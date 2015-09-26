@@ -6,11 +6,13 @@ export default Ember.Route.extend({
 		let properties = [
 			{
 				name: "voltage",
-				value: 2.3
+				value: 2.3,
+				type: "kV"
 			},
 			{
-				nane: "current",
-				value: 1.6
+				name: "current",
+				value: 1.6,
+				type: "A"
 			}
 		];
 		
