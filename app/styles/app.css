@@ -6,11 +6,11 @@ html, body {
 body {
 	background: #ccc;
 	color: #4d4d4d;
-	
+
 	min-width: 300px;
 	max-width: 1500px;
 	margin: 0 auto;
-	
+
 	font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	font-weight: 300;
 	font-smoothing: antialiased;
@@ -26,18 +26,18 @@ body {
 	background: #fff;
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
 				0 25px 50px 0 rgba(0, 0, 0, 0.1);
-	
+
 	margin: 150px 0 40px 0;
 	position: relative;
 }
 
 #lapMashupApp h1 {
 	color: rgba(95, 95, 95, 0.7);
-	
+
 	position: absolute;
 	top: -175px;
 	width: 100%;
-	
+
 	font-size: 70px;
 	font-weight: 100;
 	text-align: center;
@@ -48,7 +48,7 @@ body {
 
 #main {
 	border-top: 1px solid #e6e6e6;
-	
+
 	padding: 20px;
 	position: relative;
 	z-index: 2;
@@ -57,18 +57,18 @@ body {
 #footer {
 	color: #777;
 	border-top: 1px solid #e6e6e6;
-	
+
 	padding: 10px 15px;
 	height: 20px;
-	
+
 	text-align: center;
 }
 
 #info {
 	color: #777;
-	
+
 	margin: 65px auto 0;
-	
+
 	font-size: 12px;
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 	text-align: center;
@@ -76,37 +76,37 @@ body {
 
 #last-update-info {
 	margin: 30px auto auto 0;
-	
+
 	font-size: 12px;
 	text-align: center;
 }
 
-#properties-table {
+.properties-table {
 	background: #eee;
-	
+
 	border: 1px solid #999;
 	border-collapse: collapse;
-	
+
 	width: 50%;
 	margin: 0 auto;
 }
 
-#properties-table th {
+.properties-table th {
 	background: #ddd;
-	
+
 	border: 1px solid #999;
 	border-collapse: collapse;
-	
+
 	padding: 5px;
-	
+
 	font-size: 16px;
 }
 
-#properties-table td {
+.properties-table td {
 	border: 1px solid #999;
 	border-collapse: collapse;
-	
+
 	padding: 5px;
-	
+
 	font-size: 14px;
 }

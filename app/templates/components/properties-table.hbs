@@ -1,0 +1,10 @@
+<tr>
+  <th>Name</th>
+  <th>Value</th>
+</tr>
+{{#each properties as |property|}}
+  <tr>
+    <td>{{property.name}}</td>
+    <td>{{property.value}} {{property.unit}}</td>
+  </tr>
+{{/each}}
