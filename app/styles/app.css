@@ -54,20 +54,32 @@ body {
 	z-index: 2;
 }
 
-#footer {
-	color: #777;
-	border-top: 1px solid #e6e6e6;
+#main-left {
+	float: left;
+	width: 45%;
 
-	padding: 10px 15px;
-	height: 20px;
+	padding-top: 10px;
+	padding-left: 25px;
+}
 
-	text-align: center;
+#main-right {
+	float: right;
+	width: 45%;
+
+	padding-top: 10px;
+	padding-right: 25px;
+}
+
+#main::after {
+	display: block;
+	content: "";
+	clear: both;
 }
 
 #info {
 	color: #777;
 
-	margin: 65px auto 0;
+	margin: 35px auto 0;
 
 	font-size: 12px;
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
@@ -75,23 +87,23 @@ body {
 }
 
 #last-update-info {
-	margin: 30px auto auto 0;
+	padding: 0px 0 20px 0;
 
-	font-size: 12px;
+	font-size: 16px;
 	text-align: center;
 }
 
-.properties-table {
+.data-table {
 	background: #eee;
 
 	border: 1px solid #999;
 	border-collapse: collapse;
 
-	width: 50%;
+	width: 100%;
 	margin: 0 auto;
 }
 
-.properties-table th {
+.data-table th {
 	background: #ddd;
 
 	border: 1px solid #999;
@@ -102,7 +114,7 @@ body {
 	font-size: 16px;
 }
 
-.properties-table td {
+.data-table td {
 	border: 1px solid #999;
 	border-collapse: collapse;
 

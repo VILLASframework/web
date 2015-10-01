@@ -1,3 +1,15 @@
 <section id="main">
-	{{outlet}}
+	<section id="main-left">
+		<h2>Entities</h2>
+
+		{{entities-table entities=model}}
+	</section>
+
+	<section id="main-right">
+		{{outlet}}
+	</section>
+</section>
+
+<section id="last-update-info">
+	<p>Last updated: </p>
 </section>
