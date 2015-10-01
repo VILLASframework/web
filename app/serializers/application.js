@@ -43,7 +43,8 @@ export default DS.RESTSerializer.extend({
             var property = {
               name: attribute.name,
               value: attribute.value,
-              type: attribute.type
+              type: attribute.type,
+              timestamp: attribute.metadatas[0].value
             }
 
             entity.attributes.properties.push(property);

@@ -1,10 +1,12 @@
 <tr>
   <th>Name</th>
   <th>Value</th>
+  <th>Date</th>
 </tr>
 {{#each entity.properties as |property|}}
   <tr>
     <td>{{property.name}}</td>
     <td>{{property.value}} {{property.type}}</td>
+    <td>{{property.timestamp}}</td>
   </tr>
 {{/each}}
