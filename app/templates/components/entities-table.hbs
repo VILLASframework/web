@@ -1,0 +1,10 @@
+<tr>
+  <th>ID</th>
+  <th>Type</th>
+</tr>
+{{#each entities as |entity|}}
+  <tr>
+    <td>{{#link-to 'lab-mashup.entity' entity}}{{entity.id}}{{/link-to}}</td>
+    <td>{{entity.type}}</td>
+  </tr>
+{{/each}}

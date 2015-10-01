@@ -16,6 +16,16 @@ module.exports = function(environment) {
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
+    },
+
+    contentSecurityPolicy: {
+      'default-src': "'none'",
+      'script-src': "'self'",
+      'font-src': "'self'",
+      'connect-src': "'self' localhost:8080 46.101.131.212:1026 46.101.131.212:80",
+      'img-src': "'self'",
+      'style-src': "'self'",
+      'media-src': "'self'"
     }
   };
 
@@ -25,6 +35,10 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
+
+    ENV['ember-cli-mirage'] = {
+      enabled: false
+    }
   }
 
   if (environment === 'test') {

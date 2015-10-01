@@ -6,7 +6,9 @@ var Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-    this.route('lab-mashup', { path: '/' }, function() {});
+    this.route('lab-mashup', { path: '/' }, function() {
+      this.route('entity', { path: '/:entity_id' });
+    });
 });
 
 export default Router;
