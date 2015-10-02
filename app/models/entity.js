@@ -6,12 +6,12 @@ export default DS.Model.extend({
   properties: DS.attr(),
 
   poll: function() {
-    Ember.debug("Poll");
+      var _this = this;
+      Ember.run.later( function() {
+        Ember.debug("reload");
 
-    var _this = this;
-    Ember.run.later(function() {
-      _this.reload();
-      _this.poll();
-    }, 500);
-  }.observes('didLoad')
+        _this.reload();
+        _this.poll();
+      }, 1000);
+   }.on('didLoad')
 });
