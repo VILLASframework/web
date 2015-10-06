@@ -8,8 +8,6 @@ export default DS.Model.extend({
   poll: function() {
       var _this = this;
       Ember.run.later( function() {
-        Ember.debug("reload");
-
         _this.reload();
         _this.poll();
       }, 1000);

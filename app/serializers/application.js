@@ -39,16 +39,18 @@ export default DS.RESTSerializer.extend({
             }
           }
 
-          item.contextElement.attributes.forEach(function(attribute) {
-            var property = {
-              name: attribute.name,
-              value: attribute.value,
-              type: attribute.type,
-              timestamp: attribute.metadatas[0].value
-            }
+          if (item.contextElement.attributes) {
+            item.contextElement.attributes.forEach(function(attribute) {
+              var property = {
+                name: attribute.name,
+                value: attribute.value,
+                type: attribute.type,
+                timestamp: attribute.metadatas[0].value
+              }
 
-            entity.attributes.properties.push(property);
-          });
+              entity.attributes.properties.push(property);
+            });
+          }
 
           // pass entity to caller function
           if (handleEntity(entity) == false) {
