@@ -1,8 +1,32 @@
 export default function() {
-	this.get('/properties', function(db, request) {
+	this.namespace =  '/api/ngsi10';
+
+	this.post('/queryContext', function(db, request) {
 		return {
-			data: db.properties.map(attrs => ({ type: 'properties', id: attrs.id, attributes: attrs }))
-		}
+			contextResponses:	db.entities.map(attrs => ({
+				contextElement: {
+					type: attrs.type,
+					isPattern: false,
+					id: attrs.name,
+					attributes: attrs.properties.map(props => ({
+						name: props.name,
+						type: props.type,
+						value: props.value,
+						metadatas: [
+							{
+								name: 'timestamp',
+								type: 'date',
+								value: props.timestamp
+							}
+						]
+					}))
+				},
+				statusCode: {
+					code: 200,
+					reasonPhrase: 'OK'
+				}
+			}))
+		};
 	});
 }
 

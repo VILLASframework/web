@@ -1,8 +1,8 @@
 import DS from 'ember-data';
 
 export default DS.RESTAdapter.extend({
-  host: 'http://46.101.131.212:80',
-  namespace: '/api/ngsi10',
+  host: 'http://localhost:4200',
+  namespace: 'api/ngsi10',
   headers: {
     Accept: 'application/json'
   },

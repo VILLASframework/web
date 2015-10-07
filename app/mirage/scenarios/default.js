@@ -1,3 +1,3 @@
 export default function(server) {
-  server.createList('property', 5);
+  server.createList('entity', 5);
 }
