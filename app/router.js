@@ -6,8 +6,10 @@ var Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-    this.route('lab-mashup', { path: '/' }, function() {
-      this.route('entity', { path: '/:entity_id' });
+    this.route('entities', { path: '/' }, function() {
+      this.route('entity', { path: '/:entity_id' }, function() {
+        this.route('property', { path: '/:property_id'});
+      });
     });
 });
 

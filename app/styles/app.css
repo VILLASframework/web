@@ -58,16 +58,20 @@ body {
 	float: left;
 	width: 45%;
 
+	margin-top: 20px;
+
 	padding-top: 10px;
-	padding-left: 25px;
+	/*padding-left: 25px;*/
 }
 
 #main-right {
 	float: right;
 	width: 45%;
 
+	margin-top: 20px;
+
 	padding-top: 10px;
-	padding-right: 25px;
+	/*padding-right: 25px;*/
 }
 
 #main::after {
@@ -121,4 +125,9 @@ body {
 	padding: 5px;
 
 	font-size: 14px;
+}
+
+.data-table.entity-table {
+	width: 45%;
+	margin: 0;
 }

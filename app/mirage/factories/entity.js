@@ -8,14 +8,9 @@ export default Mirage.Factory.extend({
   properties: function(i) {
     var data = [];
 
-    for (var j = 0; j < 10; j++) {
-      data.push({
-        name: faker.random.arrayElement(['Current', 'Max. Current', 'Voltage', 'Max. Voltage', 'Power', 'Max. Power']),
-        value: faker.finance.amount(-100, 100, 4),
-        type: faker.random.arrayElement(['A', 'kV', 'MW']),
-        timestamp: faker.date.past()
-      })
-    }
+    data.push({name: 'Current', value: faker.finance.amount(-100, 100, 4), type: 'A', timestamp: faker.date.past()});
+    data.push({name: 'Voltage', value: faker.finance.amount(-100, 100, 4), type: 'kV', timestamp: faker.date.past()});
+    data.push({name: 'Power', value: faker.finance.amount(-100, 100, 4), type: 'MW', timestamp: faker.date.past()});
 
     return data;
   }

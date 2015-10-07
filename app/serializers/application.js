@@ -24,6 +24,8 @@ export default DS.RESTSerializer.extend({
   },
 
   _normalizePayload: function(payload, handleEntity) {
+    var propertyIndex = 0;
+
     // check if payload has context responses
     if (payload.contextResponses) {
       payload.contextResponses.forEach(function(item) {
@@ -34,21 +36,37 @@ export default DS.RESTSerializer.extend({
             type: 'entity',
             id: item.contextElement.id,
             attributes: {
-              type: item.contextElement.type,
-              properties: []
+              type: item.contextElement.type//,
+              //properties: []
+            },
+            relationships: {
+              properties: {
+                data: []
+              }
             }
           }
 
           if (item.contextElement.attributes) {
             item.contextElement.attributes.forEach(function(attribute) {
               var property = {
-                name: attribute.name,
-                value: attribute.value,
-                type: attribute.type,
-                timestamp: attribute.metadatas[0].value
+                type: 'property',
+                id: 'property_' + propertyIndex++,
+                attributes: {
+                  name: attribute.name,
+                  type: attribute.type,
+                  value: attribute.value,
+                  timestamp: attribute.metadatas[0].value
+                },
+                relationships: {
+                  entity: {
+                    data: { type: 'entity', id: entity.id }
+                  }
+                }
               }
 
-              entity.attributes.properties.push(property);
+              entity.relationships.properties.data.push({ type: 'property', id: property.id });
+
+              handleEntity(property);
             });
           }
 
