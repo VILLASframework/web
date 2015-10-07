@@ -48,6 +48,7 @@ export default DS.RESTSerializer.extend({
 
           if (item.contextElement.attributes) {
             item.contextElement.attributes.forEach(function(attribute) {
+              // create property
               var property = {
                 type: 'property',
                 id: 'property_' + propertyIndex++,
@@ -55,7 +56,6 @@ export default DS.RESTSerializer.extend({
                   name: attribute.name,
                   type: attribute.type,
                   value: attribute.value,
-                  timestamp: attribute.metadatas[0].value
                 },
                 relationships: {
                   entity: {
@@ -63,6 +63,13 @@ export default DS.RESTSerializer.extend({
                   }
                 }
               }
+
+              // find timestamp
+              attribute.metadatas.forEach(function(metadata) {
+                if (metadata.name === 'timestamp') {
+                  property.attributes.timestamp = metadata.value;
+                }
+              });
 
               entity.relationships.properties.data.push({ type: 'property', id: property.id });
 
