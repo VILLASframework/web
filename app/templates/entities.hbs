@@ -1,7 +1,11 @@
 <section id="main">
-	<h2>Entities</h2>
+	{{#if model}}
+		<h2>Entities</h2>
 
-	{{entities-table entities=model}}
+		{{entities-table entities=model}}
+	{{else}}
+		<h2>No entities found</h2>
+	{{/if}}
 
 	{{outlet}}
 </section>

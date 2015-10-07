@@ -1,5 +1,13 @@
-{{entity-title entity=model}}
+<h3>{{model.id}}</h3>
 
-{{properties-table entity=model}}
+{{#if model.properties}}
+<section id="main-left">
+  {{properties-table entity=model}}
+</section>
 
-{{outlet}}
+<section id="main-right">
+  {{outlet}}
+</section>
+{{else}}
+  <h3>No properties</h3>
+{{/if}}
