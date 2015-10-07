@@ -1,7 +1,8 @@
 import DS from 'ember-data';
+import ENV from '../config/environment';
 
 export default DS.RESTAdapter.extend({
-  host: 'http://localhost:4200',
+  host: ENV.APP.API_HOST,
   namespace: 'api/ngsi10',
   headers: {
     Accept: 'application/json'
