@@ -4,7 +4,7 @@ html, body {
 }
 
 body {
-	background: #ccc;
+	background: #eee;
 	color: #4d4d4d;
 
 	min-width: 300px;
@@ -23,22 +23,16 @@ body {
 }
 
 #lapMashupApp {
-	background: #fff;
-	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
-				0 25px 50px 0 rgba(0, 0, 0, 0.1);
 
-	margin: 150px 0 40px 0;
-	position: relative;
 }
 
-#lapMashupApp h1 {
-	color: rgba(95, 95, 95, 0.7);
+header {
+	color: #fff;
+	background-color: #8080C9;
 
-	position: absolute;
-	top: -175px;
-	width: 100%;
+	padding: 10px 0 10px 0;
 
-	font-size: 70px;
+	font-size: 60px;
 	font-weight: 100;
 	text-align: center;
 	text-rendering: optimizeLegibility;
@@ -46,12 +40,44 @@ body {
 	-moz-text-rendering: optimizeLegibitliy;
 }
 
-#main {
-	border-top: 1px solid #e6e6e6;
+#menu {
+	background-color: #6060C9;
 
-	padding: 20px;
-	position: relative;
-	z-index: 2;
+	border-top: 1px solid #3030C9;
+
+	width: 100%;
+}
+
+.nav-tabs {
+	color: #ccc;
+	background-color: #6060C9;
+
+	padding-left: 30px;
+
+	border: 0;
+}
+
+.nav-tabs > li > a {
+	color: #ccc;
+	background-color: #5050C9;
+	box-shadow: none;
+
+	border: 0;
+}
+
+.nav-tabs > li > a:hover {
+	color: #ccc;
+	background-color: #7070C9;
+
+	box-shadow: none;
+
+	border: 0;
+	border-radius: 0;
+}
+
+#main {
+	margin-top: 15px;
+	margin-left: 15px;
 }
 
 #main-left {

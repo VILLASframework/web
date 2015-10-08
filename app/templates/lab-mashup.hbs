@@ -1,0 +1,10 @@
+<ul class="nav nav-tabs" role="tablist">
+	{{#link-to 'lab-mashup.static1' tagName='li' activeClass='active'}}{{#link-to 'lab-mashup.static1'}}Static 1{{/link-to}}{{/link-to}}
+	{{#link-to 'lab-mashup.entity' 'S1_ElectricalGrid' tagName='li'}}{{#link-to 'lab-mashup.entity' 'S1_ElectricalGrid'}}Entity 1{{/link-to}}{{/link-to}}
+	{{#link-to 'lab-mashup.entity' 'S2_ElectricalGrid' tagName='li'}}{{#link-to 'lab-mashup.entity' 'S2_ElectricalGrid'}}Entity 2{{/link-to}}{{/link-to}}
+	{{#link-to 'lab-mashup.static2' tagName='li'}}{{#link-to 'lab-mashup.static1'}}Static 2{{/link-to}}{{/link-to}}
+</ul>
+
+<section id="main">
+	{{outlet}}
+</section>
