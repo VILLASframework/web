@@ -1,13 +1,13 @@
-<h3>{{model.id}}</h3>
-
-{{#if model.properties}}
 <section id="main-left">
-  {{properties-table entity=model}}
+  <section class="mockup-image">[Node Layout Image]</section>
 </section>
 
 <section id="main-right">
+  <ul class="nav nav-tabs" role="tablist">
+    {{#each model.categories as |category|}}
+      {{#link-to 'lab-mashup.entity.category' category tagName='li' activeClass='active'}}{{#link-to 'lab-mashup.entity.category' category}}{{category.name}}{{/link-to}}{{/link-to}}
+    {{/each}}
+  </ul>
+
   {{outlet}}
 </section>
-{{else}}
-  <h3>No properties</h3>
-{{/if}}

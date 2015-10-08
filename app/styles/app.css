@@ -40,39 +40,14 @@ header {
 	-moz-text-rendering: optimizeLegibitliy;
 }
 
-#menu {
-	background-color: #6060C9;
+footer {
+	color: #777;
 
-	border-top: 1px solid #3030C9;
+	margin: 35px auto 0;
 
-	width: 100%;
-}
-
-.nav-tabs {
-	color: #ccc;
-	background-color: #6060C9;
-
-	padding-left: 30px;
-
-	border: 0;
-}
-
-.nav-tabs > li > a {
-	color: #ccc;
-	background-color: #5050C9;
-	box-shadow: none;
-
-	border: 0;
-}
-
-.nav-tabs > li > a:hover {
-	color: #ccc;
-	background-color: #7070C9;
-
-	box-shadow: none;
-
-	border: 0;
-	border-radius: 0;
+	font-size: 12px;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+	text-align: center;
 }
 
 #main {
@@ -100,23 +75,6 @@ header {
 	display: block;
 	content: "";
 	clear: both;
-}
-
-#info {
-	color: #777;
-
-	margin: 35px auto 0;
-
-	font-size: 12px;
-	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-	text-align: center;
-}
-
-#last-update-info {
-	padding: 0px 0 20px 0;
-
-	font-size: 15px;
-	text-align: left;
 }
 
 .data-table {
@@ -152,4 +110,15 @@ header {
 .data-table.entity-table {
 	width: 45%;
 	margin: 0;
+}
+
+.mockup-image {
+	width: 600px;
+	height: 400px;
+
+	border: 1px solid black;
+
+	text-align: center;
+	vertical-align: middle;
+	line-height: 400px;
 }

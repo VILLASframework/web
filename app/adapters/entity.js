@@ -35,4 +35,8 @@ export default DS.RESTAdapter.extend({
 
     return this.ajax(this.host + '/' + this.namespace + '/queryContext', 'POST', { data: requestBody });
   },
+
+  query: function(store, type, query) {
+    return this.ajax(this.host + '/' + this.namespace + '/queryContext', 'POST', { data: query });
+  }
 });

@@ -5,5 +5,6 @@ export default DS.Model.extend({
   value: DS.attr('number'),
   type: DS.attr('string'),
   timestamp: DS.attr('date'),
-  entity: DS.belongsTo('entity')
+  entity: DS.belongsTo('entity'),
+  category: DS.belongsTo('category')
 });

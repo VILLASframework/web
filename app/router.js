@@ -9,7 +9,7 @@ Router.map(function() {
     this.route('lab-mashup', { path: '/' }, function() {
       // dynamic routes
       this.route('entity', { path: '/:entity_id' }, function() {
-        this.route('property', { path: '/:property_id'});
+        this.route('category', { path: '/:category_id'});
       });
 
       // static routes
