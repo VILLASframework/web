@@ -3,5 +3,22 @@ import Ember from 'ember';
 export default Ember.Route.extend({
   model() {
     return this.store.findAll('entity');
+  },
+
+  afterModel() {
+    // first time call poll
+    Ember.run.later(this, function() {
+      this.refreshEntities();
+    }, 500);
+  },
+
+  refreshEntities: function() {
+    // fetch new data from server
+    this.store.findAll('entity');
+
+    // reschedule refresh
+    Ember.run.later(this, function() {
+      this.refreshEntities();
+    }, 500);
   }
 });

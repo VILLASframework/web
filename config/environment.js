@@ -38,11 +38,11 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
 
-    ENV.APP.API_HOST = 'http://localhost:4200';
+    //ENV.APP.API_HOST = 'http://localhost:4200';
 
     ENV['ember-cli-mirage'] = {
-      enabled: true
-      //enabled: false
+      //enabled: true
+      enabled: false
     }
   }
 
