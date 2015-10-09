@@ -124,9 +124,9 @@ footer {
 	margin: 0;
 }
 
-canvas.line-chart {
-	width: 90%;
-	height: 90%;
+.line-chart {
+	width: 500px;
+	height: 300px;
 
 	margin: 10px;
 }

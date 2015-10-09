@@ -10,9 +10,9 @@ export default Ember.Route.extend({
     return record;
   },
 
-  chartData() {
+  chartData: function() {
     return {
       name: 'test'
     };
-  }
+  }.property()
 });

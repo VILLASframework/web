@@ -1,7 +1,12 @@
-{{#if property}}
-  <p>{{property.name}}</p>
+{{#if model.name}}
+  <p>Model: {{model.name}}, {{model.history.[0].length}}</p>
 {{/if}}
 
-{{chartData.name}}
+{{#if chartData}}
+  <p>{{chartData.name}}</p>
+{{else}}
+  <p>No chart data</p>
+{{/if}}
 
-{{flot-chart height="500px" data=model.history}}
+<!-- {{flot-chart height="500px" data=model.history}} -->
+{{line-chart data=model.history}}

@@ -1,17 +1,24 @@
 import Ember from 'ember';
 
-const { Component, computed } = Ember;
-
 export default Ember.Component.extend({
-  tagName: 'canvas',
+  tagName: 'div',
   classNames: ['line-chart'],
 
-  didInsertElement: function() {
-    // create chart
-    var element = this.get('element');
-    this.chart = new Chart(element.getContext('2d'));
-    this.chart.Line(this.chartData, {
+  init: function() {
+    this._super();
+    this.addObserver('data', this.dataDidChange);
+  },
 
-    });
+  didInsertElement: function() {
+    this._drawPlot();
+  },
+
+  dataDidChange: function() {
+    this._drawPlot();
+  },
+
+  _drawPlot: function() {
+    var elementId = this.get('elementId');
+    $.plot('#' + elementId, this.data);
   }
 });
