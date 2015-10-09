@@ -1,13 +1,30 @@
-<section id="main-left">
+<section class="layout-left">
   <section class="mockup-image">[Node Layout Image]</section>
 </section>
 
-<section id="main-right">
+<section class="layout-right">
   <ul class="nav nav-tabs" role="tablist">
     {{#each model.categories as |category|}}
       {{#link-to 'lab-mashup.entity.category' category tagName='li' activeClass='active'}}{{#link-to 'lab-mashup.entity.category' category}}{{category.name}}{{/link-to}}{{/link-to}}
     {{/each}}
   </ul>
 
-  {{outlet}}
+  <section id="properties">
+    <section class="layout-left">
+      <table class="data-table">
+        <tr>
+          <th>Name</th>
+        </tr>
+        {{#each model.properties as |property|}}
+          <tr>
+            <td>{{#link-to 'lab-mashup.entity.property' property}}{{property.name}}{{/link-to}}</td>
+          </tr>
+        {{/each}}
+      </table>
+    </section>
+
+    <section class="layout-right">
+      {{outlet}}
+    </section>
+  </section>
 </section>

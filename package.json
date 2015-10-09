@@ -44,6 +44,7 @@
     "morgan": "^1.6.1"
   },
   "dependencies": {
-    "ember-cli-cors": "0.0.1"
+    "ember-cli-cors": "0.0.1",
+    "ember-cli-flot": "0.0.3"
   }
 }

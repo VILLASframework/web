@@ -5,7 +5,21 @@ export default DS.RESTSerializer.extend({
     var json = { data: [] };
 
     this._normalizePayload(payload, function(item) {
-      json.data.push(item);
+      if (item.type === 'entity') {
+        json.data.push(item);
+      } else if (item.type === 'property') {
+        // create record if needed, otherwise add to current one
+        var record = store.peekRecord('property', item.id);
+        if (record) {
+          var length = record.get('history')[0].length;
+          record.get('history')[0].push([length, record.get('value')]);
+          record.set('value', item.attributes.value);
+        } else {
+          // add new item
+          store.push(item);
+        }
+      }
+
       return true;
     });
 
@@ -16,8 +30,25 @@ export default DS.RESTSerializer.extend({
     var json = { data: {} };
 
     this._normalizePayload(payload, function(item) {
-      json.data = item;
-      return false;
+      //json.data = item;
+      //return false;
+
+      if (item.type === 'entity') {
+        json.data = item;
+      } else if (item.type === 'property') {
+        // create record if needed, otherwise add to current one
+        var record = store.peekRecord('property', item.id);
+        if (record) {
+          var length = record.get('history').length;
+          record.get('history')[0].push([length, record.get('value')]);
+          record.set('value', item.attributes.value);
+        } else {
+          // add new item
+          store.push(item);
+        }
+      }
+
+      return true;
     });
 
     return json;
@@ -29,8 +60,17 @@ export default DS.RESTSerializer.extend({
     this._normalizePayload(payload, function(item) {
       if (item.type === 'entity') {
         json.data.push(item);
-      } else {
-        _createRecord(store, item);
+      } else if (item.type === 'property') {
+        // create record if needed, otherwise add to current one
+        var record = store.peekRecord('property', item.id);
+        if (record) {
+          var length = record.get('history').length;
+          record.get('history')[0].push([length, record.get('value')]);
+          record.set('value', item.attributes.value);
+        } else {
+          // add new item
+          store.push(item);
+        }
       }
 
       return true;
@@ -73,6 +113,7 @@ export default DS.RESTSerializer.extend({
                     name: attribute.name,
                     type: attribute.type,
                     value: attribute.value,
+                    history: [[[0, attribute.value]]]
                   },
                   relationships: {
                     entity: {
@@ -118,11 +159,5 @@ export default DS.RESTSerializer.extend({
         }
       });
     }
-  },
-
-  _createRecord: function(store, item) {
-    store.createRecord(item.type, {
-
-    });
   }
 });

@@ -8,7 +8,7 @@ body {
 	color: #4d4d4d;
 
 	min-width: 300px;
-	max-width: 1500px;
+	/*max-width: 1500px;*/
 	margin: 0 auto;
 
 	font: 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -45,6 +45,8 @@ footer {
 
 	margin: 35px auto 0;
 
+	width: 100%;
+
 	font-size: 12px;
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 	text-align: center;
@@ -53,28 +55,38 @@ footer {
 #main {
 	margin-top: 15px;
 	margin-left: 15px;
+
+	width: 100%;
 }
 
-#main-left {
+.layout-left {
 	float: left;
-	width: 45%;
+	width: 50%;
 
 	padding-top: 10px;
 	/*padding-left: 25px;*/
 }
 
-#main-right {
+.layout-right {
 	float: right;
-	width: 45%;
+	width: 50%;
 
 	padding-top: 10px;
 	/*padding-right: 25px;*/
 }
 
-#main::after {
+.layout::after {
 	display: block;
 	content: "";
 	clear: both;
+}
+
+#properties > .layout-left {
+	width: 30%;
+}
+
+#properties > .layout-right {
+	width: 70%;
 }
 
 .data-table {
@@ -110,6 +122,13 @@ footer {
 .data-table.entity-table {
 	width: 45%;
 	margin: 0;
+}
+
+canvas.line-chart {
+	width: 90%;
+	height: 90%;
+
+	margin: 10px;
 }
 
 .mockup-image {

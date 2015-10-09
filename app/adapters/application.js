@@ -38,5 +38,9 @@ export default DS.RESTAdapter.extend({
 
   query: function(store, type, query) {
     return this.ajax(this.host + '/' + this.namespace + '/queryContext', 'POST', { data: query });
+  },
+
+  updateRecord: function(store, type, snapshot) {
+    
   }
 });
