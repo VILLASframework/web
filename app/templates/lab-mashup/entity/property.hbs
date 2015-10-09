@@ -1,12 +1,1 @@
-{{#if model.name}}
-  <p>Model: {{model.name}}, {{model.history.[0].length}}</p>
-{{/if}}
-
-{{#if chartData}}
-  <p>{{chartData.name}}</p>
-{{else}}
-  <p>No chart data</p>
-{{/if}}
-
-<!-- {{flot-chart height="500px" data=model.history}} -->
 {{line-chart data=model.history}}

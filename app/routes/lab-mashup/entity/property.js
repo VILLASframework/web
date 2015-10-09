@@ -8,11 +8,5 @@ export default Ember.Route.extend({
 
     var record = this.store.peekRecord('property', params.property_id);
     return record;
-  },
-
-  chartData: function() {
-    return {
-      name: 'test'
-    };
-  }.property()
+  }
 });

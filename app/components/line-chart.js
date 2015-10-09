@@ -11,6 +11,10 @@ export default Ember.Component.extend({
 
   didInsertElement: function() {
     this._drawPlot();
+
+    Ember.run.later(this, function() {
+      this._drawPlot();
+    }, 500);
   },
 
   dataDidChange: function() {
@@ -20,5 +24,9 @@ export default Ember.Component.extend({
   _drawPlot: function() {
     var elementId = this.get('elementId');
     $.plot('#' + elementId, this.data);
+
+    Ember.run.later(this, function() {
+      this._drawPlot();
+    }, 500);
   }
 });
