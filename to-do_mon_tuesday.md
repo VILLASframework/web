@@ -1,7 +1,7 @@
 # Monday
 - virtual box image
 - offline data
-- start button
+- start button (start offline data from the beginning)
 - diagrams and static view with images
 - categories
 
@@ -10,3 +10,4 @@
 # Tue
 - 4 sections
 - logos and layout
+- RUN SCENARIO button (for example +-10%): mashup -> ocb
