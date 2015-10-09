@@ -23,7 +23,9 @@ export default Ember.Component.extend({
 
   _drawPlot: function() {
     var elementId = this.get('elementId');
-    $.plot('#' + elementId, this.data);
+    if (elementId) {
+      $.plot('#' + elementId, this.data);
+    }
 
     Ember.run.later(this, function() {
       this._drawPlot();
