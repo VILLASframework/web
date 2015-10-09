@@ -11,9 +11,11 @@ export default DS.RESTSerializer.extend({
         // create record if needed, otherwise add to current one
         var record = store.peekRecord('property', item.id);
         if (record) {
-          var length = record.get('history')[0].length;
-          record.get('history')[0].push([length, record.get('value')]);
-          record.set('value', item.attributes.value);
+          if (record.timestamp !== item.attributes.timestamp) {
+            var length = record.get('history')[0].length;
+            record.get('history')[0].push([length, record.get('value')]);
+            record.set('value', item.attributes.value);
+          }
         } else {
           // add new item
           store.push(item);

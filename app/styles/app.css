@@ -82,11 +82,19 @@ footer {
 }
 
 #properties > .layout-left {
-	width: 30%;
+	width: 25%;
 }
 
 #properties > .layout-right {
-	width: 70%;
+	width: 75%;
+}
+
+#main > .layout-left {
+	width: 40%;
+}
+
+#main > .layout-right {
+	width: 60%;
 }
 
 .data-table {
@@ -125,15 +133,15 @@ footer {
 }
 
 .line-chart {
-	width: 500px;
-	height: 300px;
+	width: 100%;
+	height: 500px;
 
 	margin: 10px;
 }
 
 .mockup-image {
-	width: 600px;
-	height: 400px;
+	width: 100%;
+	height: 75%;
 
 	border: 1px solid black;
 
