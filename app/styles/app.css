@@ -61,18 +61,18 @@ footer {
 
 .layout-left {
 	float: left;
-	width: 50%;
 
-	padding-top: 10px;
-	/*padding-left: 25px;*/
+	height: 100%;
+
+	/*margin: 10px;*/
 }
 
 .layout-right {
 	float: right;
-	width: 50%;
 
-	padding-top: 10px;
-	/*padding-right: 25px;*/
+	height: 100%;
+
+	/*margin: 10px;*/
 }
 
 .layout::after {
@@ -81,12 +81,16 @@ footer {
 	clear: both;
 }
 
+#properties {
+	padding-top: 20px;
+}
+
 #properties > .layout-left {
 	width: 25%;
 }
 
 #properties > .layout-right {
-	width: 75%;
+	width: 70%;
 }
 
 #main > .layout-left {
@@ -94,7 +98,7 @@ footer {
 }
 
 #main > .layout-right {
-	width: 60%;
+	width: 55%;
 }
 
 .data-table {
@@ -133,10 +137,8 @@ footer {
 }
 
 .line-chart {
-	width: 100%;
+	width: 90%;
 	height: 500px;
-
-	margin: 10px;
 }
 
 .mockup-image {

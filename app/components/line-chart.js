@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   tagName: 'div',
   classNames: ['line-chart'],
-  xaxisLength: 30,
+  xaxisLength: 100,
 
   init: function() {
     this._super();
