@@ -4,22 +4,13 @@ export default DS.RESTSerializer.extend({
   normalizeFindAllResponse: function(store, primaryModelClass, payload, id, requestType) {
     var json = { data: [] };
 
+    var _this = this;
+
     this._normalizePayload(payload, function(item) {
       if (item.type === 'entity') {
         json.data.push(item);
       } else if (item.type === 'property') {
-        // create record if needed, otherwise add to current one
-        var record = store.peekRecord('property', item.id);
-        if (record) {
-          if (record.timestamp !== item.attributes.timestamp) {
-            var length = record.get('history')[0].length;
-            record.get('history')[0].push([length, record.get('value')]);
-            record.set('value', item.attributes.value);
-          }
-        } else {
-          // add new item
-          store.push(item);
-        }
+        _this._updateProperty(item);
       }
 
       return true;
@@ -31,23 +22,13 @@ export default DS.RESTSerializer.extend({
   normalizeFindRecordResponse: function(store, primaryModelClass, payload, id, requestType) {
     var json = { data: {} };
 
-    this._normalizePayload(payload, function(item) {
-      //json.data = item;
-      //return false;
+    var _this = this;
 
+    this._normalizePayload(payload, function(item) {
       if (item.type === 'entity') {
         json.data = item;
       } else if (item.type === 'property') {
-        // create record if needed, otherwise add to current one
-        var record = store.peekRecord('property', item.id);
-        if (record) {
-          var length = record.get('history').length;
-          record.get('history')[0].push([length, record.get('value')]);
-          record.set('value', item.attributes.value);
-        } else {
-          // add new item
-          store.push(item);
-        }
+        _this._updateProperty(item);
       }
 
       return true;
@@ -59,20 +40,13 @@ export default DS.RESTSerializer.extend({
   normalizeQueryResponse: function(store, primaryModelClass, payload, id, requestType) {
     var json = { data: [] };
 
+    var _this = this;
+
     this._normalizePayload(payload, function(item) {
       if (item.type === 'entity') {
         json.data.push(item);
       } else if (item.type === 'property') {
-        // create record if needed, otherwise add to current one
-        var record = store.peekRecord('property', item.id);
-        if (record) {
-          var length = record.get('history').length;
-          record.get('history')[0].push([length, record.get('value')]);
-          record.set('value', item.attributes.value);
-        } else {
-          // add new item
-          store.push(item);
-        }
+        _this._updateProperty(item);
       }
 
       return true;
@@ -94,8 +68,7 @@ export default DS.RESTSerializer.extend({
             type: 'entity',
             id: item.contextElement.id,
             attributes: {
-              type: item.contextElement.type//,
-              //properties: []
+              type: item.contextElement.type
             },
             relationships: {
               properties: {
@@ -107,6 +80,15 @@ export default DS.RESTSerializer.extend({
           if (item.contextElement.attributes) {
             item.contextElement.attributes.forEach(function(attribute) {
               if (attribute.type !== 'category') {
+                // find timestamp
+                var timestamp = 0;
+
+                attribute.metadatas.forEach(function(metadata) {
+                  if (metadata.name === 'timestamp') {
+                    timestamp = Date.parse(metadata.value);
+                  }
+                });
+
                 // create property
                 var property = {
                   type: 'property',
@@ -115,7 +97,9 @@ export default DS.RESTSerializer.extend({
                     name: attribute.name,
                     type: attribute.type,
                     value: attribute.value,
-                    history: [[[0, attribute.value]]]
+                    timestamp: timestamp,
+                    visible: false,
+                    history: [[timestamp, attribute.value]]
                   },
                   relationships: {
                     entity: {
@@ -123,13 +107,6 @@ export default DS.RESTSerializer.extend({
                     }
                   }
                 }
-
-                // find timestamp
-                attribute.metadatas.forEach(function(metadata) {
-                  if (metadata.name === 'timestamp') {
-                    property.attributes.timestamp = metadata.value;
-                  }
-                });
 
                 entity.relationships.properties.data.push({ type: 'property', id: property.id });
 
@@ -160,6 +137,21 @@ export default DS.RESTSerializer.extend({
           }
         }
       });
+    }
+  },
+
+  _updateProperty: function(item) {
+    // create record if needed, otherwise add to current one
+    var record = this.store.peekRecord('property', item.id);
+    if (record) {
+      if (record.timestamp !== item.attributes.timestamp) {
+        record.get('history').push([record.get('timestamp'), record.get('value')]);
+        record.set('value', item.attributes.value);
+        record.set('timestamp', item.attributes.timestamp);
+      }
+    } else {
+      // add new item
+      this.store.push(item);
     }
   }
 });

@@ -17,6 +17,7 @@
     "Faker": "~3.0.0",
     "bootstrap": "~3.3.2",
     "chart.js": "~0.1.0",
-    "flot-charts": "*"
+    "flot-charts": "*",
+    "flot": "*"
   }
 }
