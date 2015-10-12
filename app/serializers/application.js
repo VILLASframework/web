@@ -80,7 +80,7 @@ export default DS.RESTSerializer.extend({
           if (item.contextElement.attributes) {
             item.contextElement.attributes.forEach(function(attribute) {
               if (attribute.type !== 'category') {
-                // find timestamp
+                // find timestamp data
                 var timestamp = 0;
 
                 attribute.metadatas.forEach(function(metadata) {
@@ -96,16 +96,22 @@ export default DS.RESTSerializer.extend({
                   attributes: {
                     name: attribute.name,
                     type: attribute.type,
-                    value: attribute.value,
-                    timestamp: timestamp,
+                    date: timestamp,
                     visible: false,
-                    history: [[timestamp, attribute.value]]
+                    values: []
                   },
                   relationships: {
                     entity: {
                       data: { type: 'entity', id: entity.id }
                     }
                   }
+                }
+
+                // add values
+                if (attribute.value) {
+                  attribute.value.forEach(function (value) {
+                    property.attributes.values.push(value);
+                  });
                 }
 
                 entity.relationships.properties.data.push({ type: 'property', id: property.id });
@@ -145,8 +151,10 @@ export default DS.RESTSerializer.extend({
     var record = this.store.peekRecord('property', item.id);
     if (record) {
       if (record.timestamp !== item.attributes.timestamp) {
-        record.get('history').push([record.get('timestamp'), record.get('value')]);
-        record.set('value', item.attributes.value);
+        item.attributes.values.forEach(function (value) {
+          record.get('values').push(value);
+        });
+
         record.set('timestamp', item.attributes.timestamp);
       }
     } else {

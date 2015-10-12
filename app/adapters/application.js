@@ -13,8 +13,10 @@ export default DS.RESTAdapter.extend({
       entities: [
         {
           type: 'ElectricalGridMonitoring',
-          isPattern: true,
-          id: 'S?_ElectricalGrid'
+          /*isPattern: true,
+          id: 'S?_ElectricalGrid'*/
+          isPattern: false,
+          id: 'S3_ElectricalGrid'
         }
       ]
     };
@@ -41,6 +43,6 @@ export default DS.RESTAdapter.extend({
   },
 
   updateRecord: function(store, type, snapshot) {
-    
+
   }
 });

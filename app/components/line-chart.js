@@ -44,10 +44,24 @@ export default Ember.Component.extend({
   				},
         });*/
 
+        var firstTimestamp = this.data[0][0];
+        var lastTimestamp = this.data[this.data.length - 1][0];
+
+        var diff = lastTimestamp - firstTimestamp;
+        var diffValue = this.xaxisLength * 100;
+
+        if (diff > diffValue) {
+          firstTimestamp = lastTimestamp - diffValue;
+        } else {
+          lastTimestamp = +firstTimestamp + +diffValue;
+        }
+
         $.plot('#' + element.id, [this.data], {
           xaxis: {
             mode: 'time',
-            timeformat: '%H:%M:%S'
+            timeformat: '%M:%S',
+            min: firstTimestamp,
+            max: lastTimestamp
           }
         });
 
