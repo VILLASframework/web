@@ -28,7 +28,7 @@ export default Ember.Route.extend({
     // fetch new data from server
     this.store.query('entity', { entities: [
       {
-        id: 'S3_ElectricalGrid',
+        id: 'S1_ElectricalGrid',
         isPattern: false,
         type: 'ElectricalGridMonitoring'
       },

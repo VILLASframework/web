@@ -64,6 +64,8 @@ h2 {
 	margin: 0;
 
 	border: 0;
+	
+	border-collapse: collapse;
 }
 
 .grid2x2 td {
@@ -79,11 +81,22 @@ h2 {
 }
 
 #S1-left {
-	width: 200px;
+	width: 150px;
 }
 
 #S1-right {
 	width: auto;
+	
+	padding: 25px;
+	padding-bottom: 30px;
+}
+
+#S1-right h3 {
+	text-align: center;
+}
+
+#S1-right h4 {
+	text-align: right;
 }
 
 #S2-left {

@@ -3,6 +3,6 @@
 </tr>
 {{#each model.properties as |property|}}
   <tr>
-    <td {{action "propertyClicked" property}}>{{property.name}}</td>
+    <td><a href="#" {{action "propertyClicked" property}}>{{property.name}}</a></td>
   </tr>
 {{/each}}

@@ -31,7 +31,7 @@ export default Ember.Component.extend({
         var lastTimestamp = this.data[this.data.length - 1][0];
 
         var diff = lastTimestamp - firstTimestamp;
-        var diffValue = this.xaxisLength * 100;
+        var diffValue = this.xaxisLength * 1000;
 
         if (diff > diffValue) {
           firstTimestamp = lastTimestamp - diffValue;

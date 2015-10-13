@@ -16,7 +16,9 @@
 						</td>
 
 						<td id="S1-right">
-							{{line-chart data=S1Property.values dataName=S1Property.name}}
+							<h3>{{S1Property.name}}</h3>
+							{{line-chart data=S1Property.values}}
+							<h4>{{S1Property.type}}</h4>
 						</td>
 					</tr>
 				</table>
@@ -33,7 +35,7 @@
 							{{property-table model=S2Entity showProperty="showPropertyValues"}}
 						</td>
 						<td id="S2-right">
-							{{line-chart data=S2Property.values dataName=S2Property.name}}
+							{{line-chart data=S2Property.values}}
 						</td>
 					</tr>
 				</table>
