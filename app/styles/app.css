@@ -7,8 +7,6 @@ body {
 	background: #eee;
 	color: #4d4d4d;
 
-	min-width: 300px;
-	/*max-width: 1500px;*/
 	margin: 0 auto;
 
 	font: 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -43,72 +41,78 @@ header {
 footer {
 	color: #777;
 
-	margin: 35px auto 0;
+	padding-top: 10px;
 
 	width: 100%;
 
-	font-size: 12px;
+	font-size: 13px;
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 	text-align: center;
 }
 
+h2 {
+	text-align: center;
+}
+
 #main {
-	margin-top: 15px;
-	margin-left: 15px;
 
+}
+
+.grid {
 	width: 100%;
-}
-
-.layout-left {
-	float: left;
-
 	height: 100%;
+	margin: 0;
 
-	/*margin: 10px;*/
+	border: 0;
 }
 
-.layout-right {
-	float: right;
+.grid2x2 td {
+	padding: 5px;
 
+	width: 50%;
+	height: 50%;
+}
+
+.grid3x1 td {
 	height: 100%;
-
-	/*margin: 10px;*/
+	width: auto;
 }
 
-.layout::after {
-	display: block;
-	content: "";
-	clear: both;
+#S1-left {
+	width: 200px;
 }
 
-#properties {
-	padding-top: 20px;
+#S1-right {
+	width: auto;
 }
 
-#properties > .layout-left {
-	width: 25%;
-}
-
-#properties > .layout-right {
-	width: 70%;
-}
-
-#main > .layout-left {
+#S2-left {
 	width: 40%;
 }
 
-#main > .layout-right {
-	width: 55%;
+#S2-center {
+	width: 200px;
+}
+
+#S2-right {
+	width: auto;
+}
+
+.line-chart {
+	width: 100%;
+	height: 100%;
 }
 
 .data-table {
 	background: #eee;
 
-	border: 1px solid #999;
-	border-collapse: collapse;
+	margin: 0;
+	padding: 0;
 
 	width: 100%;
-	margin: 0 auto;
+
+	border: 1px solid #999;
+	border-collapse: collapse;
 }
 
 .data-table th {
@@ -131,23 +135,7 @@ footer {
 	font-size: 14px;
 }
 
-.data-table.entity-table {
-	width: 45%;
-	margin: 0;
-}
-
-.line-chart {
-	width: 90%;
-	height: 500px;
-}
-
-.mockup-image {
+.svg-image {
 	width: 100%;
-	height: 75%;
-
-	border: 1px solid black;
-
-	text-align: center;
-	vertical-align: middle;
-	line-height: 400px;
+	height: auto;
 }

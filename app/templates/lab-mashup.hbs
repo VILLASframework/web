@@ -1,13 +1,54 @@
-<ul class="nav nav-tabs" role="tablist">
-	{{#link-to 'lab-mashup.static1' tagName='li' activeClass='active'}}{{#link-to 'lab-mashup.static1'}}Static 1{{/link-to}}{{/link-to}}
-
-	{{#each model as |entity|}}
-		{{#link-to 'lab-mashup.entity' entity tagName='li'}}{{#link-to 'lab-mashup.entity' entity}}{{entity.id}}{{/link-to}}{{/link-to}}
-	{{/each}}
-
-	{{#link-to 'lab-mashup.static2' tagName='li'}}{{#link-to 'lab-mashup.static1'}}Static 2{{/link-to}}{{/link-to}}
-</ul>
-
 <section id="main">
-	{{outlet}}
+	<table class="grid grid2x2">
+		<tr>
+			<td id="top-left">
+				<h2>Transmission System</h2>
+
+				<table class="grid grid3x1">
+					<tr>
+						<td colspan="2">
+							<img src={{"assets/images/View2/TransmissionSystem.svg"}} class="svg-image" />
+						</td>
+					</tr>
+					<tr>
+						<td id="S1-left">
+							{{property-table model=S1Entity showProperty="showPropertyValues"}}
+						</td>
+
+						<td id="S1-right">
+							{{line-chart data=S1Property.values dataName=S1Property.name}}
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td id="top-right">
+				<h2>Distribution System</h2>
+
+				<table class="grid grid3x1">
+					<tr>
+						<td id="S2-left">
+							<img src={{"assets/images/View3/DistributionSystem.svg"}} class="svg-image" />
+						</td>
+						<td id="S2-center">
+							{{property-table model=S2Entity showProperty="showPropertyValues"}}
+						</td>
+						<td id="S2-right">
+							{{line-chart data=S2Property.values dataName=S2Property.name}}
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td id="bottom-left">
+
+				<h2>Simulation</h2>
+
+				<img src={{"assets/images/View1/Simulation Scenario.svg"}} class="svg-image" />
+			</td>
+			<td id="bottom-right">
+				<h2>Static</h2>
+			</td>
+		</tr>
+	</table>
 </section>

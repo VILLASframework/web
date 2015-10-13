@@ -89,6 +89,10 @@ export default DS.RESTSerializer.extend({
                   }
                 });
 
+                if (timestamp === 0) {
+                  timestamp = (new Date()).getTime();
+                }
+
                 // create property
                 var property = {
                   type: 'property',
@@ -96,7 +100,7 @@ export default DS.RESTSerializer.extend({
                   attributes: {
                     name: attribute.name,
                     type: attribute.type,
-                    date: timestamp,
+                    timestamp: timestamp,
                     visible: false,
                     values: []
                   },
@@ -109,9 +113,13 @@ export default DS.RESTSerializer.extend({
 
                 // add values
                 if (attribute.value) {
-                  attribute.value.forEach(function (value) {
-                    property.attributes.values.push(value);
-                  });
+                  if ($.isArray(attribute.value)) {
+                    attribute.value.forEach(function (value) {
+                      property.attributes.values.push(value);
+                    });
+                  } else {
+                    property.attributes.values.push([timestamp, attribute.value]);
+                  }
                 }
 
                 entity.relationships.properties.data.push({ type: 'property', id: property.id });

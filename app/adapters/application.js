@@ -13,10 +13,8 @@ export default DS.RESTAdapter.extend({
       entities: [
         {
           type: 'ElectricalGridMonitoring',
-          /*isPattern: true,
-          id: 'S?_ElectricalGrid'*/
-          isPattern: false,
-          id: 'S3_ElectricalGrid'
+          isPattern: true,
+          id: 'S?_ElectricalGrid'
         }
       ]
     };
