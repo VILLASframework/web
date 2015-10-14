@@ -23,35 +23,5 @@ export default Ember.Controller.extend({
     });
 
     return entity;
-  }.property('model.[]'),
-
-  actions: {
-    showProperty1Values(property) {
-      var id = property.id;
-
-      var prop = null;
-
-      this.get('S1Entity').get('properties').forEach(function (proper) {
-        if (proper.id === id) {
-          prop = proper;
-        }
-      });
-
-      this.set('S1Property', prop);
-    },
-	
-	showProperty2Values(property) {
-      var id = property.id;
-
-      var prop = null;
-
-      this.get('S2Entity').get('properties').forEach(function (proper) {
-        if (proper.id === id) {
-          prop = proper;
-        }
-      });
-
-      this.set('S2Property', prop);
-    }
-  }
+  }.property('model.[]')
 });

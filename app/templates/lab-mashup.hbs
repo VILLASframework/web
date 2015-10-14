@@ -2,11 +2,11 @@
 	<table class="grid">
 		<tr>
 			<td colspan="2">
-				<div class="layout-page" width="70%">
+				<div class="layout-page" width="75%">
 					<img src={{"assets/images/View2/TransmissionSystem.svg"}} class="svg-image" />
 				</div>
 			</td>
-			<td rowspan="2" width="30%" height="100%">
+			<td rowspan="2" width="25%">
 				<div class="layout-page">
 					<h2>Simulation</h2>
 					<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.<br />
@@ -17,42 +17,10 @@
 		</tr>
 		<tr>
 			<td>
-				<div class="layout-page">
-					<table>
-						<tr>
-							<td class="column-left">
-								{{property-table model=S1Entity showProperty="showProperty1Values"}}
-							</td>
-							<td class="column-right">
-								{{#if S1Property}}
-									<h3>{{S1Property.name}}</h3>
-								{{/if}}
-								
-								{{line-chart data=S1Property.values}}
-								
-								{{#if S1Property}}
-									<h4>{{S1Property.type}}</h4>
-								{{/if}}
-							</td>
-						</tr>
-					</table>
-				</div>
+				{{entity-chart entity=S1Entity entityName="Transmission System"}}
 			</td>
 			<td>
-				<div class="layout-page">
-					<table>
-						<tr>
-							<td class="column-left">
-								{{property-table model=S2Entity showProperty="showProperty2Values"}}
-							</td>
-							<td class="column-right">
-								<h3>{{S2Property.name}}</h3>
-								{{line-chart data=S2Property.values}}
-								<h4>{{S2Property.type}}</h4>
-							</td>
-						</tr>
-						</table>
-				</div>
+				{{entity-chart entity=S2Entity entityName="Distribution System"}}
 			</td>
 		</tr>
 	</table>

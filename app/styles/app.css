@@ -87,10 +87,16 @@ h2 {
 
 .column-right h3 {
 	text-align: center;
+	
+	margin: 0;
+	padding: 0;
 }
 
 .column-right h4 {
 	text-align: right;
+	
+	margin: 0;
+	padding: 0;
 }
 
 .layout-page {
@@ -102,6 +108,10 @@ h2 {
 	padding: 10px;
 	
 	height: 100%;
+}
+
+.layout-page h2 {
+	margin-bottom: 10px;
 }
 
 .line-chart {
