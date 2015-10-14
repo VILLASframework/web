@@ -38,6 +38,7 @@
     "ember-data": "1.13.8",
     "ember-disable-proxy-controllers": "^1.0.0",
     "ember-export-application-global": "^1.0.3",
+    "ember-normalize": "0.0.9",
     "glob": "^4.5.3",
     "http-proxy": "^1.11.2",
     "mirage": "0.0.5",
