@@ -101,13 +101,6 @@ footer {
 	padding: 0;
 }
 
-.column-right h4 {
-	text-align: right;
-	
-	margin: 0;
-	padding: 0;
-}
-
 .layout-page {
 	background-color: #fff;
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
@@ -183,4 +176,22 @@ footer {
 	margin-top: 15px;
 	
 	height: 50px !important;
+}
+
+.label-source {
+	text-align: left;
+	
+	margin: 0;
+	padding: 0;
+	
+	float: left;
+}
+
+.label-type {
+	text-align: right;
+	
+	margin: 0;
+	padding: 0;
+	
+	float: right;
 }

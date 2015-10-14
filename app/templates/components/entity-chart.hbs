@@ -20,7 +20,8 @@
 				{{line-chart data=visibleProperty.values}}
 				
 				{{#if visibleProperty}}
-					<h4>{{visibleProperty.type}}</h4>
+					<h4 class="label-source">Source: {{visibleProperty.source}}</h4>
+					<h4 class="label-type">{{visibleProperty.type}}</h4>
 				{{/if}}
 			</td>
 		{{else}}

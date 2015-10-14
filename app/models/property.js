@@ -6,6 +6,7 @@ export default DS.Model.extend({
   values: DS.attr(),
   timestamp: DS.attr('date'),
   visible: DS.attr('boolean', { defaultValue: false }),
+  source: DS.attr('string'),
   entity: DS.belongsTo('entity'),
   category: DS.belongsTo('category')
 });
