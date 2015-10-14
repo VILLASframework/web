@@ -62,6 +62,7 @@ h2 {
 	width: 100%;
 	height: 100%;
 	margin: 0;
+	padding: 0;
 
 	border: 0;
 	
@@ -69,7 +70,8 @@ h2 {
 }
 
 .grid2x2 td {
-	padding: 5px;
+	padding: 0;
+	margin: 0;
 
 	width: 50%;
 	height: 50%;
@@ -78,37 +80,44 @@ h2 {
 .grid3x1 td {
 	height: 100%;
 	width: auto;
+	
+	padding: 5px;
+	
+	border: 1px solid black;
 }
 
-#S1-left {
-	width: 150px;
+#S1-image {
+	height: auto;
 }
 
-#S1-right {
+.column-left {
+	width: 150px !important;
+}
+
+.column-right {
 	width: auto;
 	
 	padding: 25px;
-	padding-bottom: 30px;
+	padding-bottom: 40px;
 }
 
-#S1-right h3 {
+.column-right h3 {
 	text-align: center;
 }
 
-#S1-right h4 {
+.column-right h4 {
 	text-align: right;
 }
 
-#S2-left {
-	width: 40%;
-}
-
-#S2-center {
-	width: 200px;
-}
-
-#S2-right {
-	width: auto;
+.layout-page {
+	background-color: #fff;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
+				0 25px 50px 0 rgba(0, 0, 0, 0.1);
+	
+	margin: 10px;
+	padding: 10px;
+	
+	height: 100%;
 }
 
 .line-chart {

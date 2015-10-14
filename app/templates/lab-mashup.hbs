@@ -1,55 +1,69 @@
 <section id="main">
 	<table class="grid grid2x2">
 		<tr>
-			<td id="top-left">
-				<h2>Transmission System</h2>
-
-				<table class="grid grid3x1">
-					<tr>
-						<td colspan="2">
-							<img src={{"assets/images/View2/TransmissionSystem.svg"}} class="svg-image" />
-						</td>
-					</tr>
-					<tr>
-						<td id="S1-left">
-							{{property-table model=S1Entity showProperty="showPropertyValues"}}
-						</td>
-
-						<td id="S1-right">
-							<h3>{{S1Property.name}}</h3>
-							{{line-chart data=S1Property.values}}
-							<h4>{{S1Property.type}}</h4>
-						</td>
-					</tr>
-				</table>
+			<td>
+				<div id="top-left" class="layout-page">
+					<h2>Transmission System</h2>
+	
+					<table class="grid grid3x1">
+						<tr>
+							<td colspan="2" id="S1-image">
+								<img src={{"assets/images/View2/TransmissionSystem.svg"}} class="svg-image" />
+							</td>
+						</tr>
+						<tr>
+							<td class="column-left">
+								{{property-table model=S1Entity showProperty="showProperty1Values"}}
+							</td>
+	
+							<td class="column-right">
+								<h3>{{S1Property.name}}</h3>
+								{{line-chart data=S1Property.values}}
+								<h4>{{S1Property.type}}</h4>
+							</td>
+						</tr>
+					</table>
+				</div>
 			</td>
-			<td id="top-right">
-				<h2>Distribution System</h2>
-
-				<table class="grid grid3x1">
-					<tr>
-						<td id="S2-left">
-							<img src={{"assets/images/View3/DistributionSystem.svg"}} class="svg-image" />
-						</td>
-						<td id="S2-center">
-							{{property-table model=S2Entity showProperty="showPropertyValues"}}
-						</td>
-						<td id="S2-right">
-							{{line-chart data=S2Property.values}}
-						</td>
-					</tr>
-				</table>
+			<td>
+				<div id="top-right" class="layout-page">
+					<h2>Distribution System</h2>
+	
+					<table class="grid grid3x1">
+						<tr>
+							<td colspan="2" id="S1-image">
+								<img src={{"assets/images/View3/DistributionSystem.svg"}} class="svg-image" />
+							</td>
+						</tr>
+						<tr>
+							<td class="column-left">
+								{{property-table model=S2Entity showProperty="showProperty2Values"}}
+							</td>
+	
+							<td class="column-right">
+								<h3>{{S2Property.name}}</h3>
+								{{line-chart data=S2Property.values}}
+								<h4>{{S2Property.type}}</h4>
+							</td>
+						</tr>
+					</table>
+				</div>
 			</td>
 		</tr>
 		<tr>
-			<td id="bottom-left">
+			<td>
+				<div id="bottom-left" class="layout-page">
+					<h2>Simulation</h2>
 
-				<h2>Simulation</h2>
-
-				<img src={{"assets/images/View1/Simulation Scenario.svg"}} class="svg-image" />
+					<img src={{"assets/images/View1/Simulation Scenario.svg"}} class="svg-image" />
+				</div>
 			</td>
-			<td id="bottom-right">
-				<h2>Static</h2>
+			<td>
+				<div id="bottom-right" class="layout-page">
+					<h2>Static</h2>
+					
+					<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+				</div>
 			</td>
 		</tr>
 	</table>

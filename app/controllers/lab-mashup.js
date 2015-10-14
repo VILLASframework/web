@@ -26,7 +26,7 @@ export default Ember.Controller.extend({
   }.property('model.[]'),
 
   actions: {
-    showPropertyValues(property) {
+    showProperty1Values(property) {
       var id = property.id;
 
       var prop = null;
@@ -38,7 +38,20 @@ export default Ember.Controller.extend({
       });
 
       this.set('S1Property', prop);
-      console.log(prop);
+    },
+	
+	showProperty2Values(property) {
+      var id = property.id;
+
+      var prop = null;
+
+      this.get('S2Entity').get('properties').forEach(function (proper) {
+        if (proper.id === id) {
+          prop = proper;
+        }
+      });
+
+      this.set('S2Property', prop);
     }
   }
 });
