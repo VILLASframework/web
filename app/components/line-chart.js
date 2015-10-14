@@ -23,45 +23,73 @@ export default Ember.Component.extend({
     this._drawPlot();
   },
 
-  _drawPlot: function() {
+	_drawPlot: function() {
     var element = this.get('element');
     if (element && element.id) {
-      if (this.data && this.data.length > 0) {
-        var firstTimestamp = this.data[0][0];
-        var lastTimestamp = this.data[this.data.length - 1][0];
-
-        var diff = lastTimestamp - firstTimestamp;
-        var diffValue = this.xaxisLength * 1000;
-
-        if (diff > diffValue) {
-          firstTimestamp = lastTimestamp - diffValue;
-        } else {
-          lastTimestamp = +firstTimestamp + +diffValue;
-        }
-
-        $.plot('#' + element.id, [
-			{
-				data: this.data,
-				color: "rgb(51, 102, 204)"
-        	}
-		], {
-          xaxis: {
-            mode: 'time',
-            timeformat: '%M:%S',
-            min: firstTimestamp,
-            max: lastTimestamp
-          }
-        });
-      } else {
-        // display empty chart
-        $.plot('#' + element.id, [[]], {
-          xaxis: {
-            show: false
-          },
-          yaxis: {
-            show: false
-          }
-        });
+      if (this.data) {
+			  var values = this.data.get('values');
+			  
+			  if (values.length > 0) {
+				  // get first and last time stamp for plot
+					var firstTimestamp = values[0][0];
+			  	var lastTimestamp = values[values.length - 1][0];
+	
+					var diff = lastTimestamp - firstTimestamp;
+					var diffValue = this.xaxisLength * 1000;
+					
+					if (diff > diffValue) {
+					  firstTimestamp = lastTimestamp - diffValue;
+					} else {
+					  lastTimestamp = +firstTimestamp + +diffValue;
+					}
+					
+					// generate plot options
+					var options = {
+						series: {
+							lines: {
+								show: true,
+								lineWidth: 1
+							},
+							shadowSize: 0
+						},
+						xaxis: {
+				    	mode: 'time',
+				    	timeformat: '%M:%S',
+				    	min: firstTimestamp,
+				    	max: lastTimestamp
+						},
+						yaxis: {
+							
+						}
+					}
+					
+					// set y axis scale
+					if (this.data.get('minValue')) {
+						options.yaxis.min = this.data.get('minValue');
+					}
+					
+					if (this.data.get('maxValue')) {
+						options.yaxis.max = this.data.get('maxValue');
+					}
+					
+					// draw plot
+					$.plot('#' + element.id, [
+						{
+							data: values,
+							color: "rgb(51, 153, 255)"
+						}
+						], options);
+	      } else {
+	        // display empty chart
+	        $.plot('#' + element.id, [[]], {
+	          xaxis: {
+	            show: false
+	          },
+	          yaxis: {
+	            show: false
+	          }
+	        });
+				}
       }
     }
 

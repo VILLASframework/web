@@ -83,12 +83,18 @@ export default DS.RESTSerializer.extend({
                 // find metadata
                 var timestamp = 0;
 				var source = "";
+				var minValue;
+				var maxValue;
 
                 attribute.metadatas.forEach(function(metadata) {
                   if (metadata.name === 'timestamp') {
                     timestamp = Date.parse(metadata.value);
                   } else if (metadata.name === 'source') {
-					  source = metadata.value;
+					  				source = metadata.value;
+                  } else if (metadata.name === 'min') {
+					  				minValue = metadata.value;
+                  } else if (metadata.name === 'max') {
+					  				maxValue = metadata.value;
                   }
                 });
 
@@ -106,7 +112,9 @@ export default DS.RESTSerializer.extend({
                     type: attribute.type,
                     timestamp: timestamp,
                     visible: false,
-					source: source,
+										source: source,
+										minValue: minValue,
+										maxValue: maxValue,
                     values: []
                   },
                   relationships: {

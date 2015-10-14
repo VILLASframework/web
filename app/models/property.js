@@ -7,6 +7,8 @@ export default DS.Model.extend({
   timestamp: DS.attr('date'),
   visible: DS.attr('boolean', { defaultValue: false }),
   source: DS.attr('string'),
+  minValue: DS.attr('number'),
+  maxValue: DS.attr('number'),
   entity: DS.belongsTo('entity'),
   category: DS.belongsTo('category')
 });
