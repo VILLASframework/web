@@ -9,6 +9,11 @@ export default Ember.Component.extend({
 		return properties.objectAt(0);
 	}.property('entity'),
 	
+	entityAvailable: function() {
+		var properties = this.get('entity.properties');
+		return (properties.get('length') > 0);
+	}.property('entity'),
+	
 	actions: {
 		showPropertyValues(_prop) {
 			this.set('visibleProperty', _prop);
