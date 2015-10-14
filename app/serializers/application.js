@@ -115,7 +115,10 @@ export default DS.RESTSerializer.extend({
                 if (attribute.value) {
                   if ($.isArray(attribute.value)) {
                     attribute.value.forEach(function (value) {
-                      property.attributes.values.push(value);
+						// fix for second to millisecond
+						value[0] = +value[0] * 1000;
+						
+                    	property.attributes.values.push(value);
                     });
                   } else {
                     property.attributes.values.push([timestamp, attribute.value]);
