@@ -10,8 +10,12 @@ export default Ember.Component.extend({
 	}.property('entity'),
 	
 	entityAvailable: function() {
-		var properties = this.get('entity.properties');
-		return (properties.get('length') > 0);
+		if (this.get('entity')) {
+			var properties = this.get('entity.properties');
+			return (properties.get('length') > 0);
+		} else {
+			return false;
+		}
 	}.property('entity'),
 	
 	actions: {
