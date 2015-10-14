@@ -26,16 +26,32 @@ body {
 
 header {
 	color: #fff;
-	background-color: #8080C9;
+	background-color: #3B843C;
 
-	padding: 10px 0 10px 0;
+	/*padding: 10px 0 10px 0;*/
+	
+	height: 100px;
+}
 
+header #title {
 	font-size: 60px;
 	font-weight: 100;
 	text-align: center;
 	text-rendering: optimizeLegibility;
 	-webkit-text-rendering: optimizeLegiblity;
 	-moz-text-rendering: optimizeLegibitliy;
+	
+	padding: 10px 0 10px 20px;
+	
+	float: left;
+}
+
+header #logos {
+	height: 100px;
+	
+	padding-top: 10px;
+	
+	float: right;
 }
 
 footer {
@@ -95,8 +111,8 @@ footer {
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
 				0 25px 50px 0 rgba(0, 0, 0, 0.1);
 	
-	margin: 10px;
-	padding: 10px;
+	margin: 20px;
+	padding: 20px;
 	
 	height: 100%;
 }
@@ -150,4 +166,19 @@ footer {
 .svg-image {
 	width: 100%;
 	height: auto;
+}
+
+.svg-logo {
+	width: auto;
+	height: 80px;
+	
+	padding-right: 30px;
+	
+	float: left;
+}
+
+#rwth-logo {
+	margin-top: 15px;
+	
+	height: 50px !important;
 }
