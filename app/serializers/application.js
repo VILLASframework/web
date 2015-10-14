@@ -94,7 +94,6 @@ export default DS.RESTSerializer.extend({
 
                 if (timestamp === 0) {
                   timestamp = (new Date()).getTime();
-				  console.log('Use local timestamp');
                 }
 				
 

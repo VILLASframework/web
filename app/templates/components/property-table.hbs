@@ -1,8 +1,16 @@
 <tr>
-  <th>Name</th>
+  <th>Attributes</th>
 </tr>
 {{#each model.properties as |property|}}
   <tr>
-    <td><a href="#" {{action "propertyClicked" property}}>{{property.name}}</a></td>
+    <td>
+		<a href="#" {{action "propertyClicked" property}}>
+			{{#if property.visible}}
+				<strong>{{property.name}}</strong>
+			{{else}}
+				{{property.name}}
+			{{/if}}	
+		</a>
+	</td>
   </tr>
 {{/each}}

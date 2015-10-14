@@ -39,7 +39,12 @@ export default Ember.Component.extend({
           lastTimestamp = +firstTimestamp + +diffValue;
         }
 
-        $.plot('#' + element.id, [this.data], {
+        $.plot('#' + element.id, [
+			{
+				data: this.data,
+				color: "rgb(51, 102, 204)"
+        	}
+		], {
           xaxis: {
             mode: 'time',
             timeformat: '%M:%S',
