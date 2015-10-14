@@ -50,10 +50,6 @@ footer {
 	text-align: center;
 }
 
-h2 {
-	text-align: center;
-}
-
 #main {
 	
 }
@@ -69,17 +65,12 @@ h2 {
 	border-collapse: collapse;
 }
 
-#S1-image {
-	height: auto;
-}
-
 .column-left {
-	width: 150px !important;
+	
 }
 
 .column-right {
-	padding-top: 25px;
-	padding-bottom: 40px;
+	padding: 25px 5px 25px 10px;
 	
 	width: 100%;
 	height: 100%;
@@ -111,12 +102,15 @@ h2 {
 }
 
 .layout-page h2 {
+	text-align: center;
+	
+	margin: 0;
 	margin-bottom: 10px;
 }
 
 .line-chart {
-	width: 400px;
-	height: 400px;
+	width: 100%;
+	height: 100%;
 }
 
 .data-table {
@@ -129,6 +123,8 @@ h2 {
 
 	border: 1px solid #999;
 	border-collapse: collapse;
+	
+	vertical-align: top;
 }
 
 .data-table th {
