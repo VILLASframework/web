@@ -3,8 +3,11 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   tagName: 'div',
   classNames: ['line-chart'],
-  xaxisLength: 60,
+	attributeBindings: ['style'],
+  xaxisLength: 300,
   updateTime: 100,
+	height: '100%',
+	useLabel: true,
 
   init: function() {
     this._super();
@@ -22,6 +25,10 @@ export default Ember.Component.extend({
   dataDidChange: function() {
     this._drawPlot();
   },
+	
+	style: function() {
+		return "height: " + this.get('height') + ";";
+	}.property('height'),
 
 	_drawPlot: function() {
     var element = this.get('element');
@@ -72,13 +79,18 @@ export default Ember.Component.extend({
 						options.yaxis.max = this.data.get('maxValue');
 					}
 					
+					// setup plot data
+					var plotData = {
+						data: values,
+						color: "rgb(51, 153, 255)"
+					}
+					
+					if (this.get('useLabel')) {
+						plotData.label = this.data.get('name') + " [" + this.data.get('type') + "]";
+					}
+					
 					// draw plot
-					$.plot('#' + element.id, [
-						{
-							data: values,
-							color: "rgb(51, 153, 255)"
-						}
-						], options);
+					$.plot('#' + element.id, [plotData], options);
 	      } else {
 	        // display empty chart
 	        $.plot('#' + element.id, [[]], {

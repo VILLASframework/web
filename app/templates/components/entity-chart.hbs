@@ -6,25 +6,16 @@
 			{{/if}}
 		</td>
 		<td valign="top" width="100%" height="100%" class="chart-cell">	
+			<h2>{{entityName}}</h2>
+		
 			{{#if entityAvailable}}
-				<h3>{{entityName}}</h3>
-			
-				{{#if visibleProperty}}
-					<h4>{{visibleProperty.name}} [{{visibleProperty.type}}]</h4>
-				{{/if}}
-				
-				{{line-chart data=visibleProperty}}
+				{{line-chart data=visibleProperty height="95%"}}
 				
 				<!-- {{#if visibleProperty}}
 					<h4 class="label-source">Source: {{visibleProperty.source}}</h4>
 				{{/if}} -->
 			{{else}}
-				<h3>
-					{{entityName}} 
-					<br />
-					<br />
-					Data not available
-				</h3>
+				<h3>Data not available</h3>
 			{{/if}}
 		</td>
 	</tr>

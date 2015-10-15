@@ -128,7 +128,9 @@ footer {
 }
 
 h2 {
-	font-size: 2em;
+	font-size: 1.2em;
+	
+	text-align: left;
 }
 
 h3 {
@@ -137,6 +139,10 @@ h3 {
 
 h4 {
 	font-size: 0.8em;
+}
+
+p {
+	font-size: 0.75em;
 }
 
 /*
@@ -172,11 +178,15 @@ h4 {
 	padding: 20px;
 }
 
-.layout-page h3 {
+.layout-page h2 {
 	text-align: center;
 	
 	margin: 0;
 	margin-bottom: 5px;
+}
+
+.layout-page h3 {
+	text-align: center;
 }
 
 .page-grid {
