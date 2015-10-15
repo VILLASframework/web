@@ -2,19 +2,25 @@
 	<table class="grid">
 		<tr height="50%">
 			<td colspan="2" style="padding-top: 20px;">
-				<div class="layout-page" width="66%">
+				<div class="layout-page" id="simulation-page" width="66%" height="100%">
 					<img src={{"assets/images/TS_DS_grid_withSimulators.svg"}} class="svg-image" />
 				</div>
 			</td>
 			<td rowspan="2" width="33%" style="padding-top: 20px; padding-bottom: 20px">
-				<div class="layout-page">
-					<h2>Consumer – JRC Petten</h2>
-					<p>
-						Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.<br />
-	
-						Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet,
-					</p>
-					{{line-chart data=S1Freq575 height="20%" useLabel=false}}
+				<div class="layout-page" id="consumer-page">
+					<h1>Consumer – JRC Petten</h1>
+					
+					<h2>Distribution grid: consumption and PV generation</h2>
+					{{static-chart height="35%"}}
+					
+					<h2>Voltage203937 [pu]</h2>
+					{{line-chart data=S2Voltage203937 height="15%" useLabel=false}}
+					
+					<h2>Flow1551412_204871 [MW]</h2>
+					{{line-chart data=S2Flow1551412_204871 height="15%" useLabel=false}}
+					
+					<h2>Frequency at the substation bus [Hz]</h2>
+					{{line-chart data=S1Freq575 height="15%" useLabel=false}}
 				</div>
 			</td>
 		</tr>

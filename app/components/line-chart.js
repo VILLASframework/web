@@ -66,7 +66,7 @@ export default Ember.Component.extend({
 				    	max: lastTimestamp
 						},
 						yaxis: {
-							
+							tickDecimals: 3
 						}
 					}
 					

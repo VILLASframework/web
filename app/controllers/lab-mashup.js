@@ -14,5 +14,19 @@ export default Ember.Controller.extend({
 		if (entity) {
 			return entity.get('properties').findBy('name', 'Freq_575');
 		}
+	}.property('model.[]'),
+	
+	S2Voltage203937: function() {
+		var entity = this.model.findBy('id', 'S2_ElectricalGrid');
+		if (entity) {
+			return entity.get('properties').findBy('name', 'Voltage203937');
+		}
+	}.property('model.[]'),
+	
+	S2Flow1551412_204871: function() {
+		var entity = this.model.findBy('id', 'S2_ElectricalGrid');
+		if (entity) {
+			return entity.get('properties').findBy('name', 'Flow1551412_204871');
+		}
 	}.property('model.[]')
 });
