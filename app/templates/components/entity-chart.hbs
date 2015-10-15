@@ -1,32 +1,26 @@
-
-<table height="100%">
-	{{#if entityName}}
-		<tr>
-			<th colspan="2">
-					<h2>{{entityName}}</h2>
-			</th>
-		</tr>
-	{{/if}}
+<table class="page-grid">
 	<tr>
-		{{#if entityAvailable}}
-			<td class="column-left" valign="top">
-				{{property-table model=entity showProperty="showPropertyValues"}}
-			</td>
-			<td class="column-right">
-				{{#if visibleProperty}}
+		<td valign="top" class="property-cell">
+			{{property-table model=entity showProperty="showPropertyValues"}}
+		</td>
+		<td valign="top" width="100%" height="100%" class="chart-cell">
+			<!-- <h2>{{entityName}}</h2> -->
+				
+			{{#if entityAvailable}}
+				<!-- {{#if visibleProperty}}
 					<h3>{{visibleProperty.name}}</h3>
-				{{/if}}
+				{{/if}} -->
 				
 				{{line-chart data=visibleProperty}}
 				
-				{{#if visibleProperty}}
+				<!-- {{#if visibleProperty}}
 					<h4 class="label-source">Source: {{visibleProperty.source}}</h4>
 					<h4 class="label-type">{{visibleProperty.type}}</h4>
-				{{/if}}
-			</td>
-		{{else}}
-			<h3>Entity has no attributes</h3>
-		{{/if}}
+				{{/if}} -->
+			{{else}}
+				<h3>Entity has no attributes</h3>
+			{{/if}}
+		</td>
 	</tr>
 </table>
 

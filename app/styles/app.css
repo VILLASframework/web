@@ -1,38 +1,70 @@
 @import "normalize.css";
 
+/*
+ * Skeleton
+ */
 html, body {
 	margin: 0;
 	padding: 0;
 }
 
-body {
-	background: #eee;
+.ember-application {
+	width: 100%;
+	height: 100%;
+	
+	top: 0;
+	left: 0;
+	
+	position: absolute;
+	overflow: hidden;
+	
+	background: #6EA2B0;
 	color: #4d4d4d;
 
 	margin: 0 auto;
 
-	font: 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	/*font: 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;*/
+	font: 1.6em Helvetica;
 	font-weight: 300;
 	font-smoothing: antialiased;
 	-webkit-font-smoothing: antialiased;
 	-moz-font-smoothing: antialiased;
 }
 
+.row, .col {
+	overflow: hidden;
+	position: absolute;
+}
+
+.row {
+	left: 0;
+	right: 0;
+}
+
+.col {
+	top: 0;
+	bottom: 0;
+}
+
 .hidden {
 	display: none;
 }
 
+/*
+ * Application
+ */
 #lapMashupApp {
 
 }
 
 header {
-	color: #fff;
-	background-color: #3B843C;
+	color: #103B7D;
+	background-color: #fff;
 
-	/*padding: 10px 0 10px 0;*/
-	
 	height: 100px;
+	top: 0;
+	
+	border-bottom: 3px solid #bbb;
 }
 
 header #title {
@@ -43,7 +75,7 @@ header #title {
 	-webkit-text-rendering: optimizeLegiblity;
 	-moz-text-rendering: optimizeLegibitliy;
 	
-	padding: 10px 0 10px 20px;
+	padding: 20px 0 20px 50px;
 	
 	float: left;
 }
@@ -57,109 +89,26 @@ header #logos {
 }
 
 footer {
-	color: #777;
+	color: #555;
 
-	padding-top: 10px;
+	height: 25px;
+	bottom: 0;
 
-	width: 100%;
-
-	font-size: 13px;
-	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+	font-size: 1em;
+	/*text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);*/
 	text-align: center;
 }
 
 #main {
+	top: 100px;
+	bottom: 25px;
 	
-}
-
-.grid {
-	width: 100%;
-	height: 100%;
-	margin: 0;
-	padding: 0;
-
-	border: 0;
-	
-	border-collapse: collapse;
-}
-
-.column-left {
-	
-}
-
-.column-right {
-	padding: 25px 5px 25px 10px;
-	
-	width: 100%;
-	height: 100%;
-}
-
-.column-right h3 {
-	text-align: center;
-	
-	margin: 0;
-	padding: 0;
-}
-
-.layout-page {
-	background-color: #fff;
-	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
-				0 25px 50px 0 rgba(0, 0, 0, 0.1);
-	
-	margin: 20px;
-	padding: 20px;
-	
-	height: 100%;
-}
-
-.layout-page h2 {
-	text-align: center;
-	
-	margin: 0;
-	margin-bottom: 10px;
-}
-
-.line-chart {
-	width: 100%;
-	height: 100%;
-}
-
-.data-table {
-	background: #eee;
-
-	margin: 0;
-	padding: 0;
-
-	width: 100%;
-
-	border: 1px solid #999;
-	border-collapse: collapse;
-	
-	vertical-align: top;
-}
-
-.data-table th {
-	background: #ddd;
-
-	border: 1px solid #999;
-	border-collapse: collapse;
-
-	padding: 5px;
-
-	font-size: 16px;
-}
-
-.data-table td {
-	border: 1px solid #999;
-	border-collapse: collapse;
-
-	padding: 5px;
-
-	font-size: 14px;
+	left: 20px;
+	right: 20px;
 }
 
 .svg-image {
-	width: 100%;
+	width: 90%;
 	height: auto;
 }
 
@@ -176,6 +125,127 @@ footer {
 	margin-top: 15px;
 	
 	height: 50px !important;
+}
+
+h2 {
+	font-size: 2em;
+}
+
+h3 {
+	font-size: 1.8em;
+}
+
+/*
+ * Layout
+ */
+.grid {
+	width: 100%;
+	height: 100%;
+	
+	margin: 0;
+	/*padding: 0;*/
+	
+	padding-top: 10px;
+	padding-bottom: 10px;
+
+	border: 0;
+	
+	border-collapse: collapse;
+}
+
+.grid td {
+	/*padding: 20px 10px 20px 10px;*/
+	padding: 10px;
+}
+
+.layout-page {
+	background-color: #f2f2f2;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
+				0 9px 18px 0 rgba(0, 0, 0, 0.1);
+	
+	height: 100%;
+	
+	padding: 20px;
+}
+
+.layout-page h2 {
+	text-align: center;
+	
+	margin: 0;
+	margin-bottom: 10px;
+}
+
+.page-grid {
+	width: 100%;
+	height: 100%;
+	
+	max-width: 100%;
+	max-height: 100%;
+	
+	padding: 0;
+	margin: 0;
+}
+
+.page-grid tr {
+	padding: 0;
+	margin: 0;
+}
+
+.page-grid td {
+	padding: 0;
+	margin: 0;
+}
+
+/*
+ * Content
+ */
+
+.property-cell {
+	
+}
+ 
+.chart-cell {
+	padding-left: 10px;
+}
+
+/*
+ * Components
+ */
+.line-chart {
+	width: 100%;
+	height: 100%;
+}
+
+.data-table {
+	background: #eee;
+
+	margin: 0;
+	padding: 0;
+
+	border: 1px solid #999;
+	border-collapse: collapse;
+	
+	vertical-align: top;
+}
+
+.data-table th {
+	background: #ddd;
+
+	border: 1px solid #999;
+	border-collapse: collapse;
+
+	padding: 2px 4px;
+
+	font-size: 70%;
+}
+
+.data-table td {
+	border: 1px solid #999;
+	border-collapse: collapse;
+
+	padding: 2px 4px;
+
+	font-size: 60%;
 }
 
 .label-source {
