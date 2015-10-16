@@ -1,7 +1,7 @@
 {
   "name": "lab-mashup",
-  "version": "0.0.0",
-  "description": "Small description for lab-mashup goes here",
+  "version": "0.1.0",
+  "description": "Lab Mashup Visualization",
   "private": true,
   "directories": {
     "doc": "doc",
