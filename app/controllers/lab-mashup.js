@@ -1,6 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
+  state: 1,
+
   dataSetOne: [
     {
       label: 'Total consumption [MW]',
@@ -52,10 +54,12 @@ export default Ember.Controller.extend({
 		}
 	}.property('model.[]'),
 
-	S2Voltage203937: function() {
-		var entity = this.model.findBy('id', 'S2_ElectricalGrid');
+	Voltage203937: function() {
+		var entity = this.model.findBy('id', 'S1_ElectricalGrid');
 		if (entity) {
 			return entity.get('properties').findBy('name', 'Voltage203937');
+		} else {
+			return {};
 		}
 	}.property('model.[]'),
 
@@ -66,12 +70,22 @@ export default Ember.Controller.extend({
 		}
 	}.property('model.[]'),
 
+  initState: function() {
+    return this.get('state') === 1;
+  }.property('state'),
+
+  eventState: function() {
+    return this.get('state') === 2;
+  }.property('state'),
+
   actions: {
     resetData: function() {
+      this.set('state', 1);
       this.set('dataSet', this.get('dataSetOne'));
     },
 
     eventData: function() {
+      this.set('state', 2);
       this.set('dataSet', this.get('dataSetTwo'));
     }
   }

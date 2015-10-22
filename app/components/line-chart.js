@@ -33,7 +33,7 @@ export default Ember.Component.extend({
 	_drawPlot: function() {
     var element = this.get('element');
     if (element && element.id) {
-      if (this.data) {
+      if (this.data && this.data.get('values')) {
 			  var values = this.data.get('values');
 			  
 			  if (values.length > 0) {

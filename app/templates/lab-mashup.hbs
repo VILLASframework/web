@@ -1,25 +1,122 @@
 <section class="row" id="main">
 	<table class="grid">
-		<tr height="50%">
-			<td width="50%" style="padding-top: 20px;">
+		<tr>
+			<td style="padding-top: 20px;">
 				<div class="layout-page">
+				  <table class="page-grid">
+				    <tr>
+				      <td style="width: 25%">
+					<h3>
+					  Italy - Piedmont region
+					  <br />
+					  380-220kV transmission system
+					</h3>
+					{{#if initState}}
+					  <img src={{"assets/images/TS_section/TSmap_m1.gif"}} id="TS-image" />
+					{{/if}}
+					{{#if eventState}}
+					  <img src={{"assets/images/TS_section/TSmap_m2.gif"}} id="TS-image" />
+					{{/if}}
+				      </td>
+				      <td style="width: 50%">
+					<h2>Transmission system simulation</h2>
+				      </td>
+				      <td style="width: 25%">
+					<img src={{"assets/images/TS_section/TS_fig1.svg"}} class="svg-image" />
+				      </td>
+				    </tr>
+				  </table>
 				</div>
 			</td>
-			<td width="50%" style="padding-top: 20px;">
+			<td style="padding-top: 20px;">
 				<div class="layout-page">
-					<button {{action 'resetData'}}>Reset</button>
-					<button {{action 'eventData'}}>Event</button>
+					<table class="page-grid">
+					  <tr style="height: 25%">
+					    <td style="width: 25%">
+					    </td>
+					    <td style="width: 50%" colspan="2">
+					      <h2>Control Center</h2>
+					    </td>
+					    <td style="width: 25%">
+					      <img src={{"assets/images/ControlCenter_section/CS_fig1.svg"}} class="svg-image" />
+					    </td>
+					  </tr>
+					  <tr style="height: 75%">
+					    <td style="width: 50%" colspan="2">
+					      <h3>
+						Distribution grid monitoring
+						<br />
+						Voltage measurement
+					      </h3>
+
+					      {{line-chart data=Voltage203937 height="90%"}}
+					    </td>
+					    <td style="width: 50%" colspan="2">
+					      <button {{action 'resetData'}} disabled={{initState}}>Reset</button>
+					      <button {{action 'eventData'}} disabled={{eventState}}>Event</button>
+					    </td>
+					  </tr>
+					</table>
 				</div>
 			</td>
 		</tr>
-		<tr height="50%">
-			<td width="50%" style="padding-bottom: 20px;">
+		<tr>
+			<td style="padding-bottom: 20px;">
 				<div class="layout-page">
+				  <table class="page-grid">
+				    <tr>
+				      <td style="width: 40%">
+					<h3>
+					  Italy - Turin
+					  <br />
+					  STURA substation 220/22kV
+					  <br />
+					  22kV distribution system
+					</h3>
+					{{#if initState}}
+					  <img src={{"assets/images/DS_section/DSmap_m1.gif"}} id="DS-image" />
+					{{/if}}
+					{{#if eventState}}
+					  <img src={{"assets/images/DS_section/DSmap_m2.gif"}} id="DS-image" />
+					{{/if}}
+				      </td>
+				      <td style="width: 35%">
+					<h2>Distribution system simulation</h2>
+				      </td>
+				      <td style="width: 25%">
+					<img src={{"assets/images/DS_section/DS_fig1.svg"}} class="svg-image" />
+				      </td>
+				    </tr>
+				  </table>
+				  
 				</div>
 			</td>
-			<td width="50%" style="padding-bottom: 20px;">
+			<td style="padding-bottom: 20px;">
 				<div class="layout-page">
-					{{static-chart data=dataSet options=dataOptions}}
+					<table class="page-grid">
+					  <tr style="height: 25%">
+					    <td style="width: 25%">
+					    </td>
+					    <td style="width: 50%" colspan="2">
+					      <h2>Prosumer behavior</h2>
+					    </td>
+					    <td style="width: 25%">
+					      <img src={{"assets/images/Prosumer_section/Cnsmr_fig1.svg"}} class="svg-image" />
+					    </td>
+					  </tr>
+					  <tr style="height: 75%">
+					    <td style="width: 50%" colspan="2">
+					      <h3>
+						Prosumer: Consumption and generation profiles
+					      </h3>
+
+					      {{line-chart data=LoadProfile height="40%"}}
+					    </td>
+					    <td style="width: 50%" colspan="2">
+					      <img src={{"assets/images/Prosumer_section/Cnsmr_fig2.svg"}} class="svg-image" />
+					    </td>
+					  </tr>
+					</table>
 				</div>
 			</td>
 		</tr>
