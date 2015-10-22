@@ -16,7 +16,7 @@
 					  <img src={{"assets/images/TS_section/TSmap_m2.gif"}} id="TS-image" />
 					{{/if}}
 				      </td>
-				      <td style="width: 50%">
+				      <td style="width: 50%; padding-left: 20px">
 					<h2>Transmission system simulation</h2>
 
 					<p>
@@ -34,6 +34,8 @@
 					</p>
 
 					{{d3-gauge label="Freq" value=Freq575Value minValue=49 maxValue=51 minorTicks=4 size=150 greenZones=freq575GreenZones yellowZones=freq575YellowZones}}
+
+					{{d3-alarm value=Freq575Value alarmZones=freq575AlarmZones}}
 				      </td>
 				      <td style="width: 25%">
 					<img src={{"assets/images/TS_section/TS_fig1.svg"}} class="svg-image" style="float: right" />
@@ -90,7 +92,7 @@
 					  <img src={{"assets/images/DS_section/DSmap_m2.gif"}} id="DS-image" />
 					{{/if}}
 				      </td>
-				      <td style="width: 35%">
+				      <td style="width: 35%; padding-left: 20px">
 					<h2>Distribution system simulation</h2>
 
 					<p>
@@ -133,7 +135,7 @@
 						Prosumer: Consumption and generation profiles
 					      </h3>
 
-					      {{line-chart data=LoadGenProfiles height="90%" minValue=0 maxValue=25}}
+					      {{line-chart data=LoadGenProfiles height="90%" minValue=0 maxValue=25 xaxisLength=120}}
 					    </td>
 					    <td style="width: 50%;" colspan="2">
 					      {{#if initState}}

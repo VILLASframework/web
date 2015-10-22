@@ -3,6 +3,7 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
   freq575GreenZones: [{from: 49.5, to: 50.5}],
   freq575YellowZones: [{from: 49, to: 49.5}, {from: 50.5, to: 51}],
+  freq575AlarmZones: [{from: 49, to: 49.5}, {from: 50.5, to: 51}],
 
   init: function() {
     this.set('state', 1);

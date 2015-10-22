@@ -10,12 +10,12 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="821.06445"
-   height="409.59793"
+   width="1205.673"
+   height="403.98267"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.0 r9654"
-   sodipodi:docname="TS_fig1.svg">
+   sodipodi:docname="DS_fig1.svg">
   <defs
      id="defs4">
     <clipPath
@@ -77,20 +77,27 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.50000002"
-     inkscape:cx="464.74347"
-     inkscape:cy="217.95659"
+     inkscape:cx="949.75199"
+     inkscape:cy="-64.890973"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1600"
-     inkscape:window-height="838"
+     inkscape:window-width="1920"
+     inkscape:window-height="1018"
      inkscape:window-x="-8"
-     inkscape:window-y="-8"
+     inkscape:window-y="1072"
      inkscape:window-maximized="1"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
-     fit-margin-bottom="0" />
+     fit-margin-bottom="0"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       orientation="-0.70710678,0.70710678"
+       position="-709.09,706.51202"
+       id="guide3002" />
+  </sodipodi:namedview>
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -99,7 +106,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -107,28 +114,21 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(3602.3059,7763.5024)">
-    <rect
-       style="color:#000000;fill:none;stroke:none;stroke-width:4.96899986;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="rect2985-1-2-5-1-1-0"
-       width="821.06445"
-       height="409.59793"
-       x="-3602.3059"
-       y="-7763.5024" />
+     transform="translate(3917.1064,7952.2292)">
     <text
        id="text3415-6"
-       x="-3366.322"
-       y="-7641.2959"
+       x="-3502.856"
+       y="-7853.0674"
        style="font-size:39.0313797px;fill:#aa0000;stroke:none">
       <tspan
          style="font-size:85px;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#aa0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-         x="-3366.322"
+         x="-3502.856"
          sodipodi:role="line"
-         y="-7641.2959"
-         id="tspan3514">PoliTo</tspan>
+         y="-7853.0674"
+         id="tspan3514">Politecnico di Torino</tspan>
     </text>
     <g
-       transform="matrix(0.67692308,0,0,0.67692308,-3608.2651,-7845.1182)"
+       transform="matrix(1.0563462,0,0,1.0563462,-3864.9468,-8264.53)"
        id="layer1-0"
        inkscape:label="Ebene 1">
       <image
@@ -141,7 +141,7 @@
     </g>
     <g
        id="g3129-0-8-0"
-       transform="matrix(5.699339,0,0,-5.7824848,-3343.3848,-6530.6159)">
+       transform="matrix(5.6319941,0,0,-5.7141574,-3263.2996,-6738.1306)">
       <g
          id="g3131-7-7"
          clip-path="url(#clipPath3133-3-4-7)">
