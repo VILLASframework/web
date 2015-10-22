@@ -17,7 +17,8 @@
     "Faker": "~3.0.0",
     "bootstrap": "~3.3.2",
     "flot": "*",
-    "normalize.css": "3.0.3"
+    "normalize.css": "3.0.3",
+    "d3": "~3.5.6"
   },
   "resolutions": {
     "ember": "^2.0.0"

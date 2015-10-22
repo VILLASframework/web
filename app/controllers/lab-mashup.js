@@ -2,6 +2,8 @@ import Ember from 'ember';
 
 export default Ember.Controller.extend({
   state: 1,
+  redZone: [{from: 50, to: 60}],
+  yellowZone: [{from: 40, to: 50}],
 
   dataSetOne: [
     {

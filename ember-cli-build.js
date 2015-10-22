@@ -20,6 +20,7 @@ module.exports = function(defaults) {
   // along with the exports of each module as its value.
 
   app.import('bower_components/flot/jquery.flot.time.js');
+  app.import('bower_components/d3/d3.js');
 
   return app.toTree();
 };
