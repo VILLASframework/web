@@ -32,10 +32,13 @@ export default Ember.Component.extend({
     var majorDelta = range / (this.majorTicks - 1);
     var minorDelta = majorDelta / this.minorTicks;
     var midValue = (this.minValue + this.maxValue) / 2;
-    var pointerFontSize = Math.round(this.size / 7);
+    var pointerFontSize = Math.round(this.size / 10);
 
     // create body element
-    var body = d3.select('#' + this.elementId).append("svg:svg");
+    var body = d3.select('#' + this.elementId)
+      .append("svg:svg")
+	.attr("width", this.size)
+	.attr("height", this.size);
     this.set('svgBody', body);
 
     // base circles
@@ -165,7 +168,7 @@ export default Ember.Component.extend({
 
   _redraw: function(value, transitionDuration) {
     var pointerContainer = this.svgBody.select(".pointerContainer");
-    pointerContainer.selectAll("text").text(Math.round(value));
+    pointerContainer.selectAll("text").text(Math.floor(value * 100) / 100);
 
     var pointer = pointerContainer.selectAll("path");
     var _this = this;

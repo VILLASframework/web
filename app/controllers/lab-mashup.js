@@ -45,8 +45,6 @@ export default Ember.Controller.extend({
   LoadGenProfiles: function() {
     var entity = this.model.findBy('id', 'S1_ElectricalGrid');
     if (entity) {
-      console.log(entity.get('properties').findBy('name', 'LoadProfile'));
-
       return [
 	{
 	  label: 'Total consumption [MW]',

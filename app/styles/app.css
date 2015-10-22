@@ -24,7 +24,7 @@ html, body {
 	margin: 0 auto;
 
 	/*font: 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;*/
-	font: 1.6em Helvetica;
+	font: 1.7em Helvetica;
 	font-weight: 300;
 	font-smoothing: antialiased;
 	-webkit-font-smoothing: antialiased;
@@ -108,7 +108,7 @@ footer {
 }
 
 .svg-image {
-	width: 75%;
+	width: 120%;
 	height: auto;
 }
 
@@ -138,20 +138,24 @@ footer {
 }
 
 h1 {
-	font-size: 1.4em;
+	font-size: 1.5em;
 	
 	margin: 0;
 	padding: 0;
 }
 
 h2 {
-	font-size: 1.2em;
+	font-size: 1.3em;
+	font-weight: bold;
 	
 	text-align: left;
+
+  color: #103B7D;
 }
 
 h3 {
-	font-size: 0.9em;
+	font-size: 0.95em;
+	font-weight: bold;
 }
 
 h4 {
@@ -159,7 +163,19 @@ h4 {
 }
 
 p {
-	font-size: 0.75em;
+	font-size: 0.85em;
+}
+
+.gauge {
+  padding-left: 20px;
+  padding-top: 0px;
+
+  float: left;
+}
+
+.alarm {
+  float: right;
+  padding-left: 20px;
 }
 
 /*

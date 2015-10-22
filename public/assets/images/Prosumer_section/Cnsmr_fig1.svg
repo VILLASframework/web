@@ -10,8 +10,8 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="1143.494"
-   height="510.04965"
+   width="1547.9999"
+   height="624"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.0 r9654"
@@ -55,9 +55,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="727.25376"
-     inkscape:cy="271.96058"
+     inkscape:zoom="0.5"
+     inkscape:cx="495.43179"
+     inkscape:cy="-11.108901"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -86,7 +86,7 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(4131.3406,8043.2637)">
+     transform="translate(4337.3403,8103.2139)">
     <g
        transform="matrix(1.1812552,0,0,1.1812552,-3211.6224,-8155.7077)"
        id="layer1-2"
@@ -633,7 +633,7 @@
          x="-3570.4153"
          sodipodi:role="line"
          y="-7981.3813"
-         id="tspan3514">JOINT RESEARCH CENTRE</tspan>
+         id="tspan3514">Joint Research Centre</tspan>
       <tspan
          style="font-size:85px;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#aa0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
          x="-3570.4153"
@@ -649,5 +649,12 @@
        preserveAspectRatio="none"
        height="405.16147"
        width="343.85413" />
+    <rect
+       style="color:#000000;fill:none;stroke:none;stroke-width:4.96899986;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3076"
+       width="1547.9999"
+       height="624"
+       x="-4337.3403"
+       y="-8103.2139" />
   </g>
 </svg>

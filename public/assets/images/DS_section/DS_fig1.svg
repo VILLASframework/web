@@ -10,8 +10,8 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="1205.673"
-   height="403.98267"
+   width="1547.9999"
+   height="624"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.0 r9654"
@@ -77,8 +77,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.50000002"
-     inkscape:cx="949.75199"
-     inkscape:cy="-64.890973"
+     inkscape:cx="1145.752"
+     inkscape:cy="55.108979"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -95,7 +95,7 @@
      inkscape:guide-bbox="true">
     <sodipodi:guide
        orientation="-0.70710678,0.70710678"
-       position="-709.09,706.51202"
+       position="-513.08995,826.51197"
        id="guide3002" />
   </sodipodi:namedview>
   <metadata
@@ -114,7 +114,7 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(3917.1064,7952.2292)">
+     transform="translate(4113.1064,8052.2466)">
     <text
        id="text3415-6"
        x="-3502.856"
@@ -161,5 +161,12 @@
         </g>
       </g>
     </g>
+    <rect
+       style="color:#000000;fill:none;stroke:none;stroke-width:4.96899986;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3076"
+       width="1547.9999"
+       height="624"
+       x="-4113.1064"
+       y="-8052.2466" />
   </g>
 </svg>

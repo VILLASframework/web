@@ -10,8 +10,8 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="1148.582"
-   height="503.63904"
+   width="1547.9999"
+   height="624"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.0 r9654"
@@ -63,9 +63,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.35355341"
-     inkscape:cx="746.32317"
-     inkscape:cy="561.4172"
+     inkscape:zoom="0.70710682"
+     inkscape:cx="1149.2192"
+     inkscape:cy="142.06867"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -94,7 +94,7 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(3848.7837,7765.9067)">
+     transform="translate(4054.2698,7820.3408)">
     <rect
        style="color:#000000;fill:none;stroke:none;stroke-width:4.96899986;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect2985-1-2-5-1-1-0"
@@ -670,7 +670,7 @@
          x="-3287.8584"
          sodipodi:role="line"
          y="-7704.0244"
-         id="tspan3514-1">JOINT RESEARCH CENTRE</tspan>
+         id="tspan3514-1">Joint Research Centre</tspan>
       <tspan
          style="font-size:85px;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#aa0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
          x="-3287.8584"
@@ -678,5 +678,12 @@
          y="-7597.7744"
          id="tspan3111">JRC Ispra</tspan>
     </text>
+    <rect
+       style="color:#000000;fill:none;stroke:none;stroke-width:4.96899986;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3076"
+       width="1547.9999"
+       height="624"
+       x="-4054.2698"
+       y="-7820.3408" />
   </g>
 </svg>

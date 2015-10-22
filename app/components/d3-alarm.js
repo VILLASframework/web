@@ -18,7 +18,7 @@ export default Ember.Component.extend({
     var radius = this.size / 2 * 0.97;
 
     // create body element
-    var body = d3.select('#' + this.elementId).append("svg:svg");
+    var body = d3.select('#' + this.elementId).append("svg:svg").attr("width", this.size).attr("height", this.size);
     this.set('svgBody', body);
 
     // add background
