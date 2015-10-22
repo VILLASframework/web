@@ -11,6 +11,8 @@ export default DS.RESTSerializer.extend({
         json.data.push(item);
       } else if (item.type === 'property') {
         _this._updateProperty(item);
+      } else if (item.type === 'data-file-control') {
+	_this._updateDataFileControl(item);
       }
 
       return true;
@@ -29,6 +31,8 @@ export default DS.RESTSerializer.extend({
         json.data = item;
       } else if (item.type === 'property') {
         _this._updateProperty(item);
+      } else if (item.type === 'data-file-control') {
+	_this._updateDataFileControl(item);
       }
 
       return true;
@@ -47,12 +51,38 @@ export default DS.RESTSerializer.extend({
         json.data.push(item);
       } else if (item.type === 'property') {
         _this._updateProperty(item);
+      } else if (item.type === 'data-file-control') {
+	_this._updateDataFileControl(item);
       }
 
       return true;
     });
 
     return json;
+  },
+
+  serializeIntoHash: function(hash, typeClass, snapshot, options) {
+    hash.contextElements = [
+      {
+	id: snapshot.id,
+	type: 'DataFileControl',
+	isPattern: false,
+	attributes: []
+      }
+    ];
+    hash.updateAction = "APPEND";
+
+    for (var name in snapshot._attributes) {
+      hash.contextElements[0].attributes.push({
+	name: name,
+	value: snapshot._attributes[name]
+      });
+    }
+  },
+
+  modelNameFromPayloadKey: function(payloadKey) {
+    console.log(payloadKey);
+    return this._super(payloadKey);
   },
 
   _normalizePayload: function(payload, handleItem) {
@@ -63,116 +93,139 @@ export default DS.RESTSerializer.extend({
       payload.contextResponses.forEach(function(item) {
         // check if item has context element
         if (item.contextElement) {
-          // create new entity object
-          var entity = {
-            type: 'entity',
-            id: item.contextElement.id,
-            attributes: {
-              type: item.contextElement.type
-            },
-            relationships: {
-              properties: {
-                data: []
-              }
-            }
-          }
-
-          if (item.contextElement.attributes) {
-	    var timestamp = 0;
-
-	    item.contextElement.attributes.forEach(function(attribute) {
-	      if (attribute.name === 'timestamp') {
-		timestamp = attribute.value;
+	  if (item.contextElement.type === 'DataFileControl') {
+	    var dataFileControl = {
+	      type: 'data-file-control',
+	      id: item.contextElement.id,
+	      attributes: {
 	      }
-	    });
+	    };
 
-            item.contextElement.attributes.forEach(function(attribute) {
-              if (attribute.id !== 'timestamp') {
-                // find metadata
-		var source = "";
-		var minValue;
-		var maxValue;
-
-                if (attribute.metadatas) {
-		  attribute.metadatas.forEach(function(metadata) {
-		    if (metadata.name === 'timestamp') {
-		      timestamp = Date.parse(metadata.value);
-		    } else if (metadata.name === 'source') {
-									  source = metadata.value;
-		    } else if (metadata.name === 'min') {
-									  minValue = metadata.value;
-		    } else if (metadata.name === 'max') {
-									  maxValue = metadata.value;
-		    }
-		  });
+	    if (item.contextElement.attributes) {
+	      item.contextElement.attributes.forEach(function(attribute) {
+		if (attribute.name === 'Filename') {
+		  dataFileControl.attributes.Filename = attribute.value;
+		} else if (attribute.name === 'ForceReload') {
+		  dataFileControl.attributes.ForceReload = attribute.value;
+		} else if (attribute.name === 'Status') {
+		  dataFileControl.attributes.Status = attribute.value;
 		}
+	      });
+	    }
 
-                if (timestamp === 0) {
-                  timestamp = (new Date()).getTime();
-                }
+	    handleItem(dataFileControl);
+	  } else {
+	    // create new entity object
+	    var entity = {
+	      type: 'entity',
+	      id: item.contextElement.id,
+	      attributes: {
+		type: item.contextElement.type
+	      },
+	      relationships: {
+		properties: {
+		  data: []
+		}
+	      }
+	    }
 
-                // create property
-                var property = {
-                  type: 'property',
-                  id: 'property_' + propertyIndex++,
-                  attributes: {
-                    name: attribute.name,
-                    type: attribute.type,
-                    timestamp: timestamp,
-                    visible: false,
-		    source: source,
-		    minValue: minValue,
-		    maxValue: maxValue,
-                    values: []
-                  },
-                  relationships: {
-                    entity: {
-                      data: { type: 'entity', id: entity.id }
-                    }
-                  }
-                }
+	    if (item.contextElement.attributes) {
+	      var timestamp = 0;
 
-                // add values
-                if (attribute.value) {
-                  if ($.isArray(attribute.value)) {
-                    attribute.value.forEach(function (value) {
-						// fix for second to millisecond
-						value[0] = +value[0] * 1000;
-						
-                    	property.attributes.values.push(value);
-                    });
-                  } else {
-                    property.attributes.values.push([timestamp, attribute.value]);
-                  }
-                }
+	      item.contextElement.attributes.forEach(function(attribute) {
+		if (attribute.name === 'timestamp') {
+		  timestamp = attribute.value;
+		}
+	      });
 
-                entity.relationships.properties.data.push({ type: 'property', id: property.id });
+	      item.contextElement.attributes.forEach(function(attribute) {
+		if (attribute.name !== 'timestamp') {
+		  // find metadata
+		  var source = "";
+		  var minValue;
+		  var maxValue;
 
-                handleItem(property);
-              } else {
-                var category = {
-                  type: 'category',
-                  id: 'category_' + propertyIndex++,
-                  attributes: {
-                    name: attribute.name,
-                  },
-                  relationships: {
-                    entity: {
-                      data: { type: 'entity', id: entity.id }
-                    }
-                  }
-                }
+		  if (attribute.metadatas) {
+		    attribute.metadatas.forEach(function(metadata) {
+		      if (metadata.name === 'timestamp') {
+			timestamp = Date.parse(metadata.value);
+		      } else if (metadata.name === 'source') {
+									    source = metadata.value;
+		      } else if (metadata.name === 'min') {
+									    minValue = metadata.value;
+		      } else if (metadata.name === 'max') {
+									    maxValue = metadata.value;
+		      }
+		    });
+		  }
 
-                handleItem(category);
-              }
-            });
-          }
+		  if (timestamp === 0) {
+		    timestamp = (new Date()).getTime();
+		  }
 
-          // pass entity to caller function
-          if (handleItem(entity) == false) {
-            // if false returned the caller needs no more entites
-            return;
-          }
+		  // create property
+		  var property = {
+		    type: 'property',
+		    id: 'property_' + propertyIndex++,
+		    attributes: {
+		      name: attribute.name,
+		      type: attribute.type,
+		      timestamp: timestamp,
+		      visible: false,
+		      source: source,
+		      minValue: minValue,
+		      maxValue: maxValue,
+		      values: []
+		    },
+		    relationships: {
+		      entity: {
+			data: { type: 'entity', id: entity.id }
+		      }
+		    }
+		  }
+
+		  // add values
+		  if (attribute.value) {
+		    if ($.isArray(attribute.value)) {
+		      attribute.value.forEach(function (value) {
+						  // fix for second to millisecond
+						  value[0] = +value[0] * 1000;
+						  
+			  property.attributes.values.push(value);
+		      });
+		    } else {
+		      property.attributes.values.push([timestamp, attribute.value]);
+		    }
+		  }
+
+		  entity.relationships.properties.data.push({ type: 'property', id: property.id });
+
+		  handleItem(property);
+		} else {
+		  var category = {
+		    type: 'category',
+		    id: 'category_' + propertyIndex++,
+		    attributes: {
+		      name: attribute.name,
+		    },
+		    relationships: {
+		      entity: {
+			data: { type: 'entity', id: entity.id }
+		      }
+		    }
+		  }
+
+		  handleItem(category);
+		}
+	      });
+	    }
+
+	    // pass entity to caller function
+	    if (handleItem(entity) == false) {
+	      // if false returned the caller needs no more entites
+	      return;
+	    }
+	  }
         }
       });
     }
@@ -191,6 +244,17 @@ export default DS.RESTSerializer.extend({
       }
     } else {
       // add new item
+      this.store.push(item);
+    }
+  },
+
+  _updateDataFileControl: function(item) {
+    var record = this.store.peekRecord('data-file-control', item.id);
+    if (record) {
+      record.set('Filename', item.attributes.Filename);
+      record.set('ForceReload', item.attributes.ForceReload);
+      record.set('Status', item.attributes.Status);
+    } else {
       this.store.push(item);
     }
   }

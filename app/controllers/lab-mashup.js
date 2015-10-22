@@ -2,11 +2,14 @@ import Ember from 'ember';
 
 export default Ember.Controller.extend({
   state: 1,
-  redZone: [{from: 50, to: 60}],
-  yellowZone: [{from: 40, to: 50}],
+  freq575GreenZones: [{from: 49.5, to: 50.5}],
+  freq575YellowZones: [{from: 47.5, to: 49.5}, {from: 50.5, to: 52.5}],
+  freq575RedZones: [{from: 45.0, to: 47.5}, {from: 52.5, to: 55}],
 
   init: function() {
     this.set('dataSet', this.get('dataSetOne'));
+
+    this._updateButtons();
   },
 
   S1Entity: function() {
@@ -41,6 +44,50 @@ export default Ember.Controller.extend({
   eventState: function() {
     return this.get('state') === 2;
   }.property('state'),
+
+  _updateButtons: function() {
+    var control = this.store.peekRecord('data-file-control', 'DataFileControl');
+    var updated = false;
+
+    if (control.get('Filename') === 'm1_S1_ElectricalGrid_data.txt') {
+      if (this.get('state') !== 1) {
+      	his.set('state', 1);
+    	updated = true;
+      }
+    } else {
+      if (this.get('state') !== 2) {
+        this.set('state', 2); 
+	updated = true;
+      }
+    }
+
+    if (control.get('Status') === 'EOF') {
+      if (this.get('state') === 1) {
+	control.set('ForceReload', true);
+      } else {
+	control.set('Filename', 'm1_S1_ElectricalGrid_data.txt');
+      }
+
+      updated = true;
+    }
+
+    if (updated) {
+     control.save();
+    }
+  },
+
+  _updateDataFileControl: function() {
+    var control = this.store.peekRecord('data-file-control', 'DataFileControl');
+
+    if (this.get('state') === 1) {
+      control.set('Filename', 'm1_S1_ElectricalGrid_data.txt');
+    } else {
+      control.set('Filename', 'm2_S1_ElectricalGrid_data.txt');
+    }
+
+    control.set('ForceReload', true);
+    control.save();
+  }.observes('state'),
 
   actions: {
     resetData: function() {

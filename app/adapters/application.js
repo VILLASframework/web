@@ -15,7 +15,12 @@ export default DS.RESTAdapter.extend({
           type: 'ElectricalGridMonitoring',
           isPattern: true,
           id: 'S?_ElectricalGrid'
-        }
+        },
+	{
+	  type: 'DataFileControl',
+	  isPattern: false,
+	  id: 'DataFileControl'
+	}
       ]
     };
 
@@ -29,7 +34,12 @@ export default DS.RESTAdapter.extend({
           type: 'ElectricalGridMonitoring',
           isPattern: false,
           id: id
-        }
+        },
+	{
+	  type: 'DataFileControl',
+	  isPattern: false,
+	  id: 'DataFileControl'
+	}
       ]
     };
 
@@ -41,6 +51,14 @@ export default DS.RESTAdapter.extend({
   },
 
   updateRecord: function(store, type, snapshot) {
+    var requestBody = {};
 
+    var serializer = store.serializerFor(type.modelName);
+
+    serializer.serializeIntoHash(requestBody, type, snapshot);
+    console.log(requestBody);
+    var url = this.host + '/' + this.namespace + '/updateContext';
+
+    return this.ajax(url, 'POST', { data: requestBody });
   }
 });

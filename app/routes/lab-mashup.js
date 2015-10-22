@@ -7,6 +7,11 @@ export default Ember.Route.extend({
         id: 'S1_ElectricalGrid',
         isPattern: false,
         type: ''
+      },
+      {
+	id: 'DataFileControl',
+	isPattern: false,
+	type: 'DataFileControl'
       }
     ]});
     //return this.store.findAll('entity');
@@ -26,6 +31,11 @@ export default Ember.Route.extend({
         id: 'S1_ElectricalGrid',
         isPattern: false,
         type: ''
+      },
+      {
+	id: 'DataFileControl',
+	isPattern: false,
+	type: 'DataFileControl'
       }
     ]});
     //this.store.findAll('entity');
