@@ -66,7 +66,6 @@ export default Ember.Component.extend({
 
     for (var index in this.redZones) {
       var zone = this.redZones[index];
-      console.log(zone);
       this.drawBand(this.redZones[index].from, this.redZones[index].to, this.redColor);
     }
 

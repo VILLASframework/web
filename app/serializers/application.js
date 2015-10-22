@@ -78,30 +78,38 @@ export default DS.RESTSerializer.extend({
           }
 
           if (item.contextElement.attributes) {
-            item.contextElement.attributes.forEach(function(attribute) {
-              if (attribute.type !== 'category') {
-                // find metadata
-                var timestamp = 0;
-				var source = "";
-				var minValue;
-				var maxValue;
+	    var timestamp = 0;
 
-                attribute.metadatas.forEach(function(metadata) {
-                  if (metadata.name === 'timestamp') {
-                    timestamp = Date.parse(metadata.value);
-                  } else if (metadata.name === 'source') {
-					  				source = metadata.value;
-                  } else if (metadata.name === 'min') {
-					  				minValue = metadata.value;
-                  } else if (metadata.name === 'max') {
-					  				maxValue = metadata.value;
-                  }
-                });
+	    item.contextElement.attributes.forEach(function(attribute) {
+	      if (attribute.name === 'timestamp') {
+		timestamp = attribute.value;
+	      }
+	    });
+
+            item.contextElement.attributes.forEach(function(attribute) {
+              if (attribute.id !== 'timestamp') {
+                // find metadata
+		var source = "";
+		var minValue;
+		var maxValue;
+
+                if (attribute.metadatas) {
+		  attribute.metadatas.forEach(function(metadata) {
+		    if (metadata.name === 'timestamp') {
+		      timestamp = Date.parse(metadata.value);
+		    } else if (metadata.name === 'source') {
+									  source = metadata.value;
+		    } else if (metadata.name === 'min') {
+									  minValue = metadata.value;
+		    } else if (metadata.name === 'max') {
+									  maxValue = metadata.value;
+		    }
+		  });
+		}
 
                 if (timestamp === 0) {
                   timestamp = (new Date()).getTime();
                 }
-				
 
                 // create property
                 var property = {
@@ -112,9 +120,9 @@ export default DS.RESTSerializer.extend({
                     type: attribute.type,
                     timestamp: timestamp,
                     visible: false,
-										source: source,
-										minValue: minValue,
-										maxValue: maxValue,
+		    source: source,
+		    minValue: minValue,
+		    maxValue: maxValue,
                     values: []
                   },
                   relationships: {
