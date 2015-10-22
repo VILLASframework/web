@@ -5,6 +5,9 @@ export default Ember.Component.extend({
   classNames: ['line-chart'],
 	attributeBindings: ['style'],
   xaxisLength: 300,
+  minValue: '',
+  maxValue: '',
+  label: '',
   updateTime: 100,
 	height: '100%',
 	useLabel: true,
@@ -33,8 +36,8 @@ export default Ember.Component.extend({
 	_drawPlot: function() {
     var element = this.get('element');
     if (element && element.id) {
-      if (this.data && this.data.get('values')) {
-			  var values = this.data.get('values');
+      if (this.data) {
+			  var values = this.data[0].data;
 			  
 			  if (values.length > 0) {
 				  // get first and last time stamp for plot
@@ -66,19 +69,23 @@ export default Ember.Component.extend({
 				    	max: lastTimestamp
 						},
 						yaxis: {
-							tickDecimals: 3
+							tickDecimals: 2
 						}
 					}
 					
 					// set y axis scale
 					if (this.data.get('minValue')) {
 						options.yaxis.min = this.data.get('minValue');
+					} else if (this.get('minValue') !== '') {
+					  options.yaxis.min = this.get('minValue');
 					}
 					
 					if (this.data.get('maxValue')) {
 						options.yaxis.max = this.data.get('maxValue');
+					} else if (this.get('maxValue') !== '') {
+					  options.yaxis.max = this.get('maxValue');
 					}
-					
+
 					// setup plot data
 					var plotData = {
 						data: values,
@@ -86,11 +93,15 @@ export default Ember.Component.extend({
 					}
 					
 					if (this.get('useLabel')) {
-						plotData.label = this.data.get('name') + " [" + this.data.get('type') + "]";
+					  if (this.get('label') !== '') {
+					    plotData.label = this.get('label');
+					  } else {
+					    plotData.label = this.data.get('name') + " [" + this.data.get('type') + "]";
+					  }
 					}
-					
+
 					// draw plot
-					$.plot('#' + element.id, [plotData], options);
+					$.plot('#' + element.id, this.data, options);
 	      } else {
 	        // display empty chart
 	        $.plot('#' + element.id, [[]], {

@@ -32,7 +32,7 @@ export default Ember.Component.extend({
     var majorDelta = range / (this.majorTicks - 1);
     var minorDelta = majorDelta / this.minorTicks;
     var midValue = (this.minValue + this.maxValue) / 2;
-    var pointerFontSize = Math.round(this.size / 10);
+    var pointerFontSize = Math.round(this.size / 7);
 
     // create body element
     var body = d3.select('#' + this.elementId).append("svg:svg");

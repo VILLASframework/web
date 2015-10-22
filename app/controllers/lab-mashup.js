@@ -1,29 +1,33 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  state: 1,
   freq575GreenZones: [{from: 49.5, to: 50.5}],
-  freq575YellowZones: [{from: 47.5, to: 49.5}, {from: 50.5, to: 52.5}],
-  freq575RedZones: [{from: 45.0, to: 47.5}, {from: 52.5, to: 55}],
+  freq575YellowZones: [{from: 49, to: 49.5}, {from: 50.5, to: 51}],
 
   init: function() {
-    this.set('dataSet', this.get('dataSetOne'));
+    this.set('state', 1);
 
-    this._updateButtons();
+    Ember.run.later(this, this._updateState, 100);
   },
 
   S1Entity: function() {
     return this.model.findBy('id', 'S1_ElectricalGrid');
   }.property('model.[]'),
 
-	Voltage203937: function() {
-		var entity = this.model.findBy('id', 'S1_ElectricalGrid');
-		if (entity) {
-			return entity.get('properties').findBy('name', 'Voltage203937');
-		} else {
-			return {};
-		}
-	}.property('model.[]'),
+  Voltage203937: function() {
+    var entity = this.model.findBy('id', 'S1_ElectricalGrid');
+    if (entity) {
+      return [
+	{
+	  label: 'Voltage203937',
+	  data: entity.get('properties').findBy('name', 'Voltage203937').get('values'),
+	  color: "rgb(51, 153, 255)"
+	}
+      ];
+    } else {
+      return {};
+    }
+  }.property('model.[]'),
 
   Freq575Value: function() {
     var entity = this.model.findBy('id', 'S1_ElectricalGrid');
@@ -37,6 +41,28 @@ export default Ember.Controller.extend({
     }
   }.property('model.[]'),
 
+  LoadGenProfiles: function() {
+    var entity = this.model.findBy('id', 'S1_ElectricalGrid');
+    if (entity) {
+      console.log(entity.get('properties').findBy('name', 'LoadProfile'));
+
+      return [
+	{
+	  label: 'Total consumption [MW]',
+	  data: entity.get('properties').findBy('name', 'LoadProfile').get('values'),
+	  color: "rgb(51, 153, 255)"
+	},
+	{
+	  label: 'Total PV generation [MW]',
+	  data: entity.get('properties').findBy('name', 'GenProfile').get('values'),
+	  color: "rgb(255, 91, 51)"
+	}
+      ];
+    } else {
+      return [];
+    }
+  }.property('model.[]'),
+
   initState: function() {
     return this.get('state') === 1;
   }.property('state'),
@@ -45,19 +71,17 @@ export default Ember.Controller.extend({
     return this.get('state') === 2;
   }.property('state'),
 
-  _updateButtons: function() {
+  _updateState: function() {
     var control = this.store.peekRecord('data-file-control', 'DataFileControl');
     var updated = false;
 
-    if (control.get('Filename') === 'm1_S1_ElectricalGrid_data.txt') {
+    if (control.get('Filename') === '/share/data/m1_S1_ElectricalGrid_data.txt') {
       if (this.get('state') !== 1) {
-      	his.set('state', 1);
-    	updated = true;
+	this.set('state', 1);
       }
     } else {
       if (this.get('state') !== 2) {
-        this.set('state', 2); 
-	updated = true;
+	this.set('state', 2);
       }
     }
 
@@ -65,39 +89,41 @@ export default Ember.Controller.extend({
       if (this.get('state') === 1) {
 	control.set('ForceReload', true);
       } else {
-	control.set('Filename', 'm1_S1_ElectricalGrid_data.txt');
+	control.set('Filename', '/share/data/m1_S1_ElectricalGrid_data.txt');
       }
 
       updated = true;
     }
 
     if (updated) {
-     control.save();
+      console.log("Update data control");
+      control.save();
     }
+    
+    Ember.run.later(this, this._updateState, 100);
   },
 
-  _updateDataFileControl: function() {
+  _updateDataFileControl: function(state) {
     var control = this.store.peekRecord('data-file-control', 'DataFileControl');
 
-    if (this.get('state') === 1) {
-      control.set('Filename', 'm1_S1_ElectricalGrid_data.txt');
+    if (state === 1) {
+      control.set('Filename', '/share/data/m1_S1_ElectricalGrid_data.txt');
     } else {
-      control.set('Filename', 'm2_S1_ElectricalGrid_data.txt');
+      control.set('Filename', '/share/data/m2_S1_ElectricalGrid_data.txt');
     }
 
+    console.log("changed data control");
     control.set('ForceReload', true);
     control.save();
-  }.observes('state'),
+  },
 
   actions: {
     resetData: function() {
-      this.set('state', 1);
-      this.set('dataSet', this.get('dataSetOne'));
+      this._updateDataFileControl(1);
     },
 
     eventData: function() {
-      this.set('state', 2);
-      this.set('dataSet', this.get('dataSetTwo'));
+      this._updateDataFileControl(2);
     }
   }
 });

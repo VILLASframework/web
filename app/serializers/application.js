@@ -159,10 +159,6 @@ export default DS.RESTSerializer.extend({
 		    });
 		  }
 
-		  if (timestamp === 0) {
-		    timestamp = (new Date()).getTime();
-		  }
-
 		  // create property
 		  var property = {
 		    type: 'property',
@@ -194,7 +190,7 @@ export default DS.RESTSerializer.extend({
 			  property.attributes.values.push(value);
 		      });
 		    } else {
-		      property.attributes.values.push([timestamp, attribute.value]);
+		      property.attributes.values.push([(new Date()).getTime(), attribute.value]);
 		    }
 		  }
 
@@ -235,7 +231,7 @@ export default DS.RESTSerializer.extend({
     // create record if needed, otherwise add to current one
     var record = this.store.peekRecord('property', item.id);
     if (record) {
-      if (record.timestamp !== item.attributes.timestamp) {
+      if (record.get('timestamp') !== item.attributes.timestamp) {
         item.attributes.values.forEach(function (value) {
           record.get('values').push(value);
         });

@@ -33,10 +33,10 @@
 					  </ul>
 					</p>
 
-					{{d3-gauge label="Frequency" value=Freq575Value minValue=45 maxValue=55 minorTicks=4 greenZones=freq575GreenZones yellowZones=freq575YellowZones redZones=freq575RedZones}}
+					{{d3-gauge label="Freq" value=Freq575Value minValue=49 maxValue=51 minorTicks=4 size=150 greenZones=freq575GreenZones yellowZones=freq575YellowZones}}
 				      </td>
 				      <td style="width: 25%">
-					<img src={{"assets/images/TS_section/TS_fig1.svg"}} class="svg-image" />
+					<img src={{"assets/images/TS_section/TS_fig1.svg"}} class="svg-image" style="float: right" />
 				      </td>
 				    </tr>
 				  </table>
@@ -52,7 +52,7 @@
 					      <h2>Control Center</h2>
 					    </td>
 					    <td style="width: 25%">
-					      <img src={{"assets/images/ControlCenter_section/CS_fig1.svg"}} class="svg-image" />
+					      <img src={{"assets/images/ControlCenter_section/CS_fig1.svg"}} class="svg-image" style="float: right" />
 					    </td>
 					  </tr>
 					  <tr style="height: 75%">
@@ -63,7 +63,7 @@
 						Voltage measurement
 					      </h3>
 
-					      {{line-chart data=Voltage203937 height="90%"}}
+					      {{line-chart data=Voltage203937 height="90%" xaxisLength=120 minValue=0.95  maxValue=1.05 label="RMS voltage [pu]"}}
 					    </td>
 					    <td style="width: 50%" colspan="2">
 					      <button {{action 'resetData'}} disabled={{initState}}>Reset</button>
@@ -107,7 +107,7 @@
 					</p>
 				      </td>
 				      <td style="width: 25%">
-					<img src={{"assets/images/DS_section/DS_fig1.svg"}} class="svg-image" />
+					<img src={{"assets/images/DS_section/DS_fig1.svg"}} class="svg-image" style="float: right" />
 				      </td>
 				    </tr>
 				  </table>
@@ -124,7 +124,7 @@
 					      <h2>Prosumer behavior</h2>
 					    </td>
 					    <td style="width: 25%">
-					      <img src={{"assets/images/Prosumer_section/Cnsmr_fig1.svg"}} class="svg-image" />
+					      <img src={{"assets/images/Prosumer_section/Cnsmr_fig1.svg"}} class="svg-image" style="float: right" />
 					    </td>
 					  </tr>
 					  <tr style="height: 75%">
@@ -133,10 +133,15 @@
 						Prosumer: Consumption and generation profiles
 					      </h3>
 
-					      {{line-chart data=LoadProfile height="40%"}}
+					      {{line-chart data=LoadGenProfiles height="90%" minValue=0 maxValue=25}}
 					    </td>
-					    <td style="width: 50%" colspan="2">
-					      <img src={{"assets/images/Prosumer_section/Cnsmr_fig2.svg"}} class="svg-image" />
+					    <td style="width: 50%;" colspan="2">
+					      {{#if initState}}
+						<img src={{"assets/images/Prosumer_section/Prosumer_gif_m1.gif"}} style="width: 60%; height: auto" />
+					      {{/if}}
+					      {{#if eventState}}
+						<img src={{"assets/images/Prosumer_section/Prosumer_gif_m2.gif"}} style="width: 60%; height: auto" />
+					      {{/if}}
 					    </td>
 					  </tr>
 					</table>
