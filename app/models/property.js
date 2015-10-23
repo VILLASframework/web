@@ -9,6 +9,7 @@ export default DS.Model.extend({
   source: DS.attr('string'),
   minValue: DS.attr('number'),
   maxValue: DS.attr('number'),
+  currentValue: DS.attr('number'),
   entity: DS.belongsTo('entity'),
   category: DS.belongsTo('category')
 });

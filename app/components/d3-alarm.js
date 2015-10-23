@@ -30,16 +30,19 @@ export default Ember.Component.extend({
       .style("stroke", "#000")
       .style("stroke-width", "0.5px");
 
-    this._redraw(this.value);
+    this._redraw();
   },
 
-  _redraw: function(value) {
+  _redraw: function() {
     var litAlarm = false;
     var cx = this.size / 2;
     var radius = this.size / 2 * 0.97;
 
     for (var zone in this.alarmZones) {
-      if (this.alarmZones[zone].from >= value && this.alarmZones[zone].to <= value) {
+      var from = this.alarmZones[zone].from;
+      var to = this.alarmZones[zone].to;
+
+      if (this.value >= from && this.value <= to) {
 	litAlarm = true;
       }
     }
@@ -49,7 +52,7 @@ export default Ember.Component.extend({
 	.attr("cx", cx)
 	.attr("cy", cx)
 	.attr("r", radius * 0.8)
-	.style("fill", "#C33")
+	.style("fill", "#F00")
 	.style("stroke", "#000")
 	.style("stroke-width", "0.5px");
     } else {
@@ -61,5 +64,7 @@ export default Ember.Component.extend({
 	.style("stroke", "#000")
 	.style("stroke-width", "0.5px");
     }
+
+    // reschedule
   }.observes('value')
 });

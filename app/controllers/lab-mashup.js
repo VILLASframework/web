@@ -5,6 +5,8 @@ export default Ember.Controller.extend({
   freq575YellowZones: [{from: 49, to: 49.5}, {from: 50.5, to: 51}],
   freq575AlarmZones: [{from: 49, to: 49.5}, {from: 50.5, to: 51}],
 
+  freq575Value: 0,
+
   init: function() {
     this.set('state', 1);
 
@@ -17,10 +19,11 @@ export default Ember.Controller.extend({
 
   Voltage203937: function() {
     var entity = this.model.findBy('id', 'S1_ElectricalGrid');
+  
     if (entity) {
       return [
 	{
-	  label: 'Voltage203937',
+	  label: 'RMS voltage [pu]',
 	  data: entity.get('properties').findBy('name', 'Voltage203937').get('values'),
 	  color: "rgb(51, 153, 255)"
 	}
@@ -30,17 +33,18 @@ export default Ember.Controller.extend({
     }
   }.property('model.[]'),
 
-  Freq575Value: function() {
-    var entity = this.model.findBy('id', 'S1_ElectricalGrid');
-    if (entity) {
-      var attribute = entity.get('properties').findBy('name', 'Freq_575');
-      var valuesLength = attribute.get('values').length;
-      var tuple = attribute.get('values')[valuesLength - 1];
-      return tuple[1];
-    } else {
-      return {};
+  Freq575Observer: function() {
+    Ember.run.later(this, this.Freq575Observer, 100);
+  
+    if (this.model) {
+      var entity = this.model.findBy('id', 'S1_ElectricalGrid');
+
+      if (entity) {
+	var attribute = entity.get('properties').findBy('name', 'Freq_575');
+	this.set('freq575Value', attribute.get('currentValue'));
+      }
     }
-  }.property('model.[]'),
+  }.on('init'),
 
   LoadGenProfiles: function() {
     var entity = this.model.findBy('id', 'S1_ElectricalGrid');
@@ -95,7 +99,6 @@ export default Ember.Controller.extend({
     }
 
     if (updated) {
-      console.log("Update data control");
       control.save();
     }
     

@@ -56,7 +56,6 @@ export default DS.RESTAdapter.extend({
     var serializer = store.serializerFor(type.modelName);
 
     serializer.serializeIntoHash(requestBody, type, snapshot);
-    console.log(requestBody);
     var url = this.host + '/' + this.namespace + '/updateContext';
 
     return this.ajax(url, 'POST', { data: requestBody });

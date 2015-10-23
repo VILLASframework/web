@@ -80,11 +80,6 @@ export default DS.RESTSerializer.extend({
     }
   },
 
-  modelNameFromPayloadKey: function(payloadKey) {
-    console.log(payloadKey);
-    return this._super(payloadKey);
-  },
-
   _normalizePayload: function(payload, handleItem) {
     var propertyIndex = 0;
 
@@ -188,9 +183,11 @@ export default DS.RESTSerializer.extend({
 						  value[0] = +value[0] * 1000;
 						  
 			  property.attributes.values.push(value);
+			  property.attributes.currentValue = value[1];
 		      });
 		    } else {
 		      property.attributes.values.push([(new Date()).getTime(), attribute.value]);
+		      property.attributes.currentValue = attribute.value;
 		    }
 		  }
 
@@ -237,6 +234,7 @@ export default DS.RESTSerializer.extend({
         });
 
         record.set('timestamp', item.attributes.timestamp);
+	record.set('currentValue', item.attributes.currentValue);
       }
     } else {
       // add new item

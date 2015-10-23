@@ -168,18 +168,20 @@ export default Ember.Component.extend({
 
   _redraw: function(value, transitionDuration) {
     var pointerContainer = this.svgBody.select(".pointerContainer");
-    pointerContainer.selectAll("text").text(Math.floor(value * 100) / 100);
+    pointerContainer.selectAll("text").text(Math.floor(this.value * 100) / 100);
 
     var pointer = pointerContainer.selectAll("path");
     var _this = this;
+    transitionDuration = 0;
 
     pointer.transition()
       .duration(transitionDuration)
       .attrTween("transform", function() {
-	var pointerValue = value;
-	if (value > _this.maxValue) {
+	var pointerValue = _this.value;
+
+	if (pointerValue > _this.maxValue) {
 	  pointerValue = _this.maxValue + 0.02 * (_this.maxValue - _this.minValue);
-	} else if (value < _this.minValue) {
+	} else if (pointerValue < _this.minValue) {
 	  pointerValue = _this.minValue - 0.02 * (_this.maxValue - _this.minValue);
 	}
 
