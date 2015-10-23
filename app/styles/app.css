@@ -178,6 +178,27 @@ p {
   padding-left: 20px;
 }
 
+button {
+  border: 3px solid blue;
+  color #FFF;
+  background-color: #ccf;
+
+  font-size: 30px;
+  font-weight: bold;
+
+  width: 250px;
+  height: 50px;
+}
+
+button:disabled {
+  border: 3px solid gray;
+  background-color: #ccc;
+}
+
+#init-button {
+  
+}
+
 /*
  * Layout
  */
@@ -268,6 +289,11 @@ overflow: hidden;
 .page-grid h3 {
   padding: 0;
   margin: 0;
+}
+
+.shadowed {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5),
+	      0 10px 20px 0 rgba(0, 0, 0, 0.2);
 }
 
 /*

@@ -79,8 +79,12 @@
 					      {{line-chart data=Voltage203937 height="90%" xaxisLength=120 minValue=0.90  maxValue=1.05 label="RMS voltage [pu]"}}
 					    </td>
 					    <td style="width: 50%" colspan="2">
-					      <button {{action 'resetData'}} disabled={{initState}}>Reset</button>
-					      <button {{action 'eventData'}} disabled={{eventState}}>Event</button>
+						<div style="position: relative; top: 25%; left: 30%">
+						  <button {{action 'resetData'}} disabled={{initState}} id="init-button">Reset</button>
+						</div>
+						<div style="position: relative; top: 40%; left: 30%">
+						  <button {{action 'eventData'}} disabled={{eventState}} id="event-button">Event</button>
+						</div>
 					    </td>
 					  </tr>
 					</table>
@@ -153,10 +157,10 @@
 					    </td>
 					    <td style="width: 50%;" colspan="2">
 					      {{#if initState}}
-						<img src={{"assets/images/Prosumer_section/Prosumer_gif_m1.gif"}} style="width: 55%; height: auto; float: right; margin-right: 100px" />
+						<img src={{"assets/images/Prosumer_section/Prosumer_gif_m1.gif"}} style="width: 55%; height: auto; float: right; margin-right: 100px" class="shadowed" />
 					      {{/if}}
 					      {{#if eventState}}
-						<img src={{"assets/images/Prosumer_section/Prosumer_gif_m2.gif"}} style="width: 55%; height: auto; float: right; margin-right: 100px" />
+						<img src={{"assets/images/Prosumer_section/Prosumer_gif_m2.gif"}} style="width: 55%; height: auto; float: right; margin-right: 100px" class="shadowed" />
 					      {{/if}}
 					    </td>
 					  </tr>
