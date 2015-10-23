@@ -7,6 +7,8 @@ export default Ember.Controller.extend({
 
   freq575Value: 0,
 
+  _waitForStateUpdate: false,
+
   init: function() {
     this.set('state', 1);
 

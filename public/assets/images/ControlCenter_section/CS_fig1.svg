@@ -104,7 +104,7 @@
        y="-7763.5024" />
     <g
        id="g3129-0-8"
-       transform="matrix(5.6319941,0,0,-5.7141574,-3252.0677,-6443.9718)">
+       transform="matrix(5.6319941,0,0,-5.7141574,-3278.9378,-6448.2144)">
       <g
          id="g3131-7"
          clip-path="url(#clipPath3133-3-4)">
@@ -662,20 +662,20 @@
     </g>
     <text
        id="text3415-6-0"
-       x="-3287.8584"
-       y="-7704.0244"
+       x="-3289.2725"
+       y="-7699.7817"
        style="font-size:39.0313797px;fill:#aa0000;stroke:none">
       <tspan
          style="font-size:85px;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#aa0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-         x="-3287.8584"
+         x="-3289.2725"
          sodipodi:role="line"
-         y="-7704.0244"
-         id="tspan3514-1">Joint Research Centre</tspan>
+         y="-7699.7817"
+         id="tspan3514-1" />
       <tspan
          style="font-size:85px;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#aa0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-         x="-3287.8584"
+         x="-3289.2725"
          sodipodi:role="line"
-         y="-7597.7744"
+         y="-7593.5317"
          id="tspan3111">JRC Ispra</tspan>
     </text>
     <rect

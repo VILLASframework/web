@@ -173,15 +173,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.50000002"
-     inkscape:cx="520.11892"
-     inkscape:cy="588.23848"
+     inkscape:cx="520.17953"
+     inkscape:cy="427.63791"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1018"
-     inkscape:window-x="-8"
-     inkscape:window-y="1072"
+     inkscape:window-width="944"
+     inkscape:window-height="1002"
+     inkscape:window-x="960"
+     inkscape:window-y="1080"
      inkscape:window-maximized="1"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -213,21 +213,15 @@
        y="-7051.5024" />
     <text
        id="text3415-6"
-       x="-3388.2561"
-       y="-7011.9927"
+       x="-3370.2561"
+       y="-6951.9927"
        style="font-size:39.0313797px;fill:#aa0000;stroke:none">
       <tspan
          style="font-size:85px;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#aa0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-         x="-3388.2561"
+         x="-3370.2561"
          sodipodi:role="line"
-         y="-7011.9927"
-         id="tspan3002">RWTH Aachen</tspan>
-      <tspan
-         style="font-size:85px;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#aa0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-         x="-3388.2561"
-         sodipodi:role="line"
-         y="-6905.7427"
-         id="tspan3075">University</tspan>
+         y="-6951.9927"
+         id="tspan3075">RWTH Aachen University</tspan>
     </text>
     <image
        y="-7098.9473"
@@ -238,7 +232,7 @@
        height="464.59662"
        width="343.854" />
     <g
-       transform="matrix(2.3166009,0,0,2.3166009,-3828.0727,-8446.2982)"
+       transform="matrix(2.3166009,0,0,2.3166009,-3814.0727,-8478.2982)"
        id="layer1-9"
        inkscape:label="Ebene 1">
       <g

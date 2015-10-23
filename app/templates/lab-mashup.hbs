@@ -1,10 +1,11 @@
 <section class="row" id="main">
 	<table class="grid">
 		<tr>
-			<td style="padding-top: 20px;">
+			<td style="padding-top: 5px;">
 				<div class="layout-page">
+				  <h2>Transmission system simulation</h2>
 				  <table class="page-grid">
-				    <tr style="height: 25%">
+				    <tr style="height: 15%">
 				      <td style="width: 25%" rowspan="2">
 					<h3>
 					  Italy - Piedmont region
@@ -17,45 +18,42 @@
 					{{/if}}
 				      </td>
 				      <td style="width: 50%; padding-left: 20px">
-					<h2>Transmission system simulation</h2>
-					
-					
 				      </td>
 				      <td style="width: 25%">
 					<img src={{"assets/images/TS_section/TS_fig1.svg"}} class="svg-image" style="float: right" />
 				      </td>
 				    </tr>
-				    <tr style="height: 75%">
+				    <tr style="height: 85%">
 				      <td style="width: 40%">
 					<div style="padding-top: 0px">
-					  <p style="padding-left: 60px; padding-top: 30px;">
-					    Piedmont Region - Italy
-					    <ul>
-					      <li>Surface area: 25,4 km&#178;</li>
-					      <li>Inhabitants: 4,45 m</li>
-					    </ul>
-
-					    380-220kV transmission system:
-					    <ul>
-					      <li>90 buses, 20 generators and 110 lines</li>
-					      <li>Electric power capacity: 8458 MW</li>
-					    </ul>
-					  </p>
+					  
 					  </div>
 				      </td>
 				      <td style="width: 35%">
-					<h3>
-					  Frequency measuerement<br />
-					  at STURA substation
-					</h3>
-					{{d3-alarm value=freq575Value alarmZones=freq575AlarmZones}}
-					{{d3-gauge label="Freq" value=freq575Value minValue=49 maxValue=51 minorTicks=4 size=180 greenZones=freq575GreenZones yellowZones=freq575YellowZones}}
+					<p style="">
+					    Piedmont Region - Italy
+					    <ul>
+					      <li>Surface area: 25400 km&#178;</li>
+					      <li>Inhabitants: 4.45 million</li>
+					      <li>Electric power capacity: 8458 MW</li>
+					    </ul>
+					  </p>
+					<div style="padding-top: 40px;">
+					  {{d3-alarm value=freq575Value alarmZones=freq575AlarmZones}}
+					  {{d3-gauge label="Freq" value=freq575Value minValue=49 maxValue=51 minorTicks=4 size=120 greenZones=freq575GreenZones yellowZones=freq575YellowZones}}
+					</div>
+					<div style="width: 100%; margin-top: 150px">
+					  <h3 style="padding-left: 10px">
+					    Frequency measurement<br />
+					    at STURA substation
+					  </h3>
+					</div>
 				      </td>
 				    </tr>
 				  </table>
 				</div>
 			</td>
-			<td style="padding-top: 20px;">
+			<td style="padding-top: 5px;">
 				<div class="layout-page">
 					<table class="page-grid">
 					  <tr style="height: 25%">
@@ -70,7 +68,7 @@
 					  </tr>
 					  <tr style="height: 75%">
 					    <td style="width: 50%" colspan="2">
-					      <h3>
+					      <h3 style="text-align: center">
 						Distribution grid monitoring
 						<br />
 						Voltage measurement
@@ -79,11 +77,11 @@
 					      {{line-chart data=Voltage203937 height="90%" xaxisLength=120 minValue=0.90  maxValue=1.05 label="RMS voltage [pu]"}}
 					    </td>
 					    <td style="width: 50%" colspan="2">
-						<div style="position: relative; top: 25%; left: 30%">
-						  <button {{action 'resetData'}} disabled={{initState}} id="init-button">Reset</button>
+						<div style="position: relative; top: 15%; left: 30%">
+						  <button {{action 'resetData'}} disabled={{initState}} id="init-button">NORMAL<br />sunny + low demand</button>
 						</div>
-						<div style="position: relative; top: 40%; left: 30%">
-						  <button {{action 'eventData'}} disabled={{eventState}} id="event-button">Event</button>
+						<div style="position: relative; top: 30%; left: 30%">
+						  <button {{action 'eventData'}} disabled={{eventState}} id="event-button">ABNORMAL<br />cloudy + high demand</button>
 						</div>
 					    </td>
 					  </tr>
@@ -92,11 +90,12 @@
 			</td>
 		</tr>
 		<tr>
-			<td style="padding-bottom: 20px;">
+			<td style="padding-bottom: 5px;">
 				<div class="layout-page">
+				  <h2>Distribution system simulation</h2>
 				  <table class="page-grid">
 				    <tr>
-				      <td style="width: 40%" rowspan="2">
+				      <td style="width: 80%" rowspan="2">
 					<h3>
 					  Italy - Piedmont - Turin
 					</h3>
@@ -107,24 +106,16 @@
 					  <img src={{"assets/images/DS_section/DSmap_m2.gif"}} id="DS-image" />
 					{{/if}}
 				      </td>
-				      <td style="width: 35%; padding-left: 20px">
-					<h2>Distribution system simulation</h2>
-				      </td>
 				      <td style="width: 25%">
 					<img src={{"assets/images/DS_section/DS_fig1.svg"}} class="svg-image" style="float: right" />
 				      </td>
 				    </tr>
 				    <tr>
 				      <td colspan="2">
-					<p style="padding-left: 40px; padding-right: 20px">
+					<p style="">
 					  Turin - Piedmont - Italy<br />
-					  22kV distribution system:<br />
 					  <ul>
-					    <li>Five Medium Voltage lines derived from Stura HV/MV substation (220/22 kV)</li>
-					    <li>50 buses, 49 lines</li>
-					    <li>742 mono-phase and 8293 three-phase LV customers</li>
-					    <li>6 MV customers</li>
-					    <li>4 PV generators</li>
+					    <li>Medium Voltage lines derived from Stura HV/MV</li>
 					    <li>Total length of lines: 38,54 km</li>
 					  </ul>
 					</p>
@@ -134,7 +125,7 @@
 				  
 				</div>
 			</td>
-			<td style="padding-bottom: 20px;">
+			<td style="padding-bottom: 5px;">
 				<div class="layout-page">
 					<table class="page-grid">
 					  <tr style="height: 25%">
@@ -149,7 +140,7 @@
 					  </tr>
 					  <tr style="height: 75%">
 					    <td style="width: 50%; padding-left: 0px" colspan="2">
-					      <h3>
+					      <h3 style="text-align: center">
 						Prosumer: Consumption and generation profiles
 					      </h3>
 
