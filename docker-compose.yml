@@ -24,12 +24,10 @@ orion:
     - mongo
   command: -dbhost mongo
 
-#playback:
-#  image: playback
-#  volumes:
-#    - /share:/share
-#  links:
-#    - orion
-#  command: orion:1026
-
-
+playback:
+  build: ../LabMashup-sselab/FICBPlaybackSource
+  volumes:
+    - /share:/share
+  links:
+    - orion
+  command: orion:1026 m1_S1_ElectricalGrid_data.txt
