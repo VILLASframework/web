@@ -1,0 +1,35 @@
+nginx:
+  image: nginx
+  volumes:
+    - nginx.default.conf:/etc/nginx/conf.d/default.conf
+  links:
+    - orion
+    - ember
+  ports:
+    - "80:80"
+
+ember:
+  image: danlynn/ember-cli
+  volumes:
+    - .:/myapp
+  command: server --watcher polling
+
+mongo:
+  image: mongo:2.6
+  command: --smallfiles --nojournal --dbpath=/tmp/
+
+orion:
+  image: fiware/orion
+  links:
+    - mongo
+  command: -dbhost mongo
+
+#playback:
+#  image: playback
+#  volumes:
+#    - /share:/share
+#  links:
+#    - orion
+#  command: orion:1026
+
+
