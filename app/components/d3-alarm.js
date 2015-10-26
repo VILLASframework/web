@@ -7,6 +7,9 @@ export default Ember.Component.extend({
   size: 40,
   value: 0,
   alarmZones: [],
+
+  _blinking: false,
+  _blinkState: false,
   
   didInsertElement: function() {
     this._drawAlarm();
@@ -34,20 +37,23 @@ export default Ember.Component.extend({
   },
 
   _redraw: function() {
-    var litAlarm = false;
     var cx = this.size / 2;
     var radius = this.size / 2 * 0.97;
+    var litAlarm = this._shouldLitAlarm();
 
-    for (var zone in this.alarmZones) {
-      var from = this.alarmZones[zone].from;
-      var to = this.alarmZones[zone].to;
-
-      if (this.value >= from && this.value <= to) {
-	litAlarm = true;
-      }
+    if (litAlarm && this._blinking === false) {
+      // start blinking
+      this._blinkState = true;
+      this._blinking = true;
+    } else if (litAlarm && this._blinking === true) {
+      // switch blink state
+      this._blinkState = !this._blinkState;
+    } else if (litAlarm === false && this._blinking === true) {
+      // stop blinking
+      this._blinking = false;
     }
 
-    if (litAlarm) {
+    if (litAlarm && (this._blinking === true && this._blinkState === true)) {
       this.svgBody.append("svg:circle")
 	.attr("cx", cx)
 	.attr("cy", cx)
@@ -65,6 +71,22 @@ export default Ember.Component.extend({
 	.style("stroke-width", "0.5px");
     }
 
-    // reschedule
-  }.observes('value')
+    if (this._blinking === true) {
+      Ember.run.later(this, this._redraw, 500);
+    }
+  }.observes('value'),
+
+  _shouldLitAlarm: function() {
+    for (var zone in this.alarmZones) {
+      // get border for zone
+      var from = this.alarmZones[zone].from;
+      var to = this.alarmZones[zone].to;
+
+      if (this.value >= from && this.value <= to) {
+	return true;
+      }
+    }
+
+    return false;
+  }
 });
