@@ -23,7 +23,7 @@ export default Ember.Component.extend({
     if (element && element.id) {
       if (this.data) {
 	// chart options
-	var options = { xaxis: {} };
+	var options = { xaxis: { show: false }, yaxis: {} };
 
 	if (this.get('minValue') !== '') {
 	  options.yaxis.min = this.get('minValue');

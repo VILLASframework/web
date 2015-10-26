@@ -9,7 +9,6 @@ export default Ember.Component.extend({
   minValue: '',
   maxValue: '',
   label: '',
-  updateTime: 100,
   height: '100%',
   useLabel: true,
 
@@ -19,10 +18,6 @@ export default Ember.Component.extend({
 
   didInsertElement: function() {
     this._drawPlot();
-
-    Ember.run.later(this, function() {
-      this._drawPlot();
-    }, this.updateTime);
   },
 
   style: function() {
@@ -32,7 +27,7 @@ export default Ember.Component.extend({
   _drawPlot: function() {
     var element = this.get('element');
     if (element && element.id) {
-      if (this.data) {
+      if (this.data && this.data.length > 0) {
 	var values = this.data[0].data;
 
 	if (values.length > 0) {

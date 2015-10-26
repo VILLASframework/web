@@ -76,10 +76,10 @@
 					    </td>
 					    <td style="width: 50%" colspan="2">
 						<div style="position: relative; top: 15%; left: 30%">
-						  <button {{action 'resetData'}} disabled={{initState}} id="init-button">NORMAL<br />sunny + low demand</button>
+						  <button {{action 'resetData'}} disabled={{initButtonState}} id="init-button">NORMAL<br />sunny + low demand</button>
 						</div>
 						<div style="position: relative; top: 30%; left: 30%">
-						  <button {{action 'eventData'}} disabled={{eventState}} id="event-button">ABNORMAL<br />cloudy + high demand</button>
+						  <button {{action 'eventData'}} disabled={{eventButtonState}} id="event-button">ABNORMAL<br />cloudy + high demand</button>
 						</div>
 						<div style="position: relative; top: 48%; left: 76%">
 						  <a class="link-button" href="/technical/" target="_blank">Technical</a>
@@ -113,14 +113,14 @@
 				    </tr>
 				    <tr>
 				      <td colspan="2">
-					{{bar-chart width='200px' height='250px'}}
-					<p style="padding-top: 25px;">
+					<p style="padding-top: 25px; padding-bottom: 30px">
 					  Turin - Piedmont - Italy<br />
 					  <ul>
 					    <li>Medium Voltage lines derived from Stura HV/MV</li>
 					    <li>Total length of lines: 38,54 km</li>
 					  </ul>
 					</p>
+					{{bar-chart data=totalPValue width='200px' height='250px' maxValue=25}}
 				      </td>
 				    </tr>
 				  </table>

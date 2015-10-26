@@ -8,8 +8,9 @@ export default Ember.Controller.extend({
   freq575Value: 0,
   voltage203937: [],
   loadGenProfiles: [],
+  totalPValue: [],
 
-  _waitForStateUpdate: false,
+  _freezeState: false,
 
   initState: function() {
     return this.get('state') === 1;
@@ -19,38 +20,48 @@ export default Ember.Controller.extend({
     return this.get('state') === 2;
   }.property('state'),
 
+  initButtonState: function() {
+    return this.get('state') === 1 || this.get('state') === 0;
+  }.property('state'),
+
+  eventButtonState: function() {
+    return this.get('state') === 2 || this.get('state') === 0;
+  }.property('state'),
+
   _updateController: function() {
     // update attribute values
     this._updateAttributes();
 
     // get new data file control state from store
-    var control = this.store.peekRecord('data-file-control', 'DataFileControl');
-    var updated = false;
+    if (this._freezeState === false) {
+      var control = this.store.peekRecord('data-file-control', 'DataFileControl');
 
-    if (control.get('Filename') === '/share/data/m1_S1_ElectricalGrid_data.txt') {
-      if (this.get('state') !== 1) {
-	this.set('state', 1);
-      }
-    } else {
-      if (this.get('state') !== 2) {
-	this.set('state', 2);
-      }
-    }
-
-    if (control.get('Status') === 'EOF') {
-      if (this.get('state') === 1) {
-	control.set('ForceReload', true);
+      if (control.get('Filename') === '/share/data/m1_S1_ElectricalGrid_data.txt') {
+	// state 1
+	if (this.get('state') !== 1) {
+	  this.set('state', 1);
+	}
       } else {
-	control.set('Filename', '/share/data/m1_S1_ElectricalGrid_data.txt');
+	// state 2
+	if (this.get('state') !== 2) {
+	  this.set('state', 2);
+	}
       }
 
-      updated = true;
+      if (control.get('Status') === 'EOF' && control.get('ForceReload') === false) {
+	if (this.get('state') === 1) {
+	  control.set('ForceReload', true);
+	} else {
+	  control.set('Filename', '/share/data/m1_S1_ElectricalGrid_data.txt');
+	  this.set('state', 1);
+	}
+
+	control.save();
+
+	Ember.debug('update control: ' + control.get('Filename') + ', ' + control.get('ForceReload'));
+      }
     }
 
-    if (updated) {
-      control.save();
-    }
-    
     Ember.run.later(this, this._updateController, 100);
   }.on('init'),
 
@@ -69,14 +80,16 @@ export default Ember.Controller.extend({
 
     var properties = entity.get('properties');
     if (!properties) {
+      Ember.debug('controller properties not found');
       return false;
     }
 
     // update attributes
     var attr_freq575 = properties.findBy('name', 'Freq_575');
-    if (attr_freq575) {
-      Ember.debug('controller freq575 not found');
+    if (attr_freq575) { 
       this.set('freq575Value', attr_freq575.get('currentValue'));
+    } else {
+      Ember.debug('controller freq575 not found');
     }
 
     var attr_voltage203937 = properties.findBy('name', 'Voltage203937');
@@ -96,7 +109,7 @@ export default Ember.Controller.extend({
     var attr_genProfile = properties.findBy('name', 'GenProfile');
 
     if (attr_loadProfile && attr_genProfile) {
-      this.set('loadGenProfile', [
+      this.set('loadGenProfiles', [
 	{
 	  label: 'Total consumption [MW]',
 	  data: attr_loadProfile.get('values'),
@@ -112,6 +125,19 @@ export default Ember.Controller.extend({
       Ember.debug('controller loadGenProfile not found');
     }
 
+    var attr_totalP = properties.findBy('name', 'TotalP_DS');
+    if (attr_totalP) {
+      this.set('totalPValue', [
+	{
+	  bars: { show: true },
+	  data: [[0, attr_totalP.get('currentValue')]],
+	  label: 'Total DS absorb [MW]'
+	}
+      ]);
+    } else {
+      Ember.debug('controller totalP not found');
+    }
+
     return true;
   },
 
@@ -120,9 +146,16 @@ export default Ember.Controller.extend({
 
     if (state === 1) {
       control.set('Filename', '/share/data/m1_S1_ElectricalGrid_data.txt');
+      this.set('state', 1);
     } else {
       control.set('Filename', '/share/data/m2_S1_ElectricalGrid_data.txt');
+      this.set('state', 2);
     }
+
+    this._freezeState = true;
+    Ember.run.later(this, function() {
+      this._freezeState = false;
+    }, 1000);
 
     console.log("changed data control");
     control.set('ForceReload', true);
