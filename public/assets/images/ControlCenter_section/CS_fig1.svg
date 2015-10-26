@@ -10,8 +10,8 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="1547.9999"
-   height="624"
+   width="766.37006"
+   height="395.80264"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.0 r9654"
@@ -64,8 +64,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.70710682"
-     inkscape:cx="1149.2192"
-     inkscape:cy="142.06867"
+     inkscape:cx="504.95259"
+     inkscape:cy="330.70026"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -94,17 +94,10 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(4054.2698,7820.3408)">
-    <rect
-       style="color:#000000;fill:none;stroke:none;stroke-width:4.96899986;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="rect2985-1-2-5-1-1-0"
-       width="821.06445"
-       height="409.59793"
-       x="-3602.3059"
-       y="-7763.5024" />
+     transform="translate(3410.0032,7120.6692)">
     <g
        id="g3129-0-8"
-       transform="matrix(5.6319941,0,0,-5.7141574,-3278.9378,-6448.2144)">
+       transform="matrix(5.6319941,0,0,-5.7141574,-3195.4992,-5906.5706)">
       <g
          id="g3131-7"
          clip-path="url(#clipPath3133-3-4)">
@@ -125,7 +118,7 @@
       </g>
     </g>
     <g
-       transform="matrix(1.1812552,0,0,1.1812552,-2933.3083,-7884.6353)"
+       transform="matrix(1.1812552,0,0,1.1812552,-2849.8697,-7342.9915)"
        id="layer1-2-4"
        inkscape:label="Ebene 1">
       <g
@@ -662,28 +655,21 @@
     </g>
     <text
        id="text3415-6-0"
-       x="-3289.2725"
-       y="-7699.7817"
+       x="-3205.834"
+       y="-7158.1382"
        style="font-size:39.0313797px;fill:#aa0000;stroke:none">
       <tspan
          style="font-size:85px;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#aa0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-         x="-3289.2725"
+         x="-3205.834"
          sodipodi:role="line"
-         y="-7699.7817"
+         y="-7158.1382"
          id="tspan3514-1" />
       <tspan
          style="font-size:85px;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#aa0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-         x="-3289.2725"
+         x="-3205.834"
          sodipodi:role="line"
-         y="-7593.5317"
+         y="-7051.8882"
          id="tspan3111">JRC Ispra</tspan>
     </text>
-    <rect
-       style="color:#000000;fill:none;stroke:none;stroke-width:4.96899986;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="rect3076"
-       width="1547.9999"
-       height="624"
-       x="-4054.2698"
-       y="-7820.3408" />
   </g>
 </svg>

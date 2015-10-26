@@ -10,8 +10,8 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="1547.9999"
-   height="624"
+   width="1205.673"
+   height="403.98267"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.0 r9654"
@@ -77,8 +77,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.50000002"
-     inkscape:cx="1145.752"
-     inkscape:cy="55.108979"
+     inkscape:cx="1019.7521"
+     inkscape:cy="661.10913"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -95,7 +95,7 @@
      inkscape:guide-bbox="true">
     <sodipodi:guide
        orientation="-0.70710678,0.70710678"
-       position="-513.08995,826.51197"
+       position="-639.08985,1432.5121"
        id="guide3002" />
   </sodipodi:namedview>
   <metadata
@@ -114,21 +114,21 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(4113.1064,8052.2466)">
+     transform="translate(3987.1064,7226.2292)">
     <text
        id="text3415-6"
-       x="-3502.856"
-       y="-7853.0674"
+       x="-3572.856"
+       y="-7127.0674"
        style="font-size:39.0313797px;fill:#aa0000;stroke:none">
       <tspan
          style="font-size:85px;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#aa0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-         x="-3502.856"
+         x="-3572.856"
          sodipodi:role="line"
-         y="-7853.0674"
+         y="-7127.0674"
          id="tspan3514">Politecnico di Torino</tspan>
     </text>
     <g
-       transform="matrix(1.0563462,0,0,1.0563462,-3864.9468,-8264.53)"
+       transform="matrix(1.0563462,0,0,1.0563462,-3934.9468,-7538.53)"
        id="layer1-0"
        inkscape:label="Ebene 1">
       <image
@@ -141,7 +141,7 @@
     </g>
     <g
        id="g3129-0-8-0"
-       transform="matrix(5.6319941,0,0,-5.7141574,-3263.2996,-6738.1306)">
+       transform="matrix(5.6319941,0,0,-5.7141574,-3333.2996,-6012.1306)">
       <g
          id="g3131-7-7"
          clip-path="url(#clipPath3133-3-4-7)">
@@ -161,12 +161,5 @@
         </g>
       </g>
     </g>
-    <rect
-       style="color:#000000;fill:none;stroke:none;stroke-width:4.96899986;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="rect3076"
-       width="1547.9999"
-       height="624"
-       x="-4113.1064"
-       y="-8052.2466" />
   </g>
 </svg>

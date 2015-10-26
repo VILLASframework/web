@@ -20,7 +20,7 @@
 				      <td style="width: 50%; padding-left: 20px">
 				      </td>
 				      <td style="width: 25%">
-					<img src={{"assets/images/TS_section/TS_fig1.svg"}} class="svg-image" style="float: right" />
+					<img src={{"assets/images/TS_section/TS_fig1.svg"}} class="svg-image" style="float: right; margin-top: -20px" />
 				      </td>
 				    </tr>
 				    <tr style="height: 85%">
@@ -39,7 +39,7 @@
 					    </ul>
 					  </p>
 					<div style="padding-top: 40px;">
-					  {{d3-alarm value=freq575Value alarmZones=freq575AlarmZones}}
+					  {{d3-alarm value=freq575Value alarmZones=freq575AlarmZones size=35}}
 					  {{d3-gauge label="Freq" value=freq575Value minValue=49 maxValue=51 minorTicks=4 size=120 greenZones=freq575GreenZones yellowZones=freq575YellowZones}}
 					</div>
 					<div style="width: 100%; margin-top: 150px">
@@ -63,15 +63,13 @@
 					      <h2>Control Center</h2>
 					    </td>
 					    <td style="width: 25%">
-					      <img src={{"assets/images/ControlCenter_section/CS_fig1.svg"}} class="svg-image" style="float: right" />
+					      <img src={{"assets/images/ControlCenter_section/CS_fig1.svg"}} class="svg-image" style="float: right; width: 40% !important" />
 					    </td>
 					  </tr>
 					  <tr style="height: 75%">
 					    <td style="width: 50%" colspan="2">
 					      <h3 style="text-align: center">
-						Distribution grid monitoring
-						<br />
-						Voltage measurement
+						Distribution grid monitoring voltage measurement
 					      </h3>
 
 					      {{line-chart data=Voltage203937 height="90%" xaxisLength=120 minValue=0.90  maxValue=1.05 label="RMS voltage [pu]"}}
@@ -82,6 +80,9 @@
 						</div>
 						<div style="position: relative; top: 30%; left: 30%">
 						  <button {{action 'eventData'}} disabled={{eventState}} id="event-button">ABNORMAL<br />cloudy + high demand</button>
+						</div>
+						<div style="position: relative; top: 48%; left: 76%">
+						  <a class="link-button" href="/technical/" target="_blank">Technical</a>
 						</div>
 					    </td>
 					  </tr>
@@ -107,12 +108,13 @@
 					{{/if}}
 				      </td>
 				      <td style="width: 25%">
-					<img src={{"assets/images/DS_section/DS_fig1.svg"}} class="svg-image" style="float: right" />
+					<img src={{"assets/images/DS_section/DS_fig1.svg"}} class="svg-image" style="float: right; margin-top: -20px;" />
 				      </td>
 				    </tr>
 				    <tr>
 				      <td colspan="2">
-					<p style="">
+					{{bar-chart width='200px' height='250px'}}
+					<p style="padding-top: 25px;">
 					  Turin - Piedmont - Italy<br />
 					  <ul>
 					    <li>Medium Voltage lines derived from Stura HV/MV</li>
@@ -135,7 +137,7 @@
 					      <h2>Prosumer behavior</h2>
 					    </td>
 					    <td style="width: 25%">
-					      <img src={{"assets/images/Prosumer_section/Cnsmr_fig1.svg"}} class="svg-image" style="float: right" />
+					      <img src={{"assets/images/Prosumer_section/Cnsmr_fig1.svg"}} class="svg-image" style="float: right; width: 40%;" />
 					    </td>
 					  </tr>
 					  <tr style="height: 75%">

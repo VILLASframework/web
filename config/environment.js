@@ -5,7 +5,7 @@ module.exports = function(environment) {
     modulePrefix: 'lab-mashup',
     environment: environment,
     baseURL: '/',
-    locationType: 'auto',
+    locationType: 'none',
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
@@ -60,6 +60,7 @@ module.exports = function(environment) {
 
   if (environment === 'production') {
     ENV.APP.API_HOST = 'http://46.101.131.212:80';
+    ENV.baseURL = '/simple/';
 
     ENV['ember-cli-mirage'] = {
       enabled: false

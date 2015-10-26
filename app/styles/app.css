@@ -108,7 +108,7 @@ footer {
 }
 
 .svg-image {
-	width: 80%;
+	width: 50%;
 	height: auto;
 }
 
@@ -154,7 +154,7 @@ h2 {
 
 h3 {
 	font-size: 0.85em;
-	font-weight: bold;
+	/*font-weight: bold;*/
 }
 
 h4 {
@@ -167,6 +167,7 @@ p {
 
 .gauge {
   padding-top: 20px;
+  padding-left: 20px;
 
   float: left;
 }
@@ -174,6 +175,7 @@ p {
 .alarm {
   float: right;
   padding-top: 20px;
+  padding-right: 80px;
 }
 
 button {
@@ -191,6 +193,25 @@ button {
 button:disabled {
   border: 3px solid gray !important;
   background-color: #ccc !important;
+}
+
+.link-button {
+  display: block;
+  border: 3px solid green;
+  color: #333;
+  background-color: #beb;
+
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  
+  width: 120px;
+  height: 30px;
+  padding: 5px;
+}
+
+.link-button:hover {
+  text-decoration: none !important;
 }
 
 #init-button {
