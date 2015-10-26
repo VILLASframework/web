@@ -4,9 +4,9 @@ export default Ember.Route.extend({
   model() {
     return this.store.query('entity', { entities: [
       {
-        id: 'S1_ElectricalGrid',
+        id: 'S3_ElectricalGrid',
         isPattern: false,
-        type: ''
+        type: 'ElectricalGridMonitoring'
       },
       {
 	id: 'DataFileControl',
@@ -28,9 +28,9 @@ export default Ember.Route.extend({
     // fetch new data from server
     this.store.query('entity', { entities: [
       {
-        id: 'S1_ElectricalGrid',
+        id: 'S3_ElectricalGrid',
         isPattern: false,
-        type: ''
+        type: 'ElectricalGridMonitoring'
       },
       {
 	id: 'DataFileControl',

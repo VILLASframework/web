@@ -45,9 +45,8 @@ export default Ember.Component.extend({
       // start blinking
       this._blinkState = true;
       this._blinking = true;
-    } else if (litAlarm && this._blinking === true) {
-      // switch blink state
-      this._blinkState = !this._blinkState;
+
+      Ember.run.later(this, this._updateBlinkState, 1000);
     } else if (litAlarm === false && this._blinking === true) {
       // stop blinking
       this._blinking = false;
@@ -70,10 +69,6 @@ export default Ember.Component.extend({
 	.style("stroke", "#000")
 	.style("stroke-width", "0.5px");
     }
-
-    if (this._blinking === true) {
-      Ember.run.later(this, this._redraw, 500);
-    }
   }.observes('value'),
 
   _shouldLitAlarm: function() {
@@ -88,5 +83,13 @@ export default Ember.Component.extend({
     }
 
     return false;
+  },
+
+  _updateBlinkState: function() {
+    if (this._blinking === true) {
+      this._blinkState = !this._blinkState;
+
+      Ember.run.later(this, this._updateBlinkState, 1000);
+    }
   }
 });
