@@ -61,29 +61,29 @@ header {
 	color: #103B7D;
 	background-color: #fff;
 
-	height: 100px;
+	height: 60px;
 	top: 0;
 	
 	border-bottom: 3px solid #bbb;
 }
 
 header #title {
-	font-size: 35px;
+	font-size: 25px;
 	font-weight: 100;
 	text-align: left;
 	text-rendering: optimizeLegibility;
 	-webkit-text-rendering: optimizeLegiblity;
 	-moz-text-rendering: optimizeLegibitliy;
 	
-	padding: 15px 0 15px 30px;
+	padding: 15px 0 20px 30px;
 	
 	float: left;
 }
 
 header #logos {
-	height: 100px;
+	height: 60px;
 	
-	padding-top: 10px;
+	padding-top: 15px;
 	
 	float: right;
 }
@@ -100,7 +100,7 @@ footer {
 }
 
 #main {
-	top: 100px;
+	top: 60px;
 	bottom: 25px;
 	
 	left: 20px;
@@ -108,13 +108,15 @@ footer {
 }
 
 .svg-image {
-	width: 75%;
+	width: 90%;
 	height: auto;
+
+	padding-left: 130px;
 }
 
 .svg-logo {
 	width: auto;
-	height: 80px;
+	height: 30px;
 	
 	padding-right: 30px;
 	
@@ -122,9 +124,9 @@ footer {
 }
 
 #rwth-logo {
-	margin-top: 15px;
+	margin-top: 10px;
 	
-	height: 40px !important;
+	height: 15px !important;
 }
 
 h1 {

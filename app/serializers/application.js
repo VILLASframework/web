@@ -79,24 +79,26 @@ export default DS.RESTSerializer.extend({
 
           if (item.contextElement.attributes) {
             item.contextElement.attributes.forEach(function(attribute) {
-              if (attribute.type !== 'category') {
+              if (attribute.type !== 'category' && attribute.name !== 'timestamp') {
                 // find metadata
                 var timestamp = 0;
 				var source = "";
 				var minValue;
 				var maxValue;
 
-                attribute.metadatas.forEach(function(metadata) {
-                  if (metadata.name === 'timestamp') {
-                    timestamp = Date.parse(metadata.value);
-                  } else if (metadata.name === 'source') {
-					  				source = metadata.value;
-                  } else if (metadata.name === 'min') {
-					  				minValue = metadata.value;
-                  } else if (metadata.name === 'max') {
-					  				maxValue = metadata.value;
-                  }
-                });
+		if (attribute.metadatas) {
+		  attribute.metadatas.forEach(function(metadata) {
+		    if (metadata.name === 'timestamp') {
+		      timestamp = Date.parse(metadata.value);
+		    } else if (metadata.name === 'source') {
+									  source = metadata.value;
+		    } else if (metadata.name === 'min') {
+									  minValue = metadata.value;
+		    } else if (metadata.name === 'max') {
+									  maxValue = metadata.value;
+		    }
+		  });
+		}
 
                 if (timestamp === 0) {
                   timestamp = (new Date()).getTime();

@@ -60,6 +60,7 @@ module.exports = function(environment) {
 
   if (environment === 'production') {
     ENV.APP.API_HOST = 'http://46.101.131.212:80';
+    ENV.baseURL = '/technical/';
 
     ENV['ember-cli-mirage'] = {
       enabled: false
