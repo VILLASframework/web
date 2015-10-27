@@ -48,7 +48,12 @@ export default Ember.Controller.extend({
 	}
       }
 
-      if (control.get('Status') === 'EOF' && control.get('ForceReload') === false) {
+      var status = control.get('Status');
+      var reload = control.get('ForceReload');
+
+      /*Ember.debug('status: ' + status + ', reload: ' + reload);*/
+
+      if ((status === 'EOF') && ((reload === false) || (reload) === 'false')) {
 	if (this.get('state') === 1) {
 	  control.set('ForceReload', true);
 	} else {
@@ -130,8 +135,7 @@ export default Ember.Controller.extend({
       this.set('totalPValue', [
 	{
 	  bars: { show: true },
-	  data: [[0, attr_totalP.get('currentValue')]],
-	  label: 'Total DS absorb [MW]'
+	  data: [[0, attr_totalP.get('currentValue')]]
 	}
       ]);
     } else {

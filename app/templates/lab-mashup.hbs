@@ -38,11 +38,11 @@
 					      <li>Electric power capacity: 8458 MW</li>
 					    </ul>
 					  </p>
-					<div style="padding-top: 40px;">
+					<div style="padding-top: 60px; padding-left: 20px;">
 					  {{d3-alarm value=freq575Value alarmZones=freq575AlarmZones size=35}}
 					  {{d3-gauge label="Freq" value=freq575Value minValue=49 maxValue=51 minorTicks=4 size=120 greenZones=freq575GreenZones yellowZones=freq575YellowZones}}
 					</div>
-					<div style="width: 100%; margin-top: 150px">
+					<div style="width: 100%; margin-top: 150px; padding-left: 10px;">
 					  <h3 style="padding-left: 10px">
 					    Frequency measurement<br />
 					    at STURA substation
@@ -56,17 +56,17 @@
 			<td style="padding-top: 5px;">
 				<div class="layout-page">
 					<table class="page-grid">
-					  <tr style="height: 25%">
+					  <tr style="height: 15%">
 					    <td style="width: 25%">
 					    </td>
 					    <td style="width: 50%" colspan="2">
 					      <h2>Control Center</h2>
 					    </td>
 					    <td style="width: 25%">
-					      <img src={{"assets/images/ControlCenter_section/CS_fig1.svg"}} class="svg-image" style="float: right; width: 40% !important" />
+					      <img src={{"assets/images/ControlCenter_section/CS_fig1.svg"}} class="svg-image" style="float: right; width: 50% !important" />
 					    </td>
 					  </tr>
-					  <tr style="height: 75%">
+					  <tr style="height: 85%">
 					    <td style="width: 50%" colspan="2">
 					      <h3 style="text-align: center">
 						Distribution grid monitoring voltage measurement
@@ -81,7 +81,7 @@
 						<div style="position: relative; top: 30%; left: 30%">
 						  <button {{action 'eventData'}} disabled={{eventButtonState}} id="event-button">ABNORMAL<br />cloudy + high demand</button>
 						</div>
-						<div style="position: relative; top: 48%; left: 76%">
+						<div style="position: relative; top: 48%; left: 72%">
 						  <a class="link-button" href="/technical/" target="_blank">Technical</a>
 						</div>
 					    </td>
@@ -113,14 +113,17 @@
 				    </tr>
 				    <tr>
 				      <td colspan="2">
-					<p style="padding-top: 25px; padding-bottom: 30px">
+					<p style="padding-top: 25px; padding-bottom: 20px">
 					  Turin - Piedmont - Italy<br />
 					  <ul>
 					    <li>Medium Voltage lines derived from Stura HV/MV</li>
 					    <li>Total length of lines: 38,54 km</li>
 					  </ul>
 					</p>
-					{{bar-chart data=totalPValue width='200px' height='250px' maxValue=25}}
+					{{bar-chart data=totalPValue width='200px' height='250px' maxValue=30}}
+					<h3 style="padding-left: 15px;">
+					  Total Net Consumption [MW]
+					</h3>
 				      </td>
 				    </tr>
 				  </table>
@@ -130,17 +133,17 @@
 			<td style="padding-bottom: 5px;">
 				<div class="layout-page">
 					<table class="page-grid">
-					  <tr style="height: 25%">
+					  <tr style="height: 15%">
 					    <td style="width: 25%">
 					    </td>
 					    <td style="width: 50%" colspan="2">
 					      <h2>Prosumer behavior</h2>
 					    </td>
 					    <td style="width: 25%">
-					      <img src={{"assets/images/Prosumer_section/Cnsmr_fig1.svg"}} class="svg-image" style="float: right; width: 40%;" />
+					      <img src={{"assets/images/Prosumer_section/Cnsmr_fig1.svg"}} class="svg-image" style="float: right; width: 50% !important;" />
 					    </td>
 					  </tr>
-					  <tr style="height: 75%">
+					  <tr style="height: 85%">
 					    <td style="width: 50%; padding-left: 0px" colspan="2">
 					      <h3 style="text-align: center">
 						Prosumer: Consumption and generation profiles
@@ -150,10 +153,10 @@
 					    </td>
 					    <td style="width: 50%;" colspan="2">
 					      {{#if initState}}
-						<img src={{"assets/images/Prosumer_section/Prosumer_gif_m1.gif"}} style="width: 55%; height: auto; float: right; margin-right: 100px" class="shadowed" />
+						<img src={{"assets/images/Prosumer_section/Prosumer_gif_m1.gif"}} style="width: 55%; height: auto; float: right; margin-right: 100px; margin-top: 40px;" class="shadowed" />
 					      {{/if}}
 					      {{#if eventState}}
-						<img src={{"assets/images/Prosumer_section/Prosumer_gif_m2.gif"}} style="width: 55%; height: auto; float: right; margin-right: 100px" class="shadowed" />
+						<img src={{"assets/images/Prosumer_section/Prosumer_gif_m2.gif"}} style="width: 55%; height: auto; float: right; margin-right: 100px; margin-top: 40px;" class="shadowed" />
 					      {{/if}}
 					    </td>
 					  </tr>
