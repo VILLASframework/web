@@ -80,6 +80,20 @@ export default DS.RESTSerializer.extend({
     }
   },
 
+  normalizeSaveResponse: function(store, primaryModelClass, payload, id, requestType) {
+    if (payload.contextResponses) {
+      payload.contextResponses.forEach(function(response) {
+	if (response.statusCode.code !== 200 && response.statusCode.code !== '200') {
+	  Ember.debug('Failed update DataFileControl: ' + response.statusCode.code + ', ' + response.statusCode.details);
+	}
+      });
+    }
+
+    Ember.debug('cb response');
+
+    return { data: {} };
+  },
+
   _normalizePayload: function(payload, handleItem) {
     var propertyIndex = 0;
 
@@ -145,11 +159,11 @@ export default DS.RESTSerializer.extend({
 		      if (metadata.name === 'timestamp') {
 			timestamp = Date.parse(metadata.value);
 		      } else if (metadata.name === 'source') {
-									    source = metadata.value;
+			source = metadata.value;
 		      } else if (metadata.name === 'min') {
-									    minValue = metadata.value;
+			minValue = metadata.value;
 		      } else if (metadata.name === 'max') {
-									    maxValue = metadata.value;
+			maxValue = metadata.value;
 		      }
 		    });
 		  }
@@ -232,6 +246,12 @@ export default DS.RESTSerializer.extend({
         item.attributes.values.forEach(function (value) {
           record.get('values').push(value);
         });
+
+	// erase old data
+	while (record.get('values').length > 500) {
+	  record.get('values').shift();
+	  /*Ember.debug('Shift on ' + record.get('name'));*/
+	}
 
         record.set('timestamp', item.attributes.timestamp);
 	record.set('currentValue', item.attributes.currentValue);

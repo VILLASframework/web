@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import ENV from '../config/environment';
 
 export default Ember.Controller.extend({
   freq575GreenZones: [{from: 49.5, to: 50.5}],
@@ -28,6 +29,11 @@ export default Ember.Controller.extend({
     return this.get('state') === 2 || this.get('state') === 0;
   }.property('state'),
 
+  showExtendedView: function() {
+    Ember.debug(ENV.APP.SHOW_EXTENDED_VIEW);
+    return ENV.APP.SHOW_EXTENDED_VIEW;
+  }.property(),
+
   _updateController: function() {
     // update attribute values
     this._updateAttributes();
@@ -35,21 +41,28 @@ export default Ember.Controller.extend({
     // get new data file control state from store
     if (this._freezeState === false) {
       var control = this.store.peekRecord('data-file-control', 'DataFileControl');
+      var reload = control.get('ForceReload');
 
-      if (control.get('Filename') === '/share/data/m1_S1_ElectricalGrid_data.txt') {
-	// state 1
-	if (this.get('state') !== 1) {
-	  this.set('state', 1);
-	}
-      } else {
-	// state 2
-	if (this.get('state') !== 2) {
-	  this.set('state', 2);
+      if (reload === false || reload === 'false') {
+	if (control.get('Filename') === '/share/data/m1_S1_ElectricalGrid_data.txt') {
+	  // state 1
+	  if (this.get('state') !== 1) {
+	    this.set('state', 1);
+
+	    Ember.debug('update state (1)');
+	  }
+	} else {
+	  // state 2
+	  if (this.get('state') !== 2) {
+	    this.set('state', 2);
+
+	    Ember.debug('update state (2)');
+	  }
 	}
       }
 
       var status = control.get('Status');
-      var reload = control.get('ForceReload');
+      
 
       /*Ember.debug('status: ' + status + ', reload: ' + reload);*/
 
@@ -67,7 +80,7 @@ export default Ember.Controller.extend({
       }
     }
 
-    Ember.run.later(this, this._updateController, 100);
+    Ember.run.later(this, this._updateController, ENV.APP.UPDATE_RATE);
   }.on('init'),
 
   _updateAttributes: function() {

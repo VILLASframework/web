@@ -63,13 +63,13 @@
 					      <h2>Control Center</h2>
 					    </td>
 					    <td style="width: 25%">
-					      <img src={{"assets/images/ControlCenter_section/CS_fig1.svg"}} class="svg-image" style="float: right; width: 50% !important" />
+					      <img src={{"assets/images/ControlCenter_section/CS_fig1.svg"}} class="svg-image" style="float: right; width: 65% !important" />
 					    </td>
 					  </tr>
 					  <tr style="height: 85%">
 					    <td style="width: 50%" colspan="2">
 					      <h3 style="text-align: center">
-						Distribution grid monitoring voltage measurement
+						Distribution grid monitoring: voltage measurement
 					      </h3>
 
 					      {{line-chart data=voltage203937 height="90%" xaxisLength=120 minValue=0.90  maxValue=1.05 label="RMS voltage [pu]"}}
@@ -81,9 +81,11 @@
 						<div style="position: relative; top: 30%; left: 30%">
 						  <button {{action 'eventData'}} disabled={{eventButtonState}} id="event-button">ABNORMAL<br />cloudy + high demand</button>
 						</div>
-						<div style="position: relative; top: 48%; left: 72%">
-						  <a class="link-button" href="/technical/" target="_blank">Technical</a>
-						</div>
+						{{#if showExtendedView}}
+						  <div style="position: relative; top: 45%; left: 72%">
+						    <a class="link-button" href="/technical/" target="_blank">Extended View</a>
+						  </div>
+						{{/if}}
 					    </td>
 					  </tr>
 					</table>
@@ -120,7 +122,7 @@
 					    <li>Total length of lines: 38,54 km</li>
 					  </ul>
 					</p>
-					{{bar-chart data=totalPValue width='200px' height='250px' maxValue=30}}
+					{{bar-chart data=totalPValue width='200px' height='230px' maxValue=30}}
 					<h3 style="padding-left: 15px;">
 					  Total Net Consumption [MW]
 					</h3>
@@ -140,7 +142,7 @@
 					      <h2>Prosumer behavior</h2>
 					    </td>
 					    <td style="width: 25%">
-					      <img src={{"assets/images/Prosumer_section/Cnsmr_fig1.svg"}} class="svg-image" style="float: right; width: 50% !important;" />
+					      <img src={{"assets/images/Prosumer_section/Cnsmr_fig1.svg"}} class="svg-image" style="float: right; width: 65% !important;" />
 					    </td>
 					  </tr>
 					  <tr style="height: 85%">

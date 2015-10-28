@@ -17,7 +17,9 @@ module.exports = function(environment) {
       // Here you can pass flags/options to your application instance
       // when it is created
 
-      API_HOST: 'http://46.101.131.212:80'
+      API_HOST: '',
+      UPDATE_RATE: 200,
+      SHOW_EXTENDED_VIEW: true,
     },
 
     contentSecurityPolicy: {
@@ -31,6 +33,11 @@ module.exports = function(environment) {
     }
   };
 
+  // disable mirage
+  ENV['ember-cli-mirage'] = {
+    enabled: false
+  }
+
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
@@ -38,12 +45,7 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
 
-    //ENV.APP.API_HOST = 'http://localhost:4200';
-
-    ENV['ember-cli-mirage'] = {
-      //enabled: true
-      enabled: false
-    }
+    ENV.APP.API_HOST = 'http://46.101.131.212:80';
   }
 
   if (environment === 'test') {
@@ -59,12 +61,15 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-    ENV.APP.API_HOST = 'http://46.101.131.212:80';
     ENV.baseURL = '/simple/';
+  }
 
-    ENV['ember-cli-mirage'] = {
-      enabled: false
-    }
+  if (environment === 'simple') {
+    ENV.APP.SHOW_EXTENDED_VIEW = false;
+  }
+
+  if (environment === 'extended') {
+    ENV.APP.SHOW_EXTENDED_VIEW = true;
   }
 
   return ENV;
