@@ -64,13 +64,15 @@ export default DS.RESTSerializer.extend({
   serializeIntoHash: function(hash, typeClass, snapshot, options) {
     hash.contextElements = [
       {
-	id: snapshot.id,
+	id: 'DataFileControl',
 	type: 'DataFileControl',
 	isPattern: false,
 	attributes: []
       }
     ];
     hash.updateAction = "APPEND";
+
+    console.log(hash);
 
     for (var name in snapshot._attributes) {
       hash.contextElements[0].attributes.push({
