@@ -1,11 +1,11 @@
 import Ember from 'ember';
+import ENV from '../config/environment';
 
 export default Ember.Component.extend({
   tagName: 'div',
   classNames: ['line-chart'],
 	attributeBindings: ['style'],
-  xaxisLength: 300,
-  updateTime: 100,
+  xaxisLength: 120,
 	height: '100%',
 	useLabel: true,
 
@@ -19,7 +19,7 @@ export default Ember.Component.extend({
 
     Ember.run.later(this, function() {
       this._drawPlot();
-    }, this.updateTime);
+    }, ENV.APP.UPDATE_RATE);
   },
 
   dataDidChange: function() {
@@ -108,6 +108,6 @@ export default Ember.Component.extend({
     // try again
     Ember.run.later(this, function() {
       this._drawPlot();
-    }, this.updateTime);
+    }, ENV.APP.UPDATE_RATE);
   }
 });

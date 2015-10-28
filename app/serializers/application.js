@@ -78,32 +78,34 @@ export default DS.RESTSerializer.extend({
           }
 
           if (item.contextElement.attributes) {
-            item.contextElement.attributes.forEach(function(attribute) {
+            var timestamp = 0;
+
+	    item.contextElement.attributes.forEach(function(attribute) {
+	      if (attribute.name === 'timestamp') {
+		timestamp = attribute.value;
+	      }
+	    });
+	    
+	    item.contextElement.attributes.forEach(function(attribute) {
               if (attribute.type !== 'category' && attribute.name !== 'timestamp') {
                 // find metadata
-                var timestamp = 0;
-				var source = "";
-				var minValue;
-				var maxValue;
+		var source = "";
+		var minValue;
+		var maxValue;
 
 		if (attribute.metadatas) {
 		  attribute.metadatas.forEach(function(metadata) {
 		    if (metadata.name === 'timestamp') {
 		      timestamp = Date.parse(metadata.value);
 		    } else if (metadata.name === 'source') {
-									  source = metadata.value;
+		      source = metadata.value;
 		    } else if (metadata.name === 'min') {
-									  minValue = metadata.value;
+		      minValue = metadata.value;
 		    } else if (metadata.name === 'max') {
-									  maxValue = metadata.value;
+		      maxValue = metadata.value;
 		    }
 		  });
 		}
-
-                if (timestamp === 0) {
-                  timestamp = (new Date()).getTime();
-                }
-				
 
                 // create property
                 var property = {
@@ -114,9 +116,9 @@ export default DS.RESTSerializer.extend({
                     type: attribute.type,
                     timestamp: timestamp,
                     visible: false,
-										source: source,
-										minValue: minValue,
-										maxValue: maxValue,
+		    source: source,
+		    minValue: minValue,
+		    maxValue: maxValue,
                     values: []
                   },
                   relationships: {
@@ -136,7 +138,7 @@ export default DS.RESTSerializer.extend({
                     	property.attributes.values.push(value);
                     });
                   } else {
-                    property.attributes.values.push([timestamp, attribute.value]);
+                    property.attributes.values.push([(new Date()).getTime(), attribute.value]);
                   }
                 }
 
@@ -180,6 +182,10 @@ export default DS.RESTSerializer.extend({
         item.attributes.values.forEach(function (value) {
           record.get('values').push(value);
         });
+
+	while (record.get('values').length > 500) {
+	  record.get('values').shift();
+	}
 
         record.set('timestamp', item.attributes.timestamp);
       }

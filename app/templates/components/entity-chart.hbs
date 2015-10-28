@@ -1,15 +1,15 @@
 <table class="page-grid">
 	<tr>
-		<td valign="top" class="property-cell">
+		<td valign="top" class="property-cell" style="padding-top: 30px;">
 			{{#if entityAvailable}}
 				{{property-table model=entity showProperty="showPropertyValues"}}
 			{{/if}}
 		</td>
 		<td valign="top" width="100%" height="100%" class="chart-cell">	
-			<h2>{{entityName}}</h2>
+			<h1 style="text-align: center">{{entityName}}</h1>
 		
 			{{#if entityAvailable}}
-				{{line-chart data=visibleProperty height="80%"}}
+				{{line-chart data=visibleProperty height="95%"}}
 				
 				<!-- {{#if visibleProperty}}
 					<h4 class="label-source">Source: {{visibleProperty.source}}</h4>

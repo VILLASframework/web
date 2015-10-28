@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import ENV from '../config/environment';
 
 export default Ember.Route.extend({
   model() {
@@ -12,6 +13,11 @@ export default Ember.Route.extend({
         id: 'S2_ElectricalGrid',
         isPattern: false,
         type: 'ElectricalGridMonitoring'
+      },
+      {
+	id: 'S3_ElectricalGrid',
+	isPattern: false,
+	type: 'ElectricalGridMonitoring'
       }
     ]});
     //return this.store.findAll('entity');
@@ -21,7 +27,7 @@ export default Ember.Route.extend({
     // first time call poll
     Ember.run.later(this, function() {
       this.refreshEntities();
-    }, 100);
+    }, ENV.APP.UPDATE_RATE);
   },
 
   refreshEntities: function() {
@@ -36,6 +42,11 @@ export default Ember.Route.extend({
         id: 'S2_ElectricalGrid',
         isPattern: false,
         type: 'ElectricalGridMonitoring'
+      },
+      {
+	id: 'S3_ElectricalGrid',
+	isPattern: false,
+	type: 'ElectricalGridMonitoring'
       }
     ]});
     //this.store.findAll('entity');
@@ -43,6 +54,6 @@ export default Ember.Route.extend({
     // reschedule refresh
     Ember.run.later(this, function() {
       this.refreshEntities();
-    }, 100);
+    }, ENV.APP.UPDATE_RATE);
   }
 });

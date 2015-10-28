@@ -1,35 +1,40 @@
 <section class="row" id="main">
 	<table class="grid">
-		<tr height="50%">
-			<td colspan="2" style="padding-top: 20px;">
-				<div class="layout-page" id="simulation-page" width="66%" height="100%">
+		<tr style="height: 50%">
+			<td colspan="2" style="padding-top: 20px; padding-right: 5px;">
+				<div class="layout-page" id="simulation-page">
 					<img src={{"assets/images/TS_DS_grid_withSimulators_web.svg"}} class="svg-image" />
 				</div>
 			</td>
-			<td rowspan="2" width="33%" style="padding-top: 20px; padding-bottom: 20px">
-				<div class="layout-page" id="consumer-page">
-					<h1>Consumer – JRC Petten</h1>
-					
-					<h2>Distribution grid: consumption and PV generation</h2>
-					{{static-chart height="35%"}}
-					
-					<h2>Voltage203937 [pu]</h2>
-					{{line-chart data=S2Voltage203937 height="15%" useLabel=false}}
-					
-					<h2>Flow1551412_204871 [MW]</h2>
-					{{line-chart data=S2Flow1551412_204871 height="15%" useLabel=false}}
-					
-					<h2>Frequency at the substation bus [Hz]</h2>
-					{{line-chart data=S1Freq575 height="15%" useLabel=false}}
-				</div>
+			<td width="33%" style="padding-top: 20px;">
+			  <div class="layout-page">
+			    <h1>Control Center</h1>
+
+			    <h2>Voltage203937 [pu]</h2>
+			    {{line-chart data=S2Voltage203937 height="40%" useLabel=false}}
+					  
+			    <h2>Frequency at the substation bus [Hz]</h2>
+			    {{line-chart data=S1Freq575 height="40%" useLabel=false}}
+			  </div>
 			</td>
 		</tr>
-		<tr height="50%">
+		<tr style="height: 50%">
 			<td width="33%" style="padding-bottom: 20px;">
-				{{entity-chart entity=S1Entity entityName="Transmission – RWTH Aachen University"}}
+				{{entity-chart entity=S1Entity entityName="Transmission system simulation"}}
 			</td>
 			<td width="33%" style="padding-bottom: 20px;">
-				{{entity-chart entity=S2Entity entityName="Distribution – Politecnico di Torino"}}
+				{{entity-chart entity=S2Entity entityName="Distribution system simulation"}}
+			</td>
+			<td style="width: 33%; padding-bottom: 20px;">
+			  <div class="layout-page" id="consumer-page">
+					<h1>Prosumer behavior</h1>
+					
+					<h2>Prosumer: Total consumption [MW]</h2>
+					{{line-chart data=S3LoadProfile height="40%" useLabel=false}}
+
+					<h2>Prosumer: Total PV generation [MW]</h2>
+					{{line-chart data=S3GenProfile height="40%" useLabel=false}}
+				</div>
 			</td>
 		</tr>
 	</table>
