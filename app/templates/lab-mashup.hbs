@@ -19,7 +19,7 @@
 				      </td>
 				      <td style="width: 50%; padding-left: 20px">
 				      </td>
-				      <td style="width: 25%">
+				      <td style="width: 35%">
 					<img src={{"assets/images/TS_section/TS_fig1.svg"}} class="svg-image" style="float: right; margin-top: -20px" />
 				      </td>
 				    </tr>
@@ -30,7 +30,7 @@
 					  </div>
 				      </td>
 				      <td style="width: 35%">
-					<p style="">
+					<p style="padding-top: 30px; padding-left: 15px;">
 					    Piedmont Region - Italy
 					    <ul>
 					      <li>Surface area: 25400 km&#178;</li>
@@ -42,7 +42,7 @@
 					  {{d3-alarm value=freq575Value alarmZones=freq575AlarmZones size=35}}
 					  {{d3-gauge label="Freq" value=freq575Value minValue=49 maxValue=51 minorTicks=4 size=120 greenZones=freq575GreenZones yellowZones=freq575YellowZones}}
 					</div>
-					<div style="width: 100%; margin-top: 150px; padding-left: 10px;">
+					<div style="width: 100%; margin-top: 130px; padding-left: 10px;">
 					  <h3 style="padding-left: 10px">
 					    Frequency measurement<br />
 					    at STURA substation
@@ -98,7 +98,7 @@
 				  <h2>Distribution system simulation</h2>
 				  <table class="page-grid">
 				    <tr>
-				      <td style="width: 80%" rowspan="2">
+				      <td style="width: 72%" rowspan="2">
 					<h3>
 					  Italy - Piedmont - Turin
 					</h3>
@@ -109,7 +109,7 @@
 					  <img src={{"assets/images/DS_section/DSmap_m2.gif"}} id="DS-image" />
 					{{/if}}
 				      </td>
-				      <td style="width: 25%">
+				      <td style="width: 28%">
 					<img src={{"assets/images/DS_section/DS_fig1.svg"}} class="svg-image" style="float: right; margin-top: -20px; width: 105% !important;" />
 				      </td>
 				    </tr>
@@ -122,10 +122,11 @@
 					    <li>Total length of lines: 38,54 km</li>
 					  </ul>
 					</p>
-					{{bar-chart data=totalPValue width='200px' height='230px' maxValue=30}}
+					{{bar-chart data=totalPValue width='170px' height='200px' maxValue=25}}
 					<h3 style="padding-left: 15px;">
 					  Total Net Consumption [MW]
 					</h3>
+					<img src={{"assets/images/flexmeter_logo.svg"}} class="svg-image" style="float: right; width: 50px; margin-top: -25px;"  />
 				      </td>
 				    </tr>
 				  </table>
