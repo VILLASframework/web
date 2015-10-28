@@ -19,7 +19,7 @@ module.exports = function(environment) {
 
       API_HOST: '',
       UPDATE_RATE: 200,
-      SHOW_EXTENDED_VIEW: true,
+      SHOW_EXTENDED_VIEW: process.env.SHOW_EXTENDED_VIEW,
     },
 
     contentSecurityPolicy: {
@@ -62,14 +62,6 @@ module.exports = function(environment) {
 
   if (environment === 'production') {
     ENV.baseURL = '/simple/';
-  }
-
-  if (environment === 'simple') {
-    ENV.APP.SHOW_EXTENDED_VIEW = false;
-  }
-
-  if (environment === 'extended') {
-    ENV.APP.SHOW_EXTENDED_VIEW = true;
   }
 
   return ENV;

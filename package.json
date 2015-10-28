@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "ember-cli-cors": "0.0.1",
-    "ember-cli-flot": "0.0.3"
+    "ember-cli-flot": "0.0.3",
+    "ember-cli-dotenv": "~1.0.4"
   }
 }

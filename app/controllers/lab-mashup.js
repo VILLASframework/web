@@ -30,8 +30,7 @@ export default Ember.Controller.extend({
   }.property('state'),
 
   showExtendedView: function() {
-    Ember.debug(ENV.APP.SHOW_EXTENDED_VIEW);
-    return ENV.APP.SHOW_EXTENDED_VIEW;
+    return (ENV.APP.SHOW_EXTENDED_VIEW === 'true');
   }.property(),
 
   _updateController: function() {
