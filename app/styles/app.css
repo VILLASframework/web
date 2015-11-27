@@ -50,6 +50,11 @@ html, body {
 	display: none;
 }
 
+.vertical-text {
+  transform: rotate(270deg);
+  transform-origin: left top 0;
+}
+
 /*
  * Application
  */
@@ -178,7 +183,8 @@ p {
 }
 
 .layout-page {
-	background-color: #f2f2f2;
+	/*background-color: #f2f2f2;*/
+	background-color: #fff;
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
 				0 9px 18px 0 rgba(0, 0, 0, 0.1);
 	
@@ -250,7 +256,8 @@ p {
 }
 
 .data-table {
-	background: #eee;
+	/*background: #eee;*/
+	background: #fff;
 
 	margin: 0;
 	padding: 0;

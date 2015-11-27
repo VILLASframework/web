@@ -52,22 +52,26 @@ export default Ember.Component.extend({
 					
 					// generate plot options
 					var options = {
-						series: {
-							lines: {
-								show: true,
-								lineWidth: 2
-							},
-							shadowSize: 0
-						},
-						xaxis: {
-				    	mode: 'time',
-				    	timeformat: '%M:%S',
-				    	min: firstTimestamp,
-				    	max: lastTimestamp
-						},
-						yaxis: {
-							tickDecimals: 3
-						}
+					  series: {
+					    lines: {
+					      show: true,
+					      lineWidth: 2
+					    },
+					    shadowSize: 0
+					  },
+					  xaxis: {
+					    mode: 'time',
+					    timeformat: '%M:%S',
+					    min: firstTimestamp,
+					    max: lastTimestamp,
+					    axisLabel: 'time [min]',
+					    axisLabelUseCanvas: true
+					  },
+					  yaxis: {
+					    tickDecimals: 1,
+					    axisLabel: this.data.get('type'),
+					    axisLabelUseCanvas: true
+					  }
 					}
 					
 					// set y axis scale
@@ -86,7 +90,7 @@ export default Ember.Component.extend({
 					}
 					
 					if (this.get('useLabel')) {
-						plotData.label = this.data.get('name') + " [" + this.data.get('type') + "]";
+						plotData.label = this.data.get('name');
 					}
 					
 					// draw plot
