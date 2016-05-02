@@ -1,17 +1,24 @@
-ember: &defaults
-  image: danlynn/ember-cli
+nginx:
+  image: nginx
   volumes:
-    - .:/myapp
-  command: server --watcher polling
+    - ./nginx.default.conf:/etc/nginx/conf.d/default.conf
+  links:
+    - orion
   ports:
-    - "4200:4200"
-    - "35729:35729"
+    - "80:80"
 
-npm:
-  <<: *defaults
-  entrypoint: ['/usr/local/bin/npm']
+mongo:
+  image: mongo:3.2
+  command: --smallfiles --nojournal
 
-bower:
-  <<: *defaults
-  entrypoint: ['/usr/local/bin/bower', '--allow-root']
+orion:
+  image: fiware/orion
+  links:
+    - mongo
+  command: -dbhost mongo
 
+playback:
+  image: acs/playback
+  links:
+    - orion
+  command: orion:1026 m1_S1_ElectricalGrid_data.txt

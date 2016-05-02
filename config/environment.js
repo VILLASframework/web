@@ -26,7 +26,7 @@ module.exports = function(environment) {
       'default-src': "'none'",
       'script-src': "'self' 'unsafe-eval'",
       'font-src': "'self'",
-      'connect-src': "'self' 46.101.131.212:80",
+      'connect-src': "'self' 192.168.99.100:80",
       'img-src': "'self'",
       'style-src': "'self' 'unsafe-inline'",
       'media-src': "'self'"
@@ -45,7 +45,7 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
 
-    ENV.APP.API_HOST = 'http://46.101.131.212:80';
+    ENV.APP.API_HOST = 'http://192.168.99.100:80';
   }
 
   if (environment === 'test') {
