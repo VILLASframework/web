@@ -1,0 +1,24 @@
+nginx:
+  image: nginx
+  volumes:
+    - ./nginx-conf.d/:/etc/nginx/conf.d/
+  links:
+    - orion
+  ports:
+    - "80:80"
+
+mongo:
+  image: mongo:3.2
+  command: --smallfiles --nojournal
+
+orion:
+  image: fiware/orion
+  links:
+    - mongo
+  command: -dbhost mongo
+
+playback:
+  image: acs/playback
+  links:
+    - orion
+  command: orion:1026 m1_S1_ElectricalGrid_data.txt

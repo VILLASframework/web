@@ -7,17 +7,7 @@ export default Ember.Route.extend({
       {
         id: 'S1_ElectricalGrid',
         isPattern: false,
-        type: 'ElectricalGridMonitoring'
-      },
-      {
-        id: 'S2_ElectricalGrid',
-        isPattern: false,
-        type: 'ElectricalGridMonitoring'
-      },
-      {
-	id: 'S3_ElectricalGrid',
-	isPattern: false,
-	type: 'ElectricalGridMonitoring'
+        type: ''
       }
     ]});
     //return this.store.findAll('entity');
@@ -36,17 +26,7 @@ export default Ember.Route.extend({
       {
         id: 'S1_ElectricalGrid',
         isPattern: false,
-        type: 'ElectricalGridMonitoring'
-      },
-      {
-        id: 'S2_ElectricalGrid',
-        isPattern: false,
-        type: 'ElectricalGridMonitoring'
-      },
-      {
-	id: 'S3_ElectricalGrid',
-	isPattern: false,
-	type: 'ElectricalGridMonitoring'
+        type: ''
       }
     ]});
     //this.store.findAll('entity');
