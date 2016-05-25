@@ -17,7 +17,7 @@ module.exports = function(environment) {
       // Here you can pass flags/options to your application instance
       // when it is created
 
-      API_HOST: '',
+      ENV.APP.API_HOST = 'http://nginx:80',
       UPDATE_RATE: 200,
     },
 
@@ -25,7 +25,7 @@ module.exports = function(environment) {
       'default-src': "'none'",
       'script-src': "'self' 'unsafe-eval'",
       'font-src': "'self'",
-      'connect-src': "'self' 192.168.99.100:80",
+      'connect-src': "'self' nginx:80",
       'img-src': "'self'",
       'style-src': "'self' 'unsafe-inline'",
       'media-src': "'self'"
@@ -44,7 +44,7 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
 
-    ENV.APP.API_HOST = 'http://192.168.99.100:80';
+    //ENV.APP.API_HOST = 'http://nginx:80';
   }
 
   if (environment === 'test') {
@@ -60,7 +60,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-    ENV.baseURL = '/technical/';
+    //ENV.baseURL = '/technical/';
   }
 
   return ENV;

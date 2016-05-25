@@ -2,18 +2,18 @@ nginx:
   image: nginx
   volumes:
     - ./nginx-conf.d/:/etc/nginx/conf.d/
+    - ./dist/:/www/
   links:
     - orion
+    - ember
+  ports:
+    - "80:80"
 
 ember:
   image: danlynn/ember-cli
   volumes:
     - ./:/myapp/
-  links:
-    - nginx
-  ports:
-    - "4200:4200"
-  command: serve -dev
+  command: build -prod
 
 mongo:
   image: mongo:3.2
