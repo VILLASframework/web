@@ -11,13 +11,13 @@ html, body {
 .ember-application {
 	width: 100%;
 	height: 100%;
-	
+
 	top: 0;
 	left: 0;
-	
+
 	position: absolute;
 	overflow: hidden;
-	
+
 	background: #6EA2B0;
 	color: #4d4d4d;
 
@@ -68,7 +68,7 @@ header {
 
 	height: 80px;
 	top: 0;
-	
+
 	border-bottom: 3px solid #bbb;
 }
 
@@ -79,17 +79,17 @@ header #title {
 	text-rendering: optimizeLegibility;
 	-webkit-text-rendering: optimizeLegiblity;
 	-moz-text-rendering: optimizeLegibitliy;
-	
+
 	padding: 25px 0 20px 30px;
-	
+
 	float: left;
 }
 
 header #logos {
 	height: 80px;
-	
+
 	padding-top: 8px;
-	
+
 	float: right;
 }
 
@@ -107,7 +107,7 @@ footer {
 #main {
 	top: 80px;
 	bottom: 0px;
-	
+
 	left: 20px;
 	right: 20px;
 }
@@ -119,31 +119,31 @@ footer {
 	padding-left: 42px;
 }
 
-.svg-logo {
+.logo {
 	width: auto;
 	height: 60px;
-	
+
 	padding-right: 30px;
-	
+
 	float: left;
 }
 
 #rwth-logo {
 	margin-top: 15px;
-	
+
 	height: 30px !important;
 }
 
 h1 {
 	font-size: 1.4em;
-	
+
 	margin: 0;
 	padding: 0;
 }
 
 h2 {
 	font-size: 1.2em;
-	
+
 	text-align: left;
 }
 
@@ -165,15 +165,15 @@ p {
 .grid {
 	width: 100%;
 	height: 100%;
-	
+
 	margin: 0;
 	/*padding: 0;*/
-	
+
 	padding-top: 10px;
 	padding-bottom: 10px;
 
 	border: 0;
-	
+
 	border-collapse: collapse;
 }
 
@@ -187,18 +187,18 @@ p {
 	background-color: #fff;
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
 				0 9px 18px 0 rgba(0, 0, 0, 0.1);
-	
+
 	width: 99%;
 	height: 99%;
-	
+
 	padding: 20px;
-	
+
 	overflow: hidden;
 }
 
 .layout-page h2 {
 	text-align: center;
-	
+
 	margin: 0;
 	margin-bottom: 5px;
 }
@@ -210,10 +210,10 @@ p {
 .page-grid {
 	width: 100%;
 	height: 100%;
-	
+
 	max-width: 100%;
 	max-height: 100%;
-	
+
 	padding: 0;
 	margin: 0;
 }
@@ -233,9 +233,9 @@ p {
  */
 
 .property-cell {
-	
+
 }
- 
+
 .chart-cell {
 	padding-left: 10px !important;
 }
@@ -264,7 +264,7 @@ p {
 
 	border: 1px solid #999;
 	border-collapse: collapse;
-	
+
 	vertical-align: top;
 }
 
@@ -290,19 +290,19 @@ p {
 
 .label-source {
 	text-align: left;
-	
+
 	margin: 0;
 	padding: 0;
-	
+
 	float: left;
 }
 
 .label-type {
 	text-align: right;
-	
+
 	margin: 0;
 	padding: 0;
-	
+
 	float: right;
 }
 

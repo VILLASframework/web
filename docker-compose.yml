@@ -12,7 +12,7 @@ nginx:
 ember:
   image: danlynn/ember-cli
   volumes:
-    - .:/myapp
+    - ./:/myapp/
   command: build -prod
 
 mongo:
