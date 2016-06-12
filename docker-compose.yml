@@ -1,0 +1,32 @@
+nginx:
+  image: nginx
+  volumes:
+    - ./nginx-conf.d/:/etc/nginx/conf.d/
+    - ./dist/:/www/
+  links:
+    - orion
+    - ember
+  ports:
+    - "80:80"
+
+ember:
+  image: danlynn/ember-cli
+  volumes:
+    - .:/myapp
+  command: build -prod
+
+mongo:
+  image: mongo:3.2
+  command: --smallfiles --nojournal
+
+orion:
+  image: fiware/orion
+  links:
+    - mongo
+  command: -dbhost mongo
+
+playback:
+  image: acs/playback
+  links:
+    - orion
+  command: orion:1026 m1_S1_ElectricalGrid_data.txt

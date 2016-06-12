@@ -17,7 +17,7 @@ module.exports = function(environment) {
       // Here you can pass flags/options to your application instance
       // when it is created
 
-      API_HOST: '',
+      API_HOST: 'http://localhost:80',
       UPDATE_RATE: 200,
     },
 
@@ -25,7 +25,7 @@ module.exports = function(environment) {
       'default-src': "'none'",
       'script-src': "'self' 'unsafe-eval'",
       'font-src': "'self'",
-      'connect-src': "'self' 192.168.99.100:80",
+      'connect-src': "'self' 192.168.99.100:80 localhost:80",
       'img-src': "'self'",
       'style-src': "'self' 'unsafe-inline'",
       'media-src': "'self'"
@@ -60,7 +60,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-    ENV.baseURL = '/technical/';
+
   }
 
   return ENV;
