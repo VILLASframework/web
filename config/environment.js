@@ -1,6 +1,14 @@
 /* jshint node: true */
 
 module.exports = function(environment) {
+  /*********************************
+   * This variable must be set to the address the server should be available on.
+   */
+  var hostAddress = 'localhost';
+  /*********************************
+   *
+   */
+
   var ENV = {
     modulePrefix: 'lab-mashup',
     environment: environment,
@@ -14,10 +22,6 @@ module.exports = function(environment) {
     },
 
     APP: {
-      // Here you can pass flags/options to your application instance
-      // when it is created
-
-      API_HOST: 'http://localhost:80',
       UPDATE_RATE: 200,
     },
 
@@ -25,17 +29,16 @@ module.exports = function(environment) {
       'default-src': "'none'",
       'script-src': "'self' 'unsafe-eval'",
       'font-src': "'self'",
-      'connect-src': "'self' 192.168.99.100:80 localhost:80",
+      'connect-src': "'self'",
       'img-src': "'self'",
       'style-src': "'self' 'unsafe-inline'",
       'media-src': "'self'"
+    },
+
+    'ember-cli-mirage': {
+      enabled: false
     }
   };
-
-  // disable mirage
-  ENV['ember-cli-mirage'] = {
-    enabled: false
-  }
 
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
@@ -44,7 +47,10 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
 
-    ENV.APP.API_HOST = 'http://192.168.99.100:80';
+    hostAddress = '192.168.99.100'; // docker-machine ip address (only when using docker on a mac)
+
+    ENV.contentSecurityPolicy['script-src'] += " " + hostAddress + ":80";
+    ENV.contentSecurityPolicy['connect-src'] += " ws://" + hostAddress + ":49152";
   }
 
   if (environment === 'test') {
@@ -62,6 +68,11 @@ module.exports = function(environment) {
   if (environment === 'production') {
 
   }
+
+  ENV.APP.API_HOST = 'http://' + hostAddress + ':80';
+
+  // add api host to allowed connect src
+  ENV.contentSecurityPolicy['connect-src'] += " " + hostAddress + ":80";
 
   return ENV;
 };
