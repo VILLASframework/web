@@ -5,9 +5,9 @@ module.exports = function(environment) {
    * This variable must be set to the address the server should be available on.
    */
   var hostAddress = 'localhost';
-  /*********************************
+  /*
    *
-   */
+   *********************************/
 
   var ENV = {
     modulePrefix: 'lab-mashup',

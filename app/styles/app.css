@@ -3,25 +3,11 @@
 /*
  * Skeleton
  */
-html, body {
-	margin: 0;
-	padding: 0;
-}
-
 .ember-application {
-	width: 100%;
-	height: 100%;
-
-	top: 0;
-	left: 0;
-
-	position: absolute;
-	overflow: hidden;
+	min-width: 1350px;
 
 	background: #6EA2B0;
 	color: #4d4d4d;
-
-	margin: 0 auto;
 
 	/*font: 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;*/
 	font: 1.6em Helvetica;
@@ -29,21 +15,6 @@ html, body {
 	font-smoothing: antialiased;
 	-webkit-font-smoothing: antialiased;
 	-moz-font-smoothing: antialiased;
-}
-
-.row, .col {
-	overflow: hidden;
-	position: absolute;
-}
-
-.row {
-	left: 0;
-	right: 0;
-}
-
-.col {
-	top: 0;
-	bottom: 0;
 }
 
 .hidden {
@@ -58,16 +29,11 @@ html, body {
 /*
  * Application
  */
-#lapMashupApp {
-
-}
-
 header {
 	color: #103B7D;
 	background-color: #fff;
 
 	height: 80px;
-	top: 0;
 
 	border-bottom: 3px solid #bbb;
 }
@@ -91,32 +57,6 @@ header #logos {
 	padding-top: 8px;
 
 	float: right;
-}
-
-footer {
-	color: #555;
-
-	height: 25px;
-	bottom: 0;
-
-	font-size: 1em;
-	/*text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);*/
-	text-align: center;
-}
-
-#main {
-	top: 80px;
-	bottom: 0px;
-
-	left: 20px;
-	right: 20px;
-}
-
-.svg-image {
-	width: 96%;
-	height: auto;
-
-	padding-left: 42px;
 }
 
 .logo {
