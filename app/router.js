@@ -6,6 +6,15 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
+  this.route('login');
+
+  this.route('projects');
+  this.route('project', function() {
+    this.route('index', { path: '/:projectid' });
+    this.route('new');
+    this.route('edit', { path: '/edit/:projectid' });
+    this.route('delete', { path: '/delete/:projectid' });
+  });
 });
 
 export default Router;
