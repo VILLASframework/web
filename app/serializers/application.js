@@ -1,5 +1,6 @@
-import JSONSerializer from 'ember-data/serializers/json';
+import RESTSerializer from 'ember-data/serializers/rest';
+import DS from 'ember-data';
 
-export default JSONSerializer.extend({
+export default RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
   primaryKey: '_id'
 });

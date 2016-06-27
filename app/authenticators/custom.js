@@ -32,9 +32,9 @@ export default Base.extend({
           });
         });
       }, function(xhr) {
-        var response = xhr.responseText;
+        var response = JSON.parse(xhr.responseText);
         Ember.run(function() {
-          reject(response);
+          reject(response.message);
         });
       });
     });

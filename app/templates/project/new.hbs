@@ -7,6 +7,7 @@
       {{input id='name' placeholder='Enter project name' value=name}}
     </p>
 
+    <button {{action 'cancelNewProject'}}>Cancel</button>
     <button type="submit">Create</button>
 
     {{#if errorMessage}}
