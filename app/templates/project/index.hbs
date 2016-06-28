@@ -1,4 +1,24 @@
 <h1>{{model.name}}</h1>
 
-{{#link-to "project.edit" model.id}}Edit project{{/link-to}}
-{{#link-to "project.delete" model.id}}Delete project{{/link-to}}
+<br />
+
+<p>
+  <h3>Visualizations</h3>
+
+  <ul>
+    {{#each model.visualizations as |visualization|}}
+      <li>{{#link-to 'visualization.index' visualization.id}}{{visualization.name}}{{/link-to}}</li>
+    {{/each}}
+  </ul>
+
+  <br />
+
+  {{#link-to 'visualization.new'}}New visualization{{/link-to}}
+</p>
+
+<br />
+
+<p>
+  {{#link-to "project.edit" model.id}}Edit project{{/link-to}}
+  {{#link-to "project.delete" model.id}}Delete project{{/link-to}}
+</p>
