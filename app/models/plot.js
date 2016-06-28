@@ -5,8 +5,9 @@ import attr from 'ember-data/attr';
 export default Model.extend({
   name: attr('string'),
   signal: attr('string'),
-  //position:
-  //size:
-  title: attr('string')
-  //backgroundColor:
+  width: attr('number', { defaultValue: 100 }),
+  height: attr('number', { defaultValue: 100 }),
+  title: attr('string'),
+
+  type: 'plot'
 });

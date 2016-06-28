@@ -98,9 +98,53 @@ footer {
 }
 
 #login {
-  
+
 }
 
 #login-form {
   padding: 20px 20px;
+}
+
+/**
+ * Visualization
+ */
+.plots {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.plot-toolbox {
+  margin-top: 20px;
+}
+
+.draggableDropzone {
+  display: block;
+
+  min-height: 200px;
+
+  padding-top: 5px;
+  padding-left: 10px;
+
+  border: 3px dashed #aaa;
+
+  &.activated {
+    border-color: #2ecc71;
+  }
+  &.deactivated {
+    border-color: #e1e1e1;
+  }
+}
+
+.draggableItem[draggable=true] {
+  display: inline-block;
+  background: #e1e1e1;
+  cursor: move;
+
+  padding: 5px 10px;
+
+  border: 1px solid gray;
+
+  &:hover {
+    background-color: #aaa;
+  }
 }
