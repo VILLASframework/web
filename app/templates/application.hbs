@@ -9,8 +9,8 @@
     <ul>
       <li>{{#link-to 'index'}}Home{{/link-to}}</li>
       <li>{{#link-to 'projects'}}Projects{{/link-to}}</li>
-      <li>Preferences</li>
-      <li><a {{action 'invalidateSession'}}>Logout</a></li>
+      <li>{{#link-to 'user.edit'}}Preferences{{/link-to}}</li>
+      <li><a href="" {{action 'invalidateSession'}}>Logout</a></li>
     </ul>
   </div>
 

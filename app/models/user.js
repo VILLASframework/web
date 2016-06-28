@@ -6,5 +6,6 @@ export default Model.extend({
   username: attr('string'),
   password: attr('string'),
   adminLevel: attr('number'),
-  projects: hasMany('project', { async: true })
+  projects: hasMany('project', { async: true }),
+  mail: attr('string')
 });

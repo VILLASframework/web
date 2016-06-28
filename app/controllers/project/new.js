@@ -18,8 +18,6 @@ export default Ember.Controller.extend({
 
       // save the project and user
       project.save().then(function() {
-        console.log(project.get('id'));
-
         // add the project to the user
         user.get('projects').pushObject(project);
 
