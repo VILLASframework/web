@@ -5,7 +5,5 @@ export default RESTAdapter.extend(DataAdapterMixin, {
   host: 'http://192.168.99.100:3000',
   namespace: 'api/v1',
   authorizer: 'authorizer:custom',
-  headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-
-
+  headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
 });

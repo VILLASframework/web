@@ -8,6 +8,5 @@ export default Model.extend({
   width: attr('number', { defaultValue: 100 }),
   height: attr('number', { defaultValue: 100 }),
   title: attr('string'),
-
-  type: 'plot'
+  type: attr('string')
 });

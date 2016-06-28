@@ -1,1 +1,29 @@
-<h1>Edit</h1>
+<h1>{{model.name}}</h1>
+
+<div class="plot-toolbox">
+  <h3>Toolbox</h3>
+  {{#draggable-item content='chart'}}
+    <span>Chart</span>
+  {{/draggable-item}}
+
+  {{#draggable-item content='table'}}
+    <span>Table</span>
+  {{/draggable-item}}
+
+  {{#draggable-item content='value'}}
+    <span>Value</span>
+  {{/draggable-item}}
+</div>
+
+<div class="plots">
+  {{#draggable-dropzone dropped='addPlot'}}
+    {{#each model.plots as |plot|}}
+      {{#plot-container plot=plot}}{{/plot-container}}
+    {{/each}}
+  {{/draggable-dropzone}}
+</div>
+
+<p>
+  <button {{action 'cancelEdit'}}>Cancel</button>
+  <button {{action 'saveEdit'}}>Save</button>
+</p>

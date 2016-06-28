@@ -21,12 +21,24 @@ export default Ember.Controller.extend({
 
       // delete the project and remove from user projects
       user.get('projects').removeObject(projectId);
-      user.save();
+      user.save().then(function() {
+        // destroy all visualizations
+        var visualizations = project.get('visualizations');
+        visualizations.forEach(function(visualization) {
+          // destroy all plots
+          var plots = visualization.get('plots');
+          plots.forEach(function(plot) {
+            plot.destroyRecord();
+          });
 
-      project.destroyRecord();
+          visualization.destroyRecord();
+        });
 
-      // go back to project list
-      this.transitionToRoute('/projects');
+        project.destroyRecord();
+
+        // go back to project list
+        this.transitionToRoute('/projects');
+      });
     }
   }
 });

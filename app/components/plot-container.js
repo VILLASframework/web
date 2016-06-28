@@ -11,7 +11,7 @@ export default Ember.Component.extend({
   }.property('plot'),
 
   isTable: function() {
-    var modelName = this.get('plot.constructor.modelName');
-    return modelName === 'plot-table';
+    var type = this.get('plot.type');
+    return type === 'table';
   }.property('plot.type')
 });

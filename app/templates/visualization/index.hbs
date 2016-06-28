@@ -1,26 +1,9 @@
 <h1>{{model.name}}</h1>
 
-<div class="plot-toolbox">
-  <h3>Toolbox</h3>
-  {{#draggable-item content='chart'}}
-    <span>Chart</span>
-  {{/draggable-item}}
-
-  {{#draggable-item content='table'}}
-    <span>Table</span>
-  {{/draggable-item}}
-
-  {{#draggable-item content='value'}}
-    <span>Value</span>
-  {{/draggable-item}}
-</div>
-
 <div class="plots">
-  {{#draggable-dropzone dropped='addPlot'}}
-    {{#each plots as |plot|}}
-      {{#plot-container plot=plot}}{{/plot-container}}
-    {{/each}}
-  {{/draggable-dropzone}}
+  {{#each model.plots as |plot|}}
+    {{#plot-container plot=plot}}{{/plot-container}}
+  {{/each}}
 </div>
 
 <p>
