@@ -122,9 +122,6 @@ footer {
 
   min-height: 200px;
 
-  padding-top: 5px;
-  padding-left: 10px;
-
   border: 3px dashed #aaa;
 
   &.activated {
@@ -147,4 +144,26 @@ footer {
   &:hover {
     background-color: #aaa;
   }
+}
+
+.plotContainer {
+  border: 1px solid lightgray;
+
+  margin: 10px;
+  padding: 5px 10px;
+}
+
+.plotTable {
+  width: 100%;
+  height: 100%;
+
+  border: 1px solid gray;
+
+  border-collapse: collapse;
+}
+
+.plotTable td, th {
+  border: 1px solid gray;
+
+  padding: 2px 5px;
 }

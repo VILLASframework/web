@@ -1,8 +1,16 @@
-<tr>
-  <th>Name</th>
-  <th>Value</th>
-</tr>
-<tr>
-  <td>Signal X</td>
-  <td>1.234</td>
-</tr>
+{{#if editing}}
+  {{input value=plot.title placeholder='Enter title'}}
+{{else}}
+  <h4>{{plot.title}}</h4>
+{{/if}}
+
+<table class="plotTable">
+  <tr>
+    <th>Name</th>
+    <th>Value</th>
+  </tr>
+  <tr>
+    <td>Signal X</td>
+    <td>1.234</td>
+  </tr>
+</table>

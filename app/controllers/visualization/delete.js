@@ -16,18 +16,20 @@ export default Ember.Controller.extend({
       var projectId = this.get('model.project.id');
       var project = this.store.peekRecord('project', projectId);
 
+      // destroy all plots
+      var plots = visualization.get('plots');
+      plots.forEach(function(plot) {
+        plot.destroyRecord();
+      });
+
+      visualization.destroyRecord();
+
       // delete the visualization and remove from the project
+      var controller = this;
+
       project.get('visualizations').removeObject(visualizationId);
       project.save().then(function() {
-        // destroy all plots
-        var plots = visualization.get('plots');
-        plots.forEach(function(plot) {
-          plot.destroyRecord();
-        });
-
-        visualization.destroyRecord();
-
-        this.transitionToRoute('/project/' + projectId);
+        controller.transitionToRoute('/project/' + projectId);
       });
     }
   }

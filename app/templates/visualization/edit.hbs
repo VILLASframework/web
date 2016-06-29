@@ -18,7 +18,7 @@
 <div class="plots">
   {{#draggable-dropzone dropped='addPlot'}}
     {{#each model.plots as |plot|}}
-      {{#plot-container plot=plot}}{{/plot-container}}
+      {{#plot-container plot=plot editing=true}}{{/plot-container}}
     {{/each}}
   {{/draggable-dropzone}}
 </div>

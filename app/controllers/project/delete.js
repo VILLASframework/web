@@ -20,24 +20,25 @@ export default Ember.Controller.extend({
       let projectId = project.get('id');
 
       // delete the project and remove from user projects
-      user.get('projects').removeObject(projectId);
-      user.save().then(function() {
-        // destroy all visualizations
-        var visualizations = project.get('visualizations');
-        visualizations.forEach(function(visualization) {
-          // destroy all plots
-          var plots = visualization.get('plots');
-          plots.forEach(function(plot) {
-            plot.destroyRecord();
-          });
-
-          visualization.destroyRecord();
+      var visualizations = project.get('visualizations');
+      visualizations.forEach(function(visualization) {
+        // destroy all plots
+        var plots = visualization.get('plots');
+        plots.forEach(function(plot) {
+          plot.destroyRecord();
         });
 
-        project.destroyRecord();
+        visualization.destroyRecord();
+      });
 
-        // go back to project list
-        this.transitionToRoute('/projects');
+      project.destroyRecord();
+
+      // save the changes to project
+      var controller = this;
+
+      user.get('projects').removeObject(projectId);
+      user.save().then(function() {
+        controller.transitionToRoute('/projects');
       });
     }
   }

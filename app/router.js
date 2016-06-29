@@ -19,12 +19,15 @@ Router.map(function() {
   this.route('user', function() {
     this.route('edit');
   });
+
   this.route('visualization', function() {
     this.route('index', { path: '/:visualizationid' });
     this.route('new');
     this.route('edit', { path: '/edit/:visualizationid' });
     this.route('delete', { path: '/delete/:visualizationid' });
   });
+
+  this.route('404', { path: '/*path' });
 });
 
 export default Router;
