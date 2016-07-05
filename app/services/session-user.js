@@ -10,13 +10,18 @@ export default Ember.Service.extend({
   store: service(),
 
   loadCurrentUser() {
+    var _this = this;
+
     return new RSVP.Promise((resolve, reject) => {
       const token = this.get('session.data.authenticated.token');
       if (!Ember.isEmpty(token)) {
-        return this.get('store').findRecord('user', 'me').then((user) => {
-          this.set('user', user);
+        return this.get('store').findRecord('user', 'me').then(function(user) {
+          _this.set('user', user);
           resolve();
-        }, reject);
+        }, function() {
+          _this.get('session').invalidate();
+          reject();
+        });
       } else {
         resolve();
       }
