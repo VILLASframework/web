@@ -5,9 +5,8 @@ export default Ember.Controller.extend({
 
   actions: {
     newProject() {
-      // get current user object
-      var userId = this.get('sessionUser.user.id');
-      var user = this.store.peekRecord('user', userId);
+      // get current user
+      var user = this.get('sessionUser.user');
 
       // create new project from properties
       var properties = this.getProperties('name');
@@ -16,14 +15,8 @@ export default Ember.Controller.extend({
       var project = this.store.createRecord('project', properties);
       var controller = this;
 
-      // save the project and user
       project.save().then(function() {
-        // add the project to the user
-        user.get('projects').pushObject(project);
-
-        user.save().then(function() {
-          controller.transitionToRoute('/projects');
-        });
+        controller.transitionToRoute('/projects');
       });
     },
 

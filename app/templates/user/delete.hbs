@@ -1,0 +1,10 @@
+<h1>Delete User</h1>
+
+<p>
+  Are you sure you want to delete the user "{{model.username}}"?
+  <br />
+  This will also delete all projects belonging to this user!
+</p>
+
+<button {{action 'cancelDelete'}}>Cancel</button>
+<button {{action 'confirmDelete'}}>Delete</button>

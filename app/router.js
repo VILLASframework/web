@@ -7,6 +7,7 @@ const Router = Ember.Router.extend({
 
 Router.map(function() {
   this.route('login');
+  this.route('logout');
 
   this.route('projects');
   this.route('project', function() {
@@ -16,9 +17,7 @@ Router.map(function() {
     this.route('delete', { path: '/delete/:projectid' });
   });
 
-  this.route('user', function() {
-    this.route('edit');
-  });
+  this.route('me');
 
   this.route('visualization', function() {
     this.route('index', { path: '/:visualizationid' });
@@ -27,8 +26,13 @@ Router.map(function() {
     this.route('delete', { path: '/delete/:visualizationid' });
   });
 
+  this.route('user', function() {
+    this.route('edit', { path: '/edit/:userid' });
+    this.route('new');
+    this.route('delete', { path: '/delete/:userid' });
+  });
+
   this.route('404', { path: '/*path' });
-  this.route('logout');
 });
 
 export default Router;

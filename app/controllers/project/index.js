@@ -10,13 +10,10 @@ export default Ember.Controller.extend({
       // create the visualization
       var visualization = this.store.createRecord('visualization', { name: 'Visualization', project: projectId });
 
-      // the visualization must be added to the project before the project is saved, otherwise ember will set the projectId to null!
+      // this change will not be saved, but it is nessecary otherwise ember will omit the project's id in the post request
       project.get('visualizations').pushObject(visualization);
 
-      // save the visualization and project
-      visualization.save().then(function() {
-        project.save();
-      });
+      visualization.save();
     }
   }
 });
