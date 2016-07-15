@@ -15,13 +15,15 @@
   {{/draggable-item}}
 </div>
 
-<div class="plots">
-  {{#draggable-dropzone dropped='addPlot'}}
-    {{#each model.plots as |plot|}}
-      {{#plot-container plot=plot editing=true}}{{/plot-container}}
-    {{/each}}
-  {{/draggable-dropzone}}
-</div>
+{{#draggable-dropzone dropped='addPlot'}}
+  {{#each model.plots as |plot|}}
+    {{#plot-container plot=plot editing=true}}{{/plot-container}}
+  {{/each}}
+{{/draggable-dropzone}}
+
+{{#draggable-dropzone dropped='addRowWithPlot'}}
+  <div class="plot-add-row">+</div>
+{{/draggable-dropzone}}
 
 <p>
   <button {{action 'cancelEdit'}}>Cancel</button>

@@ -43,6 +43,8 @@ footer {
   margin-top: 20px;
 
   text-align: center;
+
+  clear: both;
 }
 
 /**
@@ -111,16 +113,28 @@ footer {
 .plots {
   margin-top: 20px;
   margin-bottom: 20px;
+
+  overflow: auto;
 }
 
 .plot-toolbox {
   margin-top: 20px;
 }
 
+.plot-add-row {
+  font-size: 100px;
+  font-weight: 800;
+
+  text-align: center;
+
+  margin: 0;
+  margin-top: -25px;
+}
+
 .draggableDropzone {
   display: block;
 
-  min-height: 200px;
+  min-height: 100px;
 
   border: 3px dashed #aaa;
 
@@ -151,6 +165,12 @@ footer {
 
   margin: 10px;
   padding: 5px 10px;
+
+  float: left;
+}
+
+.plotValue {
+
 }
 
 .plotTable {

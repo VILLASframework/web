@@ -1,5 +1,9 @@
 {{#if isTable}}
   {{#plot-table plot=plot editing=editing}}{{/plot-table}}
+{{else if isChart}}
+  {{#plot-chart plot=plot editing=editing}}{{/plot-chart}}
+{{else if isValue}}
+  {{#plot-value plot=plot editing=editing}}{{/plot-value}}
 {{else}}
-  <strong>Plot</strong>
+  <strong>Unknown Plot</strong>
 {{/if}}

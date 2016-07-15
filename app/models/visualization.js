@@ -5,5 +5,6 @@ import { belongsTo, hasMany } from 'ember-data/relationships';
 export default Model.extend({
   name: attr('string'),
   plots: hasMany('plot', { async: true }),
-  project: belongsTo('project', { async: true })
+  project: belongsTo('project', { async: true }),
+  rows: attr('number', { defaultValue: 1 })
 });

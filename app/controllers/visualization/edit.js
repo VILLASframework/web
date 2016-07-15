@@ -9,7 +9,7 @@ export default Ember.Controller.extend({
         // create new chart plot
         plot = this.store.createRecord('plot', { name: 'Chart 1', signal: 'Signal 1', type: 'chart' });
       } else if (name === 'table') {
-        plot = this.store.createRecord('plot', { name: 'Table 1', signal: 'Signal 1', type: 'table', width: 500 });
+        plot = this.store.createRecord('plot', { name: 'Table 1', signal: 'Signal 1', type: 'table', width: 500, height: 200 });
       } else if (name === 'value') {
         plot = this.store.createRecord('plot', { name: 'Value 1', signal: 'Signal 1', type: 'value' });
       } else {

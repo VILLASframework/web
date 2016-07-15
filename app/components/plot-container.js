@@ -1,19 +1,18 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  tagName: 'div',
-  attributeBindings: [ 'style' ],
-  classNames: [ 'plotContainer' ],
-
-  plot: null,
-  editing: false,
-
-  style: function() {
-    return 'width: ' + this.get('plot.width') + 'px; height: ' + this.get('plot.height') + 'px;';
-  }.property('plot'),
-
   isTable: function() {
     var type = this.get('plot.type');
     return type === 'table';
+  }.property('plot.type'),
+
+  isChart: function() {
+    var type = this.get('plot.type');
+    return type === 'chart';
+  }.property('plot.type'),
+
+  isValue: function() {
+    var type = this.get('plot.type');
+    return type === 'value';
   }.property('plot.type')
 });

@@ -3,7 +3,8 @@ import Ember from 'ember';
 var { set } = Ember;
 
 export default Ember.Component.extend({
-  classNames: [ 'draggableDropzone' ],
+  tagName: 'div',
+  classNames: [ 'draggableDropzone plots' ],
   classNameBindings: [ 'dragClass' ],
   dragClass: 'deactivated',
 

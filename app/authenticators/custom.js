@@ -1,8 +1,9 @@
 import Ember from 'ember';
 import Base from 'ember-simple-auth/authenticators/base';
+import ENV from '../config/environment';
 
 export default Base.extend({
-  tokenEndpoint: 'http://192.168.99.100:3000/api/v1/authenticate',
+  tokenEndpoint: 'http://' + ENV.APP.API_HOST + '/api/v1/authenticate',
 
   restore(data) {
     return new Ember.RSVP.Promise(function(resolve, reject) {
