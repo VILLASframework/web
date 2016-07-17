@@ -33,6 +33,25 @@ export default Ember.Controller.extend({
       } else {
         console.error('Unknown plot type: ' + name);
       }
+    },
+
+    saveEdit() {
+      // save changes to store
+      var plots = this.get('model.plots');
+      plots.forEach(function(plot) {
+        plot.save();
+      });
+
+      // go back to index
+      var id = this.get('model.id');
+      this.transitionToRoute('/visualization/' + id);
+    },
+
+    cancelEdit() {
+      // TODO: revert changes
+
+      let id = this.get('model.id');
+      this.transitionToRoute('/visualization/' + id);
     }
   }
 });

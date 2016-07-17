@@ -6,7 +6,7 @@
  - Websocket node is working in develop branch
  - Add API host to config/environment.js
  - Empty visualization after delete
-
+ - Go into edit mode if visualization is empty
 
 websocketserverip/config.json
 websocketserverip/nodes.json

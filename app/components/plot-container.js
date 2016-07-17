@@ -1,6 +1,9 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+  classNames: [ 'plot' ],
+  editing: false,
+
   isTable: function() {
     var type = this.get('plot.type');
     return type === 'table';

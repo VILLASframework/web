@@ -1,12 +1,15 @@
 import Ember from 'ember';
+import Sortable from '../mixins/sortable';
 
 var { set } = Ember;
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(Sortable, {
   tagName: 'div',
   classNames: [ 'draggableDropzone plots' ],
   classNameBindings: [ 'dragClass' ],
   dragClass: 'deactivated',
+
+  placeholder_sort: 'plot-placeholder',
 
   dragLeave(event) {
     event.preventDefault();

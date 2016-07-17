@@ -117,8 +117,8 @@ footer {
   overflow: auto;
 }
 
-.plot-toolbox {
-  margin-top: 20px;
+.plots > div {
+  float: left;
 }
 
 .plot-add-row {
@@ -126,9 +126,22 @@ footer {
   font-weight: 800;
 
   text-align: center;
+}
 
-  margin: 0;
-  margin-top: -25px;
+.plot-add-row > div {
+  float: none;
+}
+
+.plot-toolbox {
+  margin-top: 20px;
+}
+
+.plot-placeholder {
+  border: 1px dotted black;
+  width: 100px;
+  height: 100px;
+
+  margin: 10px;
 }
 
 .draggableDropzone {
@@ -166,7 +179,7 @@ footer {
   margin: 10px;
   padding: 5px 10px;
 
-  float: left;
+  display: inline-block;
 }
 
 .plotValue {

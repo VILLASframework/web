@@ -61,13 +61,15 @@ export default Ember.Mixin.create({
   _gatherDragEvents(options) {
     // register callbacks for each event
     var uiDragEvents = this.get('uiDragEvents') || [];
+    var _this = this;
+
     uiDragEvents.forEach(function(event) {
-      var callback = this[event];
+      var callback = _this[event];
       if (callback) {
         options[event.split('_')[0]] = function(event, ui) {
-          callback.call(this, event, ui);
+          callback.call(_this, event, ui);
         };
       }
-    }, this);
+    });
   }
 });
