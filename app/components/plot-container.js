@@ -1,21 +1,28 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  classNames: [ 'plot' ],
+  tagName: 'div',
+  classNames: [ 'plots' ],
+  attributeBindings: [ 'style' ],
   editing: false,
 
-  isTable: function() {
-    var type = this.get('plot.type');
-    return type === 'table';
-  }.property('plot.type'),
+  plots: null,
 
-  isChart: function() {
-    var type = this.get('plot.type');
-    return type === 'chart';
-  }.property('plot.type'),
+  style: function() {
+    return Ember.String.htmlSafe('height: ' + this._calculateHeight() + 'px;');
+  }.property('plots.@each.height', 'plots.@each.y'),
 
-  isValue: function() {
-    var type = this.get('plot.type');
-    return type === 'value';
-  }.property('plot.type')
+  _calculateHeight() {
+    var maxHeight = 0;
+    var plots = this.get('plots');
+
+    plots.forEach(function(plot) {
+      var plotHeight = plot.get('y') + plot.get('height');
+      if (plotHeight > maxHeight) {
+        maxHeight = plotHeight;
+      }
+    });
+
+    return maxHeight;
+  }
 });

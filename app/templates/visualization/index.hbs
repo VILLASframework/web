@@ -1,10 +1,6 @@
 <h1>{{model.name}}</h1>
 
-<div class="plots">
-  {{#each model.plots as |plot|}}
-    {{#plot-container plot=plot}}{{/plot-container}}
-  {{/each}}
-</div>
+{{plot-container plots=model.plots}}
 
 <p>
   {{#link-to "visualization.edit" model.id}}Edit visualization{{/link-to}}

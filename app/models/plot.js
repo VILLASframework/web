@@ -9,7 +9,7 @@ export default Model.extend({
   height: attr('number', { defaultValue: 100 }),
   title: attr('string'),
   type: attr('string'),
-  row: attr('number'),
-  column: attr('number'),
+  x: attr('number', { defaultValue: 0 }),
+  y: attr('number', { defaultValue: 0 }),
   visualization: belongsTo('Visualization', { async: true })
 });

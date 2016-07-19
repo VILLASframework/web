@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import PlotAbstract from './plot-abstract';
 
 export default PlotAbstract.extend({

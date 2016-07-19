@@ -1,16 +1,22 @@
 import Ember from 'ember';
 import Resizable from '../mixins/resizable';
+import Draggable from '../mixins/draggable';
 
-export default Ember.Component.extend(Resizable, {
+export default Ember.Component.extend(Resizable, Draggable, {
   attributeBindings: [ 'style' ],
 
   plot: null,
 
   disabled_resize: false,
   autoHide_resize: false,
+  grid_resize: [ 10, 10 ],
+
+  disabled_drag: false,
+  containment_drag: 'parent',
+  grid_drag: [ 10, 10 ],
 
   style: function() {
-    return 'width: ' + this.get('plot.width') + 'px; height: ' + this.get('plot.height') + 'px;';
+    return Ember.String.htmlSafe('width: ' + this.get('plot.width') + 'px; height: ' + this.get('plot.height') + 'px; left: ' + this.get('plot.x') + 'px; top: ' + this.get('plot.y') + 'px;');
   }.property('plot'),
 
   stop_resize(event, ui) {
@@ -21,13 +27,20 @@ export default Ember.Component.extend(Resizable, {
     this.set('plot.height', height);
   },
 
+  stop_drag(event, ui) {
+    this.set('plot.x', ui.position.left);
+    this.set('plot.y', ui.position.top);
+  },
+
   _updateUI: function() {
     if (this.get('editing') === true) {
       this.set('disabled_resize', false);
       this.set('autoHide_resize', false);
+      this.set('disabled_drag', false);
     } else {
       this.set('disabled_resize', true);
       this.set('autoHide_resize', true);
+      this.set('disabled_drag', true);
     }
   }.observes('editing').on('init')
 });

@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import Draggable from '../mixins/draggable';
 
 var { get } = Ember;
 
