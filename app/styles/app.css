@@ -1,3 +1,5 @@
+@import 'plots.css';
+
 * {
   margin: 0;
   padding: 0;
@@ -110,19 +112,6 @@ footer {
 /**
  * Visualization
  */
-.plots {
-  margin-top: 20px;
-  margin-bottom: 20px;
-
-  overflow: visible;
-
-  position: relative;
-}
-
-.plot-toolbox {
-  margin-top: 20px;
-}
-
 .draggableDropzone {
   display: block;
 
@@ -150,36 +139,4 @@ footer {
   &:hover {
     background-color: #aaa;
   }
-}
-
-.plotContainer {
-  border: 1px solid lightgray;
-
-  margin: 10px;
-  padding: 5px 10px;
-
-  /*display: inline-block;*/
-
-  /*position: absolute;*/
-}
-
-.plotValue {
-  position: absolute;
-}
-
-.plotTable {
-  position: absolute;
-
-  width: 100%;
-  /*height: 100%;*/
-
-  border: 1px solid gray;
-
-  border-collapse: collapse;
-}
-
-.plotTable td, th {
-  border: 1px solid gray;
-
-  padding: 2px 5px;
 }

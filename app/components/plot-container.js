@@ -4,9 +4,10 @@ export default Ember.Component.extend({
   tagName: 'div',
   classNames: [ 'plots' ],
   attributeBindings: [ 'style' ],
-  editing: false,
 
   plots: null,
+  editing: false,
+  grid: true,
 
   style: function() {
     return Ember.String.htmlSafe('height: ' + this._calculateHeight() + 'px;');
@@ -22,6 +23,9 @@ export default Ember.Component.extend({
         maxHeight = plotHeight;
       }
     });
+
+    // add padding to height
+    maxHeight += 40;
 
     return maxHeight;
   }

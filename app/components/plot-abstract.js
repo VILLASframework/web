@@ -3,9 +3,13 @@ import Resizable from '../mixins/resizable';
 import Draggable from '../mixins/draggable';
 
 export default Ember.Component.extend(Resizable, Draggable, {
+  tagName: 'div',
+  classNames: [ 'plotAbstract' ],
   attributeBindings: [ 'style' ],
 
   plot: null,
+  editing: false,
+  grid: false,
 
   disabled_resize: false,
   autoHide_resize: false,
@@ -14,6 +18,7 @@ export default Ember.Component.extend(Resizable, Draggable, {
   disabled_drag: false,
   containment_drag: 'parent',
   grid_drag: [ 10, 10 ],
+  scroll_drag: true,
 
   style: function() {
     return Ember.String.htmlSafe('width: ' + this.get('plot.width') + 'px; height: ' + this.get('plot.height') + 'px; left: ' + this.get('plot.x') + 'px; top: ' + this.get('plot.y') + 'px;');
@@ -42,5 +47,13 @@ export default Ember.Component.extend(Resizable, Draggable, {
       this.set('autoHide_resize', true);
       this.set('disabled_drag', true);
     }
-  }.observes('editing').on('init')
+
+    if (this.get('grid') === true) {
+      this.set('grid_resize', [ 10, 10 ]);
+      this.set('grid_drag', [ 10, 10 ]);
+    } else {
+      this.set('grid_resize', false);
+      this.set('grid_drag', false);
+    }
+  }.observes('editing', 'grid').on('init')
 });
