@@ -42,6 +42,14 @@ Router.map(function() {
   });
 
   this.route('404', { path: '/*path' });
+
+  this.route('simulation-model', function() {
+    this.route('index', { path: '/:modelid' });
+    this.route('new');
+    this.route('delete', { path: '/delete/:modelid' });
+    this.route('edit', { path: '/edit/:modelid' });
+  });
+  this.route('simulation-models');
 });
 
 export default Router;

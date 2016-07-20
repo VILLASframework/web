@@ -1,0 +1,11 @@
+<h1>New model</h1>
+
+<form {{action 'newModel' on='submit'}}>
+  <p>
+    <label for="name">Name</label>
+    {{input id='name' placeholder='Enter model name' value=name}}
+  </p>
+
+  <button {{action 'cancelNewModel'}}>Cancel</button>
+  <button type="submit">Create</button>
+</form>
