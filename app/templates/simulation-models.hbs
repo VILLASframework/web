@@ -1,9 +1,24 @@
 <h1>Models</h1>
 
-<ul>
-  {{#each model as |simulationModel|}}
-    <li>{{#link-to "simulation-model.index" simulationModel.id}}{{simulationModel.name}}{{/link-to}}</li>
-  {{/each}}
-</ul>
+<div class="simulation-models-container">
+  <table>
+    <tr>
+      <th>Name</th>
+    </tr>
+    {{#each model as |simulationModel|}}
+      <tr>
+        <td>
+          {{#link-to "simulation-model.index" simulationModel.id}}{{simulationModel.name}}{{/link-to}}
+          <div class="simulation-models-row-controls">
+            {{#link-to "simulation-model.edit" simulationModel.id}}Edit{{/link-to}}
+            {{#link-to "simulation-model.delete" simulationModel.id}}Delete{{/link-to}}
+          </div>
+        </td>
+      </tr>
+    {{/each}}
+  </table>
+</div>
 
-{{#link-to "simulation-model.new"}}New model{{/link-to}}
+<div class="simulation-models-new-container">
+  {{#link-to "simulation-model.new"}}New model{{/link-to}}
+</div>

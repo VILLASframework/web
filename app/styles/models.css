@@ -1,0 +1,51 @@
+/**
+ * File: models.css
+ * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
+ * Date: 20.07.2016
+ * Copyright: 2016, Institute for Automation of Complex Power Systems, EONERC
+ *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
+ *   Unauthorized copying of this file, via any medium is strictly prohibited.
+ **********************************************************************************/
+
+/**
+ * Route: simulation-models
+ */
+.simulation-models-container {
+  margin-top: 20px;
+}
+
+.simulation-models-container table {
+  width: 100%;
+
+  border: 0;
+  border-collapse: collapse;
+}
+
+.simulation-models-container th, td {
+  padding: 5px;
+
+  text-align: left;
+
+  border: 0;
+}
+
+.simulation-models-container th {
+  background-color: #151;
+  color: #fff;
+}
+
+.simulation-models-row-controls {
+  float: right;
+}
+
+.simulation-models-row-controls a {
+  margin-left: 10px;
+}
+
+.simulation-models-container tr:nth-child(even) {
+  background-color: #ddd;
+}
+
+.simulation-models-new-container {
+  margin-top: 20px;
+}
