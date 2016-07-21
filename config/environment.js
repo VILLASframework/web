@@ -14,7 +14,8 @@ module.exports = function(environment) {
     },
 
     APP: {
-      API_HOST: 'localhost:3000'
+      API_HOST: 'localhost:3000',
+      LIVE_HOST: 'localhost:4000'
     }
   };
 

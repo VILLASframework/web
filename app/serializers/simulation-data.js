@@ -1,5 +1,5 @@
 /**
- * File: index.js
+ * File: simulation-data.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 20.07.2016
  * Copyright: 2016, Institute for Automation of Complex Power Systems, EONERC
@@ -8,10 +8,16 @@
  **********************************************************************************/
 
 import Ember from 'ember';
-import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import DS from 'ember-data';
 
-export default Ember.Route.extend(AuthenticatedRouteMixin, {
-  model(params) {
-    return this.store.findRecord('simulation-model', params.modelid);
+export default DS.Serializer.extend({
+  normalizeResponse(store, primaryModelClass, payload, id, requestType) {
+    console.log('normalizeResponse');
+    return {};
+  },
+
+  serialize(record, options) {
+    console.log('serialize');
+    return null;
   }
 });

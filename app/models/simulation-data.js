@@ -1,5 +1,5 @@
 /**
- * File: index.js
+ * File: simulation-data.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 20.07.2016
  * Copyright: 2016, Institute for Automation of Complex Power Systems, EONERC
@@ -7,11 +7,12 @@
  *   Unauthorized copying of this file, via any medium is strictly prohibited.
  **********************************************************************************/
 
-import Ember from 'ember';
-import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
+// import { belongsTo, hasMany } from 'ember-data/relationships';
 
-export default Ember.Route.extend(AuthenticatedRouteMixin, {
-  model(params) {
-    return this.store.findRecord('simulation-model', params.modelid);
-  }
+export default Model.extend({
+  simulator: attr('number'),
+  sequence: attr('number'),
+  values: attr('array')
 });
