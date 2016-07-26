@@ -7,12 +7,26 @@
  *   Unauthorized copying of this file, via any medium is strictly prohibited.
  **********************************************************************************/
 
+import Ember from 'ember';
 import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
 // import { belongsTo, hasMany } from 'ember-data/relationships';
 
 export default Model.extend({
-  simulator: attr('number'),
+  simulator: Ember.computed.alias('id'),
   sequence: attr('number'),
-  values: attr('array')
+  values: attr('array'),
+
+  historyValues() {
+    return this._history;
+  },
+
+  _history: [],
+
+  _updateHistory: function() {
+    this._history.unshift(this.get('values'));
+    while (this._history.length > 500) {
+      this._history.shift();
+    }
+  }.observes('values')
 });
