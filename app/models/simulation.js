@@ -1,7 +1,7 @@
 /**
- * File: simulation-model.js
+ * File: simulation.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 20.07.2016
+ * Date: 26.07.2016
  * Copyright: 2016, Institute for Automation of Complex Power Systems, EONERC
  *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
  *   Unauthorized copying of this file, via any medium is strictly prohibited.
@@ -13,8 +13,8 @@ import { belongsTo, hasMany } from 'ember-data/relationships';
 
 export default Model.extend({
   name: attr('string'),
-  simulator: attr('number'),
-  length: attr('number'),
-  mapping: attr('array'),
-  simulation: belongsTo('simulation', { async: true })
+  running: attr('boolean'),
+  owner: belongsTo('user', { async: true }),
+  models: hasMany('simulation-model', { aync: true }),
+  projects: hasMany('project', { async: true })
 });

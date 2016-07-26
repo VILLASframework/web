@@ -11,11 +11,4 @@ import Ember from 'ember';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
-  sessionUser: Ember.inject.service('session-user'),
-
-  model() {
-    // get models for current user
-    var user = this.get('sessionUser.user');
-    return user.get('simulationModels');
-  }
 });

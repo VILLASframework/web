@@ -16,6 +16,6 @@ export default Model.extend({
   password: attr('string'),
   adminLevel: attr('number'),
   projects: hasMany('project', { async: true }),
-  simulationModels: hasMany('simulation-model', { async: true }),
+  simulations: hasMany('simulation', { async: true }),
   mail: attr('string')
 });

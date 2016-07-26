@@ -1,7 +1,7 @@
 /**
- * File: new.js
+ * File: simulations.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 20.07.2016
+ * Date: 26.07.2016
  * Copyright: 2016, Institute for Automation of Complex Power Systems, EONERC
  *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
  *   Unauthorized copying of this file, via any medium is strictly prohibited.
@@ -11,7 +11,11 @@ import Ember from 'ember';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
-  model(params) {
-    return this.store.findRecord('simulation', params.simulationid);
+  sessionUser: Ember.inject.service('session-user'),
+
+  model() {
+    // get simulations for current user
+    var user = this.get('sessionUser.user');
+    return user.get('simulations');
   }
 });

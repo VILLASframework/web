@@ -9,6 +9,8 @@
 
 @import 'plots.css';
 @import 'models.css';
+@import 'simulations.css';
+@import 'projects.css';
 
 * {
   margin: 0;
@@ -149,4 +151,84 @@ footer {
   &:hover {
     background-color: #aaa;
   }
+}
+
+/**
+ * Table
+ */
+.column-center {
+  text-align: center;
+}
+
+/**
+ * Table full width
+ */
+.table-full-width {
+  width: 100%;
+
+  border: 0;
+  border-collapse: collapse;
+}
+
+.table-full-width th, td {
+  padding: 5px;
+
+  text-align: left;
+
+  border: none;
+}
+
+.table-full-width  th {
+  background-color: #151;
+  color: #fff;
+}
+
+.table-full-width tr:nth-child(even) {
+  background-color: #ddd;
+}
+
+/**
+ * Form create record
+ */
+.form-create-record {
+  padding: 0;
+
+  width: 400px;
+}
+
+.form-create-record table {
+  border: none;
+}
+
+.form-create-record td {
+  padding: 5px 10px 5px 0;
+}
+
+.form-create-record input {
+  padding: 2px 4px;
+
+  width: 100%;
+}
+
+.form-create-record input[type=number] {
+  width: 60px;
+
+  padding: 0;
+}
+
+.form-create-record button {
+  background-color: #151;
+  color: #fff;
+
+  font-size: 14px;
+
+  padding: 4px 8px;
+
+  border: none;
+
+  cursor: pointer;
+}
+
+.form-create-record button:hover {
+  background: #373;
 }

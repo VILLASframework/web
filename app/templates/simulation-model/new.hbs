@@ -1,11 +1,28 @@
 <h1>New model</h1>
 
-<form {{action 'newModel' on='submit'}}>
-  <p>
-    <label for="name">Name</label>
-    {{input id='name' placeholder='Enter model name' value=name}}
-  </p>
-
-  <button {{action 'cancelNewModel'}}>Cancel</button>
-  <button type="submit">Create</button>
+<form class="form-create-record" {{action 'newModel' on='submit'}}>
+  <table>
+    <tr>
+      <td>
+        <label for="name">Name</label>
+      </td>
+      <td>
+        {{input id='name' placeholder='Enter model name' value=name}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="simulator">Simulator</label>
+      </td>
+      <td>
+        {{input id='simulator' value=simulator type='number' min=1 max=255 step=1}}
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <button {{action 'cancelNewModel'}}>Cancel</button>
+        <button type="submit">Create</button>
+      </td>
+    </tr>
+  </table>
 </form>

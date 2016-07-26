@@ -45,11 +45,19 @@ Router.map(function() {
 
   this.route('simulation-model', function() {
     this.route('index', { path: '/:modelid' });
-    this.route('new');
+    this.route('new', { path: '/new/:simulationid' });
     this.route('delete', { path: '/delete/:modelid' });
     this.route('edit', { path: '/edit/:modelid' });
   });
   this.route('simulation-models');
+
+  this.route('simulations');
+  this.route('simulation', function() {
+    this.route('index', { path: '/:simulationid' });
+    this.route('delete', { path: '/delete/:simulationid' });
+    this.route('new');
+    this.route('edit', { path: '/edit/:simulationid' });
+  });
 });
 
 export default Router;

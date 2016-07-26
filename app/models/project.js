@@ -14,5 +14,6 @@ import { hasMany, belongsTo } from 'ember-data/relationships';
 export default Model.extend({
   name: attr('string'),
   owner: belongsTo('user', { async: true }),
-  visualizations: hasMany('visualization', { async: true })
+  visualizations: hasMany('visualization', { async: true }),
+  simulation: belongsTo('simulation', { async: true })
 });

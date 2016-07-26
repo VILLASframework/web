@@ -1,0 +1,31 @@
+<h1>{{model.name}}</h1>
+
+<div class="simulation-index-models-container">
+  <table class="table-full-width">
+    <tr>
+      <th>Name</th>
+      <th width="80px" class="column-center">Simulator</th>
+      <th width="100px"></th>
+    </tr>
+    {{#each model.models as |simulationModel|}}
+      <tr>
+        <td>
+          {{#link-to "simulation-model.index" simulationModel.id}}{{simulationModel.name}}{{/link-to}}
+        </td>
+        <td class="column-center">
+          {{simulationModel.simulator}}
+        </td>
+        <td>
+          <div class="simulation-index-row-controls">
+            {{#link-to "simulation-model.edit" simulationModel.id}}Edit{{/link-to}}
+            {{#link-to "simulation-model.delete" simulationModel.id}}Delete{{/link-to}}
+          </div>
+        </td>
+      </tr>
+    {{/each}}
+  </table>
+</div>
+
+<div class="simulation-index-new-model">
+  {{#link-to "simulation-model.new" model.id}}New model{{/link-to}}
+</div>

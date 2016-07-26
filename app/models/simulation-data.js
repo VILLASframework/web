@@ -25,7 +25,7 @@ export default Model.extend({
 
   _updateHistory: function() {
     this._history.unshift(this.get('values'));
-    while (this._history.length > 500) {
+    while (this._history.length > 5) {
       this._history.shift();
     }
   }.observes('values')
