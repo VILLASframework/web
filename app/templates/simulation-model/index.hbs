@@ -1,9 +1,18 @@
 <h1>{{model.name}}</h1>
 
 <p>
-  Running: {{#if model.running}}
-    true
-  {{else}}
-    false
-  {{/if}}
+  Running: {{model.simulation.running}}
 </p>
+
+<p>
+  Simulator: {{model.simulator}}
+</p>
+
+<p>
+  Data:
+</p>
+
+{{#each values as |value|}}
+  {{value}}
+  <br />
+{{/each}}

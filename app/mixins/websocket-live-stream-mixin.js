@@ -1,24 +1,55 @@
+/**
+ * File: websocket-live-stream-mixin.js
+ * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
+ * Date: 21.07.2016
+ * Copyright: 2016, Institute for Automation of Complex Power Systems, EONERC
+ *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
+ *   Unauthorized copying of this file, via any medium is strictly prohibited.
+ **********************************************************************************/
+
 import Ember from 'ember';
 import ENV from '../config/environment';
+
+const { service } = Ember.inject;
 
 export default Ember.Mixin.create({
   host: 'ws://' + ENV.APP.LIVE_HOST,
   namespace: '',
+  runningSimulation: service('running-simulation'),
+
+  socket: null,
 
   init() {
     this._super(...arguments);
 
-    // create socket
-    var socket = new WebSocket(this.host + this.namespace);
-    socket.binaryType = 'arraybuffer';
-
-    // register event callbacks
-    var self = this;
-    socket.onopen = function(event) { self.onopen.apply(self, [event]); };
-    socket.onclose = function(event) { self.onclose.apply(self, [event]); };
-    socket.onmessage = function(event) { self.onmessage.apply(self, [event]); };
-    socket.onerror = function(event) { self.onerror.apply(self, [event]); };
+    // start simulation service
+    this.get('runningSimulation').loadRunningSimulation();
   },
+
+  _runningSimulationChanged: function() {
+    // called each time running simulation did change
+    var simulation = this.get('runningSimulation.simulation');
+    if (simulation !== null) {
+      if (this.socket === null) {
+        // create new socket connection
+        this.socket = new WebSocket(this.host + this.namespace);
+        this.socket.binaryType = 'arraybuffer';
+
+        // register callbacks
+        var self = this;
+        this.socket.onopen = function(event) { self.onopen.apply(self, [event]); };
+        this.socket.onclose = function(event) { self.onclose.apply(self, [event]); };
+        this.socket.onmessage = function(event) { self.onmessage.apply(self, [event]); };
+        this.socket.onerror = function(event) { self.onerror.apply(self, [event]); };
+      }
+    } else {
+      // stop stream if still opened
+      if (this.socket !== null) {
+        this.socket.close();
+        this.socket = null;
+      }
+    }
+  }.observes('runningSimulation.simulation'),
 
   onopen(event) {
     Ember.debug('websocket opened');
