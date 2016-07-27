@@ -1,24 +1,27 @@
 <h1>{{model.name}}</h1>
 
-<br />
-
-<p>
-  <h3>Visualizations</h3>
-
-  <ul>
+<div class="project-index-container">
+  <table class="table-full-width">
+    <tr>
+      <th>Name</th>
+      <th width="100px"></th>
+    </tr>
     {{#each model.visualizations as |visualization|}}
-      <li>{{#link-to 'visualization.index' visualization.id}}{{visualization.name}}{{/link-to}}</li>
+      <tr>
+        <td>
+          {{#link-to 'visualization.index' visualization.id}}{{visualization.name}}{{/link-to}}
+        </td>
+        <td>
+          <div class="project-index-row-controls">
+            {{#link-to "visualization.edit" visualization.id}}Edit{{/link-to}}
+            {{#link-to "visualization.delete" visualization.id}}Delete{{/link-to}}
+          </div>
+        </td>
+      </tr>
     {{/each}}
-  </ul>
+  </table>
+</div>
 
-  <br />
-
+<div class="project-index-new-visualization">
   <a href="" {{action 'newVisualization'}}>New visualization</a>
-</p>
-
-<br />
-
-<p>
-  {{#link-to "project.edit" model.id}}Edit project{{/link-to}}
-  {{#link-to "project.delete" model.id}}Delete project{{/link-to}}
-</p>
+</div>

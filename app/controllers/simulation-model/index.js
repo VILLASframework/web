@@ -15,7 +15,7 @@ export default Ember.Controller.extend({
   }.property('simulationData.values.@each'),
 
   _getData: function() {
-    if (this.get('model.simulation.running') == true) {
+    if (this.get('model.simulation.running') === true) {
       var simulator = this.get('model.simulator');
       if (simulator == null) {
         return;

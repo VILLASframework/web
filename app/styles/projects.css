@@ -25,3 +25,22 @@
 .projects-new-container {
   margin-top: 20px;
 }
+
+/**
+ * Route: project.index
+ */
+.project-index-container {
+  margin-top: 20px;
+}
+
+.project-index-row-controls {
+  float: right;
+}
+
+.project-index-row-controls a {
+  margin:left: 10px;
+}
+
+.project-index-new-visualization {
+  margin-top: 20px;
+}

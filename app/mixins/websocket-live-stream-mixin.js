@@ -51,7 +51,7 @@ export default Ember.Mixin.create({
     }
   }.observes('runningSimulation.simulation'),
 
-  onopen(event) {
+  onopen(/*event*/) {
     Ember.debug('websocket opened');
   },
 
@@ -76,7 +76,7 @@ export default Ember.Mixin.create({
     }
   },
 
-  onerror(event) {
+  onerror(/*event*/) {
     Ember.debug('websocket error');
   },
 

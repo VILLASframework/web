@@ -27,12 +27,12 @@ export default Ember.Service.extend({
         var newSimulation = null;
 
         simulations.forEach(function(simulation) {
-          if (simulation.get('running') == true) {
+          if (simulation.get('running') === true) {
             newSimulation = simulation;
           }
         });
 
-        if (newSimulation != self.get('simulation')) {
+        if (newSimulation !== self.get('simulation')) {
           self.set('simulation', newSimulation);
         }
       });

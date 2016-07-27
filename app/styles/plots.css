@@ -42,6 +42,18 @@
 
 }
 
+.plot-edit-container {
+  width: 200px !important;
+
+  background-color: #ddd;
+
+  border: 1px dotted black;
+}
+
+.plot-edit-form {
+
+}
+
 /**
  * Component: plot-table
  */

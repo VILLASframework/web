@@ -168,6 +168,8 @@ footer {
 
   border: 0;
   border-collapse: collapse;
+
+  background-color: #f6f6f6;
 }
 
 .table-full-width th, td {
@@ -231,4 +233,22 @@ footer {
 
 .form-create-record button:hover {
   background: #373;
+}
+
+/**
+ *
+ */
+.popover {
+  z-index: 1010;
+
+  width: 120px;
+  height: 100px;
+}
+
+.arrow {
+  border-right-color: red !important;
+}
+
+.hidden {
+  visibility: hidden;
 }
