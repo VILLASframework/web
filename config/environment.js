@@ -4,7 +4,7 @@ module.exports = function(environment) {
   /*********************************
    * This variable must be set to the address the server should be available on.
    */
-  var hostAddress = 'localhost';
+   var hostAddress = process.env.HOST_ADDRESS || 'localhost';
   /*
    *
    *********************************/
@@ -46,8 +46,6 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
-
-    hostAddress = '192.168.99.100'; // docker-machine ip address (only when using docker on a mac)
 
     ENV.contentSecurityPolicy['script-src'] += " " + hostAddress + ":80";
     ENV.contentSecurityPolicy['connect-src'] += " ws://" + hostAddress + ":49152";

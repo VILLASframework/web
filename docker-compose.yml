@@ -10,6 +10,8 @@ nginx:
     - "80:80"
 
 ember:
+  environment:
+    HOST_ADDRESS: 'localhost'
   image: danlynn/ember-cli
   volumes:
     - ./:/myapp/
@@ -29,4 +31,4 @@ playback:
   image: acs/playback
   links:
     - orion
-  command: orion:1026 m1_S1_ElectricalGrid_data.txt
+  command: orion:1026 m1_S1_ElectricalGrid_data.txt 200 3

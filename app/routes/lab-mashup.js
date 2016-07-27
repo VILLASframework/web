@@ -8,6 +8,16 @@ export default Ember.Route.extend({
         id: 'S1_ElectricalGrid',
         isPattern: false,
         type: ''
+      },
+      {
+        id: 'S2_ElectricalGrid',
+        isPattern: false,
+        type: ''
+      },
+      {
+        id: 'S3_ElectricalGrid',
+        isPattern: false,
+        type: ''
       }
     ]});
     //return this.store.findAll('entity');
@@ -25,6 +35,16 @@ export default Ember.Route.extend({
     this.store.query('entity', { entities: [
       {
         id: 'S1_ElectricalGrid',
+        isPattern: false,
+        type: ''
+      },
+      {
+        id: 'S2_ElectricalGrid',
+        isPattern: false,
+        type: ''
+      },
+      {
+        id: 'S3_ElectricalGrid',
         isPattern: false,
         type: ''
       }
