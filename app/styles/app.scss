@@ -11,6 +11,10 @@
 @import 'models.css';
 @import 'simulations.css';
 @import 'projects.css';
+@import 'simulators.css';
+
+@import "ember-modal-dialog/ember-modal-structure";
+@import "ember-modal-dialog/ember-modal-appearance";
 
 * {
   margin: 0;
@@ -232,6 +236,24 @@ footer {
 }
 
 .form-create-record button:hover {
+  background: #373;
+}
+
+button {
+  background-color: #151;
+  color: #fff;
+
+  font-size: 14px;
+
+  margin-top: 10px;
+  padding: 4px 8px;
+
+  border: none;
+
+  cursor: pointer;
+}
+
+button:hover {
   background: #373;
 }
 

@@ -58,6 +58,9 @@ Router.map(function() {
     this.route('new');
     this.route('edit', { path: '/edit/:simulationid' });
   });
+
+  this.route('simulators');
+  this.route('simulator');
 });
 
 export default Router;

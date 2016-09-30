@@ -1,0 +1,143 @@
+<h1>Simulators</h1>
+
+<div class="simulators-container">
+  <table class="table-full-width">
+    <tr>
+      <th>Name</th>
+      <th width="80px" class="column-center">ID</th>
+      <th width="80px" class="column-center">Running</th>
+      <th width="120px" class="column-center">Endpoint</th>
+      <th width="100px"></th>
+    </tr>
+    {{#each model as |simulator|}}
+      <tr>
+        <td>
+          <!-- {{#link-to "simulator.index" simulator.id}}{{simulator.name}}{{/link-to}} -->
+          {{simulator.name}}
+        </td>
+        <td>
+          {{simulator.simulatorid}}
+        </td>
+        <td>
+          {{simulator.running}}
+        </td>
+        <td>
+          {{simulator.endpoint}}
+        </td>
+        <td>
+          <div class="simulators-row-controls">
+            <!-- {{#link-to "simulator.edit" simulator.id}}Edit{{/link-to}} -->
+            <!-- {{#link-to "simulator.delete" simulator.id}}Delete{{/link-to}} -->
+            <a href="" {{action 'showEditModal' simulator}}>Edit</a>
+            <a href="" {{action 'showDeleteModal' simulator}}>Delete</a>
+          </div>
+        </td>
+      </tr>
+    {{/each}}
+  </table>
+</div>
+
+<div class="simulators-new-container">
+  <button {{action 'showNewModal'}}>New Simulator</button>
+</div>
+
+{{#if isShowingNewModal}}
+  {{#modal-dialog attachment="middle center" translucentOverlay=true}}
+    <h1>New simulator</h1>
+
+    <form class="form-create-record" {{action 'newSimulator' on='submit'}}>
+      <table>
+        <tr>
+          <td>
+            <label for="name">Name</label>
+          </td>
+          <td>
+            {{input id='name' placeholder='Enter simulator name' value=name}}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="simulatorid">Simulator ID</label>
+          </td>
+          <td>
+            {{input id='simulatorid' type='number' value=simulatorid min='1' max='255'}}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="endpoint">Endpoint</label>
+          </td>
+          <td>
+            {{input id='endpoint' placeholder='Enter endpoint' value=endpoint}}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <button {{action 'cancelNewSimulator'}}>Cancel</button>
+            <button type="submit">Create</button>
+          </td>
+        </tr>
+      </table>
+    </form>
+
+    {{#if errorMessage}}
+      <p><strong>Error:</strong> {{errorMessage}}</p>
+    {{/if}}
+  {{/modal-dialog}}
+{{/if}}
+
+{{#if isShowingDeleteModal}}
+  {{#modal-dialog attachment="middle center" translucentOverlay=true}}
+    <h1>Delete simulator</h1>
+
+    <p>Are you sure you want to delete the simulator <b><i>{{simulator.name}}</i></b>?</p>
+
+    <button {{action 'cancelDeleteSimulator'}}>Cancel</button>
+    <button {{action 'confirmDeleteSimulator'}}>Delete</button>
+  {{/modal-dialog}}
+{{/if}}
+
+{{#if isShowingEditModal}}
+  {{#modal-dialog attachment="middle center" translucentOverlay=true}}
+    <h1>New simulator</h1>
+
+    <form class="form-edit-record" {{action 'editSimulator' on='submit'}}>
+      <table>
+        <tr>
+          <td>
+            <label for="name">Name</label>
+          </td>
+          <td>
+            {{input id='name' placeholder='Enter simulator name' value=simulatorName}}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="simulatorid">Simulator ID</label>
+          </td>
+          <td>
+            {{input id='simulatorid' type='number' value=simulatorid min='1' max='255'}}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="endpoint">Endpoint</label>
+          </td>
+          <td>
+            {{input id='endpoint' placeholder='Enter endpoint' value=simulatorEndpoint}}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <button {{action 'cancelEditSimulator'}}>Cancel</button>
+            <button type="submit">Create</button>
+          </td>
+        </tr>
+      </table>
+    </form>
+
+    {{#if errorMessage}}
+      <p><strong>Error:</strong> {{errorMessage}}</p>
+    {{/if}}
+  {{/modal-dialog}}
+{{/if}}

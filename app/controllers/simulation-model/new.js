@@ -10,19 +10,26 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  simulator: 1,
+  simulator: null,
 
   actions: {
     newModel() {
       // get the simulation
-      var simulation = this.get('model');
-      var simulationId = this.get('model.id');
+      var simulation = this.get('model.simulation');
+      var simulationId = this.get('model.simulation.id');
 
       // create new model from properties
-      var properties = this.getProperties('name', 'simulator');
+      var properties = this.getProperties('name');
       properties['simulation'] = simulationId;
 
-      var simulationModel = this.store.createRecord('simulation-model', properties);
+      // get the simulator id by simulator name
+      if (this.get('simulator') == null) {
+        this.set('simulator', this.get('model.simulators')[0]);
+      }
+
+      console.log(this.get('model.simulators')[0]);
+
+      /*var simulationModel = this.store.createRecord('simulation-model', properties);
 
       // this change will not be saved, but it is nessecary otherwise ember will omit the simulation's id in the post request
       simulation.get('models').pushObject(simulationModel);
@@ -33,12 +40,16 @@ export default Ember.Controller.extend({
         controller.transitionToRoute('/simulation/' + simulationId);
       }, function() {
         Ember.debug('Error saving new model');
-      });
+      });*/
     },
 
     cancelNewModel() {
-      var simulationId = this.get('model.id');
+      var simulationId = this.get('model.simulation.id');
       this.transitionToRoute('/simulation/' + simulationId);
+    },
+
+    selectSimulator(simulator) {
+      this.set('simulator', simulator);
     }
   }
 });

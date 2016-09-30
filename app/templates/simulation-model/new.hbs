@@ -15,7 +15,11 @@
         <label for="simulator">Simulator</label>
       </td>
       <td>
-        {{input id='simulator' value=simulator type='number' min=1 max=255 step=1}}
+        <select onchange={{action "selectSimulator" value="target.value"}}>
+          {{#each model.simulators as |simulator|}}
+            <option value={{simulator.name}}>{{simulator.name}}</option>
+          {{/each}}
+        </select>
       </td>
     </tr>
     <tr>
