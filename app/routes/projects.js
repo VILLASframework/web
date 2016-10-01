@@ -14,10 +14,8 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
   sessionUser: Ember.inject.service('session-user'),
 
   model() {
-    // get session user
-    var userId = this.get('sessionUser.user.id');
-    let user = this.store.peekRecord('user', userId);
-
+    // get projects for current user
+    var user = this.get('sessionUser.user');
     return user.get('projects');
   }
 });

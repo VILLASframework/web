@@ -1,3 +1,5 @@
+{{#link-to 'projects'}}Back to projects{{/link-to}}
+
 <h1>{{model.name}}</h1>
 
 <div class="project-index-container">
@@ -13,8 +15,8 @@
         </td>
         <td>
           <div class="project-index-row-controls">
-            {{#link-to "visualization.edit" visualization.id}}Edit{{/link-to}}
-            {{#link-to "visualization.delete" visualization.id}}Delete{{/link-to}}
+            <a href="" {{action 'showEditModal' visualization}}>Edit</a>
+            <a href="" {{action 'showDeleteModal' visualization}}>Delete</a>
           </div>
         </td>
       </tr>
@@ -23,5 +25,74 @@
 </div>
 
 <div class="project-index-new-visualization">
-  <a href="" {{action 'newVisualization'}}>New visualization</a>
+  <button {{action 'showNewModal'}}>New visualization</button>
 </div>
+
+{{#if isShowingNewModal}}
+  {{#modal-dialog attachment="middle center" translucentOverlay=true}}
+    <h1>New visualization</h1>
+
+    <form class="form-create-record" {{action 'submitNew' on='submit'}} >
+      <table>
+        <tr>
+          <td>
+            <label for="name">Name</label>
+          </td>
+          <td>
+            {{input id='name' placeholder='Enter visualization name' value=name}}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <button {{action 'cancelNew'}}>Cancel</button>
+            <button type="submit">Create</button>
+          </td>
+        </tr>
+      </table>
+    </form>
+
+    {{#if errorMessage}}
+      <p><strong>Error:</strong> {{errorMessage}}</p>
+    {{/if}}
+  {{/modal-dialog}}
+{{/if}}
+
+{{#if isShowingEditModal}}
+  {{#modal-dialog attachment="middle center" translucentOverlay=true}}
+    <h1>Edit visualization</h1>
+
+    <form class="form-edit-record" {{action 'submitEdit' on='submit'}} >
+      <table>
+        <tr>
+          <td>
+            <label for="name">Name</label>
+          </td>
+          <td>
+            {{input id='name' placeholder='Enter visualization name' value=name}}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <button {{action 'cancelEdit'}}>Cancel</button>
+            <button type="submit">Save</button>
+          </td>
+        </tr>
+      </table>
+    </form>
+
+    {{#if errorMessage}}
+      <p><strong>Error:</strong> {{errorMessage}}</p>
+    {{/if}}
+  {{/modal-dialog}}
+{{/if}}
+
+{{#if isShowingDeleteModal}}
+  {{#modal-dialog attachment="middle center" translucentOverlay=true}}
+    <h1>Delete visualization</h1>
+
+    <p>Are you sure you want to delete the visualization <b><i>{{visualization.name}}</i></b>?</p>
+
+    <button {{action 'cancelDelete'}}>Cancel</button>
+    <button {{action 'confirmDelete'}}>Delete</button>
+  {{/modal-dialog}}
+{{/if}}

@@ -21,6 +21,7 @@ export default Ember.Service.extend({
     var self = this;
 
     // check every second for running simulation
+    /*
     setInterval(function() {
       // check if running simulation did changed
       self.get('store').findAll('simulation').then(function(simulations) {
@@ -36,6 +37,6 @@ export default Ember.Service.extend({
           self.set('simulation', newSimulation);
         }
       });
-    }, 1000);
+    }, 1000);*/
   }
 });

@@ -21,9 +21,6 @@ Router.map(function() {
   this.route('projects');
   this.route('project', function() {
     this.route('index', { path: '/:projectid' });
-    this.route('new');
-    this.route('edit', { path: '/edit/:projectid' });
-    this.route('delete', { path: '/delete/:projectid' });
   });
 
   this.route('me');
@@ -45,18 +42,11 @@ Router.map(function() {
 
   this.route('simulation-model', function() {
     this.route('index', { path: '/:modelid' });
-    this.route('new', { path: '/new/:simulationid' });
-    this.route('delete', { path: '/delete/:modelid' });
-    this.route('edit', { path: '/edit/:modelid' });
   });
-  this.route('simulation-models');
 
   this.route('simulations');
   this.route('simulation', function() {
     this.route('index', { path: '/:simulationid' });
-    this.route('delete', { path: '/delete/:simulationid' });
-    this.route('new');
-    this.route('edit', { path: '/edit/:simulationid' });
   });
 
   this.route('simulators');

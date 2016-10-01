@@ -1,4 +1,6 @@
-<h1>{{model.name}}</h1>
+{{#link-to 'simulations'}}Back to simulations{{/link-to}}
+
+<h1>{{model.simulation.name}}</h1>
 
 <div class="simulation-index-models-container">
   <table class="table-full-width">
@@ -7,7 +9,7 @@
       <th width="80px" class="column-center">Simulator</th>
       <th width="100px"></th>
     </tr>
-    {{#each model.models as |simulationModel|}}
+    {{#each model.simulation.models as |simulationModel|}}
       <tr>
         <td>
           {{#link-to "simulation-model.index" simulationModel.id}}{{simulationModel.name}}{{/link-to}}
@@ -17,8 +19,8 @@
         </td>
         <td>
           <div class="simulation-index-row-controls">
-            {{#link-to "simulation-model.edit" simulationModel.id}}Edit{{/link-to}}
-            {{#link-to "simulation-model.delete" simulationModel.id}}Delete{{/link-to}}
+            <a href="" {{action 'showEditModal' simulationModel}}>Edit</a>
+            <a href="" {{action 'showDeleteModal' simulationModel}}>Delete</a>
           </div>
         </td>
       </tr>
@@ -27,5 +29,98 @@
 </div>
 
 <div class="simulation-index-new-model">
-  {{#link-to "simulation-model.new" model.id}}New model{{/link-to}}
+  <button {{action 'showNewModal'}}>New model</button>
 </div>
+
+{{#if isShowingNewModal}}
+  {{#modal-dialog attachment="middle center" translucentOverlay=true}}
+    <h1>New model</h1>
+
+    <form class="form-create-record" {{action 'submitNew' on='submit'}}>
+      <table>
+        <tr>
+          <td>
+            <label for="name">Name</label>
+          </td>
+          <td>
+            {{input id='name' placeholder='Enter model name' value=name}}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="simulator">Simulator</label>
+          </td>
+          <td>
+            <select onchange={{action "selectSimulator" value="target.value"}}>
+              {{#each model.simulators as |simulator|}}
+                <option value={{simulator.name}}>{{simulator.name}}</option>
+              {{/each}}
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <button {{action 'cancelNew'}}>Cancel</button>
+            <button type="submit">Create</button>
+          </td>
+        </tr>
+      </table>
+    </form>
+
+    {{#if errorMessage}}
+      <p><strong>Error:</strong> {{errorMessage}}</p>
+    {{/if}}
+  {{/modal-dialog}}
+{{/if}}
+
+{{#if isShowingEditModal}}
+  {{#modal-dialog attachment="middle center" translucentOverlay=true}}
+    <h1>Edit model</h1>
+
+    <form class="form-edit-record" {{action 'submitEdit' on='submit'}}>
+      <table>
+        <tr>
+          <td>
+            <label for="name">Name</label>
+          </td>
+          <td>
+            {{input id='name' placeholder='Enter model name' value=name}}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="simulator">Simulator</label>
+          </td>
+          <td>
+            <select onchange={{action "selectSimulator" value="target.value"}}>
+              {{#each model.simulators as |simulator|}}
+                <option value={{simulator.name}} selected={{eq simulatorName simulator.name}}>{{simulator.name}}</option>
+              {{/each}}
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <button {{action 'cancelEdit'}}>Cancel</button>
+            <button type="submit">Save</button>
+          </td>
+        </tr>
+      </table>
+    </form>
+
+    {{#if errorMessage}}
+      <p><strong>Error:</strong> {{errorMessage}}</p>
+    {{/if}}
+  {{/modal-dialog}}
+{{/if}}
+
+{{#if isShowingDeleteModal}}
+  {{#modal-dialog attachment="middle center" translucentOverlay=true}}
+    <h1>Delete simulation-model</h1>
+
+    <p>Are you sure you want to delete the simulation-model <b><i>{{simulationModel.name}}</i></b>?</p>
+
+    <button {{action 'cancelDelete'}}>Cancel</button>
+    <button {{action 'confirmDelete'}}>Delete</button>
+  {{/modal-dialog}}
+{{/if}}
