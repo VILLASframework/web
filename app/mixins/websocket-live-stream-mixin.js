@@ -13,43 +13,95 @@ import ENV from '../config/environment';
 const { service } = Ember.inject;
 
 export default Ember.Mixin.create({
-  host: 'ws://' + ENV.APP.LIVE_HOST,
-  namespace: '',
-  runningSimulation: service('running-simulation'),
+  runningSimulations: service('running-simulations'),
+  store: service(),
 
-  socket: null,
+  sockets: [],
 
   init() {
     this._super(...arguments);
 
-    // start simulation service
-    this.get('runningSimulation').loadRunningSimulation();
+    // load simulators
+    var self = this;
+
+    this.store.findAll('simulator').then(function() {
+      // start simulators service
+      self.get('runningSimulations').loadRunningSimulations();
+    });
   },
 
-  _runningSimulationChanged: function() {
-    // called each time running simulation did change
-    var simulation = this.get('runningSimulation.simulation');
-    if (simulation !== null) {
-      if (this.socket === null) {
-        // create new socket connection
-        this.socket = new WebSocket(this.host + this.namespace);
-        this.socket.binaryType = 'arraybuffer';
+  _runningSimulationsChanged: function() {
+    // called each time running simulations did change
+    var self = this;
 
-        // register callbacks
-        var self = this;
-        this.socket.onopen = function(event) { self.onopen.apply(self, [event]); };
-        this.socket.onclose = function(event) { self.onclose.apply(self, [event]); };
-        this.socket.onmessage = function(event) { self.onmessage.apply(self, [event]); };
-        this.socket.onerror = function(event) { self.onerror.apply(self, [event]); };
+    this.get('runningSimulations.simulationModels').forEach(function(simulationModel) {
+      //console.log('Model: ' + simulationModel.get('name') + ' (' + simulationModel.get('simulator.name') + ')');
+
+      // get socket for simulation model
+      let modelid = simulationModel.get('id');
+      var socket = self._socketForSimulationModel(modelid);
+
+      // create new socket for simulation model if not running yet
+      if (socket == null) {
+        // try to create new socket
+        socket = new WebSocket('ws://' + simulationModel.get('simulator.endpoint'));
+        console.log('opened ' + simulationModel.get('simulator.endpoint'));
+
+        if (socket != null) {
+          socket.binaryType = 'arraybuffer';
+
+          // register callbacks
+          socket.onopen = function(event) { self.onopen.apply(self, [event]); };
+          socket.onclose = function(event) { self.onclose.apply(self, [event]); };
+          socket.onmessage = function(event) { self.onmessage.apply(self, [event]); };
+          socket.onerror = function(event) { self.onerror.apply(self, [event]); };
+
+          // save socket
+          self._addSocketForSimulationModel(socket, modelid);
+
+          console.log('simulation model \'' + simulationModel.get('name') + '\' started');
+        }
       }
-    } else {
-      // stop stream if still opened
-      if (this.socket !== null) {
-        this.socket.close();
-        this.socket = null;
+    });
+  }.observes('runningSimulations.simulationModels.@each.mod'),
+
+  _socketForSimulationModel(modelid) {
+    this.get('sockets').forEach(function(s) {
+      if (s.id === modelid) {
+        return s.socket;
+      }
+    });
+
+    return null;
+  },
+
+  _addSocketForSimulationModel(socket, modelid) {
+    // search for existing socket to replace
+    this.get('sockets').forEach(function(s) {
+      if (s.id === modelid) {
+        s.socket = socket;
+        return;
+      }
+    });
+
+    // add new socket
+    this.get('sockets').pushObject({ id: modelid, socket: socket });
+  },
+
+  _removeSocketForSimulationModel(modelid) {
+    var sockets = this.get('sockets');
+    var i = 0;
+
+    while (i < sockets.get('length')) {
+      if (sockets[i].id === modelid) {
+        // remove object from array
+        sockets.slice(i, 1);
+      } else {
+        // only increase index if no object was removed
+        i++;
       }
     }
-  }.observes('runningSimulation.simulation'),
+  },
 
   onopen(/*event*/) {
     Ember.debug('websocket opened');

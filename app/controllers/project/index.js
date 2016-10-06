@@ -49,7 +49,7 @@ export default Ember.Controller.extend({
     submitNew() {
       // verify properties
       var properties = this.getProperties('name');
-      if (properties['name'] == null || properties['name'] == "") {
+      if (properties['name'] == null || properties['name'] === "") {
         this.set('errorMessage', 'Visualization name is missing');
         return;
       }
@@ -79,7 +79,7 @@ export default Ember.Controller.extend({
     submitEdit() {
       // verify properties
       var properties = this.getProperties('name');
-      if (properties['name'] == null || properties['name'] == "") {
+      if (properties['name'] == null || properties['name'] === "") {
         this.set('errorMessage', 'Visualization name is missing');
         return;
       }

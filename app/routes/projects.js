@@ -14,8 +14,12 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, {
   sessionUser: Ember.inject.service('session-user'),
 
   model() {
-    // get projects for current user
+    // get projects for current user, simulations are needed for the simulation picker
     var user = this.get('sessionUser.user');
-    return user.get('projects');
+
+    return Ember.RSVP.hash({
+      projects: user.get('projects'),
+      simulations: this.store.findAll('simulation')
+    });
   }
 });

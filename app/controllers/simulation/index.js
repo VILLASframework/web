@@ -43,11 +43,11 @@ export default Ember.Controller.extend({
       this.set('name', simulationModel.get('name'));
 
       var simulators = this.get('model.simulators');
-      var simulatorId = simulationModel.get('simulator');
+      var simulatorId = simulationModel.get('simulator.id');
       var simulatorName = null;
 
       simulators.forEach(function(simulator) {
-        if (simulator.get('simulatorid') == simulatorId) {
+        if (simulator.get('id') === simulatorId) {
           simulatorName = simulator.get('name');
         }
       });
@@ -69,32 +69,24 @@ export default Ember.Controller.extend({
     submitNew() {
       // verify properties
       var properties = this.getProperties('name');
-      if (properties['name'] == null || properties['name'] == "") {
+      if (properties['name'] == null || properties['name'] === "") {
         this.set('errorMessage', 'Simulation model name is missing');
         return;
       }
 
       // set simuatlion properties
       var simulation = this.get('model.simulation');
-      properties['simulation'] = simulation.get('id');;
+      properties['simulation'] = simulation;
 
       // get the simulator id by simulator name
       var simulators = this.get('model.simulators');
-      var simulatorId = null;
       var simulatorName = this.get('simulatorName');
 
       simulators.forEach(function(simulator) {
         if (simulator.get('name') === simulatorName) {
-          simulatorId = simulator.get('simulatorid');
+          properties['simulator'] = simulator;
         }
       });
-
-      if (simulatorId == null) {
-        Ember.debug('Unable to find simulator by name');
-        return;
-      }
-
-      properties['simulator'] = simulatorId;
 
       // create new model
       var simulationModel = this.store.createRecord('simulation-model', properties);
@@ -118,14 +110,14 @@ export default Ember.Controller.extend({
     submitEdit() {
       // verify properties
       var properties = this.getProperties('name');
-      if (properties['name'] == null || properties['name'] == "") {
+      if (properties['name'] == null || properties['name'] === "") {
         this.set('errorMessage', 'Simulation model name is missing');
         return;
       }
 
       // set simuatlion properties
       var simulation = this.get('model.simulation');
-      properties['simulation'] = simulation.get('id');;
+      properties['simulation'] = simulation.get('id');
 
       // get the simulator id by simulator name
       var simulators = this.get('model.simulators');

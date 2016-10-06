@@ -7,12 +7,12 @@
       <th width="80px" class="column-center">ID</th>
       <th width="80px" class="column-center">Running</th>
       <th width="120px" class="column-center">Endpoint</th>
+      <!-- <th width="140px"></th> -->
       <th width="100px"></th>
     </tr>
     {{#each model as |simulator|}}
       <tr>
         <td>
-          <!-- {{#link-to "simulator.index" simulator.id}}{{simulator.name}}{{/link-to}} -->
           {{simulator.name}}
         </td>
         <td>
@@ -26,8 +26,7 @@
         </td>
         <td>
           <div class="simulators-row-controls">
-            <!-- {{#link-to "simulator.edit" simulator.id}}Edit{{/link-to}} -->
-            <!-- {{#link-to "simulator.delete" simulator.id}}Delete{{/link-to}} -->
+            <!-- <a href="" {{action 'showRunningModal' simulator}}>Running</a> -->
             <a href="" {{action 'showEditModal' simulator}}>Edit</a>
             <a href="" {{action 'showDeleteModal' simulator}}>Delete</a>
           </div>
@@ -139,5 +138,23 @@
     {{#if errorMessage}}
       <p><strong>Error:</strong> {{errorMessage}}</p>
     {{/if}}
+  {{/modal-dialog}}
+{{/if}}
+
+{{#if isShowingRunningModal}}
+  {{#modal-dialog attachment="middle center" translucentOverlay=true}}
+    <h1>Simulator running</h1>
+
+    {{simulator.name}}:
+
+    <select onchange={{action "selectRunning" value="target.value"}}>
+      <option value=true selected={{eq simulatorRunning true}}>running</option>
+      <option value=false selected={{eq simulatorRunning false}}>not running</option>
+    </select>
+
+    <br />
+
+    <button {{action 'cancelRunningSimulator'}}>Cancel</button>
+    <button {{action 'confirmRunningSimulator'}}>Save</button>
   {{/modal-dialog}}
 {{/if}}

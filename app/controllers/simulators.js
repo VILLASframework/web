@@ -13,12 +13,14 @@ export default Ember.Controller.extend({
   isShowingNewModal: false,
   isShowingDeleteModal: false,
   isShowingEditModal: false,
+  isShowingRunningModal: false,
 
   simulatorid: 1,
   errorMessage: null,
   simulator: null,
   simulatorName: null,
   simulatorEdit: null,
+  simulatorRunning: true,
 
   actions: {
     showNewModal() {
@@ -47,6 +49,15 @@ export default Ember.Controller.extend({
 
       // show the modal dialog
       this.set('isShowingEditModal', true);
+    },
+
+    showRunningModal(simulator) {
+      // set properties
+      this.set('simulator', simulator);
+      this.set('simulatorRunning', simulator.get('running'));
+
+      // show the dialog
+      this.set('isShowingRunningModal', true);
     },
 
     newSimulator() {
@@ -114,6 +125,34 @@ export default Ember.Controller.extend({
 
     cancelEditSimulator() {
       this.set('isShowingEditModal', false);
+    },
+
+    confirmRunningSimulation() {
+      // set the property
+      var simulator = this.get('simulator');
+      simulator.set('running', this.get('simulatorRunning'));
+
+      // save property
+      var controller = this;
+
+      simulator.save().then(function() {
+        controller.set('isShowingRunningModal', false);
+      }, function() {
+        Ember.debug('Error saving running simulator');
+      });
+    },
+
+    cancelRunningSimulation() {
+      this.set('isShowingRunningModal', false);
+    },
+
+    selectRunning(running) {
+      // NOTE: running is a string and not a boolean value
+      if (running === 'true') {
+        this.set('simulatorRunning', true);
+      } else {
+        this.set('simulatorRunning', false);
+      }
     }
   }
 });

@@ -13,7 +13,7 @@ import { belongsTo/*, hasMany*/ } from 'ember-data/relationships';
 
 export default Model.extend({
   name: attr('string'),
-  simulator: attr('number'),
+  simulator: belongsTo('simulator', { async: true }),
   length: attr('number'),
   mapping: attr('array'),
   simulation: belongsTo('simulation', { async: true })

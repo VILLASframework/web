@@ -12,6 +12,9 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, {
   model(params) {
-    return this.store.findRecord('visualization', params.visualizationid);
+    return Ember.RSVP.hash({
+      /*simulation: this.store.findRecord('simulation', params.simulationid),*/
+      visualization: this.store.findRecord('visualization', params.visualizationid)
+    });
   }
 });

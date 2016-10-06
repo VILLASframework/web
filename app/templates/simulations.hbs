@@ -5,7 +5,7 @@
     <tr>
       <th>Name</th>
       <th width="80px" class="column-center">Running</th>
-      <th width="100px"></th>
+      <th width="140px"></th>
     </tr>
     {{#each model as |simulation|}}
       <tr>
@@ -17,8 +17,7 @@
         </td>
         <td>
           <div class="simulations-row-controls">
-            <!-- {{#link-to "simulation.edit" simulation.id}}Edit{{/link-to}} -->
-            <!-- {{#link-to "simulation.delete" simulation.id}}Delete{{/link-to}} -->
+            <a href="" {{action 'showRunningModal' simulation}}>Running</a>
             <a href="" {{action 'showEditModal' simulation}}>Edit</a>
             <a href="" {{action 'showDeleteModal' simulation}}>Delete</a>
           </div>
@@ -98,5 +97,23 @@
 
     <button {{action 'cancelDelete'}}>Cancel</button>
     <button {{action 'confirmDelete'}}>Delete</button>
+  {{/modal-dialog}}
+{{/if}}
+
+{{#if isShowingRunningModal}}
+  {{#modal-dialog attachment="middle center" translucentOverlay=true}}
+    <h1>Simulation running</h1>
+
+    {{simulation.name}}:
+
+    <select onchange={{action "selectRunning" value="target.value"}}>
+      <option value=true selected={{eq simulationRunning true}}>running</option>
+      <option value=false selected={{eq simulationRunning false}}>not running</option>
+    </select>
+
+    <br />
+
+    <button {{action 'cancelRunningSimulation'}}>Cancel</button>
+    <button {{action 'confirmRunningSimulation'}}>Save</button>
   {{/modal-dialog}}
 {{/if}}

@@ -14,11 +14,12 @@ export default Ember.Controller.extend({
 
   isShowingNewModal: false,
   isShowingEditModal: false,
-  isShowingEditModal: false,
+  isShowingDeleteModal: false,
 
   errorMessage: null,
 
   simulation: null,
+  simulationRunning: true,
 
   actions: {
     showNewModal() {
@@ -48,10 +49,19 @@ export default Ember.Controller.extend({
       this.set('isShowingDeleteModal', true);
     },
 
+    showRunningModal(simulation) {
+      // set properties
+      this.set('simulation', simulation);
+      this.set('simulationRunning', simulation.get('running'));
+
+      // show the dialog
+      this.set('isShowingRunningModal', true);
+    },
+
     submitNew() {
       // verify properties
       var properties = this.getProperties('name');
-      if (properties['name'] == null || properties['name'] == "") {
+      if (properties['name'] == null || properties['name'] === "") {
         this.set('errorMessage', 'Simulation name is missing');
         return;
       }
@@ -78,7 +88,7 @@ export default Ember.Controller.extend({
     submitEdit() {
       // verify properties
       var properties = this.getProperties('name');
-      if (properties['name'] == null || properties['name'] == "") {
+      if (properties['name'] == null || properties['name'] === "") {
         this.set('errorMessage', 'Simulation name is missing');
         return;
       }
@@ -110,6 +120,34 @@ export default Ember.Controller.extend({
 
     cancelDelete() {
       this.set('isShowingDeleteModal', false);
+    },
+
+    confirmRunningSimulation() {
+      // set the property
+      var simulation = this.get('simulation');
+      simulation.set('running', this.get('simulationRunning'));
+
+      // save property
+      var controller = this;
+
+      simulation.save().then(function() {
+        controller.set('isShowingRunningModal', false);
+      }, function() {
+        Ember.debug('Error saving running simulation');
+      });
+    },
+
+    cancelRunningSimulation() {
+      this.set('isShowingRunningModal', false);
+    },
+
+    selectRunning(running) {
+      // NOTE: running is a string and not a boolean value
+      if (running === 'true') {
+        this.set('simulationRunning', true);
+      } else {
+        this.set('simulationRunning', false);
+      }
     }
   }
 });

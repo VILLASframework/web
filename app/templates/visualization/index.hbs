@@ -1,8 +1,9 @@
-<h1>{{model.name}}</h1>
+{{#link-to 'project.index' project.id}}Back to {{model.project.name}}{{/link-to}}
 
-{{plot-container plots=model.plots}}
+<h1>{{model.visualization.name}}</h1>
+
+{{plot-container plots=model.visualization.plots}}
 
 <p>
-  {{#link-to "visualization.edit" model.id}}Edit visualization{{/link-to}}
-  {{#link-to "visualization.delete" model.id}}Delete visualization{{/link-to}}
+  {{#link-to "visualization.edit" model.visualization.id}}Edit layout{{/link-to}}
 </p>
