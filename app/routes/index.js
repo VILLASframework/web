@@ -9,7 +9,7 @@
 
 import Ember from 'ember';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
-import WebsocketLiveStreamMixin from '../mixins/websocket-live-stream-mixin';
+import LiveDataMixin from '../mixins/live-data';
 
-export default Ember.Route.extend(AuthenticatedRouteMixin, WebsocketLiveStreamMixin, {
+export default Ember.Route.extend(AuthenticatedRouteMixin, LiveDataMixin, {
 });
