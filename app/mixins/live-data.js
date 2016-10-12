@@ -17,7 +17,7 @@ export default Ember.Mixin.create({
 
   INTERVAL: 5000,
 
-  _sockets: [],
+  _sockets: {},
 
   init: function() {
     this._super();
@@ -36,79 +36,79 @@ export default Ember.Mixin.create({
   _fetchRunningSimulations: function() {
     // check if the user is logged in
     if (this.get('sessionUser.user') != null) {
-      // load simulators
+      // get all simulations to find all running ones
       var self = this;
 
-      this.get('store').findAll('simulator').then(function() {
-        // get all simulations to find all running ones
-        self.get('store').findAll('simulation').then(function(simulations) {
-          simulations.forEach(function(simulation) {
-            // check if the simulation is running
-            if (simulation.get('running')) {
-              // get all models
-              simulation.get('models').forEach(function(model) {
-                self.get('store').findRecord('simulation-model', model.get('id')).then(function(m) {
-                  self._addSocket(m);
-                });
+      this.get('store').findAll('simulation').then(function(simulations) {
+        simulations.forEach(function(simulation) {
+          // check if the simulation is running
+          if (simulation.get('running')) {
+            // get all models for this simulation
+            simulation.get('models').then((models) => {
+              models.forEach(function(simulationModel) {
+                self._addSocket(simulationModel);
               });
-            }
-          });
+            });
+          }
         });
       });
     }
   },
 
   _addSocket(simulationModel) {
-    // search for existing socket
-    var length = this.get('_sockets').length;
-
-    for (var i = 0; i < length; i++) {
-      if (this.get('_sockets')[i].id === simulationModel.get('id')) {
-        // dont do anything
-        return;
-      }
+    // check if socket is already open
+    let id = simulationModel.get('id');
+    if (this.get('_sockets')[id] !== undefined) {
+      //Ember.debug('skip ' + simulationModel.get('name'));
+      return;
     }
 
-    // add new socket
-    var socket = new WebSocket('ws://' + simulationModel.get('simulator.endpoint'));
-    socket.binaryType = 'arraybuffer';
+    // get simulator endpoint
+    simulationModel.get('simulator').then((simulator) => {
+      // get simulator endpoint
+      let endpoint = simulator.get('endpoint');
+      if (endpoint) {
+        // add new socket
+        let socket = new WebSocket('ws://' + endpoint);
+        socket.binaryType = 'arraybuffer';
 
-    // register callbacks
-    var self = this;
+        // register callbacks
+        let self = this;
 
-    socket.onopen = function(event) { self._onSocketOpen.apply(self, [event]); };
-    socket.onclose = function(event) { self._onSocketClose.apply(self, [event]); };
-    socket.onmessage = function(event) { self._onSocketMessage.apply(self, [event]); };
-    socket.onerror = function(event) { self._onSocketError.apply(self, [event]); };
+        socket.onopen = function(event) { self._onSocketOpen.apply(self, [event]); };
+        socket.onclose = function(event) { self._onSocketClose.apply(self, [event]); };
+        socket.onmessage = function(event) { self._onSocketMessage.apply(self, [event]); };
+        socket.onerror = function(event) { self._onSocketError.apply(self, [event]); };
 
-    this.get('_sockets').pushObject({ id: simulationModel.get('id'), socket: socket });
+        // add socket to list of known sockets
+        this.get('_sockets')[id] = socket;
 
-    console.log('Socket created for ' + simulationModel.get('name') + ': ws://' + simulationModel.get('simulator.endpoint'));
+        //Ember.debug('Socket created for ' + simulationModel.get('name') + ': ws://' + endpoint);
+      } else {
+        Ember.debug('Undefined endpoint for ' + simulationModel.get('name'));
+      }
+    });
   },
 
   _removeSocket(socket) {
-    var length = this.get('_sockets').length;
-    var i = 0;
+    // search through all sockets
+    let sockets = this.get('_sockets');
 
-    while (i < length) {
-      if (this.get('_sockets')[i].socket === socket) {
-        // remove object from array
-        this.get('_sockets').slice(i, 1);
-        console.log('socket removed');
-      } else {
-        // increase index if no object was removed
-        i++;
+    for (let id in sockets) {
+      if (sockets[id] === socket) {
+        // remove socket from list
+        delete sockets[id];
       }
     }
   },
 
   _onSocketOpen(/* event */) {
-    Ember.debug('websocket opened');
+    //Ember.debug('websocket opened');
   },
 
   _onSocketClose(event) {
     if (event.wasClean) {
-
+      Ember.debug('websocket closed');
     } else {
       Ember.debug('websocket closed: ' + event.code);
     }
@@ -139,6 +139,7 @@ export default Ember.Mixin.create({
   },
 
   _messageToJSON(blob) {
+    // parse incoming message into usable data
     var data = new DataView(blob);
 
     let OFFSET_ENDIAN = 1;

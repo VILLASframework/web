@@ -19,8 +19,9 @@ export default Ember.Component.extend(Resizable, Draggable, {
   plot: null,
   editing: false,
   grid: false,
+  data: null,
 
-  simulator: 0,
+  simulator: 0
 
   disabled_resize: false,
   autoHide_resize: false,

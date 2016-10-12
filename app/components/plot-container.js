@@ -17,6 +17,7 @@ export default Ember.Component.extend({
   plots: null,
   editing: false,
   grid: true,
+  data: null,
 
   style: function() {
     var height = this._calculateHeight();
@@ -26,6 +27,10 @@ export default Ember.Component.extend({
 
     return Ember.String.htmlSafe('height: ' + height + 'px;');
   }.property('plots.@each.height', 'plots.@each.y'),
+
+  _value: function() {
+    console.log(this.get('data'));
+  }.property('data.2.values.@each'),
 
   _calculateHeight() {
     var maxHeight = 0;
