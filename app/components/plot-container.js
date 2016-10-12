@@ -47,5 +47,11 @@ export default Ember.Component.extend({
     maxHeight += 40;
 
     return maxHeight;
+  },
+
+  actions: {
+    showPlotDialog(plot) {
+      this.sendAction('showPlotDialog', plot);
+    }
   }
 });

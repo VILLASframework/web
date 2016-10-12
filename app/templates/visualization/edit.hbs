@@ -16,10 +16,12 @@
 </div>
 
 {{#draggable-dropzone dropped='addPlot'}}
-  {{plot-container plots=model.plots editing=true data=data}}
+  {{plot-container plots=model.plots editing=true data=data showPlotDialog='showPlotDialog'}}
 {{/draggable-dropzone}}
 
 <p>
   <button {{action 'cancelEdit'}}>Cancel</button>
   <button {{action 'saveEdit'}}>Save</button>
 </p>
+
+{{partial "dialog/plot/value"}}

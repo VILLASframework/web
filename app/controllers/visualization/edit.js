@@ -11,17 +11,26 @@ import Ember from 'ember';
 import FetchLiveDataMixin from '../../mixins/fetch-live-data';
 
 export default Ember.Controller.extend(FetchLiveDataMixin, {
+  isShowingPlotValueModal: false,
+
+  errorMessage: null,
+
+  plot: null,
+  name: null,
+  simulator: null,
+  signal: null,
+
   actions: {
     addPlot(name) {
       var plot = null;
 
       if (name === 'chart') {
         // create new chart plot
-        plot = this.store.createRecord('plot', { name: 'Chart 1', signal: 'Signal 1', type: 'plot-chart' });
+        plot = this.store.createRecord('plot', { name: 'Chart 1', type: 'plot-chart' });
       } else if (name === 'table') {
-        plot = this.store.createRecord('plot', { name: 'Table 1', signal: 'Signal 1', type: 'plot-table', width: 500, height: 200, title: 'Table 1' });
+        plot = this.store.createRecord('plot', { name: 'Table 1', type: 'plot-table', width: 500, height: 200, title: 'Table 1' });
       } else if (name === 'value') {
-        plot = this.store.createRecord('plot', { name: 'Value 1', signal: 'Signal 1', type: 'plot-value' });
+        plot = this.store.createRecord('plot', { name: 'Value 1', type: 'plot-value' });
       } else {
         // DEBUG
         console.log('Add plot: ' + name);
@@ -62,6 +71,47 @@ export default Ember.Controller.extend(FetchLiveDataMixin, {
 
       let id = this.get('model.id');
       this.transitionToRoute('/visualization/' + id);
+    },
+
+    showPlotDialog(plot) {
+      // show dialog by plot type
+      let plotType = plot.get('type');
+      if (plotType === 'plot-value') {
+        // set properties
+        this.set('plot', plot);
+        this.set('name', plot.get('name'));
+        this.set('simulator', plot.get('simulator'));
+        this.set('signal', plot.get('signal'));
+
+        this.set('isShowingPlotValueModal', true);
+      }
+    },
+
+    submitValuePlot() {
+      // verify properties
+      let properties = this.getProperties('name', 'simulator', 'signal');
+      if (properties['name'] === null || properties['name'] === "") {
+        this.set('errorMessage', 'Plot name is missing');
+        return;
+      }
+
+      properties['simulator'] = Number(properties['simulator']);
+      properties['signal'] = Number(properties['signal']);
+
+      // save properties
+      this.get('plot').setProperties(properties);
+
+      let self = this;
+
+      this.get('plot').save().then(function() {
+        self.set('isShowingPlotValueModal', false);
+      }, function() {
+        Ember.debug('Error saving value plot');
+      });
+    },
+
+    cancelValuePlot() {
+      this.set('isShowingPlotValueModal', false);
     }
   }
 });

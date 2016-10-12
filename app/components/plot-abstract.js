@@ -21,8 +21,6 @@ export default Ember.Component.extend(Resizable, Draggable, {
   grid: false,
   data: null,
 
-  simulator: 0,
-
   disabled_resize: false,
   autoHide_resize: false,
   grid_resize: [ 10, 10 ],
@@ -32,41 +30,12 @@ export default Ember.Component.extend(Resizable, Draggable, {
   grid_drag: [ 10, 10 ],
   scroll_drag: true,
 
-  _popoverDisplayed: false,
-
-  didInsertElement() {
-    this._super();
-
-    if (this.get('editing') === true) {
-      // create popover
-      var self = this;
-
-      this.$().popover({
-        html: true,
-        placement: 'auto right',
-        content: function () {
-          return self.$('.popover-content').html();
-        },
-        viewport: { selector: '.plots', padding: 10 }
-      });
-
-      // register popover events
-      this.$().on('show.bs.popover', function() {
-
-      });
-
-      this.$().on('shown.bs.popover', function() {
-        self._popoverDisplayed = true;
-      });
-
-      this.$().on('hide.bs.popover', function() {
-        self._popoverDisplayed = false;
-      });
-    }
-  },
-
   style: function() {
     return Ember.String.htmlSafe('width: ' + this.get('plot.width') + 'px; height: ' + this.get('plot.height') + 'px; left: ' + this.get('plot.x') + 'px; top: ' + this.get('plot.y') + 'px;');
+  }.property('plot'),
+
+  name: function() {
+    return this.get('plot.name');
   }.property('plot'),
 
   stop_resize(event, ui) {
@@ -77,10 +46,8 @@ export default Ember.Component.extend(Resizable, Draggable, {
     this.set('plot.height', height);
   },
 
-  resize_resize(event, ui) {
-    if (this._popoverDisplayed === true) {
-      this.$().popover('show');
-    }
+  resize_resize(/* event, ui */) {
+
   },
 
   stop_drag(event, ui) {
@@ -88,10 +55,8 @@ export default Ember.Component.extend(Resizable, Draggable, {
     this.set('plot.y', ui.position.top);
   },
 
-  drag_drag(event, ui) {
-    if (this._popoverDisplayed === true) {
-      this.$().popover('show');
-    }
+  drag_drag(/* event, ui */) {
+
   },
 
   _updateUI: function() {
@@ -114,9 +79,9 @@ export default Ember.Component.extend(Resizable, Draggable, {
     }
   }.observes('editing', 'grid').on('init'),
 
-  actions: {
-    savePlot() {
-      this.$().popover('hide');
+  doubleClick() {
+    if (this.get('editing')) {
+      this.sendAction('showPlotDialog', this.get('plot'));
     }
   }
 });

@@ -51,6 +51,10 @@ Router.map(function() {
 
   this.route('simulators');
   this.route('simulator');
+
+  this.route('dialog', function() {
+    this.route('plot', function() {});
+  });
 });
 
 export default Router;

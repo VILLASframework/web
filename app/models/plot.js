@@ -13,7 +13,7 @@ import { belongsTo } from 'ember-data/relationships';
 
 export default Model.extend({
   name: attr('string'),
-  signal: attr('string'),
+  signal: attr('number', { defaultValue: 1 }),
   simulator: attr('number', { defaultValue: 1 }),
   width: attr('number', { defaultValue: 100 }),
   height: attr('number', { defaultValue: 100 }),
