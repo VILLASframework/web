@@ -1,44 +1,5 @@
-{{#if isShowingPlotValueModal}}
-  {{#modal-dialog attachment="middle center" translucentOverlay=true}}
-    <h1>Value</h1>
+<h1>Test</h1>
 
-    <form class="form-plot-value" {{action 'submitValuePlot' on='submit'}} >
-      <table>
-        <tr>
-          <td>
-            <label for="name">Name</label>
-          </td>
-          <td>
-            {{input id='name' placeholder='Enter plot name' value=name}}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <label for="simulator">Simulator</label>
-          </td>
-          <td>
-            {{input id='simulator' type='number' value=simulator min='1' max='255'}}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <label for="signal">Signal</label>
-          </td>
-          <td>
-            {{input id='signal' type='number' value=signal min='1'}}
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <button {{action 'cancelValuePlot'}}>Cancel</button>
-            <button type="submit">Save</button>
-          </td>
-        </tr>
-      </table>
-    </form>
-
-    {{#if errorMessage}}
-      <p><b>Error:</b> {{errorMessage}}</p>
-    {{/if}}
-  {{/modal-dialog}}
-{{/if}}
+<!-- {{#if isShowingPlotValueModal}} -->
+  
+<!-- {{/if}} -->

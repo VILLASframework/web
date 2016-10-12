@@ -1,14 +1,14 @@
-<h1>{{model.name}}</h1>
+<h1>{{model.ame}}</h1>
 
 <div class="plot-toolbox">
   <h3>Toolbox</h3>
-  {{#draggable-item content='chart'}}
+  <!-- {{#draggable-item content='chart'}}
     <span>Chart</span>
-  {{/draggable-item}}
+  {{/draggable-item}} -->
 
-  {{#draggable-item content='table'}}
+  <!-- {{#draggable-item content='table'}}
     <span>Table</span>
-  {{/draggable-item}}
+  {{/draggable-item}} -->
 
   {{#draggable-item content='value'}}
     <span>Value</span>
@@ -23,5 +23,3 @@
   <button {{action 'cancelEdit'}}>Cancel</button>
   <button {{action 'saveEdit'}}>Save</button>
 </p>
-
-{{partial "dialog/plot/value"}}

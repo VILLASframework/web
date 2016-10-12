@@ -79,9 +79,9 @@ export default Ember.Component.extend(Resizable, Draggable, {
     }
   }.observes('editing', 'grid').on('init'),
 
-  doubleClick() {
+  /*doubleClick() {
     if (this.get('editing')) {
       this.sendAction('showPlotDialog', this.get('plot'));
     }
-  }
+  }*/
 });

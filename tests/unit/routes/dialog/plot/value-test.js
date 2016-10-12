@@ -1,6 +1,6 @@
 import { moduleFor, test } from 'ember-qunit';
 
-moduleFor('route:visualization/new', 'Unit | Route | visualization/new', {
+moduleFor('route:dialog/plot/value', 'Unit | Route | dialog/plot/value', {
   // Specify the other units that are required for this test.
   // needs: ['controller:foo']
 });

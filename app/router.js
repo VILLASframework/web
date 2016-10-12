@@ -27,9 +27,7 @@ Router.map(function() {
 
   this.route('visualization', function() {
     this.route('index', { path: '/:visualizationid' });
-    this.route('new');
     this.route('edit', { path: '/edit/:visualizationid' });
-    this.route('delete', { path: '/delete/:visualizationid' });
   });
 
   this.route('user', function() {
@@ -53,7 +51,9 @@ Router.map(function() {
   this.route('simulator');
 
   this.route('dialog', function() {
-    this.route('plot', function() {});
+    this.route('plot', function() {
+      this.route('value');
+    });
   });
 });
 

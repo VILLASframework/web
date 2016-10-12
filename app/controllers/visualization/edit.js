@@ -18,7 +18,15 @@ export default Ember.Controller.extend(FetchLiveDataMixin, {
   plot: null,
   name: null,
   simulator: null,
+  simulatorName: null,
   signal: null,
+
+  _updateSimulators: function() {
+    if (this.get('model.simulators') !== null && this.get('model.simulators.length') > 0) {
+      let simulators = this.get('model.simulators');
+      this.set('simulatorName', simulators.toArray()[0].get('name'));
+    }
+  }.observes('model'),
 
   actions: {
     addPlot(name) {
@@ -30,7 +38,7 @@ export default Ember.Controller.extend(FetchLiveDataMixin, {
       } else if (name === 'table') {
         plot = this.store.createRecord('plot', { name: 'Table 1', type: 'plot-table', width: 500, height: 200, title: 'Table 1' });
       } else if (name === 'value') {
-        plot = this.store.createRecord('plot', { name: 'Value 1', type: 'plot-value' });
+        plot = this.store.createRecord('plot', { name: 'Value 1', type: 'plot-value', simulator: 2 });
       } else {
         // DEBUG
         console.log('Add plot: ' + name);
@@ -79,9 +87,10 @@ export default Ember.Controller.extend(FetchLiveDataMixin, {
       if (plotType === 'plot-value') {
         // set properties
         this.set('plot', plot);
-        this.set('name', plot.get('name'));
-        this.set('simulator', plot.get('simulator'));
-        this.set('signal', plot.get('signal'));
+        /*this.set('name', plot.get('name'));
+        this.set('signal', plot.get('signal'));*/
+
+        //this.set('simulatorName', simulatorName);
 
         this.set('isShowingPlotValueModal', true);
       }
@@ -112,6 +121,10 @@ export default Ember.Controller.extend(FetchLiveDataMixin, {
 
     cancelValuePlot() {
       this.set('isShowingPlotValueModal', false);
+    },
+
+    selectSimulator(simulator) {
+      this.set('simulatorName', simulator);
     }
   }
 });

@@ -21,7 +21,7 @@ export default Ember.Controller.extend({
 
   _updateSimulators: function() {
     if (this.get('model.simulators') != null && this.get('model.simulators.length') > 0) {
-      var simulators = this.get('model.simulators');
+      let simulators = this.get('model.simulators');
       this.set('simulatorName', simulators.toArray()[0].get('name'));
     }
   }.observes('model'),
@@ -31,6 +31,7 @@ export default Ember.Controller.extend({
       // reset properties
       this.set('errorMessage', null);
       this.set('name', null);
+      this.set('length', 1);
 
       // show the dialog
       this.set('isShowingNewModal', true);
@@ -41,10 +42,11 @@ export default Ember.Controller.extend({
       this.set('errorMessage', null);
       this.set('simulationModel', simulationModel);
       this.set('name', simulationModel.get('name'));
+      this.set('length', simulationModel.get('length'));
 
-      var simulators = this.get('model.simulators');
-      var simulatorId = simulationModel.get('simulator.id');
-      var simulatorName = null;
+      let simulators = this.get('model.simulators');
+      let simulatorId = simulationModel.get('simulator.id');
+      let simulatorName = null;
 
       simulators.forEach(function(simulator) {
         if (simulator.get('id') === simulatorId) {
@@ -68,19 +70,19 @@ export default Ember.Controller.extend({
 
     submitNew() {
       // verify properties
-      var properties = this.getProperties('name');
+      let properties = this.getProperties('name', 'length');
       if (properties['name'] == null || properties['name'] === "") {
         this.set('errorMessage', 'Simulation model name is missing');
         return;
       }
 
       // set simuatlion properties
-      var simulation = this.get('model.simulation');
+      let simulation = this.get('model.simulation');
       properties['simulation'] = simulation;
 
-      // get the simulator id by simulator name
-      var simulators = this.get('model.simulators');
-      var simulatorName = this.get('simulatorName');
+      // get the simulator by simulator name
+      let simulators = this.get('model.simulators');
+      let simulatorName = this.get('simulatorName');
 
       simulators.forEach(function(simulator) {
         if (simulator.get('name') === simulatorName) {
@@ -88,13 +90,22 @@ export default Ember.Controller.extend({
         }
       });
 
+      // create mapping
+      let mapping = [];
+
+      for (let i = 0; i < properties['length']; i++) {
+        mapping.pushObject("Signal " + (i + 1));
+      }
+
+      properties['mapping'] = mapping;
+
       // create new model
-      var simulationModel = this.store.createRecord('simulation-model', properties);
+      let simulationModel = this.store.createRecord('simulation-model', properties);
 
       // this change will not be saved, but it is nessecary otherwise ember will omit the simulation's id in the post request
       simulation.get('models').pushObject(simulationModel);
 
-      var controller = this;
+      let controller = this;
 
       simulationModel.save().then(function() {
         controller.set('isShowingNewModal', false);
@@ -109,36 +120,28 @@ export default Ember.Controller.extend({
 
     submitEdit() {
       // verify properties
-      var properties = this.getProperties('name');
+      let properties = this.getProperties('name', 'length');
       if (properties['name'] == null || properties['name'] === "") {
         this.set('errorMessage', 'Simulation model name is missing');
         return;
       }
 
       // set simuatlion properties
-      var simulation = this.get('model.simulation');
-      properties['simulation'] = simulation.get('id');
+      let simulation = this.get('model.simulation');
+      properties['simulation'] = simulation;
 
-      // get the simulator id by simulator name
-      var simulators = this.get('model.simulators');
-      var simulatorId = null;
-      var simulatorName = this.get('simulatorName');
+      // get the simulator by simulator name
+      let simulators = this.get('model.simulators');
+      let simulatorName = this.get('simulatorName');
 
       simulators.forEach(function(simulator) {
         if (simulator.get('name') === simulatorName) {
-          simulatorId = simulator.get('simulatorid');
+          properties['simulator'] = simulator;
         }
       });
 
-      if (simulatorId == null) {
-        Ember.debug('Unable to find simulator by name');
-        return;
-      }
-
-      properties['simulator'] = simulatorId;
-
       // save properties
-      var controller = this;
+      let controller = this;
 
       this.get('simulationModel').setProperties(properties);
 
@@ -155,7 +158,7 @@ export default Ember.Controller.extend({
 
     confirmDelete() {
       // delete the model
-      var simulationModel = this.get('simulationModel');
+      let simulationModel = this.get('simulationModel');
       simulationModel.destroyRecord();
 
       // hide the dialog

@@ -25,6 +25,14 @@
           </td>
         </tr>
         <tr>
+          <td>
+            <label for="length">Length</label>
+          </td>
+          <td>
+            {{input id='length' type='number' value=length min='1'}}
+          </td>
+        </tr>
+        <tr>
           <td colspan="2">
             <button {{action 'cancelNew'}}>Cancel</button>
             <button type="submit">Create</button>
@@ -63,6 +71,14 @@
                 <option value={{simulator.name}} selected={{eq simulatorName simulator.name}}>{{simulator.name}}</option>
               {{/each}}
             </select>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="length">Length</label>
+          </td>
+          <td>
+            {{input id='length' type='number' value=length min='1'}}
           </td>
         </tr>
         <tr>

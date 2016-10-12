@@ -1,18 +1,29 @@
+{{#link-to 'simulation.index' model.simulation.id}}Back to {{model.simulation.name}}{{/link-to}}
+
 <h1>{{model.name}}</h1>
 
-<p>
-  Running: {{model.simulation.running}}
-</p>
+<h3>Mapping</h3>
 
-<p>
-  Simulator: {{model.simulator}}
-</p>
+<div class="simulation-model-index-mapping">
+  <table class="table-full-width">
+    <tr>
+      <th width="80px">Signal</th>
+      <th>Name</th>
+    </tr>
+    {{#each-in model.mapping as |signal name|}}
+      <tr>
+        <td>
+          {{signal}}
+        </td>
+        <td>
+          {{name}}
+        </td>
+      </tr>
+    {{/each-in}}
+  </table>
+</div>
 
-<p>
-  Data:
-</p>
-
-{{#each values as |value|}}
-  {{value}}
-  <br />
-{{/each}}
+<div class="simulation-model-index-buttons">
+  <!-- <button {{action 'cancelMapping'}}>Cancel</button> -->
+  <button {{action 'saveMapping'}}>Save</button>
+</div>
