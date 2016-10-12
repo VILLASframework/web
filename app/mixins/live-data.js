@@ -29,7 +29,7 @@ export default Ember.Mixin.create({
     setInterval((function(self) {
       return function() {
         self._fetchRunningSimulations();
-      }
+      };
     })(this), this.INTERVAL);
   },
 

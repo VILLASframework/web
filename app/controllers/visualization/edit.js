@@ -8,8 +8,9 @@
  **********************************************************************************/
 
 import Ember from 'ember';
+import FetchLiveDataMixin from '../../mixins/fetch-live-data';
 
-export default Ember.Controller.extend({
+export default Ember.Controller.extend(FetchLiveDataMixin, {
   actions: {
     addPlot(name) {
       var plot = null;
