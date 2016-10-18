@@ -19,12 +19,12 @@ export default Ember.Controller.extend({
   simulationModel: null,
   simulatorName: null,
 
-  _updateSimulators: function() {
+  _updateSimulators: Ember.observer('model', function() {
     if (this.get('model.simulators') != null && this.get('model.simulators.length') > 0) {
       let simulators = this.get('model.simulators');
       this.set('simulatorName', simulators.toArray()[0].get('name'));
     }
-  }.observes('model'),
+  }),
 
   actions: {
     showNewModal() {

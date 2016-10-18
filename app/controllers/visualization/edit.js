@@ -27,7 +27,7 @@ export default Ember.Controller.extend(FetchLiveDataMixin, {
       this.set('simulatorName', simulators.toArray()[0].get('name'));
     }
   }),
-
+  
   actions: {
     addPlot(name) {
       var plot = null;

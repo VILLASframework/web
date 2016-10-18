@@ -17,7 +17,7 @@ export default Model.extend({
   sequence: attr('number'),
   values: attr('array'),
 
-  historyValues() {
+  /*historyValues() {
     return this._history;
   },
 
@@ -28,5 +28,5 @@ export default Model.extend({
     while (this._history.length > 5) {
       this._history.shift();
     }
-  })
+  })*/
 });

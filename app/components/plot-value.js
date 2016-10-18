@@ -16,37 +16,18 @@ export default PlotAbstract.extend({
   minWidth_resize: 50,
   minHeight_resize: 20,
 
-  value: Ember.computed('data.2.values', 'plot.simulator', 'plot.signal', function() {
-    // get all values for the choosen simulator
-    let values = this.get('data.' + this.get('plot.simulator') + '.values');
-    if (values) {
-      return values[this.get('plot.signal')];
-    }
-
-    // values is null, try to reload later
-    Ember.run.later(this, function() {
-      this.notifyPropertyChange('data.' + this.get('plot.simulator') + '.values');
-    }, 1000);
-  }),
-
-  /*_updateValue() {
-    let values = this.get('data.' + this.get('plot.simulator') + '.values');
-    if (values) {
-      console.log('update value');
-      return;
-    }
-
-    // values is null, try to reload later
-    Ember.run.later(this, this._updateValue, 1000);
-
-    console.log('update later');
-  },
-
-  _updateDataObserver: function() {
-    let query = 'data.' + this.get('plot.simulator') + '.values';
-    this.addObserver(query, this, this._updateValue);
-    console.log('Add observer: ' + query);
-  }.observes('plot.simulator', 'plot.signal').on('init'),*/
+  _updateDataObserver: Ember.on('init', Ember.observer('plot.simulator', 'plot.signal', function() {
+    let query = 'data.' + this.get('plot.simulator') + '.sequence';
+    this.addObserver(query, function() {
+      // get value from array
+      let values = this.get('data.' + this.get('plot.simulator') + '.values');
+      if (values) {
+        this.set('value', values[this.get('plot.signal')]);
+      } else {
+        this.set('value', null);
+      }
+    });
+  })),
 
   doubleClick() {
     if (this.get('editing') === true) {

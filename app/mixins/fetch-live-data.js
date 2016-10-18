@@ -10,7 +10,7 @@
 import Ember from 'ember';
 
 export default Ember.Mixin.create({
-  data: {},
+  data: Ember.Object.create(),
 
   _getData: Ember.observer('model', function() {
     // check if simulation is running
@@ -35,11 +35,6 @@ export default Ember.Mixin.create({
             });
           });
         } else {
-          // clear simulation data
-          this.set('data', {});
-
-          //Ember.debug('Simulation not running');
-
           // check again if simulation is running
           Ember.run.later(this, function() {
             // trigger _getData observer
@@ -55,10 +50,7 @@ export default Ember.Mixin.create({
     let simulationData = this.store.peekRecord('simulation-data', simulatorID);
     if (simulationData) {
       // add data to list
-      this.get('data')[simulatorID] = simulationData;
-
-      // notify object for property changes
-      this.notifyPropertyChange('data.' + simulatorID + '.values');
+      this.set('data.' + simulatorID, simulationData);
     } else {
       // try to load data later
       Ember.run.later(this, function() {

@@ -10,7 +10,7 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  users: function() {
+  users: Ember.computed('model.@each', function() {
     var filteredUsers = this.get('model');
     filteredUsers.forEach(function(user) {
       // catch undefined user
@@ -22,5 +22,5 @@ export default Ember.Controller.extend({
     });
 
     return filteredUsers;
-  }.property('model.@each')
+  })
 });
