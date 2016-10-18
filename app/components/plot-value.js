@@ -8,6 +8,7 @@
  **********************************************************************************/
 
 import PlotAbstract from './plot-abstract';
+import Ember from 'ember';
 
 export default PlotAbstract.extend({
   classNames: [ 'plotValue' ],
@@ -15,7 +16,7 @@ export default PlotAbstract.extend({
   minWidth_resize: 50,
   minHeight_resize: 20,
 
-  value: function() {
+  value: Ember.computed('data.2.values', 'plot.simulator', 'plot.signal', function() {
     // get all values for the choosen simulator
     let values = this.get('data.' + this.get('plot.simulator') + '.values');
     if (values) {
@@ -26,7 +27,26 @@ export default PlotAbstract.extend({
     Ember.run.later(this, function() {
       this.notifyPropertyChange('data.' + this.get('plot.simulator') + '.values');
     }, 1000);
-  }.property('data.2.values', 'plot.simulator', 'plot.signal'),
+  }),
+
+  /*_updateValue() {
+    let values = this.get('data.' + this.get('plot.simulator') + '.values');
+    if (values) {
+      console.log('update value');
+      return;
+    }
+
+    // values is null, try to reload later
+    Ember.run.later(this, this._updateValue, 1000);
+
+    console.log('update later');
+  },
+
+  _updateDataObserver: function() {
+    let query = 'data.' + this.get('plot.simulator') + '.values';
+    this.addObserver(query, this, this._updateValue);
+    console.log('Add observer: ' + query);
+  }.observes('plot.simulator', 'plot.signal').on('init'),*/
 
   doubleClick() {
     if (this.get('editing') === true) {
@@ -124,7 +144,6 @@ export default PlotAbstract.extend({
 
       // get signal mapping for simulation model
       let self = this;
-      let simulatorid = this.get('plot.simulator');
 
       this.get('plot.visualization').then((visualization) => {
         visualization.get('project').then((project) => {

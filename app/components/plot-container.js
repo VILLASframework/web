@@ -19,18 +19,18 @@ export default Ember.Component.extend({
   grid: true,
   data: null,
 
-  style: function() {
+  style: Ember.computed('plots.@each.height', 'plots.@each.y', function() {
     var height = this._calculateHeight();
     if (this.get('editing') === true && height < 400) {
       height = 400;
     }
 
     return Ember.String.htmlSafe('height: ' + height + 'px;');
-  }.property('plots.@each.height', 'plots.@each.y'),
+  }),
 
-  _value: function() {
+  _value: Ember.computed('data.2.values.@each', function() {
     console.log(this.get('data'));
-  }.property('data.2.values.@each'),
+  }),
 
   _calculateHeight() {
     var maxHeight = 0;

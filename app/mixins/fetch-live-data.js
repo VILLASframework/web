@@ -12,7 +12,7 @@ import Ember from 'ember';
 export default Ember.Mixin.create({
   data: {},
 
-  _getData: function() {
+  _getData: Ember.observer('model', function() {
     // check if simulation is running
     let self = this;
 
@@ -48,7 +48,7 @@ export default Ember.Mixin.create({
         }
       });
     });
-  }.observes('model'),
+  }),
 
   _loadDataForSimulator(simulatorID) {
     // get data by simulator id

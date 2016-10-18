@@ -21,12 +21,12 @@ export default Ember.Controller.extend({
   project: null,
   projectSimulation: null,
 
-  _updateSimulations: function() {
+  _updateSimulations: Ember.observer('model', function() {
     if (this.get('model.simulations') != null && this.get('model.simulations.length') > 0) {
       var simulations = this.get('model.simulations');
       this.set('projectSimulation', simulations.toArray()[0]);
     }
-  }.observes('model'),
+  }),
 
   actions: {
     showNewModal() {

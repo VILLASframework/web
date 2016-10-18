@@ -30,13 +30,13 @@ export default Ember.Component.extend(Resizable, Draggable, {
   grid_drag: [ 10, 10 ],
   scroll_drag: true,
 
-  style: function() {
+  style: Ember.computed('plot', function() {
     return Ember.String.htmlSafe('width: ' + this.get('plot.width') + 'px; height: ' + this.get('plot.height') + 'px; left: ' + this.get('plot.x') + 'px; top: ' + this.get('plot.y') + 'px;');
-  }.property('plot'),
+  }),
 
-  name: function() {
+  name: Ember.computed('plot', function() {
     return this.get('plot.name');
-  }.property('plot'),
+  }),
 
   stop_resize(event, ui) {
     var width = ui.size.width;
@@ -59,7 +59,7 @@ export default Ember.Component.extend(Resizable, Draggable, {
 
   },
 
-  _updateUI: function() {
+  _updateUI: Ember.on('init', Ember.observer('editing', 'grid', function() {
     if (this.get('editing') === true) {
       this.set('disabled_resize', false);
       this.set('autoHide_resize', false);
@@ -77,7 +77,7 @@ export default Ember.Component.extend(Resizable, Draggable, {
       this.set('grid_resize', false);
       this.set('grid_drag', false);
     }
-  }.observes('editing', 'grid').on('init'),
+  })),
 
   /*doubleClick() {
     if (this.get('editing')) {

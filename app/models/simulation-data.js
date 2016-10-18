@@ -23,10 +23,10 @@ export default Model.extend({
 
   _history: [],
 
-  _updateHistory: function() {
+  _updateHistory: Ember.observer('values', function() {
     this._history.unshift(this.get('values'));
     while (this._history.length > 5) {
       this._history.shift();
     }
-  }.observes('values')
+  })
 });

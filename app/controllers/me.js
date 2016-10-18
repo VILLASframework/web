@@ -10,10 +10,10 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  isAdmin: function() {
+  isAdmin: Ember.computed('model', function() {
     var level = this.get('model.adminLevel');
     return level >= 1;
-  }.property('model'),
+  }),
 
   actions: {
     changeUser() {
