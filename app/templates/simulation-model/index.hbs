@@ -2,28 +2,30 @@
 
 <h1>{{model.name}}</h1>
 
-<h3>Mapping</h3>
+<form {{action 'saveMapping' on='submit'}}>
+  <h3>Mapping</h3>
 
-<div class="simulation-model-index-mapping">
-  <table class="table-full-width">
-    <tr>
-      <th width="80px">Signal</th>
-      <th>Name</th>
-    </tr>
-    {{#each-in model.mapping as |signal name|}}
+  <div class="simulation-model-index-mapping">
+    <table class="table-full-width">
       <tr>
-        <td>
-          {{signal}}
-        </td>
-        <td>
-          {{name}}
-        </td>
+        <th width="80px">Signal</th>
+        <th>Name</th>
       </tr>
-    {{/each-in}}
-  </table>
-</div>
+      {{#each-in model.mapping as |signal name|}}
+        <tr>
+          <td>
+            {{signal}}
+          </td>
+          <td>
+            {{input value=(mut (get this (concat 'name' signal)))}}
+          </td>
+        </tr>
+      {{/each-in}}
+    </table>
+  </div>
 
-<div class="simulation-model-index-buttons">
-  <!-- <button {{action 'cancelMapping'}}>Cancel</button> -->
-  <button {{action 'saveMapping'}}>Save</button>
-</div>
+  <div class="simulation-model-index-buttons">
+    <!-- <button {{action 'cancelMapping'}}>Cancel</button> -->
+    <button type="submit">Save</button>
+  </div>
+</form>

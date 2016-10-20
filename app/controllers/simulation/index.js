@@ -94,7 +94,7 @@ export default Ember.Controller.extend({
       let mapping = [];
 
       for (let i = 0; i < properties['length']; i++) {
-        mapping.pushObject("Signal " + (i + 1));
+        mapping.push('Signal ' + (i + 1));
       }
 
       properties['mapping'] = mapping;
@@ -139,6 +139,23 @@ export default Ember.Controller.extend({
           properties['simulator'] = simulator;
         }
       });
+
+      // change mapping
+      let mapping = this.get('simulationModel.mapping');
+
+      if (mapping.length < properties['length']) {
+        // add more signals
+        for (let i = mapping.length; i < properties['length']; i++) {
+          mapping.push('Signal ' + (i + 1));
+        }
+      } else if (mapping.length > properties['length']) {
+        // remove signals
+        mapping = mapping.slice(0, Number(properties['length']));
+      }
+
+      console.log(mapping);
+
+      properties['mapping'] = mapping;
 
       // save properties
       let controller = this;
