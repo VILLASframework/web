@@ -1,22 +1,22 @@
-<h1>{{model.ame}}</h1>
+<h1>{{model.name}}</h1>
 
-<div class="plot-toolbox">
+<div class="widget-toolbox">
   <h3>Toolbox</h3>
   <!-- {{#draggable-item content='chart'}}
     <span>Chart</span>
   {{/draggable-item}} -->
 
-  <!-- {{#draggable-item content='table'}}
+  {{#draggable-item content='table'}}
     <span>Table</span>
-  {{/draggable-item}} -->
+  {{/draggable-item}}
 
   {{#draggable-item content='value'}}
     <span>Value</span>
   {{/draggable-item}}
 </div>
 
-{{#draggable-dropzone dropped='addPlot'}}
-  {{plot-container plots=model.plots editing=true data=data showPlotDialog='showPlotDialog'}}
+{{#draggable-dropzone dropped='addWidget'}}
+  {{widget-container widgets=model.widgets editing=true data=data showWidgetDialog='showWidgetDialog'}}
 {{/draggable-dropzone}}
 
 <p>

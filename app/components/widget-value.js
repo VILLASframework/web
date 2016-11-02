@@ -1,5 +1,5 @@
 /**
- * File: plot-value.js
+ * File: widget-value.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 04.07.2016
  * Copyright: 2016, Institute for Automation of Complex Power Systems, EONERC
@@ -7,22 +7,22 @@
  *   Unauthorized copying of this file, via any medium is strictly prohibited.
  **********************************************************************************/
 
-import PlotAbstract from './plot-abstract';
+import WidgetAbstract from './widget-abstract';
 import Ember from 'ember';
 
-export default PlotAbstract.extend({
-  classNames: [ 'plotValue' ],
+export default WidgetAbstract.extend({
+  classNames: [ 'widgetValue' ],
 
   minWidth_resize: 50,
   minHeight_resize: 20,
 
-  _updateDataObserver: Ember.on('init', Ember.observer('plot.simulator', 'plot.signal', function() {
-    let query = 'data.' + this.get('plot.simulator') + '.sequence';
+  _updateDataObserver: Ember.on('init', Ember.observer('widget.widgetData.simulator', 'widget.widgetData.signal', function() {
+    let query = 'data.' + this.get('widget.widgetData.simulator') + '.sequence';
     this.addObserver(query, function() {
       // get value from array
-      let values = this.get('data.' + this.get('plot.simulator') + '.values');
+      let values = this.get('data.' + this.get('widget.widgetData.simulator') + '.values');
       if (values) {
-        this.set('value', values[this.get('plot.signal')]);
+        this.set('value', values[this.get('widget.widgetData.signal')]);
       } else {
         this.set('value', null);
       }
@@ -32,13 +32,13 @@ export default PlotAbstract.extend({
   doubleClick() {
     if (this.get('editing') === true) {
       // prepare modal
-      this.set('name', this.get('plot.name'));
+      this.set('name', this.get('widget.name'));
 
       // get signal mapping for simulation model
       let self = this;
-      let simulatorid = this.get('plot.simulator');
+      let simulatorid = this.get('widget.widgetData.simulator');
 
-      this.get('plot.visualization').then((visualization) => {
+      this.get('widget.visualization').then((visualization) => {
         visualization.get('project').then((project) => {
           project.get('simulation').then((simulation) => {
             simulation.get('models').then((simulationModels) => {
@@ -52,7 +52,7 @@ export default PlotAbstract.extend({
 
                     // set signal
                     let mapping = simulationModel.get('mapping');
-                    self.set('signalName', mapping[self.get('plot.signal')]);
+                    self.set('signalName', mapping[self.get('widget.widgetData.signal')]);
                   }
                 });
               });
@@ -70,8 +70,9 @@ export default PlotAbstract.extend({
     submitModal() {
       // verify properties
       let properties = this.getProperties('name');
+
       if (properties['name'] === null || properties['name'] === "") {
-        this.set('errorMessage', 'Plot name is missing');
+        this.set('errorMessage', 'Widget name is missing');
         return;
       }
 
@@ -79,7 +80,7 @@ export default PlotAbstract.extend({
       let simulationModelName = this.get('simulationModelName');
       let self = this;
 
-      this.get('plot.visualization').then((visualization) => {
+      this.get('widget.visualization').then((visualization) => {
         visualization.get('project').then((project) => {
           project.get('simulation').then((simulation) => {
             simulation.get('models').then((simulationModels) => {
@@ -88,7 +89,8 @@ export default PlotAbstract.extend({
                 if (simulationModel.get('name') === simulationModelName) {
                   simulationModel.get('simulator').then((simulator) => {
                     // set simulator
-                    properties['simulator'] = simulator.get('simulatorid');
+                    let widgetData = {};
+                    widgetData.simulator = simulator.get('simulatorid');
 
                     // set signal by name
                     let mapping = simulationModel.get('mapping');
@@ -96,14 +98,16 @@ export default PlotAbstract.extend({
 
                     for (let i = 0; i < mapping.length; i++) {
                       if (mapping[i] === signalName) {
-                        properties['signal'] = i;
+                        widgetData.signal = i;
                       }
                     }
 
                     // save properties
-                    self.get('plot').setProperties(properties);
+                    properties['widgetData'] = widgetData;
 
-                    self.get('plot').save().then(function() {
+                    self.get('widget').setProperties(properties);
+
+                    self.get('widget').save().then(function() {
                       self.set('isShowingModal', false);
                     });
                   });
@@ -126,7 +130,7 @@ export default PlotAbstract.extend({
       // get signal mapping for simulation model
       let self = this;
 
-      this.get('plot.visualization').then((visualization) => {
+      this.get('widget.visualization').then((visualization) => {
         visualization.get('project').then((project) => {
           project.get('simulation').then((simulation) => {
             simulation.get('models').then((simulationModels) => {

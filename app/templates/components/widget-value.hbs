@@ -4,14 +4,14 @@
   {{#modal-dialog attachment="middle center" translucentOverlay=true}}
     <h1>Value</h1>
 
-    <form class="form-plot-value" {{action 'submitModal' on='submit'}} >
+    <form class="form-widget-value" {{action 'submitModal' on='submit'}} >
       <table>
         <tr>
           <td>
             <label for="name">Name</label>
           </td>
           <td>
-            {{input id='name' placeholder='Enter plot name' value=name}}
+            {{input id='name' placeholder='Enter widget name' value=name}}
           </td>
         </tr>
         <tr>
@@ -20,7 +20,7 @@
           </td>
           <td>
             <select onchange={{action "selectSimulationModel" value="target.value"}}>
-              {{#each plot.visualization.project.simulation.models as |simulationModel|}}
+              {{#each widget.visualization.project.simulation.models as |simulationModel|}}
                 <option value={{simulationModel.name}} selected={{eq simulationModelName simulationModel.name}}>{{simulationModel.name}}</option>
               {{/each}}
             </select>

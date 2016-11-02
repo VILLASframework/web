@@ -1,5 +1,5 @@
 /**
- * File: plot-container.js
+ * File: widget-container.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 05.07.2016
  * Copyright: 2016, Institute for Automation of Complex Power Systems, EONERC
@@ -11,15 +11,15 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   tagName: 'div',
-  classNames: [ 'plots' ],
+  classNames: [ 'widgets' ],
   attributeBindings: [ 'style' ],
 
-  plots: null,
+  widgets: null,
   editing: false,
   grid: true,
   data: null,
 
-  style: Ember.computed('plots.@each.height', 'plots.@each.y', function() {
+  style: Ember.computed('widgets.@each.height', 'widgets.@each.y', function() {
     var height = this._calculateHeight();
     if (this.get('editing') === true && height < 400) {
       height = 400;
@@ -28,18 +28,14 @@ export default Ember.Component.extend({
     return Ember.String.htmlSafe('height: ' + height + 'px;');
   }),
 
-  _value: Ember.computed('data.2.values.@each', function() {
-    console.log(this.get('data'));
-  }),
-
   _calculateHeight() {
     var maxHeight = 0;
-    var plots = this.get('plots');
+    var widgets = this.get('widgets');
 
-    plots.forEach(function(plot) {
-      var plotHeight = plot.get('y') + plot.get('height');
-      if (plotHeight > maxHeight) {
-        maxHeight = plotHeight;
+    widgets.forEach(function(widget) {
+      var widgetHeight = widget.get('y') + widget.get('height');
+      if (widgetHeight > maxHeight) {
+        maxHeight = widgetHeight;
       }
     });
 
@@ -50,8 +46,8 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    showPlotDialog(plot) {
-      this.sendAction('showPlotDialog', plot);
+    showWidgetDialog(widget) {
+      this.sendAction('showWidgetDialog', widget);
     }
   }
 });

@@ -1,5 +1,5 @@
 /**
- * File: plot.js
+ * File: widget.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 28.06.2016
  * Copyright: 2016, Institute for Automation of Complex Power Systems, EONERC
@@ -13,8 +13,7 @@ import { belongsTo } from 'ember-data/relationships';
 
 export default Model.extend({
   name: attr('string'),
-  signal: attr('number', { defaultValue: 1 }),
-  simulator: attr('number', { defaultValue: 1 }),
+  widgetData: attr(),
   width: attr('number', { defaultValue: 100 }),
   height: attr('number', { defaultValue: 100 }),
   type: attr('string'),

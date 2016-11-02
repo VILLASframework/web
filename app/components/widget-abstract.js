@@ -1,5 +1,5 @@
 /**
- * File: plot-abstract.js
+ * File: widget-abstract.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 15.07.2016
  * Copyright: 2016, Institute for Automation of Complex Power Systems, EONERC
@@ -13,10 +13,10 @@ import Draggable from '../mixins/draggable';
 
 export default Ember.Component.extend(Resizable, Draggable, {
   tagName: 'div',
-  classNames: [ 'plotAbstract' ],
+  classNames: [ 'widgetAbstract' ],
   attributeBindings: [ 'style' ],
 
-  plot: null,
+  widget: null,
   editing: false,
   grid: false,
   data: null,
@@ -30,20 +30,20 @@ export default Ember.Component.extend(Resizable, Draggable, {
   grid_drag: [ 10, 10 ],
   scroll_drag: true,
 
-  style: Ember.computed('plot', function() {
-    return Ember.String.htmlSafe('width: ' + this.get('plot.width') + 'px; height: ' + this.get('plot.height') + 'px; left: ' + this.get('plot.x') + 'px; top: ' + this.get('plot.y') + 'px;');
+  style: Ember.computed('widget', function() {
+    return Ember.String.htmlSafe('width: ' + this.get('widget.width') + 'px; height: ' + this.get('widget.height') + 'px; left: ' + this.get('widget.x') + 'px; top: ' + this.get('widget.y') + 'px;');
   }),
 
-  name: Ember.computed('plot', function() {
-    return this.get('plot.name');
+  name: Ember.computed('widget', function() {
+    return this.get('widget.name');
   }),
 
   stop_resize(event, ui) {
     var width = ui.size.width;
     var height = ui.size.height;
 
-    this.set('plot.width', width);
-    this.set('plot.height', height);
+    this.set('widget.width', width);
+    this.set('widget.height', height);
   },
 
   resize_resize(/* event, ui */) {
@@ -51,8 +51,8 @@ export default Ember.Component.extend(Resizable, Draggable, {
   },
 
   stop_drag(event, ui) {
-    this.set('plot.x', ui.position.left);
-    this.set('plot.y', ui.position.top);
+    this.set('widget.x', ui.position.left);
+    this.set('widget.y', ui.position.top);
   },
 
   drag_drag(/* event, ui */) {
