@@ -57,36 +57,38 @@ export default Ember.Mixin.create({
 
   _addSocket(simulationModel) {
     // check if socket is already open
-    let id = simulationModel.get('id');
-    if (this.get('_sockets')[id] !== undefined) {
-      //Ember.debug('skip ' + simulationModel.get('name'));
-      return;
-    }
-
-    // get simulator endpoint
     simulationModel.get('simulator').then((simulator) => {
-      // get simulator endpoint
-      let endpoint = simulator.get('endpoint');
-      if (endpoint) {
-        // add new socket
-        let socket = new WebSocket('ws://' + endpoint);
-        socket.binaryType = 'arraybuffer';
-
-        // register callbacks
-        let self = this;
-
-        socket.onopen = function(event) { self._onSocketOpen.apply(self, [event]); };
-        socket.onclose = function(event) { self._onSocketClose.apply(self, [event]); };
-        socket.onmessage = function(event) { self._onSocketMessage.apply(self, [event]); };
-        socket.onerror = function(event) { self._onSocketError.apply(self, [event]); };
-
-        // add socket to list of known sockets
-        this.get('_sockets')[id] = socket;
-
-        //Ember.debug('Socket created for ' + simulationModel.get('name') + ': ws://' + endpoint);
-      } else {
-        Ember.debug('Undefined endpoint for ' + simulationModel.get('name'));
+      let id = simulator.get('simulatorid');
+      if (this.get('_sockets')[id] !== undefined) {
+        //Ember.debug('skip ' + simulationModel.get('name'));
+        return;
       }
+
+      // get simulator endpoint
+      simulationModel.get('simulator').then((simulator) => {
+        // get simulator endpoint
+        let endpoint = simulator.get('endpoint');
+        if (endpoint) {
+          // add new socket
+          let socket = new WebSocket('ws://' + endpoint, 'live');
+          socket.binaryType = 'arraybuffer';
+
+          // register callbacks
+          let self = this;
+
+          socket.onopen = function(event) { self._onSocketOpen.apply(self, [event]); };
+          socket.onclose = function(event) { self._onSocketClose.apply(self, [event]); };
+          socket.onmessage = function(event) { self._onSocketMessage.apply(self, [event]); };
+          socket.onerror = function(event) { self._onSocketError.apply(self, [event]); };
+
+          // add socket to list of known sockets
+          this.get('_sockets')[id] = socket;
+
+          //Ember.debug('Socket created for ' + simulationModel.get('name') + ': ws://' + endpoint);
+        } else {
+          Ember.debug('Undefined endpoint for ' + simulationModel.get('name'));
+        }
+      });
     });
   },
 
@@ -121,6 +123,21 @@ export default Ember.Mixin.create({
     // read the message into JSON
     var message = this._messageToJSON(event.data);
 
+    // set simulator by socket
+    if (message.simulator === 0) {
+      // search for socket in list
+      let sockets = this.get('_sockets');
+
+      for (let id in sockets) {
+        if (sockets[id] === event.target) {
+          // set id as simulator
+          message.simulator = id;
+          break;
+        }
+      }
+    }
+
+    // create or update simulation data object
     var simulationData = this.store.peekRecord('simulation-data', message.simulator);
     if (simulationData != null) {
       simulationData.set('sequence', message.sequence);
