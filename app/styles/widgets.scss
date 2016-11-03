@@ -27,12 +27,14 @@
  * Component: widget-abstract
  */
 .widgetAbstract {
+  position: absolute;
+}
+
+.widget-editing {
   border: 1px solid lightgray;
 
-  margin: 10px;
   padding: 5px 10px;
-
-  position: absolute;
+  margin: 10px;
 }
 
 /**

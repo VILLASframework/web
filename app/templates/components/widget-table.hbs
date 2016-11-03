@@ -1,16 +1,55 @@
-{{#if editing}}
-  {{input value=widget.title placeholder='Enter title'}}
-{{else}}
-  <h4>{{widget.title}}</h4>
-{{/if}}
+<h4>{{widget.name}}</h4>
 
 <table class="widgetTable">
   <tr>
     <th>Name</th>
     <th>Value</th>
   </tr>
-  <tr>
-    <td>Signal X</td>
-    <td>1.234</td>
-  </tr>
+  {{#each signals as |signal|}}
+    <tr>
+      <td>
+        {{signal.name}}
+      </td>
+      <td>
+        {{signal.value}}
+      </td>
+    </tr>
+  {{/each}}
 </table>
+
+{{#if isShowingModal}}
+  {{#modal-dialog attachment="middle center" translucentOverlay=true}}
+    <h1>Table</h1>
+
+    <form class="form-widget-table" {{action 'submitModal' on='submit'}} >
+      <table>
+        <tr>
+          <td>
+            <label for="name">Name</label>
+          </td>
+          <td>
+            {{input id='name' placeholder='Enter widget name' value=name}}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="simulator">Simulator</label>
+          </td>
+          <td>
+            <select onchange={{action "selectSimulationModel" value="target.value"}} >
+              {{#each widget.visualization.project.simulation.models as |simulationModel|}}
+                <option value={{simulationModel.name}} selected={{eq simulationModelName simulationModel.name}}>{{simulationModel.name}}</option>
+              {{/each}}
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <button {{action 'cancelModal'}}>Cancel</button>
+            <button type="submit">Save</button>
+          </td>
+        </tr>
+      </table>
+    </form>
+  {{/modal-dialog}}
+{{/if}}

@@ -61,7 +61,7 @@ export default WidgetAbstract.extend({
         });
       });
 
-      // shot modal
+      // show modal
       this.set('isShowingModal', true);
     }
   },

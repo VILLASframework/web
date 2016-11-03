@@ -21,21 +21,14 @@ export default Ember.Controller.extend(FetchLiveDataMixin, {
   simulatorName: null,
   signal: null,
 
-  _updateSimulators: Ember.observer('model', function() {
-    if (this.get('model.simulators') !== null && this.get('model.simulators.length') > 0) {
-      let simulators = this.get('model.simulators');
-      this.set('simulatorName', simulators.toArray()[0].get('name'));
-    }
-  }),
-
   actions: {
     addWidget(name) {
-      var widget = null;
+      let widget = null;
 
-      if (name === 'chart') {
-        widget = this.store.createRecord('widget', { name: 'Chart 1', type: 'widget-chart' });
+      if (name === 'label') {
+        widget = this.store.createRecord('widget', { name: 'Label', type: 'widget-label', width: 100, height: 20 });
       } else if (name === 'table') {
-        widget = this.store.createRecord('widget', { name: 'Table 1', type: 'widget-table', width: 500, height: 200 });
+        widget = this.store.createRecord('widget', { name: 'Table 1', type: 'widget-table', width: 500, height: 200, widgetData: { simulator: 2 } });
       } else if (name === 'value') {
         widget = this.store.createRecord('widget', { name: 'Value 1', type: 'widget-value', width: 250, height: 20, widgetData: { signal: 0, simulator: 2 } });
       } else {

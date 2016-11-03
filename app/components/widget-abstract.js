@@ -14,15 +14,17 @@ import Draggable from '../mixins/draggable';
 export default Ember.Component.extend(Resizable, Draggable, {
   tagName: 'div',
   classNames: [ 'widgetAbstract' ],
+  classNameBindings: [ 'widgetEditing' ],
   attributeBindings: [ 'style' ],
 
   widget: null,
+  widgetEditing: true,
   editing: false,
   grid: false,
   data: null,
 
   disabled_resize: false,
-  autoHide_resize: false,
+  autoHide_resize: true,
   grid_resize: [ 10, 10 ],
 
   disabled_drag: false,
@@ -59,15 +61,19 @@ export default Ember.Component.extend(Resizable, Draggable, {
 
   },
 
-  _updateUI: Ember.on('init', Ember.observer('editing', 'grid', function() {
+  _updateUI: Ember.on('init', Ember.observer('editing', 'grid', 'isShowingModal', function() {
     if (this.get('editing') === true) {
       this.set('disabled_resize', false);
-      this.set('autoHide_resize', false);
+      //this.set('autoHide_resize', false);
       this.set('disabled_drag', false);
+
+      this.set('widgetEditing', true);
     } else {
       this.set('disabled_resize', true);
-      this.set('autoHide_resize', true);
+      //this.set('autoHide_resize', true);
       this.set('disabled_drag', true);
+
+      this.set('widgetEditing', false);
     }
 
     if (this.get('grid') === true) {

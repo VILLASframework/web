@@ -1,0 +1,26 @@
+<h4>{{widget.name}}</h4>
+
+{{#if isShowingModal}}
+  {{#modal-dialog attachment="middle center" translucentOverlay=true}}
+    <h1>Label</h1>
+
+    <form class="form-widget-label" {{action 'submitModal' on='submit'}} >
+      <table>
+        <tr>
+          <td>
+            <label for="name">Name</label>
+          </td>
+          <td>
+            {{input id='name' placeholder='Enter widget name' value=name}}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <button {{action 'cancelModal'}}>Cancel</button>
+            <button type="submit">Save</button>
+          </td>
+        </tr>
+      </table>
+    </form>
+  {{/modal-dialog}}
+{{/if}}

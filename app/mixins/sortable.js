@@ -60,7 +60,7 @@ export default Ember.Mixin.create({
       // create an observer for this option
       var observer = function() {
         var value = this.get(key);
-        console.log(key + ': ' + value);
+        //console.log(key + ': ' + value);
         this.get('ui').option(key.split('_')[0], value);
       };
 
