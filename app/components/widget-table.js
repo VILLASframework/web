@@ -8,6 +8,7 @@
  **********************************************************************************/
 
 import WidgetAbstract from './widget-abstract';
+import Ember from 'ember';
 
 export default WidgetAbstract.extend({
   classNames: [ 'widgetTable' ],

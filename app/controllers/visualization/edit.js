@@ -23,35 +23,49 @@ export default Ember.Controller.extend(FetchLiveDataMixin, {
 
   actions: {
     addWidget(name) {
-      let widget = null;
+      // get first simulator id
+      let defaultSimulatorid = 0;
 
-      if (name === 'label') {
-        widget = this.store.createRecord('widget', { name: 'Label', type: 'widget-label', width: 100, height: 20 });
-      } else if (name === 'table') {
-        widget = this.store.createRecord('widget', { name: 'Table 1', type: 'widget-table', width: 500, height: 200, widgetData: { simulator: 2 } });
-      } else if (name === 'value') {
-        widget = this.store.createRecord('widget', { name: 'Value 1', type: 'widget-value', width: 250, height: 20, widgetData: { signal: 0, simulator: 2 } });
-      } else {
-        // DEBUG
-        console.log('Add widget ' + name);
-        return;
-      }
+      this.get('model.project').then((project) => {
+        project.get('simulation').then((simulation) => {
+          simulation.get('models').then((simulationModels) => {
+            simulationModels.toArray()[0].get('simulator').then((simulator) => {
+              defaultSimulatorid = simulator.get('simulatorid');
 
-      if (widget != null) {
-        // add widget to visualization
-        this.get('model.widgets').pushObject(widget);
+              // create widget
+              let widget = null;
 
-        // save new widget
-        var visualization = this.get('model');
+              if (name === 'label') {
+                widget = this.store.createRecord('widget', { name: 'Label', type: 'widget-label', width: 100, height: 20 });
+              } else if (name === 'table') {
+                widget = this.store.createRecord('widget', { name: 'Table 1', type: 'widget-table', width: 500, height: 200, widgetData: { simulator: defaultSimulatorid } });
+              } else if (name === 'value') {
+                widget = this.store.createRecord('widget', { name: 'Value 1', type: 'widget-value', width: 250, height: 20, widgetData: { signal: 0, simulator: defaultSimulatorid } });
+              } else {
+                // DEBUG
+                console.log('Add widget ' + name);
+                return;
+              }
 
-        widget.save().then(function() {
-          // save the widget in the visualization
-          visualization.get('widgets').pushObject(widget);
-          visualization.save();
+              if (widget != null) {
+                // add widget to visualization
+                this.get('model.widgets').pushObject(widget);
+
+                // save new widget
+                var visualization = this.get('model');
+
+                widget.save().then(function() {
+                  // save the widget in the visualization
+                  visualization.get('widgets').pushObject(widget);
+                  visualization.save();
+                });
+              } else {
+                console.error('Unknown widget type: ' + name);
+              }
+            });
+          });
         });
-      } else {
-        console.error('Unknown widget type: ' + name);
-      }
+      });
     },
 
     saveEdit() {
