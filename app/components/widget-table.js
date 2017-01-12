@@ -150,6 +150,13 @@ export default WidgetAbstract.extend({
       this.set('isShowingModal', false);
     },
 
+    deleteModal() {
+      // delete widget
+      this.get('widget').destroyRecord();
+
+      this.set('isShowingModal', false);
+    },
+
     selectSimulationModel(simulationModelName) {
       // save simulation model
       this.set('simulationModelName', simulationModelName);

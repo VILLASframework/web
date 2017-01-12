@@ -47,6 +47,13 @@ export default WidgetAbstract.extend({
 
     cancelModal() {
       this.set('isShowingModal', false);
-    }
+    },
+
+    deleteModal() {
+      // delete widget
+      this.get('widget').destroyRecord();
+
+      this.set('isShowingModal', false);
+    },
   }
 });

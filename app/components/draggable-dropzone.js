@@ -29,7 +29,14 @@ export default Ember.Component.extend({
 
   drop(event) {
     var data = event.dataTransfer.getData('text/data');
-    this.sendAction('dropped', data);
+    var position = {
+      x: event.originalEvent.pageX - $(event.target).offset().left - parseFloat(event.dataTransfer.getData('offset/x')),
+      y: event.originalEvent.pageY - $(event.target).offset().top - parseFloat(event.dataTransfer.getData('offset/y'))
+    }
+
+    console.log(position);
+
+    this.sendAction('dropped', data, position);
 
     set(this, 'dragClass', 'deactivated');
   }

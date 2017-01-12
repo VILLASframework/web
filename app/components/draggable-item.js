@@ -17,6 +17,9 @@ export default Ember.Component.extend({
   draggable: 'true',
 
   dragStart(event) {
+    event.dataTransfer.setData('offset/x', event.originalEvent.pageX - $(event.target).offset().left);
+    event.dataTransfer.setData('offset/y', event.originalEvent.pageY - $(event.target).offset().top);
+
     return event.dataTransfer.setData('text/data', get(this, 'content'));
   }
 });

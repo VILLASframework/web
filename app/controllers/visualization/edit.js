@@ -22,7 +22,7 @@ export default Ember.Controller.extend(FetchLiveDataMixin, {
   signal: null,
 
   actions: {
-    addWidget(name) {
+    addWidget(name, position) {
       // get first simulator id
       let defaultSimulatorid = 0;
 
@@ -36,11 +36,11 @@ export default Ember.Controller.extend(FetchLiveDataMixin, {
               let widget = null;
 
               if (name === 'label') {
-                widget = this.store.createRecord('widget', { name: 'Label', type: 'widget-label', width: 100, height: 20 });
+                widget = this.store.createRecord('widget', { name: 'Label', type: 'widget-label', width: 100, height: 20, x: position.x, y: position.y });
               } else if (name === 'table') {
-                widget = this.store.createRecord('widget', { name: 'Table 1', type: 'widget-table', width: 500, height: 200, widgetData: { simulator: defaultSimulatorid } });
+                widget = this.store.createRecord('widget', { name: 'Table 1', type: 'widget-table', width: 500, height: 200, x: position.x, y: position.y, widgetData: { simulator: defaultSimulatorid } });
               } else if (name === 'value') {
-                widget = this.store.createRecord('widget', { name: 'Value 1', type: 'widget-value', width: 250, height: 20, widgetData: { signal: 0, simulator: defaultSimulatorid } });
+                widget = this.store.createRecord('widget', { name: 'Value 1', type: 'widget-value', width: 250, height: 20, x: position.x, y: position.y, widgetData: { signal: 0, simulator: defaultSimulatorid } });
               } else {
                 // DEBUG
                 console.log('Add widget ' + name);
