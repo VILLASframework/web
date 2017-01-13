@@ -16,7 +16,7 @@ export default Ember.Component.extend({
 
   widgets: null,
   editing: false,
-  grid: true,
+  grid: false,
   data: null,
 
   style: Ember.computed('widgets.@each.height', 'widgets.@each.y', function() {

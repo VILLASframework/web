@@ -15,18 +15,28 @@ import attr from 'ember-data/attr';
 export default Model.extend({
   simulator: Ember.computed.alias('id'),
   sequence: attr('number'),
+  timestamp: attr('number'),
   values: attr('array'),
 
-  /*historyValues() {
+  flotValues: Ember.computed('_flotValues', function() {
+    return this._flotValues;
+  }),
+
+  _flotValues: [],
+
+  historyValues: Ember.computed('_history', function() {
     return this._history;
-  },
+  }),
 
   _history: [],
 
-  _updateHistory: Ember.observer('values', function() {
-    this._history.unshift(this.get('values'));
-    while (this._history.length > 5) {
-      this._history.shift();
+  _updateHistories: Ember.observer('values', function() {
+    // save set of values with timestamp
+    this._flotValues.push([this.get('timestamp'), this.get('values')[0]]);
+
+    // discard old values
+    while (this._flotValues.length > 100) {
+      this._flotValues.shift();
     }
-  })*/
+  })
 });

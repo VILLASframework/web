@@ -1,13 +1,8 @@
 # To-Do
  - Change password
- - Move plot attributes/styling from plot-container into actual plots
- - Move drag-n-drop to mixins
  - Go into edit mode if visualization is empty
  - Auto-detect if simulators are running
  - Remove running socket if it's not in the updated list
- - Rebrand plots into widgets
- - Change widget model (plot) to custom data to provide mechanism for all widgets
- - Add widgets where dropped
 
 websocketserverip/config.json
 {

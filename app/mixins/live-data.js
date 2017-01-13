@@ -141,10 +141,12 @@ export default Ember.Mixin.create({
     var simulationData = this.store.peekRecord('simulation-data', message.simulator);
     if (simulationData != null) {
       simulationData.set('sequence', message.sequence);
+      simulationData.set('timestamp', new Date(message.timestamp).getTime());
       simulationData.set('values', message.values);
     } else {
       this.store.createRecord('simulation-data', {
         sequence: message.sequence,
+        timestamp: new Date(message.timestamp).getTime(),
         values: message.values,
         id: message.simulator
       });

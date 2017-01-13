@@ -34,20 +34,46 @@ export default Ember.Controller.extend(FetchLiveDataMixin, {
 
               // create widget
               let widget = null;
+              let properties = {
+                x: position.x,
+                y: position.y,
+                name: 'widget',
+                type: null
+              };
 
               if (name === 'label') {
-                widget = this.store.createRecord('widget', { name: 'Label', type: 'widget-label', width: 100, height: 20, x: position.x, y: position.y });
+                properties.type = 'widget-label';
+                properties.width = 100;
+                properties.height = 20;
+                properties.name = 'Label';
               } else if (name === 'table') {
-                widget = this.store.createRecord('widget', { name: 'Table 1', type: 'widget-table', width: 500, height: 200, x: position.x, y: position.y, widgetData: { simulator: defaultSimulatorid } });
+                properties.type = 'widget-table';
+                properties.name = "Table";
+                properties.width = 500;
+                proeprties.height = 200;
+                properties.widgetData = { simulator: defaultSimulatorid };
               } else if (name === 'value') {
-                widget = this.store.createRecord('widget', { name: 'Value 1', type: 'widget-value', width: 250, height: 20, x: position.x, y: position.y, widgetData: { signal: 0, simulator: defaultSimulatorid } });
+                properties.type = 'widget-value';
+                properties.name = 'Value';
+                properties.width = 250;
+                properties.height = 20;
+                properties.widgetData = { signal: 0, simulator: defaultSimulatorid };
+              } else if (name === 'plot') {
+                properties.type = 'widget-plot';
+                properties.name = 'Plot';
+                properties.width = 500;
+                properties.height = 200;
+                properties.widgetData = { signal: 0, simulator: defaultSimulatorid };
               } else {
                 // DEBUG
-                console.log('Add widget ' + name);
+                console.log('Add unknown widget ' + name);
                 return;
               }
 
-              if (widget != null) {
+              if (properties.type != null) {
+                // create widget
+                widget = this.store.createRecord('widget', properties);
+
                 // add widget to visualization
                 this.get('model.widgets').pushObject(widget);
 
