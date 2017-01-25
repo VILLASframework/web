@@ -40,6 +40,8 @@ export default WidgetAbstract.extend({
 
   signals: Ember.A([]),
 
+  checkedSignals: {},
+
   _updateDataObserver: Ember.on('init', Ember.observer('widget.widgetData.simulator', function() {
     // get query for observer
     let simulatorId = this.get('widget.widgetData.simulator');
@@ -90,15 +92,18 @@ export default WidgetAbstract.extend({
 
                     // set signals
                     let mapping = simulationModel.get('mapping');
+                    let checkedSignals = {};
 
                     // uncheck all signals
                     mapping.forEach(function(key) {
-                      self.set(key + 'Checked', false);
+                      checkedSignals[key] = false;
                     });
 
                     self.get('signals').forEach(function(signal) {
-                      self.set(mapping[signal] + 'Checked', true);
+                      checkedSignals[mapping[signal]] = true;
                     });
+
+                    self.set('checkedSignals', checkedSignals);
                   }
                 });
               });
@@ -143,8 +148,10 @@ export default WidgetAbstract.extend({
                     widgetData.signals = [];
 
                     // uncheck all signals
+                    let checkedSignals = self.get('checkedSignals');
+
                     for (var i = 0; i < mapping.length; i++) {
-                      if (self.get(mapping[i] + 'Checked')) {
+                      if (checkedSignals[mapping[i]]) {
                         widgetData.signals.push(i);
                       }
                     }

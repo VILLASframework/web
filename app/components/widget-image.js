@@ -46,7 +46,7 @@ export default WidgetAbstract.extend({
       this.get('widget').setProperties(properties);
 
       let self = this;
-      
+
       this.get('widget').save().then(function() {
         self.set('isShowingModal', false);
       });

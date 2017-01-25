@@ -34,7 +34,7 @@
           </td>
           <td>
             {{#each simulationModel.mapping as |signal|}}
-              <input type='checkbox' name={{signal}} checked={{concat signal "Checked"}} /><label for={{signal}}> {{signal}}</label>
+              {{input type='checkbox' name=signal checked=(mut (get checkedSignals signal))}}<label for={{signal}}> {{signal}}</label>
               <br />
             {{/each}}
           </td>
