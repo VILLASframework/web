@@ -50,7 +50,7 @@ export default Ember.Controller.extend(FetchLiveDataMixin, {
                 properties.type = 'widget-table';
                 properties.name = "Table";
                 properties.width = 500;
-                proeprties.height = 200;
+                properties.height = 200;
                 properties.widgetData = { simulator: defaultSimulatorid };
               } else if (name === 'value') {
                 properties.type = 'widget-value';
@@ -64,6 +64,12 @@ export default Ember.Controller.extend(FetchLiveDataMixin, {
                 properties.width = 500;
                 properties.height = 400;
                 properties.widgetData = { signals: [0], simulator: defaultSimulatorid, type: 'multiple' };
+              } else if (name === 'image') {
+                properties.type = 'widget-image';
+                properties.name = 'Image';
+                properties.width = 300;
+                properties.height = 300;
+                properties.widgetData = { path: null };
               } else {
                 // DEBUG
                 console.log('Add unknown widget ' + name);
