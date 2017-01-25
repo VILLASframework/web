@@ -1,0 +1,205 @@
+/**
+ * File: widget-value.js
+ * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
+ * Date: 08.12.2016
+ * Copyright: 2016, Institute for Automation of Complex Power Systems, EONERC
+ *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
+ *   Unauthorized copying of this file, via any medium is strictly prohibited.
+ **********************************************************************************/
+
+import Ember from 'ember';
+import WidgetAbstract from './widget-abstract';
+
+export default WidgetAbstract.extend({
+  classNames: [ 'widgetPlot' ],
+
+  plotData: Ember.A([]),
+
+  plotOptions: {
+    series: {
+      lines: {
+        show: true,
+        lineWidth: 2
+      },
+      shadowSize: 0
+    },
+    xaxis: {
+      mode: 'time',
+      timeformat: '%M:%S',
+      /*min: firstTimestamp,
+      max: lastTimestamp,*/
+      axisLabel: 'time [min]',
+      axisLabelUseCanvas: true
+    }/*,
+    yaxis: {
+      tickDecimals: 1,
+      axisLabel: this.data.get('type'),
+      axisLabelUseCanvas: true
+    }*/
+  },
+
+  signals: Ember.A([]),
+
+  _updateDataObserver: Ember.on('init', Ember.observer('widget.widgetData.simulator', function() {
+    // get query for observer
+    let simulatorId = this.get('widget.widgetData.simulator');
+    let query = 'data.' + simulatorId + '.sequence';
+
+    // get plot settings
+    let signals = this.get('widget.widgetData.signals');
+    this.set('signals', signals);
+
+    this.addObserver(query, function() {
+      // get values from array
+      let values = this.get('data.' + simulatorId + '.flotValues');
+      var updatedValues = this.get('plotData');
+
+      // update values
+      var index = 0;
+
+      this.get('signals').forEach(function(signal) {
+        updatedValues.replace(index, 1, Ember.A([ values[signal] ]));
+        index += 1;
+      });
+
+      this.set('plotData', updatedValues);
+    });
+  })),
+
+  doubleClick() {
+    if (this.get('editing') === true) {
+      // prepare modal
+      this.set('name', this.get('widget.name'));
+      this.set('errorMessage', null);
+
+      // get signal mapping for simulation model
+      let self = this;
+      let simulatorid = this.get('widget.widgetData.simulator');
+
+      this.get('widget.visualization').then((visualization) => {
+        visualization.get('project').then((project) => {
+          project.get('simulation').then((simulation) => {
+            simulation.get('models').then((simulationModels) => {
+              // find simulation model by simulatorid
+              simulationModels.forEach(function(simulationModel) {
+                simulationModel.get('simulator').then((simulator) => {
+                  if (simulator.get('simulatorid') === simulatorid) {
+                    // set simulation model
+                    self.set('simulationModel', simulationModel);
+                    self.set('simulationModelName', simulationModel.get('name'));
+
+                    // set signals
+                    let mapping = simulationModel.get('mapping');
+
+                    // uncheck all signals
+                    mapping.forEach(function(key) {
+                      self.set(key + 'Checked', false);
+                    });
+
+                    self.get('signals').forEach(function(signal) {
+                      self.set(mapping[signal] + 'Checked', true);
+                    });
+                  }
+                });
+              });
+            });
+          });
+        });
+      });
+
+      // show modal
+      this.set('isShowingModal', true);
+    }
+  },
+
+  actions: {
+    submitModal() {
+      // verify properties
+      let properties = this.getProperties('name');
+
+      if (properties['name'] === null || properties['name'] === "") {
+        this.set('errorMessage', 'Widget name is missing');
+        return;
+      }
+
+      // set simulator by simulation model name
+      let simulationModelName = this.get('simulationModelName');
+      let self = this;
+
+      this.get('widget.visualization').then((visualization) => {
+        visualization.get('project').then((project) => {
+          project.get('simulation').then((simulation) => {
+            simulation.get('models').then((simulationModels) => {
+              // find simulation model by name
+              simulationModels.forEach(function(simulationModel) {
+                if (simulationModel.get('name') === simulationModelName) {
+                  simulationModel.get('simulator').then((simulator) => {
+                    // set simulator
+                    let widgetData = {};
+                    widgetData.simulator = simulator.get('simulatorid');
+
+                    // set signals
+                    let mapping = simulationModel.get('mapping');
+                    widgetData.signals = [];
+
+                    // uncheck all signals
+                    for (var i = 0; i < mapping.length; i++) {
+                      if (self.get(mapping[i] + 'Checked')) {
+                        widgetData.signals.push(i);
+                      }
+                    }
+
+                    // save properties
+                    properties['widgetData'] = widgetData;
+
+                    console.log(properties);
+
+                    self.get('widget').setProperties(properties);
+
+                    self.get('widget').save().then(function() {
+                      self.set('isShowingModal', false);
+                    });
+                  });
+                }
+              });
+            });
+          });
+        });
+      });
+    },
+
+    cancelModal() {
+      this.set('isShowingModal', false);
+    },
+
+    deleteModal() {
+      // delete widget
+      this.get('widget').destroyRecord();
+
+      this.set('isShowingModal', false);
+    },
+
+    selectSimulationModel(simulationModelName) {
+      // save simulation model
+      this.set('simulationModelName', simulationModelName);
+
+      // get signal mapping for simulation model
+      let self = this;
+
+      this.get('widget.visualization').then((visualization) => {
+        visualization.get('project').then((project) => {
+          project.get('simulation').then((simulation) => {
+            simulation.get('models').then((simulationModels) => {
+              // find simulation model by name
+              simulationModels.forEach(function(simulationModel) {
+                if (simulationModel.get('name') === simulationModelName) {
+                  self.set('simulationModel', simulationModel);
+                }
+              });
+            });
+          });
+        });
+      });
+    }
+  }
+});

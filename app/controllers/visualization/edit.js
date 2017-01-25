@@ -62,8 +62,8 @@ export default Ember.Controller.extend(FetchLiveDataMixin, {
                 properties.type = 'widget-plot';
                 properties.name = 'Plot';
                 properties.width = 500;
-                properties.height = 200;
-                properties.widgetData = { signal: 0, simulator: defaultSimulatorid };
+                properties.height = 400;
+                properties.widgetData = { signals: [0], simulator: defaultSimulatorid, type: 'multiple' };
               } else {
                 // DEBUG
                 console.log('Add unknown widget ' + name);

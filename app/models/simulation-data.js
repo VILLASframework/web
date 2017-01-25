@@ -24,19 +24,22 @@ export default Model.extend({
 
   _flotValues: [],
 
-  historyValues: Ember.computed('_history', function() {
-    return this._history;
-  }),
-
-  _history: [],
-
   _updateHistories: Ember.observer('values', function() {
-    // save set of values with timestamp
-    this._flotValues.push([this.get('timestamp'), this.get('values')[0]]);
+    // update flot values
+    let values = this.get('values');
 
-    // discard old values
-    while (this._flotValues.length > 100) {
-      this._flotValues.shift();
+    // add empty arrays for each value
+    while (this._flotValues.length < values.length) {
+      this._flotValues.push([]);
+    }
+
+    for (var i = 0; i < values.length; i++) {
+      this._flotValues[i].push([this.get('timestamp'), values[i]]);
+
+      // discard old values
+      while (this._flotValues[i].length > 100) {
+        this._flotValues[i].shift();
+      }
     }
   })
 });
