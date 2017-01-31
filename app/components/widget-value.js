@@ -16,18 +16,29 @@ export default WidgetAbstract.extend({
   minWidth_resize: 50,
   minHeight_resize: 20,
 
+  observeQuery: null,
+
   _updateDataObserver: Ember.on('init', Ember.observer('widget.widgetData.simulator', 'widget.widgetData.signal', function() {
+    // update observer
     let query = 'data.' + this.get('widget.widgetData.simulator') + '.sequence';
-    this.addObserver(query, function() {
-      // get value from array
-      let values = this.get('data.' + this.get('widget.widgetData.simulator') + '.values');
-      if (values) {
-        this.set('value', values[this.get('widget.widgetData.signal')]);
-      } else {
-        this.set('value', null);
-      }
-    });
+    let observeQuery = this.get('observeQuery');
+    if (observeQuery != null) {
+      this.removeObserver(observeQuery, this._updateData);
+    }
+
+    this.addObserver(query, this._updateData);
+    this.set('observeQuery', query);
   })),
+
+  _updateData() {
+    // get value from array
+    let values = this.get('data.' + this.get('widget.widgetData.simulator') + '.values');
+    if (values) {
+      this.set('value', values[this.get('widget.widgetData.signal')]);
+    } else {
+      this.set('value', null);
+    }
+  },
 
   doubleClick() {
     if (this.get('editing') === true) {

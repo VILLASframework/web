@@ -42,7 +42,11 @@ export default WidgetAbstract.extend({
 
   checkedSignals: {},
 
-  _updateDataObserver: Ember.on('init', Ember.observer('widget.widgetData.simulator', function() {
+  plotType: "multiple",
+
+  observeQuery: null,
+
+  _updateDataObserver: Ember.on('init', Ember.observer('widget.widgetData.simulator', 'widget.widgetData.type', 'widget.widgetData.signals', function() {
     // get query for observer
     let simulatorId = this.get('widget.widgetData.simulator');
     let query = 'data.' + simulatorId + '.sequence';
@@ -51,27 +55,67 @@ export default WidgetAbstract.extend({
     let signals = this.get('widget.widgetData.signals');
     this.set('signals', signals);
 
-    this.addObserver(query, function() {
-      // get values from array
-      let values = this.get('data.' + simulatorId + '.flotValues');
-      var updatedValues = this.get('plotData');
+    let plotType = this.get('widget.widgetData.type');
+    this.set('plotType', plotType);
 
-      // update values
-      var index = 0;
+    if (plotType === 'table') {
+      // set simulation model for table with signals
+      var self = this;
+      let simulatorid = this.get('widget.widgetData.simulator');
 
-      this.get('signals').forEach(function(signal) {
-        updatedValues.replace(index, 1, Ember.A([ values[signal] ]));
-        index += 1;
+      this.get('widget.visualization').then((visualization) => {
+        visualization.get('project').then((project) => {
+          project.get('simulation').then((simulation) => {
+            simulation.get('models').then((simulationModels) => {
+              // find simulation model by simulatorid
+              simulationModels.forEach(function(simulationModel) {
+                simulationModel.get('simulator').then((simulator) => {
+                  if (simulator.get('simulatorid') === simulatorid) {
+                    // set simulation model
+                    self.set('simulationModel', simulationModel);
+                  }
+                });
+              });
+            });
+          });
+        });
       });
+    }
 
-      this.set('plotData', updatedValues);
-    });
+    // update observer TODO: Only update when (query) changed
+    let observeQuery = this.get('observeQuery');
+    if (query != observeQuery) {
+      if (observeQuery != null) {
+        this.removeObserver(observeQuery, this._updateData);
+      }
+
+      this.addObserver(query, this._updateData);
+      this.set('observeQuery', query);
+    }
   })),
+
+  _updateData() {
+    // get values from array
+    let simulatorId = this.get('widget.widgetData.simulator');
+    let values = this.get('data.' + simulatorId + '.flotValues');
+    var updatedValues = Ember.A([]);
+
+    // update values
+    var index = 0;
+
+    this.get('signals').forEach(function(signal) {
+      updatedValues.replace(index, 1, Ember.A([ values[signal] ]));
+      index += 1;
+    });
+
+    this.set('plotData', updatedValues);
+  },
 
   doubleClick() {
     if (this.get('editing') === true) {
       // prepare modal
       this.set('name', this.get('widget.name'));
+      this.set('plotType', this.get('widget.widgetData.type'));
       this.set('errorMessage', null);
 
       // get signal mapping for simulation model
@@ -140,7 +184,10 @@ export default WidgetAbstract.extend({
                 if (simulationModel.get('name') === simulationModelName) {
                   simulationModel.get('simulator').then((simulator) => {
                     // set simulator
-                    let widgetData = {};
+                    let widgetData = {
+                      type: self.get('plotType')
+                    };
+
                     widgetData.simulator = simulator.get('simulatorid');
 
                     // set signals
@@ -158,8 +205,6 @@ export default WidgetAbstract.extend({
 
                     // save properties
                     properties['widgetData'] = widgetData;
-
-                    console.log(properties);
 
                     self.get('widget').setProperties(properties);
 
@@ -207,6 +252,21 @@ export default WidgetAbstract.extend({
           });
         });
       });
+    },
+
+    selectType(type) {
+      this.set('plotType', type);
+    },
+
+    selectTableSignal(signal) {
+      // display signal
+      let mapping = this.get('simulationModel.mapping');
+
+      for (var i = 0; i < mapping.length; i++) {
+        if (mapping[i] === signal) {
+          this.set('widget.widgetData.signals', [ i ]);
+        }
+      }
     }
   }
 });

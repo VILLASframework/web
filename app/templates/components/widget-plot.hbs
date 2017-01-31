@@ -1,6 +1,29 @@
 <h4>{{widget.name}}</h4>
 
-{{flow-plot data=plotData options=plotOptions}}
+{{#if (eq plotType "table")}}
+  <table class="widgetPlot-signal-table" style="float: left; width: 150px;">
+    <tr>
+      <th>
+        Signal
+      </th>
+    </tr>
+    {{#each simulationModel.mapping as |signal|}}
+      <tr>
+        <td>
+          <a href="" {{action "selectTableSignal" signal}}>{{signal}}</a>
+        </td>
+      </tr>
+    {{/each}}
+  </table>
+
+  <div style="height: 100%; margin-left: 200px;">
+    {{flow-plot data=plotData options=plotOptions}}
+  </div>
+{{/if}}
+
+{{#if (eq plotType "multiple")}}
+  {{flow-plot data=plotData options=plotOptions}}
+{{/if}}
 
 {{#if isShowingModal}}
   {{#modal-dialog attachment="middle center" translucentOverlay=true}}
@@ -30,15 +53,32 @@
         </tr>
         <tr>
           <td>
-            <label for="signals">Signals</label>
+            <label for="type">Type</label>
           </td>
           <td>
-            {{#each simulationModel.mapping as |signal|}}
-              {{input type='checkbox' name=signal checked=(mut (get checkedSignals signal))}}<label for={{signal}}> {{signal}}</label>
-              <br />
-            {{/each}}
+            <select onchange={{action "selectType" value="target.value"}} >
+              <option value="multiple" selected={{eq plotType "multiple"}}>Multiple</option>
+              <option value="table" selected={{eq plotType "table"}}>Table</option>
+            </select>
           </td>
         </tr>
+        {{#if (eq plotType "multiple")}}
+          <tr>
+            <td>
+              <label for="signals">Signals</label>
+            </td>
+            <td>
+              {{#each simulationModel.mapping as |signal|}}
+                {{input type='checkbox' name=signal checked=(mut (get checkedSignals signal))}}<label for={{signal}}> {{signal}}</label>
+                <br />
+              {{/each}}
+            </td>
+          </tr>
+        {{/if}}
+
+        {{#if (eq plotType "table")}}
+
+        {{/if}}
         <tr>
           <td colspan="2">
             <button {{action 'cancelModal'}}>Cancel</button>

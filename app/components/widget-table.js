@@ -18,29 +18,19 @@ export default WidgetAbstract.extend({
 
   signals: [],
 
+  observeQuery: null,
+
   _updateDataObserver: Ember.on('init', Ember.observer('widget.widgetData.simulator', function() {
     // get query for observer
     let simulatorId = this.get('widget.widgetData.simulator');
     let query = 'data.' + simulatorId + '.sequence';
+    let observeQuery = this.get('observeQuery');
+    if (observeQuery != null) {
+      this.removeObserver(observeQuery, this._updateData);
+    }
 
-    this.addObserver(query, function() {
-      // get signal names to fill data in
-      let signals = this.get('signals');
-      if (!signals) {
-        // wait till names are loaded
-        return;
-      }
-
-      // get values from array
-      let values = this.get('data.' + simulatorId + '.values');
-      for (let i = 0; i < values.length; i++) {
-        if (!signals[i]) {
-          break;
-        }
-
-        Ember.set(signals[i], 'value', values[i]);
-      }
-    });
+    this.addObserver(query, this._updateData);
+    this.set('observeQuery', query);
 
     // get signal names
     let self = this;
@@ -69,6 +59,25 @@ export default WidgetAbstract.extend({
       });
     });
   })),
+
+  _updateData() {
+    // get signal names to fill data in
+    let signals = this.get('signals');
+    if (!signals) {
+      // wait till names are loaded
+      return;
+    }
+
+    // get values from array
+    let values = this.get('data.' + simulatorId + '.values');
+    for (let i = 0; i < values.length; i++) {
+      if (!signals[i]) {
+        break;
+      }
+
+      Ember.set(signals[i], 'value', values[i]);
+    }
+  },
 
   doubleClick() {
     if (this.get('editing') === true) {
