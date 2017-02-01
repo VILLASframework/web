@@ -84,7 +84,7 @@ export default WidgetAbstract.extend({
 
     // update observer TODO: Only update when (query) changed
     let observeQuery = this.get('observeQuery');
-    if (query != observeQuery) {
+    if (query !== observeQuery) {
       if (observeQuery != null) {
         this.removeObserver(observeQuery, this._updateData);
       }

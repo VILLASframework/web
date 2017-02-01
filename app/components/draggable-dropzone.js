@@ -30,9 +30,9 @@ export default Ember.Component.extend({
   drop(event) {
     var data = event.dataTransfer.getData('text/data');
     var position = {
-      x: event.originalEvent.pageX - $(event.target).offset().left - parseFloat(event.dataTransfer.getData('offset/x')),
-      y: event.originalEvent.pageY - $(event.target).offset().top - parseFloat(event.dataTransfer.getData('offset/y'))
-    }
+      x: event.originalEvent.pageX - Ember.$(event.target).offset().left - parseFloat(event.dataTransfer.getData('offset/x')),
+      y: event.originalEvent.pageY - Ember.$(event.target).offset().top - parseFloat(event.dataTransfer.getData('offset/y'))
+    };
 
     this.sendAction('dropped', data, position);
 

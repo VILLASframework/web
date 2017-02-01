@@ -13,8 +13,7 @@ import ENV from '../config/environment';
 import EmberUploader from 'ember-uploader';
 
 const {
-  inject: { service },
-  RSVP
+  inject: { service }
 } = Ember;
 
 export default WidgetAbstract.extend({
@@ -95,7 +94,7 @@ export default WidgetAbstract.extend({
 
         var self = this;
 
-        uploader.upload(files).then(event => {
+        uploader.upload(files).then(function() {
           // reload user
           var user = self.get('sessionUser.user');
           self.get('store').findRecord('user', user.get('id'));

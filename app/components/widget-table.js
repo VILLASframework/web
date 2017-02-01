@@ -69,7 +69,7 @@ export default WidgetAbstract.extend({
     }
 
     // get values from array
-    let values = this.get('data.' + simulatorId + '.values');
+    let values = this.get('data.' + this.get('widget.widgetData.simulator') + '.values');
     for (let i = 0; i < values.length; i++) {
       if (!signals[i]) {
         break;

@@ -7,7 +7,6 @@
  *   Unauthorized copying of this file, via any medium is strictly prohibited.
  **********************************************************************************/
 
-import Ember from 'ember';
 import EmberUploader from 'ember-uploader';
 
 export default EmberUploader.FileField.extend({
