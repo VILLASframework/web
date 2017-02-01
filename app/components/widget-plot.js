@@ -26,8 +26,6 @@ export default WidgetAbstract.extend({
     xaxis: {
       mode: 'time',
       timeformat: '%M:%S',
-      /*min: firstTimestamp,
-      max: lastTimestamp,*/
       axisLabel: 'time [min]',
       axisLabelUseCanvas: true
     }/*,
@@ -39,12 +37,11 @@ export default WidgetAbstract.extend({
   },
 
   signals: Ember.A([]),
-
   checkedSignals: {},
-
   plotType: "multiple",
-
+  time: null,
   observeQuery: null,
+  selectedSignal: null,
 
   _updateDataObserver: Ember.on('init', Ember.observer('widget.widgetData.simulator', 'widget.widgetData.type', 'widget.widgetData.signals', function() {
     // get query for observer
@@ -73,6 +70,10 @@ export default WidgetAbstract.extend({
                   if (simulator.get('simulatorid') === simulatorid) {
                     // set simulation model
                     self.set('simulationModel', simulationModel);
+
+                    if (self.get('selectedSignal') === null) {
+                      self.set('selectedSignal', simulationModel.get('mapping')[0]);
+                    }
                   }
                 });
               });
@@ -100,6 +101,26 @@ export default WidgetAbstract.extend({
     let values = this.get('data.' + simulatorId + '.flotValues');
     var updatedValues = Ember.A([]);
 
+    // update plot options
+    var plotOptions = this.get('plotOptions');
+
+    // calculate diff for first and last timestamp
+    var firstTimestamp = values[0][0][0];
+    var lastTimestamp = values[0][values[0].length - 1][0];
+
+    var diff = lastTimestamp - firstTimestamp;
+    var diffValue = this.get('widget.widgetData.time') * 1000;  // javascript timestamps are in milliseconds
+
+    if (diff > diffValue) {
+      firstTimestamp = lastTimestamp - diffValue;
+    } else {
+      lastTimestamp = +firstTimestamp + +diffValue;
+    }
+
+    plotOptions.xaxis.min = firstTimestamp;
+    plotOptions.xaxis.max = lastTimestamp;
+    this.set('plotOptions', plotOptions);
+
     // update values
     var index = 0;
 
@@ -116,6 +137,7 @@ export default WidgetAbstract.extend({
       // prepare modal
       this.set('name', this.get('widget.name'));
       this.set('plotType', this.get('widget.widgetData.type'));
+      this.set('time', this.get('widget.widgetData.time'));
       this.set('errorMessage', null);
 
       // get signal mapping for simulation model
@@ -189,6 +211,7 @@ export default WidgetAbstract.extend({
                     };
 
                     widgetData.simulator = simulator.get('simulatorid');
+                    widgetData.time = self.get('time');
 
                     // set signals
                     let mapping = simulationModel.get('mapping');
@@ -267,6 +290,8 @@ export default WidgetAbstract.extend({
           this.set('widget.widgetData.signals', [ i ]);
         }
       }
+
+      this.set('selectedSignal', signal);
     }
   }
 });

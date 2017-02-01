@@ -10,7 +10,13 @@
     {{#each simulationModel.mapping as |signal|}}
       <tr>
         <td>
-          <a href="" {{action "selectTableSignal" signal}}>{{signal}}</a>
+          {{#if (eq signal selectedSignal)}}
+            <b>
+              <a href="" {{action "selectTableSignal" signal}}>{{signal}}</a>
+            </b>
+          {{else}}
+            <a href="" {{action "selectTableSignal" signal}}>{{signal}}</a>
+          {{/if}}
         </td>
       </tr>
     {{/each}}
@@ -49,6 +55,14 @@
                 <option value={{simulationModel.name}} selected={{eq simulationModelName simulationModel.name}}>{{simulationModel.name}}</option>
               {{/each}}
             </select>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="time">Time in sec</label>
+          </td>
+          <td>
+            {{input type='number' id='time' placeholder='Enter time length' value=time}}
           </td>
         </tr>
         <tr>

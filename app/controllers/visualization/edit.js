@@ -63,7 +63,7 @@ export default Ember.Controller.extend(FetchLiveDataMixin, {
                 properties.name = 'Plot';
                 properties.width = 500;
                 properties.height = 400;
-                properties.widgetData = { signals: [0], simulator: defaultSimulatorid, type: 'multiple' };
+                properties.widgetData = { signals: [0], simulator: defaultSimulatorid, type: 'multiple', time: 300 };
               } else if (name === 'image') {
                 properties.type = 'widget-image';
                 properties.name = 'Image';

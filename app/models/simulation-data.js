@@ -37,7 +37,7 @@ export default Model.extend({
       this._flotValues[i].push([this.get('timestamp'), values[i]]);
 
       // discard old values
-      while (this._flotValues[i].length > 100) {
+      while (this._flotValues[i].length > 1200) {
         this._flotValues[i].shift();
       }
     }
