@@ -20,7 +20,7 @@ export default Ember.Mixin.create({
   _sockets: {},
 
   init: function() {
-    this._super();
+    this._super.init();
 
     // fetch the simulations for the first time
     this._fetchRunningSimulations();

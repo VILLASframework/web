@@ -15,5 +15,11 @@ export default RESTAdapter.extend(DataAdapterMixin, {
   host: 'http://' + ENV.APP.API_HOST,
   namespace: 'api/v1',
   authorizer: 'authorizer:custom',
-  headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+  headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+
+  urlForQueryRecord(query /*, modelName */) {
+    // Fix for /users/me query
+    let baseUrl = this.buildURL();
+    return baseUrl + '/users/' + query;
+  }
 });

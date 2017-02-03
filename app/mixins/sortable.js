@@ -21,7 +21,7 @@ export default Ember.Mixin.create({
     'sort_sort', 'start_sort', 'stop_sort', 'update_sort' ],
 
   didInsertElement() {
-    this._super();
+    this._super.init();
 
     // get available options and events
     var options = this._gatherSortOptions();

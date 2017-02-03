@@ -17,7 +17,7 @@ export default Ember.Mixin.create({
   uiDragEvents: [ 'create_drag', 'start_drag', 'drag_drag', 'stop_drag' ],
 
   didInsertElement() {
-    this._super();
+    this._super.init();
 
     // get available options and events
     var options = this._gatherDragOptions();

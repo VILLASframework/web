@@ -18,7 +18,7 @@ export default Ember.Mixin.create({
   uiResizeEvents: [ 'create_resize', 'start_resize', 'resize_resize', 'stop_resize' ],
 
   didInsertElement() {
-    this._super();
+    this._super.init();
 
     // get available options and events
     var options = this._gatherResizeOptions();

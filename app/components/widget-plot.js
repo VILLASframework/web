@@ -114,7 +114,7 @@ export default WidgetAbstract.extend({
     if (diff > diffValue) {
       firstTimestamp = lastTimestamp - diffValue;
     } else {
-      lastTimestamp = +firstTimestamp + +diffValue;
+      lastTimestamp = firstTimestamp + diffValue;
     }
 
     plotOptions.xaxis.min = firstTimestamp;
