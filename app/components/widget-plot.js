@@ -188,11 +188,6 @@ export default WidgetAbstract.extend({
       // verify properties
       let properties = this.getProperties('name');
 
-      if (properties['name'] === null || properties['name'] === "") {
-        this.set('errorMessage', 'Widget name is missing');
-        return;
-      }
-
       // set simulator by simulation model name
       let simulationModelName = this.get('simulationModelName');
       let self = this;

@@ -83,6 +83,7 @@ export default WidgetAbstract.extend({
     if (this.get('editing') === true) {
       // prepare modal
       this.set('name', this.get('widget.name'));
+      this.set('errorMessage', null);
 
       // get simlator name from id
       let self = this;
@@ -116,11 +117,6 @@ export default WidgetAbstract.extend({
     submitModal() {
       // verify properties
       let properties = this.getProperties('name');
-
-      if (properties['name'] === null || properties['name'] === "") {
-        this.set('errorMessage', 'Widget name is missing');
-        return;
-      }
 
       // set simulator by simulation model name
       let simulationModelName = this.get('simulationModelName');

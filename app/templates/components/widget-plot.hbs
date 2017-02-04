@@ -35,6 +35,12 @@
   {{#modal-dialog attachment="middle center" translucentOverlay=true}}
     <h1>Plot</h1>
 
+    {{#if errorMessage}}
+      <p>
+        <b>Error:</b> {{errorMessage}}
+      </p>
+    {{/if}}
+
     <form class="form-widget-plot" {{action 'submitModal' on='submit'}} >
       <table>
         <tr>
@@ -102,9 +108,5 @@
         </tr>
       </table>
     </form>
-
-    {{#if errorMessage}}
-      <p><b>Error:</b> {{errorMessage}}</p>
-    {{/if}}
   {{/modal-dialog}}
 {{/if}}

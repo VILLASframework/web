@@ -19,6 +19,7 @@ export default WidgetAbstract.extend({
     if (this.get('editing') === true) {
       // prepare modal
       this.set('name', this.get('widget.name'));
+      this.set('errorMessage', null);
 
       // show modal
       this.set('isShowingModal', true);
