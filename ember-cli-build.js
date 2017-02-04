@@ -22,6 +22,11 @@ module.exports = function(defaults) {
 
   app.import('bower_components/bootstrap/dist/js/bootstrap.js');
   app.import('bower_components/flot/jquery.flot.time.js');
+  app.import('bower_components/jquery-ui/jquery-ui.js');
+
+  app.import('bower_components/jquery-ui/themes/smoothness/jquery-ui.css');
+
+  app.import('bower_components/jquery-ui/themes/smoothness/images/ui-icons_222222_256x240.png', { destDir: 'assets/images' });
 
   return app.toTree();
 };

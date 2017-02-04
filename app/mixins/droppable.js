@@ -16,7 +16,7 @@ export default Ember.Mixin.create({
     'out_drop', 'drop_drop' ],
 
   didInsertElement() {
-    this._super.init();
+    this._super();
 
     // get available options and events
     var options = this._gatherDropOptions();
