@@ -10,14 +10,15 @@
 import React, { Component } from 'react';
 import { Modal, Button, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
-class NewSimulatorDialog extends Component {
+class EditSimulatorDialog extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       name: '',
       simulatorid: '1',
-      endpoint: ''
+      endpoint: '',
+      _id: ''
     }
 
     this.closeModal = this.closeModal.bind(this);
@@ -42,7 +43,12 @@ class NewSimulatorDialog extends Component {
   }
 
   resetState() {
-    this.setState({ name: '', simulatorid: '1', endpoint: '' });
+    this.setState({
+      name: this.props.simulator.name,
+      simulatorid: this.props.simulator.simulatorid,
+      endpoint: this.props.simulator.endpoint,
+      _id: this.props.simulator._id
+    });
   }
 
   validateForm(target) {
@@ -76,7 +82,7 @@ class NewSimulatorDialog extends Component {
     return (
       <Modal show={this.props.show} onEnter={this.resetState}>
         <Modal.Header>
-          <Modal.Title>New Simulator</Modal.Title>
+          <Modal.Title>Edit Simulator</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
@@ -98,11 +104,11 @@ class NewSimulatorDialog extends Component {
 
         <Modal.Footer>
           <Button onClick={this.cancelModal}>Cancel</Button>
-          <Button bsStyle="primary" onClick={this.closeModal} disabled={!this.valid}>Add</Button>
+          <Button bsStyle="primary" onClick={this.closeModal} disabled={!this.valid}>Save</Button>
         </Modal.Footer>
       </Modal>
     );
   }
 }
 
-export default NewSimulatorDialog;
+export default EditSimulatorDialog;

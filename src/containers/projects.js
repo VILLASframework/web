@@ -13,8 +13,6 @@ import { Container } from 'flux/utils';
 // import AppDispatcher from '../app-dispatcher';
 import VillasStore from '../stores/villas-store';
 
-import '../styles/projects.css';
-
 class Projects extends Component {
   static getStores() {
     return [ VillasStore ];

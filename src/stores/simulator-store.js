@@ -22,6 +22,8 @@ class SimulatorStore extends ReduceStore {
   }
 
   reduce(state, action) {
+    var simulators;
+
     switch (action.type) {
       case 'simulators/start-load':
         SimulatorsDataManager.loadSimulators();
@@ -40,12 +42,43 @@ class SimulatorStore extends ReduceStore {
 
       case 'simulators/added':
         // state should always be immutable, thus make new copy
-        var simulators = state.slice();
+        simulators = state.slice();
         simulators.push(action.simulator);
 
         return simulators;
 
       case 'simulators/add-error':
+        // TODO: Add error message
+        return state;
+
+      case 'simulators/start-remove':
+        SimulatorsDataManager.removeSimulator(action.simulator);
+        return state;
+
+      case 'simulators/removed':
+        return state.filter((simulator) => {
+          return (simulator !== action.simulator)
+        });
+
+      case 'simulators/remove-error':
+        // TODO: Add error message
+        return state;
+
+      case 'simulators/start-edit':
+        SimulatorsDataManager.editSimulator(action.simulator);
+        return state;
+
+      case 'simulators/edited':
+        simulators = state.slice();
+        for (var i = 0; i < simulators.length; i++) {
+          if (simulators[i]._id === action.simulator._id) {
+            simulators[i] = action.simulator;
+          }
+        }
+
+        return simulators;
+
+      case 'simulators/edit-error':
         // TODO: Add error message
         return state;
 

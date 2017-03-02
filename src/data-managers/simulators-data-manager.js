@@ -16,11 +16,11 @@ const SimulatorsDataManager = {
       AppDispatcher.dispatch({
         type: 'simulators/loaded',
         simulators: response.simulators
-      }).catch(error => {
-        AppDispatcher.dispatch({
-          type: 'simulators/load-error',
-          error: error
-        });
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'simulators/load-error',
+        error: error
       });
     });
   },
@@ -30,11 +30,39 @@ const SimulatorsDataManager = {
       AppDispatcher.dispatch({
         type: 'simulators/added',
         simulator: response.simulator
-      }).catch(error => {
-        AppDispatcher.dispatch({
-          type: 'simulators/add-error',
-          error: error
-        });
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'simulators/add-error',
+        error: error
+      });
+    });
+  },
+
+  removeSimulator(simulator) {
+    RestAPI.delete('/simulators/' + simulator._id).then(response => {
+      AppDispatcher.dispatch({
+        type: 'simulators/removed',
+        simulator: simulator
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'simulators/remove-error',
+        error: error
+      });
+    });
+  },
+
+  editSimulator(simulator) {
+    RestAPI.put('/simulators/' + simulator._id, { simulator: simulator }).then(response => {
+      AppDispatcher.dispatch({
+        type: 'simulators/edited',
+        simulator: response.simulator
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'simulators/edit-error',
+        error: error
       });
     });
   }

@@ -121,20 +121,14 @@ body {
 /**
  * Buttons
  */
-/*button {
-  margin-top: 10px;
-  padding: 4px 8px;
-
+.table-control-button {
   border: none;
 
-  background-color: #527984;
-  color: #fff;
+  background: none;
 
-  font-size: 14px;
-
-  cursor: pointer;
+  padding: 0 5px;
 }
 
-button:hover {
-  background: #6EA2B0;
-}*/
+.table-control-button:hover {
+  color: #888;
+}
