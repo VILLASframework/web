@@ -22,8 +22,6 @@ class SimulatorStore extends ReduceStore {
   }
 
   reduce(state, action) {
-    console.log(action.type);
-
     switch (action.type) {
       case 'simulators/start-load':
         SimulatorsDataManager.loadSimulators();
@@ -44,7 +42,7 @@ class SimulatorStore extends ReduceStore {
         // state should always be immutable, thus make new copy
         var simulators = state.slice();
         simulators.push(action.simulator);
-        
+
         return simulators;
 
       case 'simulators/add-error':

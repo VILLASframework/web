@@ -9,15 +9,24 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
+import { Button } from 'react-bootstrap';
 
 import AppDispatcher from '../app-dispatcher';
 import VillasStore from '../stores/villas-store';
 import SimulatorStore from '../stores/simulator-store';
 
 import Table from '../components/table';
+import NewSimulatorDialog from '../components/dialog-new-simulator';
 import '../styles/projects.css';
 
 class Simulators extends Component {
+  constructor(props) {
+    super(props);
+
+    this.showModal = this.showModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+  }
+
   static getStores() {
     return [ VillasStore, SimulatorStore ];
   }
@@ -27,7 +36,7 @@ class Simulators extends Component {
       villas: VillasStore.getState(),
       simulators: SimulatorStore.getState(),
 
-      onButton
+      modal: false
     };
   }
 
@@ -35,6 +44,21 @@ class Simulators extends Component {
     AppDispatcher.dispatch({
       type: 'simulators/start-load'
     });
+  }
+
+  showModal() {
+    this.setState({ modal: true });
+  }
+
+  closeModal(data) {
+    this.setState({ modal : false });
+
+    if (data) {
+      AppDispatcher.dispatch({
+        type: 'simulators/start-add',
+        simulator: data
+      });
+    }
   }
 
   render() {
@@ -51,22 +75,12 @@ class Simulators extends Component {
 
         <Table columns={columns} data={this.state.simulators} width='100%'/>
 
-        <button onClick={onButton}>New Simulator</button>
+        <Button onClick={this.showModal}>New Simulator</Button>
+
+        <NewSimulatorDialog show={this.state.modal} onClose={this.closeModal}/>
       </div>
     );
   }
-}
-
-function onButton() {
-  AppDispatcher.dispatch({
-    type: 'simulators/start-add',
-    simulator: {
-      name: 'Virtual',
-      running: false,
-      simulatorid: 3,
-      endpoint: '1.1.1.1:1234'
-    }
-  });
 }
 
 export default Container.create(Simulators);
