@@ -19,18 +19,6 @@ import NewSimulatorDialog from '../components/dialog-new-simulator';
 import EditSimulatorDialog from '../components/dialog-edit-simulator';
 
 class Simulators extends Component {
-  constructor(props) {
-    super(props);
-
-    this.showNewModal = this.showNewModal.bind(this);
-    this.closeNewModal = this.closeNewModal.bind(this);
-    this.showDeleteModal = this.showDeleteModal.bind(this);
-    this.confirmDeleteModal = this.confirmDeleteModal.bind(this);
-    this.cancelDeleteModal = this.cancelDeleteModal.bind(this);
-    this.showEditModal = this.showEditModal.bind(this);
-    this.closeEditModal = this.closeEditModal.bind(this);
-  }
-
   static getStores() {
     return [ SimulatorStore ];
   }
@@ -52,17 +40,13 @@ class Simulators extends Component {
     });
   }
 
-  showNewModal() {
-    this.setState({ newModal: true });
-  }
-
   closeNewModal(data) {
     this.setState({ newModal : false });
 
     if (data) {
       AppDispatcher.dispatch({
         type: 'simulators/start-add',
-        simulator: data
+        data: data
       });
     }
   }
@@ -80,16 +64,12 @@ class Simulators extends Component {
     this.setState({ deleteModal: true, modalSimulator: deleteSimulator });
   }
 
-  cancelDeleteModal() {
-    this.setState({ deleteModal: false });
-  }
-
   confirmDeleteModal() {
     this.setState({ deleteModal: false });
 
     AppDispatcher.dispatch({
       type: 'simulators/start-remove',
-      simulator: this.state.modalSimulator
+      data: this.state.modalSimulator
     });
   }
 
@@ -112,7 +92,7 @@ class Simulators extends Component {
     if (data) {
       AppDispatcher.dispatch({
         type: 'simulators/start-edit',
-        simulator: data
+        data: data
       });
     }
   }
@@ -129,13 +109,13 @@ class Simulators extends Component {
       <div>
         <h1>Simulators</h1>
 
-        <ControlTable columns={columns} data={this.state.simulators} width='100%' onEdit={this.showEditModal} onDelete={this.showDeleteModal} />
+        <ControlTable columns={columns} data={this.state.simulators} width='100%' onEdit={(id) => this.showEditModal(id)} onDelete={(id) => this.showDeleteModal(id)} />
 
-        <Button onClick={this.showNewModal}>New Simulator</Button>
+        <Button onClick={() => this.setState({ newModal: true })}>New Simulator</Button>
 
-        <NewSimulatorDialog show={this.state.newModal} onClose={this.closeNewModal} />
+        <NewSimulatorDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
 
-        <EditSimulatorDialog show={this.state.editModal} onClose={this.closeEditModal} simulator={this.state.modalSimulator} />
+        <EditSimulatorDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} simulator={this.state.modalSimulator} />
 
         <Modal show={this.state.deleteModal}>
           <Modal.Header>
@@ -147,8 +127,8 @@ class Simulators extends Component {
           </Modal.Body>
 
           <Modal.Footer>
-            <Button onClick={this.cancelDeleteModal}>Cancel</Button>
-            <Button bsStyle="danger" onClick={this.confirmDeleteModal}>Delete</Button>
+            <Button onClick={() => this.setState({ deleteModal: false })}>Cancel</Button>
+            <Button bsStyle="danger" onClick={() => this.confirmDeleteModal()}>Delete</Button>
           </Modal.Footer>
         </Modal>
       </div>

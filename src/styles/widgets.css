@@ -1,5 +1,5 @@
 /**
- * File: villas-store.js
+ * File: widgets.css
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 02.03.2017
  * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -7,7 +7,11 @@
  *   Unauthorized copying of this file, via any medium is strictly prohibited.
  **********************************************************************************/
 
-import ArrayStore from './array-store';
-import SimulatorsDataManager from '../data-managers/simulators-data-manager';
+.widget {
+  width: 100%;
+  height: 100%;
 
-export default new ArrayStore('simulators', SimulatorsDataManager);
+  padding: 5px 10px;
+
+  border: 1px solid lightgray;
+}

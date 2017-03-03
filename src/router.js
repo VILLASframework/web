@@ -14,6 +14,8 @@ import App from './containers/app';
 import Home from './containers/home';
 import Projects from './containers/projects';
 import Simulators from './containers/simulators';
+import Visualization from './containers/visualization';
+import Visualizations from './containers/visualizations';
 
 class Root extends Component {
   render() {
@@ -23,6 +25,9 @@ class Root extends Component {
           <Route path='/home' component={Home} />
           <Route path='/projects' component={Projects} />
           <Route path='/simulators' component={Simulators} />
+
+          <Route path='/visualizations' component={Visualizations} />
+          <Route path='/visualizations/:visualization' component={Visualization} />
         </Route>
       </Router>
     );

@@ -7,10 +7,20 @@
  *   Unauthorized copying of this file, via any medium is strictly prohibited.
  **********************************************************************************/
 
-import React, { Component } from 'react';
-import { Modal, Button, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import React, { Component, PropTypes } from 'react';
+import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+
+import Dialog from './dialog';
 
 class EditSimulatorDialog extends Component {
+  static propTypes = {
+    show: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    simulator: PropTypes.object.isRequired
+  };
+
+  valid: false;
+
   constructor(props) {
     super(props);
 
@@ -19,23 +29,15 @@ class EditSimulatorDialog extends Component {
       simulatorid: '1',
       endpoint: '',
       _id: ''
+    };
+  }
+
+  onClose(canceled) {
+    if (canceled === false) {
+      this.props.onClose(this.state);
+    } else {
+      this.props.onClose();
     }
-
-    this.closeModal = this.closeModal.bind(this);
-    this.cancelModal = this.cancelModal.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.validateForm = this.validateForm.bind(this);
-    this.resetState = this.resetState.bind(this);
-  }
-
-  valid: false
-
-  closeModal() {
-    this.props.onClose(this.state);
-  }
-
-  cancelModal() {
-    this.props.onClose(null);
   }
 
   handleChange(e) {
@@ -80,33 +82,22 @@ class EditSimulatorDialog extends Component {
 
   render() {
     return (
-      <Modal show={this.props.show} onEnter={this.resetState}>
-        <Modal.Header>
-          <Modal.Title>Edit Simulator</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <form>
-            <FormGroup controlId="name" validationState={this.validateForm('name')}>
-              <ControlLabel>Name</ControlLabel>
-              <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={this.handleChange} />
-            </FormGroup>
-            <FormGroup controlId="simulatorid" validationState={this.validateForm('simulatorid')}>
-              <ControlLabel>Simulator ID</ControlLabel>
-              <FormControl type="number" placeholder="Enter simulator ID" value={this.state.simulatorid} onChange={this.handleChange} />
-            </FormGroup>
-            <FormGroup controlId="endpoint" validationState={this.validateForm('endpoint')}>
-              <ControlLabel>Endpoint</ControlLabel>
-              <FormControl type="text" placeholder="Enter endpoint" value={this.state.endpoint} onChange={this.handleChange} />
-            </FormGroup>
-          </form>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button onClick={this.cancelModal}>Cancel</Button>
-          <Button bsStyle="primary" onClick={this.closeModal} disabled={!this.valid}>Save</Button>
-        </Modal.Footer>
-      </Modal>
+      <Dialog show={this.props.show} title="Edit Simulator" buttonTitle="save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+        <form>
+          <FormGroup controlId="name" validationState={this.validateForm('name')}>
+            <ControlLabel>Name</ControlLabel>
+            <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+          </FormGroup>
+          <FormGroup controlId="simulatorid" validationState={this.validateForm('simulatorid')}>
+            <ControlLabel>Simulator ID</ControlLabel>
+            <FormControl type="number" placeholder="Enter simulator ID" value={this.state.simulatorid} onChange={(e) => this.handleChange(e)} />
+          </FormGroup>
+          <FormGroup controlId="endpoint" validationState={this.validateForm('endpoint')}>
+            <ControlLabel>Endpoint</ControlLabel>
+            <FormControl type="text" placeholder="Enter endpoint" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
+          </FormGroup>
+        </form>
+      </Dialog>
     );
   }
 }

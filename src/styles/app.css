@@ -53,7 +53,7 @@ body {
 .app-content {
   min-height: 200px;
 
-  margin: 20px 20px 20px 170px;
+  margin: 20px 20px 20px 200px;
   padding: 15px 20px;
 
   background-color: #fff;
@@ -66,6 +66,8 @@ body {
  */
 .menu-sidebar {
   float: left;
+
+  width: 160px;
 
   margin: 20px 0 0 20px;
   padding: 20px 25px 20px 25px;
@@ -131,4 +133,41 @@ body {
 
 .table-control-button:hover {
   color: #888;
+}
+
+/**
+ * Toolbox
+ */
+.toolbox-dropzone {
+  width: 100%;
+  min-height: 400px;
+
+  position: relative;
+}
+
+.toolbox-dropzone-editing {
+  border: 3px dashed #e1e1e1;
+}
+
+.toolbox-dropzone-active {
+  border-color: #aaa;
+}
+
+.toolbox {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.toolbox-item {
+  display: inline-block;
+
+  padding: 5px 10px;
+
+  border: 1px solid gray;
+
+  cursor: move;
+}
+
+.toolbox-item-dragging {
+  opacity: 0.4;
 }

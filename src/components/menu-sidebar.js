@@ -21,6 +21,7 @@ class SidebarMenu extends Component {
           <li><Link to="/projects" activeClassName="active">Projects</Link></li>
           <li><Link to="/simulation" activeClassName="active">Simulations</Link></li>
           <li><Link to="/simulators" activeClassName="active">Simulators</Link></li>
+          <li><Link to="/visualizations" activeClassName="active">Visualizations</Link></li>
         </ul>
       </div>
     );

@@ -1,16 +1,24 @@
 /**
- * File: table-control.js
+ * File: table-control-link.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
+ * Date: 03.03.2017
  * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
  *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
  *   Unauthorized copying of this file, via any medium is strictly prohibited.
  **********************************************************************************/
 
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Button, Glyphicon } from 'react-bootstrap';
+import { Link } from 'react-router';
 
-class ControlTable extends Component {
+class ControlLinkTable extends Component {
+  static propTypes = {
+    columns: PropTypes.array.isRequired,
+    onEdit: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    linkRoot: PropTypes.string.isRequired
+  };
+
   render() {
     // create sorted rows
     var rows = this.props.data.map(row => {
@@ -44,7 +52,13 @@ class ControlTable extends Component {
               {row.filter((element, index) => {
                 return index !== 0;
               }).map((cell, index) => (
-                <td key={index}>{cell}</td>
+                <td key={index}>
+                  {index === 0 ? (
+                    <Link to={this.props.linkRoot + '/' + row[0]}>{cell}</Link>
+                  ) : (
+                    {cell}
+                  )}
+                </td>
               ))}
               <td>
                 <Button bsClass="table-control-button" onClick={() => this.props.onEdit(row[0])}><Glyphicon glyph="pencil" /></Button>
@@ -58,4 +72,4 @@ class ControlTable extends Component {
   }
 }
 
-export default ControlTable;
+export default ControlLinkTable;

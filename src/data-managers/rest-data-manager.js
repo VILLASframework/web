@@ -1,0 +1,82 @@
+/**
+ * File: data-manager.js
+ * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
+ * Date: 03.03.2017
+ * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
+ *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
+ *   Unauthorized copying of this file, via any medium is strictly prohibited.
+ **********************************************************************************/
+
+import RestAPI from '../api/rest-api';
+import AppDispatcher from '../app-dispatcher';
+
+class RestDataManager {
+  constructor(type, url) {
+    this.url = url;
+    this.type = type;
+  }
+
+  load() {
+    RestAPI.get(this.url).then(response => {
+      AppDispatcher.dispatch({
+        type: this.type + 's/loaded',
+        data: response[this.type + 's']
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: this.type + 's/load-error',
+        error: error
+      });
+    });
+  }
+
+  add(object) {
+    var obj = {};
+    obj[this.type] = object;
+
+    RestAPI.post(this.url, obj).then(response => {
+      AppDispatcher.dispatch({
+        type: this.type + 's/added',
+        data: response[this.type]
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: this.type + 's/add-error',
+        error: error
+      });
+    });
+  }
+
+  remove(object) {
+    RestAPI.delete(this.url + '/' + object._id).then(response => {
+      AppDispatcher.dispatch({
+        type: this.type + 's/removed',
+        data: response[this.type]
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: this.type + 's/remove-error',
+        error: error
+      });
+    });
+  }
+
+  update(object) {
+    var obj = {};
+    obj[this.type] = object;
+
+    RestAPI.put(this.url + '/' + object._id, obj).then(response => {
+      AppDispatcher.dispatch({
+        type: this.type + 's/edited',
+        data: response[this.type]
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: this.type + 's/edit-error',
+        error: error
+      });
+    });
+  }
+};
+
+export default RestDataManager;

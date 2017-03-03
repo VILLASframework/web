@@ -9,6 +9,8 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
 // import AppDispatcher from '../app-dispatcher';
 import VillasStore from '../stores/villas-store';
@@ -52,4 +54,4 @@ class App extends Component {
   }
 }
 
-export default Container.create(App);
+export default DragDropContext(HTML5Backend)(Container.create(App));

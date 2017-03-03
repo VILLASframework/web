@@ -1,5 +1,5 @@
 /**
- * File: villas-store.js
+ * File: visualization-store.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 02.03.2017
  * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -8,6 +8,6 @@
  **********************************************************************************/
 
 import ArrayStore from './array-store';
-import SimulatorsDataManager from '../data-managers/simulators-data-manager';
+import VisualizationsDataManager from '../data-managers/visualizations-data-manager';
 
-export default new ArrayStore('simulators', SimulatorsDataManager);
+export default new ArrayStore('visualizations', VisualizationsDataManager);
