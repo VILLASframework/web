@@ -10,6 +10,7 @@
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import { Button } from 'react-bootstrap';
+import { ContextMenu, MenuItem } from 'react-contextmenu';
 
 import ToolboxItem from '../components/toolbox-item';
 import Dropzone from '../components/dropzone';
@@ -32,11 +33,59 @@ class Visualization extends Component {
   }
 
   handleDrop(item) {
-    console.log(item);
+    // add new widget
+    var widget = {
+      name: 'Name',
+      type: item.name,
+      width: 100,
+      height: 100,
+      x: 0,
+      y: 0,
+      z: 0
+    };
+
+    var visualization = this.state.visualization;
+    visualization.widgets.push(widget);
+
+    this.setState({ visualization: visualization });
+    this.forceUpdate();
   }
 
-  widgetChange(widget) {
-    console.log(widget);
+  widgetChange(widget, index) {
+    // save changes temporarily
+    var visualization = this.state.visualization;
+    visualization.widgets[index] = widget;
+
+    this.setState({ visualization: visualization });
+  }
+
+  editWidget(e, data) {
+
+  }
+
+  deleteWidget(e, data) {
+    // delete widget temporarily
+    var visualization = this.state.visualization;
+    visualization.widgets.splice(data.index, 1);
+
+    this.setState({ visualization: visualization });
+    this.forceUpdate();
+  }
+
+  saveChanges() {
+    AppDispatcher.dispatch({
+      type: 'visualizations/start-edit',
+      data: this.state.visualization
+    });
+
+    this.setState({ editing: false });
+  }
+
+  discardChanges() {
+    this.setState({ editing: false, visualization: {} });
+
+    this.reloadVisualization();
+    this.forceUpdate();
   }
 
   componentWillMount() {
@@ -55,39 +104,56 @@ class Visualization extends Component {
     // select visualization by param id
     this.state.visualizations.forEach((visualization) => {
       if (visualization._id === this.props.params.visualization) {
-        this.setState({ visualization: visualization });
+        // JSON.parse(JSON.stringify(obj)) = deep clone to make also copy of widget objects inside
+        this.setState({ visualization: JSON.parse(JSON.stringify(visualization)) });
       }
     });
   }
 
   render() {
+    console.log(this.state.visualization.widgets);
+
     return (
       <div>
-        <h1>{this.state.visualization.name}</h1>
-
         <div>
-          {this.state.editing ? (
-            <div>
-              <Button bsStyle="link" onClick={() => this.setState({ editing: false })}>Save</Button>
-              <Button bsStyle="link" onClick={() => this.setState({ editing: false })}>Cancel</Button>
-            </div>
-          ) : (
-            <Button bsStyle="link" onClick={() => this.setState({ editing: true })}>Edit</Button>
-          )}
+          <h1>
+            {this.state.visualization.name}
+          </h1>
+
+          <div>
+            {this.state.editing ? (
+              <div>
+                <Button bsStyle="link" onClick={() => this.saveChanges()}>Save</Button>
+                <Button bsStyle="link" onClick={() => this.discardChanges()}>Cancel</Button>
+              </div>
+            ) : (
+              <Button bsStyle="link" onClick={() => this.setState({ editing: true })}>Edit</Button>
+            )}
+          </div>
         </div>
 
-        {this.state.editing &&
-          <div className="toolbox">
-            <ToolboxItem name="Value" type="widget" />
-          </div>
-        }
+        <div>
+          {this.state.editing &&
+            <div className="toolbox">
+              <ToolboxItem name="Value" type="widget" />
+            </div>
+          }
 
-        <Dropzone onDrop={item => this.handleDrop(item)} editing={this.state.editing}>
+          <Dropzone onDrop={item => this.handleDrop(item)} editing={this.state.editing}>
+            {this.state.visualization.widgets != null &&
+              this.state.visualization.widgets.map((widget, index) => (
+              <Widget key={index} data={widget} onWidgetChange={(w, i) => this.widgetChange(w, i)} editing={this.state.editing} index={index} />
+            ))}
+          </Dropzone>
+
           {this.state.visualization.widgets != null &&
             this.state.visualization.widgets.map((widget, index) => (
-            <Widget key={index} data={widget} onWidgetChange={this.widgetChange} editing={this.state.editing} />
+              <ContextMenu id={'widgetMenu' + index} key={index}>
+                <MenuItem data={{index: index}} onClick={(e, data) => this.editWidget(e, data)}>Edit</MenuItem>
+                <MenuItem data={{index: index}} onClick={(e, data) => this.deleteWidget(e, data)}>Delete</MenuItem>
+              </ContextMenu>
           ))}
-        </Dropzone>
+        </div>
       </div>
     );
   }
