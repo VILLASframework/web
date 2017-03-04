@@ -1,5 +1,5 @@
 /**
- * File: data-manager.js
+ * File: rest-data-manager.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 03.03.2017
  * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC

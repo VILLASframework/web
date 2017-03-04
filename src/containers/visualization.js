@@ -14,7 +14,7 @@ import { ContextMenu, MenuItem } from 'react-contextmenu';
 
 import ToolboxItem from '../components/toolbox-item';
 import Dropzone from '../components/dropzone';
-import Widget from '../components/widget';
+import Widget from './widget';
 import VisualizationStore from '../stores/visualization-store';
 import AppDispatcher from '../app-dispatcher';
 
@@ -27,8 +27,7 @@ class Visualization extends Component {
     return {
       visualizations: VisualizationStore.getState(),
 
-      visualization: {},
-      editing: false
+      visualization: {}
     }
   }
 
@@ -92,6 +91,14 @@ class Visualization extends Component {
     AppDispatcher.dispatch({
       type: 'visualizations/start-load'
     });
+
+    AppDispatcher.dispatch({
+      type: 'simulatorData/open',
+      endpoint: 'localhost:5000',
+      identifier: 'RTDS'
+    });
+
+    this.setState({ editing: false });
   }
 
   componentDidUpdate() {
@@ -111,8 +118,6 @@ class Visualization extends Component {
   }
 
   render() {
-    console.log(this.state.visualization.widgets);
-
     return (
       <div>
         <div>
