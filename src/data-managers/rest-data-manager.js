@@ -51,7 +51,8 @@ class RestDataManager {
     RestAPI.delete(this.url + '/' + object._id).then(response => {
       AppDispatcher.dispatch({
         type: this.type + 's/removed',
-        data: response[this.type]
+        data: response[this.type],
+        original: object
       });
     }).catch(error => {
       AppDispatcher.dispatch({

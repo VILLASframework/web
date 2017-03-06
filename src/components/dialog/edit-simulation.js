@@ -1,7 +1,7 @@
 /**
- * File: dialog-new-visualization.js
+ * File: new-simulation.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 03.03.2017
+ * Date: 04.03.2017
  * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
  *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
  *   Unauthorized copying of this file, via any medium is strictly prohibited.
@@ -12,10 +12,11 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
-class NewVisualzationDialog extends Component {
+class EditSimulationDialog extends Component {
   static propTypes = {
     show: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired
+    onClose: PropTypes.func.isRequired,
+    simulation: PropTypes.object.isRequired
   };
 
   valid: false;
@@ -24,7 +25,8 @@ class NewVisualzationDialog extends Component {
     super(props);
 
     this.state = {
-      name: ''
+      name: '',
+      _id: ''
     }
   }
 
@@ -41,7 +43,10 @@ class NewVisualzationDialog extends Component {
   }
 
   resetState() {
-    this.setState({ name: '' });
+    this.setState({
+      name: this.props.simulation.name,
+      _id: this.props.simulation._id
+    });
   }
 
   validateForm(target) {
@@ -62,11 +67,12 @@ class NewVisualzationDialog extends Component {
 
   render() {
     return (
-      <Dialog show={this.props.show} title="New Visualization" buttonTitle="add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog show={this.props.show} title="Edit Simulation" buttonTitle="save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
             <ControlLabel>Name</ControlLabel>
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
           </FormGroup>
         </form>
       </Dialog>
@@ -74,4 +80,4 @@ class NewVisualzationDialog extends Component {
   }
 }
 
-export default NewVisualzationDialog;
+export default EditSimulationDialog;

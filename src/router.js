@@ -16,6 +16,8 @@ import Projects from './containers/projects';
 import Simulators from './containers/simulators';
 import Visualization from './containers/visualization';
 import Visualizations from './containers/visualizations';
+import Simulations from './containers/simulations';
+import Simulation from './containers/simulation';
 
 class Root extends Component {
   render() {
@@ -28,6 +30,9 @@ class Root extends Component {
 
           <Route path='/visualizations' component={Visualizations} />
           <Route path='/visualizations/:visualization' component={Visualization} />
+
+          <Route path='/simulations' component={Simulations} />
+          <Route path='/simulations/:simulation' component={Simulation} />
         </Route>
       </Router>
     );

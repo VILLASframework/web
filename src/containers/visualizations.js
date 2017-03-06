@@ -9,14 +9,15 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Modal, Glyphicon } from 'react-bootstrap';
 
 import AppDispatcher from '../app-dispatcher';
 import VisualizationStore from '../stores/visualization-store';
 
-import ControlLinkTable from '../components/table-control-link';
-import NewVisualzationDialog from '../components/dialog-new-visualization';
-import EditVisualizationDialog from '../components/dialog-edit-visualization';
+import Table from '../components/table';
+import TableColumn from '../components/table-column';
+import NewVisualzationDialog from '../components/dialog/new-visualization';
+import EditVisualizationDialog from '../components/dialog/edit-visualization';
 
 class Visualizations extends Component {
   static getStores() {
@@ -30,7 +31,7 @@ class Visualizations extends Component {
       newModal: false,
       deleteModal: false,
       editModal: false,
-      modalVisualization: {}
+      modalData: {}
     };
   }
 
@@ -51,19 +52,6 @@ class Visualizations extends Component {
     }
   }
 
-  showDeleteModal(id) {
-    // get visualization by id
-    var deleteVisualization;
-
-    this.state.visualizations.forEach((visualization) => {
-      if (visualization._id === id) {
-        deleteVisualization = visualization;
-      }
-    });
-
-    this.setState({ deleteModal: true, modalVisualization: deleteVisualization });
-  }
-
   confirmDeleteModal() {
     this.setState({ deleteModal: false });
 
@@ -71,19 +59,6 @@ class Visualizations extends Component {
       type: 'visualizations/start-remove',
       data: this.state.modalVisualization
     });
-  }
-
-  showEditModal(id) {
-    // get visualization by id
-    var editVisualization;
-
-    this.state.visualizations.forEach((visualization) => {
-      if (visualization._id === id) {
-        editVisualization = visualization;
-      }
-    });
-
-    this.setState({ editModal: true, modalVisualization: editVisualization });
   }
 
   closeEditModal(data) {
@@ -98,21 +73,20 @@ class Visualizations extends Component {
   }
 
   render() {
-    var columns = [
-      { title: 'Name', key: 'name' }
-    ];
-
     return (
       <div>
         <h1>Visualizations</h1>
 
-        <ControlLinkTable columns={columns} data={this.state.visualizations} width='100%' onEdit={(id) => this.showEditModal(id)} onDelete={(id) => this.showDeleteModal(id)} linkRoot="/visualizations"/>
+        <Table data={this.state.visualizations}>
+          <TableColumn title='Name' dataKey='name' link='/visualizations/' linkKey='_id' />
+          <TableColumn width='70' editButton deleteButton onEdit={index => this.setState({ editModal: true, modalData: this.state.visualizations[index] })} onDelete={index => this.setState({ deleteModal: true, modalData: this.state.visualizations[index] })} />
+        </Table>
 
-        <Button onClick={() => this.setState({ newModal: true })}>New Visualization</Button>
+        <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Visualization</Button>
 
         <NewVisualzationDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
 
-        <EditVisualizationDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} visualization={this.state.modalVisualization} />
+        <EditVisualizationDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} visualization={this.state.modalData} />
 
         <Modal show={this.state.deleteModal}>
           <Modal.Header>
@@ -120,7 +94,7 @@ class Visualizations extends Component {
           </Modal.Header>
 
           <Modal.Body>
-            Are you sure you want to delete the visualization <strong>'{this.state.modalVisualization.name}'</strong>?
+            Are you sure you want to delete the visualization <strong>'{this.state.modalData.name}'</strong>?
           </Modal.Body>
 
           <Modal.Footer>

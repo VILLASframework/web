@@ -1,5 +1,5 @@
 /**
- * File: dialog-new-visualization.js
+ * File: new-visualization.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 03.03.2017
  * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -12,11 +12,10 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
-class EditVisualizationDialog extends Component {
+class NewVisualzationDialog extends Component {
   static propTypes = {
     show: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    visualization: PropTypes.object.isRequired
+    onClose: PropTypes.func.isRequired
   };
 
   valid: false;
@@ -25,8 +24,7 @@ class EditVisualizationDialog extends Component {
     super(props);
 
     this.state = {
-      name: '',
-      _id: ''
+      name: ''
     }
   }
 
@@ -43,10 +41,7 @@ class EditVisualizationDialog extends Component {
   }
 
   resetState() {
-    this.setState({
-      name: this.props.visualization.name,
-      _id: this.props.visualization._id
-    });
+    this.setState({ name: '' });
   }
 
   validateForm(target) {
@@ -67,11 +62,12 @@ class EditVisualizationDialog extends Component {
 
   render() {
     return (
-      <Dialog show={this.props.show} title="Edit Visualization" buttonTitle="save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog show={this.props.show} title="New Visualization" buttonTitle="add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
             <ControlLabel>Name</ControlLabel>
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
           </FormGroup>
         </form>
       </Dialog>
@@ -79,4 +75,4 @@ class EditVisualizationDialog extends Component {
   }
 }
 
-export default EditVisualizationDialog;
+export default NewVisualzationDialog;

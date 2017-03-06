@@ -13,6 +13,7 @@ import { ContextMenuTrigger } from 'react-contextmenu';
 import Rnd from 'react-rnd';
 
 import SimulatorDataStore from '../stores/simulator-data-store';
+import WidgetValue from '../components/widget-value';
 
 import '../styles/widgets.css';
 
@@ -21,12 +22,20 @@ class Widget extends Component {
     return [ SimulatorDataStore ];
   }
 
-  static calculateState() {
-    return {
-      simulatorData: SimulatorDataStore.getState(),
+  static calculateState(prevState) {
+    if (prevState) {
+      return {
+        simulatorData: SimulatorDataStore.getState(),
 
-      widget: {}
-    };
+        sequence: prevState.sequence + 1
+      }
+    } else {
+      return {
+        simulatorData: SimulatorDataStore.getState(),
+
+        sequence: 0
+      };
+    }
   }
 
   dragStop(event, ui) {
@@ -50,11 +59,9 @@ class Widget extends Component {
   render() {
     const widget = this.props.data;
 
-    var value = '';
-
-    if (this.state.simulatorData.RTDS && this.state.simulatorData.RTDS.values) {
-      const arr = this.state.simulatorData.RTDS.values[this.props.index];
-      value = arr[arr.length - 1].y;
+    var grid = this.props.grid;
+    if (!grid) {
+      grid = [ 1, 1 ];
     }
 
     if (this.props.editing) {
@@ -66,16 +73,18 @@ class Widget extends Component {
           className="widget"
           onResizeStop={(direction, styleSize, clientSize, delta) => this.resizeStop(direction, styleSize, clientSize, delta)}
           onDragStop={(event, ui) => this.dragStop(event, ui)}
+          moveGrid={grid}
+          resizeGrid={grid}
         >
           <ContextMenuTrigger id={'widgetMenu' + this.props.index} attributes={{ style: { width: '100%', height: '100%' } }}>
-              <div>{value}</div>
+            <WidgetValue widget={widget} data={this.state.simulatorData} sequence={this.state.sequence} />
           </ContextMenuTrigger>
         </Rnd>
       );
     } else {
       return (
         <div className="widget" style={{ width: Number(widget.width), height: Number(widget.height), left: Number(widget.x), top: Number(widget.y), position: 'absolute' }}>
-          {value}
+          <WidgetValue widget={widget} data={this.state.simulatorData} />
         </div>
       );
     }

@@ -9,14 +9,15 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Modal, Glyphicon } from 'react-bootstrap';
 
 import AppDispatcher from '../app-dispatcher';
 import SimulatorStore from '../stores/simulator-store';
 
-import ControlTable from '../components/table-control';
-import NewSimulatorDialog from '../components/dialog-new-simulator';
-import EditSimulatorDialog from '../components/dialog-edit-simulator';
+import Table from '../components/table';
+import TableColumn from '../components/table-column';
+import NewSimulatorDialog from '../components/dialog/new-simulator';
+import EditSimulatorDialog from '../components/dialog/edit-simulator';
 
 class Simulators extends Component {
   static getStores() {
@@ -51,19 +52,6 @@ class Simulators extends Component {
     }
   }
 
-  showDeleteModal(id) {
-    // get simulator by id
-    var deleteSimulator;
-
-    this.state.simulators.forEach((simulator) => {
-      if (simulator._id === id) {
-        deleteSimulator = simulator;
-      }
-    });
-
-    this.setState({ deleteModal: true, modalSimulator: deleteSimulator });
-  }
-
   confirmDeleteModal() {
     this.setState({ deleteModal: false });
 
@@ -71,19 +59,6 @@ class Simulators extends Component {
       type: 'simulators/start-remove',
       data: this.state.modalSimulator
     });
-  }
-
-  showEditModal(id) {
-    // get simulator by id
-    var editSimulator;
-
-    this.state.simulators.forEach((simulator) => {
-      if (simulator._id === id) {
-        editSimulator = simulator;
-      }
-    });
-
-    this.setState({ editModal: true, modalSimulator: editSimulator });
   }
 
   closeEditModal(data) {
@@ -98,20 +73,19 @@ class Simulators extends Component {
   }
 
   render() {
-    var columns = [
-      { title: 'Name', key: 'name' },
-      { title: 'ID', key: 'simulatorid', width: 80 },
-      { title: 'Running', key: 'running', width: 80 },
-      { title: 'Endpoint', key: 'endpoint', width: 120 }
-    ];
-
     return (
       <div>
         <h1>Simulators</h1>
 
-        <ControlTable columns={columns} data={this.state.simulators} width='100%' onEdit={(id) => this.showEditModal(id)} onDelete={(id) => this.showDeleteModal(id)} />
+        <Table data={this.state.simulators}>
+          <TableColumn title='Name' dataKey='name' />
+          <TableColumn title='ID' dataKey='simulatorid' width='80' />
+          <TableColumn title='Running' dataKey='running' width='80' />
+          <TableColumn title='Endpoint' dataKey='endpoint' width='120' />
+          <TableColumn title='' width='70' editButton deleteButton onEdit={(index) => this.setState({ editModal: true, modalSimulator: this.state.simulators[index] })} onDelete={(index) => this.setState({ deleteModal: true, modalSimulator: this.state.simulators[index] })} />
+        </Table>
 
-        <Button onClick={() => this.setState({ newModal: true })}>New Simulator</Button>
+        <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Simulator</Button>
 
         <NewSimulatorDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
 

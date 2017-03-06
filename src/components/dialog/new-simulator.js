@@ -1,5 +1,5 @@
 /**
- * File: dialog-new-simulator.js
+ * File: new-simulator.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 02.03.2017
  * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -12,11 +12,10 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
-class EditSimulatorDialog extends Component {
+class NewSimulatorDialog extends Component {
   static propTypes = {
     show: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    simulator: PropTypes.object.isRequired
+    onClose: PropTypes.func.isRequired
   };
 
   valid: false;
@@ -24,11 +23,10 @@ class EditSimulatorDialog extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
+    this.state = {
       name: '',
       simulatorid: '1',
-      endpoint: '',
-      _id: ''
+      endpoint: ''
     };
   }
 
@@ -45,12 +43,7 @@ class EditSimulatorDialog extends Component {
   }
 
   resetState() {
-    this.setState({
-      name: this.props.simulator.name,
-      simulatorid: this.props.simulator.simulatorid,
-      endpoint: this.props.simulator.endpoint,
-      _id: this.props.simulator._id
-    });
+    this.setState({ name: '', simulatorid: '1', endpoint: '' });
   }
 
   validateForm(target) {
@@ -82,19 +75,22 @@ class EditSimulatorDialog extends Component {
 
   render() {
     return (
-      <Dialog show={this.props.show} title="Edit Simulator" buttonTitle="save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog show={this.props.show} title="New Simulator" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
             <ControlLabel>Name</ControlLabel>
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="simulatorid" validationState={this.validateForm('simulatorid')}>
             <ControlLabel>Simulator ID</ControlLabel>
             <FormControl type="number" placeholder="Enter simulator ID" value={this.state.simulatorid} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="endpoint" validationState={this.validateForm('endpoint')}>
             <ControlLabel>Endpoint</ControlLabel>
             <FormControl type="text" placeholder="Enter endpoint" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
           </FormGroup>
         </form>
       </Dialog>
@@ -102,4 +98,4 @@ class EditSimulatorDialog extends Component {
   }
 }
 
-export default EditSimulatorDialog;
+export default NewSimulatorDialog;
