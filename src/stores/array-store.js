@@ -43,11 +43,11 @@ class ArrayStore extends ReduceStore {
         return state;
 
       case this.type + '/added':
-        // state should always be immutable, thus make new copy
-        array = state.slice();
-        array.push(action.data);
+        // signal array change since its not automatically detected
+        state.push(action.data);
+        this.__emitChange();
 
-        return array;
+        return state;
 
       case this.type + '/add-error':
         // TODO: Add error message
@@ -59,7 +59,7 @@ class ArrayStore extends ReduceStore {
 
       case this.type + '/removed':
         return state.filter((item) => {
-          return (item !== action.data);
+          return (item !== action.original);
         });
 
       case this.type + '/remove-error':

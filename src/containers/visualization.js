@@ -23,11 +23,23 @@ class Visualization extends Component {
     return [ VisualizationStore ];
   }
 
-  static calculateState() {
+  static calculateState(prevState) {
+    if (prevState) {
+      return {
+        visualizations: VisualizationStore.getState(),
+
+        visualization: prevState.visualization,
+        editing: prevState.editing,
+        grid: prevState.grid
+      };
+    }
+
     return {
       visualizations: VisualizationStore.getState(),
 
-      visualization: {}
+      visualization: {},
+      editing: false,
+      grid: false
     }
   }
 
@@ -97,8 +109,6 @@ class Visualization extends Component {
       endpoint: 'localhost:5000',
       identifier: 'RTDS'
     });
-
-    this.setState({ editing: false });
   }
 
   componentDidUpdate() {
@@ -147,7 +157,7 @@ class Visualization extends Component {
           <Dropzone onDrop={item => this.handleDrop(item)} editing={this.state.editing}>
             {this.state.visualization.widgets != null &&
               this.state.visualization.widgets.map((widget, index) => (
-              <Widget key={index} data={widget} onWidgetChange={(w, i) => this.widgetChange(w, i)} editing={this.state.editing} index={index} />
+              <Widget key={index} data={widget} onWidgetChange={(w, i) => this.widgetChange(w, i)} editing={this.state.editing} index={index} grid={this.state.grid} />
             ))}
           </Dropzone>
 

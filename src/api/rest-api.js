@@ -21,8 +21,8 @@ class RestAPI {
   get(url) {
     return new Promise(function (resolve, reject) {
       request.get(makeURL(url)).end(function (error, res) {
-        if (res.status !== 200) {
-          reject();
+        if (res == null || res.status !== 200) {
+          reject(error);
         } else {
           resolve(JSON.parse(res.text));
         }
@@ -33,8 +33,8 @@ class RestAPI {
   post(url, body) {
     return new Promise(function (resolve, reject) {
       request.post(makeURL(url)).send(body).end(function (error, res) {
-        if (res.status !== 200) {
-          reject();
+        if (res == null || res.status !== 200) {
+          reject(error);
         } else {
           resolve(JSON.parse(res.text));
         }
@@ -45,8 +45,8 @@ class RestAPI {
   delete(url) {
     return new Promise(function (resolve, reject) {
       request.delete(makeURL(url)).end(function (error, res) {
-        if (res.status !== 200) {
-          reject();
+        if (res == null || res.status !== 200) {
+          reject(error);
         } else {
           resolve(JSON.parse(res.text));
         }
@@ -57,8 +57,8 @@ class RestAPI {
   put(url, body) {
     return new Promise(function (resolve, reject) {
       request.put(makeURL(url)).send(body).end(function (error, res) {
-        if (res.status !== 200) {
-          reject();
+        if (res == null || res.status !== 200) {
+          reject(error);
         } else {
           resolve(JSON.parse(res.text));
         }

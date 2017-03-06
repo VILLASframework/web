@@ -12,6 +12,8 @@ import { ReduceStore } from 'flux/utils';
 import AppDispatcher from '../app-dispatcher';
 import SimulatorDataManager from '../data-managers/simulator-data-manager';
 
+const MAX_VALUES = 10000;
+
 class SimulationDataStore extends ReduceStore {
   constructor() {
     super(AppDispatcher);
@@ -43,6 +45,12 @@ class SimulationDataStore extends ReduceStore {
         // add data to simulator
         for (i = 0; i < state[action.identifier].signals; i++) {
           state[action.identifier].values[i].push({ x: action.data.timestamp, y: action.data.values[i] });
+
+          // erase old values
+          if (state[action.identifier].values[i].length > MAX_VALUES) {
+            const pos = state[action.identifier].values[i].length - MAX_VALUES;
+            state[action.identifier].values[i].splice(0, pos);
+          }
         }
 
         // update metadata
