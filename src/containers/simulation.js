@@ -34,6 +34,7 @@ class Simulation extends Component {
       deleteModal: false,
       editModal: false,
       modalData: {},
+      modalIndex: null,
 
       simulation: {}
     }
@@ -79,24 +80,30 @@ class Simulation extends Component {
   }
 
   confirmDeleteModal() {
-    this.setState({ deleteModal: false });
+    // remove model from simulation
+    var simulation = this.state.simulation;
+    simulation.models.splice(this.state.modalIndex, 1);
 
+    this.setState({ deleteModal: false, simulation: simulation });
 
-
-    /*AppDispatcher.dispatch({
-      type: 'visualizations/start-remove',
-      data: this.state.modalVisualization
-    });*/
+    AppDispatcher.dispatch({
+      type: 'simulations/start-edit',
+      data: simulation
+    });
   }
 
   closeEditModal(data) {
     this.setState({ editModal : false });
 
     if (data) {
-      /*AppDispatcher.dispatch({
-        type: 'visualizations/start-edit',
-        data: data
-      });*/
+      var simulation = this.state.simulation;
+      simulation.models[this.state.modalIndex] = data;
+      this.setState({ simulation: simulation });
+
+      AppDispatcher.dispatch({
+        type: 'simulations/start-edit',
+        data: simulation
+      });
     }
   }
 
@@ -119,14 +126,14 @@ class Simulation extends Component {
           <TableColumn title='Name' dataKey='name' />
           <TableColumn title='Simulator' dataKey='simulator' width='180' modifier={(id) => this.getSimulatorName(id)} />
           <TableColumn title='Length' dataKey='length' width='100' />
-          <TableColumn title='' width='70' editButton deleteButton onEdit={(index) => this.setState({ editModal: true, modalData: this.state.simulation.models[index] })} onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.simulation.models[index] })} />
+          <TableColumn title='' width='70' editButton deleteButton onEdit={(index) => this.setState({ editModal: true, modalData: this.state.simulation.models[index], modalIndex: index })} onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.simulation.models[index], modalIndex: index })} />
         </Table>
 
         <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Simulation Model</Button>
 
         <NewSimulationModelDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} simulators={this.state.simulators} />
 
-        <EditSimulationModelDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} data={this.state.modalData} />
+        <EditSimulationModelDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} data={this.state.modalData} simulators={this.state.simulators} />
 
         <Modal show={this.state.deleteModal}>
           <Modal.Header>

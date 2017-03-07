@@ -17,7 +17,9 @@ class TableColumn extends Component {
     editButton: false,
     deleteButton: false,
     link: '/',
-    linkKey: ''
+    linkKey: '',
+    dataIndex: false,
+    inlineEditable: false
   };
 
   render() {

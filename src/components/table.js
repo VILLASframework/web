@@ -8,15 +8,27 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { Table, Button, Glyphicon } from 'react-bootstrap';
+import { Table, Button, Glyphicon, FormControl } from 'react-bootstrap';
 import { Link } from 'react-router';
 
 import TableColumn from './table-column';
 
 class CustomTable extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      editCell: [ -1, -1 ]
+    };
+  }
+
   static defaultProps = {
     width: null
   };
+
+  onClick(event, row, column) {
+    this.setState({ editCell: [ column, row ]});  // x, y
+  }
 
   render() {
     // create sorted data for rows
@@ -53,6 +65,10 @@ class CustomTable extends Component {
               }
             }
 
+            if (this.props.children[i].props.dataIndex) {
+              cell.push(index);
+            }
+
             // add buttons
             if (this.props.children[i].props.editButton) {
               const onEdit = this.props.children[i].props.onEdit;
@@ -80,13 +96,19 @@ class CustomTable extends Component {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, index) => (
-            <tr key={index}>
-              {row.map((cell, index) => (
-                <td key={index}>
-                  {cell.map((element, index) => (
-                    <span key={index}>{element}</span>
-                  ))}
+          {rows.map((row, rowIndex) => (
+            <tr key={rowIndex}>
+              {row.map((cell, cellIndex) => (
+                <td key={cellIndex} onClick={this.props.children[cellIndex].props.inlineEditable === true ? (event) => this.onClick(event, rowIndex, cellIndex) : () => {}}>
+                  {(this.state.editCell[0] === cellIndex && this.state.editCell[1] === rowIndex ) ? (
+                    <FormControl type="text" value={cell} onChange={(event) => this.props.children[cellIndex].props.onInlineChange(event, rowIndex, cellIndex)} />
+                  ) : (
+                    <span>
+                      {cell.map((element, elementIndex) => (
+                        <span key={elementIndex}>{element}</span>
+                      ))}
+                    </span>
+                  )}
                 </td>
               ))}
             </tr>
