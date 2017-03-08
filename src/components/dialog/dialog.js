@@ -39,7 +39,7 @@ class Dialog extends Component {
 
         <Modal.Footer>
           <Button onClick={() => this.cancelModal()}>Cancel</Button>
-          <Button bsStyle="primary" onClick={() => this.closeModal()} disabled={!this.props.valid}>{this.props.buttonTitle}</Button>
+          <Button bsStyle="primary" type="submit" onClick={() => this.closeModal()} disabled={!this.props.valid}>{this.props.buttonTitle}</Button>
         </Modal.Footer>
       </Modal>
     );

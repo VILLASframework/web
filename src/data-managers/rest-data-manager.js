@@ -16,18 +16,34 @@ class RestDataManager {
     this.type = type;
   }
 
-  load() {
-    RestAPI.get(this.url).then(response => {
-      AppDispatcher.dispatch({
-        type: this.type + 's/loaded',
-        data: response[this.type + 's']
+  load(id) {
+    if (id != null) {
+      // load single object
+      RestAPI.get(this.url + '/' + id).then(response => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/loaded',
+          data: response[this.type]
+        });
+      }).catch(error => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/load-error',
+          error: error
+        });
       });
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: this.type + 's/load-error',
-        error: error
+    } else {
+      // load all objects
+      RestAPI.get(this.url).then(response => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/loaded',
+          data: response[this.type + 's']
+        });
+      }).catch(error => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/load-error',
+          error: error
+        });
       });
-    });
+    }
   }
 
   add(object) {

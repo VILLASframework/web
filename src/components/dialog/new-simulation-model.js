@@ -72,7 +72,7 @@ class NewSimulationModelDialog extends Component {
   }
 
   resetState() {
-    this.setState({ name: '', simulator: '', length: '1', mapping: [ { name: 'Signal', type: 'Type' } ] });
+    this.setState({ name: '', simulator: this.props.simulators[0]._id, length: '1', mapping: [ { name: 'Signal', type: 'Type' } ] });
   }
 
   validateForm(target) {

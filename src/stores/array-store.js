@@ -23,16 +23,46 @@ class ArrayStore extends ReduceStore {
     return [];
   }
 
-  reduce(state, action) {
-    var array;
+  updateElements(state, newElements) {
+    // search for existing element to update
+    state.forEach((element, index, array) => {
+      newElements.forEach((updateElement, index) => {
+        if (element._id === updateElement._id) {
+          array[index] = element;
 
+          // remove updated element from update list
+          newElements.splice(index, 1);
+        }
+      });
+    });
+
+    // all elements still in the list will just be added
+    state = state.concat(newElements);
+
+    // announce change to listeners
+    this.__emitChange();
+
+    return state;
+  }
+
+  reduce(state, action) {
     switch (action.type) {
       case this.type + '/start-load':
-        this.dataManager.load();
+        if (Array.isArray(action.data)) {
+          action.data.forEach((id) => {
+            this.dataManager.load(id);
+          });
+        } else {
+          this.dataManager.load(action.data);
+        }
         return state;
 
       case this.type + '/loaded':
-        return action.data;
+        if (Array.isArray(action.data)) {
+          return this.updateElements(state, action.data);
+        } else {
+          return this.updateElements(state, [action.data]);
+        }
 
       case this.type + '/load-error':
         // TODO: Add error message
@@ -43,11 +73,7 @@ class ArrayStore extends ReduceStore {
         return state;
 
       case this.type + '/added':
-        // signal array change since its not automatically detected
-        state.push(action.data);
-        this.__emitChange();
-
-        return state;
+        return this.updateElements(state, [action.data]);
 
       case this.type + '/add-error':
         // TODO: Add error message
@@ -71,14 +97,7 @@ class ArrayStore extends ReduceStore {
         return state;
 
       case this.type + '/edited':
-        array = state.slice();
-        for (var i = 0; i < array.length; i++) {
-          if (array[i]._id === action.data._id) {
-            array[i] = action.data;
-          }
-        }
-
-        return array;
+        return this.updateElements(state, [action.data]);
 
       case this.type + '/edit-error':
         // TODO: Add error message
