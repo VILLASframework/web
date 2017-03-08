@@ -8,13 +8,9 @@
  **********************************************************************************/
 
 class WebsocketAPI {
-  constructor() {
-    this.sockets = {};
-  }
-
-  addSocket(endpoint, identifier, callbacks) {
+  addSocket(endpoint, callbacks) {
     // create web socket client
-    var socket = new WebSocket('ws://' + endpoint, 'live');
+    var socket = new WebSocket(this.getURL(endpoint), 'live');
     socket.binaryType = 'arraybuffer';
 
     // register callbacks
@@ -23,13 +19,11 @@ class WebsocketAPI {
     if (callbacks.onMessage) socket.addEventListener('message', event => callbacks.onMessage(event));
     if (callbacks.onError) socket.addEventListener('error', event => callbacks.onError(event));
 
-    // save socket
-    this.sockets[identifier] = socket;
+    return socket;
   }
 
-  removeSocket(identifier) {
-    this.sockets[identifier].close();
-    delete this.sockets[identifier];
+  getURL(endpoint) {
+    return 'ws://' + endpoint;
   }
 }
 

@@ -71,21 +71,6 @@ class Visualizations extends Component {
     }
   }
 
-  loadVisualizations(ids) {
-    if (AppDispatcher.isDispatching()) {
-      // try again later
-      var self = this;
-      setTimeout(function() {
-        self.loadVisualizations(ids);
-      }, 1);
-    } else {
-      AppDispatcher.dispatch({
-        type: 'visualizations/start-load',
-        data: ids
-      });
-    }
-  }
-
   reloadProject() {
     // select project by param id
     this.state.projects.forEach((project) => {
@@ -94,7 +79,10 @@ class Visualizations extends Component {
         this.setState({ project: JSON.parse(JSON.stringify(project)) });
 
         // load visualizations
-        this.loadVisualizations(project.visualizations);
+        AppDispatcher.dispatch({
+          type: 'visualizations/start-load',
+          data: project.visualizations
+        });
       }
     });
   }

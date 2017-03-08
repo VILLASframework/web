@@ -9,6 +9,20 @@
 
 import { Dispatcher } from 'flux';
 
-const dispatcher: Dispatcher = new Dispatcher();
+class AppDispatcher extends Dispatcher {
+  dispatch(payload) {
+    if (this.isDispatching()) {
+      // try again later
+      var self = this;
 
-export default dispatcher;
+      setTimeout(function() {
+        self.dispatch(payload);
+      }, 1);
+    } else {
+      // do actual dispatch
+      super.dispatch(payload);
+    }
+  }
+}
+
+export default new AppDispatcher();

@@ -15,12 +15,15 @@ import { ContextMenu, MenuItem } from 'react-contextmenu';
 import ToolboxItem from '../components/toolbox-item';
 import Dropzone from '../components/dropzone';
 import Widget from './widget';
+
 import VisualizationStore from '../stores/visualization-store';
+import ProjectStore from '../stores/project-store';
+import SimulationStore from '../stores/simulation-store';
 import AppDispatcher from '../app-dispatcher';
 
 class Visualization extends Component {
   static getStores() {
-    return [ VisualizationStore ];
+    return [ VisualizationStore, ProjectStore, SimulationStore ];
   }
 
   static calculateState(prevState) {
@@ -38,9 +41,32 @@ class Visualization extends Component {
       visualizations: VisualizationStore.getState(),
 
       visualization: {},
+      simulation: null,
       editing: false,
       grid: false
     }
+  }
+
+  componentWillMount() {
+    AppDispatcher.dispatch({
+      type: 'visualizations/start-load'
+    });
+  }
+
+  componentDidUpdate() {
+    if (this.state.visualization._id !== this.props.params.visualization) {
+      this.reloadVisualization();
+    }
+  }
+
+  reloadVisualization() {
+    // select visualization by param id
+    this.state.visualizations.forEach((visualization) => {
+      if (visualization._id === this.props.params.visualization) {
+        // JSON.parse(JSON.stringify(obj)) = deep clone to make also copy of widget objects inside
+        this.setState({ visualization: JSON.parse(JSON.stringify(visualization)) });
+      }
+    });
   }
 
   handleDrop(item) {
@@ -97,34 +123,6 @@ class Visualization extends Component {
 
     this.reloadVisualization();
     this.forceUpdate();
-  }
-
-  componentWillMount() {
-    AppDispatcher.dispatch({
-      type: 'visualizations/start-load'
-    });
-
-    AppDispatcher.dispatch({
-      type: 'simulatorData/open',
-      endpoint: 'localhost:5000',
-      identifier: 'RTDS'
-    });
-  }
-
-  componentDidUpdate() {
-    if (this.state.visualization._id !== this.props.params.visualization) {
-      this.reloadVisualization();
-    }
-  }
-
-  reloadVisualization() {
-    // select visualization by param id
-    this.state.visualizations.forEach((visualization) => {
-      if (visualization._id === this.props.params.visualization) {
-        // JSON.parse(JSON.stringify(obj)) = deep clone to make also copy of widget objects inside
-        this.setState({ visualization: JSON.parse(JSON.stringify(visualization)) });
-      }
-    });
   }
 
   render() {

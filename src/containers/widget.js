@@ -84,7 +84,7 @@ class Widget extends Component {
     } else {
       return (
         <div className="widget" style={{ width: Number(widget.width), height: Number(widget.height), left: Number(widget.x), top: Number(widget.y), position: 'absolute' }}>
-          <WidgetValue widget={widget} data={this.state.simulatorData} />
+          <WidgetValue widget={widget} data={this.state.simulatorData} sequence={this.state.sequence} />
         </div>
       );
     }

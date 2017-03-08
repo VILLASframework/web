@@ -12,8 +12,9 @@ import { Container } from 'flux/utils';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
-// import AppDispatcher from '../app-dispatcher';
-import VillasStore from '../stores/villas-store';
+import AppDispatcher from '../app-dispatcher';
+import SimulationStore from '../stores/simulation-store';
+import SimulatorStore from '../stores/simulator-store';
 
 import Header from '../components/header';
 import Footer from '../components/footer';
@@ -23,13 +24,66 @@ import '../styles/app.css';
 
 class App extends Component {
   static getStores() {
-    return [ VillasStore ];
+    return [ SimulationStore, SimulatorStore ];
   }
 
   static calculateState() {
     return {
-      villas: VillasStore.getState()
+      simulators: SimulatorStore.getState(),
+      simulations: SimulationStore.getState()
     };
+  }
+
+  componentWillMount() {
+    // load all simulators and simulations to fetch simulation data
+    AppDispatcher.dispatch({
+      type: 'simulators/start-load'
+    });
+
+    AppDispatcher.dispatch({
+      type: 'simulations/start-load'
+    });
+  }
+
+  componentDidUpdate() {
+    if (this.state.simulators && this.state.simulations && this.state.simulations.length > 0) {
+      // get list of used simulators
+      var simulators = [];
+
+      this.state.simulations.forEach((simulation) => {
+        // open connection to each simulator running a simulation model
+        simulation.models.forEach((simulationModel) => {
+          // add simulator to list if not already part of
+          const index = simulators.findIndex((element) => {
+            return element.simulator === simulationModel.simulator;
+          });
+
+          if (index === -1) {
+            simulators.push({ simulator: simulationModel.simulator, signals: simulationModel.length });
+          } else {
+            if (simulators[index].length < simulationModel.length) {
+              simulators[index].length = simulationModel.length;
+            }
+          }
+        });
+      });
+
+      // open connection to each simulator
+      this.state.simulators.forEach((simulator) => {
+        const index = simulators.findIndex((element) => {
+          return element.simulator === simulator._id;
+        });
+
+        if (index !== -1) {
+          AppDispatcher.dispatch({
+            type: 'simulatorData/open',
+            identifier: simulator._id,
+            endpoint: simulator.endpoint,
+            signals: simulators[index].signals
+          });
+        }
+      });
+    }
   }
 
   render() {

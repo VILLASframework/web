@@ -10,7 +10,7 @@
 import { ReduceStore } from 'flux/utils';
 
 import AppDispatcher from '../app-dispatcher';
-import SimulatorDataManager from '../data-managers/simulator-data-manager';
+import SimulatorDataDataManager from '../data-managers/simulator-data-data-manager';
 
 const MAX_VALUES = 10000;
 
@@ -28,7 +28,7 @@ class SimulationDataStore extends ReduceStore {
 
     switch (action.type) {
       case 'simulatorData/open':
-        SimulatorDataManager.open(action.endpoint, action.identifier);
+        SimulatorDataDataManager.open(action.endpoint, action.identifier, action.signals);
         return state;
 
       case 'simulatorData/opened':
@@ -63,6 +63,11 @@ class SimulationDataStore extends ReduceStore {
         return state;
 
       case 'simulatorData/closed':
+        // close and delete socket
+        state[action.identifier].close();
+        state[action.identifier] = null;
+
+        this.__emitChange();
         return state;
 
       default:

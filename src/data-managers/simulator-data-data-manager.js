@@ -1,5 +1,5 @@
 /**
- * File: simulator-data-manager.js
+ * File: simulator-data-data-manager.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 03.03.2017
  * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -10,34 +10,47 @@
 import WebsocketAPI from '../api/websocket-api';
 import AppDispatcher from '../app-dispatcher';
 
-class SimulationDataManager {
-  open(endpoint, identifier) {
-    WebsocketAPI.addSocket(endpoint, identifier, { onOpen: event => this.onOpen(event), onClose: event => this.onClose(event), onMessage: event => this.onMessage(event) });
+class SimulatorDataDataManager {
+  constructor() {
+    this._sockets = {};
   }
 
-  onOpen(event) {
-    // TODO: Add identifiers to callbacks
+  open(endpoint, identifier, signals) {
+    // pass signals to onOpen callback
+    if (this._sockets[identifier] != null) {
+      if (this._sockets[identifier].url !== WebsocketAPI.getURL(endpoint)) {
+        // replace connection, since endpoint changed
+        this._sockets.close();
 
+        this._sockets[identifier] = WebsocketAPI.addSocket(endpoint, { onOpen: (event) => this.onOpen(event, identifier, signals), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier) });
+      }
+    } else {
+      this._sockets[identifier] = WebsocketAPI.addSocket(endpoint, { onOpen: (event) => this.onOpen(event, identifier, signals), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier) });
+    }
+  }
+
+  onOpen(event, identifier, signals) {
     AppDispatcher.dispatch({
       type: 'simulatorData/opened',
-      identifier: 'RTDS',
-      signals: 8
+      identifier: identifier,
+      signals: signals
     });
   }
 
-  onClose(event) {
+  onClose(event, identifier) {
     AppDispatcher.dispatch({
-      type: 'simulatorData/closed'
+      type: 'simulatorData/closed',
+      identifier: identifier
     });
   }
 
-  onMessage(event) {
+  onMessage(event, identifier) {
     var message = this.bufferToMessage(event.data);
 
     AppDispatcher.dispatch({
       type: 'simulatorData/data-changed',
       data: message,
-      identifier: 'RTDS'
+      identifier: identifier
     });
   }
 
@@ -69,4 +82,4 @@ class SimulationDataManager {
   }
 }
 
-export default new SimulationDataManager();
+export default new SimulatorDataDataManager();
