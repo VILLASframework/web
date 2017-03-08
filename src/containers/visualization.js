@@ -15,6 +15,7 @@ import { ContextMenu, MenuItem } from 'react-contextmenu';
 import ToolboxItem from '../components/toolbox-item';
 import Dropzone from '../components/dropzone';
 import Widget from './widget';
+import EditWidget from '../components/dialog/edit-widget';
 
 import VisualizationStore from '../stores/visualization-store';
 import ProjectStore from '../stores/project-store';
@@ -27,24 +28,25 @@ class Visualization extends Component {
   }
 
   static calculateState(prevState) {
-    if (prevState) {
-      return {
-        visualizations: VisualizationStore.getState(),
-
-        visualization: prevState.visualization,
-        editing: prevState.editing,
-        grid: prevState.grid
-      };
+    if (prevState == null) {
+      prevState = {};
     }
 
     return {
       visualizations: VisualizationStore.getState(),
+      projects: ProjectStore.getState(),
+      simulations: SimulationStore.getState(),
 
-      visualization: {},
-      simulation: null,
-      editing: false,
-      grid: false
-    }
+      visualization: prevState.visualization || {},
+      project: prevState.project || null,
+      simulation: prevState.simulation || null,
+      editing: prevState.editing || false,
+      grid: prevState.grid || false,
+
+      editModal: prevState.editModal || false,
+      modalData: prevState.modalData || null,
+      modalIndex: prevState.modalIndex || null
+    };
   }
 
   componentWillMount() {
@@ -57,6 +59,29 @@ class Visualization extends Component {
     if (this.state.visualization._id !== this.props.params.visualization) {
       this.reloadVisualization();
     }
+
+    // load depending project
+    if (this.state.project == null && this.state.projects) {
+      this.state.projects.forEach((project) => {
+        if (project._id === this.state.visualization.project) {
+          this.setState({ project: project, simulation: null });
+
+          AppDispatcher.dispatch({
+            type: 'simulations/start-load',
+            data: project.simulation
+          });
+        }
+      });
+    }
+
+    // load depending simulation
+    if (this.state.simulation == null && this.state.simulations && this.state.project) {
+      this.state.simulations.forEach((simulation) => {
+        if (simulation._id === this.state.project.simulation) {
+          this.setState({ simulation: simulation });
+        }
+      });
+    }
   }
 
   reloadVisualization() {
@@ -64,7 +89,12 @@ class Visualization extends Component {
     this.state.visualizations.forEach((visualization) => {
       if (visualization._id === this.props.params.visualization) {
         // JSON.parse(JSON.stringify(obj)) = deep clone to make also copy of widget objects inside
-        this.setState({ visualization: JSON.parse(JSON.stringify(visualization)) });
+        this.setState({ visualization: JSON.parse(JSON.stringify(visualization)), project: null });
+
+        AppDispatcher.dispatch({
+          type: 'projects/start-load',
+          data: visualization.project
+        });
       }
     });
   }
@@ -80,6 +110,12 @@ class Visualization extends Component {
       y: 0,
       z: 0
     };
+
+    // set type specific properties
+    if (item.name === 'Value') {
+      widget.simulator = this.state.simulation.models[0].simulator;
+      widget.signal = 0;
+    }
 
     var visualization = this.state.visualization;
     visualization.widgets.push(widget);
@@ -97,7 +133,19 @@ class Visualization extends Component {
   }
 
   editWidget(e, data) {
+    this.setState({ editModal: true, modalData: this.state.visualization.widgets[data.index], modalIndex: data.index });
+  }
 
+  closeEdit(data) {
+    if (data) {
+      // save changes temporarily
+      var visualization = this.state.visualization;
+      visualization.widgets[this.state.modalIndex] = data;
+
+      this.setState({ editModal: false, visualization: visualization });
+    } else {
+      this.setState({ editModal: false });
+    }
   }
 
   deleteWidget(e, data) {
@@ -155,7 +203,7 @@ class Visualization extends Component {
           <Dropzone onDrop={item => this.handleDrop(item)} editing={this.state.editing}>
             {this.state.visualization.widgets != null &&
               this.state.visualization.widgets.map((widget, index) => (
-              <Widget key={index} data={widget} onWidgetChange={(w, i) => this.widgetChange(w, i)} editing={this.state.editing} index={index} grid={this.state.grid} />
+              <Widget key={index} data={widget} simulation={this.state.simulation} onWidgetChange={(w, i) => this.widgetChange(w, i)} editing={this.state.editing} index={index} grid={this.state.grid} />
             ))}
           </Dropzone>
 
@@ -166,6 +214,8 @@ class Visualization extends Component {
                 <MenuItem data={{index: index}} onClick={(e, data) => this.deleteWidget(e, data)}>Delete</MenuItem>
               </ContextMenu>
           ))}
+
+          <EditWidget show={this.state.editModal} onClose={(data) => this.closeEdit(data)} widget={this.state.modalData} simulation={this.state.simulation} />
         </div>
       </div>
     );

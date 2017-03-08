@@ -77,14 +77,14 @@ class Widget extends Component {
           resizeGrid={grid}
         >
           <ContextMenuTrigger id={'widgetMenu' + this.props.index} attributes={{ style: { width: '100%', height: '100%' } }}>
-            <WidgetValue widget={widget} data={this.state.simulatorData} sequence={this.state.sequence} />
+            <WidgetValue widget={widget} data={this.state.simulatorData} sequence={this.state.sequence} simulation={this.props.simulation} />
           </ContextMenuTrigger>
         </Rnd>
       );
     } else {
       return (
         <div className="widget" style={{ width: Number(widget.width), height: Number(widget.height), left: Number(widget.x), top: Number(widget.y), position: 'absolute' }}>
-          <WidgetValue widget={widget} data={this.state.simulatorData} sequence={this.state.sequence} />
+          <WidgetValue widget={widget} data={this.state.simulatorData} sequence={this.state.sequence} simulation={this.props.simulation} />
         </div>
       );
     }

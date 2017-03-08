@@ -9,23 +9,20 @@
 
 import React, { Component } from 'react';
 
-//import EditWidgetValueDialog from './dialog-edit-widget-value';
-
 class WidgetValue extends Component {
   render() {
     // calculate value
     var value = null;
-    const identifier = '58bfd9facd76830327c8b6d4';
-    const signal = 2;
+    const widget = this.props.widget;
 
-    if (this.props.data && this.props.data[identifier] && this.props.data[identifier].values) {
-      const signalArray = this.props.data[identifier].values[signal];
+    if (this.props.data && this.props.data[widget.simulator] && this.props.data[widget.simulator].values) {
+      const signalArray = this.props.data[widget.simulator].values[widget.signal];
       value = signalArray[signalArray.length - 1].y;
     }
 
     return (
       <div>
-        {this.props.widget.name}: {value}
+        {widget.name}: {value}
       </div>
     );
   }

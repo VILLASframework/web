@@ -7,86 +7,58 @@
  *   Unauthorized copying of this file, via any medium is strictly prohibited.
  **********************************************************************************/
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
-import Dialog from './dialog';
-
-class EditWidgetValueDialog extends Component {
-  static propTypes = {
-    show: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired
-  };
-
-  valid: false;
-
+class EditValueWidget extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      name: '',
-      simulator: '',
-      signal: 0
-    }
+      widget: {
+        simulator: '',
+        signal: 0
+      }
+    };
   }
 
-  onClose(canceled) {
-    if (canceled === false) {
-      this.props.onClose(this.state);
-    } else {
-      this.props.onClose();
-    }
-  }
-
-  handleChange(e) {
-    this.setState({ [e.target.id]: e.target.value });
-  }
-
-  resetState() {
-    this.setState({ name: '' });
-  }
-
-  validateForm(target) {
-    // check all controls
-    var name = true;
-
-    if (this.state.name === '') {
-      name = false;
-    }
-
-    this.valid = name;
-
-    // return state to control
-    if (target === 'name') return name ? "success" : "error";
-
-    return "success";
+  componentWillReceiveProps(nextProps) {
+    this.setState({ widget: nextProps.widget });
   }
 
   render() {
+    // get selected simulation model
+    var simulationModel = {};
+
+    if (this.props.simulation) {
+      this.props.simulation.models.forEach((model) => {
+        if (model.simulation === this.state.widget.simulation) {
+          simulationModel = model;
+        }
+      });
+    }
+
     return (
-      <Dialog show={this.props.show} title="New Visualization" buttonTitle="add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
-        <form>
-          <FormGroup controlId="name" validationState={this.validateForm('name')}>
-            <ControlLabel>Name</ControlLabel>
-            <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup controlId="simulator">
-            <ControlLabel>Simulator</ControlLabel>
-            <FormControl componentClass="select" placeholder="Select simulator">
-              <option value="RTDS">RTDS</option>
-              <option value="Opal">Opal</option>
-            </FormControl>
-          </FormGroup>
-          <FormGroup controlId="signal" validationState={this.validateForm('signal')}>
-            <ControlLabel>Signal</ControlLabel>
-            <FormControl type="text" placeholder="Enter signal" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-        </form>
-      </Dialog>
+      <div>
+        <FormGroup controlId="simulator">
+          <ControlLabel>Simulator</ControlLabel>
+          <FormControl componentClass="select" placeholder="Select simulator" value={this.state.widget.simulator} onChange={(e) => this.props.handleChange(e)}>
+            {this.props.simulation.models.map((model, index) => (
+              <option key={index} value={model.simulator}>{model.name}</option>
+            ))}
+          </FormControl>
+        </FormGroup>
+        <FormGroup controlId="signal">
+          <ControlLabel>Signal</ControlLabel>
+          <FormControl componentClass="select" placeholder="Select signal" value={this.state.widget.signal} onChange={(e) => this.props.handleChange(e)}>
+            {simulationModel.mapping.map((signal, index) => (
+              <option key={index} value={index}>{simulationModel.mapping[index].name}</option>
+            ))}
+          </FormControl>
+        </FormGroup>
+      </div>
     );
   }
 }
 
-export default EditWidgetValueDialog;
+export default EditValueWidget;
