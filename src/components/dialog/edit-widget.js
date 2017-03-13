@@ -13,7 +13,7 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import Dialog from './dialog';
 
 import EditValueWidget from './edit-widget-value';
-import editPlotWidget from './edit-widget-plot';
+import EditPlotWidget from './edit-widget-plot';
 
 class EditWidgetDialog extends Component {
   static propTypes = {
@@ -43,12 +43,12 @@ class EditWidgetDialog extends Component {
     }
   }
 
-  handleChange(e) {
+  handleChange(e, index) {
     var widget = this.state.widget;
     widget[e.target.id] = e.target.value;
     this.setState({ widget: widget });
 
-    console.log(this.state.widget);
+    //console.log(this.state.widget);
   }
 
   resetState() {
@@ -73,8 +73,12 @@ class EditWidgetDialog extends Component {
     // get widget part
     var widgetDialog = null;
 
-    if (this.props.widget && this.props.widget.type === 'Value') {
-      widgetDialog = <EditValueWidget widget={this.state.widget} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />;
+    if (this.props.widget) {
+      if (this.props.widget.type === 'Value') {
+        widgetDialog = <EditValueWidget widget={this.state.widget} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />;
+      } else if (this.props.widget.type === 'Plot') {
+        widgetDialog = <EditPlotWidget widget={this.state.widget} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />;
+      }
     }
 
     return (
