@@ -14,6 +14,7 @@ import Rnd from 'react-rnd';
 
 import SimulatorDataStore from '../stores/simulator-data-store';
 import WidgetValue from '../components/widget-value';
+import WidgetPlot from '../components/widget-plot';
 
 import '../styles/widgets.css';
 
@@ -57,11 +58,20 @@ class Widget extends Component {
   }
 
   render() {
-    const widget = this.props.data;
-
+    // configure grid
     var grid = this.props.grid;
     if (!grid) {
       grid = [ 1, 1 ];
+    }
+
+    // get widget element
+    const widget = this.props.data;
+    var element = null;
+
+    if (widget.type === 'Value') {
+      element = <WidgetValue widget={widget} data={this.state.simulatorData} sequence={this.state.sequence} simulation={this.props.simulation} />
+    } else if (widget.type === 'Plot') {
+      element = <WidgetPlot widget={widget} data={this.state.simulatorData} sequence={this.state.sequence} simulation={this.props.simulation} />
     }
 
     if (this.props.editing) {
@@ -77,14 +87,14 @@ class Widget extends Component {
           resizeGrid={grid}
         >
           <ContextMenuTrigger id={'widgetMenu' + this.props.index} attributes={{ style: { width: '100%', height: '100%' } }}>
-            <WidgetValue widget={widget} data={this.state.simulatorData} sequence={this.state.sequence} simulation={this.props.simulation} />
+            {element}
           </ContextMenuTrigger>
         </Rnd>
       );
     } else {
       return (
         <div className="widget" style={{ width: Number(widget.width), height: Number(widget.height), left: Number(widget.x), top: Number(widget.y), position: 'absolute' }}>
-          <WidgetValue widget={widget} data={this.state.simulatorData} sequence={this.state.sequence} simulation={this.props.simulation} />
+          {element}
         </div>
       );
     }

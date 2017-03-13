@@ -115,6 +115,10 @@ class Visualization extends Component {
     if (item.name === 'Value') {
       widget.simulator = this.state.simulation.models[0].simulator;
       widget.signal = 0;
+    } else if (item.name === 'Plot') {
+      widget.simulator = this.state.simulation.models[0].simulator;
+      widget.plotType = 'multiple';
+      widget.signals = [ 0 ];
     }
 
     var visualization = this.state.visualization;
@@ -197,6 +201,7 @@ class Visualization extends Component {
           {this.state.editing &&
             <div className="toolbox">
               <ToolboxItem name="Value" type="widget" />
+              <ToolboxItem name="Plot" type="widget" />
             </div>
           }
 

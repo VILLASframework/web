@@ -13,6 +13,7 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import Dialog from './dialog';
 
 import EditValueWidget from './edit-widget-value';
+import editPlotWidget from './edit-widget-plot';
 
 class EditWidgetDialog extends Component {
   static propTypes = {
