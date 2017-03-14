@@ -12,7 +12,7 @@ import { ReduceStore } from 'flux/utils';
 import AppDispatcher from '../app-dispatcher';
 import SimulatorDataDataManager from '../data-managers/simulator-data-data-manager';
 
-const MAX_VALUES = 100;
+const MAX_VALUES = 1000;
 
 class SimulationDataStore extends ReduceStore {
   constructor() {
@@ -39,26 +39,33 @@ class SimulationDataStore extends ReduceStore {
           state[action.identifier].values.push([]);
         }
 
+        console.log('Socket opened');
+
         return state;
 
       case 'simulatorData/data-changed':
-        // add data to simulator
-        for (i = 0; i < state[action.identifier].signals; i++) {
-          state[action.identifier].values[i].push({ x: action.data.timestamp, y: action.data.values[i] });
+        // only add data, if newer than current
+        if (state[action.identifier].sequence < action.data.sequence) {
+          // add data to simulator
+          for (i = 0; i < state[action.identifier].signals; i++) {
+            state[action.identifier].values[i].push({ x: action.data.timestamp, y: action.data.values[i] });
 
-          // erase old values
-          if (state[action.identifier].values[i].length > MAX_VALUES) {
-            const pos = state[action.identifier].values[i].length - MAX_VALUES;
-            state[action.identifier].values[i].splice(0, pos);
+            // erase old values
+            if (state[action.identifier].values[i].length > MAX_VALUES) {
+              const pos = state[action.identifier].values[i].length - MAX_VALUES;
+              state[action.identifier].values[i].splice(0, pos);
+            }
           }
+
+          // update metadata
+          state[action.identifier].timestamp = action.data.timestamp;
+          state[action.identifier].sequence = action.data.sequence;
+
+          // explicit call to prevent array copy
+          this.__emitChange();
+        } else {
+          console.log('same sequence');
         }
-
-        // update metadata
-        state[action.identifier].timestamp = action.data.timestamp;
-        state[action.identifier].sequence = action.data.sequence;
-
-        // explicit call to prevent array copy
-        this.__emitChange();
 
         return state;
 

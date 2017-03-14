@@ -117,8 +117,10 @@ class Visualization extends Component {
       widget.signal = 0;
     } else if (item.name === 'Plot') {
       widget.simulator = this.state.simulation.models[0].simulator;
-      widget.plotType = 'multiple';
       widget.signals = [ 0 ];
+      widget.time = 300;
+      widget.width = 400;
+      widget.height = 200;
     }
 
     var visualization = this.state.visualization;

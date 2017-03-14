@@ -23,9 +23,13 @@ class SimulatorDataDataManager {
         this._sockets.close();
 
         this._sockets[identifier] = WebsocketAPI.addSocket(endpoint, { onOpen: (event) => this.onOpen(event, identifier, signals), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier) });
+
+        console.log('Modified socket');
       }
     } else {
       this._sockets[identifier] = WebsocketAPI.addSocket(endpoint, { onOpen: (event) => this.onOpen(event, identifier, signals), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier) });
+
+      console.log('New socket');
     }
   }
 
@@ -46,6 +50,8 @@ class SimulatorDataDataManager {
 
   onMessage(event, identifier) {
     var message = this.bufferToMessage(event.data);
+
+    //console.log(message);
 
     AppDispatcher.dispatch({
       type: 'simulatorData/data-changed',

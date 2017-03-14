@@ -10,19 +10,34 @@
 import React, { Component } from 'react';
 
 class WidgetValue extends Component {
-  render() {
-    // calculate value
-    var value = null;
-    const widget = this.props.widget;
+  constructor(props) {
+    super(props);
 
-    if (this.props.data && this.props.data[widget.simulator] && this.props.data[widget.simulator].values) {
-      const signalArray = this.props.data[widget.simulator].values[widget.signal];
-      value = signalArray[signalArray.length - 1].y;
+    this.state = {
+      value: ''
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // update value
+    const simulator = nextProps.widget.simulator;
+
+    if (nextProps.data == null || nextProps.data[simulator] == null || nextProps.data[simulator].values == null) {
+      this.setState({ value: '' });
+      return;
     }
 
+    // check if value has changed
+    const signal = nextProps.data[simulator].values[nextProps.widget.signal];
+    if (this.state.value !== signal[signal.length - 1].y) {
+      this.setState({ value: signal[signal.length - 1].y });
+    }
+  }
+
+  render() {
     return (
       <div>
-        {widget.name}: {value}
+        {this.props.widget.name}: {this.state.value}
       </div>
     );
   }

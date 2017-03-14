@@ -10,16 +10,22 @@
 import RestAPI from '../api/rest-api';
 import AppDispatcher from '../app-dispatcher';
 
+const API_URL = 'http://localhost:4000/api/v1';
+
 class RestDataManager {
   constructor(type, url) {
     this.url = url;
     this.type = type;
   }
 
+  makeURL(part) {
+    return API_URL + part;
+  }
+
   load(id) {
     if (id != null) {
       // load single object
-      RestAPI.get(this.url + '/' + id).then(response => {
+      RestAPI.get(this.makeURL(this.url + '/' + id)).then(response => {
         AppDispatcher.dispatch({
           type: this.type + 's/loaded',
           data: response[this.type]
@@ -32,7 +38,7 @@ class RestDataManager {
       });
     } else {
       // load all objects
-      RestAPI.get(this.url).then(response => {
+      RestAPI.get(this.makeURL(this.url)).then(response => {
         AppDispatcher.dispatch({
           type: this.type + 's/loaded',
           data: response[this.type + 's']
@@ -50,7 +56,7 @@ class RestDataManager {
     var obj = {};
     obj[this.type] = object;
 
-    RestAPI.post(this.url, obj).then(response => {
+    RestAPI.post(this.makeURL(this.url), obj).then(response => {
       AppDispatcher.dispatch({
         type: this.type + 's/added',
         data: response[this.type]
@@ -64,7 +70,7 @@ class RestDataManager {
   }
 
   remove(object) {
-    RestAPI.delete(this.url + '/' + object._id).then(response => {
+    RestAPI.delete(this.makeURL(this.url + '/' + object._id)).then(response => {
       AppDispatcher.dispatch({
         type: this.type + 's/removed',
         data: response[this.type],
@@ -82,7 +88,7 @@ class RestDataManager {
     var obj = {};
     obj[this.type] = object;
 
-    RestAPI.put(this.url + '/' + object._id, obj).then(response => {
+    RestAPI.put(this.makeURL(this.url + '/' + object._id), obj).then(response => {
       AppDispatcher.dispatch({
         type: this.type + 's/edited',
         data: response[this.type]

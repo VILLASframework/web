@@ -69,9 +69,9 @@ class Widget extends Component {
     var element = null;
 
     if (widget.type === 'Value') {
-      element = <WidgetValue widget={widget} data={this.state.simulatorData} sequence={this.state.sequence} simulation={this.props.simulation} />
+      element = <WidgetValue widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
     } else if (widget.type === 'Plot') {
-      element = <WidgetPlot widget={widget} data={this.state.simulatorData} sequence={this.state.sequence} simulation={this.props.simulation} />
+      element = <WidgetPlot widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
     }
 
     if (this.props.editing) {
