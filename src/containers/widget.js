@@ -13,8 +13,10 @@ import { ContextMenuTrigger } from 'react-contextmenu';
 import Rnd from 'react-rnd';
 
 import SimulatorDataStore from '../stores/simulator-data-store';
+
 import WidgetValue from '../components/widget-value';
 import WidgetPlot from '../components/widget-plot';
+import WidgetTable from '../components/widget-table';
 
 import '../styles/widgets.css';
 
@@ -72,6 +74,8 @@ class Widget extends Component {
       element = <WidgetValue widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
     } else if (widget.type === 'Plot') {
       element = <WidgetPlot widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
+    } else if (widget.type === 'Table') {
+      element = <WidgetTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
     }
 
     if (this.props.editing) {

@@ -121,6 +121,10 @@ class Visualization extends Component {
       widget.time = 300;
       widget.width = 400;
       widget.height = 200;
+    } else if (item.name === 'Table') {
+      widget.simulator = this.state.simulation.models[0].simulator;
+      widget.width = 400;
+      widget.height = 200;
     }
 
     var visualization = this.state.visualization;
@@ -204,6 +208,7 @@ class Visualization extends Component {
             <div className="toolbox">
               <ToolboxItem name="Value" type="widget" />
               <ToolboxItem name="Plot" type="widget" />
+              <ToolboxItem name="Table" type="widget" />
             </div>
           }
 
