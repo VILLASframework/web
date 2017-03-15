@@ -54,6 +54,16 @@ class Widget extends Component {
   resizeStop(direction, styleSize, clientSize, delta) {
     // update widget
     var widget = this.props.data;
+
+    // resize depends on direction
+    if (direction === 'left' || direction === 'topLeft' || direction === 'bottomLeft') {
+      widget.x -= delta.width;
+    }
+
+    if (direction === 'top' || direction === 'topLeft' || direction === 'topRight') {
+      widget.y -= delta.height;
+    }
+
     widget.width = styleSize.width;
     widget.height = styleSize.height;
 
@@ -61,7 +71,7 @@ class Widget extends Component {
   }
 
   render() {
-    console.log('render widget ' + this.props.data.z + this.props.data.type);
+    //console.log('render widget ' + this.props.data.z + this.props.data.type);
 
     // configure grid
     var grid = this.props.grid;

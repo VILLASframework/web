@@ -142,6 +142,7 @@ class Visualization extends Component {
     visualization.widgets[index] = widget;
 
     this.setState({ visualization: visualization });
+    this.forceUpdate();
   }
 
   editWidget(e, data) {
@@ -234,6 +235,20 @@ class Visualization extends Component {
   }
 
   render() {
+    // calculate widget area height
+    var height = 0;
+
+    if (this.state.visualization.widgets) {
+      this.state.visualization.widgets.forEach((widget) => {
+        if (widget.y + widget.height > height) {
+          height = widget.y + widget.height;
+        }
+      });
+
+      // add padding
+      height += 40;
+    }
+
     return (
       <div>
         <div>
@@ -264,7 +279,7 @@ class Visualization extends Component {
             </div>
           }
 
-          <Dropzone onDrop={(item, position) => this.handleDrop(item, position)} editing={this.state.editing}>
+          <Dropzone height={height} onDrop={(item, position) => this.handleDrop(item, position)} editing={this.state.editing}>
             {this.state.visualization.widgets != null &&
               this.state.visualization.widgets.map((widget, index) => (
               <Widget key={index} data={widget} simulation={this.state.simulation} onWidgetChange={(w, i) => this.widgetChange(w, i)} editing={this.state.editing} index={index} grid={this.state.grid} />

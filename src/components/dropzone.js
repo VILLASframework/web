@@ -47,7 +47,7 @@ class Dropzone extends Component {
     });
 
     return this.props.connectDropTarget(
-      <div className={toolboxClass} ref={wrapper => this.wrapper = wrapper}>
+      <div className={toolboxClass} style={{ height: this.props.height}} ref={wrapper => this.wrapper = wrapper}>
         {this.props.children}
       </div>
     );
