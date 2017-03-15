@@ -152,3 +152,11 @@ body {
 .toolbox-item-dragging {
   opacity: 0.4;
 }
+
+.toolbox-item-disabled {
+  border-color: lightgray;
+
+  color: lightgray;
+
+  cursor: default !important;
+}

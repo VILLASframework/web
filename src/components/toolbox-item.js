@@ -34,18 +34,31 @@ class ToolboxItem extends Component {
     type: PropTypes.string.isRequired
   };
 
+  static defaultProps = {
+    disabled: false
+  };
+
   render() {
     var itemClass = classNames({
       'toolbox-item': true,
-      'toolbox-item-dragging': this.props.isDragging
+      'toolbox-item-dragging': this.props.isDragging,
+      'toolbox-item-disabled': this.props.disabled
     });
     var dropEffect = 'copy';
 
-    return this.props.connectDragSource(
-      <span className={itemClass}>
-        {this.props.name}
-      </span>
-    , {dropEffect});
+    if (this.props.disabled === false) {
+      return this.props.connectDragSource(
+        <span className={itemClass}>
+          {this.props.name}
+        </span>
+      , {dropEffect});
+    } else {
+      return (
+        <span className={itemClass}>
+          {this.props.name}
+        </span>
+      );
+    }
   }
 }
 

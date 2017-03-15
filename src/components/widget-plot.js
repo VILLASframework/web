@@ -38,13 +38,20 @@ class WidgetPlot extends Component {
     }
 
     // get timestamps
-    const latestTimestamp = nextProps.data[simulator].values[0][nextProps.data[simulator].values[0].length - 1].x;
-    const firstTimestamp = latestTimestamp - nextProps.widget.time * 100;
+    var latestTimestamp = nextProps.data[simulator].values[0][nextProps.data[simulator].values[0].length - 1].x;
+    var firstTimestamp = latestTimestamp - nextProps.widget.time * 1000;
+    var firstIndex;
 
-    // find element index representing firstTimestamp
-    const firstIndex = nextProps.data[simulator].values[0].findIndex((value) => {
-      return value.x >= firstTimestamp;
-    });
+    if (nextProps.data[simulator].values[0][0].x < firstTimestamp) {
+      // find element index representing firstTimestamp
+      firstIndex = nextProps.data[simulator].values[0].findIndex((value) => {
+        return value.x >= firstTimestamp;
+      });
+    } else {
+      firstIndex = 0;
+      firstTimestamp = nextProps.data[simulator].values[0][0].x;
+      latestTimestamp = firstTimestamp + nextProps.widget.time * 1000;
+    }
 
     // copy all values for each signal in time region
     var values = [];
@@ -71,7 +78,7 @@ class WidgetPlot extends Component {
           data={this.state.values}
           title={this.props.widget.name}
           gridHorizontal={true}
-          xAccessor={(d) => {return new Date(d.x);}}
+          xAccessor={(d) => { if (d != null) { return new Date(d.x); } }}
           hoverAnimation={false}
           circleRadius={0}
           domain={{ x: [this.state.firstTimestamp, this.state.latestTimestamp] }}

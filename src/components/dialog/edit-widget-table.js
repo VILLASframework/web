@@ -26,17 +26,6 @@
    }
 
    render() {
-     // get selected simulation model
-     var simulationModel = {};
-
-     if (this.props.simulation) {
-       this.props.simulation.models.forEach((model) => {
-         if (model.simulation === this.state.widget.simulation) {
-           simulationModel = model;
-         }
-       });
-     }
-
      return (
        <div>
          <FormGroup controlId="simulator">

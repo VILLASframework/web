@@ -8,7 +8,7 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, FormControl, ControlLabel, Checkbox } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel, Checkbox, HelpBlock } from 'react-bootstrap';
 
 class EditPlotWidget extends Component {
   constructor(props) {
@@ -17,8 +17,8 @@ class EditPlotWidget extends Component {
     this.state = {
       widget: {
         simulator: '',
-        plotType: '',
-        signals: []
+        signals: [],
+        time: 0
       }
     };
   }
@@ -58,6 +58,11 @@ class EditPlotWidget extends Component {
 
     return (
       <div>
+        <FormGroup controlId="time">
+          <ControlLabel>Time</ControlLabel>
+          <FormControl type="number" min="1" max="300" placeholder="Enter time" value={this.state.widget.time} onChange={(e) => this.props.handleChange(e)} />
+          <HelpBlock>Time in seconds</HelpBlock>
+        </FormGroup>
         <FormGroup controlId="simulator">
           <ControlLabel>Simulator</ControlLabel>
           <FormControl componentClass="select" placeholder="Select simulator" value={this.state.widget.simulator} onChange={(e) => this.props.handleChange(e)}>
@@ -66,21 +71,12 @@ class EditPlotWidget extends Component {
             ))}
           </FormControl>
         </FormGroup>
-        <FormGroup controlId="plotType">
-          <ControlLabel>Type</ControlLabel>
-          <FormControl componentClass="select" value={this.state.widget.plotType} onChange={(e) => this.props.handleChange(e)}>
-            <option value="multiple">Multiple</option>
-            <option value="table">Table</option>
-          </FormControl>
+        <FormGroup>
+          <ControlLabel>Signals</ControlLabel>
+          {simulationModel.mapping.map((signal, index) => (
+            <Checkbox key={index} checked={this.state.widget.signals.indexOf(index) !== -1} onChange={(e) => this.handleSignalChange(e, index)}>{signal.name}</Checkbox>
+          ))}
         </FormGroup>
-        {this.state.widget.plotType === 'multiple' &&
-          <FormGroup>
-            <ControlLabel>Signals</ControlLabel>
-            {simulationModel.mapping.map((signal, index) => (
-              <Checkbox key={index} checked={this.state.widget.signals.indexOf(index) !== -1} onChange={(e) => this.handleSignalChange(e, index)}>{signal.name}</Checkbox>
-            ))}
-          </FormGroup>
-        }
       </div>
     );
   }

@@ -12,7 +12,7 @@ import { ReduceStore } from 'flux/utils';
 import AppDispatcher from '../app-dispatcher';
 import SimulatorDataDataManager from '../data-managers/simulator-data-data-manager';
 
-const MAX_VALUES = 1000;
+const MAX_VALUES = 10000;
 
 class SimulationDataStore extends ReduceStore {
   constructor() {
@@ -71,7 +71,7 @@ class SimulationDataStore extends ReduceStore {
 
       case 'simulatorData/closed':
         // close and delete socket
-        if (state[action.identifier]) {
+        if (state[action.identifier] != null) {
           state[action.identifier].close();
           state[action.identifier] = null;
 

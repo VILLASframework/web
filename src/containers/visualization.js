@@ -212,6 +212,7 @@ class Visualization extends Component {
               <ToolboxItem name="Plot" type="widget" />
               <ToolboxItem name="Table" type="widget" />
               <ToolboxItem name="Label" type="widget" />
+              <ToolboxItem name="Image" type="widget" disabled />
             </div>
           }
 
