@@ -12,8 +12,14 @@ import { DropTarget } from 'react-dnd';
 import classNames from 'classnames';
 
 const dropzoneTarget = {
-  drop(props, monitor) {
-    props.onDrop(monitor.getItem());
+  drop(props, monitor, component) {
+    // get drop position
+    var position = monitor.getSourceClientOffset();
+    var dropzoneRect = component.wrapper.getBoundingClientRect();
+    position.x -= dropzoneRect.left;
+    position.y -= dropzoneRect.top;
+
+    props.onDrop(monitor.getItem(), position);
   }
 };
 
@@ -41,7 +47,7 @@ class Dropzone extends Component {
     });
 
     return this.props.connectDropTarget(
-      <div className={toolboxClass}>
+      <div className={toolboxClass} ref={wrapper => this.wrapper = wrapper}>
         {this.props.children}
       </div>
     );

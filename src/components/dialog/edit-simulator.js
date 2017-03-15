@@ -26,7 +26,6 @@ class EditSimulatorDialog extends Component {
 
     this.state = {
       name: '',
-      simulatorid: '1',
       endpoint: '',
       _id: ''
     };
@@ -47,7 +46,6 @@ class EditSimulatorDialog extends Component {
   resetState() {
     this.setState({
       name: this.props.simulator.name,
-      simulatorid: this.props.simulator.simulatorid,
       endpoint: this.props.simulator.endpoint,
       _id: this.props.simulator._id
     });
@@ -55,7 +53,6 @@ class EditSimulatorDialog extends Component {
 
   validateForm(target) {
     // check all controls
-    var simulatorid = true;
     var endpoint = true;
     var name = true;
 
@@ -63,20 +60,14 @@ class EditSimulatorDialog extends Component {
       name = false;
     }
 
-    // test if simulatorid is a number (in a string, not type of number)
-    if (!/^\d+$/.test(this.state.simulatorid)) {
-      simulatorid = false;
-    }
-
     if (this.state.endpoint === '') {
       endpoint = false;
     }
 
-    this.valid = simulatorid && endpoint && name;
+    this.valid = endpoint && name;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
-    else if (target === 'simulatorid') return simulatorid ? "success" : "error";
     else return endpoint ? "success" : "error";
   }
 
@@ -87,11 +78,6 @@ class EditSimulatorDialog extends Component {
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
             <ControlLabel>Name</ControlLabel>
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup controlId="simulatorid" validationState={this.validateForm('simulatorid')}>
-            <ControlLabel>Simulator ID</ControlLabel>
-            <FormControl type="number" placeholder="Enter simulator ID" value={this.state.simulatorid} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="endpoint" validationState={this.validateForm('endpoint')}>

@@ -39,8 +39,6 @@ class SimulationDataStore extends ReduceStore {
           state[action.identifier].values.push([]);
         }
 
-        console.log('Socket opened');
-
         return state;
 
       case 'simulatorData/data-changed':

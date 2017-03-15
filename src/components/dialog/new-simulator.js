@@ -25,7 +25,6 @@ class NewSimulatorDialog extends Component {
 
     this.state = {
       name: '',
-      simulatorid: '1',
       endpoint: ''
     };
   }
@@ -43,12 +42,11 @@ class NewSimulatorDialog extends Component {
   }
 
   resetState() {
-    this.setState({ name: '', simulatorid: '1', endpoint: '' });
+    this.setState({ name: '', endpoint: '' });
   }
 
   validateForm(target) {
     // check all controls
-    var simulatorid = true;
     var endpoint = true;
     var name = true;
 
@@ -56,20 +54,14 @@ class NewSimulatorDialog extends Component {
       name = false;
     }
 
-    // test if simulatorid is a number (in a string, not type of number)
-    if (!/^\d+$/.test(this.state.simulatorid)) {
-      simulatorid = false;
-    }
-
     if (this.state.endpoint === '') {
       endpoint = false;
     }
 
-    this.valid = simulatorid && endpoint && name;
+    this.valid = endpoint && name;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
-    else if (target === 'simulatorid') return simulatorid ? "success" : "error";
     else return endpoint ? "success" : "error";
   }
 
@@ -80,11 +72,6 @@ class NewSimulatorDialog extends Component {
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
             <ControlLabel>Name</ControlLabel>
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup controlId="simulatorid" validationState={this.validateForm('simulatorid')}>
-            <ControlLabel>Simulator ID</ControlLabel>
-            <FormControl type="number" placeholder="Enter simulator ID" value={this.state.simulatorid} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="endpoint" validationState={this.validateForm('endpoint')}>

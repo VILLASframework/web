@@ -99,15 +99,15 @@ class Visualization extends Component {
     });
   }
 
-  handleDrop(item) {
+  handleDrop(item, position) {
     // add new widget
     var widget = {
       name: 'Name',
       type: item.name,
       width: 100,
       height: 100,
-      x: 0,
-      y: 0,
+      x: position.x,
+      y: position.y,
       z: 0
     };
 
@@ -185,6 +185,54 @@ class Visualization extends Component {
     this.forceUpdate();
   }
 
+  moveWidgetAbove(e, data) {
+    // increase z-Order
+    var visualization = this.state.visualization;
+    var widget = visualization.widgets[data.index]
+    widget.z++;
+
+    visualization.widgets[data.index] = widget;
+    this.setState({ visualization: visualization });
+    this.forceUpdate();
+  }
+
+  moveWidgetToFront(e, data) {
+    // increase z-Order
+    var visualization = this.state.visualization;
+    var widget = visualization.widgets[data.index]
+    widget.z = 100;
+
+    visualization.widgets[data.index] = widget;
+    this.setState({ visualization: visualization });
+    this.forceUpdate();
+  }
+
+  moveWidgetUnderneath(e, data) {
+    // decrease z-Order
+    var visualization = this.state.visualization;
+    var widget = visualization.widgets[data.index]
+
+    widget.z--;
+    if (widget.z < 0) {
+      widget.z = 0;
+    }
+
+    visualization.widgets[data.index] = widget;
+    this.setState({ visualization: visualization });
+    this.forceUpdate();
+  }
+
+  moveWidgetToBack(e, data) {
+    // increase z-Order
+    var visualization = this.state.visualization;
+    var widget = visualization.widgets[data.index]
+    widget.z = 0;
+
+    visualization.widgets[data.index] = widget;
+    this.setState({ visualization: visualization });
+    this.forceUpdate();
+  }
+
   render() {
     return (
       <div>
@@ -216,7 +264,7 @@ class Visualization extends Component {
             </div>
           }
 
-          <Dropzone onDrop={item => this.handleDrop(item)} editing={this.state.editing}>
+          <Dropzone onDrop={(item, position) => this.handleDrop(item, position)} editing={this.state.editing}>
             {this.state.visualization.widgets != null &&
               this.state.visualization.widgets.map((widget, index) => (
               <Widget key={index} data={widget} simulation={this.state.simulation} onWidgetChange={(w, i) => this.widgetChange(w, i)} editing={this.state.editing} index={index} grid={this.state.grid} />
@@ -228,6 +276,11 @@ class Visualization extends Component {
               <ContextMenu id={'widgetMenu' + index} key={index}>
                 <MenuItem data={{index: index}} onClick={(e, data) => this.editWidget(e, data)}>Edit</MenuItem>
                 <MenuItem data={{index: index}} onClick={(e, data) => this.deleteWidget(e, data)}>Delete</MenuItem>
+                <MenuItem divider />
+                <MenuItem data={{index: index}} onClick={(e, data) => this.moveWidgetAbove(e, data)}>Move above</MenuItem>
+                <MenuItem data={{index: index}} onClick={(e, data) => this.moveWidgetToFront(e, data)}>Move to front</MenuItem>
+                <MenuItem data={{index: index}} onClick={(e, data) => this.moveWidgetUnderneath(e, data)}>Move underneath</MenuItem>
+                <MenuItem data={{index: index}} onClick={(e, data) => this.moveWidgetToBack(e, data)}>Move to back</MenuItem>
               </ContextMenu>
           ))}
 

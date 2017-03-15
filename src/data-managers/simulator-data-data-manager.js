@@ -23,13 +23,9 @@ class SimulatorDataDataManager {
         this._sockets.close();
 
         this._sockets[identifier] = WebsocketAPI.addSocket(endpoint, { onOpen: (event) => this.onOpen(event, identifier, signals), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier) });
-
-        console.log('Modified socket');
       }
     } else {
       this._sockets[identifier] = WebsocketAPI.addSocket(endpoint, { onOpen: (event) => this.onOpen(event, identifier, signals), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier) });
-
-      console.log('New socket');
     }
   }
 
@@ -51,8 +47,6 @@ class SimulatorDataDataManager {
   onMessage(event, identifier) {
     var message = this.bufferToMessage(event.data);
 
-    //console.log(message);
-
     AppDispatcher.dispatch({
       type: 'simulatorData/data-changed',
       data: message,
@@ -69,7 +63,6 @@ class SimulatorDataDataManager {
     let OFFSET_VERSION = 4;
 
     var bits = data.getUint8(0);
-    var simulator = data.getUint8(0x01);
     var endian = (bits >> OFFSET_ENDIAN) & 0x1 ? 0 : 1;
     var length = data.getUint16(0x02, endian);
 
@@ -82,8 +75,7 @@ class SimulatorDataDataManager {
       length: length,
       sequence: data.getUint32(0x04, endian),
       timestamp: data.getUint32(0x08, endian) * 1e3 + data.getUint32(0x0C, endian) * 1e-6,
-      values: values,
-      simulator: simulator
+      values: values
     };
   }
 }

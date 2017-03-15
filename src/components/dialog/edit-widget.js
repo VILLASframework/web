@@ -15,6 +15,7 @@ import Dialog from './dialog';
 import EditValueWidget from './edit-widget-value';
 import EditPlotWidget from './edit-widget-plot';
 import EditTableWidget from './edit-widget-table';
+import EditImageWidget from './edit-widget-image';
 
 class EditWidgetDialog extends Component {
   static propTypes = {
@@ -81,6 +82,8 @@ class EditWidgetDialog extends Component {
         widgetDialog = <EditPlotWidget widget={this.state.widget} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />;
       } else if (this.props.widget.type === 'Table') {
         widgetDialog = <EditTableWidget widget={this.state.widget} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />;
+      } else if (this.props.widget.type === 'Image') {
+        widgetDialog = <EditImageWidget widget={this.state.widget} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />;
       }
     }
 

@@ -61,6 +61,8 @@ class Widget extends Component {
   }
 
   render() {
+    console.log('render widget ' + this.props.data.z + this.props.data.type);
+
     // configure grid
     var grid = this.props.grid;
     if (!grid) {
@@ -92,6 +94,7 @@ class Widget extends Component {
           onDragStop={(event, ui) => this.dragStop(event, ui)}
           moveGrid={grid}
           resizeGrid={grid}
+          zIndex={widget.z}
         >
           <ContextMenuTrigger id={'widgetMenu' + this.props.index} attributes={{ style: { width: '100%', height: '100%' } }}>
             {element}
@@ -100,7 +103,7 @@ class Widget extends Component {
       );
     } else {
       return (
-        <div className="widget" style={{ width: Number(widget.width), height: Number(widget.height), left: Number(widget.x), top: Number(widget.y), position: 'absolute' }}>
+        <div className="widget" style={{ width: Number(widget.width), height: Number(widget.height), left: Number(widget.x), top: Number(widget.y), 'zIndex': Number(widget.z), position: 'absolute' }}>
           {element}
         </div>
       );
