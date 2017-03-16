@@ -12,7 +12,7 @@ import React, { Component } from 'react';
 class Footer extends Component {
   render() {
     return (
-      <footer>
+      <footer className="app-footer">
         Copyright &copy; {new Date().getFullYear()}
       </footer>
     );

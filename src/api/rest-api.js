@@ -11,9 +11,15 @@ import request from 'superagent/lib/client';
 import Promise from 'es6-promise';
 
 class RestAPI {
-  get(url) {
+  get(url, token) {
     return new Promise(function (resolve, reject) {
-      request.get(url).set('Access-Control-Allow-Origin', '*').end(function (error, res) {
+      var req = request.get(url).set('Access-Control-Allow-Origin', '*');
+
+      if (token != null) {
+        req.set('x-access-token', token);
+      }
+
+      req.end(function (error, res) {
         if (res == null || res.status !== 200) {
           reject(error);
         } else {
@@ -23,9 +29,15 @@ class RestAPI {
     });
   }
 
-  post(url, body) {
+  post(url, body, token) {
     return new Promise(function (resolve, reject) {
-      request.post(url).send(body).end(function (error, res) {
+      var req = request.post(url).send(body);
+
+      if (token != null) {
+        req.set('x-access-token', token);
+      }
+
+      req.end(function (error, res) {
         if (res == null || res.status !== 200) {
           reject(error);
         } else {
@@ -35,9 +47,15 @@ class RestAPI {
     });
   }
 
-  delete(url) {
+  delete(url, token) {
     return new Promise(function (resolve, reject) {
-      request.delete(url).end(function (error, res) {
+      var req = request.delete(url);
+
+      if (token != null) {
+        req.set('x-access-token', token);
+      }
+
+      req.end(function (error, res) {
         if (res == null || res.status !== 200) {
           reject(error);
         } else {
@@ -47,9 +65,15 @@ class RestAPI {
     });
   }
 
-  put(url, body) {
+  put(url, body, token) {
     return new Promise(function (resolve, reject) {
-      request.put(url).send(body).end(function (error, res) {
+      var req = request.put(url).send(body);
+
+      if (token != null) {
+        req.set('x-access-token', token);
+      }
+
+      req.end(function (error, res) {
         if (res == null || res.status !== 200) {
           reject(error);
         } else {

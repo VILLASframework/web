@@ -15,6 +15,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import AppDispatcher from '../app-dispatcher';
 import SimulationStore from '../stores/simulation-store';
 import SimulatorStore from '../stores/simulator-store';
+import UserStore from '../stores/user-store';
 
 import Header from '../components/header';
 import Footer from '../components/footer';
@@ -24,17 +25,31 @@ import '../styles/app.css';
 
 class App extends Component {
   static getStores() {
-    return [ SimulationStore, SimulatorStore ];
+    return [ SimulationStore, SimulatorStore, UserStore ];
   }
 
   static calculateState() {
     return {
       simulators: SimulatorStore.getState(),
-      simulations: SimulationStore.getState()
+      simulations: SimulationStore.getState(),
+      currentUser: UserStore.getState().currentUser
     };
   }
 
   componentWillMount() {
+    // if token stored locally, request user
+    const token = localStorage.getItem('token');
+
+    if (token != null && token !== '') {
+      AppDispatcher.dispatch({
+        type: 'users/logged-in',
+        token: token
+      });
+    } else {
+      // transition to login page
+      this.props.router.push('/login');
+    }
+
     // load all simulators and simulations to fetch simulation data
     AppDispatcher.dispatch({
       type: 'simulators/start-load'
