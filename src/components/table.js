@@ -11,13 +11,14 @@ import React, { Component } from 'react';
 import { Table, Button, Glyphicon, FormControl } from 'react-bootstrap';
 import { Link } from 'react-router';
 
-import TableColumn from './table-column';
+//import TableColumn from './table-column';
 
 class CustomTable extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      rows: [],
       editCell: [ -1, -1 ]
     };
   }
@@ -30,78 +31,97 @@ class CustomTable extends Component {
     this.setState({ editCell: [ column, row ]});  // x, y
   }
 
+  addCell(data, index, child) {
+    // add data to cell
+    const dataKey = child.props.dataKey;
+    var cell = [];
+
+    if (dataKey && data[dataKey] != null) {
+      // get content
+      var content;
+      const modifier = child.props.modifier;
+
+      if (modifier) {
+        content = modifier(data[dataKey]);
+      } else {
+        content = data[dataKey].toString();
+      }
+
+      // check if cell should be a link
+      const linkKey = child.props.linkKey;
+      if (linkKey && data[linkKey] != null) {
+        cell.push(<Link to={child.props.link + data[linkKey]}>{content}</Link>);
+      } else if (child.props.clickable) {
+        cell.push(<a onClick={() => child.props.onClick(index)}>{content}</a>);
+      } else {
+        cell.push(content);
+      }
+    }
+
+    if (child.props.dataIndex) {
+      cell.push(index);
+    }
+
+    // add buttons
+    if (child.props.editButton) {
+      cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onEdit(index)}><Glyphicon glyph='pencil' /></Button>);
+    }
+
+    if (child.props.deleteButton) {
+      cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onDelete(index)}><Glyphicon glyph='remove' /></Button>);
+    }
+
+    return cell;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // check if data exists
+    if (nextProps.data == null) {
+      this.setState({ rows: [] });
+      return;
+    }
+
+    // create row data
+    var rows = nextProps.data.map((data, index) => {
+      // check if multiple columns
+      if (Array.isArray(nextProps.children)) {
+        var row = [];
+
+        nextProps.children.forEach(child => {
+          row.push(this.addCell(data, index, child));
+        });
+
+        return row;
+      } else {
+        // table only has a single column
+        return [ this.addCell(data, index, nextProps.children) ];
+      }
+    });
+
+    this.setState({ rows: rows });
+  }
+
   render() {
-    // create sorted data for rows
-    var rows = [];
-    if (this.props.data) {
-      rows = this.props.data.map((row, index) => {
-        var array = [];
-
-        for (var i = 0; i < this.props.children.length; i++) {
-          // only handle table-column children
-          if (this.props.children[i].type === TableColumn) {
-            // add content to cell
-            var cell = [];
-
-            // add data to cell
-            const dataKey = this.props.children[i].props.dataKey;
-            if (dataKey && row[dataKey] != null) {
-              // get content
-              var content;
-              const modifier = this.props.children[i].props.modifier;
-
-              if (modifier) {
-                content = modifier(row[dataKey]);
-              } else {
-                content = row[dataKey].toString();
-              }
-
-              // check if cell should be a link
-              const linkKey = this.props.children[i].props.linkKey;
-              if (linkKey && row[linkKey] != null) {
-                cell.push(<Link to={this.props.children[i].props.link + row[linkKey]}>{content}</Link>);
-              } else {
-                cell.push(content);
-              }
-            }
-
-            if (this.props.children[i].props.dataIndex) {
-              cell.push(index);
-            }
-
-            // add buttons
-            if (this.props.children[i].props.editButton) {
-              const onEdit = this.props.children[i].props.onEdit;
-              cell.push(<Button bsClass='table-control-button' onClick={() => onEdit(index)}><Glyphicon glyph='pencil' /></Button>);
-            }
-
-            if (this.props.children[i].props.deleteButton) {
-              const onDelete = this.props.children[i].props.onDelete;
-              cell.push(<Button bsClass='table-control-button' onClick={() => onDelete(index)}><Glyphicon glyph='remove' /></Button>);
-            }
-
-            array.push(cell);
-          }
-        }
-
-        return array;
-      });
+    // get children
+    var children = this.props.children;
+    if (Array.isArray(this.props.children) === false) {
+      children = [ children ];
     }
 
     return (
-      <Table width={this.props.width} striped hover>
+      <Table style={{ width: this.props.width}} striped hover bordered>
         <thead>
           <tr>
             {this.props.children}
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, rowIndex) => (
+          {this.state.rows.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((cell, cellIndex) => (
-                <td key={cellIndex} onClick={this.props.children[cellIndex].props.inlineEditable === true ? (event) => this.onClick(event, rowIndex, cellIndex) : () => {}}>
+                <td key={cellIndex} onClick={children[cellIndex].props.inlineEditable === true ? (event) => this.onClick(event, rowIndex, cellIndex) : () => {}}>
                   {(this.state.editCell[0] === cellIndex && this.state.editCell[1] === rowIndex ) ? (
-                    <FormControl type="text" value={cell} onChange={(event) => this.props.children[cellIndex].props.onInlineChange(event, rowIndex, cellIndex)} />
+                    <FormControl type="text" value={cell} onChange={(event) => children[cellIndex].props.onInlineChange(event, rowIndex, cellIndex)} />
                   ) : (
                     <span>
                       {cell.map((element, elementIndex) => (

@@ -118,7 +118,7 @@ class Visualization extends Component {
     } else if (item.name === 'Plot') {
       widget.simulator = this.state.simulation.models[0].simulator;
       widget.signals = [ 0 ];
-      widget.time = 300;
+      widget.time = 60;
       widget.width = 400;
       widget.height = 200;
     } else if (item.name === 'Table') {
@@ -127,6 +127,11 @@ class Visualization extends Component {
       widget.height = 200;
     } else if (item.name === 'Label') {
 
+    } else if (item.name === 'PlotTable') {
+      widget.simulator = this.state.simulation.models[0].simulator;
+      widget.width = 500;
+      widget.height = 400;
+      widget.time = 60
     }
 
     var visualization = this.state.visualization;
@@ -276,6 +281,7 @@ class Visualization extends Component {
               <ToolboxItem name="Table" type="widget" />
               <ToolboxItem name="Label" type="widget" />
               <ToolboxItem name="Image" type="widget" disabled />
+              <ToolboxItem name="PlotTable" type="widget" />
             </div>
           }
 

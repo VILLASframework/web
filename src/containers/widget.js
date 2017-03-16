@@ -18,6 +18,7 @@ import WidgetValue from '../components/widget-value';
 import WidgetPlot from '../components/widget-plot';
 import WidgetTable from '../components/widget-table';
 import WidgetLabel from '../components/widget-label';
+import WidgetPlotTable from '../components/widget-plot-table';
 
 import '../styles/widgets.css';
 
@@ -83,6 +84,7 @@ class Widget extends Component {
     const widget = this.props.data;
     var element = null;
 
+    // dummy is passed to widgets to keep updating them while in edit mode
     if (widget.type === 'Value') {
       element = <WidgetValue widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
     } else if (widget.type === 'Plot') {
@@ -91,6 +93,8 @@ class Widget extends Component {
       element = <WidgetTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
     } else if (widget.type === 'Label') {
       element = <WidgetLabel widget={widget} />
+    } else if (widget.type === 'PlotTable') {
+      element = <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
     }
 
     if (this.props.editing) {
