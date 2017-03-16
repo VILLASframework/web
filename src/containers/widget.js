@@ -12,35 +12,46 @@ import { Container } from 'flux/utils';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import Rnd from 'react-rnd';
 
+import AppDispatcher from '../app-dispatcher';
 import SimulatorDataStore from '../stores/simulator-data-store';
+import FileStore from '../stores/file-store';
 
 import WidgetValue from '../components/widget-value';
 import WidgetPlot from '../components/widget-plot';
 import WidgetTable from '../components/widget-table';
 import WidgetLabel from '../components/widget-label';
 import WidgetPlotTable from '../components/widget-plot-table';
+import WidgetImage from '../components/widget-image';
 
 import '../styles/widgets.css';
 
 class Widget extends Component {
   static getStores() {
-    return [ SimulatorDataStore ];
+    return [ SimulatorDataStore, FileStore ];
   }
 
   static calculateState(prevState) {
     if (prevState) {
       return {
         simulatorData: SimulatorDataStore.getState(),
+        files: FileStore.getState(),
 
         sequence: prevState.sequence + 1
       }
     } else {
       return {
         simulatorData: SimulatorDataStore.getState(),
+        files: FileStore.getState(),
 
         sequence: 0
       };
     }
+  }
+
+  componentWillMount() {
+    AppDispatcher.dispatch({
+      type: 'files/start-load'
+    });
   }
 
   dragStop(event, ui) {
@@ -95,6 +106,8 @@ class Widget extends Component {
       element = <WidgetLabel widget={widget} />
     } else if (widget.type === 'PlotTable') {
       element = <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
+    } else if (widget.type === 'Image') {
+      element = <WidgetImage widget={widget} files={this.state.files} />
     }
 
     if (this.props.editing) {

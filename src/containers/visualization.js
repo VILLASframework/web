@@ -20,11 +20,12 @@ import EditWidget from '../components/dialog/edit-widget';
 import VisualizationStore from '../stores/visualization-store';
 import ProjectStore from '../stores/project-store';
 import SimulationStore from '../stores/simulation-store';
+import FileStore from '../stores/file-store';
 import AppDispatcher from '../app-dispatcher';
 
 class Visualization extends Component {
   static getStores() {
-    return [ VisualizationStore, ProjectStore, SimulationStore ];
+    return [ VisualizationStore, ProjectStore, SimulationStore, FileStore ];
   }
 
   static calculateState(prevState) {
@@ -36,6 +37,7 @@ class Visualization extends Component {
       visualizations: VisualizationStore.getState(),
       projects: ProjectStore.getState(),
       simulations: SimulationStore.getState(),
+      files: FileStore.getState(),
 
       visualization: prevState.visualization || {},
       project: prevState.project || null,
@@ -132,6 +134,9 @@ class Visualization extends Component {
       widget.width = 500;
       widget.height = 400;
       widget.time = 60
+    } else if (item.name === 'Image') {
+      widget.width = 200;
+      widget.height = 200;
     }
 
     var visualization = this.state.visualization;
@@ -280,7 +285,7 @@ class Visualization extends Component {
               <ToolboxItem name="Plot" type="widget" />
               <ToolboxItem name="Table" type="widget" />
               <ToolboxItem name="Label" type="widget" />
-              <ToolboxItem name="Image" type="widget" disabled />
+              <ToolboxItem name="Image" type="widget" />
               <ToolboxItem name="PlotTable" type="widget" />
             </div>
           }
@@ -305,7 +310,7 @@ class Visualization extends Component {
               </ContextMenu>
           ))}
 
-          <EditWidget show={this.state.editModal} onClose={(data) => this.closeEdit(data)} widget={this.state.modalData} simulation={this.state.simulation} />
+          <EditWidget show={this.state.editModal} onClose={(data) => this.closeEdit(data)} widget={this.state.modalData} simulation={this.state.simulation} files={this.state.files} />
         </div>
       </div>
     );

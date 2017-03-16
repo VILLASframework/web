@@ -82,6 +82,24 @@ class RestAPI {
       });
     });
   }
+
+  upload(url, data, token) {
+    return new Promise(function (resolve, reject) {
+      var req = request.post(url).send(data);
+
+      if (token != null) {
+        req.set('x-access-token', token);
+      }
+
+      req.end(function (error, res) {
+        if (res == null || res.status !== 200) {
+          reject(error);
+        } else {
+          resolve(JSON.parse(res.text));
+        }
+      });
+    });
+  }
 }
 
 export default new RestAPI();

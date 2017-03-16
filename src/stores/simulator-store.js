@@ -10,4 +10,31 @@
 import ArrayStore from './array-store';
 import SimulatorsDataManager from '../data-managers/simulators-data-manager';
 
-export default new ArrayStore('simulators', SimulatorsDataManager);
+class SimulatorStore extends ArrayStore {
+  constructor() {
+    super('simulators', SimulatorsDataManager);
+  }
+
+  reduce(state, action) {
+    // handle action
+    state = super.reduce(state, action);
+
+    if (action.type === 'simulators/loaded') {
+      // get simulator running state
+      if (Array.isArray(action.data)) {
+        action.data.forEach((simulator) => {
+          //SimulatorsDataManager.isRunning(simulator);
+        });
+      } else {
+        //SimulatorsDataManager.isRunning(action.data);
+      }
+    } else if (action.type === 'simulators/running') {
+      // set running state
+      console.log(action);
+    }
+
+    return state;
+  }
+}
+
+export default new SimulatorStore();
