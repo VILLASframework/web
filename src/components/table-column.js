@@ -20,7 +20,8 @@ class TableColumn extends Component {
     linkKey: '',
     dataIndex: false,
     inlineEditable: false,
-    clickable: false
+    clickable: false,
+    labelKey: null
   };
 
   render() {

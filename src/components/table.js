@@ -8,7 +8,7 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { Table, Button, Glyphicon, FormControl } from 'react-bootstrap';
+import { Table, Button, Glyphicon, FormControl, Label } from 'react-bootstrap';
 import { Link } from 'react-router';
 
 //import TableColumn from './table-column';
@@ -56,6 +56,18 @@ class CustomTable extends Component {
       } else {
         cell.push(content);
       }
+    }
+
+    // add label to content
+    const labelKey = child.props.labelKey;
+    if (labelKey && data[labelKey] != null) {
+      var labelContent = data[labelKey];
+
+      if (child.props.labelModifier) {
+        labelContent = child.props.labelModifier(labelContent);
+      }
+
+      cell.push(<span>&nbsp;<Label bsStyle={child.props.labelStyle(data[labelKey])}>{labelContent.toString()}</Label></span>);
     }
 
     if (child.props.dataIndex) {

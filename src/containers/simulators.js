@@ -72,15 +72,24 @@ class Simulators extends Component {
     }
   }
 
+  labelStyle(value) {
+    if (value === true) return 'success';
+    else return 'warning';
+  }
+
+  labelModifier(value) {
+    if (value === true) return 'Running';
+    else return 'Not running';
+  }
+
   render() {
     return (
       <div>
         <h1>Simulators</h1>
 
         <Table data={this.state.simulators}>
-          <TableColumn title='Name' dataKey='name' />
-          <TableColumn title='Running' dataKey='running' width='80' />
-          <TableColumn title='Endpoint' dataKey='endpoint' width='120' />
+          <TableColumn title='Name' dataKey='name' labelKey='running' labelStyle={(value) => this.labelStyle(value)} labelModifier={(value) => this.labelModifier(value)} />
+          <TableColumn title='Endpoint' dataKey='endpoint' width='180' />
           <TableColumn title='' width='70' editButton deleteButton onEdit={(index) => this.setState({ editModal: true, modalSimulator: this.state.simulators[index] })} onDelete={(index) => this.setState({ deleteModal: true, modalSimulator: this.state.simulators[index] })} />
         </Table>
 

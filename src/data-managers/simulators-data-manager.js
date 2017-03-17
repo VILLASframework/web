@@ -34,6 +34,7 @@ class SimulatorsDataManager extends RestDataManager {
         }
       });
 
+      // report simulator running state
       simulator.running = running;
 
       AppDispatcher.dispatch({
