@@ -13,7 +13,7 @@ import Promise from 'es6-promise';
 class RestAPI {
   get(url, token) {
     return new Promise(function (resolve, reject) {
-      var req = request.get(url).set('Access-Control-Allow-Origin', '*');
+      var req = request.get(url);
 
       if (token != null) {
         req.set('x-access-token', token);

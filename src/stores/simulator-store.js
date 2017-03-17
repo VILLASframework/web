@@ -16,24 +16,26 @@ class SimulatorStore extends ArrayStore {
   }
 
   reduce(state, action) {
-    // handle action
-    state = super.reduce(state, action);
+    switch (action.type) {
+      case 'simulators/loaded':
+        // get simulator running state
+        if (Array.isArray(action.data)) {
+          action.data.forEach((simulator) => {
+            SimulatorsDataManager.isRunning(simulator);
+          });
+        } else {
+          SimulatorsDataManager.isRunning(action.data);
+        }
 
-    if (action.type === 'simulators/loaded') {
-      // get simulator running state
-      if (Array.isArray(action.data)) {
-        action.data.forEach((simulator) => {
-          //SimulatorsDataManager.isRunning(simulator);
-        });
-      } else {
-        //SimulatorsDataManager.isRunning(action.data);
-      }
-    } else if (action.type === 'simulators/running') {
-      // set running state
-      console.log(action);
+        return super.reduce(state, action);
+
+      case 'simulators/running':
+        // update simulator
+        return this.updateElements(state, [ action.simulator ]);
+
+      default:
+        return super.reduce(state, action);
     }
-
-    return state;
   }
 }
 

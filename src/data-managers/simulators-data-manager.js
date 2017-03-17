@@ -9,7 +9,7 @@
 
 import RestDataManager from './rest-data-manager';
 import RestAPI from '../api/rest-api';
-//import AppDispatcher from '../app-dispatcher';
+import AppDispatcher from '../app-dispatcher';
 
 class SimulatorsDataManager extends RestDataManager {
   constructor() {
@@ -17,10 +17,32 @@ class SimulatorsDataManager extends RestDataManager {
   }
 
   isRunning(simulator) {
-    RestAPI.get('http://localhost/nodes.json').then(response => {
-      console.log(response);
+    // get path and name
+    var path = simulator.endpoint.substring(0, simulator.endpoint.lastIndexOf('/'));
+    path += '/nodes.json';
+
+    var name = simulator.endpoint.substring(simulator.endpoint.lastIndexOf('/') + 1);
+
+    // send request
+    RestAPI.get('http://' + path).then(response => {
+      // check if simulator is running
+      var running = false;
+
+      response.forEach(sim => {
+        if (sim.name === name) {
+          running = true;
+        }
+      });
+
+      simulator.running = running;
+
+      AppDispatcher.dispatch({
+        type: 'simulators/running',
+        simulator: simulator,
+        running: running
+      });
     }).catch(error => {
-      console.log(error);
+      //console.log(error);
     });
   }
 }
