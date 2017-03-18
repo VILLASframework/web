@@ -70,10 +70,11 @@ class SimulationDataStore extends ReduceStore {
       case 'simulatorData/closed':
         // close and delete socket
         if (state[action.identifier] != null) {
-          state[action.identifier].close();
-          state[action.identifier] = null;
+          // delete data
+          //delete state[action.identifier];
+          //state[action.identifier] = null;
 
-          this.__emitChange();
+          //this.__emitChange();
         }
 
         return state;

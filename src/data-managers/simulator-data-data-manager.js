@@ -42,6 +42,10 @@ class SimulatorDataDataManager {
       type: 'simulatorData/closed',
       identifier: identifier
     });
+
+    // remove from list
+    delete this._sockets[identifier];
+    this._sockets[identifier] = null;
   }
 
   onMessage(event, identifier) {

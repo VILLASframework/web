@@ -14,6 +14,8 @@ import AppDispatcher from '../app-dispatcher';
 class SimulatorsDataManager extends RestDataManager {
   constructor() {
     super('simulator', '/simulators');
+
+    this._timers = [];
   }
 
   isRunning(simulator) {
@@ -26,24 +28,59 @@ class SimulatorsDataManager extends RestDataManager {
     // send request
     RestAPI.get('http://' + path).then(response => {
       // check if simulator is running
-      var running = false;
+      simulator.running = false;
 
       response.forEach(sim => {
         if (sim.name === name) {
-          running = true;
+          // save properties
+          simulator.running = true;
+          //simulator.defaultTypes = sim.units;
+          //simulator.defaultLabels = sim.series;
         }
       });
-
-      // report simulator running state
-      simulator.running = running;
 
       AppDispatcher.dispatch({
         type: 'simulators/running',
         simulator: simulator,
-        running: running
+        running: simulator.running
       });
+
+      // remove timer if needed
+      if (simulator.running) {
+        const index = this._timers.findIndex(timer => {
+          return timer.simulator === simulator._id;
+        });
+
+        if (index !== -1) {
+          this._timers.splice(index, 1);
+        }
+      }
     }).catch(error => {
       //console.log(error);
+
+      simulator.running = false;
+
+      AppDispatcher.dispatch({
+        type: 'simulators/running',
+        simulator: simulator,
+        running: simulator.running
+      });
+
+      // check for existing timer
+      const timer = this._timers.find(element => {
+        return element.simulator === simulator._id;
+      });
+
+      if (timer == null) {
+        // add timer
+        var self = this;
+
+        const timerID = setInterval(function() {
+          self.isRunning(simulator);
+        }, 5000);
+
+        this._timers.push({ id: timerID, simulator: simulator._id });
+      }
     });
   }
 }

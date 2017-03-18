@@ -18,6 +18,7 @@ class SimulatorStore extends ArrayStore {
   reduce(state, action) {
     switch (action.type) {
       case 'simulators/loaded':
+      case 'simulators/is-running':
         // get simulator running state
         if (Array.isArray(action.data)) {
           action.data.forEach((simulator) => {
@@ -30,8 +31,21 @@ class SimulatorStore extends ArrayStore {
         return super.reduce(state, action);
 
       case 'simulators/running':
-        // update simulator
         return this.updateElements(state, [ action.simulator ]);
+
+      case 'simulatorData/closed':
+        // get simulator
+        var simulator = state.find(element => {
+          return element._id === action.identifier;
+        });
+
+        // update running state
+        simulator.running = false;
+
+        // restart requesting again
+        SimulatorsDataManager.isRunning(simulator);
+
+        return this.updateElements(state, [ simulator ]);
 
       default:
         return super.reduce(state, action);
