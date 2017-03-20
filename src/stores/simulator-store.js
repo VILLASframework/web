@@ -16,16 +16,18 @@ class SimulatorStore extends ArrayStore {
   }
 
   reduce(state, action) {
+    var simulator;
+
     switch (action.type) {
       case 'simulators/loaded':
-      case 'simulators/is-running':
+      //case 'simulators/is-running':
         // get simulator running state
         if (Array.isArray(action.data)) {
           action.data.forEach((simulator) => {
-            SimulatorsDataManager.isRunning(simulator);
+            SimulatorsDataManager.startRunningDetection(simulator);
           });
         } else {
-          SimulatorsDataManager.isRunning(action.data);
+          SimulatorsDataManager.startRunningDetection(action.data);
         }
 
         return super.reduce(state, action);
@@ -33,9 +35,20 @@ class SimulatorStore extends ArrayStore {
       case 'simulators/running':
         return this.updateElements(state, [ action.simulator ]);
 
+      case 'simulatorData/opened':
+        // get simulator
+        simulator = state.find(element => {
+          return element._id === action.identifier;
+        });
+
+        // restart requesting again
+        SimulatorsDataManager.stopRunningDetection(simulator);
+
+        return state;
+
       case 'simulatorData/closed':
         // get simulator
-        var simulator = state.find(element => {
+        simulator = state.find(element => {
           return element._id === action.identifier;
         });
 
@@ -43,7 +56,7 @@ class SimulatorStore extends ArrayStore {
         simulator.running = false;
 
         // restart requesting again
-        SimulatorsDataManager.isRunning(simulator);
+        SimulatorsDataManager.startRunningDetection(simulator);
 
         return this.updateElements(state, [ simulator ]);
 
