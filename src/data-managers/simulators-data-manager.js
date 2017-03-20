@@ -13,7 +13,7 @@ import AppDispatcher from '../app-dispatcher';
 
 class SimulatorsDataManager extends RestDataManager {
   constructor() {
-    super('simulator', '/simulators');
+    super('simulator', '/simulators', [ '_id', 'name', 'endpoint' ]);
 
     this._timers = [];
   }
@@ -52,6 +52,10 @@ class SimulatorsDataManager extends RestDataManager {
         });
 
         if (index !== -1) {
+          clearInterval(this._timers[index].id);
+
+          console.log('stop interval ' + this._timers[index].id);
+
           this._timers.splice(index, 1);
         }
       }
@@ -78,6 +82,8 @@ class SimulatorsDataManager extends RestDataManager {
         const timerID = setInterval(function() {
           self.isRunning(simulator);
         }, 5000);
+
+        console.log('start interval ' + timerID);
 
         this._timers.push({ id: timerID, simulator: simulator._id });
       }
