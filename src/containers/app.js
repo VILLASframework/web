@@ -32,7 +32,7 @@ class App extends Component {
   static calculateState(prevState) {
     // get list of running simulators
     var simulators = SimulatorStore.getState().filter(simulator => {
-      return simulator.running;
+      return simulator.running === true;
     });
 
     // check if running simulators changed
@@ -99,7 +99,7 @@ class App extends Component {
     const requiredSimulators = this.requiredSimulatorsBySimulations();
 
     requiredSimulators.forEach(simulator => {
-      this.connectSimulator(simulator);
+      this.connectSimulator(nextState, simulator);
     });
   }
 
@@ -126,9 +126,9 @@ class App extends Component {
     return simulators;
   }
 
-  connectSimulator(data) {
+  connectSimulator(state, data) {
     // get simulator object
-    const simulator = this.state.runningSimulators.find(element => {
+    const simulator = state.runningSimulators.find(element => {
       return element._id === data.simulator;
     });
 

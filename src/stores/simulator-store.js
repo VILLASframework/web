@@ -33,7 +33,17 @@ class SimulatorStore extends ArrayStore {
         return super.reduce(state, action);
 
       case 'simulators/running':
-        return this.updateElements(state, [ action.simulator ]);
+        // check if simulator running state changed
+        simulator = state.find(element => {
+          return element._id === action.simulator._id;
+        });
+
+        // only update if state changed
+        if (simulator.running == null || simulator.running !== action.simulator.running) {
+          state = this.updateElements(state, [ action.simulator ]);
+        }
+
+        return state;
 
       case 'simulatorData/opened':
         // get simulator

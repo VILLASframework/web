@@ -52,7 +52,9 @@ class SimulatorsDataManager extends RestDataManager {
     this._timers = [];
   }
 
-  startRunningDetection(simulator) {
+  startRunningDetection(obj) {
+    const simulator = JSON.parse(JSON.stringify(obj));
+
     // check if timer is already running
     const index = this._timers.findIndex(timer => {
       return timer.simulator === simulator._id;
