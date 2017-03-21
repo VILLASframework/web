@@ -26,13 +26,20 @@ class ArrayStore extends ReduceStore {
   updateElements(state, newElements) {
     // search for existing element to update
     state.forEach((element, index, array) => {
-      newElements.forEach((updateElement, index) => {
+      newElements = newElements.filter((updateElement, newIndex) => {
         if (element._id === updateElement._id) {
-          array[index] = element;
+          // update each property
+          for (var key in updateElement) {
+            if (updateElement.hasOwnProperty(key)) {
+              array[index][key] = updateElement[key];
+            }
+          }
 
           // remove updated element from update list
-          newElements.splice(index, 1);
+          return false;
         }
+
+        return true;
       });
     });
 
