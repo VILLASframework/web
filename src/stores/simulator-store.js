@@ -52,11 +52,13 @@ class SimulatorStore extends ArrayStore {
           return element._id === action.identifier;
         });
 
-        NotificationsDataManager.addNotification({
-          title: 'Simulator online',
-          message: 'Simulator \'' + simulator.name + '\' went online.',
-          level: 'info'
-        });
+        if (action.firstOpen === false) {
+          NotificationsDataManager.addNotification({
+            title: 'Simulator online',
+            message: 'Simulator \'' + simulator.name + '\' went online.',
+            level: 'info'
+          });
+        }
 
         // restart requesting again
         SimulatorsDataManager.stopRunningDetection(simulator);

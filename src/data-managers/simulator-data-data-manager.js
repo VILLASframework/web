@@ -25,15 +25,21 @@ class SimulatorDataDataManager {
         this._sockets[identifier] = WebsocketAPI.addSocket(endpoint, { onOpen: (event) => this.onOpen(event, identifier, signals), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier) });
       }
     } else {
-      this._sockets[identifier] = WebsocketAPI.addSocket(endpoint, { onOpen: (event) => this.onOpen(event, identifier, signals), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier) });
+      // set flag if a socket to this simulator was already create before
+      if (this._sockets[identifier] === null) {
+        this._sockets[identifier] = WebsocketAPI.addSocket(endpoint, { onOpen: (event) => this.onOpen(event, identifier, signals, false), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier) });
+      } else {
+        this._sockets[identifier] = WebsocketAPI.addSocket(endpoint, { onOpen: (event) => this.onOpen(event, identifier, signals, true), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier) });
+      }
     }
   }
 
-  onOpen(event, identifier, signals) {
+  onOpen(event, identifier, signals, firstOpen) {
     AppDispatcher.dispatch({
       type: 'simulatorData/opened',
       identifier: identifier,
-      signals: signals
+      signals: signals,
+      firstOpen: firstOpen
     });
   }
 
@@ -43,8 +49,7 @@ class SimulatorDataDataManager {
       identifier: identifier
     });
 
-    // remove from list
-    delete this._sockets[identifier];
+    // remove from list, keep null reference for flag detection
     this._sockets[identifier] = null;
   }
 
