@@ -11,11 +11,13 @@ import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import NotificationSystem from 'react-notification-system';
 
 import AppDispatcher from '../app-dispatcher';
 import SimulationStore from '../stores/simulation-store';
 import SimulatorStore from '../stores/simulator-store';
 import UserStore from '../stores/user-store';
+import NotificationsDataManager from '../data-managers/notifications-data-manager';
 
 import Header from '../components/header';
 import Footer from '../components/footer';
@@ -95,6 +97,10 @@ class App extends Component {
     });
   }
 
+  componentDidMount() {
+    NotificationsDataManager.setSystem(this.refs.notificationSystem);
+  }
+
   componentWillUpdate(nextProps, nextState) {
     // check if user is still logged in
     if (nextState.token == null) {
@@ -160,6 +166,8 @@ class App extends Component {
 
     return (
       <div className="app">
+        <NotificationSystem ref="notificationSystem" />
+
         <Header />
         <SidebarMenu />
 

@@ -9,6 +9,7 @@
 
 import ArrayStore from './array-store';
 import SimulatorsDataManager from '../data-managers/simulators-data-manager';
+import NotificationsDataManager from '../data-managers/notifications-data-manager';
 
 class SimulatorStore extends ArrayStore {
   constructor() {
@@ -51,6 +52,12 @@ class SimulatorStore extends ArrayStore {
           return element._id === action.identifier;
         });
 
+        NotificationsDataManager.addNotification({
+          title: 'Simulator online',
+          message: 'Simulator \'' + simulator.name + '\' went online.',
+          level: 'info'
+        });
+
         // restart requesting again
         SimulatorsDataManager.stopRunningDetection(simulator);
 
@@ -64,6 +71,12 @@ class SimulatorStore extends ArrayStore {
 
         // update running state
         simulator.running = false;
+
+        NotificationsDataManager.addNotification({
+          title: 'Simulator offline',
+          message: 'Simulator \'' + simulator.name + '\' went offline.',
+          level: 'info'
+        });
 
         // restart requesting again
         SimulatorsDataManager.startRunningDetection(simulator);
