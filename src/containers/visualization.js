@@ -261,21 +261,28 @@ class Visualization extends Component {
 
     return (
       <div>
-        <div>
-          <h1>
-            {this.state.visualization.name}
-          </h1>
-
-          <div>
-            {this.state.editing ? (
-              <div>
-                <Button bsStyle="link" onClick={() => this.saveChanges()}>Save</Button>
-                <Button bsStyle="link" onClick={() => this.discardChanges()}>Cancel</Button>
-              </div>
-            ) : (
-              <Button bsStyle="link" onClick={() => this.setState({ editing: true })}>Edit</Button>
-            )}
+        <div className='section-header'>
+          <div className="section-title">
+            <span>
+              {this.state.visualization.name}
+            </span>
           </div>
+          {this.state.editing ? (
+            <div className='section-buttons-group'>
+              <Button bsStyle="link" onClick={() => this.saveChanges()}>
+                <span className="glyphicon glyphicon-floppy-disk"></span> Save
+              </Button>
+              <Button bsStyle="link" onClick={() => this.discardChanges()}>
+                <span className="glyphicon glyphicon-remove"></span> Cancel
+              </Button>
+            </div>
+          ) : (
+            <div className='section-buttons-group'>
+              <Button bsStyle="link" onClick={() => this.setState({ editing: true })}>
+                <span className="glyphicon glyphicon-pencil"></span> Edit
+              </Button>
+            </div>
+          )}
         </div>
 
         <div>
