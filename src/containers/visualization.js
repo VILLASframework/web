@@ -260,8 +260,8 @@ class Visualization extends Component {
     }
 
     return (
-      <div>
-        <div className='section-header'>
+      <div className='section box'>
+        <div className='section-header box-header'>
           <div className="section-title">
             <span>
               {this.state.visualization.name}
@@ -285,9 +285,9 @@ class Visualization extends Component {
           )}
         </div>
 
-        <div>
+        <div className="box box-content">
           {this.state.editing &&
-            <div className="toolbox">
+            <div className="toolbox box-header">
               <ToolboxItem name="Value" type="widget" />
               <ToolboxItem name="Plot" type="widget" />
               <ToolboxItem name="Table" type="widget" />

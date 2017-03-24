@@ -14,9 +14,13 @@ body {
   background-color: #6EA2B0 !important;
 }
 
+#root {
+  height: 100vh;
+}
+
 .app {
   min-width: 800px;
-
+  height: 100%;
   color: #4d4d4d;
 
   font: 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -42,8 +46,10 @@ body {
 
 .app-footer {
   width: 100%;
-
-  margin-top: 20px;
+  height: 60px;
+  position: absolute;
+  bottom: 0px;
+  padding-top: 20px;
 
   text-align: center;
 
@@ -51,9 +57,14 @@ body {
 }
 
 .app-content {
+  position: absolute;
+  bottom: 0px;
+  top: 60px;
+  right: 0px;
+  left: 200px;
   min-height: 400px;
 
-  margin: 20px 20px 20px 200px;
+  margin: 20px 20px 60px 20px;
   padding: 15px 20px;
 
   background-color: #fff;
@@ -178,6 +189,27 @@ body {
 /**
  *  Sections
  */
+
+.box {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+}
+
+.box-header {
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
+}
+
+.box-content {
+  -webkit-flex: 1 0 auto;
+  flex: 1 0 auto;
+}
+
+.section {
+  height: 100%;
+}
+
 .section-header div {
   display: inline-block;
   vertical-align: middle;

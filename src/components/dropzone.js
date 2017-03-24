@@ -41,6 +41,7 @@ class Dropzone extends Component {
 
   render() {
     var toolboxClass = classNames({
+      'box-content': true,
       'toolbox-dropzone': true,
       'toolbox-dropzone-active': this.props.isOver && this.props.canDrop && this.props.editing,
       'toolbox-dropzone-editing': this.props.editing
