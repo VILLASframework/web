@@ -26,6 +26,8 @@ class UserStore extends ReduceStore {
   }
 
   reduce(state, action) {
+    console.log(action.type);
+
     switch (action.type) {
       case 'users/login':
         UsersDataManager.login(action.username, action.password);
@@ -37,13 +39,19 @@ class UserStore extends ReduceStore {
 
       case 'users/logged-in':
         // request logged-in user data
+        console.log(action.token);
         UsersDataManager.getCurrentUser(action.token);
 
-        return { token: action.token };
+        return Object.assign({}, state, { token: action.token });
 
       case 'users/current-user':
         // save logged-in user
-        return { currentUser: action.user };
+        return Object.assign({}, state, { currentUser: action.user });
+
+      case 'users/current-user-error':
+        // discard user token
+        //return { currentUser: null, token: null };
+        return state;
 
       case 'users/login-error':
         console.log(action);

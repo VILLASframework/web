@@ -32,22 +32,24 @@ class Login extends Component {
 
   componentWillUpdate(nextProps, nextState) {
     // if token stored locally, request user
-    const token = localStorage.getItem('token');
+    if (nextState.token == null) {
+      const token = localStorage.getItem('token');
 
-    if (token != null && token !== '') {
-      AppDispatcher.dispatch({
-        type: 'users/logged-in',
-        token: token
-      });
-    }
+      if (token != null && token !== '' && nextState.currentUser == null) {
+        AppDispatcher.dispatch({
+          type: 'users/logged-in',
+          token: token
+        });
+      }
+    } else {
+      // check if logged in
+      if (nextState.currentUser != null) {
+        // save login in local storage
+        localStorage.setItem('token', nextState.token);
 
-    // check if logged in
-    if (nextState.currentUser != null) {
-      // save login in local storage
-      localStorage.setItem('token', this.state.token);
-
-      // transition to index
-      this.props.router.push('/');
+        // transition to index
+        nextProps.router.push('/');
+      }
     }
   }
 

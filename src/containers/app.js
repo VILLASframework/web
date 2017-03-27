@@ -95,6 +95,13 @@ class App extends Component {
   }
 
   componentWillUpdate(nextProps, nextState) {
+    // check if user is still logged in
+    if (UserStore.getState().token == null) {
+      this.props.router.push('/login');
+
+      return;
+    }
+
     // open connection to each required simulator
     const requiredSimulators = this.requiredSimulatorsBySimulations();
 
