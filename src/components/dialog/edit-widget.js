@@ -29,7 +29,7 @@ class EditWidgetDialog extends Component {
     super(props);
 
     this.state = {
-      widget: {
+      temporal: {
         name: '',
         simulator: '',
         signal: 0
@@ -39,22 +39,23 @@ class EditWidgetDialog extends Component {
 
   onClose(canceled) {
     if (canceled === false) {
-      this.props.onClose(this.state.widget);
+      this.props.onClose(this.state.temporal);
     } else {
       this.props.onClose();
     }
   }
 
   handleChange(e, index) {
-    var widget = this.state.widget;
-    widget[e.target.id] = e.target.value;
-    this.setState({ widget: widget });
+    var update = this.state.temporal;
+    update[e.target.id] = e.target.value;
+    this.setState({ temporal: update });
 
     //console.log(this.state.widget);
   }
 
   resetState() {
-    this.setState({ widget: this.props.widget });
+    var widget_data = Object.assign({}, this.props.widget);
+    this.setState({ temporal: widget_data });
   }
 
   validateForm(target) {
@@ -77,13 +78,13 @@ class EditWidgetDialog extends Component {
 
     if (this.props.widget) {
       if (this.props.widget.type === 'Value') {
-        widgetDialog = <EditValueWidget widget={this.state.widget} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />;
+        widgetDialog = <EditValueWidget widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />;
       } else if (this.props.widget.type === 'Plot') {
-        widgetDialog = <EditPlotWidget widget={this.state.widget} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />;
+        widgetDialog = <EditPlotWidget widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />;
       } else if (this.props.widget.type === 'Table') {
-        widgetDialog = <EditTableWidget widget={this.state.widget} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />;
+        widgetDialog = <EditTableWidget widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />;
       } else if (this.props.widget.type === 'Image') {
-        widgetDialog = <EditImageWidget widget={this.state.widget} files={this.props.files} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />;
+        widgetDialog = <EditImageWidget widget={this.state.temporal} files={this.props.files} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />;
       }
     }
 
@@ -92,7 +93,7 @@ class EditWidgetDialog extends Component {
         <form encType='multipart/form-data'>
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
             <ControlLabel>Name</ControlLabel>
-            <FormControl type="text" placeholder="Enter name" value={this.state.widget.name} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder="Enter name" value={this.state.temporal.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
 
