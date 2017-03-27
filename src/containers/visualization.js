@@ -47,7 +47,9 @@ class Visualization extends Component {
 
       editModal: prevState.editModal || false,
       modalData: prevState.modalData || null,
-      modalIndex: prevState.modalIndex || null
+      modalIndex: prevState.modalIndex || null,
+
+      last_widget_key: prevState.last_widget_key  || 0
     };
   }
 
@@ -85,13 +87,34 @@ class Visualization extends Component {
       });
     }
   }
+  
+  getNewWidgetKey() {
+    // Increase the counter and update the state
+    return this.state.last_widget_key++;
+  }
+
+  transformToWidgetsDict(widgets) {
+    var widgetsDict = {};
+    // Create a new key and make a copy of the widget object
+    widgets.forEach( (widget) => widgetsDict[this.getNewWidgetKey()] = Object.assign({}, widget) );
+    return widgetsDict;
+  }
+
+  transformToWidgetsList(widgets) {
+    return Object.keys(widgets).map( (key) => widgets[key]);
+  }
 
   reloadVisualization() {
     // select visualization by param id
-    this.state.visualizations.forEach((visualization) => {
-      if (visualization._id === this.props.params.visualization) {
-        // JSON.parse(JSON.stringify(obj)) = deep clone to make also copy of widget objects inside
-        this.setState({ visualization: JSON.parse(JSON.stringify(visualization)), project: null });
+    this.state.visualizations.forEach((tempVisualization) => {
+      if (tempVisualization._id === this.props.params.visualization) {
+
+        // convert widgets list to a dictionary
+        var visualization = Object.assign({}, tempVisualization, {
+            widgets: tempVisualization.widgets? this.transformToWidgetsDict(tempVisualization.widgets) : {}
+        });
+
+        this.setState({ visualization: visualization, project: null });
 
         AppDispatcher.dispatch({
           type: 'projects/start-load',
@@ -139,31 +162,44 @@ class Visualization extends Component {
       widget.height = 200;
     }
 
-    var visualization = this.state.visualization;
-    visualization.widgets.push(widget);
+    var new_widgets = this.state.visualization.widgets;
 
+    var widget_key = this.getNewWidgetKey();
+    new_widgets[widget_key] = widget;
+
+    var visualization = Object.assign({}, this.state.visualization, {
+      widgets: new_widgets
+    });
     this.setState({ visualization: visualization });
-    this.forceUpdate();
   }
 
-  widgetChange(widget, index) {
-    // save changes temporarily
-    var visualization = this.state.visualization;
-    visualization.widgets[index] = widget;
+  widgetChange(updated_widget, key) {
+    
+    var widgets_update = {};
+    widgets_update[key] =  updated_widget;
+    var new_widgets = Object.assign({}, this.state.visualization.widgets, widgets_update);
 
+    var visualization = Object.assign({}, this.state.visualization, {
+      widgets: new_widgets
+    });
     this.setState({ visualization: visualization });
-    this.forceUpdate();
   }
 
   editWidget(e, data) {
-    this.setState({ editModal: true, modalData: this.state.visualization.widgets[data.index], modalIndex: data.index });
+    this.setState({ editModal: true, modalData: this.state.visualization.widgets[data.key], modalIndex: data.key });
   }
 
   closeEdit(data) {
     if (data) {
       // save changes temporarily
-      var visualization = this.state.visualization;
-      visualization.widgets[this.state.modalIndex] = data;
+      var widgets_update = {};
+      widgets_update[this.state.modalIndex] =  data;
+      
+      var new_widgets = Object.assign({}, this.state.visualization.widgets, widgets_update);
+
+      var visualization = Object.assign({}, this.state.visualization, {
+        widgets: new_widgets
+      });
 
       this.setState({ editModal: false, visualization: visualization });
     } else {
@@ -172,18 +208,22 @@ class Visualization extends Component {
   }
 
   deleteWidget(e, data) {
-    // delete widget temporarily
-    var visualization = this.state.visualization;
-    visualization.widgets.splice(data.index, 1);
-
+    delete this.state.visualization.widgets[data.key];
+    var visualization = Object.assign({}, this.state.visualization, {
+        widgets: this.state.visualization.widgets
+      });
     this.setState({ visualization: visualization });
-    this.forceUpdate();
   }
 
   saveChanges() {
+    // Transform to a list 
+    var visualization = Object.assign({}, this.state.visualization, {
+        widgets: this.transformToWidgetsList(this.state.visualization.widgets)
+      });
+
     AppDispatcher.dispatch({
       type: 'visualizations/start-edit',
-      data: this.state.visualization
+      data: visualization
     });
 
     this.setState({ editing: false });
@@ -193,63 +233,57 @@ class Visualization extends Component {
     this.setState({ editing: false, visualization: {} });
 
     this.reloadVisualization();
-    this.forceUpdate();
   }
 
-  moveWidgetAbove(e, data) {
+  moveWidget(e, data, applyDirection) {
+    var widget = this.state.visualization.widgets[data.key];
+    var updated_widgets = {};
+    updated_widgets[data.key] =  applyDirection(widget);
+    var new_widgets = Object.assign({}, this.state.visualization.widgets, updated_widgets);
+
+    var visualization = Object.assign({}, this.state.visualization, {
+      widgets: new_widgets
+    });
+    this.setState({ visualization: visualization });
+
+  }
+
+  moveAbove(widget) {
     // increase z-Order
-    var visualization = this.state.visualization;
-    var widget = visualization.widgets[data.index]
     widget.z++;
-
-    visualization.widgets[data.index] = widget;
-    this.setState({ visualization: visualization });
-    this.forceUpdate();
+     return widget;
   }
 
-  moveWidgetToFront(e, data) {
+  moveToFront(widget) {
     // increase z-Order
-    var visualization = this.state.visualization;
-    var widget = visualization.widgets[data.index]
     widget.z = 100;
-
-    visualization.widgets[data.index] = widget;
-    this.setState({ visualization: visualization });
-    this.forceUpdate();
+    return widget;
   }
 
-  moveWidgetUnderneath(e, data) {
+  moveUnderneath(widget) {
     // decrease z-Order
-    var visualization = this.state.visualization;
-    var widget = visualization.widgets[data.index]
-
     widget.z--;
     if (widget.z < 0) {
       widget.z = 0;
     }
-
-    visualization.widgets[data.index] = widget;
-    this.setState({ visualization: visualization });
-    this.forceUpdate();
+    return widget;
   }
 
-  moveWidgetToBack(e, data) {
+  moveToBack(widget) {
     // increase z-Order
-    var visualization = this.state.visualization;
-    var widget = visualization.widgets[data.index]
     widget.z = 0;
-
-    visualization.widgets[data.index] = widget;
-    this.setState({ visualization: visualization });
-    this.forceUpdate();
+    return widget;
   }
 
   render() {
     // calculate widget area height
     var height = 0;
 
-    if (this.state.visualization.widgets) {
-      this.state.visualization.widgets.forEach((widget) => {
+    var current_widgets = this.state.visualization.widgets;
+
+    if (current_widgets) {
+      Object.keys(current_widgets).forEach( (widget_key) => {
+        var widget = current_widgets[widget_key];
         if (widget.y + widget.height > height) {
           height = widget.y + widget.height;
         }
@@ -298,22 +332,22 @@ class Visualization extends Component {
           }
 
           <Dropzone height={height} onDrop={(item, position) => this.handleDrop(item, position)} editing={this.state.editing}>
-            {this.state.visualization.widgets != null &&
-              this.state.visualization.widgets.map((widget, index) => (
-              <Widget key={index} data={widget} simulation={this.state.simulation} onWidgetChange={(w, i) => this.widgetChange(w, i)} editing={this.state.editing} index={index} grid={this.state.grid} />
+            {current_widgets != null &&
+              Object.keys(current_widgets).map( (widget_key) => (
+              <Widget key={widget_key} data={current_widgets[widget_key]} simulation={this.state.simulation} onWidgetChange={(w, k) => this.widgetChange(w, k)} editing={this.state.editing} index={widget_key} grid={this.state.grid} />
             ))}
           </Dropzone>
 
-          {this.state.visualization.widgets != null &&
-            this.state.visualization.widgets.map((widget, index) => (
-              <ContextMenu id={'widgetMenu' + index} key={index}>
-                <MenuItem data={{index: index}} onClick={(e, data) => this.editWidget(e, data)}>Edit</MenuItem>
-                <MenuItem data={{index: index}} onClick={(e, data) => this.deleteWidget(e, data)}>Delete</MenuItem>
+          {current_widgets != null && 
+            Object.keys(current_widgets).map( (widget_key) => (
+              <ContextMenu id={'widgetMenu'+ widget_key} key={widget_key} >
+                <MenuItem data={{key: widget_key}} onClick={(e, data) => this.editWidget(e, data)}>Edit</MenuItem>
+                <MenuItem data={{key: widget_key}} onClick={(e, data) => this.deleteWidget(e, data)}>Delete</MenuItem>
                 <MenuItem divider />
-                <MenuItem data={{index: index}} onClick={(e, data) => this.moveWidgetAbove(e, data)}>Move above</MenuItem>
-                <MenuItem data={{index: index}} onClick={(e, data) => this.moveWidgetToFront(e, data)}>Move to front</MenuItem>
-                <MenuItem data={{index: index}} onClick={(e, data) => this.moveWidgetUnderneath(e, data)}>Move underneath</MenuItem>
-                <MenuItem data={{index: index}} onClick={(e, data) => this.moveWidgetToBack(e, data)}>Move to back</MenuItem>
+                <MenuItem data={{key: widget_key}} onClick={(e, data) => this.moveWidget(e, data, this.moveAbove)}>Move above</MenuItem>
+                <MenuItem data={{key: widget_key}} onClick={(e, data) => this.moveWidget(e, data, this.moveToFront)}>Move to front</MenuItem>
+                <MenuItem data={{key: widget_key}} onClick={(e, data) => this.moveWidget(e, data, this.moveUnderneath)}>Move underneath</MenuItem>
+                <MenuItem data={{key: widget_key}} onClick={(e, data) => this.moveWidget(e, data, this.moveToBack)}>Move to back</MenuItem>
               </ContextMenu>
           ))}
 
