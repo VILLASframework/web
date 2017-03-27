@@ -35,7 +35,7 @@ class UserStore extends ReduceStore {
 
       case 'users/logout':
         // delete user and token
-        return { token: null, currentUser: null };
+        return Object.assign({}, state, { token: null, currentUser: null });
 
       case 'users/logged-in':
         // request logged-in user data

@@ -37,7 +37,7 @@ class Home extends Component {
       localStorage.setItem('token', '');
 
       // transition to login page
-      this.props.router.push('/login');
+      nextProps.router.push('/login');
     }
   }
 
