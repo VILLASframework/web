@@ -10,10 +10,12 @@
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import { PageHeader } from 'react-bootstrap';
+import NotificationSystem from 'react-notification-system';
 
 import LoginForm from '../components/login-form';
 import Header from '../components/header';
 import Footer from '../components/footer';
+import NotificationsDataManager from '../data-managers/notifications-data-manager';
 
 import AppDispatcher from '../app-dispatcher';
 import UserStore from '../stores/user-store';
@@ -28,6 +30,10 @@ class Login extends Component {
       currentUser: UserStore.getState().currentUser,
       token: UserStore.getState().token
     };
+  }
+
+  componentDidMount() {
+    NotificationsDataManager.setSystem(this.refs.notificationSystem);
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -56,6 +62,8 @@ class Login extends Component {
   render() {
     return (
       <div>
+        <NotificationSystem ref="notificationSystem" />
+
         <Header />
 
         <div className="login-container">

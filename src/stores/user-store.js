@@ -11,6 +11,7 @@ import { ReduceStore } from 'flux/utils';
 
 import AppDispatcher from '../app-dispatcher';
 import UsersDataManager from '../data-managers/users-data-manager';
+import NotificationsDataManager from '../data-managers/notifications-data-manager';
 
 class UserStore extends ReduceStore {
   constructor() {
@@ -50,7 +51,12 @@ class UserStore extends ReduceStore {
         return Object.assign({}, state, { currentUser: null, token: null });
 
       case 'users/login-error':
-        console.log(action);
+        // server offline
+        NotificationsDataManager.addNotification({
+          title: 'Server offline',
+          message: 'The server is offline. Please try again later.',
+          level: 'error'
+        });
         return state;
 
       default:
