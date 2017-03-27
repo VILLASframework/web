@@ -85,3 +85,17 @@
     position: absolute;
     right: 7px;
 }
+
+.plot-table-widget .content {
+  display: -webkit-flex;
+  display: flex;
+}
+
+.plot-table-widget .widget-table {
+  min-width: 100px;
+}
+
+.plot-table-widget .widget-plot {
+  -webkit-flex: 1 0 auto;
+  flex: 1 0 auto;
+}

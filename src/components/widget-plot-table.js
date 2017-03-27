@@ -9,7 +9,6 @@
 
 import React, { Component } from 'react';
 import { LineChart } from 'rd3';
-import { Col } from 'react-bootstrap';
 
 import Table from './table';
 import TableColumn from './table-column';
@@ -19,6 +18,7 @@ class WidgetPlotTable extends Component {
     super(props);
 
     this.state = {
+      size: { w: 0, h: 0 },
       signal: 0,
       firstTimestamp: 0,
       latestTimestamp: 0,
@@ -31,6 +31,9 @@ class WidgetPlotTable extends Component {
   componentWillReceiveProps(nextProps) {
     // check data
     const simulator = nextProps.widget.simulator;
+
+    // plot size
+    this.setState({ size: { w: this.props.widget.width - 100, h: this.props.widget.height - 20 }});
 
     if (nextProps.simulation == null || nextProps.data == null || nextProps.data[simulator] == null || nextProps.data[simulator].length === 0 || nextProps.data[simulator].values[0].length === 0) {
       // clear values
@@ -81,29 +84,31 @@ class WidgetPlotTable extends Component {
 
   render() {
     return (
-      <div style={{ width: '100%', height: '100%' }} ref="wrapper">
+      <div className="plot-table-widget" style={{ width: '100%', height: '100%' }} ref="wrapper">
         <h4>{this.props.widget.name}</h4>
 
-        <Col xs={3}>
-          <Table data={this.state.rows}>
-            <TableColumn title="Signal" dataKey="name" clickable onClick={(index) => this.setState({ signal: index }) } />
-          </Table>
-        </Col>
+        <div className="content">
+          <div className="widget-table">
+            <Table data={this.state.rows}>
+              <TableColumn title="Signal" dataKey="name" clickable onClick={(index) => this.setState({ signal: index }) } />
+            </Table>
+          </div>
 
-        <Col xs={4}>
-          {this.state.sequence &&
-            <LineChart
-              width={400}
-              height={this.props.widget.height - 20}
-              data={this.state.values}
-              gridHorizontal={true}
-              xAccessor={(d) => { if (d != null) { return new Date(d.x); } }}
-              hoverAnimation={false}
-              circleRadius={0}
-              domain={{ x: [this.state.firstTimestamp, this.state.latestTimestamp] }}
-            />
-          }
-        </Col>
+          <div className="widget-plot">
+            {this.state.sequence &&
+              <LineChart
+                width={ this.state.size.w || 100 }
+                height={ this.state.size.h || 100 }
+                data={this.state.values}
+                gridHorizontal={true}
+                xAccessor={(d) => { if (d != null) { return new Date(d.x); } }}
+                hoverAnimation={false}
+                circleRadius={0}
+                domain={{ x: [this.state.firstTimestamp, this.state.latestTimestamp] }}
+              />
+            }
+          </div>
+        </div>
       </div>
     );
   }
