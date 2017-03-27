@@ -28,14 +28,14 @@ class Home extends Component {
     AppDispatcher.dispatch({
       type: 'users/logout'
     });
+
+    // discard login token
+    localStorage.setItem('token', '');
   }
 
   componentWillUpdate(nextProps, nextState) {
     // check if logged out
-    if (nextState.currentUser == null) {
-      // discard login token
-      localStorage.setItem('token', '');
-
+    if (nextState.token == null) {
       // transition to login page
       nextProps.router.push('/login');
     }

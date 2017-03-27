@@ -65,6 +65,7 @@ class App extends Component {
     return {
       simulations: SimulationStore.getState(),
       currentUser: UserStore.getState().currentUser,
+      token: UserStore.getState().token,
 
       runningSimulators: simulators
     };
@@ -96,10 +97,11 @@ class App extends Component {
 
   componentWillUpdate(nextProps, nextState) {
     // check if user is still logged in
-    if (UserStore.getState().token == null) {
-      //this.props.router.push('/login');
+    if (nextState.token == null) {
+      // discard local token
+      localStorage.setItem('token', '');
 
-      //return;
+      this.props.router.push('/login');
     }
 
     // open connection to each required simulator
