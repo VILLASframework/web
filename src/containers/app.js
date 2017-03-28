@@ -108,6 +108,8 @@ class App extends Component {
       localStorage.setItem('token', '');
 
       this.props.router.push('/login');
+      
+      return;
     }
 
     // open connection to each required simulator

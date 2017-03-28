@@ -12,6 +12,7 @@ import { ReduceStore } from 'flux/utils';
 import AppDispatcher from '../app-dispatcher';
 import UsersDataManager from '../data-managers/users-data-manager';
 import NotificationsDataManager from '../data-managers/notifications-data-manager';
+import SimulatorDataDataManager from '../data-managers/simulator-data-data-manager';
 
 class UserStore extends ReduceStore {
   constructor() {
@@ -33,6 +34,9 @@ class UserStore extends ReduceStore {
         return state;
 
       case 'users/logout':
+        // disconnect from all simulators
+        SimulatorDataDataManager.closeAll();
+
         // delete user and token
         return Object.assign({}, state, { token: null });
 

@@ -62,7 +62,7 @@ class SimulationDataStore extends ReduceStore {
           // explicit call to prevent array copy
           this.__emitChange();
         } else {
-          console.log('same sequence');
+          console.log('same sequence ' + state[action.identifier].sequence + ' ' + action.data.sequence);
         }
 
         return state;

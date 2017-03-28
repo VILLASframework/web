@@ -74,14 +74,16 @@ class SimulatorStore extends ArrayStore {
         // update running state
         simulator.running = false;
 
-        NotificationsDataManager.addNotification({
-          title: 'Simulator offline',
-          message: 'Simulator \'' + simulator.name + '\' went offline.',
-          level: 'info'
-        });
+        if (action.notification) {
+          NotificationsDataManager.addNotification({
+            title: 'Simulator offline',
+            message: 'Simulator \'' + simulator.name + '\' went offline.',
+            level: 'info'
+          });
 
-        // restart requesting again
-        SimulatorsDataManager.startRunningDetection(simulator);
+          // restart requesting again
+          SimulatorsDataManager.startRunningDetection(simulator);
+        }
 
         return this.updateElements(state, [ simulator ]);
 

@@ -34,6 +34,16 @@ class SimulatorDataDataManager {
     }
   }
 
+  closeAll() {
+    // close every open socket
+    for (var key in this._sockets) {
+      if (this._sockets.hasOwnProperty(key)) {
+        this._sockets[key].close(4000);
+        delete this._sockets[key];
+      }
+    }
+  }
+
   onOpen(event, identifier, signals, firstOpen) {
     AppDispatcher.dispatch({
       type: 'simulatorData/opened',
@@ -46,11 +56,12 @@ class SimulatorDataDataManager {
   onClose(event, identifier) {
     AppDispatcher.dispatch({
       type: 'simulatorData/closed',
-      identifier: identifier
+      identifier: identifier,
+      notification: (event.code !== 4000)
     });
 
     // remove from list, keep null reference for flag detection
-    this._sockets[identifier] = null;
+    delete this._sockets[identifier];
   }
 
   onMessage(event, identifier) {
