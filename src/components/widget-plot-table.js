@@ -10,8 +10,7 @@
 import React, { Component } from 'react';
 import { LineChart } from 'rd3';
 
-import Table from './table';
-import TableColumn from './table-column';
+import { ButtonGroup, Button } from 'react-bootstrap';
 
 class WidgetPlotTable extends Component {
   constructor(props) {
@@ -81,17 +80,21 @@ class WidgetPlotTable extends Component {
 
     this.setState({ values: values, firstTimestamp: firstTimestamp, latestTimestamp: latestTimestamp, sequence: nextProps.data[simulator].sequence, rows: rows });
   }
-
+  
   render() {
+    console.log("Signal: " + this.state.signal);
     return (
       <div className="plot-table-widget" style={{ width: '100%', height: '100%' }} ref="wrapper">
         <h4>{this.props.widget.name}</h4>
 
         <div className="content">
           <div className="widget-table">
-            <Table data={this.state.rows}>
-              <TableColumn title="Signal" dataKey="name" clickable onClick={(index) => this.setState({ signal: index }) } />
-            </Table>
+            <ButtonGroup vertical>
+              { this.state.rows.map( (row, index) => (
+                  <Button key={index} active={ index === this.state.signal } disabled={ this.props.editing } onClick={() => this.setState({ signal: Number(index) }) } > { row.name } </Button>
+                ))
+              }
+            </ButtonGroup>
           </div>
 
           <div className="widget-plot">
