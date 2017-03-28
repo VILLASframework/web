@@ -72,16 +72,26 @@ class NewSimulationModelDialog extends Component {
   }
 
   resetState() {
-    this.setState({ name: '', simulator: this.props.simulators[0]._id, length: '1', mapping: [ { name: 'Signal', type: 'Type' } ] });
+    this.setState({
+      name: '',
+      simulator: this.props.simulators[0] != null ? this.props.simulators[0]._id : '', 
+      length: '1',
+      mapping: [ { name: 'Signal', type: 'Type' } ]
+    });
   }
 
   validateForm(target) {
     // check all controls
     var name = true;
     var length = true;
+    var simulator = true;
 
     if (this.state.name === '') {
       name = false;
+    }
+
+    if (this.state.simulator === '') {
+      simulator = false;
     }
 
     // test if simulatorid is a number (in a string, not type of number)
@@ -89,11 +99,12 @@ class NewSimulationModelDialog extends Component {
       length = false;
     }
 
-    this.valid = name && length;
+    this.valid = name && length && simulator;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
     else if (target === 'length') return length ? "success" : "error";
+    else if (target === 'simulator') return simulator ? "success" : "error";
   }
 
   render() {
