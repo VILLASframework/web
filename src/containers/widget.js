@@ -105,16 +105,18 @@ class Widget extends Component {
     } else if (widget.type === 'Label') {
       element = <WidgetLabel widget={widget} />
     } else if (widget.type === 'PlotTable') {
-      element = <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
+      element = <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} editing={this.props.editing} />
     } else if (widget.type === 'Image') {
       element = <WidgetImage widget={widget} files={this.state.files} />
     }
-
+    
     if (this.props.editing) {
       return (
         <Rnd
           ref={c => { this.rnd = c; }}
           initial={{ x: Number(widget.x), y: Number(widget.y), width: widget.width, height: widget.height }}
+          minWidth={ widget.minWidth }
+          minHeight={ widget.minHeight }
           bounds={'parent'}
           className="widget"
           onResizeStop={(direction, styleSize, clientSize, delta) => this.resizeStop(direction, styleSize, clientSize, delta)}

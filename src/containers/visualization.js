@@ -140,24 +140,35 @@ class Visualization extends Component {
     if (item.name === 'Value') {
       widget.simulator = this.state.simulation.models[0].simulator;
       widget.signal = 0;
+      widget.minWidth = 70;
+      widget.minHeight = 20;
     } else if (item.name === 'Plot') {
       widget.simulator = this.state.simulation.models[0].simulator;
       widget.signals = [ 0 ];
       widget.time = 60;
+      widget.minWidth = 400;
+      widget.minHeight = 200;
       widget.width = 400;
       widget.height = 200;
     } else if (item.name === 'Table') {
       widget.simulator = this.state.simulation.models[0].simulator;
+      widget.minWidth = 300;
+      widget.minHeight = 200;
       widget.width = 400;
       widget.height = 200;
     } else if (item.name === 'Label') {
-
+      widget.minWidth = 70;
+      widget.minHeight = 20;
     } else if (item.name === 'PlotTable') {
       widget.simulator = this.state.simulation.models[0].simulator;
+      widget.minWidth = 400;
+      widget.minHeight = 200;
       widget.width = 500;
       widget.height = 400;
       widget.time = 60
     } else if (item.name === 'Image') {
+      widget.minWidth = 100;
+      widget.minHeight = 100;
       widget.width = 200;
       widget.height = 200;
     }
