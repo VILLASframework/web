@@ -138,7 +138,7 @@ class Widget extends Component {
           minWidth={ widget.minWidth }
           minHeight={ widget.minHeight }
           bounds={'parent'}
-          className="widget"
+          className="editing-widget"
           onResizeStart={ (direction, styleSize, clientSize, event) => this.borderWasClicked(event) } 
           onResizeStop={(direction, styleSize, clientSize, delta) => this.resizeStop(direction, styleSize, clientSize, delta)}
           onDragStop={(event, ui) => this.dragStop(event, ui)}
