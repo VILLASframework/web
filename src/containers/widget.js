@@ -48,6 +48,13 @@ class Widget extends Component {
     }
   }
 
+  constructor(props) {
+    super(props);
+
+    // Reference to the context menu element
+    this.contextMenuTriggerViaDraggable = null;
+  }
+
   componentWillMount() {
     AppDispatcher.dispatch({
       type: 'files/start-load'
@@ -82,7 +89,20 @@ class Widget extends Component {
     this.props.onWidgetChange(widget, this.props.index);
   }
 
+  borderWasClicked(e) {
+    // check if it was triggered by the right button
+    if (e.button === 2) {
+      // launch the context menu using the reference
+      if(this.contextMenuTriggerViaDraggable) {
+          this.contextMenuTriggerViaDraggable.handleContextClick(e);
+      }
+    }
+  }
+
   render() {
+    
+    
+
     //console.log('render widget ' + this.props.data.z + this.props.data.type);
 
     // configure grid
@@ -119,13 +139,14 @@ class Widget extends Component {
           minHeight={ widget.minHeight }
           bounds={'parent'}
           className="widget"
+          onResizeStart={ (direction, styleSize, clientSize, event) => this.borderWasClicked(event) } 
           onResizeStop={(direction, styleSize, clientSize, delta) => this.resizeStop(direction, styleSize, clientSize, delta)}
           onDragStop={(event, ui) => this.dragStop(event, ui)}
           moveGrid={grid}
           resizeGrid={grid}
           zIndex={widget.z}
         >
-          <ContextMenuTrigger id={'widgetMenu' + this.props.index} attributes={{ style: { width: '100%', height: '100%' } }}>
+          <ContextMenuTrigger id={'widgetMenu' + this.props.index} ref={c => this.contextMenuTriggerViaDraggable = c} >
             {element}
           </ContextMenuTrigger>
         </Rnd>
