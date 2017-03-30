@@ -183,6 +183,11 @@ class Visualization extends Component {
       widget.minHeight = 50;
       widget.width = 200;
       widget.height = 50;
+    } else if (item.name === 'Slider') {
+      widget.minWidth = 380;
+      widget.minHeight = 30;
+      widget.width = 400;
+      widget.height = 50;
     }
 
     var new_widgets = this.state.visualization.widgets;
@@ -353,6 +358,7 @@ class Visualization extends Component {
               <ToolboxItem name="PlotTable" type="widget" />
               <ToolboxItem name="Button" type="widget" />
               <ToolboxItem name="NumberInput" type="widget" />
+              <ToolboxItem name="Slider" type="widget" />
             </div>
           }
 

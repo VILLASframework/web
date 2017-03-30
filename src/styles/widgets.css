@@ -113,7 +113,7 @@
 }
 
 /* Reset Bootstrap styles to "disable" while editing */
-div[class*="-widget"] .btn[disabled], .form-control[disabled] {
+div[class*="-widget"] .btn[disabled], div[class*="-widget"] input[disabled], .form-control[disabled] {
   cursor: inherit;
   pointer-events: none;
 }
@@ -177,7 +177,19 @@ div[class*="-widget"] .btn[disabled], .form-control[disabled] {
 }
 
 /* Number input widget */ 
-.number-input-widget label {
+div[class*="-widget"] label {
     cursor: inherit;
 }
-/* Number input widget */ 
+/* End number input widget */ 
+
+input[type=range]::-moz-range-thumb {
+    background: #ffffff;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    background: #ffffff;
+}
+
+input[type=range]::-ms-thumb {
+    background: #ffffff;
+}
