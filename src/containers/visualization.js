@@ -142,6 +142,8 @@ class Visualization extends Component {
       widget.signal = 0;
       widget.minWidth = 70;
       widget.minHeight = 20;
+      widget.width = 120;
+      widget.height = 70;
     } else if (item.name === 'Plot') {
       widget.simulator = this.state.simulation.models[0].simulator;
       widget.signals = [ 0 ];
@@ -339,6 +341,7 @@ class Visualization extends Component {
               <ToolboxItem name="Label" type="widget" />
               <ToolboxItem name="Image" type="widget" />
               <ToolboxItem name="PlotTable" type="widget" />
+              <ToolboxItem name="Button" type="widget" />
             </div>
           }
 

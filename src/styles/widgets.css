@@ -8,13 +8,10 @@
  **********************************************************************************/
 
 .widget {
-  border: 1px solid lightgray;
-  padding: 3px 6px;
   background-color: #fff;
 }
 
 .editing-widget {
-  border: 1px solid lightgray;
   background-color: #fff;
 }
 
@@ -96,6 +93,13 @@
     right: 7px;
 }
 
+.plot-table-widget, .plot-widget, .value-widget, .image-widget, .label-widget {
+    width: 100%;
+    height: 100%;
+    padding: 3px 6px;
+    border: 1px solid lightgray;
+}
+
 .plot-table-widget .content {
   display: -webkit-flex;
   display: flex;
@@ -109,8 +113,9 @@
 }
 
 /* Reset Bootstrap styles to "disable" while editing */
-.plot-table-widget .widget-table .btn[disabled] {
+div[class*="-widget"] .btn[disabled] {
   cursor: inherit;
+  pointer-events: none;
 }
 
 .btn-default[disabled]:hover {
@@ -127,4 +132,46 @@
 .plot-table-widget .widget-plot {
   -webkit-flex: 1 0 auto;
   flex: 1 0 auto;
+}
+
+/*.single-value-widget {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 95%;
+  height: 95%;
+}*/
+
+.single-value-widget {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.single-value-widget > * {
+    width: 50%;
+    float: left;
+    margin: 5px;
+    font-size: 1vw;
+}
+
+/* Button widget styling */
+.button-widget button {
+    border-radius: 25px;
+    border-style: double;
+    border-width: 5px;
+    overflow-x: hidden;
+}
+
+.button-widget button:hover {
+    border-style: double;
+}
+/* End button widget styling */
+
+.full {
+    width: 100%;
+    height: 100%;
 }

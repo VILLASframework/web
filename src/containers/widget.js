@@ -22,6 +22,7 @@ import WidgetTable from '../components/widget-table';
 import WidgetLabel from '../components/widget-label';
 import WidgetPlotTable from '../components/widget-plot-table';
 import WidgetImage from '../components/widget-image';
+import WidgetButton from '../components/widget-button';
 
 import '../styles/widgets.css';
 
@@ -128,6 +129,8 @@ class Widget extends Component {
       element = <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} editing={this.props.editing} />
     } else if (widget.type === 'Image') {
       element = <WidgetImage widget={widget} files={this.state.files} />
+    } else if (widget.type === 'Button') {
+      element = <WidgetButton widget={widget} editing={this.props.editing} />
     }
     
     if (this.props.editing) {
