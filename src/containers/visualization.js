@@ -173,6 +173,16 @@ class Visualization extends Component {
       widget.minHeight = 100;
       widget.width = 200;
       widget.height = 200;
+    } else if (item.name === 'Button') {
+      widget.minWidth = 100;
+      widget.minHeight = 50;
+      widget.width = 100;
+      widget.height = 100;
+    } else if (item.name === 'NumberInput') {
+      widget.minWidth = 200;
+      widget.minHeight = 50;
+      widget.width = 200;
+      widget.height = 50;
     }
 
     var new_widgets = this.state.visualization.widgets;
@@ -342,6 +352,7 @@ class Visualization extends Component {
               <ToolboxItem name="Image" type="widget" />
               <ToolboxItem name="PlotTable" type="widget" />
               <ToolboxItem name="Button" type="widget" />
+              <ToolboxItem name="NumberInput" type="widget" />
             </div>
           }
 

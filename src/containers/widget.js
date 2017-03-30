@@ -23,6 +23,7 @@ import WidgetLabel from '../components/widget-label';
 import WidgetPlotTable from '../components/widget-plot-table';
 import WidgetImage from '../components/widget-image';
 import WidgetButton from '../components/widget-button';
+import WidgetNumberInput from '../components/widget-number-input';
 
 import '../styles/widgets.css';
 
@@ -131,6 +132,8 @@ class Widget extends Component {
       element = <WidgetImage widget={widget} files={this.state.files} />
     } else if (widget.type === 'Button') {
       element = <WidgetButton widget={widget} editing={this.props.editing} />
+    } else if (widget.type === 'NumberInput') {
+      element = <WidgetNumberInput widget={widget} editing={this.props.editing} />
     }
     
     if (this.props.editing) {
