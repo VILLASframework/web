@@ -182,6 +182,7 @@ div[class*="-widget"] label {
 }
 /* End number input widget */ 
 
+/* Slider widget */
 input[type=range]::-moz-range-thumb {
     background: #ffffff;
 }
@@ -193,3 +194,31 @@ input[type=range]::-webkit-slider-thumb {
 input[type=range]::-ms-thumb {
     background: #ffffff;
 }
+/* End slider widget */
+
+/* Gauge widget */
+.gauge-widget {
+    width: 100%;
+    height: 100%;
+}
+
+.gauge-widget canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.gauge-name {
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+}
+
+.gauge-value {
+    position: absolute;
+    width: 100%;
+    font-weight: bold;
+    font-size: large;
+    bottom: 0px;
+    text-align: center;
+}
+/* End gauge widget */

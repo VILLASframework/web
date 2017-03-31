@@ -25,6 +25,7 @@ import WidgetImage from '../components/widget-image';
 import WidgetButton from '../components/widget-button';
 import WidgetNumberInput from '../components/widget-number-input';
 import WidgetSlider from '../components/widget-slider';
+import WidgetGauge from '../components/widget-gauge';
 
 import '../styles/widgets.css';
 
@@ -137,6 +138,8 @@ class Widget extends Component {
       element = <WidgetNumberInput widget={widget} editing={this.props.editing} />
     } else if (widget.type === 'Slider') {
       element = <WidgetSlider widget={widget} editing={this.props.editing} />
+    } else if (widget.type === 'Gauge') {
+      element = <WidgetGauge widget={widget} data={this.state.simulatorData} editing={this.props.editing} />
     }
     
     if (this.props.editing) {

@@ -188,6 +188,13 @@ class Visualization extends Component {
       widget.minHeight = 30;
       widget.width = 400;
       widget.height = 50;
+    } else if (item.name === 'Gauge') {
+      widget.simulator = this.state.simulation.models[0].simulator;
+      widget.signal = 0;
+      widget.minWidth = 200;
+      widget.minHeight = 150;
+      widget.width = 200;
+      widget.height = 150;
     }
 
     var new_widgets = this.state.visualization.widgets;
@@ -359,6 +366,7 @@ class Visualization extends Component {
               <ToolboxItem name="Button" type="widget" />
               <ToolboxItem name="NumberInput" type="widget" />
               <ToolboxItem name="Slider" type="widget" />
+              <ToolboxItem name="Gauge" type="widget" />
             </div>
           }
 
