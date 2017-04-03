@@ -204,21 +204,30 @@ input[type=range]::-ms-thumb {
 
 .gauge-widget canvas {
     width: 100%;
-    height: 100%;
+    height: 90%;
 }
 
 .gauge-name {
+    height: 10%;
     width: 100%;
     text-align: center;
     font-weight: bold;
+}
+
+.gauge-unit {
+    position: absolute;
+    width: 100%;
+    font-size: large;
+    bottom: 25%;
+    text-align: center;
 }
 
 .gauge-value {
     position: absolute;
     width: 100%;
     font-weight: bold;
-    font-size: large;
-    bottom: 0px;
+    font-size: xx-large;
+    bottom: 10%;
     text-align: center;
 }
 /* End gauge widget */
