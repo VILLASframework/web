@@ -16,6 +16,8 @@ import EditValueWidget from './edit-widget-value';
 import EditPlotWidget from './edit-widget-plot';
 import EditTableWidget from './edit-widget-table';
 import EditImageWidget from './edit-widget-image';
+import EditWidgetSimulatorControl from './edit-widget-simulator-control';
+import EditWidgetSignalControl from './edit-widget-signal-control';
 
 class EditWidgetDialog extends Component {
   static propTypes = {
@@ -75,6 +77,8 @@ class EditWidgetDialog extends Component {
   render() {
     // get widget part
     var widgetDialog = null;
+    // Use a list to concatenate the controls according to the widget type
+    var dialogControls = [];
 
     if (this.props.widget) {
       if (this.props.widget.type === 'Value') {
@@ -85,6 +89,11 @@ class EditWidgetDialog extends Component {
         widgetDialog = <EditTableWidget widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />;
       } else if (this.props.widget.type === 'Image') {
         widgetDialog = <EditImageWidget widget={this.state.temporal} files={this.props.files} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />;
+      } else if (this.props.widget.type === 'Gauge') {
+        dialogControls.push(
+          <EditWidgetSimulatorControl widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />,
+          <EditWidgetSignalControl widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />
+        )
       }
     }
 
@@ -96,7 +105,7 @@ class EditWidgetDialog extends Component {
             <FormControl type="text" placeholder="Enter name" value={this.state.temporal.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-
+          { dialogControls }
           {widgetDialog}
         </form>
       </Dialog>
