@@ -90,12 +90,18 @@ class WidgetGauge extends Component {
 
   render() {
     var componentClass = this.props.editing ? "gauge-widget editing" : "gauge-widget";
+    var signalType = null;
+
+    if (this.props.simulation) {
+      var simulationModel = this.props.simulation.models.filter((model) => model.simulator === this.props.widget.simulator)[0];
+      signalType = simulationModel && simulationModel.length > 0? simulationModel.mapping[this.props.widget.signal].type : '';
+    }
 
     return (
       <div className={ componentClass }>
           <div className="gauge-name">{ this.props.widget.name }</div>
           <canvas ref={ (node) => this.gaugeCanvas = node } />
-          <div className="gauge-unit">Voltage (V)</div>
+          <div className="gauge-unit">{ signalType }</div>
           <div className="gauge-value">{ this.state.value }</div>
       </div>
     );
