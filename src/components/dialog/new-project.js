@@ -43,21 +43,30 @@ class NewProjectDialog extends Component {
   }
 
   resetState() {
-    this.setState({ name: '', simulation: this.props.simulations[0]._id });
+    this.setState({
+      name: '',
+      simulation: this.props.simulations[0] != null ? this.props.simulations[0]._id : ''
+    });
   }
 
   validateForm(target) {
     // check all controls
     var name = true;
+    var simulation = true;
 
     if (this.state.name === '') {
       name = false;
     }
 
-    this.valid =  name;
+    if (this.state.simulation === '') {
+      simulation = false;
+    }
+
+    this.valid =  name && simulation;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
+    else if (target === 'simulation') return simulation ? "success" : "error";
   }
 
   render() {
@@ -69,7 +78,7 @@ class NewProjectDialog extends Component {
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="simulation">
+          <FormGroup controlId="simulation" validationState={this.validateForm('simulation')}>
             <ControlLabel>Simulation</ControlLabel>
             <FormControl componentClass="select" placeholder="Select simulation" value={this.state.simulation} onChange={(e) => this.handleChange(e)}>
               {this.props.simulations.map(simulation => (
