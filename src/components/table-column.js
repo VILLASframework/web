@@ -28,6 +28,7 @@ class TableColumn extends Component {
     width: null,
     editButton: false,
     deleteButton: false,
+    exportButton: false,
     link: '/',
     linkKey: '',
     dataIndex: false,

@@ -32,6 +32,8 @@ import EditNodeDialog from '../components/dialog/edit-node';
 import NewSimulatorDialog from '../components/dialog/new-simulator';
 import EditSimulatorDialog from '../components/dialog/edit-simulator';
 import NodeTree from '../components/node-tree';
+import ImportSimulatorDialog from '../components/dialog/import-simulator';
+import ExportSimulatorDialog from '../components/dialog/export-simulator';
 
 class Simulators extends Component {
   static getStores() {
@@ -46,6 +48,8 @@ class Simulators extends Component {
       newNodeModal: false,
       deleteNodeModal: false,
       editNodeModal: false,
+      importModal: false,
+      exportModal: false,
 
       addSimulatorModal: false,
       editSimulatorModal: false,
@@ -185,6 +189,22 @@ class Simulators extends Component {
       data: node,
       token: this.state.sessionToken
     });
+  }
+  
+  closeImportModal(data) {
+    this.setState({ importModal: false });
+
+    if (data) {
+      AppDispatcher.dispatch({
+        type: 'simulators/start-add',
+        data: data
+      });
+    }
+  }
+
+  labelStyle(value) {
+    if (value === true) return 'success';
+    else return 'warning';
   }
 
   onTreeDataChange(nodes) {
