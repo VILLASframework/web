@@ -253,6 +253,26 @@ class Simulators extends Component {
     }
   }
 
+  loadFile(fileList) {
+    // get file
+    const file = fileList[0];
+    if (!file.type.match('application/json')) {
+      return;
+    }
+
+    // create file reader
+    var reader = new FileReader();
+    var self = this;
+
+    reader.onload = function(event) {
+      // read simulator
+      const simulator = JSON.parse(event.target.result);
+      self.setState({ importModal: true, modalSimulator: simulator });
+    };
+
+    reader.readAsText(file);
+  }
+
   render() {
     return (
       <div className='section'>

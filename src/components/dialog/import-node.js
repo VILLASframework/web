@@ -7,18 +7,13 @@
  *   Unauthorized copying of this file, via any medium is strictly prohibited.
  **********************************************************************************/
 
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
-class ImportSimulatorDialog extends Component {
-  static propTypes = {
-    show: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired
-  };
-
-  valid: false;
+class ImportNodeDialog extends React.Component {
+  valid = false;
 
   constructor(props) {
     super(props);
@@ -91,4 +86,4 @@ class ImportSimulatorDialog extends Component {
   }
 }
 
-export default ImportSimulatorDialog;
+export default ImportNodeDialog;

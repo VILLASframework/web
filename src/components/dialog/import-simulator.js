@@ -42,47 +42,58 @@ class ImportSimulatorDialog extends Component {
   }
 
   resetState() {
-    this.setState({ name: '', endpoint: '' });
-  }
+    this.setState({
+      name: this.props.simulator.name,
+      endpoint: this.props.simulator.endpoint
+    });
 
-  loadFile(fileList) {
-    // get file
-    const file = fileList[0];
-    if (!file.type.match('application/json')) {
-      return;
+    // validate incoming state
+    var endpoint = true;
+    var name = true;
+
+    if (this.props.simulator.name === '') {
+      name = false;
     }
 
-    // create file reader
-    var reader = new FileReader();
-    var self = this;
+    if (this.props.simulator.endpoint === '') {
+      endpoint = false;
+    }
 
-    reader.onload = function(event) {
-      // read simulator
-      const simulator = JSON.parse(event.target.result);
-      self.valid = true;
-      self.setState({ name: simulator.name, endpoint: simulator.endpoint });
-    };
+    this.valid = endpoint && name;
+  }
 
-    reader.readAsText(file);
+  validateForm(target) {
+    // check all controls
+    var endpoint = true;
+    var name = true;
+
+    if (this.state.name === '') {
+      name = false;
+    }
+
+    if (this.state.endpoint === '') {
+      endpoint = false;
+    }
+
+    this.valid = endpoint && name;
+
+    // return state to control
+    if (target === 'name') return name ? "success" : "error";
+    else return endpoint ? "success" : "error";
   }
 
   render() {
     return (
       <Dialog show={this.props.show} title="Import Simulator" buttonTitle="Import" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
-          <FormGroup controlId="file">
-            <ControlLabel>Simulator File</ControlLabel>
-            <FormControl type="file" onChange={(e) => this.loadFile(e.target.files)} />
-          </FormGroup>
-
-          <FormGroup controlId="name">
+          <FormGroup controlId="name" validationState={this.validateForm('name')}>
             <ControlLabel>Name</ControlLabel>
-            <FormControl readOnly type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="endpoint">
+          <FormGroup controlId="endpoint" validationState={this.validateForm('endpoint')}>
             <ControlLabel>Endpoint</ControlLabel>
-            <FormControl readOnly type="text" placeholder="Enter endpoint" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder="Enter endpoint" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
         </form>
