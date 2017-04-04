@@ -128,7 +128,7 @@
 /* End PlotTable Widget */
 
 /* Reset Bootstrap styles to "disable" while editing */
-div[class*="-widget"] .btn[disabled], div[class*="-widget"] input[disabled], .form-control[disabled] {
+div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input[disabled], .form-control[disabled], .checkbox.disabled label {
   cursor: inherit;
   pointer-events: none;
 }
