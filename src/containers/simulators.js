@@ -22,6 +22,7 @@
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import { Button, Modal, Glyphicon } from 'react-bootstrap';
+import FileSaver from 'file-saver';
 
 import AppDispatcher from '../app-dispatcher';
 import NodeStore from '../stores/node-store';
@@ -32,8 +33,7 @@ import EditNodeDialog from '../components/dialog/edit-node';
 import NewSimulatorDialog from '../components/dialog/new-simulator';
 import EditSimulatorDialog from '../components/dialog/edit-simulator';
 import NodeTree from '../components/node-tree';
-import ImportSimulatorDialog from '../components/dialog/import-simulator';
-import ExportSimulatorDialog from '../components/dialog/export-simulator';
+import ImportNodeDialog from '../components/dialog/import-node';
 
 class Simulators extends Component {
   static getStores() {
@@ -191,15 +191,34 @@ class Simulators extends Component {
     });
   }
   
-  closeImportModal(data) {
-    this.setState({ importModal: false });
+  closeImportNodeModal(data) {
+    this.setState({ importNodeModal: false });
 
     if (data) {
       AppDispatcher.dispatch({
-        type: 'simulators/start-add',
-        data: data
+        type: 'nodes/start-add',
+        data,
+        token: this.state.sessionToken
       });
     }
+  }
+
+  exportNode(data) {
+    const node = this.state.nodes.find((element) => {
+      return element._id === data.id;
+    });
+
+    // filter properties
+    let simulator = Object.assign({}, node);
+    delete simulator._id;
+
+    simulator.simulators.forEach(simulator => {
+      delete simulator.id;
+    });
+
+    // show save dialog
+    const blob = new Blob([JSON.stringify(simulator, null, 2)], { type: 'application/json' });
+    FileSaver.saveAs(blob, 'node - ' + node.name + '.json');
   }
 
   labelStyle(value) {
@@ -240,15 +259,26 @@ class Simulators extends Component {
         <h1>Simulators</h1>
 
         <Button onClick={() => this.setState({ newNodeModal: true })}><Glyphicon glyph="plus" /> Node</Button>
+        <Button onClick={() => this.setState({ importNodeModal: true })}><Glyphicon glyph="import" /> Import</Button>
 
         <br />
         <small><i>Hint: Node names must be unique. Simulator names must be unique on a node.</i></small>
 
-        <NodeTree data={this.state.nodes} onDataChange={(treeData) => this.onTreeDataChange(treeData)} onNodeDelete={(node) => this.showDeleteNodeModal(node)} onNodeEdit={(node) => this.showEditNodeModal(node)} onNodeAdd={(node) => this.showAddSimulatorModal(node)} onSimulatorEdit={(node, index) => this.showEditSimulatorModal(node, index)} onSimulatorDelete={(node, index) => this.showDeleteSimulatorModal(node, index)} />
+        <NodeTree 
+          data={this.state.nodes} 
+          onDataChange={(treeData) => this.onTreeDataChange(treeData)} 
+          onNodeDelete={(node) => this.showDeleteNodeModal(node)} 
+          onNodeEdit={(node) => this.showEditNodeModal(node)} 
+          onNodeAdd={(node) => this.showAddSimulatorModal(node)} 
+          onNodeExport={node => this.exportNode(node)}
+          onSimulatorEdit={(node, index) => this.showEditSimulatorModal(node, index)} 
+          onSimulatorDelete={(node, index) => this.showDeleteSimulatorModal(node, index)} 
+        />
 
         <NewNodeDialog show={this.state.newNodeModal} onClose={(data) => this.closeNewNodeModal(data)} nodes={this.state.nodes} />
         <EditNodeDialog node={this.state.modalData} show={this.state.editNodeModal} onClose={(data) => this.closeEditNodeModal(data)} nodes={this.state.nodes} />
         <NewSimulatorDialog show={this.state.addSimulatorModal} onClose={(data) => this.closeAddSimulatorModal(data)} node={this.state.modalData}/>
+        <ImportNodeDialog show={this.state.importNodeModal} onClose={data => this.closeImportNodeModal(data)} nodes={this.state.nodes} />
 
         {this.state.editSimulatorModal &&
           <EditSimulatorDialog simulator={this.state.modalData.simulators[this.state.modalIndex]} show={this.state.editSimulatorModal} onClose={(data) => this.closeEditSimulatorModal(data)} node={this.state.modalData} />
