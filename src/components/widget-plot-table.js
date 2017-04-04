@@ -9,8 +9,10 @@
 
 import React, { Component } from 'react';
 import { LineChart } from 'rd3';
+import { scaleOrdinal, schemeCategory10 } from 'd3-scale';
+import classNames from 'classnames';
 
-import { ButtonGroup, Button } from 'react-bootstrap';
+import { FormGroup, Checkbox } from 'react-bootstrap';
 
 class WidgetPlotTable extends Component {
   constructor(props) {
@@ -18,12 +20,13 @@ class WidgetPlotTable extends Component {
 
     this.state = {
       size: { w: 0, h: 0 },
-      signal: 0,
+      signals: [],
       firstTimestamp: 0,
       latestTimestamp: 0,
       sequence: null,
-      rows: [],
-      values: []
+      signalsOfCurrType: [],
+      values: [],
+      active_sim_model: {}
     };
   }
 
@@ -34,9 +37,13 @@ class WidgetPlotTable extends Component {
     // plot size
     this.setState({ size: { w: this.props.widget.width - 100, h: this.props.widget.height - 20 }});
 
+    if (nextProps.widget.signalType !== this.props.widget.signalType) {
+      this.setState({ signals: []});
+    }
+
     if (nextProps.simulation == null || nextProps.data == null || nextProps.data[simulator] == null || nextProps.data[simulator].length === 0 || nextProps.data[simulator].values[0].length === 0) {
       // clear values
-      this.setState({ values: [], sequence: null, rows: [] });
+      this.setState({ values: [], sequence: null, signalsOfCurrType: [] });
       return;
     }
 
@@ -46,18 +53,23 @@ class WidgetPlotTable extends Component {
     }
 
     // get simulation model
-    const simulationModel = nextProps.simulation.models.find((model) => {
-      return (model.simulator === simulator);
+    const simulationModel = nextProps.simulation.models.find((model, model_index) => {
+      var found = false;
+      if (model.simulator === simulator) {
+        this.setState({ active_sim_model: model_index });
+        found = true;
+      }
+      return found;
     });
 
-    // get rows
-    var rows = [];
-    // populate the table rows with the signals of the chosen type
+    // get signals belonging to the currently selected type
+    var filteredSignals = {};
     simulationModel.mapping
                 .filter( (signal) => 
                   signal.type.toLowerCase() === nextProps.widget.signalType)
                 .forEach((signal) => {
-                  rows.push({ name: signal.name })
+                  // Store signals to be shown in a dictionary
+                  filteredSignals[signal.name.toLowerCase()] = '';
                 });
 
     // get timestamps
@@ -77,30 +89,56 @@ class WidgetPlotTable extends Component {
     }
 
     // copy all values for each signal in time region
-    var values = [{
-      values: nextProps.data[simulator].values[this.state.signal].slice(firstIndex, nextProps.data[simulator].values[this.state.signal].length - 1)
-    }];
+    var values = [];
+    this.state.signals.forEach((signal_index, i, arr) => (
+      values.push(
+        { values: nextProps.data[simulator].values[signal_index].slice(firstIndex, nextProps.data[simulator].values[signal_index].length - 1)})
+    ));
 
-    this.setState({ values: values, firstTimestamp: firstTimestamp, latestTimestamp: latestTimestamp, sequence: nextProps.data[simulator].sequence, rows: rows });
+    this.setState({ values: values, firstTimestamp: firstTimestamp, latestTimestamp: latestTimestamp, sequence: nextProps.data[simulator].sequence, signalsOfCurrType: filteredSignals });
   }
   
+  updateSignalSelection(signal_index, checked) {
+    // If the signal is selected, add it to array, remove it otherwise
+    this.setState({ 
+      signals: checked? this.state.signals.concat(signal_index) : this.state.signals.filter( (idx) => idx !== signal_index )
+    });
+  }
+
   render() {
+    var checkBoxes = [];
+    if (this.state.signalsOfCurrType && Object.keys(this.state.signalsOfCurrType).length > 0) {
+      // Create checkboxes using the signal indices from simulation model
+      checkBoxes = this.props.simulation.models[this.state.active_sim_model].mapping.reduce(
+        // Loop through simulation model signals
+        (accum, model_signal, signal_index) => {
+          // Append them if they belong to the current selected type
+          if (this.state.signalsOfCurrType.hasOwnProperty(model_signal.name.toLowerCase())) {
+              // Tag as active if it is currently selected
+              var chkBxClasses = classNames({
+                'btn': true,
+                'btn-default': true,
+                'active': this.state.signals.indexOf(signal_index) > -1
+              });
+              accum.push(
+                <Checkbox key={signal_index} className={chkBxClasses} disabled={ this.props.editing } onChange={(e) => this.updateSignalSelection(signal_index, e.target.checked) } > { model_signal.name } </Checkbox>
+              )
+            }
+            return accum;
+          }, []);
+    }
+
     return (
       <div className="plot-table-widget" ref="wrapper">
         <h4>{this.props.widget.name}</h4>
 
         <div className="content">
           <div className="widget-table">
-            { this.state.rows && this.state.rows.length > 0 ? (
-              <ButtonGroup vertical>
-                { this.state.rows.map( (row, index) => (
-                    <Button key={index} active={ index === this.state.signal } disabled={ this.props.editing } onClick={() => this.setState({ signal: Number(index) }) } > { row.name } </Button>
-                  ))
-                }
-              </ButtonGroup> 
-            ) : (
-                <small>No signal found, select a different signal type.</small>
-            )
+            { checkBoxes.length > 0 ? (
+              <FormGroup className="btn-group-vertical">
+                { checkBoxes }
+              </FormGroup>
+              ) : ( <small>No signal found, select a different signal type.</small> )
             }
           </div>
 
@@ -110,6 +148,7 @@ class WidgetPlotTable extends Component {
                 width={ this.state.size.w || 100 }
                 height={ this.state.size.h || 100 }
                 data={this.state.values}
+                colors={ scaleOrdinal(schemeCategory10) }
                 gridHorizontal={true}
                 xAccessor={(d) => { if (d != null) { return new Date(d.x); } }}
                 hoverAnimation={false}

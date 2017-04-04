@@ -104,6 +104,7 @@
 .plot-table-widget .content {
   display: -webkit-flex;
   display: flex;
+  height: 100%;
 }
 
 .plot-table-widget .widget-table {
@@ -115,6 +116,14 @@
 
 .plot-table-widget small {
     text-align: center;
+}
+
+.plot-table-widget .checkbox label {
+    padding: 0px;
+}
+
+.plot-table-widget input[type="checkbox"] {
+    display: none;
 }
 /* End PlotTable Widget */
 
