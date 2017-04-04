@@ -163,6 +163,7 @@ class Visualization extends Component {
       widget.minHeight = 20;
     } else if (item.name === 'PlotTable') {
       widget.simulator = this.state.simulation.models[0].simulator;
+      widget.signalType = this.state.simulation.models[0].mapping[0].type.toLowerCase();
       widget.minWidth = 400;
       widget.minHeight = 200;
       widget.width = 500;

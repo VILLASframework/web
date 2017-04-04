@@ -52,10 +52,13 @@ class WidgetPlotTable extends Component {
 
     // get rows
     var rows = [];
-
-    simulationModel.mapping.forEach((signal) => {
-      rows.push({ name: signal.name })
-    });
+    // populate the table rows with the signals of the chosen type
+    simulationModel.mapping
+                .filter( (signal) => 
+                  signal.type.toLowerCase() === nextProps.widget.signalType)
+                .forEach((signal) => {
+                  rows.push({ name: signal.name })
+                });
 
     // get timestamps
     var latestTimestamp = nextProps.data[simulator].values[0][nextProps.data[simulator].values[0].length - 1].x;
@@ -82,19 +85,23 @@ class WidgetPlotTable extends Component {
   }
   
   render() {
-    console.log("Signal: " + this.state.signal);
     return (
-      <div className="plot-table-widget" style={{ width: '100%', height: '100%' }} ref="wrapper">
+      <div className="plot-table-widget" ref="wrapper">
         <h4>{this.props.widget.name}</h4>
 
         <div className="content">
           <div className="widget-table">
-            <ButtonGroup vertical>
-              { this.state.rows.map( (row, index) => (
-                  <Button key={index} active={ index === this.state.signal } disabled={ this.props.editing } onClick={() => this.setState({ signal: Number(index) }) } > { row.name } </Button>
-                ))
-              }
-            </ButtonGroup>
+            { this.state.rows && this.state.rows.length > 0 ? (
+              <ButtonGroup vertical>
+                { this.state.rows.map( (row, index) => (
+                    <Button key={index} active={ index === this.state.signal } disabled={ this.props.editing } onClick={() => this.setState({ signal: Number(index) }) } > { row.name } </Button>
+                  ))
+                }
+              </ButtonGroup> 
+            ) : (
+                <small>No signal found, select a different signal type.</small>
+            )
+            }
           </div>
 
           <div className="widget-plot">

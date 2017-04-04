@@ -93,6 +93,7 @@
     right: 7px;
 }
 
+/* PlotTable widget */
 .plot-table-widget, .plot-widget, .value-widget, .image-widget, .label-widget {
     width: 100%;
     height: 100%;
@@ -111,6 +112,11 @@
   flex-direction: column;
   justify-content: center;
 }
+
+.plot-table-widget small {
+    text-align: center;
+}
+/* End PlotTable Widget */
 
 /* Reset Bootstrap styles to "disable" while editing */
 div[class*="-widget"] .btn[disabled], div[class*="-widget"] input[disabled], .form-control[disabled] {

@@ -18,6 +18,7 @@ import EditTableWidget from './edit-widget-table';
 import EditImageWidget from './edit-widget-image';
 import EditWidgetSimulatorControl from './edit-widget-simulator-control';
 import EditWidgetSignalControl from './edit-widget-signal-control';
+import EditWidgetSignalTypeControl from './edit-widget-signal-type-control';
 
 class EditWidgetDialog extends Component {
   static propTypes = {
@@ -93,6 +94,11 @@ class EditWidgetDialog extends Component {
         dialogControls.push(
           <EditWidgetSimulatorControl widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />,
           <EditWidgetSignalControl widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />
+        )
+      } else if (this.props.widget.type === 'PlotTable') {
+        dialogControls.push(
+          <EditWidgetSimulatorControl widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />,
+          <EditWidgetSignalTypeControl widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />
         )
       }
     }
