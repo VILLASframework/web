@@ -21,7 +21,8 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Modal, Glyphicon } from 'react-bootstrap';
+import { Button, Modal, Glyphicon, FormGroup, FormControl, Form } from 'react-bootstrap';
+import FileSaver from 'file-saver';
 
 import AppDispatcher from '../app-dispatcher';
 import SimulationStore from '../stores/simulation-store';
@@ -31,6 +32,7 @@ import Table from '../components/table';
 import TableColumn from '../components/table-column';
 import NewSimulationDialog from '../components/dialog/new-simulation';
 import EditSimulationDialog from '../components/dialog/edit-simulation';
+import ImportSimulationDialog from '../components/dialog/import-simulation';
 
 class Simulations extends Component {
   static getStores() {
@@ -45,6 +47,7 @@ class Simulations extends Component {
       newModal: false,
       deleteModal: false,
       editModal: false,
+      importModal: false,
       modalSimulation: {}
     };
   }
@@ -123,6 +126,49 @@ class Simulations extends Component {
       this.confirmDeleteModal();
     }
   }
+  
+  closeImportModal(data) {
+    this.setState({ importModal : false });
+
+    if (data) {
+      AppDispatcher.dispatch({
+        type: 'simulations/start-add',
+        data: data
+      });
+    }
+  }
+
+  exportSimulation(data) {
+    // filter properties
+    var simulation = Object.assign({}, data);
+    delete simulation._id;
+    delete simulation.projects;
+    delete simulation.running;
+
+    // show save dialog
+    const blob = new Blob([JSON.stringify(simulation, null, 2)], { type: 'application/json' });
+    FileSaver.saveAs(blob, simulation.name + '.json');
+  }
+
+  loadFile(fileList) {
+    // get file
+    const file = fileList[0];
+    if (!file.type.match('application/json')) {
+      return;
+    }
+
+    // create file reader
+    var reader = new FileReader();
+    var self = this;
+
+    reader.onload = function(event) {
+      // read simulation
+      const simulation = JSON.parse(event.target.result);
+      self.setState({ importModal: true, modalSimulation: simulation });
+    };
+
+    reader.readAsText(file);
+  }
 
   render() {
     return (
@@ -131,14 +177,23 @@ class Simulations extends Component {
 
         <Table data={this.state.simulations}>
           <TableColumn title='Name' dataKey='name' link='/simulations/' linkKey='_id' />
-          <TableColumn width='70' editButton deleteButton onEdit={index => this.setState({ editModal: true, modalSimulation: this.state.simulations[index] })} onDelete={index => this.setState({ deleteModal: true, modalSimulation: this.state.simulations[index] })} />
+          <TableColumn width='100' editButton deleteButton exportButton onEdit={index => this.setState({ editModal: true, modalSimulation: this.state.simulations[index] })} onDelete={index => this.setState({ deleteModal: true, modalSimulation: this.state.simulations[index] })} onExport={(index) => this.exportSimulation(this.state.simulations[index])} />
         </Table>
 
-        <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Simulation</Button>
+        <Form inline>
+          <FormGroup>
+            <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Add Simulation</Button>
+          </FormGroup>
+
+          <FormGroup>
+            <FormControl inputRef={ref => { this.fileInput = ref; }} type="file" style={{ display: 'none' }} onChange={(e) => this.loadFile(e.target.files)} />
+            <Button onClick={() => { this.fileInput.click(); }}><Glyphicon glyph="import" /> Import Simulation</Button>
+          </FormGroup>
+        </Form>
 
         <NewSimulationDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
-
         <EditSimulationDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} simulation={this.state.modalSimulation} />
+        <ImportSimulationDialog show={this.state.importModal} onClose={(data) => this.closeImportModal(data)} simulation={this.state.modalSimulation} />
 
         <Modal keyboard show={this.state.deleteModal} onHide={() => this.setState({ deleteModal: false })} onKeyPress={this.onModalKeyPress}>
           <Modal.Header>
