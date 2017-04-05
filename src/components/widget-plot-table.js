@@ -128,6 +128,9 @@ class WidgetPlotTable extends Component {
           }, []);
     }
 
+    // Make tick count proportional to the plot width using a rough scale ratio
+    var tickCount = Math.round(this.state.size.w / 80);
+    
     return (
       <div className="plot-table-widget" ref="wrapper">
         <h4>{this.props.widget.name}</h4>
@@ -151,6 +154,7 @@ class WidgetPlotTable extends Component {
                 colors={ scaleOrdinal(schemeCategory10) }
                 gridHorizontal={true}
                 xAccessor={(d) => { if (d != null) { return new Date(d.x); } }}
+                xAxisTickCount={ tickCount }
                 hoverAnimation={false}
                 circleRadius={0}
                 domain={{ x: [this.state.firstTimestamp, this.state.latestTimestamp] }}
