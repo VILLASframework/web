@@ -22,8 +22,8 @@ class WidgetGauge extends Component {
     };
   }
 
-  staticLabels(gauge_dom_width) {
-    var label_font_size = gauge_dom_width * 0.05; // font scaling factor
+  staticLabels(widget_height) {
+    var label_font_size = widget_height * 0.055; // font scaling factor
     return {
           font: label_font_size + 'px "Helvetica Neue"',
           labels: [0.0, 0.1, 0.5, 0.9, 1.0],
@@ -32,7 +32,7 @@ class WidgetGauge extends Component {
         }
   }
 
-  computeGaugeOptions(gauge_dom_width) {
+  computeGaugeOptions(widget_height) {
     return {
         angle: -0.25,
         lineWidth: 0.2,
@@ -45,12 +45,12 @@ class WidgetGauge extends Component {
         colorStop: '#6EA2B0',
         strokeColor: '#E0E0E0',
         highDpiSupport: true,
-        staticLabels: this.staticLabels(gauge_dom_width)
+        staticLabels: this.staticLabels(widget_height)
       };
   }
 
   componentDidMount() {
-    const opts = this.computeGaugeOptions(this.gaugeCanvas.width);
+    const opts = this.computeGaugeOptions(this.props.widget.height);
     this.gauge = new Gauge(this.gaugeCanvas).setOptions(opts);
     this.gauge.maxValue = 1;
     this.gauge.setMinValue(0);
@@ -59,9 +59,8 @@ class WidgetGauge extends Component {
   }
 
   componentWillUpdate() {
-
     // Update labels after possible resize
-    this.gauge.setOptions({ staticLabels: this.staticLabels(this.gaugeCanvas.width) });
+    this.gauge.setOptions({ staticLabels: this.staticLabels(this.props.widget.height) });
   }
 
   componentDidUpdate() {
