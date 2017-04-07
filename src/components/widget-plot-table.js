@@ -175,42 +175,44 @@ class WidgetPlotTable extends Component {
         <h4>{this.props.widget.name}</h4>
 
         <div className="content">
-          <div className="widget-table">
-            { checkBoxes.length > 0 ? (
-              <FormGroup className="btn-group-vertical">
-                { checkBoxes }
-              </FormGroup>
-              ) : ( <small>No signal found, select a different signal type.</small> )
-            }
-          </div>
+          <div className="table-plot-row">
+            <div className="widget-table">
+              { checkBoxes.length > 0 ? (
+                <FormGroup className="btn-group-vertical">
+                  { checkBoxes }
+                </FormGroup>
+                ) : ( <small>No signal found, select a different signal type.</small> )
+              }
+            </div>
 
-          <div className="widget-plot">
-            <div className="chart-wrapper" ref={ (domNode) => this.chartWrapper = domNode }>
-              {this.state.sequence &&
-                <LineChart
-                  width={ this.state.size.w || 100 }
-                  height={ this.state.size.h || 100 }
-                  data={this.state.values }
-                  colors={ scaleOrdinal(schemeCategory10) }
-                  gridHorizontal={true}
-                  xAccessor={(d) => { if (d != null) { return new Date(d.x); } }}
-                  xAxisTickCount={ tickCount }
-                  hoverAnimation={false}
-                  circleRadius={0}
-                  domain={{ x: [this.state.firstTimestamp, this.state.latestTimestamp] }}
-                />
-              }
+            <div className="widget-plot">
+              <div className="chart-wrapper" ref={ (domNode) => this.chartWrapper = domNode }>
+                {this.state.sequence &&
+                  <LineChart
+                    width={ this.state.size.w || 100 }
+                    height={ this.state.size.h || 100 }
+                    data={this.state.values }
+                    colors={ scaleOrdinal(schemeCategory10) }
+                    gridHorizontal={true}
+                    xAccessor={(d) => { if (d != null) { return new Date(d.x); } }}
+                    xAxisTickCount={ tickCount }
+                    hoverAnimation={false}
+                    circleRadius={0}
+                    domain={{ x: [this.state.firstTimestamp, this.state.latestTimestamp] }}
+                  />
+                }
+              </div>
             </div>
-            <div className="plot-legend">
-              {
-                this.state.preselectedSignals.reduce( (accum, signal, i) => {
-                    if (this.state.signals.includes(signal.index)) {
-                      accum.push(<div key={signal.index} className="signal-legend"><span className="legend-color" style={{ background: colorScale(signal.index) }}>&nbsp;&nbsp;</span> {signal.name} </div>)
-                    }
-                    return accum;
-                  }, [])
-              }
-            </div>
+          </div>
+          <div className="plot-legend">
+            {
+              this.state.preselectedSignals.reduce( (accum, signal, i) => {
+                  if (this.state.signals.includes(signal.index)) {
+                    accum.push(<div key={signal.index} className="signal-legend"><span className="legend-color" style={{ background: colorScale(signal.index) }}>&nbsp;&nbsp;</span> {signal.name} </div>)
+                  }
+                  return accum;
+                }, [])
+            }
           </div>
         </div>
       </div>
