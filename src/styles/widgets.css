@@ -93,6 +93,37 @@
     right: 7px;
 }
 
+/* Reset Bootstrap styles to "disable" while editing */
+div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input[disabled], .form-control[disabled], .checkbox.disabled label {
+  cursor: inherit;
+  pointer-events: none;
+}
+
+.btn-default[disabled]:hover {
+    background-color: #fff;
+    border-color: #ccc;
+}
+
+.btn-default.active[disabled]:hover {
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+ /* End reset */
+
+ /* Match Bootstrap's them to VILLAS */
+.widget .btn-default.active {
+    background-color: #abcfd8;
+}
+
+.widget .btn-default.active:hover, .widget .btn-default.active:focus {
+    background-color: #89b3bd;
+}
+
+.widget .btn-default:hover {
+    background-color: #abcfd8;
+}
+/* End match */
+
 /* PlotTable widget */
 .plot-table-widget, .plot-widget, .value-widget, .image-widget, .label-widget {
     width: 100%;
@@ -157,24 +188,6 @@
     display: inline-block;
     vertical-align: middle;
 } 
-/* End PlotTable Widget */
-
-/* Reset Bootstrap styles to "disable" while editing */
-div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input[disabled], .form-control[disabled], .checkbox.disabled label {
-  cursor: inherit;
-  pointer-events: none;
-}
-
-.btn-default[disabled]:hover {
-    background-color: #fff;
-    border-color: #ccc;
-}
-
-.btn-default.active[disabled]:hover {
-    background-color: #e6e6e6;
-    border-color: #adadad;
-}
- /* End reset */
  
 .plot-table-widget .widget-plot {
   display: -webkit-flex;
@@ -188,6 +201,7 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
   -webkit-flex: 1 0 auto;
   flex: 1 0 auto;
 }
+/* End PlotTable Widget */
 
 /*.single-value-widget {
   position: absolute;
