@@ -129,7 +129,7 @@ class Widget extends Component {
     } else if (widget.type === 'Label') {
       element = <WidgetLabel widget={widget} />
     } else if (widget.type === 'PlotTable') {
-      element = <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} editing={this.props.editing} />
+      element = <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } />
     } else if (widget.type === 'Image') {
       element = <WidgetImage widget={widget} files={this.state.files} />
     } else if (widget.type === 'Button') {

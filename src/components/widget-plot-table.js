@@ -20,13 +20,12 @@ class WidgetPlotTable extends Component {
 
     this.state = {
       size: { w: 0, h: 0 },
-      signals: [],
       firstTimestamp: 0,
       latestTimestamp: 0,
       sequence: null,
-      signalsOfCurrType: [],
       values: [],
-      active_sim_model: {}
+      preselectedSignals: [],
+      signals: []
     };
   }
 
@@ -37,13 +36,30 @@ class WidgetPlotTable extends Component {
     // plot size
     this.setState({ size: { w: this.props.widget.width - 100, h: this.props.widget.height - 20 }});
 
-    if (nextProps.widget.signalType !== this.props.widget.signalType) {
-      this.setState({ signals: []});
+    // Update internal selected signals state with props (different array objects)
+    if (this.props.widget.signals !== nextProps.widget.signals) {
+      this.setState( {signals: nextProps.widget.signals});
     }
 
+    // Identify if there was a change in the preselected signals
+    if (nextProps.simulation && (JSON.stringify(nextProps.widget.preselectedSignals) !== JSON.stringify(this.props.widget.preselectedSignals) || this.state.preselectedSignals.length === 0)) {
+      
+      // Update the currently selected signals by intersecting with the preselected signals
+      // Do the same with the plot values
+      var intersection = this.computeIntersection(nextProps.widget.preselectedSignals, nextProps.widget.signals);
+      this.setState({ 
+          signals: intersection,
+          values: this.state.values.filter( (values) => intersection.includes(values.index))
+        });
+
+      this.updatePreselectedSignalsState(nextProps);
+      return;
+    }
+
+    // Identify simulation reset
     if (nextProps.simulation == null || nextProps.data == null || nextProps.data[simulator] == null || nextProps.data[simulator].length === 0 || nextProps.data[simulator].values[0].length === 0) {
       // clear values
-      this.setState({ values: [], sequence: null, signalsOfCurrType: [] });
+      this.setState({ values: [], sequence: null });
       return;
     }
 
@@ -52,25 +68,42 @@ class WidgetPlotTable extends Component {
       return;
     }
 
+    this.updatePlotData(nextProps);
+  }
+
+  // Perform the intersection of the lists, alternatively could be done with Sets ensuring unique values
+  computeIntersection(preselectedSignals, selectedSignals) {
+    return preselectedSignals.filter( s => selectedSignals.includes(s));
+  }
+  
+  updatePreselectedSignalsState(nextProps) {
+    const simulator = nextProps.widget.simulator;
+
     // get simulation model
-    const simulationModel = nextProps.simulation.models.find((model, model_index) => {
-      var found = false;
-      if (model.simulator === simulator) {
-        this.setState({ active_sim_model: model_index });
-        found = true;
-      }
-      return found;
+    const simulationModel = nextProps.simulation.models.find((model) => {
+      return (model.simulator === simulator);
     });
 
-    // get signals belonging to the currently selected type
-    var filteredSignals = {};
-    simulationModel.mapping
-                .filter( (signal) => 
-                  signal.type.toLowerCase() === nextProps.widget.signalType)
-                .forEach((signal) => {
-                  // Store signals to be shown in a dictionary
-                  filteredSignals[signal.name.toLowerCase()] = '';
-                });
+    // Create checkboxes using the signal indices from simulation model
+    const preselectedSignals = simulationModel.mapping.reduce(
+      // Loop through simulation model signals
+      (accum, model_signal, signal_index) => {
+        // Append them if they belong to the current selected type
+        if (nextProps.widget.preselectedSignals.indexOf(signal_index) > -1) {
+            accum.push(
+              {
+                index: signal_index,
+                name: model_signal.name
+              }
+            )
+          }
+          return accum;
+        }, []);
+      this.setState({ preselectedSignals: preselectedSignals });
+  }
+
+  updatePlotData(nextProps) {
+    const simulator = nextProps.widget.simulator;
 
     // get timestamps
     var latestTimestamp = nextProps.data[simulator].values[0][nextProps.data[simulator].values[0].length - 1].x;
@@ -91,41 +124,38 @@ class WidgetPlotTable extends Component {
     // copy all values for each signal in time region
     var values = [];
     this.state.signals.forEach((signal_index, i, arr) => (
+      // Include signal index, useful to relate them to the signal selection
       values.push(
-        { values: nextProps.data[simulator].values[signal_index].slice(firstIndex, nextProps.data[simulator].values[signal_index].length - 1)})
+        { 
+          index: signal_index,
+          values: nextProps.data[simulator].values[signal_index].slice(firstIndex, nextProps.data[simulator].values[signal_index].length - 1)})
     ));
 
-    this.setState({ values: values, firstTimestamp: firstTimestamp, latestTimestamp: latestTimestamp, sequence: nextProps.data[simulator].sequence, signalsOfCurrType: filteredSignals });
+    this.setState({ values: values, firstTimestamp: firstTimestamp, latestTimestamp: latestTimestamp, sequence: nextProps.data[simulator].sequence });
   }
-  
+
   updateSignalSelection(signal_index, checked) {
-    // If the signal is selected, add it to array, remove it otherwise
-    this.setState({ 
+    // Update the selected signals and propagate to parent component
+    var new_widget = Object.assign({}, this.props.widget, { 
       signals: checked? this.state.signals.concat(signal_index) : this.state.signals.filter( (idx) => idx !== signal_index )
     });
+    this.props.onWidgetChange(new_widget);
   }
 
   render() {
     var checkBoxes = [];
-    if (this.state.signalsOfCurrType && Object.keys(this.state.signalsOfCurrType).length > 0) {
+
+    if (this.state.preselectedSignals && this.state.preselectedSignals.length > 0) {
       // Create checkboxes using the signal indices from simulation model
-      checkBoxes = this.props.simulation.models[this.state.active_sim_model].mapping.reduce(
-        // Loop through simulation model signals
-        (accum, model_signal, signal_index) => {
-          // Append them if they belong to the current selected type
-          if (this.state.signalsOfCurrType.hasOwnProperty(model_signal.name.toLowerCase())) {
-              // Tag as active if it is currently selected
+      checkBoxes = this.state.preselectedSignals.map( (signal) => {
+              var checked = this.state.signals.indexOf(signal.index) > -1;
               var chkBxClasses = classNames({
                 'btn': true,
                 'btn-default': true,
-                'active': this.state.signals.indexOf(signal_index) > -1
+                'active': checked
               });
-              accum.push(
-                <Checkbox key={signal_index} className={chkBxClasses} disabled={ this.props.editing } onChange={(e) => this.updateSignalSelection(signal_index, e.target.checked) } > { model_signal.name } </Checkbox>
-              )
-            }
-            return accum;
-          }, []);
+              return <Checkbox key={signal.index} className={chkBxClasses} checked={checked} disabled={ this.props.editing } onChange={(e) => this.updateSignalSelection(signal.index, e.target.checked) } > { signal.name } </Checkbox>
+            });
     }
 
     // Make tick count proportional to the plot width using a rough scale ratio
@@ -150,7 +180,7 @@ class WidgetPlotTable extends Component {
               <LineChart
                 width={ this.state.size.w || 100 }
                 height={ this.state.size.h || 100 }
-                data={this.state.values}
+                data={this.state.values }
                 colors={ scaleOrdinal(schemeCategory10) }
                 gridHorizontal={true}
                 xAccessor={(d) => { if (d != null) { return new Date(d.x); } }}
@@ -160,6 +190,13 @@ class WidgetPlotTable extends Component {
                 domain={{ x: [this.state.firstTimestamp, this.state.latestTimestamp] }}
               />
             }
+            <div>
+              { 
+                this.state.signals.map((signal) => 
+                  ({signal} + ',')
+                )
+              }
+            </div>
           </div>
         </div>
       </div>

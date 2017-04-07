@@ -163,7 +163,8 @@ class Visualization extends Component {
       widget.minHeight = 20;
     } else if (item.name === 'PlotTable') {
       widget.simulator = this.state.simulation.models[0].simulator;
-      widget.signalType = this.state.simulation.models[0].mapping[0].type.toLowerCase();
+      widget.preselectedSignals = [];
+      widget.signals = []; // initialize selected signals
       widget.minWidth = 400;
       widget.minHeight = 200;
       widget.width = 500;
@@ -209,7 +210,12 @@ class Visualization extends Component {
     this.setState({ visualization: visualization });
   }
 
-  widgetChange(updated_widget, key) {
+  widgetStatusChange(updated_widget, key) {
+    // Widget changed internally, make changes effective then save them
+    this.widgetChange(updated_widget, key, this.saveChanges);
+  }
+
+  widgetChange(updated_widget, key, callback = null) {
     
     var widgets_update = {};
     widgets_update[key] =  updated_widget;
@@ -218,7 +224,7 @@ class Visualization extends Component {
     var visualization = Object.assign({}, this.state.visualization, {
       widgets: new_widgets
     });
-    this.setState({ visualization: visualization });
+    this.setState({ visualization: visualization }, callback);
   }
 
   editWidget(e, data) {
@@ -251,6 +257,11 @@ class Visualization extends Component {
     this.setState({ visualization: visualization });
   }
 
+  stopEditing() {
+    // Provide the callback so it can be called when state change is applied
+    this.setState({ editing: false }, this.saveChanges );
+  }
+
   saveChanges() {
     // Transform to a list 
     var visualization = Object.assign({}, this.state.visualization, {
@@ -261,8 +272,6 @@ class Visualization extends Component {
       type: 'visualizations/start-edit',
       data: visualization
     });
-
-    this.setState({ editing: false });
   }
 
   discardChanges() {
@@ -339,7 +348,7 @@ class Visualization extends Component {
           </div>
           {this.state.editing ? (
             <div className='section-buttons-group'>
-              <Button bsStyle="link" onClick={() => this.saveChanges()}>
+              <Button bsStyle="link" onClick={() => this.stopEditing()}>
                 <span className="glyphicon glyphicon-floppy-disk"></span> Save
               </Button>
               <Button bsStyle="link" onClick={() => this.discardChanges()}>
@@ -374,7 +383,7 @@ class Visualization extends Component {
           <Dropzone height={height} onDrop={(item, position) => this.handleDrop(item, position)} editing={this.state.editing}>
             {current_widgets != null &&
               Object.keys(current_widgets).map( (widget_key) => (
-              <Widget key={widget_key} data={current_widgets[widget_key]} simulation={this.state.simulation} onWidgetChange={(w, k) => this.widgetChange(w, k)} editing={this.state.editing} index={widget_key} grid={this.state.grid} />
+              <Widget key={widget_key} data={current_widgets[widget_key]} simulation={this.state.simulation} onWidgetChange={(w, k) => this.widgetChange(w, k)} onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)} editing={this.state.editing} index={widget_key} grid={this.state.grid} />
             ))}
           </Dropzone>
 
