@@ -160,7 +160,8 @@ class WidgetPlotTable extends Component {
 
     // Make tick count proportional to the plot width using a rough scale ratio
     var tickCount = Math.round(this.state.size.w / 80);
-    
+    var colorScale = scaleOrdinal(schemeCategory10);
+
     return (
       <div className="plot-table-widget" ref="wrapper">
         <h4>{this.props.widget.name}</h4>
@@ -190,11 +191,14 @@ class WidgetPlotTable extends Component {
                 domain={{ x: [this.state.firstTimestamp, this.state.latestTimestamp] }}
               />
             }
-            <div>
-              { 
-                this.state.signals.map((signal) => 
-                  ({signal} + ',')
-                )
+            <div className="plot-legend">
+              {
+                this.state.preselectedSignals.reduce( (accum, signal, i) => {
+                    if (this.state.signals.includes(signal.index)) {
+                      accum.push(<div key={signal.index} className="signal-legend"><span className="legend-color" style={{ background: colorScale(signal.index) }}>&nbsp;&nbsp;</span> {signal.name} </div>)
+                    }
+                    return accum;
+                  }, [])
               }
             </div>
           </div>
