@@ -99,6 +99,11 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
   pointer-events: none;
 }
 
+.editing-widget .btn-default.disabled {
+    background-color: #abcfd8;
+    border-color: #ccc;
+}
+
 .btn-default[disabled]:hover {
     background-color: #fff;
     border-color: #ccc;
@@ -115,7 +120,7 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
     background-color: #abcfd8;
 }
 
-.widget .btn-default.active:hover, .widget .btn-default.active:focus {
+.widget .btn-default.active:hover, .widget .btn-default.active:hover {
     background-color: #89b3bd;
 }
 
