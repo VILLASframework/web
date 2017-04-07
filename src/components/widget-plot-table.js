@@ -17,6 +17,8 @@ import { FormGroup, Checkbox } from 'react-bootstrap';
 class WidgetPlotTable extends Component {
   constructor(props) {
     super(props);
+    
+    this.chartWrapper = null;
 
     this.state = {
       size: { w: 0, h: 0 },
@@ -33,8 +35,14 @@ class WidgetPlotTable extends Component {
     // check data
     const simulator = nextProps.widget.simulator;
 
-    // plot size
-    this.setState({ size: { w: this.props.widget.width - 100, h: this.props.widget.height - 20 }});
+    // handle plot size
+    const w = this.chartWrapper.offsetWidth - 20;
+    const h = this.chartWrapper.offsetHeight - 20;
+    const currentSize = this.state.size;
+    if (w !== currentSize.w || h !== currentSize.h) {
+        this.setState({size: { w, h } });
+    }
+    // this.setState({ size: { w: this.props.widget.width - 100, h: this.props.widget.height - 77 }});
 
     // Update internal selected signals state with props (different array objects)
     if (this.props.widget.signals !== nextProps.widget.signals) {
@@ -177,20 +185,22 @@ class WidgetPlotTable extends Component {
           </div>
 
           <div className="widget-plot">
-            {this.state.sequence &&
-              <LineChart
-                width={ this.state.size.w || 100 }
-                height={ this.state.size.h || 100 }
-                data={this.state.values }
-                colors={ scaleOrdinal(schemeCategory10) }
-                gridHorizontal={true}
-                xAccessor={(d) => { if (d != null) { return new Date(d.x); } }}
-                xAxisTickCount={ tickCount }
-                hoverAnimation={false}
-                circleRadius={0}
-                domain={{ x: [this.state.firstTimestamp, this.state.latestTimestamp] }}
-              />
-            }
+            <div className="chart-wrapper" ref={ (domNode) => this.chartWrapper = domNode }>
+              {this.state.sequence &&
+                <LineChart
+                  width={ this.state.size.w || 100 }
+                  height={ this.state.size.h || 100 }
+                  data={this.state.values }
+                  colors={ scaleOrdinal(schemeCategory10) }
+                  gridHorizontal={true}
+                  xAccessor={(d) => { if (d != null) { return new Date(d.x); } }}
+                  xAxisTickCount={ tickCount }
+                  hoverAnimation={false}
+                  circleRadius={0}
+                  domain={{ x: [this.state.firstTimestamp, this.state.latestTimestamp] }}
+                />
+              }
+            </div>
             <div className="plot-legend">
               {
                 this.state.preselectedSignals.reduce( (accum, signal, i) => {

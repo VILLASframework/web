@@ -166,9 +166,9 @@ class Visualization extends Component {
       widget.preselectedSignals = [];
       widget.signals = []; // initialize selected signals
       widget.minWidth = 400;
-      widget.minHeight = 200;
+      widget.minHeight = 300;
       widget.width = 500;
-      widget.height = 400;
+      widget.height = 500;
       widget.time = 60
     } else if (item.name === 'Image') {
       widget.minWidth = 100;
