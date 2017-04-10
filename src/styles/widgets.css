@@ -186,8 +186,33 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
 .plot-table-widget input[type="checkbox"] {
     display: none;
 }
+ 
+.plot-table-widget .widget-plot {
+  -webkit-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+/* End PlotTable Widget */
 
-.plot-table-widget .plot-legend {
+/* Plot Widget */
+.plot-widget {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+}
+
+.plot-widget .widget-plot {
+  -webkit-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+/* End Plot Widget */
+
+/* Plots */
+.chart-wrapper {
+  height: 100%;
+  width: 100%;
+}
+
+.plot-legend {
   display: -webkit-flex;
   display: flex;
   flex-wrap: wrap;
@@ -195,28 +220,19 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
   margin-bottom: 5px;
 }
 
-.plot-table-widget .signal-legend {
+.signal-legend {
     font-size: 0.8em;
     font-weight: 700;
     overflow-x: hidden;
 }
 
-.plot-table-widget .legend-color {
+.legend-color {
     height: 50%;
     display: inline-block;
     vertical-align: middle;
 } 
- 
-.plot-table-widget .widget-plot {
-  -webkit-flex: 1 1 auto;
-  flex: 1 1 auto;
-}
 
-.plot-table-widget .chart-wrapper {
-  height: 100%;
-  width: 100%;
-}
-/* End PlotTable Widget */
+/* End Plots */
 
 /*.single-value-widget {
   position: absolute;
