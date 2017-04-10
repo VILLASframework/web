@@ -159,9 +159,9 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
 }
 
 .plot-table-widget .widget-table {
-  /*width: 100px;*/
   -webkit-flex: 1 0 auto;
   flex: 1 0 auto;
+  flex-basis: 90px;
   max-width: 50%;
   display: flex;
   flex-direction: column;
