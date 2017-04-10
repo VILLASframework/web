@@ -95,7 +95,7 @@ class Plot extends Component {
                 <LineChart
                 width={ this.state.size.w || 100 }
                 height={ this.state.size.h || 100 }
-                margins= {{top: 10, right: 0, bottom: 20, left: 45 }}
+                margins={{top: 10, right: 0, bottom: 20, left: 45 }}
                 data={this.state.values }
                 colors={ scaleOrdinal(schemeCategory10) }
                 gridHorizontal={true}
