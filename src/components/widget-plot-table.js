@@ -8,8 +8,6 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { LineChart } from 'rd3';
-import { scaleOrdinal, schemeCategory10 } from 'd3-scale';
 import classNames from 'classnames';
 import { FormGroup, Checkbox } from 'react-bootstrap';
 
@@ -27,8 +25,6 @@ class WidgetPlotTable extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // check data
-    const simulator = nextProps.widget.simulator;
 
     // Update internal selected signals state with props (different array objects)
     if (this.props.widget.signals !== nextProps.widget.signals) {
