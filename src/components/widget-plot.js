@@ -36,6 +36,8 @@ class WidgetPlot extends Component {
 
     return (
       <div className="plot-widget" ref="wrapper">
+        <h4>{this.props.widget.name}</h4>
+        
         <div className="widget-plot">
           <Plot signals={ this.props.widget.signals } time={ this.props.widget.time } simulatorData={ simulatorData } />
         </div>
