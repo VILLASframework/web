@@ -106,7 +106,7 @@ class Visualizations extends Component {
 
     AppDispatcher.dispatch({
       type: 'visualizations/start-remove',
-      data: this.state.modalVisualization
+      data: this.state.modalData
     });
   }
 
@@ -139,7 +139,7 @@ class Visualizations extends Component {
 
         <Table data={visualizations}>
           <TableColumn title='Name' dataKey='name' link='/visualizations/' linkKey='_id' />
-          <TableColumn width='70' editButton deleteButton onEdit={index => this.setState({ editModal: true, modalData: this.state.visualizations[index] })} onDelete={index => this.setState({ deleteModal: true, modalData: this.state.visualizations[index] })} />
+          <TableColumn width='70' editButton deleteButton onEdit={(index) => this.setState({ editModal: true, modalData: visualizations[index] })} onDelete={(index) => this.setState({ deleteModal: true, modalData: visualizations[index] })} />
         </Table>
 
         <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Visualization</Button>
