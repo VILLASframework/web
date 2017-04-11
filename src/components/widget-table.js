@@ -48,7 +48,7 @@ class WidgetTable extends Component {
     nextProps.data[simulator].values.forEach((signal, index) => {
       rows.push({
         name: simulationModel.mapping[index].name,
-        value: signal[signal.length - 1].y
+        value: signal[signal.length - 1].y.toFixed(3)
       })
     });
 
@@ -57,7 +57,7 @@ class WidgetTable extends Component {
 
   render() {
     return (
-      <div style={{ width: '100%', height: '100%' }}>
+      <div>
         <h4>{this.props.widget.name}</h4>
 
         <Table data={this.state.rows}>
