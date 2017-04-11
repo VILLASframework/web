@@ -126,13 +126,11 @@ class Visualizations extends Component {
     var visualizations = [];
 
     if (this.state.visualizations && this.state.project.visualizations) {
-      this.state.visualizations.forEach((visualization) => {
-        this.state.project.visualizations.forEach((id) => {
-          if (visualization._id === id) {
-            visualizations.push(visualization);
-          }
-        });
-      });
+      visualizations = this.state.visualizations.filter( 
+          (visualization) => this.state.project.visualizations.includes(visualization._id)
+        ).sort(
+          (visA, visB) => visA.name.localeCompare(visB.name)
+        );
     }
 
     return (
