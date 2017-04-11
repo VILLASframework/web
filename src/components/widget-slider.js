@@ -8,9 +8,16 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { Form, FormGroup, Col, ControlLabel } from 'react-bootstrap';
+import classNames from 'classnames';
 
 class WidgetSlider extends Component {
+
+  static  get OrientationTypes() { 
+    return ({
+      HORIZONTAL: {value: 0, name: 'Horizontal'},
+      VERTICAL: {value: 1, name: 'Vertical'}
+    })
+  }
 
   constructor(props) {
     super(props);
@@ -25,22 +32,40 @@ class WidgetSlider extends Component {
   }
 
   render() {
+    let fields = {
+      'name': this.props.widget.name,
+      'control': <input type="range"  min="0" max="100" disabled={ this.props.editing } onChange={ (e) => this.valueChanged(e) } defaultValue={ this.state.value }/>,
+      'value': this.state.value
+    }
+
+    let vertical = this.props.widget.orientation === WidgetSlider.OrientationTypes.VERTICAL.value;
+    var widgetClasses = classNames({
+                    'slider-widget': true,
+                    'full': true,
+                    'vertical': vertical,
+                    'horizontal': !vertical
+                  });
+
     return (
-      <div className="slider-widget full">
-          <Form componentClass="fieldset" horizontal>
-              <FormGroup validationState={ this.state.validationState} >
-                  <Col componentClass={ControlLabel} xs={3}>
-                    {this.props.widget.name}
-                  </Col>
-                  <Col xs={8}>
-                    <input type="range"  min="0" max="100" disabled={ this.props.editing } onChange={ (e) => this.valueChanged(e) } defaultValue={ this.state.value }/>
-                  </Col>
-                  <Col xs={1}>
-                    <span>{ this.state.value }</span>
-                  </Col>
-                </FormGroup>
-            </Form>
-      </div>
+      this.props.widget.orientation === WidgetSlider.OrientationTypes.HORIZONTAL.value? (
+        <div className={widgetClasses}>
+          <div>
+            <label>{ fields.name }</label>
+          </div>
+          <div>
+            { fields.control }
+            <span>{ fields.value }</span>
+          </div>
+        </div>
+      ) : (
+        <div className={widgetClasses}>
+          <div>
+            <label>{ fields.name }</label>
+            <span>{ fields.value }</span>
+          </div>
+          <div>{ fields.control }</div>
+        </div>
+      )
     );
   }
 }

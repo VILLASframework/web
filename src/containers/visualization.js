@@ -23,6 +23,8 @@ import SimulationStore from '../stores/simulation-store';
 import FileStore from '../stores/file-store';
 import AppDispatcher from '../app-dispatcher';
 
+import WidgetSlider from '../components/widget-slider';
+
 class Visualization extends Component {
   static getStores() {
     return [ VisualizationStore, ProjectStore, SimulationStore, FileStore ];
@@ -190,6 +192,7 @@ class Visualization extends Component {
       widget.minHeight = 30;
       widget.width = 400;
       widget.height = 50;
+      widget.orientation = WidgetSlider.OrientationTypes.HORIZONTAL.value; // Assign default orientation
     } else if (item.name === 'Gauge') {
       widget.simulator = this.state.simulation.models[0].simulator;
       widget.signal = 0;

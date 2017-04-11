@@ -19,6 +19,7 @@ import EditImageWidget from './edit-widget-image';
 import EditWidgetSimulatorControl from './edit-widget-simulator-control';
 import EditWidgetSignalControl from './edit-widget-signal-control';
 import EditWidgetSignalsControl from './edit-widget-signals-control';
+import EditWidgetOrientation from './edit-widget-orientation';
 
 class EditWidgetDialog extends Component {
   static propTypes = {
@@ -99,6 +100,10 @@ class EditWidgetDialog extends Component {
         dialogControls.push(
           <EditWidgetSimulatorControl key={1} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />,
           <EditWidgetSignalsControl key={2} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />
+        )
+      } else if (this.props.widget.type === 'Slider') {
+        dialogControls.push(
+          <EditWidgetOrientation key={1} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />,
         )
       }
     }

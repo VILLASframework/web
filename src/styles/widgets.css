@@ -283,6 +283,15 @@ div[class*="-widget"] label {
 /* End number input widget */ 
 
 /* Slider widget */
+.slider-widget.vertical input[type="range"] {
+   position: absolute;
+   top: 40%;
+   left: 50%;
+   transform: rotate(270deg);
+   /*margin-left: 20px;*/
+   width: 150px;
+}
+
 input[type=range]::-moz-range-thumb {
     background: #ffffff;
 }
@@ -293,6 +302,31 @@ input[type=range]::-webkit-slider-thumb {
 
 input[type=range]::-ms-thumb {
     background: #ffffff;
+}
+
+.slider-widget.horizontal div {
+    width: 50%;
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+}
+
+.slider-widget.horizontal span {
+    display: block;
+    margin: 5px;
+}
+
+.slider-widget.vertical div {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.slider-widget span {
+    font-size: 1.5em;
+    font-weight: 600;
 }
 /* End slider widget */
 
