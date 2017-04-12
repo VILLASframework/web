@@ -15,7 +15,7 @@ import AppDispatcher from '../app-dispatcher';
 import ProjectStore from '../stores/project-store';
 import VisualizationStore from '../stores/visualization-store';
 
-import Table from '../components/table';
+import CustomTable from '../components/table';
 import TableColumn from '../components/table-column';
 import NewVisualzationDialog from '../components/dialog/new-visualization';
 import EditVisualizationDialog from '../components/dialog/edit-visualization';
@@ -25,66 +25,70 @@ class Visualizations extends Component {
     return [ ProjectStore, VisualizationStore ];
   }
 
-  static calculateState(prevState) {
+  static calculateState(prevState, props) {
+
+    let currentProjects = ProjectStore.getState();
+    let currentVisualizations = VisualizationStore.getState();
+
     if (prevState) {
+      var projectUpdate = prevState.project;
+
+      // Compare content of the visualizations array, reload projects if changed
+      if (JSON.stringify(prevState.visualizations) !== JSON.stringify(currentVisualizations)) {
+        Visualizations.loadProjects();
+      }
+
+      // Compare content of the projects array, update visualizations if changed
+      if (JSON.stringify(prevState.projects) !== JSON.stringify(currentProjects)) {
+        projectUpdate = Visualizations.findProjectInState(currentProjects, props.params.project);
+        Visualizations.loadVisualizations(projectUpdate.visualizations);
+      }
+
       return {
-        projects: ProjectStore.getState(),
-        visualizations: VisualizationStore.getState(),
+        projects: currentProjects,
+        visualizations: currentVisualizations,
 
         newModal: prevState.newModal,
         deleteModal: prevState.deleteModal,
         editModal: prevState.editModal,
         modalData: prevState.modalData,
 
-        project: prevState.project,
-        reload: prevState.reload
+        project: projectUpdate
       };
     } else {
       return {
-        projects: ProjectStore.getState(),
-        visualizations: VisualizationStore.getState(),
+        projects: currentProjects,
+        visualizations: currentVisualizations,
 
         newModal: false,
         deleteModal: false,
         editModal: false,
         modalData: {},
 
-        project: {},
-        reload: false
+        project: {}
       };
     }
   }
 
-  componentWillMount() {
+  static findProjectInState(projects, projectId) {
+    return projects.find((project) => project._id === projectId);
+  }
+
+  static loadProjects() {
     AppDispatcher.dispatch({
       type: 'projects/start-load'
     });
   }
 
-  componentDidUpdate() {
-    if (this.state.project._id !== this.props.params.project /*|| this.state.reload*/) {
-      this.reloadProject();
-
-      if (this.state.reload) {
-        this.setState({ reload: false });
-      }
-    }
+  static loadVisualizations(visualizations) {
+    AppDispatcher.dispatch({
+      type: 'visualizations/start-load',
+      data: visualizations
+    });
   }
 
-  reloadProject() {
-    // select project by param id
-    this.state.projects.forEach((project) => {
-      if (project._id === this.props.params.project) {
-        // JSON.parse(JSON.stringify(obj)) = deep clone to make also copy of widget objects inside
-        this.setState({ project: JSON.parse(JSON.stringify(project)) });
-
-        // load visualizations
-        AppDispatcher.dispatch({
-          type: 'visualizations/start-load',
-          data: project.visualizations
-        });
-      }
-    });
+  componentWillMount() {
+    Visualizations.loadProjects();
   }
 
   closeNewModal(data) {
@@ -98,7 +102,7 @@ class Visualizations extends Component {
       });
     }
 
-    this.setState({ newModal: false, reload: data != null });
+    this.setState({ newModal: false });
   }
 
   confirmDeleteModal() {
@@ -124,7 +128,6 @@ class Visualizations extends Component {
   render() {
     // get visualizations for this project
     var visualizations = [];
-
     if (this.state.visualizations && this.state.project.visualizations) {
       visualizations = this.state.visualizations.filter( 
           (visualization) => this.state.project.visualizations.includes(visualization._id)
@@ -137,10 +140,10 @@ class Visualizations extends Component {
       <div>
         <h1>{this.state.project.name}</h1>
 
-        <Table data={visualizations}>
+        <CustomTable data={visualizations}>
           <TableColumn title='Name' dataKey='name' link='/visualizations/' linkKey='_id' />
           <TableColumn width='70' editButton deleteButton onEdit={(index) => this.setState({ editModal: true, modalData: visualizations[index] })} onDelete={(index) => this.setState({ deleteModal: true, modalData: visualizations[index] })} />
-        </Table>
+        </CustomTable>
 
         <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Visualization</Button>
 
@@ -167,4 +170,4 @@ class Visualizations extends Component {
   }
 }
 
-export default Container.create(Visualizations);
+export default Container.create(Visualizations, {withProps: true});
