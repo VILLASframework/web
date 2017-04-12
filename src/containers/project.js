@@ -29,7 +29,7 @@ class Visualizations extends Component {
 
     let currentProjects = ProjectStore.getState();
     let currentVisualizations = VisualizationStore.getState();
-
+    
     if (prevState) {
       var projectUpdate = prevState.project;
 
@@ -56,6 +56,13 @@ class Visualizations extends Component {
         project: projectUpdate
       };
     } else {
+
+      let initialProject = Visualizations.findProjectInState(currentProjects, props.params.project);
+      // If projects have been loaded already but visualizations not (redirect from Projects page)
+      if (initialProject && (!currentVisualizations || currentVisualizations.length === 0)) {
+        Visualizations.loadVisualizations(initialProject.visualizations);
+      }
+      
       return {
         projects: currentProjects,
         visualizations: currentVisualizations,
@@ -65,7 +72,7 @@ class Visualizations extends Component {
         editModal: false,
         modalData: {},
 
-        project: {}
+        project: initialProject || {}
       };
     }
   }
