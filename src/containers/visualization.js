@@ -23,8 +23,6 @@ import SimulationStore from '../stores/simulation-store';
 import FileStore from '../stores/file-store';
 import AppDispatcher from '../app-dispatcher';
 
-import WidgetSlider from '../components/widget-slider';
-
 class Visualization extends Component {
   static getStores() {
     return [ VisualizationStore, ProjectStore, SimulationStore, FileStore ];
@@ -144,8 +142,6 @@ class Visualization extends Component {
       widget.signal = 0;
       widget.minWidth = 70;
       widget.minHeight = 20;
-      widget.width = 120;
-      widget.height = 70;
     } else if (item.name === 'Plot') {
       widget.simulator = this.state.simulation.models[0].simulator;
       widget.signals = [ 0 ];
@@ -165,41 +161,16 @@ class Visualization extends Component {
       widget.minHeight = 20;
     } else if (item.name === 'PlotTable') {
       widget.simulator = this.state.simulation.models[0].simulator;
-      widget.preselectedSignals = [];
-      widget.signals = []; // initialize selected signals
       widget.minWidth = 400;
-      widget.minHeight = 300;
+      widget.minHeight = 200;
       widget.width = 500;
-      widget.height = 500;
+      widget.height = 400;
       widget.time = 60
     } else if (item.name === 'Image') {
       widget.minWidth = 100;
       widget.minHeight = 100;
       widget.width = 200;
       widget.height = 200;
-    } else if (item.name === 'Button') {
-      widget.minWidth = 100;
-      widget.minHeight = 50;
-      widget.width = 100;
-      widget.height = 100;
-    } else if (item.name === 'NumberInput') {
-      widget.minWidth = 200;
-      widget.minHeight = 50;
-      widget.width = 200;
-      widget.height = 50;
-    } else if (item.name === 'Slider') {
-      widget.minWidth = 380;
-      widget.minHeight = 30;
-      widget.width = 400;
-      widget.height = 50;
-      widget.orientation = WidgetSlider.OrientationTypes.HORIZONTAL.value; // Assign default orientation
-    } else if (item.name === 'Gauge') {
-      widget.simulator = this.state.simulation.models[0].simulator;
-      widget.signal = 0;
-      widget.minWidth = 200;
-      widget.minHeight = 150;
-      widget.width = 200;
-      widget.height = 150;
     }
 
     var new_widgets = this.state.visualization.widgets;
@@ -213,12 +184,7 @@ class Visualization extends Component {
     this.setState({ visualization: visualization });
   }
 
-  widgetStatusChange(updated_widget, key) {
-    // Widget changed internally, make changes effective then save them
-    this.widgetChange(updated_widget, key, this.saveChanges);
-  }
-
-  widgetChange(updated_widget, key, callback = null) {
+  widgetChange(updated_widget, key) {
     
     var widgets_update = {};
     widgets_update[key] =  updated_widget;
@@ -227,7 +193,7 @@ class Visualization extends Component {
     var visualization = Object.assign({}, this.state.visualization, {
       widgets: new_widgets
     });
-    this.setState({ visualization: visualization }, callback);
+    this.setState({ visualization: visualization });
   }
 
   editWidget(e, data) {
@@ -260,11 +226,6 @@ class Visualization extends Component {
     this.setState({ visualization: visualization });
   }
 
-  stopEditing() {
-    // Provide the callback so it can be called when state change is applied
-    this.setState({ editing: false }, this.saveChanges );
-  }
-
   saveChanges() {
     // Transform to a list 
     var visualization = Object.assign({}, this.state.visualization, {
@@ -275,6 +236,8 @@ class Visualization extends Component {
       type: 'visualizations/start-edit',
       data: visualization
     });
+
+    this.setState({ editing: false });
   }
 
   discardChanges() {
@@ -351,7 +314,7 @@ class Visualization extends Component {
           </div>
           {this.state.editing ? (
             <div className='section-buttons-group'>
-              <Button bsStyle="link" onClick={() => this.stopEditing()}>
+              <Button bsStyle="link" onClick={() => this.saveChanges()}>
                 <span className="glyphicon glyphicon-floppy-disk"></span> Save
               </Button>
               <Button bsStyle="link" onClick={() => this.discardChanges()}>
@@ -376,17 +339,13 @@ class Visualization extends Component {
               <ToolboxItem name="Label" type="widget" />
               <ToolboxItem name="Image" type="widget" />
               <ToolboxItem name="PlotTable" type="widget" />
-              <ToolboxItem name="Button" type="widget" />
-              <ToolboxItem name="NumberInput" type="widget" />
-              <ToolboxItem name="Slider" type="widget" />
-              <ToolboxItem name="Gauge" type="widget" />
             </div>
           }
 
           <Dropzone height={height} onDrop={(item, position) => this.handleDrop(item, position)} editing={this.state.editing}>
             {current_widgets != null &&
               Object.keys(current_widgets).map( (widget_key) => (
-              <Widget key={widget_key} data={current_widgets[widget_key]} simulation={this.state.simulation} onWidgetChange={(w, k) => this.widgetChange(w, k)} onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)} editing={this.state.editing} index={widget_key} grid={this.state.grid} />
+              <Widget key={widget_key} data={current_widgets[widget_key]} simulation={this.state.simulation} onWidgetChange={(w, k) => this.widgetChange(w, k)} editing={this.state.editing} index={widget_key} grid={this.state.grid} />
             ))}
           </Dropzone>
 

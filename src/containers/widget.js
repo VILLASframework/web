@@ -11,7 +11,6 @@ import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import Rnd from 'react-rnd';
-import classNames from 'classnames';
 
 import AppDispatcher from '../app-dispatcher';
 import SimulatorDataStore from '../stores/simulator-data-store';
@@ -23,10 +22,6 @@ import WidgetTable from '../components/widget-table';
 import WidgetLabel from '../components/widget-label';
 import WidgetPlotTable from '../components/widget-plot-table';
 import WidgetImage from '../components/widget-image';
-import WidgetButton from '../components/widget-button';
-import WidgetNumberInput from '../components/widget-number-input';
-import WidgetSlider from '../components/widget-slider';
-import WidgetGauge from '../components/widget-gauge';
 
 import '../styles/widgets.css';
 
@@ -118,7 +113,6 @@ class Widget extends Component {
 
     // get widget element
     const widget = this.props.data;
-    var borderedWidget = false;
     var element = null;
 
     // dummy is passed to widgets to keep updating them while in edit mode
@@ -126,34 +120,16 @@ class Widget extends Component {
       element = <WidgetValue widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
     } else if (widget.type === 'Plot') {
       element = <WidgetPlot widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
-      borderedWidget = true;
     } else if (widget.type === 'Table') {
       element = <WidgetTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
     } else if (widget.type === 'Label') {
       element = <WidgetLabel widget={widget} />
-      borderedWidget = true;
     } else if (widget.type === 'PlotTable') {
-      element = <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } />
-      borderedWidget = true;
+      element = <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} editing={this.props.editing} />
     } else if (widget.type === 'Image') {
       element = <WidgetImage widget={widget} files={this.state.files} />
-      borderedWidget = true;
-    } else if (widget.type === 'Button') {
-      element = <WidgetButton widget={widget} editing={this.props.editing} />
-    } else if (widget.type === 'NumberInput') {
-      element = <WidgetNumberInput widget={widget} editing={this.props.editing} />
-    } else if (widget.type === 'Slider') {
-      element = <WidgetSlider widget={widget} editing={this.props.editing} />
-    } else if (widget.type === 'Gauge') {
-      element = <WidgetGauge widget={widget} data={this.state.simulatorData} editing={this.props.editing} simulation={this.props.simulation} />
     }
     
-    let widgetClasses = classNames({
-              'widget': !this.props.editing,
-              'editing-widget': this.props.editing,
-              'border': borderedWidget
-            });
-
     if (this.props.editing) {
       return (
         <Rnd
@@ -162,7 +138,7 @@ class Widget extends Component {
           minWidth={ widget.minWidth }
           minHeight={ widget.minHeight }
           bounds={'parent'}
-          className={ widgetClasses }
+          className="editing-widget"
           onResizeStart={ (direction, styleSize, clientSize, event) => this.borderWasClicked(event) } 
           onResizeStop={(direction, styleSize, clientSize, delta) => this.resizeStop(direction, styleSize, clientSize, delta)}
           onDragStop={(event, ui) => this.dragStop(event, ui)}
@@ -177,7 +153,7 @@ class Widget extends Component {
       );
     } else {
       return (
-        <div className={ widgetClasses } style={{ width: Number(widget.width), height: Number(widget.height), left: Number(widget.x), top: Number(widget.y), 'zIndex': Number(widget.z), position: 'absolute' }}>
+        <div className="widget" style={{ width: Number(widget.width), height: Number(widget.height), left: Number(widget.x), top: Number(widget.y), 'zIndex': Number(widget.z), position: 'absolute' }}>
           {element}
         </div>
       );
