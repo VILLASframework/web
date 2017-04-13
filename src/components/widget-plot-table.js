@@ -126,7 +126,7 @@ class WidgetPlotTable extends Component {
                 <FormGroup className="btn-group-vertical">
                   { checkBoxes }
                 </FormGroup>
-                ) : ( <small>No signal found, select a different signal type.</small> )
+                ) : ( <small>No signal has been pre-selected.</small> )
               }
             </div>
 
