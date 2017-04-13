@@ -31,10 +31,15 @@ class EditWidgetSimulatorControl extends Component {
     return (
         <FormGroup controlId="simulator">
             <ControlLabel>Simulator</ControlLabel>
-            <FormControl componentClass="select" placeholder="Select simulator" value={this.state.widget.simulator} onChange={(e) => this.props.handleChange(e)}>
-            {this.props.simulation.models.map((model, index) => (
+            <FormControl componentClass="select" placeholder="Select simulator" value={this.state.widget.simulator || '' } onChange={(e) => this.props.handleChange(e)}>
+            {
+              this.props.simulation.models.length === 0? (
+              <option disabled value style={{ display: 'none' }}> No simulators available. </option>
+            ) : (
+              this.props.simulation.models.map((model, index) => (
                 <option key={index} value={model.simulator}>{model.name}</option>
-            ))}
+              )))
+            }
             </FormControl>
         </FormGroup>
     );

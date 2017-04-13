@@ -12,10 +12,8 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
-import EditValueWidget from './edit-widget-value';
-import EditPlotWidget from './edit-widget-plot';
-import EditTableWidget from './edit-widget-table';
-import EditImageWidget from './edit-widget-image';
+import EditWidgetTimeControl from './edit-widget-time-control';
+import EditImageWidgetControl from './edit-widget-image-control';
 import EditWidgetSimulatorControl from './edit-widget-simulator-control';
 import EditWidgetSignalControl from './edit-widget-signal-control';
 import EditWidgetSignalsControl from './edit-widget-signals-control';
@@ -53,8 +51,6 @@ class EditWidgetDialog extends Component {
     var update = this.state.temporal;
     update[e.target.id] = e.target.value;
     this.setState({ temporal: update });
-
-    //console.log(this.state.widget);
   }
 
   resetState() {
@@ -77,20 +73,29 @@ class EditWidgetDialog extends Component {
   }
 
   render() {
-    // get widget part
-    var widgetDialog = null;
     // Use a list to concatenate the controls according to the widget type
     var dialogControls = [];
 
     if (this.props.widget) {
       if (this.props.widget.type === 'Value') {
-        widgetDialog = <EditValueWidget widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />;
+        dialogControls.push(
+          <EditWidgetSimulatorControl key={1} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />,
+          <EditWidgetSignalsControl key={2} controlId={'signals'} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />
+        )
       } else if (this.props.widget.type === 'Plot') {
-        widgetDialog = <EditPlotWidget widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />;
+        dialogControls.push(
+          <EditWidgetTimeControl key={1} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />,
+          <EditWidgetSimulatorControl key={2} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />,
+          <EditWidgetSignalsControl key={3} controlId={'signals'} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />
+        )
       } else if (this.props.widget.type === 'Table') {
-        widgetDialog = <EditTableWidget widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />;
+        dialogControls.push(
+          <EditWidgetSimulatorControl key={1} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />
+        )
       } else if (this.props.widget.type === 'Image') {
-        widgetDialog = <EditImageWidget widget={this.state.temporal} files={this.props.files} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />;
+        dialogControls.push(
+          <EditImageWidgetControl key={1} widget={this.state.temporal} files={this.props.files} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />
+        )
       } else if (this.props.widget.type === 'Gauge') {
         dialogControls.push(
           <EditWidgetSimulatorControl key={1} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />,
@@ -99,7 +104,7 @@ class EditWidgetDialog extends Component {
       } else if (this.props.widget.type === 'PlotTable') {
         dialogControls.push(
           <EditWidgetSimulatorControl key={1} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />,
-          <EditWidgetSignalsControl key={2} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />
+          <EditWidgetSignalsControl key={2} controlId={'preselectedSignals'} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />
         )
       } else if (this.props.widget.type === 'Slider') {
         dialogControls.push(
@@ -117,7 +122,6 @@ class EditWidgetDialog extends Component {
             <FormControl.Feedback />
           </FormGroup>
           { dialogControls }
-          {widgetDialog}
         </form>
       </Dialog>
     );
