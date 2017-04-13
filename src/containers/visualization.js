@@ -12,6 +12,7 @@ import { Container } from 'flux/utils';
 import { Button } from 'react-bootstrap';
 import { ContextMenu, MenuItem } from 'react-contextmenu';
 
+import WidgetFactory from '../components/widget-factory';
 import ToolboxItem from '../components/toolbox-item';
 import Dropzone from '../components/dropzone';
 import Widget from './widget';
@@ -24,8 +25,6 @@ import FileStore from '../stores/file-store';
 import AppDispatcher from '../app-dispatcher';
 import NotificationsDataManager from '../data-managers/notifications-data-manager';
 import NotificationsFactory from '../data-managers/notifications-factory';
-
-import WidgetSlider from '../components/widget-slider';
 
 class Visualization extends Component {
   static getStores() {
@@ -129,17 +128,8 @@ class Visualization extends Component {
   }
 
   handleDrop(item, position) {
-    // add new widget
-    var widget = {
-      name: 'Name',
-      type: item.name,
-      width: 100,
-      height: 100,
-      x: position.x,
-      y: position.y,
-      z: 0
-    };
 
+    let widget = null;
     let defaultSimulator = null;
 
     if (this.state.simulation.models && this.state.simulation.models.length === 0) {
@@ -148,69 +138,8 @@ class Visualization extends Component {
       defaultSimulator = this.state.simulation.models[0].simulator;
     }
 
-    // set type specific properties
-    if (item.name === 'Value') {
-      widget.simulator = defaultSimulator;
-      widget.signal = 0;
-      widget.minWidth = 70;
-      widget.minHeight = 20;
-      widget.width = 120;
-      widget.height = 70;
-    } else if (item.name === 'Plot') {
-      widget.simulator = defaultSimulator;
-      widget.signals = [ 0 ];
-      widget.time = 60;
-      widget.minWidth = 400;
-      widget.minHeight = 200;
-      widget.width = 400;
-      widget.height = 200;
-    } else if (item.name === 'Table') {
-      widget.simulator = defaultSimulator;
-      widget.minWidth = 300;
-      widget.minHeight = 200;
-      widget.width = 400;
-      widget.height = 200;
-    } else if (item.name === 'Label') {
-      widget.minWidth = 70;
-      widget.minHeight = 20;
-    } else if (item.name === 'PlotTable') {
-      widget.simulator = defaultSimulator;
-      widget.preselectedSignals = [];
-      widget.signals = []; // initialize selected signals
-      widget.minWidth = 400;
-      widget.minHeight = 300;
-      widget.width = 500;
-      widget.height = 500;
-      widget.time = 60
-    } else if (item.name === 'Image') {
-      widget.minWidth = 100;
-      widget.minHeight = 100;
-      widget.width = 200;
-      widget.height = 200;
-    } else if (item.name === 'Button') {
-      widget.minWidth = 100;
-      widget.minHeight = 50;
-      widget.width = 100;
-      widget.height = 100;
-    } else if (item.name === 'NumberInput') {
-      widget.minWidth = 200;
-      widget.minHeight = 50;
-      widget.width = 200;
-      widget.height = 50;
-    } else if (item.name === 'Slider') {
-      widget.minWidth = 380;
-      widget.minHeight = 30;
-      widget.width = 400;
-      widget.height = 50;
-      widget.orientation = WidgetSlider.OrientationTypes.HORIZONTAL.value; // Assign default orientation
-    } else if (item.name === 'Gauge') {
-      widget.simulator = defaultSimulator;
-      widget.signal = 0;
-      widget.minWidth = 200;
-      widget.minHeight = 150;
-      widget.width = 200;
-      widget.height = 150;
-    }
+    // create new widget
+    widget = WidgetFactory.createWidgetOfType(item.name, position, defaultSimulator);
 
     var new_widgets = this.state.visualization.widgets;
 
