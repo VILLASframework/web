@@ -12,7 +12,9 @@ import React, { Component } from 'react';
 class WidgetLabel extends Component {
   render() {
     return (
-      <h4>{this.props.widget.name}</h4>
+      <div className="label-widget">
+        <h4>{this.props.widget.name}</h4>
+      </div>
     );
   }
 }
