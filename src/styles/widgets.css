@@ -200,11 +200,6 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
 .plot-table-widget input[type="checkbox"] {
     display: none;
 }
- 
-.plot-table-widget .widget-plot {
-  -webkit-flex: 1 1 auto;
-  flex: 1 1 auto;
-}
 /* End PlotTable Widget */
 
 /* Plot Widget */
@@ -213,16 +208,17 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
   display: flex;
   flex-direction: column;
 }
-
-.plot-widget .widget-plot {
-  -webkit-flex: 1 1 auto;
-  flex: 1 1 auto;
-}
 /* End Plot Widget */
 
 /* Plots */
+/* The plot container, in order to avoid 100% height/width */
+.widget-plot {
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
 .chart-wrapper {
-  height: 100%;
   width: 100%;
 }
 
