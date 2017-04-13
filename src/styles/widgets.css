@@ -237,7 +237,7 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
 .signal-legend {
     font-size: 0.8em;
     font-weight: 700;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 .legend-color {
