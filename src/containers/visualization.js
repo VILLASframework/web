@@ -22,6 +22,8 @@ import ProjectStore from '../stores/project-store';
 import SimulationStore from '../stores/simulation-store';
 import FileStore from '../stores/file-store';
 import AppDispatcher from '../app-dispatcher';
+import NotificationsDataManager from '../data-managers/notifications-data-manager';
+import NotificationsFactory from '../data-managers/notifications-factory';
 
 import WidgetSlider from '../components/widget-slider';
 
@@ -138,16 +140,24 @@ class Visualization extends Component {
       z: 0
     };
 
+    let defaultSimulator = null;
+
+    if (this.state.simulation.models && this.state.simulation.models.length === 0) {
+      NotificationsDataManager.addNotification(NotificationsFactory.NO_SIM_MODEL_AVAILABLE);
+    } else {
+      defaultSimulator = this.state.simulation.models[0].simulator;
+    }
+
     // set type specific properties
     if (item.name === 'Value') {
-      widget.simulator = this.state.simulation.models[0].simulator;
+      widget.simulator = defaultSimulator;
       widget.signal = 0;
       widget.minWidth = 70;
       widget.minHeight = 20;
       widget.width = 120;
       widget.height = 70;
     } else if (item.name === 'Plot') {
-      widget.simulator = this.state.simulation.models[0].simulator;
+      widget.simulator = defaultSimulator;
       widget.signals = [ 0 ];
       widget.time = 60;
       widget.minWidth = 400;
@@ -155,7 +165,7 @@ class Visualization extends Component {
       widget.width = 400;
       widget.height = 200;
     } else if (item.name === 'Table') {
-      widget.simulator = this.state.simulation.models[0].simulator;
+      widget.simulator = defaultSimulator;
       widget.minWidth = 300;
       widget.minHeight = 200;
       widget.width = 400;
@@ -164,7 +174,7 @@ class Visualization extends Component {
       widget.minWidth = 70;
       widget.minHeight = 20;
     } else if (item.name === 'PlotTable') {
-      widget.simulator = this.state.simulation.models[0].simulator;
+      widget.simulator = defaultSimulator;
       widget.preselectedSignals = [];
       widget.signals = []; // initialize selected signals
       widget.minWidth = 400;
@@ -194,7 +204,7 @@ class Visualization extends Component {
       widget.height = 50;
       widget.orientation = WidgetSlider.OrientationTypes.HORIZONTAL.value; // Assign default orientation
     } else if (item.name === 'Gauge') {
-      widget.simulator = this.state.simulation.models[0].simulator;
+      widget.simulator = defaultSimulator;
       widget.signal = 0;
       widget.minWidth = 200;
       widget.minHeight = 150;

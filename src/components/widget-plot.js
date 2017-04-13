@@ -15,24 +15,28 @@ import PlotLegend from './widget-plot/plot-legend';
 class WidgetPlot extends Component {
 
   render() {
-    if (this.props.simulation == null) {
-      return (<div>Empty</div>);
+
+    const simulator = this.props.widget.simulator;
+    const simulation = this.props.simulation;
+    let legendSignals = [];
+    let simulatorData = [];
+
+    // Proceed if a simulation with models and a simulator are available
+    if (simulator && simulation && simulation.models.length > 0) {
+
+      const model = simulation.models.find( (model) => model.simulator === simulator );
+      const chosenSignals = this.props.widget.signals;
+
+      simulatorData = this.props.data[simulator];
+
+      // Query the signals that will be displayed in the legend
+      legendSignals = model.mapping.reduce( (accum, model_signal, signal_index) => {
+          if (chosenSignals.includes(signal_index)) {
+            accum.push({ index: signal_index, name: model_signal.name });
+          }
+          return accum;
+        }, []);
     }
-
-    let simulator = this.props.widget.simulator;
-    let simulation = this.props.simulation;
-    let model = simulation.models.find( (model) => model.simulator === simulator );
-    let chosenSignals = this.props.widget.signals;
-
-    let simulatorData = this.props.data[simulator];
-
-    // Query the signals that will be displayed in the legend
-    let legendSignals = model.mapping.reduce( (accum, model_signal, signal_index) => {
-        if (chosenSignals.includes(signal_index)) {
-          accum.push({ index: signal_index, name: model_signal.name });
-        }
-        return accum;
-      }, []);
 
     return (
       <div className="plot-widget" ref="wrapper">
