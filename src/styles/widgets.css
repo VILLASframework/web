@@ -8,20 +8,14 @@
  **********************************************************************************/
 
 .widget {
-    background-color: #fff;
-}
-
-.border {
-    border: 1px solid lightgray;
+  border: 1px solid lightgray;
+  padding: 3px 6px;
+  background-color: #fff;
 }
 
 .editing-widget {
-    background-color: #fff;
-}
-
-.editing-widget:not(.border):hover {
-    outline: 1px solid lightgray;
-    outline-offset: -10px;
+  border: 1px solid lightgray;
+  background-color: #fff;
 }
 
 /* Area to trigger the context menu */
@@ -102,15 +96,21 @@
     right: 7px;
 }
 
-/* Reset Bootstrap styles to "disable" while editing */
-div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input[disabled], .form-control[disabled], .checkbox.disabled label {
-  cursor: inherit;
-  pointer-events: none;
+.plot-table-widget .content {
+  display: -webkit-flex;
+  display: flex;
 }
 
-.editing-widget .btn-default.disabled {
-    background-color: #abcfd8;
-    border-color: #ccc;
+.plot-table-widget .widget-table {
+  min-width: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Reset Bootstrap styles to "disable" while editing */
+.plot-table-widget .widget-table .btn[disabled] {
+  cursor: inherit;
 }
 
 .btn-default[disabled]:hover {
@@ -123,253 +123,8 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
     border-color: #adadad;
 }
  /* End reset */
-
- /* Match Bootstrap's them to VILLAS */
-.widget .btn-default.active {
-    background-color: #abcfd8;
-}
-
-.widget .btn-default.active:hover, .widget .btn-default.active:hover {
-    background-color: #89b3bd;
-}
-
-.widget .btn-default:hover {
-    background-color: #abcfd8;
-}
-/* End match */
-
-/* PlotTable widget */
-.plot-table-widget, .plot-widget, .value-widget, .image-widget, .label-widget {
-    width: 100%;
-    height: 100%;
-    padding: 3px 6px;
-}
-
-.plot-table-widget {
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: column;
-}
-
-.plot-table-widget .content {
-  -webkit-flex: 1 0 auto;
-  flex: 1 0 auto;
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: column;
-}
-
-.table-plot-row {
-  -webkit-flex: 1 0 auto;
-  flex: 1 0 auto;
-  display: -webkit-flex;
-  display: flex;
-}
-
-.plot-table-widget .widget-table {
-  -webkit-flex: 1 0 auto;
-  flex: 1 0 auto;
-  flex-basis: 90px;
-  max-width: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.plot-table-widget small {
-    text-align: center;
-}
-
-.plot-table-widget .checkbox label {
-    height: 100%;
-    width: 100%;
-    padding: 6px 12px;
-    overflow-x: hidden;
-}
-
-.plot-table-widget .btn {
-    padding: 0px;
-}
-
-.plot-table-widget input[type="checkbox"] {
-    display: none;
-}
  
 .plot-table-widget .widget-plot {
-  -webkit-flex: 1 1 auto;
-  flex: 1 1 auto;
+  -webkit-flex: 1 0 auto;
+  flex: 1 0 auto;
 }
-/* End PlotTable Widget */
-
-/* Plot Widget */
-.plot-widget {
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: column;
-}
-
-.plot-widget .widget-plot {
-  -webkit-flex: 1 1 auto;
-  flex: 1 1 auto;
-}
-/* End Plot Widget */
-
-/* Plots */
-.chart-wrapper {
-  height: 100%;
-  width: 100%;
-}
-
-.plot-legend {
-  display: -webkit-flex;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  margin-bottom: 5px;
-}
-
-.signal-legend {
-    font-size: 0.8em;
-    font-weight: 700;
-    overflow-x: hidden;
-}
-
-.legend-color {
-    height: 50%;
-    display: inline-block;
-    vertical-align: middle;
-} 
-
-/* End Plots */
-
-/*.single-value-widget {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 95%;
-  height: 95%;
-}*/
-
-.single-value-widget {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.single-value-widget > * {
-    width: 50%;
-    float: left;
-    margin: 5px;
-    font-size: 1vw;
-}
-
-/* Button widget styling */
-.button-widget button {
-    border-radius: 25px;
-    border-style: double;
-    border-width: 5px;
-    overflow-x: hidden;
-}
-
-.button-widget button:hover {
-    border-style: double;
-}
-/* End button widget styling */
-
-.full {
-    width: 100%;
-    height: 100%;
-}
-
-/* Number input widget */ 
-div[class*="-widget"] label {
-    cursor: inherit;
-}
-/* End number input widget */ 
-
-/* Slider widget */
-.slider-widget.vertical input[type="range"] {
-   position: absolute;
-   top: 40%;
-   left: 50%;
-   transform: rotate(270deg);
-   /*margin-left: 20px;*/
-   width: 150px;
-}
-
-input[type=range]::-moz-range-thumb {
-    background: #ffffff;
-}
-
-input[type=range]::-webkit-slider-thumb {
-    background: #ffffff;
-}
-
-input[type=range]::-ms-thumb {
-    background: #ffffff;
-}
-
-.slider-widget.horizontal div {
-    width: 50%;
-    display: inline-block;
-    text-align: center;
-    vertical-align: top;
-}
-
-.slider-widget.horizontal span {
-    display: block;
-    margin: 5px;
-}
-
-.slider-widget.vertical div {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-}
-
-.slider-widget span {
-    font-size: 1.5em;
-    font-weight: 600;
-}
-/* End slider widget */
-
-/* Gauge widget */
-.gauge-widget {
-    width: 100%;
-    height: 100%;
-}
-
-.gauge-widget canvas {
-    width: 100%;
-    height: 90%;
-}
-
-.gauge-name {
-    height: 10%;
-    width: 100%;
-    text-align: center;
-    font-weight: bold;
-}
-
-.gauge-unit {
-    position: absolute;
-    width: 100%;
-    font-size: 1.0em;
-    bottom: 25%;
-    text-align: center;
-}
-
-.gauge-value {
-    position: absolute;
-    width: 100%;
-    font-weight: bold;
-    font-size: 1.5em;
-    bottom: 10%;
-    text-align: center;
-}
-/* End gauge widget */
