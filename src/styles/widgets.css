@@ -19,9 +19,15 @@
     background-color: #fff;
 }
 
+/* Firefox-specific rules */
+@-moz-document url-prefix() {
+    .editing-widget:not(.border):hover {
+        outline-offset: -10px;
+    }
+}
+
 .editing-widget:not(.border):hover {
     outline: 1px solid lightgray;
-    outline-offset: -10px;
 }
 
 /* Area to trigger the context menu */
