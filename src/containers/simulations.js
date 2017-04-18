@@ -100,7 +100,7 @@ class Simulations extends Component {
 
   render() {
     return (
-      <div>
+      <div className='section'>
         <h1>Simulations</h1>
 
         <Table data={this.state.simulations}>

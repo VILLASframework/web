@@ -136,7 +136,7 @@ class Visualizations extends Component {
     }
 
     return (
-      <div>
+      <div className='section'>
         <h1>{this.state.project.name}</h1>
 
         <Table data={visualizations}>
