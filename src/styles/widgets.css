@@ -9,6 +9,7 @@
 
 .widget {
     background-color: #fff;
+    overflow: auto;
 }
 
 .border {
@@ -37,7 +38,7 @@
     position: absolute;
     top: 0px;
     left: 0px;
-    padding: 3px 6px;
+    overflow: auto;
 }
 
 .react-contextmenu {
@@ -281,6 +282,10 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
 div[class*="-widget"] label {
     cursor: inherit;
 }
+
+.number-input-widget .form-horizontal .form-group {
+    margin: 0px;
+}
 /* End number input widget */ 
 
 /* Slider widget */
@@ -339,7 +344,7 @@ input[type=range]::-ms-thumb {
 
 .gauge-widget canvas {
     width: 100%;
-    height: 90%;
+    height: 87%;
 }
 
 .gauge-name {
