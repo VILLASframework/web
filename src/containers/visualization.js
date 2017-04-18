@@ -50,11 +50,13 @@ class Visualization extends Component {
       editModal: prevState.editModal || false,
       modalData: prevState.modalData || null,
       modalIndex: prevState.modalIndex || null,
-
+      
+      maxWidgetHeight: prevState.maxWidgetHeight  || 0,
+      dropZoneHeight: prevState.dropZoneHeight  || 0,
       last_widget_key: prevState.last_widget_key  || 0
     };
   }
-
+  
   componentWillMount() {
     AppDispatcher.dispatch({
       type: 'visualizations/start-load'
@@ -115,6 +117,8 @@ class Visualization extends Component {
         var visualization = Object.assign({}, tempVisualization, {
             widgets: tempVisualization.widgets? this.transformToWidgetsDict(tempVisualization.widgets) : {}
         });
+
+        this.computeHeightWithWidgets(visualization.widgets);
 
         this.setState({ visualization: visualization, project: null });
 
@@ -210,6 +214,8 @@ class Visualization extends Component {
     var visualization = Object.assign({}, this.state.visualization, {
       widgets: new_widgets
     });
+    
+    this.increaseHeightWithWidget(widget);
     this.setState({ visualization: visualization });
   }
 
@@ -227,7 +233,46 @@ class Visualization extends Component {
     var visualization = Object.assign({}, this.state.visualization, {
       widgets: new_widgets
     });
+    
+    // Check if the height needs to be increased, the section may have shrunk if not
+    if (!this.increaseHeightWithWidget(updated_widget)) {
+      this.computeHeightWithWidgets(visualization.widgets);
+    }
     this.setState({ visualization: visualization }, callback);
+  }
+
+  /*
+  * Set the initial height state based on the existing widgets
+  */
+  computeHeightWithWidgets(widgets) {
+    // Compute max height from widgets
+    let maxHeight = Object.keys(widgets).reduce( (maxHeightSoFar, widgetKey) => {
+      let thisWidget = widgets[widgetKey];
+      let thisWidgetHeight = thisWidget.y + thisWidget.height;
+      
+      return thisWidgetHeight > maxHeightSoFar? thisWidgetHeight : maxHeightSoFar;
+    }, 0);
+
+    this.setState({ 
+      maxWidgetHeight: maxHeight, 
+      dropZoneHeight:  maxHeight + 40
+    });
+  }
+  /*
+  * Adapt the area's height with the position of the new widget.
+  * Return true if the height increased, otherwise false.
+  */
+  increaseHeightWithWidget(widget) {
+    let increased = false;
+    let thisWidgetHeight = widget.y + widget.height;
+    if (thisWidgetHeight > this.state.maxWidgetHeight) {
+      increased = true;
+      this.setState({ 
+        maxWidgetHeight: thisWidgetHeight, 
+        dropZoneHeight:  thisWidgetHeight + 40
+      });
+    }
+    return increased;
   }
 
   editWidget(e, data) {
@@ -324,25 +369,10 @@ class Visualization extends Component {
   }
 
   render() {
-    // calculate widget area height
-    var height = 0;
-
     var current_widgets = this.state.visualization.widgets;
 
-    if (current_widgets) {
-      Object.keys(current_widgets).forEach( (widget_key) => {
-        var widget = current_widgets[widget_key];
-        if (widget.y + widget.height > height) {
-          height = widget.y + widget.height;
-        }
-      });
-
-      // add padding
-      height += 40;
-    }
-
     return (
-      <div className='section box'>
+      <div className='section box' >
         <div className='section-header box-header'>
           <div className="section-title">
             <span>
@@ -383,7 +413,7 @@ class Visualization extends Component {
             </div>
           }
 
-          <Dropzone height={height} onDrop={(item, position) => this.handleDrop(item, position)} editing={this.state.editing}>
+          <Dropzone height={this.state.dropZoneHeight} onDrop={(item, position) => this.handleDrop(item, position)} editing={this.state.editing}>
             {current_widgets != null &&
               Object.keys(current_widgets).map( (widget_key) => (
               <Widget key={widget_key} data={current_widgets[widget_key]} simulation={this.state.simulation} onWidgetChange={(w, k) => this.widgetChange(w, k)} onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)} editing={this.state.editing} index={widget_key} grid={this.state.grid} />
