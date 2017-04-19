@@ -57,7 +57,7 @@ class WidgetTable extends Component {
 
   render() {
     return (
-      <div>
+      <div className="table-widget">
         <h4>{this.props.widget.name}</h4>
 
         <Table data={this.state.rows}>
