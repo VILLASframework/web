@@ -161,6 +161,7 @@ class Widget extends Component {
           initial={{ x: Number(widget.x), y: Number(widget.y), width: widget.width, height: widget.height }}
           minWidth={ widget.minWidth }
           minHeight={ widget.minHeight }
+          lockAspectRatio={ widget.lockedAspectRatio }
           bounds={'parent'}
           className={ widgetClasses }
           onResizeStart={ (direction, styleSize, clientSize, event) => this.borderWasClicked(event) } 
