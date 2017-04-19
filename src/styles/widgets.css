@@ -389,3 +389,9 @@ div[class*="-widget"] label {
     text-align: center;
 }
 /* End gauge widget */
+
+/* Begin label widget */
+.label-widget  {
+    text-align: center;
+}
+/* End label widget */
