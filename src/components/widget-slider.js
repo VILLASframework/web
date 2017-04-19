@@ -9,6 +9,8 @@
 
 import React, { Component } from 'react';
 import classNames from 'classnames';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 class WidgetSlider extends Component {
 
@@ -27,43 +29,68 @@ class WidgetSlider extends Component {
     };
   }
 
-  valueChanged(e) {
-    this.setState({ value: e.target.value });
+  componentWillReceiveProps(nextProps) {
+    // Update value
+    if (nextProps.widget.value && this.state.value !== nextProps.widget.value) {
+      this.setState({ value: nextProps.widget.value })
+    }
+    // Check if the orientation changed, update the size if it did
+    if (this.props.widget.orientation !== nextProps.widget.orientation) {
+      let baseWidget = nextProps.widget;
+      // Exchange dimensions and constraints
+      let newWidget = Object.assign({}, baseWidget, { 
+        width: baseWidget.height,
+        height: baseWidget.width,
+        minWidth: baseWidget.minHeight,
+        minHeight: baseWidget.minWidth,
+        maxWidth: baseWidget.maxHeight,
+        maxHeight: baseWidget.maxWidth
+      });
+      nextProps.onWidgetChange(newWidget);
+    }
+  }
+
+  valueIsChanging(newValue) {
+    this.setState({ value: newValue });
+  }
+
+  valueChanged(newValue) {
+    // Enable to propagate action
+    // let newWidget = Object.assign({}, this.props.widget, { 
+    //     value: newValue
+    //   });
+    // this.props.onWidgetChange(newWidget);
   }
 
   render() {
+    
+    let isVertical = this.props.widget.orientation === WidgetSlider.OrientationTypes.VERTICAL.value;
+
     let fields = {
       'name': this.props.widget.name,
-      'control': <input type="range"  min="0" max="100" disabled={ this.props.editing } onChange={ (e) => this.valueChanged(e) } defaultValue={ this.state.value }/>,
+      'control': <Slider min={0} max={100} value={ this.state.value } step={ 0.1 } disabled={ this.props.editing } vertical={ isVertical } onChange={ (v) => this.valueIsChanging(v) } onAfterChange={ (v) => this.valueChanged(v) }/>,
       'value': this.state.value
     }
 
-    let vertical = this.props.widget.orientation === WidgetSlider.OrientationTypes.VERTICAL.value;
     var widgetClasses = classNames({
                     'slider-widget': true,
                     'full': true,
-                    'vertical': vertical,
-                    'horizontal': !vertical
+                    'vertical': isVertical,
+                    'horizontal': !isVertical
                   });
 
     return (
       this.props.widget.orientation === WidgetSlider.OrientationTypes.HORIZONTAL.value? (
         <div className={widgetClasses}>
-          <div>
-            <label>{ fields.name }</label>
-          </div>
-          <div>
-            { fields.control }
-            <span>{ fields.value }</span>
-          </div>
+          <label>{ fields.name }</label>
+          <div className='slider'>{ fields.control }</div>
+          <span>{ fields.value }</span>
         </div>
       ) : (
         <div className={widgetClasses}>
-          <div>
-            <label>{ fields.name }</label>
-            <span>{ fields.value }</span>
-          </div>
-          <div>{ fields.control }</div>
+          <label>{ fields.name }</label>
+          { fields.control }
+          <span>{ fields.value }</span>
         </div>
       )
     );

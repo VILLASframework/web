@@ -143,7 +143,7 @@ class Widget extends Component {
     } else if (widget.type === 'NumberInput') {
       element = <WidgetNumberInput widget={widget} editing={this.props.editing} />
     } else if (widget.type === 'Slider') {
-      element = <WidgetSlider widget={widget} editing={this.props.editing} />
+      element = <WidgetSlider widget={widget} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } />
     } else if (widget.type === 'Gauge') {
       element = <WidgetGauge widget={widget} data={this.state.simulatorData} editing={this.props.editing} simulation={this.props.simulation} />
     }

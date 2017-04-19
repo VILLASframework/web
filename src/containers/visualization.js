@@ -192,8 +192,11 @@ class Visualization extends Component {
       widget.width = 200;
       widget.height = 50;
     } else if (item.name === 'Slider') {
-      widget.minWidth = 380;
-      widget.minHeight = 30;
+      // Set dimensions and constraints as Horizontal
+      widget.minWidth = 150;
+      widget.minHeight = 50;
+      widget.maxHeight = 51;
+      widget.maxWidth = 1000;
       widget.width = 400;
       widget.height = 50;
       widget.orientation = WidgetSlider.OrientationTypes.HORIZONTAL.value; // Assign default orientation
