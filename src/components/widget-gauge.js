@@ -23,7 +23,7 @@ class WidgetGauge extends Component {
   }
 
   staticLabels(widget_height) {
-    var label_font_size = widget_height * 0.055; // font scaling factor
+    let label_font_size = Math.floor(widget_height * 0.055); // font scaling factor, integer for performance
     return {
           font: label_font_size + 'px "Helvetica Neue"',
           labels: [0.0, 0.1, 0.5, 0.9, 1.0],
@@ -58,17 +58,18 @@ class WidgetGauge extends Component {
     this.gauge.set(this.state.value);
   }
 
-  componentWillUpdate() {
-    // Update labels after possible resize
-    this.gauge.setOptions({ staticLabels: this.staticLabels(this.props.widget.height) });
+  shouldComponentUpdate(nextProps, nextState) {
+
+    // Check if size changed, resize labels if it did (the canvas itself is scaled with css)
+    if (this.props.widget.height !== nextProps.widget.height) {
+      this.updateAfterResize(nextProps.widget.height);
+    }
+
+    // signal component update only if the value changed
+    return this.state.value !== nextState.value;
   }
 
-  componentDidUpdate() {
-    // update gauge's value
-    this.gauge.set(this.state.value);
-  }
-
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {    
     // update value
     const simulator = nextProps.widget.simulator;
 
@@ -84,7 +85,15 @@ class WidgetGauge extends Component {
     const new_value = Math.round( signal[signal.length - 1].y * 1e3 ) / 1e3; 
     if (this.state.value !== new_value) {
       this.setState({ value: new_value });
+      
+      // update gauge's value
+      this.gauge.set(new_value);
     }
+  }
+
+  updateAfterResize(newHeight) {
+    // Update labels after resize
+    this.gauge.setOptions({ staticLabels: this.staticLabels(newHeight) });
   }
 
   render() {

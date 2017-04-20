@@ -77,7 +77,7 @@ class Widget extends Component {
 
   resizeStop(direction, styleSize, clientSize, delta) {
     // update widget
-    var widget = this.props.data;
+    let widget = Object.assign({}, this.props.data);
 
     // resize depends on direction
     if (direction === 'left' || direction === 'topLeft' || direction === 'bottomLeft') {
