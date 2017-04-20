@@ -115,7 +115,7 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
   pointer-events: none;
 }
 
-.editing-widget .btn-default.disabled {
+.editing-widget .btn-default.active {
     background-color: #abcfd8;
     border-color: #ccc;
 }
