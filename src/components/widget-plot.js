@@ -43,7 +43,7 @@ class WidgetPlot extends Component {
         <h4>{this.props.widget.name}</h4>
         
         <div className="widget-plot">
-          <Plot signals={ this.props.widget.signals } time={ this.props.widget.time } simulatorData={ simulatorData } />
+          <Plot signals={ this.props.widget.signals } time={ this.props.widget.time } simulatorData={ simulatorData } yAxisLabel={ this.props.widget.ylabel } />
         </div>
         <PlotLegend signals={legendSignals} />
       </div>

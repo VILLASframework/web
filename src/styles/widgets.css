@@ -221,6 +221,7 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
 
 .chart-wrapper {
   width: 100%;
+  padding-left: 10px;
 }
 
 .plot-legend {

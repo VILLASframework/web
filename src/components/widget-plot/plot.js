@@ -126,6 +126,7 @@ class Plot extends Component {
                 gridHorizontal={true}
                 xAccessor={(d) => { if (d != null) { return new Date(d.x); } }}
                 xAxisTickCount={ tickCount }
+                yAxisLabel={ this.props.yAxisLabel }
                 hoverAnimation={false}
                 circleRadius={0}
                 domain={{ x: [this.state.firstTimestamp, this.state.latestTimestamp] }}

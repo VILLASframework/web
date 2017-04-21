@@ -136,7 +136,7 @@ class WidgetPlotTable extends Component {
             </div>
 
             <div className="widget-plot">
-              <Plot signals={ this.state.signals } time={ this.props.widget.time } simulatorData={ simulatorData } />
+              <Plot signals={ this.state.signals } time={ this.props.widget.time } simulatorData={ simulatorData } yAxisLabel={ this.props.widget.ylabel } />
             </div>
           </div>
           <PlotLegend signals={legendSignals} />

@@ -37,6 +37,7 @@ class WidgetFactory {
             case 'Plot':
                 widget.simulator = defaultSimulator;
                 widget.signals = [ 0 ];
+                widget.ylabel = '';
                 widget.time = 60;
                 widget.minWidth = 400;
                 widget.minHeight = 200;
@@ -58,6 +59,7 @@ class WidgetFactory {
                 widget.simulator = defaultSimulator;
                 widget.preselectedSignals = [];
                 widget.signals = []; // initialize selected signals
+                widget.ylabel = '';
                 widget.minWidth = 400;
                 widget.minHeight = 300;
                 widget.width = 500;

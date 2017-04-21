@@ -12,6 +12,7 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
+import EditWidgetTextControl from './edit-widget-text-control';
 import EditWidgetTimeControl from './edit-widget-time-control';
 import EditImageWidgetControl from './edit-widget-image-control';
 import EditWidgetSimulatorControl from './edit-widget-simulator-control';
@@ -86,7 +87,8 @@ class EditWidgetDialog extends Component {
         dialogControls.push(
           <EditWidgetTimeControl key={1} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />,
           <EditWidgetSimulatorControl key={2} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />,
-          <EditWidgetSignalsControl key={3} controlId={'signals'} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />
+          <EditWidgetSignalsControl key={3} controlId={'signals'} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />,
+          <EditWidgetTextControl key={4} controlId={'ylabel'} label={'Y-Axis name'} placeholder={'Enter a name for the y-axis'} widget={this.state.temporal} handleChange={(e) => this.handleChange(e)} />
         )
       } else if (this.props.widget.type === 'Table') {
         dialogControls.push(
@@ -104,7 +106,8 @@ class EditWidgetDialog extends Component {
       } else if (this.props.widget.type === 'PlotTable') {
         dialogControls.push(
           <EditWidgetSimulatorControl key={1} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />,
-          <EditWidgetSignalsControl key={2} controlId={'preselectedSignals'} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />
+          <EditWidgetSignalsControl key={2} controlId={'preselectedSignals'} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />,
+          <EditWidgetTextControl key={3} controlId={'ylabel'} label={'Y-Axis'} placeholder={'Enter a name for the Y-axis'} widget={this.state.temporal} handleChange={(e) => this.handleChange(e)} />
         )
       } else if (this.props.widget.type === 'Slider') {
         dialogControls.push(
