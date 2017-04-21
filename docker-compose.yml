@@ -1,0 +1,24 @@
+version: "2"
+
+services:
+  frontend:
+    image: nginx:stable
+    volumes:
+      - ./nginx:/etc/nginx/conf.d/
+      - ./build:/www
+    links:
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+
+  backend:
+    image: villasweb-backend
+    links:
+      - database
+
+  database:
+    image: mongo:latest
+    volumes:
+      - /opt/database:/data/db
+
