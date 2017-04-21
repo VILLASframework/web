@@ -17,13 +17,26 @@ class Plot extends Component {
     
     this.chartWrapper = null;
 
-    this.state = {
-      size: { w: 0, h: 0 },
-      firstTimestamp: 0,
-      latestTimestamp: 0,
-      sequence: null,
-      values: []
-    };
+    // Initialize plot size and data
+    this.state = Object.assign(
+      { size: { w: 0, h: 0 } },
+      this.getPlotInitData(true)
+    );
+  }
+
+  // Get an object with 'invisible' init data for the last minute. 
+  // Include start/end timestamps if required.
+  getPlotInitData(withRangeTimestamps = false) {
+
+    const initSecondTime = Date.now();
+    const initFirstTime = initSecondTime - 1000 * 60; // Decrease 1 min
+    const values = [{ values: [{x: initFirstTime, y: 0}], strokeWidth: 0 }];
+
+    let output = withRangeTimestamps? 
+      { sequence: 0, values: values, firstTimestamp: initFirstTime, latestTimestamp: initSecondTime, } : 
+      { sequence: 0, values: values };
+
+    return output;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -37,20 +50,32 @@ class Plot extends Component {
         this.setState({size: { w, h } });
     }
 
+    // If signals were cleared, clear the plot (triggers a new state)
+    if (this.signalsWereJustCleared(nextProps)) { this.clearPlot(); return; }
+
+    // If no signals have been selected, just leave
+    if (nextProps.signals == null || nextProps.signals.length === 0) { return; }
+
     // Identify simulation reset
-    if (nextData == null || nextData.length === 0 || nextData.values[0].length === 0) {
-      // clear values
-      this.setState({ values: [], sequence: null });
-      return;
-    }
+    if (nextData == null || nextData.length === 0 || nextData.values[0].length === 0)  { this.clearPlot(); return; }
     
     // check if new data, otherwise skip
-    if (this.state.sequence >= nextData.sequence) {
-      return;
-    }
-
+    if (this.state.sequence >= nextData.sequence) { return; }
+    
     this.updatePlotData(nextProps);
 
+  }
+
+  signalsWereJustCleared(nextProps) {
+
+    return  this.props.signals && 
+            nextProps.signals && 
+            this.props.signals.length > 0 && 
+            nextProps.signals.length === 0;
+  }
+
+  clearPlot() {
+    this.setState( this.getPlotInitData(false) );
   }
 
   updatePlotData(nextProps) {
@@ -91,7 +116,7 @@ class Plot extends Component {
 
     return (
         <div className="chart-wrapper" ref={ (domNode) => this.chartWrapper = domNode }>
-            {this.state.sequence &&
+            {this.state.sequence != null &&
                 <LineChart
                 width={ this.state.size.w || 100 }
                 height={ this.state.size.h || 100 }
