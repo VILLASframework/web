@@ -16,8 +16,7 @@ class EditWidgetSignalsControl extends Component {
 
     this.state = {
       widget: {
-        simulator: '',
-        preselectedSignals: []
+        simulator: ''
       }
     };
   }
@@ -28,7 +27,7 @@ class EditWidgetSignalsControl extends Component {
   }
 
   handleSignalChange(checked, index) {
-    var signals = this.state.widget.preselectedSignals;
+    var signals = this.state.widget[this.props.controlId];
     var new_signals;
 
     if (checked) {
@@ -57,11 +56,11 @@ class EditWidgetSignalsControl extends Component {
         <FormGroup>
           <ControlLabel>Signals</ControlLabel>
           {
-            signalsToRender.length === 0 ? (
+            signalsToRender.length === 0 || !this.state.widget.hasOwnProperty(this.props.controlId)? (
               <FormControl.Static>No signals available.</FormControl.Static>
             ) : (
               signalsToRender.map((signal, index) => (
-                <Checkbox key={index} checked={this.state.widget.preselectedSignals.indexOf(index) !== -1} onChange={(e) => this.handleSignalChange(e.target.checked, index)}>{signal.name}</Checkbox>
+                <Checkbox key={index} checked={this.state.widget[this.props.controlId].indexOf(index) !== -1} onChange={(e) => this.handleSignalChange(e.target.checked, index)}>{signal.name}</Checkbox>
                 ))
             )
           }
