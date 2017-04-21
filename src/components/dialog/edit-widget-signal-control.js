@@ -27,24 +27,29 @@ class EditWidgetSignalControl extends Component {
   }
 
   render() {
-    // get selected simulation model
-    var simulationModel = {};
+    let signalsToRender = [];
 
     if (this.props.simulation) {
-      this.props.simulation.models.forEach((model) => {
-        if (model.simulation === this.state.widget.simulation) {
-          simulationModel = model;
-        }
-      });
+      // get selected simulation model
+      const simulationModel = this.props.simulation.models.find( model => model.simulation === this.state.widget.simulation );
+
+      // If simulation model update the signals to render
+      signalsToRender = simulationModel? simulationModel.mapping : [];
     }
 
     return (
         <FormGroup controlId="signal">
           <ControlLabel>Signal</ControlLabel>
           <FormControl componentClass="select" placeholder="Select signal" value={this.state.widget.signal} onChange={(e) => this.props.handleChange(e)}>
-            {simulationModel.mapping.map((signal, index) => (
-              <option key={index} value={index}>{simulationModel.mapping[index].name}</option>
-            ))}
+            {
+              signalsToRender.length === 0 ? (
+                <option disabled value style={{ display: 'none' }}>No signals available.</option>
+              ) : (
+                signalsToRender.map((signal, index) => (
+                  <option key={index} value={index}>{signal.name}</option>
+                ))
+              )
+            }
           </FormControl>
         </FormGroup>
     );

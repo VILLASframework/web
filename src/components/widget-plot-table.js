@@ -58,22 +58,27 @@ class WidgetPlotTable extends Component {
       return (model.simulator === simulator);
     });
 
-    // Create checkboxes using the signal indices from simulation model
-    const preselectedSignals = simulationModel.mapping.reduce(
-      // Loop through simulation model signals
-      (accum, model_signal, signal_index) => {
-        // Append them if they belong to the current selected type
-        if (nextProps.widget.preselectedSignals.indexOf(signal_index) > -1) {
-            accum.push(
-              {
-                index: signal_index,
-                name: model_signal.name
-              }
-            )
-          }
-          return accum;
-        }, []);
-      this.setState({ preselectedSignals: preselectedSignals });
+    let preselectedSignals = [];
+    // Proceed if a simulation model is available
+    if (simulationModel) {
+      // Create checkboxes using the signal indices from simulation model
+      preselectedSignals = simulationModel.mapping.reduce(
+        // Loop through simulation model signals
+        (accum, model_signal, signal_index) => {
+          // Append them if they belong to the current selected type
+          if (nextProps.widget.preselectedSignals.indexOf(signal_index) > -1) {
+              accum.push(
+                {
+                  index: signal_index,
+                  name: model_signal.name
+                }
+              )
+            }
+            return accum;
+          }, []);
+    }
+    
+    this.setState({ preselectedSignals: preselectedSignals });
   }
 
   updateSignalSelection(signal_index, checked) {

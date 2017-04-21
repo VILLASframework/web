@@ -8,7 +8,7 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, Checkbox, ControlLabel } from 'react-bootstrap';
+import { FormGroup, Checkbox, ControlLabel, FormControl } from 'react-bootstrap';
 
 class EditWidgetSignalsControl extends Component {
   constructor(props) {
@@ -39,27 +39,32 @@ class EditWidgetSignalsControl extends Component {
       new_signals = signals.filter( (idx) => idx !== index );
     }
 
-    this.props.handleChange({ target: { id: 'preselectedSignals', value: new_signals } });
+    this.props.handleChange({ target: { id: this.props.controlId, value: new_signals } });
   }
 
   render() {
-    // get selected simulation model
-    var simulationModel = {};
+    let signalsToRender = [];
 
     if (this.props.simulation) {
-      this.props.simulation.models.forEach((model) => {
-        if (model.simulation === this.state.widget.simulation) {
-          simulationModel = model;
-        }
-      });
-    }
+      // get selected simulation model
+      const simulationModel = this.props.simulation.models.find( model => model.simulation === this.state.widget.simulation );
 
+      // If simulation model update the signals to render
+      signalsToRender = simulationModel? simulationModel.mapping : [];
+    }
+    
     return (
         <FormGroup>
           <ControlLabel>Signals</ControlLabel>
-          {simulationModel.mapping.map((signal, index) => (
-            <Checkbox key={index} checked={this.state.widget.preselectedSignals.indexOf(index) !== -1} onChange={(e) => this.handleSignalChange(e.target.checked, index)}>{signal.name}</Checkbox>
-          ))}
+          {
+            signalsToRender.length === 0 ? (
+              <FormControl.Static>No signals available.</FormControl.Static>
+            ) : (
+              signalsToRender.map((signal, index) => (
+                <Checkbox key={index} checked={this.state.widget.preselectedSignals.indexOf(index) !== -1} onChange={(e) => this.handleSignalChange(e.target.checked, index)}>{signal.name}</Checkbox>
+                ))
+            )
+          }
         </FormGroup>
     );
   }
