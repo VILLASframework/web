@@ -145,6 +145,39 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
 }
 /* End match */
 
+/* Begin edit menu: Colors */
+.color-control input[type="radio"] {
+    display: none;
+}
+
+.color-control .radio-inline.checked {
+    border-color: #000 !important;
+}
+
+.color-control .radio-inline {
+    height: 24px;
+    flex: 1 1 auto;
+    border: 2px solid;
+    /* Reset bootstrap padding */
+    padding-left: 0px;
+}
+
+.color-control .radio-inline + .radio-inline {
+    /* Reset bootstrap margin */
+    margin-left: 0px;
+}
+
+.color-control .radio-inline:hover {
+    border-color: #444 !important;
+}
+
+.color-control div[class*="colors-column-"] {
+    display: flex;
+    padding: 2px 20px;
+}
+
+/* End edit menu: Colors */
+
 /* PlotTable widget */
 .plot-table-widget, .plot-widget, .value-widget, .image-widget, .label-widget {
     width: 100%;
@@ -270,8 +303,10 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
 .button-widget button {
     border-radius: 25px;
     border-style: double;
-    border-width: 5px;
+    border-width: 4px;
     overflow-x: hidden;
+    font-weight: 500;
+    font-size: 1.2em;
 }
 
 .button-widget button:hover {

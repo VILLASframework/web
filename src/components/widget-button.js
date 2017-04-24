@@ -9,6 +9,8 @@
 
 import React, { Component } from 'react';
 
+import EditWidgetColorControl from './dialog/edit-widget-color-control';
+
 class WidgetButton extends Component {
 
   action(e) {
@@ -17,12 +19,21 @@ class WidgetButton extends Component {
   }
 
   render() {
+
+    let colors = EditWidgetColorControl.ColorPalette;
+
+    let colorStyle = {
+      background: colors[this.props.widget.background_color],
+      color: colors[this.props.widget.font_color],
+      borderColor: colors[this.props.widget.font_color]
+    }
+    
     return (
       <div className="button-widget full">
           { this.props.editing ? (
-                <button className="full btn btn-default" type="button" disabled onClick={ this.action } >{this.props.widget.name}</button>
+                <button className="full btn btn-default" type="button" disabled onClick={ this.action } style={colorStyle}>{this.props.widget.name}</button>
             ) : (
-                <button className="full btn btn-default" type="button" onClick={ this.action } >{this.props.widget.name}</button>
+                <button className="full btn btn-default" type="button" onClick={ this.action } style={colorStyle}>{this.props.widget.name}</button>
             )
           }
       </div>

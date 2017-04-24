@@ -13,6 +13,7 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import Dialog from './dialog';
 
 import EditWidgetTextControl from './edit-widget-text-control';
+import EditWidgetColorControl from './edit-widget-color-control';
 import EditWidgetTimeControl from './edit-widget-time-control';
 import EditImageWidgetControl from './edit-widget-image-control';
 import EditWidgetSimulatorControl from './edit-widget-simulator-control';
@@ -112,6 +113,11 @@ class EditWidgetDialog extends Component {
       } else if (this.props.widget.type === 'Slider') {
         dialogControls.push(
           <EditWidgetOrientation key={1} widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />,
+        )
+      } else if (this.props.widget.type === 'Button') {
+        dialogControls.push(
+          <EditWidgetColorControl key={1} widget={this.state.temporal} controlId={'background_color'} label={'Background'} validate={(id) => this.validateForm(id)} handleChange={(e, index) => this.handleChange(e, index)} />,
+          <EditWidgetColorControl key={2} widget={this.state.temporal} controlId={'font_color'} label={'Font color'} validate={(id) => this.validateForm(id)} handleChange={(e, index) => this.handleChange(e, index)} />
         )
       }
     }

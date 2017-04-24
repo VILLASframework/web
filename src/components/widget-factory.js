@@ -77,6 +77,8 @@ class WidgetFactory {
                 widget.minHeight = 50;
                 widget.width = 100;
                 widget.height = 100;
+                widget.background_color = 1;
+                widget.font_color = 0;
                 break;
             case 'NumberInput':
                 widget.minWidth = 200;
