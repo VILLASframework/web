@@ -20,8 +20,18 @@ class SimulatorStore extends ArrayStore {
     var simulator;
 
     switch (action.type) {
+
+      case 'simulators/added':
+        SimulatorsDataManager.startRunningDetection(action.data);
+
+        return super.reduce(state, action);
+
+      case 'simulators/removed':
+        SimulatorsDataManager.stopRunningDetection(action.original);
+        
+        return super.reduce(state, action);
+
       case 'simulators/loaded':
-      //case 'simulators/is-running':
         // get simulator running state
         if (Array.isArray(action.data)) {
           action.data.forEach((simulator) => {
@@ -35,12 +45,10 @@ class SimulatorStore extends ArrayStore {
 
       case 'simulators/running':
         // check if simulator running state changed
-        simulator = state.find(element => {
-          return element._id === action.simulator._id;
-        });
+        simulator = state.find(element => element._id === action.simulator._id );
 
         // only update if state changed
-        if (simulator.running == null || simulator.running !== action.simulator.running) {
+        if (simulator && simulator.running !== action.simulator.running) {
           state = this.updateElements(state, [ action.simulator ]);
         }
 
