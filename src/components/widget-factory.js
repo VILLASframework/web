@@ -21,7 +21,7 @@ class WidgetFactory {
             height: 100,
             x: position.x,
             y: position.y,
-            z: 0
+            z: position.z
         };
 
         // set type specific properties

@@ -19,6 +19,19 @@ const dropzoneTarget = {
     position.x -= dropzoneRect.left;
     position.y -= dropzoneRect.top;
 
+    // Z-Index is one more the top most children
+    let foundZ = props.children.reduce( (maxZ, currentChildren) => {
+      // Is there a simpler way? Is not easy to expose a getter in a Container.create(Component)
+      let widget = currentChildren.props.data;
+      if (widget && widget.z) {
+        if (widget.z > maxZ) {
+          return widget.z;
+        }
+      }
+      return maxZ;
+    }, 0);
+    position.z = foundZ >= 100? foundZ : ++foundZ;
+
     props.onDrop(monitor.getItem(), position);
   }
 };
