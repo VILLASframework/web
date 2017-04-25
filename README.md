@@ -1,4 +1,4 @@
-# VILLASweb
+# <img src="doc/pictures/villas_web.png" width=40 /> VILLASweb
 
 ## Description
 
