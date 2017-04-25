@@ -101,6 +101,14 @@ class WidgetFactory {
                 widget.width = 200;
                 widget.height = 150;
                 break;
+            case 'Box':
+                widget.minWidth = 50;
+                widget.minHeight = 50;
+                widget.width = 100;
+                widget.height = 100;
+                widget.border_color = 0;
+                widget.z = 0;
+                break;
             default:
                 widget.width = 100;
                 widget.height = 100;

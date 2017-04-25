@@ -349,6 +349,7 @@ class Visualization extends Component {
               <ToolboxItem name="NumberInput" type="widget" />
               <ToolboxItem name="Slider" type="widget" />
               <ToolboxItem name="Gauge" type="widget" />
+              <ToolboxItem name="Box" type="widget" />
             </div>
           }
 

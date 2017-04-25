@@ -119,6 +119,10 @@ class EditWidgetDialog extends Component {
           <EditWidgetColorControl key={1} widget={this.state.temporal} controlId={'background_color'} label={'Background'} validate={(id) => this.validateForm(id)} handleChange={(e, index) => this.handleChange(e, index)} />,
           <EditWidgetColorControl key={2} widget={this.state.temporal} controlId={'font_color'} label={'Font color'} validate={(id) => this.validateForm(id)} handleChange={(e, index) => this.handleChange(e, index)} />
         )
+      } else if (this.props.widget.type === 'Box') {
+        dialogControls.push(
+          <EditWidgetColorControl key={1} widget={this.state.temporal} controlId={'border_color'} label={'Border color'} validate={(id) => this.validateForm(id)} handleChange={(e, index) => this.handleChange(e, index)} />
+        )
       }
     }
 
