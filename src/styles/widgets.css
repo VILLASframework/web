@@ -324,6 +324,12 @@ div[class*="-widget"] label {
     cursor: inherit;
 }
 
+.number-input-widget {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .number-input-widget .form-horizontal .form-group {
     margin: 0px;
 }
