@@ -31,6 +31,18 @@ class SimulatorStore extends ArrayStore {
         
         return super.reduce(state, action);
 
+      case 'simulators/start-edit':
+        // An update will be requested, stop the 'runningDetection' already
+        SimulatorsDataManager.stopRunningDetection(action.data);
+
+        return super.reduce(state, action);
+
+      case 'simulators/edited':
+        // The update was done, resume the 'runningDetection'
+        SimulatorsDataManager.startRunningDetection(action.data);
+        
+        return super.reduce(state, action);
+
       case 'simulators/loaded':
         // get simulator running state
         if (Array.isArray(action.data)) {
@@ -47,7 +59,7 @@ class SimulatorStore extends ArrayStore {
         // check if simulator running state changed
         simulator = state.find(element => element._id === action.simulator._id );
 
-        // only update if state changed
+        // is this simulator still in the state? update it only if state changed
         if (simulator && simulator.running !== action.simulator.running) {
           state = this.updateElements(state, [ action.simulator ]);
         }
