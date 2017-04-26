@@ -1,3 +1,5 @@
+image: node:7.9.0
+
 stages:
 - test
 
