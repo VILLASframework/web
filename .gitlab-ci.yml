@@ -7,7 +7,9 @@ services:
 - docker:dind
 
 before_script:
-- docker info
+- docker version
+- apk add --no-cache py-pip
+- pip install docker-compose
 - mkdir -p build
 
 cache:
