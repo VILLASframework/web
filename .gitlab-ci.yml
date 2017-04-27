@@ -1,6 +1,10 @@
 image: docker
 
+services:
+- docker:dind
+
 before_script:
+- docker info
 - mkdir build
 - mkdir node_modules
 
