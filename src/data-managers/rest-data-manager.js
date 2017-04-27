@@ -9,8 +9,8 @@
 
 import RestAPI from '../api/rest-api';
 import AppDispatcher from '../app-dispatcher';
-
-const API_URL = 'http://localhost:4000/api/v1';
+const backend = process.env.REACT_APP_BACKEND || 'ghvillas.westeurope.cloudapp.azure.com:4000'
+const API_URL = 'http://' + backend + '/api/v1';
 
 class RestDataManager {
   constructor(type, url, keyFilter) {
