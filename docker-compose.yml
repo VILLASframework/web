@@ -16,9 +16,10 @@ services:
     image: villasweb-backend
     links:
       - database
+    environment:
+      - NODE_ENV=production
 
   database:
     image: mongo:latest
-    volumes:
-      - /opt/database:/data/db
-
+#    volumes:
+#      - /opt/database:/data/db
