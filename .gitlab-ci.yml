@@ -30,6 +30,7 @@ deploy_review:
   stage: deploy
   environment: review
   script:
+  - mkdir -p ~/.docker
   - echo $DEPLOYMENT_CACERT > ~/.docker/ca.pem
   - echo $DEPLOYMENT_CLIENT_CERT > ~/.docker/cert.pem
   - echo $DEPLOYMENT_CLIENT_KEY > ~/.docker/key.pem
