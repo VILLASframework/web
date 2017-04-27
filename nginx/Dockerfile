@@ -1,4 +1,4 @@
-FROM nginx:stable
+FROM nginx:stable-alpine
 
 # Copy frontend files and make them accesible to nginx
 RUN mkdir /www
