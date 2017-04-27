@@ -1,8 +1,5 @@
 image: docker
 
-variables:
-  DOCKER_DRIVER: overlay
-
 services:
 - docker:dind
 
