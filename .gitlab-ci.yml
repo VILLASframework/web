@@ -20,9 +20,9 @@ stages:
 build_job:
   stage: build
   script:
-  - docker run -v .:/usr/src/app node:7.9.0-slim npm install /usr/src/app
+  - docker run --rm -v $(pwd)/package.json:/usr/src/app/package.json -v $(pwd)/build:/usr/src/app/build -v $(pwd)/public:/usr/src/app/public -v $(pwd)/src:/usr/src/app/src -w /usr/src/app node:7.9.0-slim bash -c 'npm install; npm run build'
 
 test_job:
   stage: test
   script:
-  - docker run -v .:/usr/src/app node:7.9.0-slim npm test /usr/src/app
+  - docker run --rm -v $(pwd)/package.json:/usr/src/app/package.json -v $(pwd)/public:/usr/src/app/public -v $(pwd)/src:/usr/src/app/src -w /usr/src/app node:7.9.0-slim bash -c 'npm install; npm test'
