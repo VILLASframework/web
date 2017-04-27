@@ -1,12 +1,24 @@
-image: node:7.9.0
+image: docker
 
 before_script:
-  - npm install
+- mkdir build
+- mkdir node_modules
+
+cache:
+  paths:
+  - build
+  - node_modules
 
 stages:
+- build
 - test
+
+build_job:
+  stage: build
+  script:
+  - docker run -v .:/usr/src/app node:7.9.0 npm install /usr/src/app
 
 test_job:
   stage: test
   script:
-  - npm test
+  - docker run -v .:/usr/src/app node:7.9.0 npm test /usr/src/app
