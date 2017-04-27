@@ -2,10 +2,9 @@ version: "2"
 
 services:
   frontend:
-    image: nginx:stable
-    volumes:
-      - ./nginx:/etc/nginx/conf.d/
-      - ./build:/www
+    build: 
+      context: .
+      dockerfile: nginx/Dockerfile
     links:
       - backend
     ports:
@@ -13,12 +12,16 @@ services:
       - "443:443"
 
   backend:
-    image: villasweb-backend
+    build: VILLASweb-backend
     links:
       - database
+    ports:
+      - "4000:4000"
 
   database:
     image: mongo:latest
     volumes:
       - /opt/database:/data/db
+    ports:
+      - "27017:27017"
 
