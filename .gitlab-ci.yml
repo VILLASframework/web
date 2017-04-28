@@ -44,7 +44,7 @@ deploy_review:
   - echo $DEPLOYMENT_CLIENT_CERT > ~/.docker/cert.pem
   - echo $DEPLOYMENT_CLIENT_KEY > ~/.docker/key.pem
   - docker-compose build
-  - docker-compose -d --tlsverify -H=$DEPLOYMENT_HOST down
-  - docker-compose -d --tlsverify -H=$DEPLOYMENT_HOST up
+  - docker-compose --tlsverify -H=$DEPLOYMENT_HOST down
+  - docker-compose --tlsverify -H=$DEPLOYMENT_HOST up -d
   tags:
   - docker
