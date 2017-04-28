@@ -67,12 +67,18 @@ class UserStore extends ReduceStore {
         return Object.assign({}, state, { currentUser: null, token: null });
 
       case 'users/login-error':
-        // server offline
-        NotificationsDataManager.addNotification({
-          title: 'Server offline',
-          message: 'The server is offline. Please try again later.',
-          level: 'error'
-        });
+
+        if (action.error && !action.error.handled) {
+          // If it was an error and hasn't been handled, the credentials must have been wrong.
+          const WRONG_CREDENTIALS_NOTIFICATION = {
+            title: 'Incorrect credentials',
+            message: 'Please modify and try again.',
+            level: 'error'
+          }
+          NotificationsDataManager.addNotification(WRONG_CREDENTIALS_NOTIFICATION);
+
+        }
+
         return state;
 
       default:
