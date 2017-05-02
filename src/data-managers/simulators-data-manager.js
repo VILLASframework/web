@@ -26,20 +26,26 @@ import AppDispatcher from '../app-dispatcher';
 function isRunning(simulator) {
   // get path to nodes.json and simulator name
   var path = simulator.endpoint.substring(0, simulator.endpoint.lastIndexOf('/'));
-  path += '/nodes.json';
-
   var name = simulator.endpoint.substring(simulator.endpoint.lastIndexOf('/') + 1);
 
+  var url = 'http://' + path + '/api/v1';
+  var body = {
+    action: 'nodes',
+    id: '1234' /// @todo use random generated id
+  };
+
   // send request
-  RestAPI.get('http://' + path).then(response => {
+  RestAPI.post(url, body).then(response => {
     // check if simulator is running
     simulator.running = false;
 
-    response.forEach(sim => {
-      if (sim.name === name) {
-        simulator.running = true;
-      }
-    });
+    if (response.id == body.id) {
+      response.response.forEach(sim => {
+        if (sim.name === name) {
+          simulator.running = true;
+        }
+      });
+    }
 
     AppDispatcher.dispatch({
       type: 'simulators/running',
