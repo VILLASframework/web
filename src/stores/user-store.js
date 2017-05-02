@@ -79,21 +79,7 @@ class UserStore extends ReduceStore {
 
         }
 
-        return state;
-    
-      case 'users/start-load':
-        console.log('Sending request');
-        UsersDataManager.getUsers(state.token);
-
-        return state;
-
-      case 'users/users-loaded':
-      
-        return Object.assign({}, state, { users: action.users });
-      
-      case 'users/users-load-error':
-        // Users couldn't be loaded. Keep same state
-        return state;
+        return state;    
 
       default:
         return state;

@@ -25,20 +25,33 @@ import { Button, Modal, Glyphicon } from 'react-bootstrap';
 
 import AppDispatcher from '../app-dispatcher';
 import UserStore from '../stores/user-store';
+import UsersStore from '../stores/users-store';
 
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
-import NewProjectDialog from '../components/dialog/new-project';
-import EditProjectDialog from '../components/dialog/edit-project';
+// import NewUserDialog from '../components/dialog/new-user';
+// import EditUserDialog from '../components/dialog/edit-user';
 
-class Projects extends Component {
+class Users extends Component {
   static getStores() {
-    return [ UserStore ];
+    return [ UserStore, UsersStore ];
   }
 
-  static calculateState() {
+  static calculateState(prevState, props) {
+
+    let tokenState = UserStore.getState().token;
+
+    // If there is a token available and this method was called as a result of loading users
+    if (!prevState && tokenState) {
+      AppDispatcher.dispatch({
+        type: 'users/start-load',
+        token: tokenState
+      });
+    }
+
     return {
-      users: UserStore.getState().users,
+      token: tokenState,
+      users: UsersStore.getState(),
 
       newModal: false,
       editModal: false,
@@ -47,18 +60,12 @@ class Projects extends Component {
     };
   }
 
-  componentWillMount() {
-    AppDispatcher.dispatch({
-      type: 'users/start-load'
-    });
-  }
-
   // closeNewModal(data) {
   //   this.setState({ newModal: false });
 
   //   if (data) {
   //     AppDispatcher.dispatch({
-  //       type: 'projects/start-add',
+  //       type: 'users/start-add',
   //       data: data
   //     });
   //   }
@@ -95,8 +102,6 @@ class Projects extends Component {
   // }
 
   render() {
-    
-    this.state.users.map( (user) => console.log('User: %o', user));
 
     return (
       <div>
@@ -108,11 +113,11 @@ class Projects extends Component {
           <TableColumn width='70' editButton deleteButton onEdit={index => this.setState({ editModal: true, modalData: this.state.users[index] })} onDelete={index => this.setState({ deleteModal: true, modalData: this.state.users[index] })} />
         </Table>
 
-        {/*<Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph='plus' /> Project</Button>
+        <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph='plus' /> User</Button>
 
-        <NewProjectDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} simulations={this.state.simulations} />
+        {/*<NewUserDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />*/}
 
-        <EditProjectDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} project={this.state.modalData} simulations={this.state.simulations} />
+        {/*<EditProjectDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} project={this.state.modalData} simulations={this.state.simulations} />
 
         <Modal show={this.state.deleteModal}>
           <Modal.Header>
@@ -133,4 +138,4 @@ class Projects extends Component {
   }
 }
 
-export default Container.create(Projects);
+export default Container.create(Users);
