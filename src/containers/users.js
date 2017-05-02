@@ -21,7 +21,8 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Modal, Glyphicon } from 'react-bootstrap';
+// import { Button, Modal, Glyphicon } from 'react-bootstrap';
+import { Button, Glyphicon } from 'react-bootstrap';
 
 import AppDispatcher from '../app-dispatcher';
 import UserStore from '../stores/user-store';
@@ -29,7 +30,7 @@ import UsersStore from '../stores/users-store';
 
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
-// import NewUserDialog from '../components/dialog/new-user';
+import NewUserDialog from '../components/dialog/new-user';
 // import EditUserDialog from '../components/dialog/edit-user';
 
 class Users extends Component {
@@ -60,16 +61,17 @@ class Users extends Component {
     };
   }
 
-  // closeNewModal(data) {
-  //   this.setState({ newModal: false });
+  closeNewModal(data) {
+    this.setState({ newModal: false });
 
-  //   if (data) {
-  //     AppDispatcher.dispatch({
-  //       type: 'users/start-add',
-  //       data: data
-  //     });
-  //   }
-  // }
+    if (data) {
+      AppDispatcher.dispatch({
+        type: 'users/start-add',
+        data: data,
+        token: this.state.token
+      });
+    }
+  }
 
   // confirmDeleteModal() {
   //   this.setState({ deleteModal: false });
@@ -85,8 +87,9 @@ class Users extends Component {
 
   //   if (data) {
   //     AppDispatcher.dispatch({
-  //       type: 'projects/start-edit',
-  //       data: data
+  //       type: 'users/start-edit',
+  //       data: data,
+  //       token: this.state.token
   //     });
   //   }
   // }
@@ -115,11 +118,11 @@ class Users extends Component {
 
         <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph='plus' /> User</Button>
 
-        {/*<NewUserDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />*/}
+        <NewUserDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
 
-        {/*<EditProjectDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} project={this.state.modalData} simulations={this.state.simulations} />
+        {/*<EditUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} project={this.state.modalData} />*/}
 
-        <Modal show={this.state.deleteModal}>
+        {/*<Modal show={this.state.deleteModal}>
           <Modal.Header>
             <Modal.Title>Delete Project</Modal.Title>
           </Modal.Header>
