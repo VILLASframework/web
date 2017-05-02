@@ -30,6 +30,7 @@ import Simulators from './containers/simulators';
 import Visualization from './containers/visualization';
 import Simulations from './containers/simulations';
 import Simulation from './containers/simulation';
+import Users from './containers/users';
 import Login from './containers/login';
 import Logout from './containers/logout';
 
@@ -49,6 +50,8 @@ class Root extends Component {
 
           <Route path='/simulations' component={Simulations} />
           <Route path='/simulations/:simulation' component={Simulation} />
+
+          <Route path='/users' component={Users} />
 
           <Route path='/logout' component={Logout} />
         </Route>

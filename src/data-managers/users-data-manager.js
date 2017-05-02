@@ -55,6 +55,20 @@ class UsersDataManager extends RestDataManager {
       });
     });
   }
+
+  getUsers(token) {
+    RestAPI.get(this.makeURL('/users'), token).then(response => {
+      AppDispatcher.dispatch({
+        type: 'users/users-loaded',
+        users: response.users
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'users/users-load-error',
+        error: error
+      });
+    });
+  }
 }
 
 export default new UsersDataManager();
