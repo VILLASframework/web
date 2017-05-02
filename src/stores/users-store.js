@@ -30,11 +30,6 @@ class UsersStore extends ArrayStore {
   reduce(state, action) {
     switch (action.type) {
 
-      // Override ArrayStore's start-load to pass token
-      case 'users/start-load':
-        UsersDataManager.getUsers(action.token);
-        return state;
-
       default:
         return super.reduce(state, action);
     }
