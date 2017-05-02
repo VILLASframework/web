@@ -90,23 +90,20 @@ class SimulatorDataDataManager {
     // parse incoming message into usable data
     var data = new DataView(blob);
 
-    let OFFSET_ENDIAN = 1;
     let OFFSET_TYPE = 2;
     let OFFSET_VERSION = 4;
 
     var bits = data.getUint8(0);
-    var endian = (bits >> OFFSET_ENDIAN) & 0x1 ? 0 : 1;
-    var length = data.getUint16(0x02, endian);
+    var length = data.getUint16(0x02, 1);
 
     var values = new Float32Array(data.buffer, data.byteOffset + 0x10, length);
 
     return {
-      endian: endian,
       version: (bits >> OFFSET_VERSION) & 0xF,
       type: (bits >> OFFSET_TYPE) & 0x3,
       length: length,
-      sequence: data.getUint32(0x04, endian),
-      timestamp: data.getUint32(0x08, endian) * 1e3 + data.getUint32(0x0C, endian) * 1e-6,
+      sequence: data.getUint32(0x04, 1),
+      timestamp: data.getUint32(0x08, 1) * 1e3 + data.getUint32(0x0C, 1) * 1e-6,
       values: values
     };
   }
