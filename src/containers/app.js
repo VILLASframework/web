@@ -77,7 +77,7 @@ class App extends Component {
     }
 
     let currentUser = UserStore.getState().currentUser;
-    
+
     return {
       simulations: SimulationStore.getState(),
       currentRole: currentUser? currentUser.role : '',
@@ -185,10 +185,12 @@ class App extends Component {
         <NotificationSystem ref="notificationSystem" />
 
         <Header />
-        <SidebarMenu currentRole={ this.state.currentRole }/>
 
-        <div className="app-content">
-          {children}
+        <div className="app-body">
+          <SidebarMenu currentRole={ this.state.currentRole }/>
+          <div className="app-content">
+            {children}
+          </div>
         </div>
 
         <Footer />
