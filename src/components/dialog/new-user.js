@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React, { Component, PropTypes } from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
@@ -39,7 +39,7 @@ class NewUserDialog extends Component {
       username: '',
       mail: '',
       role: 'admin',
-      password: '1234'
+      password: ''
     };
   }
 
@@ -60,22 +60,26 @@ class NewUserDialog extends Component {
       username: '',
       mail: '',
       role: 'admin',
-      password: '1234'
+      password: ''
     });
   }
 
   validateForm(target) {
     // check all controls
-    var username = true;
+    let username = this.state.username !== '' && this.state.username.length >= 3;
+    let password = this.state.password !== '';
 
-    if (this.state.username === '') {
-      username = false;
-    }
-
-    this.valid =  username;
+    this.valid =  username && password;
 
     // return state to control
-    if (target === 'username') return username ? "success" : "error";
+    switch(target) {
+      case 'username':
+        return username ? "success" : "error";
+      case 'password':
+        return password ? "success" : "error";
+      default:
+        return "success";
+    }
   }
 
   render() {
@@ -86,10 +90,16 @@ class NewUserDialog extends Component {
             <ControlLabel>Username</ControlLabel>
             <FormControl type="text" placeholder="Enter username" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
+            <HelpBlock>Min 3 characters.</HelpBlock>
           </FormGroup>
-          <FormGroup controlId="mail" validationState={this.validateForm('mail')}>
+          <FormGroup controlId="mail">
             <ControlLabel>E-mail</ControlLabel>
             <FormControl type="text" placeholder="Enter e-mail" value={this.state.mail} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="password" validationState={this.validateForm('password')}>
+            <ControlLabel>Password</ControlLabel>
+            <FormControl type="text" placeholder="Enter password" value={this.state.password} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="role" validationState={this.validateForm('role')}>

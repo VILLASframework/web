@@ -90,10 +90,9 @@ class EditUserDialog extends Component {
             <FormControl type="text" placeholder="Enter username" value={this.state.username} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="mail" validationState={this.validateForm('mail')}>
+          <FormGroup controlId="mail">
             <ControlLabel>E-mail</ControlLabel>
             <FormControl type="text" placeholder="Enter e-mail" value={this.state.mail} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="role" validationState={this.validateForm('role')}>
             <ControlLabel>Role</ControlLabel>
