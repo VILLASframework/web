@@ -37,6 +37,7 @@ class NewUserDialog extends Component {
 
     this.state = {
       username: '',
+      mail: '',
       role: 'admin',
       password: '1234'
     };
@@ -57,6 +58,7 @@ class NewUserDialog extends Component {
   resetState() {
     this.setState({
       username: '',
+      mail: '',
       role: 'admin',
       password: '1234'
     });
@@ -85,8 +87,13 @@ class NewUserDialog extends Component {
             <FormControl type="text" placeholder="Enter username" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
+          <FormGroup controlId="mail" validationState={this.validateForm('mail')}>
+            <ControlLabel>E-mail</ControlLabel>
+            <FormControl type="text" placeholder="Enter e-mail" value={this.state.mail} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
           <FormGroup controlId="role" validationState={this.validateForm('role')}>
-            <ControlLabel>Simulation</ControlLabel>
+            <ControlLabel>Role</ControlLabel>
             <FormControl componentClass="select" placeholder="Select role" value={this.state.role} onChange={(e) => this.handleChange(e)}>
               <option key='1' value='admin'>Admin</option>
               <option key='2' disabled value='operator'>Operator</option>
