@@ -95,7 +95,6 @@ class ArrayStore extends ReduceStore {
         return this.updateElements(state, [action.data]);
 
       case this.type + '/add-error':
-        console.log('something happened');
         // TODO: Add error message
         return state;
 

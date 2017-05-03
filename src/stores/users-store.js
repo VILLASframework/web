@@ -21,6 +21,7 @@
 
 import ArrayStore from './array-store';
 import UsersDataManager from '../data-managers/users-data-manager';
+import NotificationsDataManager from '../data-managers/notifications-data-manager';
 
 class UsersStore extends ArrayStore {
   constructor() {
@@ -29,6 +30,32 @@ class UsersStore extends ArrayStore {
 
   reduce(state, action) {
     switch (action.type) {
+
+      case this.type + '/add-error':
+        if (action.error && !action.error.handled && action.error.response) {
+          // If it was an error and hasn't been handled, user could not be added
+          const USER_ADD_ERROR_NOTIFICATION = {
+            title: 'Failed to add new user',
+            message: action.error.response.body.message,
+            level: 'error'
+          }
+          NotificationsDataManager.addNotification(USER_ADD_ERROR_NOTIFICATION);
+
+        }
+        return super.reduce(state, action);
+
+      case this.type + '/edit-error':
+        if (action.error && !action.error.handled && action.error.response) {
+          // If it was an error and hasn't been handled, user couldn't not be updated
+          const USER_EDIT_ERROR_NOTIFICATION = {
+            title: 'Failed to edit user',
+            message: action.error.response.body.message,
+            level: 'error'
+          }
+          NotificationsDataManager.addNotification(USER_EDIT_ERROR_NOTIFICATION);
+
+        }
+        return super.reduce(state, action);
 
       default:
         return super.reduce(state, action);
