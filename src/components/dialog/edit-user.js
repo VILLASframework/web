@@ -98,8 +98,9 @@ class EditUserDialog extends Component {
           <FormGroup controlId="role" validationState={this.validateForm('role')}>
             <ControlLabel>Role</ControlLabel>
             <FormControl componentClass="select" placeholder="Select role" value={this.state.role} onChange={(e) => this.handleChange(e)}>
-              <option key='1' value='admin'>Admin</option>
-              <option key='2' disabled value='operator'>Operator</option>
+              <option key='1' value='admin'>Administrator</option>
+              <option key='2' value='user'>User</option>
+              <option key='3' value='guest'>Guest</option>
             </FormControl>
           </FormGroup>
         </form>

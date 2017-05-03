@@ -94,6 +94,12 @@ class Users extends Component {
     }
   }
 
+  getHumanRoleName(role_key) {
+    const HUMAN_ROLE_NAMES = {admin: 'Administrator', user: 'User', guest: 'Guest'};
+    
+    return HUMAN_ROLE_NAMES.hasOwnProperty(role_key)? HUMAN_ROLE_NAMES[role_key] : '';
+  }
+
   render() {
 
     return (
@@ -103,7 +109,7 @@ class Users extends Component {
         <Table data={this.state.users}>
           <TableColumn title='Username' width='150' dataKey='username' />
           <TableColumn title='E-mail' dataKey='mail'  />
-          <TableColumn title='Role' dataKey='role'  />
+          <TableColumn title='Role' dataKey='role'   modifier={(role) => this.getHumanRoleName(role)} />
           <TableColumn width='70' editButton deleteButton onEdit={index => this.setState({ editModal: true, modalData: this.state.users[index] })} onDelete={index => this.setState({ deleteModal: true, modalData: this.state.users[index] })} />
         </Table>
 
