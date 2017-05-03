@@ -123,7 +123,7 @@ class RestDataManager {
     var obj = {};
     obj[this.type] = this.filterKeys(object);
 
-    RestAPI.put(this.makeURL(this.url + '/' + object._id, token), obj).then(response => {
+    RestAPI.put(this.makeURL(this.url + '/' + object._id), obj, token).then(response => {
       AppDispatcher.dispatch({
         type: this.type + 's/edited',
         data: response[this.type]

@@ -21,8 +21,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-// import { Button, Modal, Glyphicon } from 'react-bootstrap';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Button, Modal, Glyphicon } from 'react-bootstrap';
 
 import AppDispatcher from '../app-dispatcher';
 import UserStore from '../stores/user-store';
@@ -31,7 +30,7 @@ import UsersStore from '../stores/users-store';
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
 import NewUserDialog from '../components/dialog/new-user';
-// import EditUserDialog from '../components/dialog/edit-user';
+import EditUserDialog from '../components/dialog/edit-user';
 
 class Users extends Component {
   static getStores() {
@@ -73,36 +72,27 @@ class Users extends Component {
     }
   }
 
-  // confirmDeleteModal() {
-  //   this.setState({ deleteModal: false });
+  confirmDeleteModal() {
+    this.setState({ deleteModal: false });
 
-  //   AppDispatcher.dispatch({
-  //     type: 'projects/start-remove',
-  //     data: this.state.modalData
-  //   });
-  // }
+    AppDispatcher.dispatch({
+      type: 'users/start-remove',
+      data: this.state.modalData,
+      token: this.state.token
+    });
+  }
 
-  // closeEditModal(data) {
-  //   this.setState({ editModal: false });
+  closeEditModal(data) {
+    this.setState({ editModal: false });
 
-  //   if (data) {
-  //     AppDispatcher.dispatch({
-  //       type: 'users/start-edit',
-  //       data: data,
-  //       token: this.state.token
-  //     });
-  //   }
-  // }
-
-  // getSimulationName(id) {
-  //   for (var i = 0; i < this.state.simulations.length; i++) {
-  //     if (this.state.simulations[i]._id === id) {
-  //       return this.state.simulations[i].name;
-  //     }
-  //   }
-
-  //   return id;
-  // }
+    if (data) {
+      AppDispatcher.dispatch({
+        type: 'users/start-edit',
+        data: data,
+        token: this.state.token
+      });
+    }
+  }
 
   render() {
 
@@ -120,22 +110,22 @@ class Users extends Component {
 
         <NewUserDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
 
-        {/*<EditUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} project={this.state.modalData} />*/}
+        <EditUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />
 
-        {/*<Modal show={this.state.deleteModal}>
+        <Modal show={this.state.deleteModal}>
           <Modal.Header>
-            <Modal.Title>Delete Project</Modal.Title>
+            <Modal.Title>Delete user</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
-            Are you sure you want to delete the project <strong>'{this.state.modalData.name}'</strong>?
+            Are you sure you want to delete the user <strong>'{this.state.modalData.username}'</strong>?
           </Modal.Body>
 
           <Modal.Footer>
             <Button onClick={() => this.setState({ deleteModal: false})}>Cancel</Button>
             <Button bsStyle='danger' onClick={() => this.confirmDeleteModal()}>Delete</Button>
           </Modal.Footer>
-        </Modal>*/}
+        </Modal>
       </div>
     );
   }
