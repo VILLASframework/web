@@ -33,7 +33,9 @@ class SidebarMenu extends Component {
           <li><Link to="/projects" activeClassName="active">Projects</Link></li>
           <li><Link to="/simulations" activeClassName="active">Simulations</Link></li>
           <li><Link to="/simulators" activeClassName="active">Simulators</Link></li>
-          <li><Link to="/users" activeClassName="active">User Management</Link></li>
+          { this.props.currentRole === 'admin' ? 
+              <li><Link to="/users" activeClassName="active">User Management</Link></li> : ''
+          }
           <li><Link to="/logout">Logout</Link></li>
         </ul>
       </div>

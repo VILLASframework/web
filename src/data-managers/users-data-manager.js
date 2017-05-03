@@ -46,7 +46,7 @@ class UsersDataManager extends RestDataManager {
     RestAPI.get(this.makeURL('/users/me'), token).then(response => {
       AppDispatcher.dispatch({
         type: 'users/current-user',
-        user: response
+        user: response.user
       });
     }).catch(error => {
       AppDispatcher.dispatch({
