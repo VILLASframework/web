@@ -1,24 +1,39 @@
 version: "2"
 
 services:
-  frontend:
+  webserver:
     image: nginx:stable
     volumes:
       - ./nginx:/etc/nginx/conf.d/
-      - ./build:/www
+      - website-volume:/www
     links:
       - backend
     ports:
       - "80:80"
       - "443:443"
+    restart: always
+
+  frontend:
+    build: .
+    volumes:
+      - ./:/react
+      - website-volume:/result
 
   backend:
     image: villasweb-backend
     links:
       - database
+    environment:
+      - NODE_ENV=production
+    restart: always
 
   database:
     image: mongo:latest
     volumes:
-      - /opt/database:/data/db
+      - data-volume:/data/db
+    restart: always
+    user: mongodb
 
+volumes:
+  data-volume:
+  website-volume:

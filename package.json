@@ -2,6 +2,7 @@
   "name": "villasweb-frontend",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:4000",
   "dependencies": {
     "bootstrap": "^3.3.7",
     "classnames": "^2.2.5",

@@ -22,7 +22,7 @@
 import RestAPI from '../api/rest-api';
 import AppDispatcher from '../app-dispatcher';
 
-const API_URL = 'http://localhost:4000/api/v1';
+const API_URL = '/api/v1';
 
 class RestDataManager {
   constructor(type, url, keyFilter) {
@@ -51,10 +51,10 @@ class RestDataManager {
     return object;
   }
 
-  load(id) {
+  load(id, token = null) {
     if (id != null) {
       // load single object
-      RestAPI.get(this.makeURL(this.url + '/' + id)).then(response => {
+      RestAPI.get(this.makeURL(this.url + '/' + id), token).then(response => {
         const data = this.filterKeys(response[this.type]);
 
         AppDispatcher.dispatch({
@@ -69,7 +69,7 @@ class RestDataManager {
       });
     } else {
       // load all objects
-      RestAPI.get(this.makeURL(this.url)).then(response => {
+      RestAPI.get(this.makeURL(this.url), token).then(response => {
         const data = response[this.type + 's'].map(element => {
           return this.filterKeys(element);
         });
@@ -87,11 +87,11 @@ class RestDataManager {
     }
   }
 
-  add(object) {
+  add(object, token = null) {
     var obj = {};
     obj[this.type] = this.filterKeys(object);
 
-    RestAPI.post(this.makeURL(this.url), obj).then(response => {
+    RestAPI.post(this.makeURL(this.url), obj, token).then(response => {
       AppDispatcher.dispatch({
         type: this.type + 's/added',
         data: response[this.type]
@@ -104,8 +104,8 @@ class RestDataManager {
     });
   }
 
-  remove(object) {
-    RestAPI.delete(this.makeURL(this.url + '/' + object._id)).then(response => {
+  remove(object, token = null) {
+    RestAPI.delete(this.makeURL(this.url + '/' + object._id), token).then(response => {
       AppDispatcher.dispatch({
         type: this.type + 's/removed',
         data: response[this.type],
@@ -119,11 +119,11 @@ class RestDataManager {
     });
   }
 
-  update(object) {
+  update(object, token = null) {
     var obj = {};
     obj[this.type] = this.filterKeys(object);
 
-    RestAPI.put(this.makeURL(this.url + '/' + object._id), obj).then(response => {
+    RestAPI.put(this.makeURL(this.url + '/' + object._id), obj, token).then(response => {
       AppDispatcher.dispatch({
         type: this.type + 's/edited',
         data: response[this.type]

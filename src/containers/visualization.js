@@ -170,18 +170,12 @@ class Visualization extends Component {
     this.setState({ visualization: visualization });
   }
 
-<<<<<<< HEAD
   widgetStatusChange(updated_widget, key) {
     // Widget changed internally, make changes effective then save them
     this.widgetChange(updated_widget, key, this.saveChanges);
   }
 
   widgetChange(updated_widget, key, callback = null) {
-    
-=======
-  widgetChange(updated_widget, key) {
-
->>>>>>> e0b7ddca551162e21d7f667c9ae2d6516493575f
     var widgets_update = {};
     widgets_update[key] =  updated_widget;
     var new_widgets = Object.assign({}, this.state.visualization.widgets, widgets_update);
