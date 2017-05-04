@@ -2,10 +2,22 @@
  * File: villas-store.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 02.03.2017
- * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
- *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
- *   Unauthorized copying of this file, via any medium is strictly prohibited.
- **********************************************************************************/
+ *
+ * This file is part of VILLASweb.
+ *
+ * VILLASweb is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * VILLASweb is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 import ArrayStore from './array-store';
 import SimulatorsDataManager from '../data-managers/simulators-data-manager';
@@ -28,7 +40,7 @@ class SimulatorStore extends ArrayStore {
 
       case 'simulators/removed':
         SimulatorsDataManager.stopRunningDetection(action.original);
-        
+
         return super.reduce(state, action);
 
       case 'simulators/start-edit':
@@ -40,7 +52,7 @@ class SimulatorStore extends ArrayStore {
       case 'simulators/edited':
         // The update was done, resume the 'runningDetection'
         SimulatorsDataManager.startRunningDetection(action.data);
-        
+
         return super.reduce(state, action);
 
       case 'simulators/loaded':

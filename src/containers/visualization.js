@@ -2,10 +2,22 @@
  * File: visualization.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 02.03.2017
- * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
- *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
- *   Unauthorized copying of this file, via any medium is strictly prohibited.
- **********************************************************************************/
+ *
+ * This file is part of VILLASweb.
+ *
+ * VILLASweb is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * VILLASweb is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
@@ -92,7 +104,7 @@ class Visualization extends Component {
       });
     }
   }
-  
+
   getNewWidgetKey() {
     // Increase the counter and update the state
     return this.state.last_widget_key++;
@@ -158,6 +170,7 @@ class Visualization extends Component {
     this.setState({ visualization: visualization });
   }
 
+<<<<<<< HEAD
   widgetStatusChange(updated_widget, key) {
     // Widget changed internally, make changes effective then save them
     this.widgetChange(updated_widget, key, this.saveChanges);
@@ -165,6 +178,10 @@ class Visualization extends Component {
 
   widgetChange(updated_widget, key, callback = null) {
     
+=======
+  widgetChange(updated_widget, key) {
+
+>>>>>>> e0b7ddca551162e21d7f667c9ae2d6516493575f
     var widgets_update = {};
     widgets_update[key] =  updated_widget;
     var new_widgets = Object.assign({}, this.state.visualization.widgets, widgets_update);
@@ -223,7 +240,7 @@ class Visualization extends Component {
       // save changes temporarily
       var widgets_update = {};
       widgets_update[this.state.modalIndex] =  data;
-      
+
       var new_widgets = Object.assign({}, this.state.visualization.widgets, widgets_update);
 
       var visualization = Object.assign({}, this.state.visualization, {
@@ -250,7 +267,7 @@ class Visualization extends Component {
   }
 
   saveChanges() {
-    // Transform to a list 
+    // Transform to a list
     var visualization = Object.assign({}, this.state.visualization, {
         widgets: this.transformToWidgetsList(this.state.visualization.widgets)
       });
@@ -360,7 +377,7 @@ class Visualization extends Component {
             ))}
           </Dropzone>
 
-          {current_widgets != null && 
+          {current_widgets != null &&
             Object.keys(current_widgets).map( (widget_key) => (
               <ContextMenu id={'widgetMenu'+ widget_key} key={widget_key} >
                 <MenuItem data={{key: widget_key}} onClick={(e, data) => this.editWidget(e, data)}>Edit</MenuItem>

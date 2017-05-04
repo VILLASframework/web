@@ -2,10 +2,22 @@
  * File: project.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 03.03.2017
- * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
- *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
- *   Unauthorized copying of this file, via any medium is strictly prohibited.
- **********************************************************************************/
+ *
+ * This file is part of VILLASweb.
+ *
+ * VILLASweb is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * VILLASweb is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
@@ -29,7 +41,7 @@ class Visualizations extends Component {
 
     let currentProjects = ProjectStore.getState();
     let currentVisualizations = VisualizationStore.getState();
-    
+
     if (prevState) {
       var projectUpdate = prevState.project;
 
@@ -62,7 +74,7 @@ class Visualizations extends Component {
       if (initialProject && (!currentVisualizations || currentVisualizations.length === 0)) {
         Visualizations.loadVisualizations(initialProject.visualizations);
       }
-      
+
       return {
         projects: currentProjects,
         visualizations: currentVisualizations,
@@ -136,7 +148,7 @@ class Visualizations extends Component {
     // get visualizations for this project
     var visualizations = [];
     if (this.state.visualizations && this.state.project.visualizations) {
-      visualizations = this.state.visualizations.filter( 
+      visualizations = this.state.visualizations.filter(
           (visualization) => this.state.project.visualizations.includes(visualization._id)
         ).sort(
           (visA, visB) => visA.name.localeCompare(visB.name)
