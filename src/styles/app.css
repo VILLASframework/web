@@ -41,7 +41,6 @@ body {
 .app-header {
   width: 100%;
   height: 60px;
-
   padding: 10px 0 0 0;
 
   color: #527984;
@@ -50,7 +49,6 @@ body {
 
 .app-header h1 {
   width: 100%;
-
   margin: 0;
 
   text-align: center;
@@ -68,15 +66,27 @@ body {
   clear: both;
 }
 
-.app-content {
+.app-body {
+  /* Let sidebar grow and content occupy rest of the space */
+  display: flex;
   position: absolute;
-  bottom: 0px;
   top: 60px;
+  bottom: 60px;
   right: 0px;
-  left: 200px;
-  min-height: 400px;
+  left: 0px;
 
-  margin: 20px 20px 60px 20px;
+  padding: 15px 5px 0px 5px;
+}
+
+.app-body div {
+  margin-left: 7px;
+  margin-right: 7px;
+}
+
+.app-content {
+  flex: 1 1 auto;
+  min-height: 400px;
+  height: 100%;
   padding: 15px 20px;
 
   background-color: #fff;
@@ -88,11 +98,7 @@ body {
  * Menus
  */
 .menu-sidebar {
-  float: left;
-
-  width: 160px;
-
-  margin: 20px 0 0 20px;
+  display: inline-table;
   padding: 20px 25px 20px 25px;
 
   background-color: #fff;
@@ -102,18 +108,35 @@ body {
 
 .menu-sidebar a {
   color: #4d4d4d;
+  text-decoration:none;
+}
+
+.menu-sidebar a:hover, .menu-sidebar a:focus {
+  text-decoration:none;
 }
 
 .active {
   font-weight: bold;
+  /*text-decoration:none;*/
 }
 
 .menu-sidebar ul {
   padding-top: 10px;
-
   list-style: none;
+  white-space: nowrap;  
 }
 
+.menu-sidebar a::after {
+  /* Trick to make menu items to be as wide as in bold */
+  display:block;
+  content:attr(title);
+  font-weight:bold;
+  height:1px;
+  color:transparent;
+  overflow:hidden;
+  visibility:hidden;
+  margin-bottom:-1px;
+}
 /**
  * Login form
  */

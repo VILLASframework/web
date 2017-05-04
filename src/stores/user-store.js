@@ -79,7 +79,7 @@ class UserStore extends ReduceStore {
 
         }
 
-        return state;
+        return state;    
 
       default:
         return state;
