@@ -24,6 +24,7 @@ import { Container } from 'flux/utils';
 import { Button } from 'react-bootstrap';
 import { ContextMenu, MenuItem } from 'react-contextmenu';
 
+import WidgetFactory from '../components/widget-factory';
 import ToolboxItem from '../components/toolbox-item';
 import Dropzone from '../components/dropzone';
 import Widget from './widget';
@@ -34,6 +35,8 @@ import ProjectStore from '../stores/project-store';
 import SimulationStore from '../stores/simulation-store';
 import FileStore from '../stores/file-store';
 import AppDispatcher from '../app-dispatcher';
+import NotificationsDataManager from '../data-managers/notifications-data-manager';
+import NotificationsFactory from '../data-managers/notifications-factory';
 
 class Visualization extends Component {
   static getStores() {
@@ -60,11 +63,13 @@ class Visualization extends Component {
       editModal: prevState.editModal || false,
       modalData: prevState.modalData || null,
       modalIndex: prevState.modalIndex || null,
-
+      
+      maxWidgetHeight: prevState.maxWidgetHeight  || 0,
+      dropZoneHeight: prevState.dropZoneHeight  || 0,
       last_widget_key: prevState.last_widget_key  || 0
     };
   }
-
+  
   componentWillMount() {
     AppDispatcher.dispatch({
       type: 'visualizations/start-load'
@@ -126,6 +131,8 @@ class Visualization extends Component {
             widgets: tempVisualization.widgets? this.transformToWidgetsDict(tempVisualization.widgets) : {}
         });
 
+        this.computeHeightWithWidgets(visualization.widgets);
+
         this.setState({ visualization: visualization, project: null });
 
         AppDispatcher.dispatch({
@@ -137,53 +144,18 @@ class Visualization extends Component {
   }
 
   handleDrop(item, position) {
-    // add new widget
-    var widget = {
-      name: 'Name',
-      type: item.name,
-      width: 100,
-      height: 100,
-      x: position.x,
-      y: position.y,
-      z: 0
-    };
 
-    // set type specific properties
-    if (item.name === 'Value') {
-      widget.simulator = this.state.simulation.models[0].simulator;
-      widget.signal = 0;
-      widget.minWidth = 70;
-      widget.minHeight = 20;
-    } else if (item.name === 'Plot') {
-      widget.simulator = this.state.simulation.models[0].simulator;
-      widget.signals = [ 0 ];
-      widget.time = 60;
-      widget.minWidth = 400;
-      widget.minHeight = 200;
-      widget.width = 400;
-      widget.height = 200;
-    } else if (item.name === 'Table') {
-      widget.simulator = this.state.simulation.models[0].simulator;
-      widget.minWidth = 300;
-      widget.minHeight = 200;
-      widget.width = 400;
-      widget.height = 200;
-    } else if (item.name === 'Label') {
-      widget.minWidth = 70;
-      widget.minHeight = 20;
-    } else if (item.name === 'PlotTable') {
-      widget.simulator = this.state.simulation.models[0].simulator;
-      widget.minWidth = 400;
-      widget.minHeight = 200;
-      widget.width = 500;
-      widget.height = 400;
-      widget.time = 60
-    } else if (item.name === 'Image') {
-      widget.minWidth = 100;
-      widget.minHeight = 100;
-      widget.width = 200;
-      widget.height = 200;
+    let widget = null;
+    let defaultSimulator = null;
+
+    if (this.state.simulation.models && this.state.simulation.models.length === 0) {
+      NotificationsDataManager.addNotification(NotificationsFactory.NO_SIM_MODEL_AVAILABLE);
+    } else {
+      defaultSimulator = this.state.simulation.models[0].simulator;
     }
+
+    // create new widget
+    widget = WidgetFactory.createWidgetOfType(item.name, position, defaultSimulator);
 
     var new_widgets = this.state.visualization.widgets;
 
@@ -193,11 +165,17 @@ class Visualization extends Component {
     var visualization = Object.assign({}, this.state.visualization, {
       widgets: new_widgets
     });
+    
+    this.increaseHeightWithWidget(widget);
     this.setState({ visualization: visualization });
   }
 
-  widgetChange(updated_widget, key) {
+  widgetStatusChange(updated_widget, key) {
+    // Widget changed internally, make changes effective then save them
+    this.widgetChange(updated_widget, key, this.saveChanges);
+  }
 
+  widgetChange(updated_widget, key, callback = null) {
     var widgets_update = {};
     widgets_update[key] =  updated_widget;
     var new_widgets = Object.assign({}, this.state.visualization.widgets, widgets_update);
@@ -205,7 +183,46 @@ class Visualization extends Component {
     var visualization = Object.assign({}, this.state.visualization, {
       widgets: new_widgets
     });
-    this.setState({ visualization: visualization });
+    
+    // Check if the height needs to be increased, the section may have shrunk if not
+    if (!this.increaseHeightWithWidget(updated_widget)) {
+      this.computeHeightWithWidgets(visualization.widgets);
+    }
+    this.setState({ visualization: visualization }, callback);
+  }
+
+  /*
+  * Set the initial height state based on the existing widgets
+  */
+  computeHeightWithWidgets(widgets) {
+    // Compute max height from widgets
+    let maxHeight = Object.keys(widgets).reduce( (maxHeightSoFar, widgetKey) => {
+      let thisWidget = widgets[widgetKey];
+      let thisWidgetHeight = thisWidget.y + thisWidget.height;
+      
+      return thisWidgetHeight > maxHeightSoFar? thisWidgetHeight : maxHeightSoFar;
+    }, 0);
+
+    this.setState({ 
+      maxWidgetHeight: maxHeight, 
+      dropZoneHeight:  maxHeight + 40
+    });
+  }
+  /*
+  * Adapt the area's height with the position of the new widget.
+  * Return true if the height increased, otherwise false.
+  */
+  increaseHeightWithWidget(widget) {
+    let increased = false;
+    let thisWidgetHeight = widget.y + widget.height;
+    if (thisWidgetHeight > this.state.maxWidgetHeight) {
+      increased = true;
+      this.setState({ 
+        maxWidgetHeight: thisWidgetHeight, 
+        dropZoneHeight:  thisWidgetHeight + 40
+      });
+    }
+    return increased;
   }
 
   editWidget(e, data) {
@@ -238,6 +255,11 @@ class Visualization extends Component {
     this.setState({ visualization: visualization });
   }
 
+  stopEditing() {
+    // Provide the callback so it can be called when state change is applied
+    this.setState({ editing: false }, this.saveChanges );
+  }
+
   saveChanges() {
     // Transform to a list
     var visualization = Object.assign({}, this.state.visualization, {
@@ -248,8 +270,6 @@ class Visualization extends Component {
       type: 'visualizations/start-edit',
       data: visualization
     });
-
-    this.setState({ editing: false });
   }
 
   discardChanges() {
@@ -299,25 +319,10 @@ class Visualization extends Component {
   }
 
   render() {
-    // calculate widget area height
-    var height = 0;
-
     var current_widgets = this.state.visualization.widgets;
 
-    if (current_widgets) {
-      Object.keys(current_widgets).forEach( (widget_key) => {
-        var widget = current_widgets[widget_key];
-        if (widget.y + widget.height > height) {
-          height = widget.y + widget.height;
-        }
-      });
-
-      // add padding
-      height += 40;
-    }
-
     return (
-      <div className='section box'>
+      <div className='section box' >
         <div className='section-header box-header'>
           <div className="section-title">
             <span>
@@ -326,7 +331,7 @@ class Visualization extends Component {
           </div>
           {this.state.editing ? (
             <div className='section-buttons-group'>
-              <Button bsStyle="link" onClick={() => this.saveChanges()}>
+              <Button bsStyle="link" onClick={() => this.stopEditing()}>
                 <span className="glyphicon glyphicon-floppy-disk"></span> Save
               </Button>
               <Button bsStyle="link" onClick={() => this.discardChanges()}>
@@ -351,13 +356,18 @@ class Visualization extends Component {
               <ToolboxItem name="Label" type="widget" />
               <ToolboxItem name="Image" type="widget" />
               <ToolboxItem name="PlotTable" type="widget" />
+              <ToolboxItem name="Button" type="widget" />
+              <ToolboxItem name="NumberInput" type="widget" />
+              <ToolboxItem name="Slider" type="widget" />
+              <ToolboxItem name="Gauge" type="widget" />
+              <ToolboxItem name="Box" type="widget" />
             </div>
           }
 
-          <Dropzone height={height} onDrop={(item, position) => this.handleDrop(item, position)} editing={this.state.editing}>
+          <Dropzone height={this.state.dropZoneHeight} onDrop={(item, position) => this.handleDrop(item, position)} editing={this.state.editing}>
             {current_widgets != null &&
               Object.keys(current_widgets).map( (widget_key) => (
-              <Widget key={widget_key} data={current_widgets[widget_key]} simulation={this.state.simulation} onWidgetChange={(w, k) => this.widgetChange(w, k)} editing={this.state.editing} index={widget_key} grid={this.state.grid} />
+              <Widget key={widget_key} data={current_widgets[widget_key]} simulation={this.state.simulation} onWidgetChange={(w, k) => this.widgetChange(w, k)} onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)} editing={this.state.editing} index={widget_key} grid={this.state.grid} />
             ))}
           </Dropzone>
 

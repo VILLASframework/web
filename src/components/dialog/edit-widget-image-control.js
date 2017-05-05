@@ -1,5 +1,5 @@
 /**
- * File: edit-widget-value.js
+ * File: edit-widget-image-control.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 04.03.2017
  *
@@ -24,7 +24,7 @@ import { FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap';
 
 import AppDispatcher from '../../app-dispatcher';
 
-class EditImageWidget extends Component {
+class EditImageWidgetControl extends Component {
   constructor(props) {
     super(props);
 
@@ -80,4 +80,4 @@ class EditImageWidget extends Component {
   }
 }
 
-export default EditImageWidget;
+export default EditImageWidgetControl;

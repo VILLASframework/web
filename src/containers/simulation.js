@@ -131,7 +131,7 @@ class Simulation extends Component {
 
   render() {
     return (
-      <div>
+      <div className='section'>
         <h1>{this.state.simulation.name}</h1>
 
         <Table data={this.state.simulation.models}>

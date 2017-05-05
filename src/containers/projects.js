@@ -102,7 +102,7 @@ class Projects extends Component {
 
   render() {
     return (
-      <div>
+      <div className='section'>
         <h1>Projects</h1>
 
         <Table data={this.state.projects}>

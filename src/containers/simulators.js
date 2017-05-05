@@ -96,7 +96,7 @@ class Simulators extends Component {
 
   render() {
     return (
-      <div>
+      <div className='section'>
         <h1>Simulators</h1>
 
         <Table data={this.state.simulators}>

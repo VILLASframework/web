@@ -39,7 +39,7 @@ function isRunning(simulator) {
     // check if simulator is running
     simulator.running = false;
 
-    if (response.id == body.id) {
+    if (response.id === body.id) {
       response.response.forEach(sim => {
         if (sim.name === name) {
           simulator.running = true;

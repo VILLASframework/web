@@ -47,9 +47,10 @@ class WidgetValue extends Component {
   }
 
   render() {
+    var value_to_render = Number(this.state.value);
     return (
-      <div>
-        {this.props.widget.name}: {this.state.value}
+      <div className="single-value-widget">
+        <strong>{this.props.widget.name}</strong> <span>{ Number.isNaN(value_to_render)?  NaN : value_to_render.toFixed(3) } </span>
       </div>
     );
   }
