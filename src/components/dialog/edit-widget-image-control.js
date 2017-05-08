@@ -49,11 +49,12 @@ class EditImageWidgetControl extends Component {
         formData.append(key, this.state.fileList[key]);
       }
     }
-
+    
     // upload files
     AppDispatcher.dispatch({
       type: 'files/start-upload',
-      data: formData
+      data: formData,
+      token: this.props.sessionToken
     });
   }
 
@@ -63,9 +64,18 @@ class EditImageWidgetControl extends Component {
         <FormGroup controlId="file">
           <ControlLabel>Image</ControlLabel>
           <FormControl componentClass="select" value={this.state.widget.file} onChange={(e) => this.props.handleChange(e)}>
-            {this.props.files.map((file, index) => (
-              <option key={index} value={file._id}>{file.name}</option>
-            ))}
+            {
+              this.props.files.length === 0? (
+                <option disabled value style={{ display: 'none' }}>No images found, please upload one first.</option>
+              ) : (
+                this.props.files.reduce( (entries, file, index) => {
+                    entries.push(<option key={++index} value={file._id}>{file.name}</option>);
+                    return entries;
+                  }, [
+                    <option key={0} value=''>Please select one image</option>
+                  ])
+              )
+            }
           </FormControl>
         </FormGroup>
 
