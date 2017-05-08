@@ -35,6 +35,7 @@ import EditWidgetOrientation from './edit-widget-orientation';
 
 class EditWidgetDialog extends Component {
   static propTypes = {
+    sessionToken: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired
   };
@@ -109,7 +110,7 @@ class EditWidgetDialog extends Component {
         )
       } else if (this.props.widget.type === 'Image') {
         dialogControls.push(
-          <EditImageWidgetControl key={1} widget={this.state.temporal} files={this.props.files} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />
+          <EditImageWidgetControl key={1} sessionToken={this.props.sessionToken} widget={this.state.temporal} files={this.props.files} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />
         )
       } else if (this.props.widget.type === 'Gauge') {
         dialogControls.push(

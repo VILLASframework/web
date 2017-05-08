@@ -30,6 +30,7 @@ import Dropzone from '../components/dropzone';
 import Widget from './widget';
 import EditWidget from '../components/dialog/edit-widget';
 
+import UserStore from '../stores/user-store';
 import VisualizationStore from '../stores/visualization-store';
 import ProjectStore from '../stores/project-store';
 import SimulationStore from '../stores/simulation-store';
@@ -40,7 +41,7 @@ import NotificationsFactory from '../data-managers/notifications-factory';
 
 class Visualization extends Component {
   static getStores() {
-    return [ VisualizationStore, ProjectStore, SimulationStore, FileStore ];
+    return [ VisualizationStore, ProjectStore, SimulationStore, FileStore, UserStore ];
   }
 
   static calculateState(prevState) {
@@ -49,6 +50,7 @@ class Visualization extends Component {
     }
 
     return {
+      sessionToken: UserStore.getState().token,
       visualizations: VisualizationStore.getState(),
       projects: ProjectStore.getState(),
       simulations: SimulationStore.getState(),
@@ -384,7 +386,7 @@ class Visualization extends Component {
               </ContextMenu>
           ))}
 
-          <EditWidget show={this.state.editModal} onClose={(data) => this.closeEdit(data)} widget={this.state.modalData} simulation={this.state.simulation} files={this.state.files} />
+          <EditWidget sessionToken={this.state.sessionToken} show={this.state.editModal} onClose={(data) => this.closeEdit(data)} widget={this.state.modalData} simulation={this.state.simulation} files={this.state.files} />
         </div>
       </div>
     );
