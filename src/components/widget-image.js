@@ -21,37 +21,33 @@
 
 import React, { Component } from 'react';
 
-const API_URL = 'http://localhost:4000/';
+import AppDispatcher from '../app-dispatcher';
+import config from '../config';
 
 class WidgetImage extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      file: null
-    };
-  }
 
   componentWillReceiveProps(nextProps) {
-    // check if file is set
-    if (nextProps.widget.file == null) {
-      this.setState({ file: null });
-      return;
-    }
 
-    // get file by id
-    nextProps.files.forEach(file => {
-      if (file._id === nextProps.widget.file) {
-        this.setState({ file: file });
-      }
-    });
+    // Query the image referenced by the widget (public request, no token required)
+    let widgetFile = nextProps.widget.file;
+    if (widgetFile && !nextProps.files.find( file => file._id === widgetFile ) ) {
+      
+      AppDispatcher.dispatch({
+        type: 'files/start-load',
+        data: widgetFile
+      });
+
+    }
   }
 
   render() {
+    
+    let file = this.props.files.find( (file) => file._id === this.props.widget.file );
+
     return (
-      <div>
-        {this.state.file &&
-          <img alt={this.state.file.name} style={{ width: this.props.widget.width - 20, height: this.props.widget.height - 20 }} src={API_URL + this.state.file.path} />
+      <div className="full">
+        {file &&
+          <img className="full" alt={file.name} src={config.publicPathBase + file.path} onDragStart={ (e) => e.preventDefault() } />
         }
       </div>
     );
