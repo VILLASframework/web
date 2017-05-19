@@ -30,7 +30,7 @@ class FileStore extends ArrayStore {
   reduce(state, action) {
     switch (action.type) {
       case 'files/start-upload':
-        FilesDataManager.upload(action.data);
+        FilesDataManager.upload(action.data, action.token);
         return state;
 
       case 'files/uploaded':

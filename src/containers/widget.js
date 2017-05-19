@@ -26,6 +26,7 @@ import Rnd from 'react-rnd';
 import classNames from 'classnames';
 
 import AppDispatcher from '../app-dispatcher';
+import UserStore from '../stores/user-store';
 import SimulatorDataStore from '../stores/simulator-data-store';
 import FileStore from '../stores/file-store';
 
@@ -45,12 +46,16 @@ import '../styles/widgets.css';
 
 class Widget extends Component {
   static getStores() {
-    return [ SimulatorDataStore, FileStore ];
+    return [ SimulatorDataStore, FileStore, UserStore ];
   }
 
   static calculateState(prevState) {
+
+    let tokenState = UserStore.getState().token;
+
     if (prevState) {
       return {
+        sessionToken: tokenState,
         simulatorData: SimulatorDataStore.getState(),
         files: FileStore.getState(),
 
@@ -58,6 +63,7 @@ class Widget extends Component {
       }
     } else {
       return {
+        sessionToken: tokenState,
         simulatorData: SimulatorDataStore.getState(),
         files: FileStore.getState(),
 
@@ -72,11 +78,15 @@ class Widget extends Component {
     // Reference to the context menu element
     this.contextMenuTriggerViaDraggable = null;
   }
-
+  
   componentWillMount() {
-    AppDispatcher.dispatch({
-      type: 'files/start-load'
-    });
+    // If loading for the first time
+    if (this.state.sessionToken) {
+      AppDispatcher.dispatch({
+        type: 'files/start-load',
+        token: this.state.sessionToken
+      });
+    }
   }
 
   dragStop(event, ui) {
@@ -150,7 +160,6 @@ class Widget extends Component {
       borderedWidget = true;
     } else if (widget.type === 'Image') {
       element = <WidgetImage widget={widget} files={this.state.files} />
-      borderedWidget = true;
     } else if (widget.type === 'Button') {
       element = <WidgetButton widget={widget} editing={this.props.editing} />
     } else if (widget.type === 'NumberInput') {
