@@ -1,16 +1,13 @@
-image: docker
+image: docker:17
 
 variables:
   GIT_SUBMODULE_STRATEGY: normal
+  DOCKER_COMPOSE_VERSION: 1.13.0
 
 services:
 - docker:dind
 
 before_script:
-- echo $DEPLOYMENT_HOST
-- docker version
-- apk add --no-cache py-pip
-- pip install docker-compose
 - mkdir -p build
 
 cache:
@@ -41,12 +38,14 @@ deploy_review:
   environment: review
   script:
   - mkdir -p ~/.docker
-  - echo $DEPLOYMENT_CACERT > ~/.docker/ca.pem
-  - echo $DEPLOYMENT_CLIENT_CERT > ~/.docker/cert.pem
-  - echo $DEPLOYMENT_CLIENT_KEY > ~/.docker/key.pem
+  - echo "$DEPLOYMENT_CACERT" > ~/.docker/ca.pem
+  - echo "$DEPLOYMENT_CLIENT_CERT" > ~/.docker/cert.pem
+  - echo "$DEPLOYMENT_CLIENT_KEY" > ~/.docker/key.pem
+  - apk add --no-cache py-pip
+  - pip install docker-compose==$DOCKER_COMPOSE_VERSION
   - docker-compose build
-  - export DOCKER_TLS_VERIFY=1 && export DOCKER_CERT_PATH=~/.docker && export COMPOSE_TLS_VERSION=TLSv1_2
-  - docker-compose -H=$DEPLOYMENT_HOST --verbose down
-  - docker-compose -H=$DEPLOYMENT_HOST --verbose up -d
+  - export DOCKER_HOST=$DEPLOYMENT_HOST && export DOCKER_TLS_VERIFY=1 && export DOCKER_CERT_PATH=~/.docker && export COMPOSE_TLS_VERSION=TLSv1_2
+  - docker-compose --verbose down
+  - docker-compose --verbose up -d
   tags:
   - docker
