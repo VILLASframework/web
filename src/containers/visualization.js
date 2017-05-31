@@ -2,30 +2,46 @@
  * File: visualization.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 02.03.2017
- * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
- *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
- *   Unauthorized copying of this file, via any medium is strictly prohibited.
- **********************************************************************************/
+ *
+ * This file is part of VILLASweb.
+ *
+ * VILLASweb is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * VILLASweb is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import { Button } from 'react-bootstrap';
 import { ContextMenu, MenuItem } from 'react-contextmenu';
 
+import WidgetFactory from '../components/widget-factory';
 import ToolboxItem from '../components/toolbox-item';
 import Dropzone from '../components/dropzone';
 import Widget from './widget';
 import EditWidget from '../components/dialog/edit-widget';
 
+import UserStore from '../stores/user-store';
 import VisualizationStore from '../stores/visualization-store';
 import ProjectStore from '../stores/project-store';
 import SimulationStore from '../stores/simulation-store';
 import FileStore from '../stores/file-store';
 import AppDispatcher from '../app-dispatcher';
+import NotificationsDataManager from '../data-managers/notifications-data-manager';
+import NotificationsFactory from '../data-managers/notifications-factory';
 
 class Visualization extends Component {
   static getStores() {
-    return [ VisualizationStore, ProjectStore, SimulationStore, FileStore ];
+    return [ VisualizationStore, ProjectStore, SimulationStore, FileStore, UserStore ];
   }
 
   static calculateState(prevState) {
@@ -34,6 +50,7 @@ class Visualization extends Component {
     }
 
     return {
+      sessionToken: UserStore.getState().token,
       visualizations: VisualizationStore.getState(),
       projects: ProjectStore.getState(),
       simulations: SimulationStore.getState(),
@@ -48,11 +65,13 @@ class Visualization extends Component {
       editModal: prevState.editModal || false,
       modalData: prevState.modalData || null,
       modalIndex: prevState.modalIndex || null,
-
+      
+      maxWidgetHeight: prevState.maxWidgetHeight  || 0,
+      dropZoneHeight: prevState.dropZoneHeight  || 0,
       last_widget_key: prevState.last_widget_key  || 0
     };
   }
-
+  
   componentWillMount() {
     AppDispatcher.dispatch({
       type: 'visualizations/start-load'
@@ -87,7 +106,7 @@ class Visualization extends Component {
       });
     }
   }
-  
+
   getNewWidgetKey() {
     // Increase the counter and update the state
     return this.state.last_widget_key++;
@@ -114,6 +133,8 @@ class Visualization extends Component {
             widgets: tempVisualization.widgets? this.transformToWidgetsDict(tempVisualization.widgets) : {}
         });
 
+        this.computeHeightWithWidgets(visualization.widgets);
+
         this.setState({ visualization: visualization, project: null });
 
         AppDispatcher.dispatch({
@@ -125,53 +146,18 @@ class Visualization extends Component {
   }
 
   handleDrop(item, position) {
-    // add new widget
-    var widget = {
-      name: 'Name',
-      type: item.name,
-      width: 100,
-      height: 100,
-      x: position.x,
-      y: position.y,
-      z: 0
-    };
 
-    // set type specific properties
-    if (item.name === 'Value') {
-      widget.simulator = this.state.simulation.models[0].simulator;
-      widget.signal = 0;
-      widget.minWidth = 70;
-      widget.minHeight = 20;
-    } else if (item.name === 'Plot') {
-      widget.simulator = this.state.simulation.models[0].simulator;
-      widget.signals = [ 0 ];
-      widget.time = 60;
-      widget.minWidth = 400;
-      widget.minHeight = 200;
-      widget.width = 400;
-      widget.height = 200;
-    } else if (item.name === 'Table') {
-      widget.simulator = this.state.simulation.models[0].simulator;
-      widget.minWidth = 300;
-      widget.minHeight = 200;
-      widget.width = 400;
-      widget.height = 200;
-    } else if (item.name === 'Label') {
-      widget.minWidth = 70;
-      widget.minHeight = 20;
-    } else if (item.name === 'PlotTable') {
-      widget.simulator = this.state.simulation.models[0].simulator;
-      widget.minWidth = 400;
-      widget.minHeight = 200;
-      widget.width = 500;
-      widget.height = 400;
-      widget.time = 60
-    } else if (item.name === 'Image') {
-      widget.minWidth = 100;
-      widget.minHeight = 100;
-      widget.width = 200;
-      widget.height = 200;
+    let widget = null;
+    let defaultSimulator = null;
+
+    if (this.state.simulation.models && this.state.simulation.models.length === 0) {
+      NotificationsDataManager.addNotification(NotificationsFactory.NO_SIM_MODEL_AVAILABLE);
+    } else {
+      defaultSimulator = this.state.simulation.models[0].simulator;
     }
+
+    // create new widget
+    widget = WidgetFactory.createWidgetOfType(item.name, position, defaultSimulator);
 
     var new_widgets = this.state.visualization.widgets;
 
@@ -181,11 +167,17 @@ class Visualization extends Component {
     var visualization = Object.assign({}, this.state.visualization, {
       widgets: new_widgets
     });
+    
+    this.increaseHeightWithWidget(widget);
     this.setState({ visualization: visualization });
   }
 
-  widgetChange(updated_widget, key) {
-    
+  widgetStatusChange(updated_widget, key) {
+    // Widget changed internally, make changes effective then save them
+    this.widgetChange(updated_widget, key, this.saveChanges);
+  }
+
+  widgetChange(updated_widget, key, callback = null) {
     var widgets_update = {};
     widgets_update[key] =  updated_widget;
     var new_widgets = Object.assign({}, this.state.visualization.widgets, widgets_update);
@@ -193,7 +185,46 @@ class Visualization extends Component {
     var visualization = Object.assign({}, this.state.visualization, {
       widgets: new_widgets
     });
-    this.setState({ visualization: visualization });
+    
+    // Check if the height needs to be increased, the section may have shrunk if not
+    if (!this.increaseHeightWithWidget(updated_widget)) {
+      this.computeHeightWithWidgets(visualization.widgets);
+    }
+    this.setState({ visualization: visualization }, callback);
+  }
+
+  /*
+  * Set the initial height state based on the existing widgets
+  */
+  computeHeightWithWidgets(widgets) {
+    // Compute max height from widgets
+    let maxHeight = Object.keys(widgets).reduce( (maxHeightSoFar, widgetKey) => {
+      let thisWidget = widgets[widgetKey];
+      let thisWidgetHeight = thisWidget.y + thisWidget.height;
+      
+      return thisWidgetHeight > maxHeightSoFar? thisWidgetHeight : maxHeightSoFar;
+    }, 0);
+
+    this.setState({ 
+      maxWidgetHeight: maxHeight, 
+      dropZoneHeight:  maxHeight + 40
+    });
+  }
+  /*
+  * Adapt the area's height with the position of the new widget.
+  * Return true if the height increased, otherwise false.
+  */
+  increaseHeightWithWidget(widget) {
+    let increased = false;
+    let thisWidgetHeight = widget.y + widget.height;
+    if (thisWidgetHeight > this.state.maxWidgetHeight) {
+      increased = true;
+      this.setState({ 
+        maxWidgetHeight: thisWidgetHeight, 
+        dropZoneHeight:  thisWidgetHeight + 40
+      });
+    }
+    return increased;
   }
 
   editWidget(e, data) {
@@ -205,7 +236,7 @@ class Visualization extends Component {
       // save changes temporarily
       var widgets_update = {};
       widgets_update[this.state.modalIndex] =  data;
-      
+
       var new_widgets = Object.assign({}, this.state.visualization.widgets, widgets_update);
 
       var visualization = Object.assign({}, this.state.visualization, {
@@ -226,8 +257,13 @@ class Visualization extends Component {
     this.setState({ visualization: visualization });
   }
 
+  stopEditing() {
+    // Provide the callback so it can be called when state change is applied
+    this.setState({ editing: false }, this.saveChanges );
+  }
+
   saveChanges() {
-    // Transform to a list 
+    // Transform to a list
     var visualization = Object.assign({}, this.state.visualization, {
         widgets: this.transformToWidgetsList(this.state.visualization.widgets)
       });
@@ -236,8 +272,6 @@ class Visualization extends Component {
       type: 'visualizations/start-edit',
       data: visualization
     });
-
-    this.setState({ editing: false });
   }
 
   discardChanges() {
@@ -287,25 +321,10 @@ class Visualization extends Component {
   }
 
   render() {
-    // calculate widget area height
-    var height = 0;
-
     var current_widgets = this.state.visualization.widgets;
 
-    if (current_widgets) {
-      Object.keys(current_widgets).forEach( (widget_key) => {
-        var widget = current_widgets[widget_key];
-        if (widget.y + widget.height > height) {
-          height = widget.y + widget.height;
-        }
-      });
-
-      // add padding
-      height += 40;
-    }
-
     return (
-      <div className='section box'>
+      <div className='section box' >
         <div className='section-header box-header'>
           <div className="section-title">
             <span>
@@ -314,7 +333,7 @@ class Visualization extends Component {
           </div>
           {this.state.editing ? (
             <div className='section-buttons-group'>
-              <Button bsStyle="link" onClick={() => this.saveChanges()}>
+              <Button bsStyle="link" onClick={() => this.stopEditing()}>
                 <span className="glyphicon glyphicon-floppy-disk"></span> Save
               </Button>
               <Button bsStyle="link" onClick={() => this.discardChanges()}>
@@ -339,17 +358,22 @@ class Visualization extends Component {
               <ToolboxItem name="Label" type="widget" />
               <ToolboxItem name="Image" type="widget" />
               <ToolboxItem name="PlotTable" type="widget" />
+              <ToolboxItem name="Button" type="widget" />
+              <ToolboxItem name="NumberInput" type="widget" />
+              <ToolboxItem name="Slider" type="widget" />
+              <ToolboxItem name="Gauge" type="widget" />
+              <ToolboxItem name="Box" type="widget" />
             </div>
           }
 
-          <Dropzone height={height} onDrop={(item, position) => this.handleDrop(item, position)} editing={this.state.editing}>
+          <Dropzone height={this.state.dropZoneHeight} onDrop={(item, position) => this.handleDrop(item, position)} editing={this.state.editing}>
             {current_widgets != null &&
               Object.keys(current_widgets).map( (widget_key) => (
-              <Widget key={widget_key} data={current_widgets[widget_key]} simulation={this.state.simulation} onWidgetChange={(w, k) => this.widgetChange(w, k)} editing={this.state.editing} index={widget_key} grid={this.state.grid} />
+              <Widget key={widget_key} data={current_widgets[widget_key]} simulation={this.state.simulation} onWidgetChange={(w, k) => this.widgetChange(w, k)} onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)} editing={this.state.editing} index={widget_key} grid={this.state.grid} />
             ))}
           </Dropzone>
 
-          {current_widgets != null && 
+          {current_widgets != null &&
             Object.keys(current_widgets).map( (widget_key) => (
               <ContextMenu id={'widgetMenu'+ widget_key} key={widget_key} >
                 <MenuItem data={{key: widget_key}} onClick={(e, data) => this.editWidget(e, data)}>Edit</MenuItem>
@@ -362,7 +386,7 @@ class Visualization extends Component {
               </ContextMenu>
           ))}
 
-          <EditWidget show={this.state.editModal} onClose={(data) => this.closeEdit(data)} widget={this.state.modalData} simulation={this.state.simulation} files={this.state.files} />
+          <EditWidget sessionToken={this.state.sessionToken} show={this.state.editModal} onClose={(data) => this.closeEdit(data)} widget={this.state.modalData} simulation={this.state.simulation} files={this.state.files} />
         </div>
       </div>
     );

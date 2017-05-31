@@ -10,6 +10,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    restart: always
 
   backend:
     build: VILLASweb-backend
@@ -19,9 +20,12 @@ services:
       - NODE_ENV=production
     ports:
       - "4000:4000"
+    restart: always
 
   database:
     image: mongo:latest
     user: mongodb
     volumes:
       - /opt/database:/data/db
+    restart: always
+    user: mongodb

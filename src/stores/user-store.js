@@ -2,10 +2,22 @@
  * File: user-store.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 15.03.2017
- * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
- *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
- *   Unauthorized copying of this file, via any medium is strictly prohibited.
- **********************************************************************************/
+ *
+ * This file is part of VILLASweb.
+ *
+ * VILLASweb is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * VILLASweb is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 import { ReduceStore } from 'flux/utils';
 
@@ -55,13 +67,19 @@ class UserStore extends ReduceStore {
         return Object.assign({}, state, { currentUser: null, token: null });
 
       case 'users/login-error':
-        // server offline
-        NotificationsDataManager.addNotification({
-          title: 'Server offline',
-          message: 'The server is offline. Please try again later.',
-          level: 'error'
-        });
-        return state;
+
+        if (action.error && !action.error.handled) {
+          // If it was an error and hasn't been handled, the credentials must have been wrong.
+          const WRONG_CREDENTIALS_NOTIFICATION = {
+            title: 'Incorrect credentials',
+            message: 'Please modify and try again.',
+            level: 'error'
+          }
+          NotificationsDataManager.addNotification(WRONG_CREDENTIALS_NOTIFICATION);
+
+        }
+
+        return state;    
 
       default:
         return state;

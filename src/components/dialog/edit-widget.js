@@ -2,23 +2,33 @@
  * File: edit-widget.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 08.03.2017
- * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
- *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
- *   Unauthorized copying of this file, via any medium is strictly prohibited.
- **********************************************************************************/
+ *
+ * This file is part of VILLASweb.
+ *
+ * VILLASweb is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * VILLASweb is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 import React, { Component, PropTypes } from 'react';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
-import EditValueWidget from './edit-widget-value';
-import EditPlotWidget from './edit-widget-plot';
-import EditTableWidget from './edit-widget-table';
-import EditImageWidget from './edit-widget-image';
+import createControls from './edit-widget-control-creator';
 
 class EditWidgetDialog extends Component {
   static propTypes = {
+    sessionToken: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired
   };
@@ -45,12 +55,16 @@ class EditWidgetDialog extends Component {
     }
   }
 
-  handleChange(e, index) {
-    var update = this.state.temporal;
-    update[e.target.id] = e.target.value;
-    this.setState({ temporal: update });
-
-    //console.log(this.state.widget);
+  handleChange(e) {
+    if (e.constructor === Array) {
+      // Every property in the array will be updated
+      let changes = e.reduce( (changesObject, event) => { changesObject[event.target.id] = event.target.value; return changesObject }, {});
+      this.setState({ temporal: Object.assign({}, this.state.temporal, changes ) });
+    } else {
+        let changeObject = {};
+        changeObject[e.target.id] = e.target.value;
+        this.setState({ temporal: Object.assign({}, this.state.temporal, changeObject ) });
+    }
   }
 
   resetState() {
@@ -73,19 +87,17 @@ class EditWidgetDialog extends Component {
   }
 
   render() {
-    // get widget part
-    var widgetDialog = null;
-
+    
+    let controls = null;
     if (this.props.widget) {
-      if (this.props.widget.type === 'Value') {
-        widgetDialog = <EditValueWidget widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e) => this.handleChange(e)} />;
-      } else if (this.props.widget.type === 'Plot') {
-        widgetDialog = <EditPlotWidget widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />;
-      } else if (this.props.widget.type === 'Table') {
-        widgetDialog = <EditTableWidget widget={this.state.temporal} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />;
-      } else if (this.props.widget.type === 'Image') {
-        widgetDialog = <EditImageWidget widget={this.state.temporal} files={this.props.files} validate={(id) => this.validateForm(id)} simulation={this.props.simulation} handleChange={(e, index) => this.handleChange(e, index)} />;
-      }
+      controls = createControls(
+            this.props.widget.type,
+            this.state.temporal,
+            this.props.sessionToken,
+            this.props.files,
+            (id) => this.validateForm(id),
+            this.props.simulation,
+            (e) => this.handleChange(e));
     }
 
     return (
@@ -96,8 +108,7 @@ class EditWidgetDialog extends Component {
             <FormControl type="text" placeholder="Enter name" value={this.state.temporal.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-
-          {widgetDialog}
+          { controls || '' }
         </form>
       </Dialog>
     );

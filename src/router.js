@@ -2,10 +2,22 @@
  * File: router.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 02.03.2017
- * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
- *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
- *   Unauthorized copying of this file, via any medium is strictly prohibited.
- **********************************************************************************/
+ *
+ * This file is part of VILLASweb.
+ *
+ * VILLASweb is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * VILLASweb is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 import React, { Component } from 'react';
 import { Router, Route, hashHistory } from 'react-router';
@@ -18,6 +30,7 @@ import Simulators from './containers/simulators';
 import Visualization from './containers/visualization';
 import Simulations from './containers/simulations';
 import Simulation from './containers/simulation';
+import Users from './containers/users';
 import Login from './containers/login';
 import Logout from './containers/logout';
 
@@ -37,6 +50,8 @@ class Root extends Component {
 
           <Route path='/simulations' component={Simulations} />
           <Route path='/simulations/:simulation' component={Simulation} />
+
+          <Route path='/users' component={Users} />
 
           <Route path='/logout' component={Logout} />
         </Route>

@@ -2,15 +2,26 @@
  * File: rest-data-manager.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 03.03.2017
- * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
- *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
- *   Unauthorized copying of this file, via any medium is strictly prohibited.
- **********************************************************************************/
+ *
+ * This file is part of VILLASweb.
+ *
+ * VILLASweb is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * VILLASweb is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 import RestAPI from '../api/rest-api';
 import AppDispatcher from '../app-dispatcher';
-const backend = process.env.REACT_APP_BACKEND || 'ghvillas.westeurope.cloudapp.azure.com:4000'
-const API_URL = 'http://' + backend + '/api/v1';
+const API_URL = '/api/v1';
 
 class RestDataManager {
   constructor(type, url, keyFilter) {
@@ -39,10 +50,10 @@ class RestDataManager {
     return object;
   }
 
-  load(id) {
+  load(id, token = null) {
     if (id != null) {
       // load single object
-      RestAPI.get(this.makeURL(this.url + '/' + id)).then(response => {
+      RestAPI.get(this.makeURL(this.url + '/' + id), token).then(response => {
         const data = this.filterKeys(response[this.type]);
 
         AppDispatcher.dispatch({
@@ -57,7 +68,7 @@ class RestDataManager {
       });
     } else {
       // load all objects
-      RestAPI.get(this.makeURL(this.url)).then(response => {
+      RestAPI.get(this.makeURL(this.url), token).then(response => {
         const data = response[this.type + 's'].map(element => {
           return this.filterKeys(element);
         });
@@ -75,11 +86,11 @@ class RestDataManager {
     }
   }
 
-  add(object) {
+  add(object, token = null) {
     var obj = {};
     obj[this.type] = this.filterKeys(object);
 
-    RestAPI.post(this.makeURL(this.url), obj).then(response => {
+    RestAPI.post(this.makeURL(this.url), obj, token).then(response => {
       AppDispatcher.dispatch({
         type: this.type + 's/added',
         data: response[this.type]
@@ -92,8 +103,8 @@ class RestDataManager {
     });
   }
 
-  remove(object) {
-    RestAPI.delete(this.makeURL(this.url + '/' + object._id)).then(response => {
+  remove(object, token = null) {
+    RestAPI.delete(this.makeURL(this.url + '/' + object._id), token).then(response => {
       AppDispatcher.dispatch({
         type: this.type + 's/removed',
         data: response[this.type],
@@ -107,11 +118,11 @@ class RestDataManager {
     });
   }
 
-  update(object) {
+  update(object, token = null) {
     var obj = {};
     obj[this.type] = this.filterKeys(object);
 
-    RestAPI.put(this.makeURL(this.url + '/' + object._id), obj).then(response => {
+    RestAPI.put(this.makeURL(this.url + '/' + object._id), obj, token).then(response => {
       AppDispatcher.dispatch({
         type: this.type + 's/edited',
         data: response[this.type]

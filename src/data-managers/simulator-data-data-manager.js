@@ -2,10 +2,22 @@
  * File: simulator-data-data-manager.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 03.03.2017
- * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
- *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
- *   Unauthorized copying of this file, via any medium is strictly prohibited.
- **********************************************************************************/
+ *
+ * This file is part of VILLASweb.
+ *
+ * VILLASweb is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * VILLASweb is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 import WebsocketAPI from '../api/websocket-api';
 import AppDispatcher from '../app-dispatcher';
@@ -78,23 +90,20 @@ class SimulatorDataDataManager {
     // parse incoming message into usable data
     var data = new DataView(blob);
 
-    let OFFSET_ENDIAN = 1;
     let OFFSET_TYPE = 2;
     let OFFSET_VERSION = 4;
 
     var bits = data.getUint8(0);
-    var endian = (bits >> OFFSET_ENDIAN) & 0x1 ? 0 : 1;
-    var length = data.getUint16(0x02, endian);
+    var length = data.getUint16(0x02, 1);
 
     var values = new Float32Array(data.buffer, data.byteOffset + 0x10, length);
 
     return {
-      endian: endian,
       version: (bits >> OFFSET_VERSION) & 0xF,
       type: (bits >> OFFSET_TYPE) & 0x3,
       length: length,
-      sequence: data.getUint32(0x04, endian),
-      timestamp: data.getUint32(0x08, endian) * 1e3 + data.getUint32(0x0C, endian) * 1e-6,
+      sequence: data.getUint32(0x04, 1),
+      timestamp: data.getUint32(0x08, 1) * 1e3 + data.getUint32(0x0C, 1) * 1e-6,
       values: values
     };
   }

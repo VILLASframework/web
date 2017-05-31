@@ -2,10 +2,22 @@
  * File: array-store.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 03.03.2017
- * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
- *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
- *   Unauthorized copying of this file, via any medium is strictly prohibited.
- **********************************************************************************/
+ *
+ * This file is part of VILLASweb.
+ *
+ * VILLASweb is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * VILLASweb is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 import { ReduceStore } from 'flux/utils';
 
@@ -57,10 +69,10 @@ class ArrayStore extends ReduceStore {
       case this.type + '/start-load':
         if (Array.isArray(action.data)) {
           action.data.forEach((id) => {
-            this.dataManager.load(id);
+            this.dataManager.load(id, action.token);
           });
         } else {
-          this.dataManager.load(action.data);
+          this.dataManager.load(action.data, action.token);
         }
         return state;
 
@@ -76,7 +88,7 @@ class ArrayStore extends ReduceStore {
         return state;
 
       case this.type + '/start-add':
-        this.dataManager.add(action.data);
+        this.dataManager.add(action.data, action.token);
         return state;
 
       case this.type + '/added':
@@ -87,7 +99,7 @@ class ArrayStore extends ReduceStore {
         return state;
 
       case this.type + '/start-remove':
-        this.dataManager.remove(action.data);
+        this.dataManager.remove(action.data, action.token);
         return state;
 
       case this.type + '/removed':
@@ -100,7 +112,7 @@ class ArrayStore extends ReduceStore {
         return state;
 
       case this.type + '/start-edit':
-        this.dataManager.update(action.data);
+        this.dataManager.update(action.data, action.token);
         return state;
 
       case this.type + '/edited':

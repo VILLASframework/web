@@ -2,10 +2,22 @@
  * File: table.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 02.03.2017
- * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
- *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
- *   Unauthorized copying of this file, via any medium is strictly prohibited.
- **********************************************************************************/
+ *
+ * This file is part of VILLASweb.
+ *
+ * VILLASweb is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * VILLASweb is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 import React, { Component } from 'react';
 import { Table, Button, Glyphicon, FormControl, Label } from 'react-bootstrap';
@@ -17,6 +29,7 @@ class CustomTable extends Component {
   constructor(props) {
     super(props);
 
+    this.activeInput = null;
     this.state = {
       rows: [],
       editCell: [ -1, -1 ]
@@ -113,6 +126,23 @@ class CustomTable extends Component {
     this.setState({ rows: rows });
   }
 
+  componentDidUpdate() {
+    // A cell will not be selected at initial render, hence no need to call this in 'componentDidMount'
+    if (this.activeInput) {
+      this.activeInput.focus();
+    }
+  }
+
+  onCellFocus(index) {
+    // When a cell focus is detected, update the current state in order to uncover the input element
+    this.setState({ editCell: [ index.cell, index.row ]});
+  }
+
+  cellLostFocus() {
+    // Reset cell selection state
+    this.setState({ editCell: [ -1, -1 ] });
+  }
+
   render() {
     // get children
     var children = this.props.children;
@@ -128,23 +158,41 @@ class CustomTable extends Component {
           </tr>
         </thead>
         <tbody>
-          {this.state.rows.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {row.map((cell, cellIndex) => (
-                <td key={cellIndex} onClick={children[cellIndex].props.inlineEditable === true ? (event) => this.onClick(event, rowIndex, cellIndex) : () => {}}>
-                  {(this.state.editCell[0] === cellIndex && this.state.editCell[1] === rowIndex ) ? (
-                    <FormControl type="text" value={cell} onChange={(event) => children[cellIndex].props.onInlineChange(event, rowIndex, cellIndex)} />
-                  ) : (
-                    <span>
-                      {cell.map((element, elementIndex) => (
-                        <span key={elementIndex}>{element}</span>
-                      ))}
-                    </span>
-                  )}
-                </td>
-              ))}
-            </tr>
-          ))}
+          {
+            this.state.rows.map((row, rowIndex) => (
+              <tr key={rowIndex}>
+                {
+                  row.map((cell, cellIndex) => {
+
+                    let isCellInlineEditable = children[cellIndex].props.inlineEditable === true;
+
+                    let tabIndex = isCellInlineEditable? 0 : -1;
+
+                    let evtHdls = isCellInlineEditable ? {
+                      onCellClick: (event) => this.onClick(event, rowIndex, cellIndex),
+                      onCellFocus: () => this.onCellFocus({cell: cellIndex, row: rowIndex}),
+                      onCellBlur: () => this.cellLostFocus()
+                    } : {
+                      onCellClick: () => {},
+                      onCellFocus: () => {},
+                      onCellBlur: () => {}
+                    };
+
+                    return (<td key={cellIndex} tabIndex={tabIndex} onClick={ evtHdls.onCellClick } onFocus={ evtHdls.onCellFocus } onBlur={ evtHdls.onCellBlur }>
+                      {(this.state.editCell[0] === cellIndex && this.state.editCell[1] === rowIndex ) ? (
+                        <FormControl type="text" value={cell} onChange={(event) => children[cellIndex].props.onInlineChange(event, rowIndex, cellIndex)} inputRef={ref => { this.activeInput = ref; }} />
+                      ) : (
+                        <span>
+                          {cell.map((element, elementIndex) => (
+                            <span key={elementIndex}>{element}</span>
+                          ))}
+                        </span>
+                      )}
+                    </td>)
+                  })
+                }
+              </tr>))
+          }
         </tbody>
       </Table>
     );
