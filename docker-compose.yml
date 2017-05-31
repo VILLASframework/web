@@ -15,13 +15,13 @@ services:
     build: VILLASweb-backend
     links:
       - database
+    environment:
+      - NODE_ENV=production
     ports:
       - "4000:4000"
 
   database:
     image: mongo:latest
+    user: mongodb
     volumes:
       - /opt/database:/data/db
-    ports:
-      - "27017:27017"
-
