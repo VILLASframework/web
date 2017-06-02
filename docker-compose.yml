@@ -1,39 +1,33 @@
 version: "2"
 
 services:
-  webserver:
-    image: nginx:stable
-    volumes:
-      - ./nginx:/etc/nginx/conf.d/
-      - website-volume:/www
+  frontend:
+    build: 
+      context: .
+      dockerfile: nginx/Dockerfile
     links:
       - backend
+    environment:
+      - REACT_APP_HTTP_PROXY
     ports:
       - "80:80"
       - "443:443"
     restart: always
 
-  frontend:
-    build: .
-    volumes:
-      - ./:/react
-      - website-volume:/result
-
   backend:
-    image: villasweb-backend
+    build: VILLASweb-backend
     links:
       - database
     environment:
       - NODE_ENV=production
+    ports:
+      - "4000:4000"
     restart: always
 
   database:
     image: mongo:latest
+    user: mongodb
     volumes:
-      - data-volume:/data/db
+      - /opt/database:/data/db
     restart: always
     user: mongodb
-
-volumes:
-  data-volume:
-  website-volume:

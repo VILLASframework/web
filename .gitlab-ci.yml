@@ -1,0 +1,53 @@
+image: docker:17
+
+variables:
+  GIT_SUBMODULE_STRATEGY: normal
+  DOCKER_COMPOSE_VERSION: 1.13.0
+
+services:
+- docker:dind
+
+before_script:
+- mkdir -p build
+
+stages:
+- build
+- test
+- deploy
+
+build_job:
+  stage: build
+  script:
+  - docker run --rm -v $(pwd)/package.json:/usr/src/app/package.json -v $(pwd)/build:/usr/src/app/build -v $(pwd)/public:/usr/src/app/public -v $(pwd)/src:/usr/src/app/src -w /usr/src/app node:7.9.0-slim bash -c 'npm install; npm run build'
+  artifacts:
+    paths:
+    - build/
+    expire_in: 1 week
+  tags:
+  - docker
+
+test_job:
+  stage: test
+  script:
+  - docker run --rm -e CI=true -v $(pwd)/package.json:/usr/src/app/package.json -v $(pwd)/public:/usr/src/app/public -v $(pwd)/src:/usr/src/app/src -w /usr/src/app node:7.9.0-slim bash -c 'npm install; npm test'
+  tags:
+  - docker
+
+deploy_review:
+  stage: deploy
+  environment: review
+  script:
+  - mkdir -p ~/.docker
+  - echo "$DEPLOYMENT_CACERT" > ~/.docker/ca.pem
+  - echo "$DEPLOYMENT_CLIENT_CERT" > ~/.docker/cert.pem
+  - echo "$DEPLOYMENT_CLIENT_KEY" > ~/.docker/key.pem
+  - apk add --no-cache py-pip
+  - pip install docker-compose==$DOCKER_COMPOSE_VERSION
+  - docker-compose build
+  - export DOCKER_HOST=$DEPLOYMENT_HOST && export DOCKER_TLS_VERIFY=1 && export DOCKER_CERT_PATH=~/.docker && export COMPOSE_TLS_VERSION=TLSv1_2
+  - docker-compose --verbose down
+  - docker-compose --verbose up -d
+  only:
+  - develop
+  tags:
+  - docker
