@@ -47,5 +47,7 @@ deploy_review:
   - export DOCKER_HOST=$DEPLOYMENT_HOST && export DOCKER_TLS_VERIFY=1 && export DOCKER_CERT_PATH=~/.docker && export COMPOSE_TLS_VERSION=TLSv1_2
   - docker-compose --verbose down
   - docker-compose --verbose up -d
+  only:
+  - develop
   tags:
   - docker
