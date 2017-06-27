@@ -24,21 +24,23 @@ import { Container } from 'flux/utils';
 import { Button, Modal, Glyphicon } from 'react-bootstrap';
 
 import AppDispatcher from '../app-dispatcher';
-import SimulatorStore from '../stores/simulator-store';
+//import SimulatorStore from '../stores/simulator-store';
+import NodeStore from '../stores/node-store';
 
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
 import NewSimulatorDialog from '../components/dialog/new-simulator';
 import EditSimulatorDialog from '../components/dialog/edit-simulator';
+import NodeTree from '../components/node-tree';
 
 class Simulators extends Component {
   static getStores() {
-    return [ SimulatorStore ];
+    return [ NodeStore ];
   }
 
   static calculateState() {
     return {
-      simulators: SimulatorStore.getState(),
+      nodes: NodeStore.getState(),
 
       newModal: false,
       deleteModal: false,
@@ -49,7 +51,7 @@ class Simulators extends Component {
 
   componentWillMount() {
     AppDispatcher.dispatch({
-      type: 'simulators/start-load'
+      type: 'nodes/start-load'
     });
   }
 
@@ -99,7 +101,11 @@ class Simulators extends Component {
       <div className='section'>
         <h1>Simulators</h1>
 
-        <Table data={this.state.simulators}>
+        <Button><Glyphicon glyph="plus" /> Add Node</Button>
+
+        <NodeTree />
+
+        {/* <Table data={this.state.simulators}>
           <TableColumn title='Name' dataKey='name' labelKey='running' labelStyle={(value) => this.labelStyle(value)} labelModifier={(value) => this.labelModifier(value)} />
           <TableColumn title='Endpoint' dataKey='endpoint' width='180' />
           <TableColumn title='' width='70' editButton deleteButton onEdit={(index) => this.setState({ editModal: true, modalSimulator: this.state.simulators[index] })} onDelete={(index) => this.setState({ deleteModal: true, modalSimulator: this.state.simulators[index] })} />
@@ -124,7 +130,7 @@ class Simulators extends Component {
             <Button onClick={() => this.setState({ deleteModal: false })}>Cancel</Button>
             <Button bsStyle="danger" onClick={() => this.confirmDeleteModal()}>Delete</Button>
           </Modal.Footer>
-        </Modal>
+        </Modal> */}
       </div>
     );
   }
