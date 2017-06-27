@@ -1,5 +1,9 @@
 version: "2"
 
+volumes:
+  database:
+    driver: local
+
 services:
   frontend:
     build: 
@@ -28,6 +32,6 @@ services:
     image: mongo:latest
     user: mongodb
     volumes:
-      - /opt/database:/data/db
+      - database:/data/db
     restart: always
     user: mongodb
