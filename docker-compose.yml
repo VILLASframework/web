@@ -22,6 +22,7 @@ services:
     build: backend
     links:
       - database
+      - broker
     environment:
       - NODE_ENV=production
     ports:
@@ -35,3 +36,12 @@ services:
       - database:/data/db
     restart: always
     user: mongodb
+
+  broker:
+    image: rabbitmq:management
+    environment:
+      - RABBITMQ_DEFAULT_USER=villas
+      - RABBITMQ_DEFAULT_PASS=s3c0sim4!
+    ports:
+      - "8080:15672"
+      - "5672:5672"
