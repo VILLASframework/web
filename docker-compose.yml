@@ -15,7 +15,7 @@ services:
     restart: always
 
   backend:
-    build: VILLASweb-backend
+    build: backend
     links:
       - database
     environment:

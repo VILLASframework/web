@@ -1,4 +1,4 @@
-[submodule "VILLASweb-backend"]
-	path = VILLASweb-backend
-	url = ../../VILLASframework/VILLASweb-backend.git
+[submodule "backend"]
+	path = backend
+	url = git@git.rwth-aachen.de:VILLASframework/VILLASweb-backend.git
 	branch = develop
