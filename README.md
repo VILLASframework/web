@@ -20,6 +20,15 @@ Additional libraries are used, for a complete list see package.json.
 
 ## Quick start
 
+We recommend Docker to get started quickly: 
+
+```bash
+$ git clone --recursive git@git.rwth-aachen.de:VILLASframework/VILLASweb.git
+$ npm install
+$ npm build
+$ docker-compose up
+```
+
 To start the website locally run `npm start`. This will open a local webserver serving the _frontend_. To make the website work, you still need to start at least the VILLASweb-backend (See repository for information).
 
 The default user and password are configured in the `config.js` file of the _backend_. By default they are: __admin__ / __admin__.
