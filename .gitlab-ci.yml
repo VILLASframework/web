@@ -56,11 +56,11 @@ deploy_review:
     - echo "$DEPLOYMENT_CACERT"      > $DOCKER_CERT_PATH/ca.pem
     - echo "$DEPLOYMENT_CLIENT_CERT" > $DOCKER_CERT_PATH/cert.pem
     - echo "$DEPLOYMENT_CLIENT_KEY"  > $DOCKER_CERT_PATH/key.pem
+    - docker --version
+    - docker-compose --version
     - docker info
   script:
-    - docker-compose build
-    - docker-compose --verbose down
-    - docker-compose --verbose up -d
+    - docker-compose up -d --force-recreate --build
   image: docker:17
   dependencies:
     - build_job
