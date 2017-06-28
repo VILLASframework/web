@@ -82,7 +82,7 @@ class EditProjectDialog extends Component {
 
   render() {
     return (
-      <Dialog show={this.props.show} title="Edit Simulation" buttonTitle="save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog show={this.props.show} title="Edit Simulation" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
             <ControlLabel>Name</ControlLabel>
