@@ -41,7 +41,7 @@ function isRunning(simulator) {
 
     if (response.id === body.id) {
       response.response.forEach(sim => {
-        if (sim.name === name) {
+        if (sim.name === simulator.name) {
           simulator.running = true;
         }
       });
