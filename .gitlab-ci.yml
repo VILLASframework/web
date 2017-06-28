@@ -1,54 +1,73 @@
-image: docker:17
-
 variables:
   GIT_SUBMODULE_STRATEGY: normal
-  DOCKER_COMPOSE_VERSION: 1.13.0
   DOCKER_DRIVER: overlay
+  DOCKER_CERT_PATH
+  CI: "true"
 
-services:
-- docker:dind
-
-before_script:
-- mkdir -p build
+cache:
+  untracked: true
+  key: "$CI_PROJECT_ID"
+  paths:
+    - node_modules/
+    - _site/vendor/
+    - .bundled/
+    - .yarn
 
 stages:
-- build
-- test
-- deploy
+  - build
+  - test
+  - deploy
 
 build_job:
   stage: build
+  before_script:
+    - mkdir -p build
   script:
-  - docker run --rm -v $(pwd)/package.json:/usr/src/app/package.json -v $(pwd)/build:/usr/src/app/build -v $(pwd)/public:/usr/src/app/public -v $(pwd)/src:/usr/src/app/src -w /usr/src/app node:7.9.0-slim bash -c 'npm install; npm run build'
+    - npm install
+    - npm run build
+  image: node:7.9.0-slim
   artifacts:
     paths:
-    - build/
+      - build/
+      - node_modules/
     expire_in: 1 week
   tags:
-  - docker
+    - docker
 
 test_job:
   stage: test
   script:
-  - docker run --rm -e CI=true -v $(pwd)/package.json:/usr/src/app/package.json -v $(pwd)/public:/usr/src/app/public -v $(pwd)/src:/usr/src/app/src -w /usr/src/app node:7.9.0-slim bash -c 'npm install; npm test'
+    - npm test
+  image: node:7.9.0-slim
+  dependencies:
+    - build_job
   tags:
-  - docker
+    - docker
 
 deploy_review:
   stage: deploy
   environment: review
+  variables:
+    COMPOSE_TLS_VERSION: "TLSv1_2"
+    DOCKER_HOST: "$DEPLOYMENT_HOST"
+    DOCKER_TLS_VERIFY: "1"
+    DOCKER_CERT_PATH: "certs"
+  before_script:
+    - apk add --no-cache py-pip
+    - pip install docker-compose==1.13.0
+    - mkdir -p $DOCKER_CERT_PATH
+    - echo "$DEPLOYMENT_CACERT"      > $DOCKER_CERT_PATH/ca.pem
+    - echo "$DEPLOYMENT_CLIENT_CERT" > $DOCKER_CERT_PATH/cert.pem
+    - echo "$DEPLOYMENT_CLIENT_KEY"  > $DOCKER_CERT_PATH/key.pem
+    - docker info
   script:
-  - mkdir -p ~/.docker
-  - echo "$DEPLOYMENT_CACERT" > ~/.docker/ca.pem
-  - echo "$DEPLOYMENT_CLIENT_CERT" > ~/.docker/cert.pem
-  - echo "$DEPLOYMENT_CLIENT_KEY" > ~/.docker/key.pem
-  - apk add --no-cache py-pip
-  - pip install docker-compose==$DOCKER_COMPOSE_VERSION
-  - docker-compose build
-  - export DOCKER_HOST=$DEPLOYMENT_HOST && export DOCKER_TLS_VERIFY=1 && export DOCKER_CERT_PATH=~/.docker && export COMPOSE_TLS_VERSION=TLSv1_2
-  - docker-compose --verbose down
-  - docker-compose --verbose up -d
+    - docker-compose build
+    - docker-compose --verbose down
+    - docker-compose --verbose up -d
+  image: docker:17
+  dependencies:
+    - build_job
   only:
-  - develop
+    - develop
   tags:
-  - docker
+    - docker

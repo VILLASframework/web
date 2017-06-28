@@ -26,7 +26,6 @@ import AppDispatcher from '../app-dispatcher';
 function isRunning(simulator) {
   // get path to nodes.json and simulator name
   var path = simulator.endpoint.substring(0, simulator.endpoint.lastIndexOf('/'));
-  var name = simulator.endpoint.substring(simulator.endpoint.lastIndexOf('/') + 1);
 
   var url = 'http://' + path + '/api/v1';
   var body = {
