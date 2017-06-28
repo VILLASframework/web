@@ -38,6 +38,8 @@ services:
     user: mongodb
     volumes:
       - database:/data/db
+    expose:
+      - "27017"
     restart: always
     user: mongodb
     networks:

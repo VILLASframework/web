@@ -27,11 +27,12 @@ $ git clone --recursive git@git.rwth-aachen.de:VILLASframework/VILLASweb.git
 $ npm install
 $ npm build
 $ docker-compose up
+$ ./sample-data.sh import
 ```
 
-To start the website locally run `npm start`. This will open a local webserver serving the _frontend_. To make the website work, you still need to start at least the VILLASweb-backend (See repository for information).
-
 The default user and password are configured in the `config.js` file of the _backend_. By default they are: __admin__ / __admin__.
+
+For development you can use `npm start` to spawn a local webserver.
 
 ## Copyright
 

@@ -3,6 +3,7 @@ image: docker:17
 variables:
   GIT_SUBMODULE_STRATEGY: normal
   DOCKER_COMPOSE_VERSION: 1.13.0
+  DOCKER_DRIVER: overlay
 
 services:
 - docker:dind
