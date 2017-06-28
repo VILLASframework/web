@@ -1,7 +1,5 @@
 variables:
   GIT_SUBMODULE_STRATEGY: normal
-  DOCKER_DRIVER: overlay
-  DOCKER_CERT_PATH
   CI: "true"
 
 cache:
@@ -29,7 +27,6 @@ build_job:
   artifacts:
     paths:
       - build/
-      - node_modules/
     expire_in: 1 week
   tags:
     - docker
