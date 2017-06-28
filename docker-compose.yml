@@ -4,31 +4,35 @@ volumes:
   database:
     driver: local
 
+networks:
+  villas:
+
 services:
+  # The VILLASweb frontend
   frontend:
     build: 
       context: .
-      dockerfile: nginx/Dockerfile
-    links:
-      - backend
     environment:
       - REACT_APP_HTTP_PROXY
     ports:
       - "80:80"
       - "443:443"
     restart: always
+    networks:
+      villas:
 
+  # The VILLASweb backend
   backend:
     build: backend
-    links:
-      - database
-      - broker
     environment:
       - NODE_ENV=production
     ports:
       - "4000:4000"
     restart: always
+    networks:
+      villas:
 
+  # The MongoDB database for the VILLASweb backend
   database:
     image: mongo:latest
     user: mongodb
@@ -36,7 +40,10 @@ services:
       - database:/data/db
     restart: always
     user: mongodb
+    networks:
+      villas:
 
+  # AMQP broker for VILLAScontroller
   broker:
     image: rabbitmq:management
     environment:
@@ -45,3 +52,31 @@ services:
     ports:
       - "8080:15672"
       - "5672:5672"
+    networks:
+      villas:
+
+  # VILLASnode, the gateway between UDP and WebSocket traffic
+  node:
+    image: villas/node:latest
+    privileged: true
+    command: [ "node", "/etc/villas/node/websocket.conf" ]
+    expose:
+      - "12000/udp"
+    ports:
+      - "8081:80/tcp"
+    volumes:
+      - "./etc/node/:/etc/villas/node/"
+    networks:
+      villas:
+
+  # Generate random data and send it via UDP to the 'node' service
+  signal:
+    image: villas/node:latest
+    privileged: true
+    entrypoint: bash
+    command: [ "-c", "villas signal mixed -v4 | villas pipe -x /etc/villas/node/websocket.conf udp_1"]
+    volumes:
+      - "./etc/node/:/etc/villas/node/"
+    stop_signal: SIGINT
+    networks:
+      villas:

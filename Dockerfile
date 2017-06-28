@@ -1,10 +1,10 @@
-FROM node:latest
+FROM nginx:stable-alpine
 
-RUN mkdir /react
-RUN mkdir /result
+# Copy frontend files and make them accesible to nginx
+RUN mkdir /www
+COPY build /www
+RUN chown nginx:nginx -R /www
+RUN chmod -R 0755 /www
 
-VOLUME /result
-
-WORKDIR /react
-
-CMD npm install && npm run build && cp -R /react/build/* /result/
+# Copy nginx configuration
+COPY etc/nginx/villas.conf /etc/nginx/conf.d/default.conf
