@@ -61,7 +61,9 @@ services:
   node:
     image: villas/node:latest
     privileged: true
-    command: [ "node", "/etc/villas/node/websocket.conf" ]
+    command:
+      - "node"
+      - "/etc/villas/node/websocket.conf"
     expose:
       - "12000/udp"
     ports:
@@ -76,7 +78,9 @@ services:
     image: villas/node:latest
     privileged: true
     entrypoint: bash
-    command: [ "-c", "villas signal mixed -v4 | villas pipe -x /etc/villas/node/websocket.conf udp_1"]
+    command:
+      - "-c"
+      - "villas signal mixed -v4 | villas pipe -x /etc/villas/node/websocket.conf udp_1"
     volumes:
       - "./etc/node/:/etc/villas/node/"
     stop_signal: SIGINT
