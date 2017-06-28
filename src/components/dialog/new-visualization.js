@@ -74,7 +74,7 @@ class NewVisualzationDialog extends Component {
 
   render() {
     return (
-      <Dialog show={this.props.show} title="New Visualization" buttonTitle="add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog show={this.props.show} title="New Visualization" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
             <ControlLabel>Name</ControlLabel>
