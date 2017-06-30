@@ -52,6 +52,7 @@ deploy_review:
   before_script:
     - apk add --no-cache py-pip
     - pip install docker-compose
+    - pip install -U docker==2.4.2
     - mkdir -p $DOCKER_CERT_PATH
     - echo "$DEPLOYMENT_CACERT"      > $DOCKER_CERT_PATH/ca.pem
     - echo "$DEPLOYMENT_CLIENT_CERT" > $DOCKER_CERT_PATH/cert.pem
@@ -64,7 +65,5 @@ deploy_review:
   image: docker:17
   dependencies:
     - build_job
-  only:
-    - develop
   tags:
     - docker
