@@ -1,5 +1,7 @@
 variables:
   GIT_SUBMODULE_STRATEGY: normal
+  DOCKER_COMPOSE_VERSION: 1.14.0
+  PY_DOCKER_VERSION: 2.4.2
   CI: "true"
 
 cache:
@@ -51,8 +53,9 @@ deploy_review:
     DOCKER_CERT_PATH: "certs"
   before_script:
     - apk add --no-cache py-pip
-    - pip install docker-compose
-    - pip install -U docker==2.4.2
+    - pip install --upgrade pip
+    - pip install docker-compose==$DOCKER_COMPOSE_VERSION
+    - pip install -U docker==$PY_DOCKER_VERSION
     - mkdir -p $DOCKER_CERT_PATH
     - echo "$DEPLOYMENT_CACERT"      > $DOCKER_CERT_PATH/ca.pem
     - echo "$DEPLOYMENT_CLIENT_CERT" > $DOCKER_CERT_PATH/cert.pem
