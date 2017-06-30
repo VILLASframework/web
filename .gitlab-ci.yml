@@ -45,6 +45,8 @@ test_job:
 
 deploy_review:
   stage: deploy
+  only:
+    - develop
   environment: review
   variables:
     COMPOSE_TLS_VERSION: "TLSv1_2"
