@@ -27,10 +27,8 @@ import AppDispatcher from '../app-dispatcher';
 //import SimulatorStore from '../stores/simulator-store';
 import NodeStore from '../stores/node-store';
 
-import Table from '../components/table';
-import TableColumn from '../components/table-column';
-import NewSimulatorDialog from '../components/dialog/new-simulator';
-import EditSimulatorDialog from '../components/dialog/edit-simulator';
+import NewNodeDialog from '../components/dialog/new-node';
+import EditNodeDialog from '../components/dialog/edit-node';
 import NodeTree from '../components/node-tree';
 
 class Simulators extends Component {
@@ -45,7 +43,7 @@ class Simulators extends Component {
       newModal: false,
       deleteModal: false,
       editModal: false,
-      modalSimulator: {}
+      modalData: {}
     };
   }
 
@@ -56,44 +54,52 @@ class Simulators extends Component {
   }
 
   closeNewModal(data) {
-    this.setState({ newModal : false });
+    this.setState({ newModal: false });
 
     if (data) {
       AppDispatcher.dispatch({
-        type: 'simulators/start-add',
+        type: 'nodes/start-add',
         data: data
       });
     }
+  }
+
+  showEditModal(data) {
+    // find node with id
+    var node = this.state.nodes.find((element) => {
+      return element._id === data.id;
+    });
+
+    this.setState({ editModal: true, modalData: node });
+  }
+
+  closeEditModal(data) {
+    this.setState({ editModal: false });
+
+    if (data) {
+      AppDispatcher.dispatch({
+        type: 'nodes/start-edit',
+        data: data
+      });
+    }
+  }
+
+  showDeleteModal(data) {
+    // find node with id
+    var node = this.state.nodes.find((element) => {
+      return element._id === data.id;
+    });
+
+    this.setState({ deleteModal: true, modalData: node });
   }
 
   confirmDeleteModal() {
     this.setState({ deleteModal: false });
 
     AppDispatcher.dispatch({
-      type: 'simulators/start-remove',
-      data: this.state.modalSimulator
+      type: 'nodes/start-remove',
+      data: this.state.modalData
     });
-  }
-
-  closeEditModal(data) {
-    this.setState({ editModal : false });
-
-    if (data) {
-      AppDispatcher.dispatch({
-        type: 'simulators/start-edit',
-        data: data
-      });
-    }
-  }
-
-  labelStyle(value) {
-    if (value === true) return 'success';
-    else return 'warning';
-  }
-
-  labelModifier(value) {
-    if (value === true) return 'Running';
-    else return 'Not running';
   }
 
   render() {
@@ -101,36 +107,27 @@ class Simulators extends Component {
       <div className='section'>
         <h1>Simulators</h1>
 
-        <Button><Glyphicon glyph="plus" /> Add Node</Button>
+        <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Add Node</Button>
 
-        <NodeTree />
+        <NodeTree data={this.state.nodes} onDelete={(node) => this.showDeleteModal(node)} onEdit={(node) => this.showEditModal(node)} />
 
-        {/* <Table data={this.state.simulators}>
-          <TableColumn title='Name' dataKey='name' labelKey='running' labelStyle={(value) => this.labelStyle(value)} labelModifier={(value) => this.labelModifier(value)} />
-          <TableColumn title='Endpoint' dataKey='endpoint' width='180' />
-          <TableColumn title='' width='70' editButton deleteButton onEdit={(index) => this.setState({ editModal: true, modalSimulator: this.state.simulators[index] })} onDelete={(index) => this.setState({ deleteModal: true, modalSimulator: this.state.simulators[index] })} />
-        </Table>
-
-        <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Simulator</Button>
-
-        <NewSimulatorDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
-
-        <EditSimulatorDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} simulator={this.state.modalSimulator} />
+        <NewNodeDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
+        <EditNodeDialog node={this.state.modalData} show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} />
 
         <Modal show={this.state.deleteModal}>
           <Modal.Header>
-            <Modal.Title>Delete Simulator</Modal.Title>
+            <Modal.Title>Delete Node</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
-            Are you sure you want to delete the simulator <strong>'{this.state.modalSimulator.name}'</strong>?
+            Are you sure you want to delete the node <strong>'{this.state.modalData.name}'</strong>?
           </Modal.Body>
 
           <Modal.Footer>
             <Button onClick={() => this.setState({ deleteModal: false })}>Cancel</Button>
             <Button bsStyle="danger" onClick={() => this.confirmDeleteModal()}>Delete</Button>
           </Modal.Footer>
-        </Modal> */}
+        </Modal>
       </div>
     );
   }
