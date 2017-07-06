@@ -28,10 +28,7 @@ class NodeTree extends React.Component {
     super(props);
 
     this.state = {
-      treeData: [
-        { title: 'Chicken', subtitle: 'localhost:5000', children: [ { title: 'Egg' } ], expanded: true },
-        { title: 'Cow', subtitle: 'localhost:5001', children: [ { title: 'Milk' }, { title: 'Cheese' }], expanded: true },
-      ]
+      treeData: []
     };
   }
 
@@ -50,11 +47,26 @@ class NodeTree extends React.Component {
       buttons.push(<Button bsSize="small"><Glyphicon glyph="plus" /></Button>)
     }
 
-    buttons.push(<Button bsSize="small"><Glyphicon glyph="pencil" /></Button>);
+    buttons.push(<Button bsSize="small" onClick={() => this.props.onEdit(rowInfo.node)}><Glyphicon glyph="pencil" /></Button>);
+    buttons.push(<Button bsSize="small" onClick={() => this.props.onDelete(rowInfo.node)}><Glyphicon glyph="trash" /></Button>);
 
     return {
       buttons: buttons
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // compare if data changed
+    if (this.props.data == null || this.props.data !== nextProps.data) {
+      // generate new state
+      var treeData = [];
+
+      nextProps.data.forEach((node) => {
+        treeData.push({ title: node.name, subtitle: node.endpoint, id: node._id });
+      });
+
+      this.setState({ treeData });
+    }
   }
 
   render() {
@@ -63,7 +75,7 @@ class NodeTree extends React.Component {
         treeData={ this.state.treeData }
         onChange={ (treeData) => this.setState({ treeData }) }
         style={{ height: 400 }}
-        maxDepth='2'
+        maxDepth={ 2 }
         canDrag={ (node, path) => this.canNodeDrag(node, path) }
         canDrop={ (node, prevPath) => this.canNodeDrop(node, prevPath) }
         generateNodeProps={(rowInfo) => this.generateNodeProps(rowInfo) }
