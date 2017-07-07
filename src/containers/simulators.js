@@ -29,6 +29,7 @@ import NodeStore from '../stores/node-store';
 import NewNodeDialog from '../components/dialog/new-node';
 import EditNodeDialog from '../components/dialog/edit-node';
 import NewSimulatorDialog from '../components/dialog/new-simulator';
+import EditSimulatorDialog from '../components/dialog/edit-simulator';
 import NodeTree from '../components/node-tree';
 
 class Simulators extends Component {
@@ -49,7 +50,8 @@ class Simulators extends Component {
       deleteSimulatorModal: false,
 
       modalData: {},
-      modalIndex: 0
+      modalIndex: 0,
+      modalName: ''
     };
   }
 
@@ -131,6 +133,61 @@ class Simulators extends Component {
     }
   }
 
+  showEditSimulatorModal(data, index) {
+    // find node with id
+    var node = this.state.nodes.find((element) => {
+      return element._id === data.id;
+    });
+
+    this.setState({ editSimulatorModal: true, modalData: node, modalIndex: index });
+  }
+
+  closeEditSimulatorModal(data) {
+    this.setState({ editSimulatorModal: false });
+
+    if (data) {
+      var node = this.state.modalData;
+      node.simulators[this.state.modalIndex] = data;
+
+      AppDispatcher.dispatch({
+        type: 'nodes/start-edit',
+        data: node
+      });
+    }
+  }
+
+  showDeleteSimulatorModal(data, index) {
+    // find node with id
+    var node = this.state.nodes.find((element) => {
+      return element._id === data.id;
+    });
+
+    this.setState({ deleteSimulatorModal: true, modalData: node, modalIndex: index, modalName: data.children[index].title });
+  }
+
+  confirmDeleteSimulatorModal() {
+    this.setState({ deleteSimulatorModal: false });
+
+    // remove simulator
+    var node = this.state.modalData;
+    node.simulators.splice(this.state.modalIndex);
+
+    AppDispatcher.dispatch({
+      type: 'nodes/start-edit',
+      data: node
+    });
+  }
+
+  onTreeDataChange(nodes) {
+    // update all at once
+    nodes.forEach((node) => {
+      AppDispatcher.dispatch({
+        type: 'nodes/start-edit',
+        data: node
+      });
+    });
+  }
+
   render() {
     return (
       <div className='section'>
@@ -138,11 +195,15 @@ class Simulators extends Component {
 
         <Button onClick={() => this.setState({ newNodeModal: true })}><Glyphicon glyph="plus" /> Add Node</Button>
 
-        <NodeTree data={this.state.nodes} onNodeDelete={(node) => this.showDeleteNodeModal(node)} onNodeEdit={(node) => this.showEditNodeModal(node)} onNodeAdd={(node) => this.showAddSimulatorModal(node)} onSimulatorEdit={(index) => this.onSimulatorEdit(index)} onSimulatorDelete={(index) => this.onSimulatorDelete(index)} />
+        <NodeTree data={this.state.nodes} onDataChange={(treeData) => this.onTreeDataChange(treeData)} onNodeDelete={(node) => this.showDeleteNodeModal(node)} onNodeEdit={(node) => this.showEditNodeModal(node)} onNodeAdd={(node) => this.showAddSimulatorModal(node)} onSimulatorEdit={(node, index) => this.showEditSimulatorModal(node, index)} onSimulatorDelete={(node, index) => this.showDeleteSimulatorModal(node, index)} />
 
         <NewNodeDialog show={this.state.newNodeModal} onClose={(data) => this.closeNewNodeModal(data)} />
         <EditNodeDialog node={this.state.modalData} show={this.state.editNodeModal} onClose={(data) => this.closeEditNodeModal(data)} />
         <NewSimulatorDialog show={this.state.addSimulatorModal} onClose={(data) => this.closeAddSimulatorModal(data)} />
+
+        {this.state.editSimulatorModal &&
+          <EditSimulatorDialog simulator={this.state.modalData.simulators[this.state.modalIndex]} show={this.state.editSimulatorModal} onClose={(data) => this.closeEditSimulatorModal(data)} />
+        }
 
         <Modal show={this.state.deleteNodeModal}>
           <Modal.Header>
@@ -167,7 +228,7 @@ class Simulators extends Component {
           </Modal.Header>
 
           <Modal.Body>
-            {/*Are you sure you want to delete the simulator <strong>'{this.state.modalData.simulators[this.state.modalIndex].name}'</strong>?*/}
+            Are you sure you want to delete the simulator <strong>'{this.state.modalName}'</strong>?
           </Modal.Body>
 
           <Modal.Footer>
