@@ -36,8 +36,7 @@ class NewSimulatorDialog extends Component {
     super(props);
 
     this.state = {
-      name: '',
-      endpoint: ''
+      name: ''
     };
   }
 
@@ -54,27 +53,21 @@ class NewSimulatorDialog extends Component {
   }
 
   resetState() {
-    this.setState({ name: '', endpoint: '' });
+    this.setState({ name: '' });
   }
 
   validateForm(target) {
     // check all controls
-    var endpoint = true;
     var name = true;
 
     if (this.state.name === '') {
       name = false;
     }
 
-    if (this.state.endpoint === '') {
-      endpoint = false;
-    }
-
-    this.valid = endpoint && name;
+    this.valid = name;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
-    else return endpoint ? "success" : "error";
   }
 
   render() {
@@ -84,11 +77,6 @@ class NewSimulatorDialog extends Component {
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
             <ControlLabel>Name</ControlLabel>
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup controlId="endpoint" validationState={this.validateForm('endpoint')}>
-            <ControlLabel>Endpoint</ControlLabel>
-            <FormControl type="text" placeholder="Enter endpoint" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
         </form>

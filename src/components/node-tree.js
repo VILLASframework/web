@@ -44,11 +44,15 @@ class NodeTree extends React.Component {
     var buttons = [];
 
     if (rowInfo.parentNode == null) {
-      buttons.push(<Button bsSize="small"><Glyphicon glyph="plus" /></Button>)
+      buttons.push(<Button bsSize="small" onClick={() => this.props.onNodeAdd(rowInfo.node)}><Glyphicon glyph="plus" /></Button>);
+      buttons.push(<Button bsSize="small" onClick={() => this.props.onNodeEdit(rowInfo.node)}><Glyphicon glyph="pencil" /></Button>);
+      buttons.push(<Button bsSize="small" onClick={() => this.props.onNodeDelete(rowInfo.node)}><Glyphicon glyph="trash" /></Button>);
+    } else {
+      buttons.push(<Button bsSize="small" onClick={() => this.props.onSimulatorEdit(rowInfo.node)}><Glyphicon glyph="pencil" /></Button>);
+      buttons.push(<Button bsSize="small" onClick={() => this.props.onSimulatorDelete(rowInfo.node)}><Glyphicon glyph="trash" /></Button>);
     }
 
-    buttons.push(<Button bsSize="small" onClick={() => this.props.onEdit(rowInfo.node)}><Glyphicon glyph="pencil" /></Button>);
-    buttons.push(<Button bsSize="small" onClick={() => this.props.onDelete(rowInfo.node)}><Glyphicon glyph="trash" /></Button>);
+    console.log(rowInfo);
 
     return {
       buttons: buttons
@@ -62,7 +66,13 @@ class NodeTree extends React.Component {
       var treeData = [];
 
       nextProps.data.forEach((node) => {
-        treeData.push({ title: node.name, subtitle: node.endpoint, id: node._id });
+        var parent = { title: node.name, subtitle: node.endpoint, id: node._id, children: [], expanded: true };
+
+        node.simulators.forEach((simulator) => {
+          parent.children.push({ title: simulator.name });
+        });
+
+        treeData.push(parent);
       });
 
       this.setState({ treeData });
