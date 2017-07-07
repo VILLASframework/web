@@ -48,47 +48,75 @@ class NodeTree extends React.Component {
       buttons.push(<Button bsSize="small" onClick={() => this.props.onNodeEdit(rowInfo.node)}><Glyphicon glyph="pencil" /></Button>);
       buttons.push(<Button bsSize="small" onClick={() => this.props.onNodeDelete(rowInfo.node)}><Glyphicon glyph="trash" /></Button>);
     } else {
-      buttons.push(<Button bsSize="small" onClick={() => this.props.onSimulatorEdit(rowInfo.node)}><Glyphicon glyph="pencil" /></Button>);
-      buttons.push(<Button bsSize="small" onClick={() => this.props.onSimulatorDelete(rowInfo.node)}><Glyphicon glyph="trash" /></Button>);
-    }
+      // get child index
+      var index = rowInfo.path[1] - rowInfo.path[0] - 1;
 
-    console.log(rowInfo);
+      buttons.push(<Button bsSize="small" onClick={() => this.props.onSimulatorEdit(rowInfo.parentNode, index)}><Glyphicon glyph="pencil" /></Button>);
+      buttons.push(<Button bsSize="small" onClick={() => this.props.onSimulatorDelete(rowInfo.parentNode, index)}><Glyphicon glyph="trash" /></Button>);
+    }
 
     return {
       buttons: buttons
     };
   }
 
+  nodesToTreeData(nodes) {
+    var treeData = [];
+
+    nodes.forEach((node) => {
+      var parent = { title: node.name, subtitle: node.endpoint, id: node._id, config: node.config, children: [], expanded: true };
+
+      node.simulators.forEach((simulator) => {
+        parent.children.push({ title: simulator.name });
+      });
+
+      treeData.push(parent);
+    });
+
+    return treeData;
+  }
+
+  treeDataToNodes(treeData) {
+    var nodes = [];
+
+    treeData.forEach((data) => {
+      var node = { name: data.title, endpoint: data.subtitle, _id: data.id, config: data.config, simulators: [] };
+
+      data.children.forEach((child) => {
+        node.simulators.push({ name: child.title });
+      });
+
+      nodes.push(node);
+    });
+
+    return nodes;
+  }
+
   componentWillReceiveProps(nextProps) {
     // compare if data changed
     if (this.props.data == null || this.props.data !== nextProps.data) {
       // generate new state
-      var treeData = [];
-
-      nextProps.data.forEach((node) => {
-        var parent = { title: node.name, subtitle: node.endpoint, id: node._id, children: [], expanded: true };
-
-        node.simulators.forEach((simulator) => {
-          parent.children.push({ title: simulator.name });
-        });
-
-        treeData.push(parent);
-      });
-
+      var treeData = this.nodesToTreeData(nextProps.data);
       this.setState({ treeData });
     }
+  }
+
+  onDataChange(treeData) {
+    this.setState({ treeData });
+
+    this.props.onDataChange(this.treeDataToNodes(treeData))
   }
 
   render() {
     return (
       <SortableTree
-        treeData={ this.state.treeData }
-        onChange={ (treeData) => this.setState({ treeData }) }
+        treeData={this.state.treeData}
+        onChange={(treeData) => this.onDataChange(treeData)}
         style={{ height: 400 }}
         maxDepth={ 2 }
-        canDrag={ (node, path) => this.canNodeDrag(node, path) }
-        canDrop={ (node, prevPath) => this.canNodeDrop(node, prevPath) }
-        generateNodeProps={(rowInfo) => this.generateNodeProps(rowInfo) }
+        canDrag={(node, path) => this.canNodeDrag(node, path)}
+        canDrop={(node, prevPath) => this.canNodeDrop(node, prevPath)}
+        generateNodeProps={(rowInfo) => this.generateNodeProps(rowInfo)}
       />
     );
   }
