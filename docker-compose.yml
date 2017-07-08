@@ -61,22 +61,7 @@ services:
   node:
     image: villas/node:latest
     privileged: true
-    command: node /etc/villas/node/websocket.conf
-    expose:
-      - "12000/udp"
-    ports:
-      - "8081:80/tcp"
-    volumes:
-      - "./etc/node/:/etc/villas/node/"
-    networks:
-      villas:
-
-  # Generate random data and send it via UDP to the 'node' service
-  signal:
-    image: villas/node:latest
-    privileged: true
-    entrypoint: bash
-    command: -c 'villas signal mixed -v4 | villas pipe -x /etc/villas/node/websocket.conf udp_1'
+    command: node /etc/villas/node/websocket-demo.conf
     volumes:
       - "./etc/node/:/etc/villas/node/"
     networks:
