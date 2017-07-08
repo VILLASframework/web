@@ -22,4 +22,28 @@
 import ArrayStore from './array-store';
 import NodesDataManager from '../data-managers/nodes-data-manager';
 
-export default new ArrayStore('nodes', NodesDataManager);
+class NodeStore extends ArrayStore {
+  constructor() {
+    super('nodes', NodesDataManager);
+  }
+
+  reduce(state, action) {
+    switch(action.type) {
+      case 'nodes/loaded':
+        if (Array.isArray(action.data)) {
+          action.data.forEach(node => {
+            NodesDataManager.getSimulators(node);
+          });
+        } else {
+          NodesDataManager.getSimulators(action.data);
+        }
+
+        return super.reduce(state, action);
+
+      default:
+        return super.reduce(state, action);
+    }
+  }
+}
+
+export default new NodeStore();

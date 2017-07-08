@@ -20,5 +20,37 @@
  ******************************************************************************/
 
 import RestDataManager from './rest-data-manager';
+import RestAPI from '../api/rest-api';
 
-export default new RestDataManager('node', '/nodes');
+class NodesDataManager extends RestDataManager {
+  constructor() {
+    super('node', '/nodes');
+  }
+
+  getSimulators(node) {
+    RestAPI.post('http://' + node.endpoint + '/api/v1', {
+      action: 'nodes',
+      id: node._id
+    }).then(response => {
+      // assign IDs to simulators
+      response.response.forEach(element => {
+        if (element.type === "websocket") {
+          // add the (villas-node) node ID to the simulator
+          node.simulators = node.simulators.map(simulator => {
+            if (simulator.name === element.name) {
+              simulator.id = element.id;
+            }
+
+            return simulator;
+          });
+        }
+      });
+
+      console.log(node);
+    }).catch(error => {
+      console.warn(error);
+    });
+  }
+}
+
+export default new NodesDataManager();
