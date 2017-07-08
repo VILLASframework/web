@@ -28,6 +28,7 @@ import NotificationSystem from 'react-notification-system';
 import AppDispatcher from '../app-dispatcher';
 import SimulationStore from '../stores/simulation-store';
 import SimulatorStore from '../stores/simulator-store';
+import NodeStore from '../stores/node-store';
 import UserStore from '../stores/user-store';
 import NotificationsDataManager from '../data-managers/notifications-data-manager';
 
@@ -40,7 +41,7 @@ import '../styles/app.css';
 
 class App extends Component {
   static getStores() {
-    return [ SimulationStore, SimulatorStore, UserStore ];
+    return [ SimulationStore, NodeStore, UserStore ];
   }
 
   static calculateState(prevState) {
@@ -164,12 +165,12 @@ class App extends Component {
     });
 
     if (simulator != null) {
-      AppDispatcher.dispatch({
+      /*AppDispatcher.dispatch({
         type: 'simulatorData/open',
         identifier: simulator._id,
         endpoint: simulator.endpoint,
         signals: data.signals
-      });
+      });*/
     }
   }
 
