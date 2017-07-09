@@ -193,7 +193,10 @@ class Simulators extends Component {
       <div className='section'>
         <h1>Simulators</h1>
 
-        <Button onClick={() => this.setState({ newNodeModal: true })}><Glyphicon glyph="plus" /> Add Node</Button>
+        <Button onClick={() => this.setState({ newNodeModal: true })}><Glyphicon glyph="plus" /> Node</Button>
+
+        <br />
+        <small><i>Hint: Node names must be unique. Simulator names must be unique on a node.</i></small>
 
         <NodeTree data={this.state.nodes} onDataChange={(treeData) => this.onTreeDataChange(treeData)} onNodeDelete={(node) => this.showDeleteNodeModal(node)} onNodeEdit={(node) => this.showEditNodeModal(node)} onNodeAdd={(node) => this.showAddSimulatorModal(node)} onSimulatorEdit={(node, index) => this.showEditSimulatorModal(node, index)} onSimulatorDelete={(node, index) => this.showDeleteSimulatorModal(node, index)} />
 

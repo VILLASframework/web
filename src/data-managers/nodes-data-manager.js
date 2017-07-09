@@ -21,6 +21,7 @@
 
 import RestDataManager from './rest-data-manager';
 import RestAPI from '../api/rest-api';
+import AppDispatcher from '../app-dispatcher';
 
 class NodesDataManager extends RestDataManager {
   constructor() {
@@ -28,7 +29,7 @@ class NodesDataManager extends RestDataManager {
   }
 
   getSimulators(node) {
-    RestAPI.post('http://' + node.endpoint + '/api/v1', {
+    /*RestAPI.post('http://' + node.endpoint + '/api/v1', {
       action: 'nodes',
       id: node._id
     }).then(response => {
@@ -46,10 +47,16 @@ class NodesDataManager extends RestDataManager {
         }
       });
 
-      console.log(node);
+      AppDispatcher.dispatch({
+        type: 'nodes/edited',
+        data: node
+      });
     }).catch(error => {
-      console.warn(error);
-    });
+      AppDispatcher.dispatch({
+        type: 'nodes/edit-error',
+        error: error
+      });
+    });*/
   }
 }
 
