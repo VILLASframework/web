@@ -24,7 +24,7 @@ import { Container } from 'flux/utils';
 import { Button, Modal, Glyphicon } from 'react-bootstrap';
 
 import SimulationStore from '../stores/simulation-store';
-import SimulatorStore from '../stores/simulator-store';
+import NodeStore from '../stores/node-store';
 import AppDispatcher from '../app-dispatcher';
 
 import Table from '../components/table';
@@ -34,13 +34,13 @@ import EditSimulationModelDialog from '../components/dialog/edit-simulation-mode
 
 class Simulation extends Component {
   static getStores() {
-    return [ SimulationStore, SimulatorStore ];
+    return [ SimulationStore, NodeStore ];
   }
 
   static calculateState() {
     return {
       simulations: SimulationStore.getState(),
-      simulators: SimulatorStore.getState(),
+      nodes: NodeStore.getState(),
 
       newModal: false,
       deleteModal: false,
@@ -58,7 +58,7 @@ class Simulation extends Component {
     });
 
     AppDispatcher.dispatch({
-      type: 'simulators/start-load'
+      type: 'nodes/start-load'
     });
   }
 
@@ -119,14 +119,8 @@ class Simulation extends Component {
     }
   }
 
-  getSimulatorName(id) {
-    for (var i = 0; i < this.state.simulators.length; i++) {
-      if (this.state.simulators[i]._id === id) {
-        return this.state.simulators[i].name;
-      }
-    }
-
-    return id;
+  getSimulatorName(simulator) {
+    return simulator.node + '/' + simulator.simulator;
   }
 
   render() {
@@ -136,16 +130,16 @@ class Simulation extends Component {
 
         <Table data={this.state.simulation.models}>
           <TableColumn title='Name' dataKey='name' />
-          <TableColumn title='Simulator' dataKey='simulator' width='180' modifier={(id) => this.getSimulatorName(id)} />
+          <TableColumn title='Simulator' dataKey='simulator' width='180' modifier={(simulator) => this.getSimulatorName(simulator)} />
           <TableColumn title='Length' dataKey='length' width='100' />
           <TableColumn title='' width='70' editButton deleteButton onEdit={(index) => this.setState({ editModal: true, modalData: this.state.simulation.models[index], modalIndex: index })} onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.simulation.models[index], modalIndex: index })} />
         </Table>
 
         <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Simulation Model</Button>
 
-        <NewSimulationModelDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} simulators={this.state.simulators} />
+        <NewSimulationModelDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} nodes={this.state.nodes} />
 
-        <EditSimulationModelDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} data={this.state.modalData} simulators={this.state.simulators} />
+        <EditSimulationModelDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} data={this.state.modalData} nodes={this.state.nodes} />
 
         <Modal show={this.state.deleteModal}>
           <Modal.Header>

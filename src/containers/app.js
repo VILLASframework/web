@@ -27,7 +27,7 @@ import NotificationSystem from 'react-notification-system';
 
 import AppDispatcher from '../app-dispatcher';
 import SimulationStore from '../stores/simulation-store';
-import SimulatorStore from '../stores/simulator-store';
+//import SimulatorStore from '../stores/simulator-store';
 import NodeStore from '../stores/node-store';
 import UserStore from '../stores/user-store';
 import NotificationsDataManager from '../data-managers/notifications-data-manager';
@@ -41,12 +41,12 @@ import '../styles/app.css';
 
 class App extends Component {
   static getStores() {
-    return [ SimulationStore, NodeStore, UserStore ];
+    return [ NodeStore, UserStore, SimulationStore ];
   }
 
   static calculateState(prevState) {
     // get list of running simulators
-    var simulators = SimulatorStore.getState().filter(simulator => {
+    /*var simulators = SimulatorStore.getState().filter(simulator => {
       return simulator.running === true;
     });
 
@@ -75,16 +75,16 @@ class App extends Component {
       if (equal) {
         simulators = prevState.runningSimulators;
       }
-    }
+    }*/
 
     let currentUser = UserStore.getState().currentUser;
 
     return {
-      simulations: SimulationStore.getState(),
+      nodes: NodeStore.getState(),
       currentRole: currentUser? currentUser.role : '',
-      token: UserStore.getState().token,
+      token: UserStore.getState().token/*,
 
-      runningSimulators: simulators
+      runningSimulators: simulators*/
     };
   }
 
@@ -104,7 +104,7 @@ class App extends Component {
 
     // load all simulators and simulations to fetch simulation data
     AppDispatcher.dispatch({
-      type: 'simulators/start-load'
+      type: 'nodes/start-load'
     });
 
     AppDispatcher.dispatch({
@@ -136,7 +136,9 @@ class App extends Component {
   }
 
   requiredSimulatorsBySimulations() {
-    var simulators = [];
+    return [];
+
+    /*var simulators = [];
 
     this.state.simulations.forEach((simulation) => {
       simulation.models.forEach((simulationModel) => {
@@ -155,24 +157,24 @@ class App extends Component {
       });
     });
 
-    return simulators;
+    return simulators;*/
   }
 
-  connectSimulator(state, data) {
+  /*connectSimulator(state, data) {
     // get simulator object
     const simulator = state.runningSimulators.find(element => {
       return element._id === data.simulator;
     });
 
     if (simulator != null) {
-      /*AppDispatcher.dispatch({
+      AppDispatcher.dispatch({
         type: 'simulatorData/open',
         identifier: simulator._id,
         endpoint: simulator.endpoint,
         signals: data.signals
-      });*/
+      });
     }
-  }
+  }*/
 
   render() {
     // get children
