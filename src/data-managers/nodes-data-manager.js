@@ -29,7 +29,7 @@ class NodesDataManager extends RestDataManager {
   }
 
   getSimulators(node) {
-    /*RestAPI.post('http://' + node.endpoint + '/api/v1', {
+    RestAPI.post('http://' + node.endpoint + '/api/v1', {
       action: 'nodes',
       id: node._id
     }).then(response => {
@@ -51,12 +51,18 @@ class NodesDataManager extends RestDataManager {
         type: 'nodes/edited',
         data: node
       });
+
+      AppDispatcher.dispatch({
+        type: 'simulatorData/open',
+        node: node,
+        endpoint: node.endpoint,
+      });
     }).catch(error => {
       AppDispatcher.dispatch({
         type: 'nodes/edit-error',
         error: error
       });
-    });*/
+    });
   }
 }
 

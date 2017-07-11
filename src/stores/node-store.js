@@ -30,6 +30,7 @@ class NodeStore extends ArrayStore {
   reduce(state, action) {
     switch(action.type) {
       case 'nodes/loaded':
+        // get simulator IDs
         if (Array.isArray(action.data)) {
           action.data.forEach(node => {
             NodesDataManager.getSimulators(node);
