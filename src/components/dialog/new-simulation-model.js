@@ -48,6 +48,7 @@ class NewSimulationModelDialog extends Component {
 
   onClose(canceled) {
     if (canceled === false) {
+      console.log(this.state);
       this.props.onClose(this.state);
     } else {
       this.props.onClose();
@@ -69,8 +70,8 @@ class NewSimulationModelDialog extends Component {
     }
 
     if (e.target.id === 'simulator') {
-      var value = e.target.value.split("/");
-      this.setState({ simulator: { node: value[0], simulator: value[1] } });
+      console.log(e.target.value);
+      this.setState({ simulator: JSON.parse(e.target.value) });
     } else {
       this.setState({ [e.target.id]: e.target.value });
     }
@@ -91,7 +92,7 @@ class NewSimulationModelDialog extends Component {
   resetState() {
     this.setState({
       name: '',
-      simulator: { node: this.props.nodes[0] ? this.props.nodes[0].name : '', simulator: this.props.nodes[0].simulators[0] ? this.props.nodes[0].simulators[0].name : '' },
+      simulator: { node: this.props.nodes[0] ? this.props.nodes[0]._id : '', simulator: this.props.nodes[0].simulators[0] ? 0 : '' },
       length: '1',
       mapping: [ { name: 'Signal', type: 'Type' } ]
     });
@@ -138,7 +139,7 @@ class NewSimulationModelDialog extends Component {
             <FormControl componentClass="select" placeholder="Select simulator" value={this.state.simulator.node + '/' + this.state.simulator.simulator} onChange={(e) => this.handleChange(e)}>
               {this.props.nodes.map(node => (
                 node.simulators.map((simulator, index) => (
-                  <option key={node._id + index} value={node.name + '/' + simulator.name}>{node.name}/{simulator.name}</option>
+                  <option key={node._id + index} value={JSON.stringify({ node: node._id, simulator: index })}>{node.name}/{simulator.name}</option>
                 ))
               ))}
             </FormControl>

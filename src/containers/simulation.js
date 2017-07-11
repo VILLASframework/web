@@ -120,7 +120,15 @@ class Simulation extends Component {
   }
 
   getSimulatorName(simulator) {
-    return simulator.node + '/' + simulator.simulator;
+    var name = "undefined";
+
+    this.state.nodes.forEach(node => {
+      if (node._id === simulator.node) {
+        name = node.name + '/' + node.simulators[simulator.simulator].name;
+      }
+    });
+
+    return name;
   }
 
   render() {
