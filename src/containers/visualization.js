@@ -154,7 +154,6 @@ class Visualization extends Component {
       NotificationsDataManager.addNotification(NotificationsFactory.NO_SIM_MODEL_AVAILABLE);
     } else {
       defaultSimulator = this.state.simulation.models[0].simulator;
-      console.log(defaultSimulator);
     }
 
     // create new widget
@@ -236,7 +235,7 @@ class Visualization extends Component {
     if (data) {
       // save changes temporarily
       var widgets_update = {};
-      widgets_update[this.state.modalIndex] =  data;
+      widgets_update[this.state.modalIndex] = data;
 
       var new_widgets = Object.assign({}, this.state.visualization.widgets, widgets_update);
 
