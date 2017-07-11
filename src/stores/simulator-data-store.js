@@ -45,12 +45,6 @@ class SimulationDataStore extends ReduceStore {
 
       case 'simulatorData/opened':
         // create entry for simulator
-        /*state[action.identifier] = { signals: action.signals, values: [], sequence: null, timestamp: null };
-
-        for (i = 0; i < action.signals; i++) {
-          state[action.identifier].values.push([]);
-        }*/
-
         state[action.node._id] = {};
 
         action.node.simulators.forEach(simulator => {

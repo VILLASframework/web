@@ -65,13 +65,13 @@ class Visualization extends Component {
       editModal: prevState.editModal || false,
       modalData: prevState.modalData || null,
       modalIndex: prevState.modalIndex || null,
-      
+
       maxWidgetHeight: prevState.maxWidgetHeight  || 0,
       dropZoneHeight: prevState.dropZoneHeight  || 0,
       last_widget_key: prevState.last_widget_key  || 0
     };
   }
-  
+
   componentWillMount() {
     AppDispatcher.dispatch({
       type: 'visualizations/start-load'
@@ -154,6 +154,7 @@ class Visualization extends Component {
       NotificationsDataManager.addNotification(NotificationsFactory.NO_SIM_MODEL_AVAILABLE);
     } else {
       defaultSimulator = this.state.simulation.models[0].simulator;
+      console.log(defaultSimulator);
     }
 
     // create new widget
@@ -167,7 +168,7 @@ class Visualization extends Component {
     var visualization = Object.assign({}, this.state.visualization, {
       widgets: new_widgets
     });
-    
+
     this.increaseHeightWithWidget(widget);
     this.setState({ visualization: visualization });
   }
@@ -185,7 +186,7 @@ class Visualization extends Component {
     var visualization = Object.assign({}, this.state.visualization, {
       widgets: new_widgets
     });
-    
+
     // Check if the height needs to be increased, the section may have shrunk if not
     if (!this.increaseHeightWithWidget(updated_widget)) {
       this.computeHeightWithWidgets(visualization.widgets);
@@ -201,12 +202,12 @@ class Visualization extends Component {
     let maxHeight = Object.keys(widgets).reduce( (maxHeightSoFar, widgetKey) => {
       let thisWidget = widgets[widgetKey];
       let thisWidgetHeight = thisWidget.y + thisWidget.height;
-      
+
       return thisWidgetHeight > maxHeightSoFar? thisWidgetHeight : maxHeightSoFar;
     }, 0);
 
-    this.setState({ 
-      maxWidgetHeight: maxHeight, 
+    this.setState({
+      maxWidgetHeight: maxHeight,
       dropZoneHeight:  maxHeight + 40
     });
   }
@@ -219,8 +220,8 @@ class Visualization extends Component {
     let thisWidgetHeight = widget.y + widget.height;
     if (thisWidgetHeight > this.state.maxWidgetHeight) {
       increased = true;
-      this.setState({ 
-        maxWidgetHeight: thisWidgetHeight, 
+      this.setState({
+        maxWidgetHeight: thisWidgetHeight,
         dropZoneHeight:  thisWidgetHeight + 40
       });
     }
