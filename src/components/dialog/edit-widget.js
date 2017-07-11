@@ -71,7 +71,12 @@ class EditWidgetDialog extends Component {
       this.setState({ temporal: Object.assign({}, this.state.temporal, changes ) });
     } else {
         let changeObject = {};
-        changeObject[e.target.id] = e.target.value;
+        if (e.target.id === 'simulator') {
+          changeObject[e.target.id] = JSON.parse(e.target.value);
+        } else {
+          changeObject[e.target.id] = e.target.value;
+        }
+
         this.setState({ temporal: Object.assign({}, this.state.temporal, changeObject ) });
     }
   }

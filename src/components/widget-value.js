@@ -44,7 +44,7 @@ class WidgetValue extends Component {
 
     // check if value has changed
     const signal = nextProps.data[node][simulator].values[nextProps.widget.signal];
-    if (this.state.value !== signal[signal.length - 1].y) {
+    if (signal != null && this.state.value !== signal[signal.length - 1].y) {
       this.setState({ value: signal[signal.length - 1].y });
     }
   }

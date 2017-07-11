@@ -38,33 +38,33 @@ class WidgetTable extends Component {
     // check data
     const simulator = nextProps.widget.simulator;
 
-    if (nextProps.simulation == null || nextProps.data == null || nextProps.data[simulator] == null || nextProps.data[simulator].length === 0 || nextProps.data[simulator].values[0].length === 0) {
+    if (nextProps.simulation == null || nextProps.data == null || nextProps.data[simulator.node][simulator.simulator] == null || nextProps.data[simulator.node][simulator.simulator].length === 0 || nextProps.data[simulator.node][simulator.simulator].values.length === 0  || nextProps.data[simulator.node][simulator.simulator].values[0].length === 0) {
       // clear values
       this.setState({ rows: [], sequence: null });
       return;
     }
 
     // check if new data, otherwise skip
-    if (this.state.sequence >= nextProps.data[simulator].sequence) {
+    /*if (this.state.sequence >= nextProps.data[simulator.node][simulator.simulator].sequence) {
       return;
-    }
+    }*/
 
     // get simulation model
     const simulationModel = nextProps.simulation.models.find((model) => {
-      return (model.simulator === simulator);
+      return (model.simulator.node === simulator.node && model.simulator.simulator === simulator.simulator);
     });
 
     // get rows
     var rows = [];
 
-    nextProps.data[simulator].values.forEach((signal, index) => {
+    nextProps.data[simulator.node][simulator.simulator].values.forEach((signal, index) => {
       rows.push({
         name: simulationModel.mapping[index].name,
         value: signal[signal.length - 1].y.toFixed(3)
       })
     });
 
-    this.setState({ rows: rows, sequence: nextProps.data[simulator].sequence });
+    this.setState({ rows: rows, sequence: nextProps.data[simulator.node][simulator.simulator].sequence });
   }
 
   render() {
