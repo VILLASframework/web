@@ -14,7 +14,7 @@ import { scaleOrdinal, schemeCategory10 } from 'd3-scale';
 class Plot extends Component {
   constructor(props) {
     super(props);
-    
+
     this.chartWrapper = null;
 
     // Initialize plot size and data
@@ -24,7 +24,7 @@ class Plot extends Component {
     );
   }
 
-  // Get an object with 'invisible' init data for the last minute. 
+  // Get an object with 'invisible' init data for the last minute.
   // Include start/end timestamps if required.
   getPlotInitData(withRangeTimestamps = false) {
 
@@ -32,8 +32,8 @@ class Plot extends Component {
     const initFirstTime = initSecondTime - 1000 * 60; // Decrease 1 min
     const values = [{ values: [{x: initFirstTime, y: 0}], strokeWidth: 0 }];
 
-    let output = withRangeTimestamps? 
-      { sequence: 0, values: values, firstTimestamp: initFirstTime, latestTimestamp: initSecondTime, } : 
+    let output = withRangeTimestamps?
+      { sequence: 0, values: values, firstTimestamp: initFirstTime, latestTimestamp: initSecondTime, } :
       { sequence: 0, values: values };
 
     return output;
@@ -58,19 +58,19 @@ class Plot extends Component {
 
     // Identify simulation reset
     if (nextData == null || nextData.length === 0 || nextData.values[0].length === 0)  { this.clearPlot(); return; }
-    
+
     // check if new data, otherwise skip
     if (this.state.sequence >= nextData.sequence) { return; }
-    
+
     this.updatePlotData(nextProps);
 
   }
 
   signalsWereJustCleared(nextProps) {
 
-    return  this.props.signals && 
-            nextProps.signals && 
-            this.props.signals.length > 0 && 
+    return  this.props.signals &&
+            nextProps.signals &&
+            this.props.signals.length > 0 &&
             nextProps.signals.length === 0;
   }
 
@@ -102,7 +102,7 @@ class Plot extends Component {
     nextProps.signals.forEach((signal_index, i, arr) => (
       // Include signal index, useful to relate them to the signal selection
       values.push(
-        { 
+        {
           index: signal_index,
           values: nextData.values[signal_index].slice(firstIndex, nextData.values[signal_index].length - 1)})
     ));
