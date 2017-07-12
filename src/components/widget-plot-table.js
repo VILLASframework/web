@@ -45,7 +45,7 @@ class WidgetPlotTable extends Component {
 
     // Identify if there was a change in the preselected signals
     if (nextProps.simulation && (JSON.stringify(nextProps.widget.preselectedSignals) !== JSON.stringify(this.props.widget.preselectedSignals) || this.state.preselectedSignals.length === 0)) {
-      
+
       // Update the currently selected signals by intersecting with the preselected signals
       // Do the same with the plot values
       var intersection = this.computeIntersection(nextProps.widget.preselectedSignals, nextProps.widget.signals);
@@ -54,20 +54,19 @@ class WidgetPlotTable extends Component {
       this.updatePreselectedSignalsState(nextProps);
       return;
     }
-
   }
 
   // Perform the intersection of the lists, alternatively could be done with Sets ensuring unique values
   computeIntersection(preselectedSignals, selectedSignals) {
     return preselectedSignals.filter( s => selectedSignals.includes(s));
   }
-  
+
   updatePreselectedSignalsState(nextProps) {
     const simulator = nextProps.widget.simulator;
 
     // get simulation model
     const simulationModel = nextProps.simulation.models.find((model) => {
-      return (model.simulator === simulator);
+      return (model.simulator.node === simulator.node && model.simulator.simulator === simulator.simulator);
     });
 
     let preselectedSignals = [];
@@ -89,13 +88,13 @@ class WidgetPlotTable extends Component {
             return accum;
           }, []);
     }
-    
+
     this.setState({ preselectedSignals: preselectedSignals });
   }
 
   updateSignalSelection(signal_index, checked) {
     // Update the selected signals and propagate to parent component
-    var new_widget = Object.assign({}, this.props.widget, { 
+    var new_widget = Object.assign({}, this.props.widget, {
       signals: checked? this.state.signals.concat(signal_index) : this.state.signals.filter( (idx) => idx !== signal_index )
     });
     this.props.onWidgetChange(new_widget);
@@ -106,31 +105,37 @@ class WidgetPlotTable extends Component {
 
     // Data passed to plot
     let simulator = this.props.widget.simulator;
-    let simulatorData = this.props.data[simulator];
+    let simulatorData = [];
+
+    if (this.props.data[simulator.node] != null && this.props.data[simulator.node][simulator.simulator] != null) {
+      simulatorData = this.props.data[simulator.node][simulator.simulator];
+    }
 
     if (this.state.preselectedSignals && this.state.preselectedSignals.length > 0) {
       // Create checkboxes using the signal indices from simulation model
       checkBoxes = this.state.preselectedSignals.map( (signal) => {
-              var checked = this.state.signals.indexOf(signal.index) > -1;
-              var chkBxClasses = classNames({
-                'btn': true,
-                'btn-default': true,
-                'active': checked
-              });
-              return <Checkbox key={signal.index} className={chkBxClasses} checked={checked} disabled={ this.props.editing } onChange={(e) => this.updateSignalSelection(signal.index, e.target.checked) } > { signal.name } </Checkbox>
-            });
+        var checked = this.state.signals.indexOf(signal.index) > -1;
+        var chkBxClasses = classNames({
+          'btn': true,
+          'btn-default': true,
+          'active': checked
+        });
+        return <Checkbox key={signal.index} className={chkBxClasses} checked={checked} disabled={ this.props.editing } onChange={(e) => this.updateSignalSelection(signal.index, e.target.checked) } > { signal.name } </Checkbox>
+      });
     }
 
     // Prepare an array with the signals to show in the legend
     var legendSignals = this.state.preselectedSignals.reduce( (accum, signal, i) => {
-                  if (this.state.signals.includes(signal.index)) {
-                    accum.push({
-                      index: signal.index,
-                      name: signal.name
-                    })
-                  }
-                  return accum;
-                }, []);
+      if (this.state.signals.includes(signal.index)) {
+        accum.push({
+          index: signal.index,
+          name: signal.name
+        });
+      }
+      return accum;
+    }, []);
+
+
 
     return (
       <div className="plot-table-widget" ref="wrapper">
