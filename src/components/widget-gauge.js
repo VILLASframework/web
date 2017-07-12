@@ -69,23 +69,23 @@ class WidgetGauge extends Component {
     return this.state.value !== nextState.value;
   }
 
-  componentWillReceiveProps(nextProps) {    
+  componentWillReceiveProps(nextProps) {
     // update value
     const simulator = nextProps.widget.simulator;
 
-    if (nextProps.data == null || nextProps.data[simulator] == null || nextProps.data[simulator].values == null) {
+    if (nextProps.data == null || nextProps.data[simulator.node][simulator.simulator] == null || nextProps.data[simulator.node][simulator.simulator].values == null) {
       this.setState({ value: 0 });
       return;
     }
 
     // check if value has changed
-    const signal = nextProps.data[simulator].values[nextProps.widget.signal];
+    const signal = nextProps.data[simulator.node][simulator.simulator].values[nextProps.widget.signal];
     // Take just 3 decimal positions
     // Note: Favor this method over Number.toFixed(n) in order to avoid a type conversion, since it returns a String
-    const new_value = Math.round( signal[signal.length - 1].y * 1e3 ) / 1e3; 
+    const new_value = Math.round( signal[signal.length - 1].y * 1e3 ) / 1e3;
     if (this.state.value !== new_value) {
       this.setState({ value: new_value });
-      
+
       // update gauge's value
       this.gauge.set(new_value);
     }
@@ -101,7 +101,7 @@ class WidgetGauge extends Component {
     var signalType = null;
 
     if (this.props.simulation) {
-      var simulationModel = this.props.simulation.models.filter((model) => model.simulator === this.props.widget.simulator)[0];
+      var simulationModel = this.props.simulation.models.filter((model) => model.simulator.node === this.props.widget.simulator.node && model.simulator.simulator === this.props.widget.simulator.simulator)[0];
       signalType = simulationModel && simulationModel.length > 0? simulationModel.mapping[this.props.widget.signal].type : '';
     }
 
