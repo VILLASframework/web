@@ -54,6 +54,11 @@ class SimulationDataStore extends ReduceStore {
         return state;
 
       case 'simulatorData/data-changed':
+        // check if data is required, otherwise discard
+        if (state[action.node._id] == null || state[action.data.id] == null) {
+          return state;
+        }
+
         // only add data, if newer than current
         if (state[action.node._id][action.data.id].sequence < action.data.sequence) {
           // add data to simulator
