@@ -31,7 +31,7 @@ class EditSimulationModelDialog extends Component {
     show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired,
-    simulators: PropTypes.array.isRequired
+    nodes: PropTypes.array.isRequired
   };
 
   valid: false;
@@ -41,8 +41,9 @@ class EditSimulationModelDialog extends Component {
 
     this.state = {
       name: '',
-      simulator: '',
-      length: 1
+      simulator: { node: '', simulator: '' },
+      length: 1,
+      mapping: [{ name: 'Signal', type: 'Type' }]
     }
   }
 
@@ -68,7 +69,12 @@ class EditSimulationModelDialog extends Component {
       }
     }
 
-    this.setState({ [e.target.id]: e.target.value });
+    if (e.target.id === 'simulator') {
+      var value = e.target.value.split("/");
+      this.setState({ simulator: { node: value[0], simulator: value[1] } });
+    } else {
+      this.setState({ [e.target.id]: e.target.value });
+    }
   }
 
   handleMappingChange(event, row, column) {
@@ -124,9 +130,11 @@ class EditSimulationModelDialog extends Component {
           </FormGroup>
           <FormGroup controlId="simulator" validationState={this.validateForm('simulator')}>
             <ControlLabel>Simulator</ControlLabel>
-            <FormControl componentClass="select" placeholder="Select simulator" value={this.state.simulator} onChange={(e) => this.handleChange(e)}>
-              {this.props.simulators.map(simulator => (
-                <option key={simulator._id} value={simulator._id}>{simulator.name}</option>
+            <FormControl componentClass="select" placeholder="Select simulator" value={this.state.simulator.node + '/' + this.state.simulator.simulator} onChange={(e) => this.handleChange(e)}>
+              {this.props.nodes.map(node => (
+                node.simulators.map((simulator, index) => (
+                  <option key={node._id + index} value={node.name + '/' + simulator.name}>{node.name}/{simulator.name}</option>
+                ))
               ))}
             </FormControl>
           </FormGroup>

@@ -27,7 +27,6 @@ import PlotLegend from './widget-plot/plot-legend';
 class WidgetPlot extends Component {
 
   render() {
-
     const simulator = this.props.widget.simulator;
     const simulation = this.props.simulation;
     let legendSignals = [];
@@ -36,10 +35,10 @@ class WidgetPlot extends Component {
     // Proceed if a simulation with models and a simulator are available
     if (simulator && simulation && simulation.models.length > 0) {
 
-      const model = simulation.models.find( (model) => model.simulator === simulator );
+      const model = simulation.models.find( model => model.simulator.node === simulator.node && model.simulator.simulator === simulator.simulator );
       const chosenSignals = this.props.widget.signals;
 
-      simulatorData = this.props.data[simulator];
+      simulatorData = this.props.data[simulator.node][simulator.simulator];
 
       // Query the signals that will be displayed in the legend
       legendSignals = model.mapping.reduce( (accum, model_signal, signal_index) => {
@@ -53,7 +52,7 @@ class WidgetPlot extends Component {
     return (
       <div className="plot-widget" ref="wrapper">
         <h4>{this.props.widget.name}</h4>
-        
+
         <div className="widget-plot">
           <Plot signals={ this.props.widget.signals } time={ this.props.widget.time } simulatorData={ simulatorData } yAxisLabel={ this.props.widget.ylabel } />
         </div>

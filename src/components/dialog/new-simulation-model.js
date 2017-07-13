@@ -30,7 +30,7 @@ class NewSimulationModelDialog extends Component {
   static propTypes = {
     show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    simulators: PropTypes.array.isRequired
+    nodes: PropTypes.array.isRequired
   };
 
   valid: false;
@@ -40,7 +40,7 @@ class NewSimulationModelDialog extends Component {
 
     this.state = {
       name: '',
-      simulator: '',
+      simulator: { node: '', simulator: '' },
       length: '1',
       mapping: [ { name: 'Signal', type: 'Type' } ]
     };
@@ -68,7 +68,11 @@ class NewSimulationModelDialog extends Component {
       }
     }
 
-    this.setState({ [e.target.id]: e.target.value });
+    if (e.target.id === 'simulator') {
+      this.setState({ simulator: JSON.parse(e.target.value) });
+    } else {
+      this.setState({ [e.target.id]: e.target.value });
+    }
   }
 
   handleMappingChange(event, row, column) {
@@ -86,7 +90,7 @@ class NewSimulationModelDialog extends Component {
   resetState() {
     this.setState({
       name: '',
-      simulator: this.props.simulators[0] != null ? this.props.simulators[0]._id : '',
+      simulator: { node: this.props.nodes[0] ? this.props.nodes[0]._id : '', simulator: this.props.nodes[0].simulators[0] ? 0 : '' },
       length: '1',
       mapping: [ { name: 'Signal', type: 'Type' } ]
     });
@@ -130,9 +134,11 @@ class NewSimulationModelDialog extends Component {
           </FormGroup>
           <FormGroup controlId="simulator" validationState={this.validateForm('simulator')}>
             <ControlLabel>Simulator</ControlLabel>
-            <FormControl componentClass="select" placeholder="Select simulator" value={this.state.simulator} onChange={(e) => this.handleChange(e)}>
-              {this.props.simulators.map(simulator => (
-                <option key={simulator._id} value={simulator._id}>{simulator.name}</option>
+            <FormControl componentClass="select" placeholder="Select simulator" value={this.state.simulator.node + '/' + this.state.simulator.simulator} onChange={(e) => this.handleChange(e)}>
+              {this.props.nodes.map(node => (
+                node.simulators.map((simulator, index) => (
+                  <option key={node._id + index} value={JSON.stringify({ node: node._id, simulator: index })}>{node.name}/{simulator.name}</option>
+                ))
               ))}
             </FormControl>
           </FormGroup>

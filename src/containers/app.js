@@ -27,7 +27,7 @@ import NotificationSystem from 'react-notification-system';
 
 import AppDispatcher from '../app-dispatcher';
 import SimulationStore from '../stores/simulation-store';
-import SimulatorStore from '../stores/simulator-store';
+import NodeStore from '../stores/node-store';
 import UserStore from '../stores/user-store';
 import NotificationsDataManager from '../data-managers/notifications-data-manager';
 
@@ -40,12 +40,12 @@ import '../styles/app.css';
 
 class App extends Component {
   static getStores() {
-    return [ SimulationStore, SimulatorStore, UserStore ];
+    return [ NodeStore, UserStore, SimulationStore ];
   }
 
   static calculateState(prevState) {
     // get list of running simulators
-    var simulators = SimulatorStore.getState().filter(simulator => {
+    /*var simulators = SimulatorStore.getState().filter(simulator => {
       return simulator.running === true;
     });
 
@@ -74,16 +74,17 @@ class App extends Component {
       if (equal) {
         simulators = prevState.runningSimulators;
       }
-    }
+    }*/
 
     let currentUser = UserStore.getState().currentUser;
 
     return {
+      nodes: NodeStore.getState(),
       simulations: SimulationStore.getState(),
       currentRole: currentUser? currentUser.role : '',
-      token: UserStore.getState().token,
+      token: UserStore.getState().token/*,
 
-      runningSimulators: simulators
+      runningSimulators: simulators*/
     };
   }
 
@@ -103,7 +104,7 @@ class App extends Component {
 
     // load all simulators and simulations to fetch simulation data
     AppDispatcher.dispatch({
-      type: 'simulators/start-load'
+      type: 'nodes/start-load'
     });
 
     AppDispatcher.dispatch({
@@ -126,52 +127,47 @@ class App extends Component {
       return;
     }
 
-    // open connection to each required simulator
-    const requiredSimulators = this.requiredSimulatorsBySimulations();
+    // open connection to each node
+    /*const requiredNodes = this.requiredNodesBySimulations();
 
-    requiredSimulators.forEach(simulator => {
-      this.connectSimulator(nextState, simulator);
-    });
+    requiredNodes.forEach(node => {
+      AppDispatcher.dispatch({
+        type: 'simulatorData/open',
+        identifier: simulator._id,
+        endpoint: node.endpoint,
+        signals: data.signals
+      });
+    });*/
   }
 
-  requiredSimulatorsBySimulations() {
-    var simulators = [];
+  /*requiredNodesBySimulations() {
+    var nodes = {};
 
-    this.state.simulations.forEach((simulation) => {
-      simulation.models.forEach((simulationModel) => {
-        // add simulator to list if not already part of
-        const index = simulators.findIndex((element) => {
-          return element.simulator === simulationModel.simulator;
+    this.state.simulations.forEach(simulation => {
+      simulation.models.forEach(model => {
+        // get ID for node
+        var node = this.state.nodes.find(element => {
+          return element.name === model.simulator.node;
         });
 
-        if (index === -1) {
-          simulators.push({ simulator: simulationModel.simulator, signals: simulationModel.length });
-        } else {
-          if (simulators[index].length < simulationModel.length) {
-            simulators[index].length = simulationModel.length;
+        // add empty node if not existing
+        if (node !== undefined) {
+          if (nodes[node._id] == null) {
+            nodes[node._id] = { simulators: [] }
           }
+
+          // get simulator id
+          var simulator = node.simulators.find(simulator => {
+            return simulator.name === model.simulator.simulator;
+          });
+
+          nodes[node._id].simulators.push({ id: simulator.id, signals: model.length });
         }
       });
     });
 
-    return simulators;
-  }
-
-  connectSimulator(state, data) {
-    // get simulator object
-    const simulator = state.runningSimulators.find(element => {
-      return element._id === data.simulator;
-    });
-
-    if (simulator != null) {
-      AppDispatcher.dispatch({
-        type: 'simulatorData/open',
-        identifier: simulator._id,
-        endpoint: simulator.endpoint,
-        signals: data.signals
-      });
-    }
-  }
+    return nodes;
+  }*/
 
   render() {
     // get children

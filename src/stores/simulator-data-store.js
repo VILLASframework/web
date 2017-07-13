@@ -40,48 +40,57 @@ class SimulationDataStore extends ReduceStore {
 
     switch (action.type) {
       case 'simulatorData/open':
-        SimulatorDataDataManager.open(action.endpoint, action.identifier, action.signals);
+        SimulatorDataDataManager.open(action.endpoint, action.node);
         return state;
 
       case 'simulatorData/opened':
         // create entry for simulator
-        state[action.identifier] = { signals: action.signals, values: [], sequence: null, timestamp: null };
+        state[action.node._id] = {};
 
-        for (i = 0; i < action.signals; i++) {
-          state[action.identifier].values.push([]);
-        }
+        action.node.simulators.forEach(simulator => {
+          state[action.node._id][simulator.id] = { sequence: -1, values: [] };
+        });
 
         return state;
 
       case 'simulatorData/data-changed':
+        // check if data is required, otherwise discard
+        if (state[action.node._id] == null || state[action.node._id][action.data.id] == null) {
+          return state;
+        }
+
         // only add data, if newer than current
-        if (state[action.identifier].sequence < action.data.sequence) {
+        if (state[action.node._id][action.data.id].sequence < action.data.sequence) {
           // add data to simulator
-          for (i = 0; i < state[action.identifier].signals; i++) {
-            state[action.identifier].values[i].push({ x: action.data.timestamp, y: action.data.values[i] });
+          for (i = 0; i < action.data.length; i++) {
+            while (state[action.node._id][action.data.id].values.length < i + 1) {
+              state[action.node._id][action.data.id].values.push([]);
+            }
+
+            state[action.node._id][action.data.id].values[i].push({ x: action.data.timestamp, y: action.data.values[i] });
 
             // erase old values
-            if (state[action.identifier].values[i].length > MAX_VALUES) {
-              const pos = state[action.identifier].values[i].length - MAX_VALUES;
-              state[action.identifier].values[i].splice(0, pos);
+            if (state[action.node._id][action.data.id].values[i].length > MAX_VALUES) {
+              const pos = state[action.node._id][action.data.id].values[i].length - MAX_VALUES;
+              state[action.node._id][action.data.id].values[i].splice(0, pos);
             }
           }
 
           // update metadata
-          state[action.identifier].timestamp = action.data.timestamp;
-          state[action.identifier].sequence = action.data.sequence;
+          state[action.node._id][action.data.id].timestamp = action.data.timestamp;
+          state[action.node._id][action.data.id].sequence = action.data.sequence;
 
           // explicit call to prevent array copy
           this.__emitChange();
         } else {
-          console.log('same sequence ' + state[action.identifier].sequence + ' ' + action.data.sequence);
+          console.log('same sequence ' + state[action.node._id][action.data.id].sequence + ' ' + action.data.sequence);
         }
 
         return state;
 
       case 'simulatorData/closed':
         // close and delete socket
-        if (state[action.identifier] != null) {
+        if (state[action.node] != null) {
           // delete data
           //delete state[action.identifier];
           //state[action.identifier] = null;

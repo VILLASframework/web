@@ -41,7 +41,7 @@ class EditWidgetDialog extends Component {
     this.state = {
       temporal: {
         name: '',
-        simulator: '',
+        simulator: {},
         signal: 0
       }
     };
@@ -58,11 +58,25 @@ class EditWidgetDialog extends Component {
   handleChange(e) {
     if (e.constructor === Array) {
       // Every property in the array will be updated
-      let changes = e.reduce( (changesObject, event) => { changesObject[event.target.id] = event.target.value; return changesObject }, {});
+      let changes = e.reduce( (changesObject, event) => {
+        if (event.target.id === 'simulator') {
+          changesObject[event.target.id] = JSON.parse(event.target.value);
+        } else {
+          changesObject[event.target.id] = event.target.value;
+        }
+
+        return changesObject;
+      }, {});
+
       this.setState({ temporal: Object.assign({}, this.state.temporal, changes ) });
     } else {
         let changeObject = {};
-        changeObject[e.target.id] = e.target.value;
+        if (e.target.id === 'simulator') {
+          changeObject[e.target.id] = JSON.parse(e.target.value);
+        } else {
+          changeObject[e.target.id] = e.target.value;
+        }
+
         this.setState({ temporal: Object.assign({}, this.state.temporal, changeObject ) });
     }
   }
@@ -87,7 +101,7 @@ class EditWidgetDialog extends Component {
   }
 
   render() {
-    
+
     let controls = null;
     if (this.props.widget) {
       controls = createControls(

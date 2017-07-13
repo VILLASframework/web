@@ -37,9 +37,7 @@ class EditSimulatorDialog extends Component {
     super(props);
 
     this.state = {
-      name: '',
-      endpoint: '',
-      _id: ''
+      name: ''
     };
   }
 
@@ -57,30 +55,22 @@ class EditSimulatorDialog extends Component {
 
   resetState() {
     this.setState({
-      name: this.props.simulator.name,
-      endpoint: this.props.simulator.endpoint,
-      _id: this.props.simulator._id
+      name: this.props.simulator.name
     });
   }
 
   validateForm(target) {
     // check all controls
-    var endpoint = true;
     var name = true;
 
-    if (this.state.name === '') {
+    if (this.state.name === '' || this.props.node.simulators.find(simulator => this.props.simulator.name !== this.state.name && simulator.name === this.state.name) !== undefined) {
       name = false;
     }
 
-    if (this.state.endpoint === '') {
-      endpoint = false;
-    }
-
-    this.valid = endpoint && name;
+    this.valid = name;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
-    else return endpoint ? "success" : "error";
   }
 
   render() {
@@ -90,11 +80,6 @@ class EditSimulatorDialog extends Component {
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
             <ControlLabel>Name</ControlLabel>
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup controlId="endpoint" validationState={this.validateForm('endpoint')}>
-            <ControlLabel>Endpoint</ControlLabel>
-            <FormControl type="text" placeholder="Enter endpoint" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
         </form>
