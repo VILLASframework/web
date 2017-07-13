@@ -63,7 +63,7 @@ class EditSimulatorDialog extends Component {
     // check all controls
     var name = true;
 
-    if (this.state.name === '') {
+    if (this.state.name === '' || this.props.node.simulators.find(simulator => this.props.simulator.name !== this.state.name && simulator.name === this.state.name) !== undefined) {
       name = false;
     }
 
