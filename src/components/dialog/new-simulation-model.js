@@ -48,7 +48,6 @@ class NewSimulationModelDialog extends Component {
 
   onClose(canceled) {
     if (canceled === false) {
-      console.log(this.state);
       this.props.onClose(this.state);
     } else {
       this.props.onClose();
@@ -70,7 +69,6 @@ class NewSimulationModelDialog extends Component {
     }
 
     if (e.target.id === 'simulator') {
-      console.log(e.target.value);
       this.setState({ simulator: JSON.parse(e.target.value) });
     } else {
       this.setState({ [e.target.id]: e.target.value });

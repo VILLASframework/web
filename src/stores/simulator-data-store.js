@@ -55,7 +55,7 @@ class SimulationDataStore extends ReduceStore {
 
       case 'simulatorData/data-changed':
         // check if data is required, otherwise discard
-        if (state[action.node._id] == null || state[action.data.id] == null) {
+        if (state[action.node._id] == null || state[action.node._id][action.data.id] == null) {
           return state;
         }
 
