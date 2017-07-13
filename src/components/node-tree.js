@@ -67,7 +67,7 @@ class NodeTree extends React.Component {
       var parent = { title: node.name, subtitle: node.endpoint, id: node._id, config: node.config, children: [], expanded: true };
 
       node.simulators.forEach((simulator) => {
-        parent.children.push({ title: simulator.name });
+        parent.children.push({ title: simulator.name, subtitle: simulator.id != null ? 'Online' : 'Offline' });
       });
 
       treeData.push(parent);
