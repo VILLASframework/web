@@ -59,11 +59,11 @@ class NewNodeDialog extends React.Component {
     var endpoint = true;
     var name = true;
 
-    if (this.state.name === '') {
+    if (this.state.name === '' || this.props.nodes.find(node => node.name === this.state.name) !== undefined) {
       name = false;
     }
 
-    if (this.state.endpoint === '') {
+    if (this.state.endpoint === '' || this.props.nodes.find(node => node.endpoint === this.state.endpoint) !== undefined) {
       endpoint = false;
     }
 

@@ -60,7 +60,7 @@ class NewSimulatorDialog extends Component {
     // check all controls
     var name = true;
 
-    if (this.state.name === '') {
+    if (this.state.name === '' || this.props.node.simulators.find(simulator => simulator.name === this.state.name) !== undefined) {
       name = false;
     }
 
