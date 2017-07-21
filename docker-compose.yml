@@ -10,10 +10,8 @@ networks:
 services:
   # The VILLASweb frontend
   frontend:
-    build: 
+    build:
       context: .
-    environment:
-      - REACT_APP_HTTP_PROXY
     ports:
       - "80:80"
       - "443:443"
@@ -26,8 +24,6 @@ services:
     build: backend
     environment:
       - NODE_ENV=production
-    ports:
-      - "4000:4000"
     restart: always
     networks:
       villas:

@@ -22,8 +22,7 @@
 import RestAPI from '../api/rest-api';
 import AppDispatcher from '../app-dispatcher';
 
-const HOST = process.env.REACT_APP_HTTP_PROXY || "http://localhost:4000";
-const API_URL = HOST + '/api/v1';
+const API_URL = '/api/v1';
 
 class RestDataManager {
   constructor(type, url, keyFilter) {
