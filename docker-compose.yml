@@ -8,14 +8,23 @@ networks:
   villas:
 
 services:
-  # The VILLASweb frontend
+  # Build the frontend with node into a Docker volume
+  # This container does nothing useful beside providing an
+  # assets container to the nginx service
   frontend:
     build:
       context: .
+    command: "/bin/true"
+
+  nginx:
+    image: nginx:stable-alpine
     ports:
       - "80:80"
       - "443:443"
-    restart: always
+    volumes:
+      - "./etc/nginx/villas.conf:/etc/nginx/conf.d/default.conf"
+    volumes_from:
+      - frontend
     networks:
       villas:
 

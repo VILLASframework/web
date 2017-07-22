@@ -1,10 +1,19 @@
-FROM nginx:stable-alpine
+FROM node:8.2
 
-# Copy frontend files and make them accesible to nginx
-RUN mkdir /www
-COPY build /www
-RUN chown nginx:nginx -R /www
-RUN chmod -R 0755 /www
+# Create app directory
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
-# Copy nginx configuration
-COPY etc/nginx/villas.conf /etc/nginx/conf.d/default.conf
+# Install app dependencies
+COPY package.json /usr/src/app/
+RUN npm install
+
+VOLUME /usr/src/app/build
+
+# Bundle app source
+COPY . /usr/src/app
+RUN npm run build
+
+EXPOSE 80
+
+CMD [ "npm", "start" ]
