@@ -1,0 +1,3 @@
+FROM villas/node:latest
+
+COPY etc/node/*.conf /etc/villas/node/

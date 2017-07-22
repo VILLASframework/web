@@ -17,12 +17,12 @@ services:
     command: "/bin/true"
 
   nginx:
-    image: nginx:stable-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - "./etc/nginx/villas.conf:/etc/nginx/conf.d/default.conf"
     volumes_from:
       - frontend
     networks:
@@ -51,23 +51,24 @@ services:
       villas:
 
   # AMQP broker for VILLAScontroller
-  broker:
-    image: rabbitmq:management
-    environment:
-      RABBITMQ_DEFAULT_USER: "villas"
-      RABBITMQ_DEFAULT_PASS: "s3c0sim4!"
-    ports:
-      - "8080:15672"
-      - "5672:5672"
-    networks:
-      villas:
+#  broker:
+#    image: rabbitmq:management
+#    environment:
+#      RABBITMQ_DEFAULT_USER: "villas"
+#      RABBITMQ_DEFAULT_PASS: "s3c0sim4!"
+#    ports:
+#      - "8080:15672"
+#      - "5672:5672"
+#    networks:
+#      villas:
 
   # VILLASnode, the gateway between UDP and WebSocket traffic
   node:
-    image: villas/node:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.node
     privileged: true
+    restart: always
     command: node /etc/villas/node/websocket-demo.conf
-    volumes:
-      - "./etc/node/:/etc/villas/node/"
     networks:
       villas:
