@@ -66,7 +66,11 @@ deploy_review:
     - docker-compose --version
     - docker info
   script:
-    - docker-compose up -d --force-recreate --build
+    - docker-compose pull
+    - docker-compose build --no-cache
+    - docker-compose up -d
+  after_script:
+    - docker-compose rm -f
   image: docker:17
   dependencies:
     - build_job
