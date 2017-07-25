@@ -47,44 +47,49 @@ class SimulationDataStore extends ReduceStore {
         // create entry for simulator
         state[action.node._id] = {};
 
-        action.node.simulators.forEach(simulator => {
-          state[action.node._id][simulator.id] = { sequence: -1, values: [] };
+        action.node.simulators.forEach((simulator, index) => {
+          state[action.node._id][index] = { sequence: -1, values: [] };
         });
 
         return state;
 
       case 'simulatorData/data-changed':
-        // check if data is required, otherwise discard
-        if (state[action.node._id] == null || state[action.node._id][action.data.id] == null) {
-          return state;
-        }
+      // get index for simulator id
+      if (state[action.node._id] == null) {
+        return state;
+      }
 
-        // only add data, if newer than current
-        if (state[action.node._id][action.data.id].sequence < action.data.sequence) {
-          // add data to simulator
-          for (i = 0; i < action.data.length; i++) {
-            while (state[action.node._id][action.data.id].values.length < i + 1) {
-              state[action.node._id][action.data.id].values.push([]);
-            }
+      let index = action.node.simulators.findIndex(simulator => simulator.id === action.data.id);
+      if (index === -1 || state[action.node._id][index] == null) {
+        return state;
+      }
 
-            state[action.node._id][action.data.id].values[i].push({ x: action.data.timestamp, y: action.data.values[i] });
-
-            // erase old values
-            if (state[action.node._id][action.data.id].values[i].length > MAX_VALUES) {
-              const pos = state[action.node._id][action.data.id].values[i].length - MAX_VALUES;
-              state[action.node._id][action.data.id].values[i].splice(0, pos);
-            }
+      // only add data, if newer than current
+      if (state[action.node._id][index].sequence < action.data.sequence) {
+        // add data to simulator
+        for (i = 0; i < action.data.length; i++) {
+          while (state[action.node._id][index].values.length < i + 1) {
+            state[action.node._id][index].values.push([]);
           }
 
-          // update metadata
-          state[action.node._id][action.data.id].timestamp = action.data.timestamp;
-          state[action.node._id][action.data.id].sequence = action.data.sequence;
+          state[action.node._id][index].values[i].push({ x: action.data.timestamp, y: action.data.values[i] });
 
-          // explicit call to prevent array copy
-          this.__emitChange();
-        } else {
-          console.log('same sequence ' + state[action.node._id][action.data.id].sequence + ' ' + action.data.sequence);
+          // erase old values
+          if (state[action.node._id][index].values[i].length > MAX_VALUES) {
+            const pos = state[action.node._id][index].values[i].length - MAX_VALUES;
+            state[action.node._id][index].values[i].splice(0, pos);
+          }
         }
+
+        // update metadata
+        state[action.node._id][index].timestamp = action.data.timestamp;
+        state[action.node._id][index].sequence = action.data.sequence;
+
+        // explicit call to prevent array copy
+        this.__emitChange();
+      } else {
+        console.log('same sequence ' + state[action.node._id][index].sequence + ' ' + action.data.sequence);
+      }
 
         return state;
 
