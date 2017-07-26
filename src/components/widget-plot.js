@@ -19,13 +19,12 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
+import React from 'react';
 
 import Plot from './widget-plot/plot';
-import PlotLegend from './widget-plot/plot-legend';
+//import PlotLegend from './widget-plot/plot-legend';
 
-class WidgetPlot extends Component {
-
+class WidgetPlot extends React.Component {
   render() {
     const simulator = this.props.widget.simulator;
     const simulation = this.props.simulation;
@@ -38,15 +37,15 @@ class WidgetPlot extends Component {
       const model = simulation.models.find( model => model.simulator.node === simulator.node && model.simulator.simulator === simulator.simulator );
       const chosenSignals = this.props.widget.signals;
 
-      simulatorData = this.props.data[simulator.node][simulator.simulator];
+      simulatorData = this.props.data[simulator.node][simulator.simulator].values[0];
 
       // Query the signals that will be displayed in the legend
       legendSignals = model.mapping.reduce( (accum, model_signal, signal_index) => {
-          if (chosenSignals.includes(signal_index)) {
-            accum.push({ index: signal_index, name: model_signal.name });
-          }
-          return accum;
-        }, []);
+        if (chosenSignals.includes(signal_index)) {
+          accum.push({ index: signal_index, name: model_signal.name });
+        }
+        return accum;
+      }, []);
     }
 
     return (
@@ -54,9 +53,12 @@ class WidgetPlot extends Component {
         <h4>{this.props.widget.name}</h4>
 
         <div className="widget-plot">
-          <Plot signals={ this.props.widget.signals } time={ this.props.widget.time } simulatorData={ simulatorData } yAxisLabel={ this.props.widget.ylabel } />
+          <Plot 
+            data={simulatorData} 
+            height={this.props.widget.height - 80} 
+            width={this.props.widget.width - 20} 
+          />
         </div>
-        <PlotLegend signals={legendSignals} />
       </div>
     );
   }
