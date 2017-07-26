@@ -8,11 +8,12 @@
  **********************************************************************************/
 
 import React from 'react';
-import { scaleLinear, scaleTime } from 'd3-scale';
+import { scaleLinear, scaleTime, scaleOrdinal, schemeCategory10 } from 'd3-scale';
 import { extent } from 'd3-array';
 import { line } from 'd3-shape';
 import { axisBottom, axisLeft } from  'd3-axis';
 import { select } from 'd3-selection';
+import { timeFormat } from 'd3-time-format';
 
 const leftMargin = 30;
 const bottomMargin = 20;
@@ -59,16 +60,18 @@ class Plot extends React.Component {
       return values;
     });
     
+    // create scale functions for both axes
     const xScale = scaleTime().domain(xRange).range([leftMargin, nextProps.width]);
     const yScale = scaleLinear().domain(yRange).range([nextProps.height, bottomMargin]);
-
-    const xAxis = axisBottom().scale(xScale).ticks(5);
+    
+    const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(date => timeFormat("%M:%S")(date));
     const yAxis = axisLeft().scale(yScale).ticks(5);
 
-    const sparkLine = line().x(p => xScale(p.x)).y(p => yScale(p.y));
-
     // generate paths from data
-    const lines = data.map((values, index) => <path d={sparkLine(values)} key={index} />);
+    const sparkLine = line().x(p => xScale(p.x)).y(p => yScale(p.y));
+    const lineColor = scaleOrdinal(schemeCategory10);
+
+    const lines = data.map((values, index) => <path d={sparkLine(values)} key={index} style={{ fill: 'none', stroke: lineColor(index) }} />);
 
     this.setState({ data: lines, xAxis, yAxis });
   }
@@ -81,7 +84,7 @@ class Plot extends React.Component {
         <g ref={node => select(node).call(this.state.xAxis)} style={{ transform: `translateY(${this.props.height}px)` }} />
         <g ref={node => select(node).call(this.state.yAxis)} style={{ transform: `translateX(${leftMargin}px)`}} />
 
-        <g style={{ fill: 'none', stroke: 'blue' }}>
+        <g>
           {this.state.data}
         </g>
       </svg>
