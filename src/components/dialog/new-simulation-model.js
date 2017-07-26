@@ -134,7 +134,7 @@ class NewSimulationModelDialog extends Component {
           </FormGroup>
           <FormGroup controlId="simulator" validationState={this.validateForm('simulator')}>
             <ControlLabel>Simulator</ControlLabel>
-            <FormControl componentClass="select" placeholder="Select simulator" value={this.state.simulator.node + '/' + this.state.simulator.simulator} onChange={(e) => this.handleChange(e)}>
+            <FormControl componentClass="select" placeholder="Select simulator" value={JSON.stringify({ node: this.state.simulator.node, simulator: this.state.simulator.simulator})} onChange={(e) => this.handleChange(e)}>
               {this.props.nodes.map(node => (
                 node.simulators.map((simulator, index) => (
                   <option key={node._id + index} value={JSON.stringify({ node: node._id, simulator: index })}>{node.name}/{simulator.name}</option>
