@@ -5,15 +5,9 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # Install app dependencies
-COPY package.json /usr/src/app/
-RUN npm install
+COPY . /usr/src/app
+RUN npm install && npm run build
 
 VOLUME /usr/src/app/build
 
-# Bundle app source
-COPY . /usr/src/app
-RUN npm run build
-
-EXPOSE 80
-
-CMD [ "npm", "start" ]
+CMD [ "true" ]

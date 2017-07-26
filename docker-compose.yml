@@ -3,9 +3,7 @@ version: "2"
 volumes:
   database:
     driver: local
-
-networks:
-  villas:
+  website:
 
 services:
   # Build the frontend with node into a Docker volume
@@ -14,7 +12,8 @@ services:
   frontend:
     build:
       context: .
-    command: "/bin/true"
+    volumes:
+      - website:/usr/src/app/build
 
   nginx:
     build:
@@ -23,10 +22,8 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    volumes_from:
-      - frontend
-    networks:
-      villas:
+    volumes:
+      - website:/www
 
   # The VILLASweb backend
   backend:
@@ -34,8 +31,6 @@ services:
     environment:
       - NODE_ENV=production
     restart: always
-    networks:
-      villas:
 
   # The MongoDB database for the VILLASweb backend
   database:
@@ -43,12 +38,8 @@ services:
     user: mongodb
     volumes:
       - database:/data/db
-    expose:
-      - "27017"
     restart: always
     user: mongodb
-    networks:
-      villas:
 
   # AMQP broker for VILLAScontroller
 #  broker:
@@ -70,5 +61,3 @@ services:
     privileged: true
     restart: always
     command: node /etc/villas/node/websocket-demo.conf
-    networks:
-      villas:
