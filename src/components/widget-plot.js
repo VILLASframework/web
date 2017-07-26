@@ -28,24 +28,24 @@ class WidgetPlot extends React.Component {
   render() {
     const simulator = this.props.widget.simulator;
     const simulation = this.props.simulation;
-    let legendSignals = [];
+    //let legendSignals = [];
     let simulatorData = [];
 
     // Proceed if a simulation with models and a simulator are available
     if (simulator && simulation && simulation.models.length > 0) {
 
-      const model = simulation.models.find( model => model.simulator.node === simulator.node && model.simulator.simulator === simulator.simulator );
-      const chosenSignals = this.props.widget.signals;
+      //const model = simulation.models.find( model => model.simulator.node === simulator.node && model.simulator.simulator === simulator.simulator );
+      //const chosenSignals = this.props.widget.signals;
 
       simulatorData = this.props.data[simulator.node][simulator.simulator].values[0];
 
       // Query the signals that will be displayed in the legend
-      legendSignals = model.mapping.reduce( (accum, model_signal, signal_index) => {
+      /*legendSignals = model.mapping.reduce( (accum, model_signal, signal_index) => {
         if (chosenSignals.includes(signal_index)) {
           accum.push({ index: signal_index, name: model_signal.name });
         }
         return accum;
-      }, []);
+      }, []);*/
     }
 
     return (
@@ -53,10 +53,11 @@ class WidgetPlot extends React.Component {
         <h4>{this.props.widget.name}</h4>
 
         <div className="widget-plot">
-          <Plot 
-            data={simulatorData} 
-            height={this.props.widget.height - 80} 
-            width={this.props.widget.width - 20} 
+          <Plot
+            data={simulatorData}
+            height={this.props.widget.height - 80}
+            width={this.props.widget.width - 20}
+            time={this.props.widget.time}
           />
         </div>
       </div>
