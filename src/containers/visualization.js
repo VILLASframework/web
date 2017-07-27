@@ -30,6 +30,7 @@ import ToolboxItem from '../components/toolbox-item';
 import Dropzone from '../components/dropzone';
 import Widget from './widget';
 import EditWidget from '../components/dialog/edit-widget';
+import Grid from '../components/grid';
 
 import UserStore from '../stores/user-store';
 import VisualizationStore from '../stores/visualization-store';
@@ -61,7 +62,6 @@ class Visualization extends Component {
       project: prevState.project || null,
       simulation: prevState.simulation || null,
       editing: prevState.editing || false,
-      grid: prevState.grid || [1, 1],
 
       editModal: prevState.editModal || false,
       modalData: prevState.modalData || null,
@@ -339,7 +339,11 @@ class Visualization extends Component {
       value = 1;
     }
 
-    this.setState({ grid: [value, value] });
+    let visualization = Object.assign({}, this.state.visualization, {
+      grid: value
+    });
+
+    this.setState({ visualization });
   }
 
   render() {
@@ -374,9 +378,9 @@ class Visualization extends Component {
 
           {this.state.editing &&
             <div className="section-grid-slider">
-              <span>Grid: {this.state.grid[0] > 1 ? this.state.grid[0] : 'Disabled'}</span>
+              <span>Grid: {this.state.visualization.grid > 1 ? this.state.visualization.grid : 'Disabled'}</span>
 
-              <Slider style={{ width: '80px' }} step={5} onChange={value => this.setGrid(value)} />
+              <Slider value={this.state.visualization.grid} style={{ width: '80px' }} step={5} onChange={value => this.setGrid(value)} />
             </div>
           }
         </div>
@@ -390,9 +394,9 @@ class Visualization extends Component {
               <ToolboxItem name="Label" type="widget" />
               <ToolboxItem name="Image" type="widget" />
               <ToolboxItem name="PlotTable" type="widget" />
-              <ToolboxItem name="Button" type="widget" />
-              <ToolboxItem name="NumberInput" type="widget" />
-              <ToolboxItem name="Slider" type="widget" />
+              <ToolboxItem name="Button" type="widget" disabled />
+              <ToolboxItem name="NumberInput" type="widget" disabled />
+              <ToolboxItem name="Slider" type="widget" disabled />
               <ToolboxItem name="Gauge" type="widget" />
               <ToolboxItem name="Box" type="widget" />
             </div>
@@ -401,8 +405,10 @@ class Visualization extends Component {
           <Dropzone height={this.state.dropZoneHeight} onDrop={(item, position) => this.handleDrop(item, position)} editing={this.state.editing}>
             {current_widgets != null &&
               Object.keys(current_widgets).map( (widget_key) => (
-              <Widget key={widget_key} data={current_widgets[widget_key]} simulation={this.state.simulation} onWidgetChange={(w, k) => this.widgetChange(w, k)} onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)} editing={this.state.editing} index={widget_key} grid={this.state.grid} />
+              <Widget key={widget_key} data={current_widgets[widget_key]} simulation={this.state.simulation} onWidgetChange={(w, k) => this.widgetChange(w, k)} onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)} editing={this.state.editing} index={widget_key} grid={[this.state.visualization.grid, this.state.visualization.grid]} />
             ))}
+
+            <Grid size={this.state.visualization.grid} disabled={this.state.visualization.grid === 1 || !this.state.editing} />
           </Dropzone>
 
           {current_widgets != null &&
