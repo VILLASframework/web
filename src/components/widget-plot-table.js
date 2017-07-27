@@ -108,7 +108,9 @@ class WidgetPlotTable extends Component {
     let simulatorData = [];
 
     if (this.props.data[simulator.node] != null && this.props.data[simulator.node][simulator.simulator] != null) {
-      simulatorData = this.props.data[simulator.node][simulator.simulator];
+      simulatorData = this.props.data[simulator.node][simulator.simulator].values.filter((values, index) => (
+        this.props.widget.signals.findIndex(value => value === index) !== -1
+      ));
     }
 
     if (this.state.preselectedSignals && this.state.preselectedSignals.length > 0) {
@@ -153,7 +155,12 @@ class WidgetPlotTable extends Component {
             </div>
 
             <div className="widget-plot">
-              <Plot signals={ this.state.signals } time={ this.props.widget.time } simulatorData={ simulatorData } yAxisLabel={ this.props.widget.ylabel } />
+              <Plot 
+                data={simulatorData}
+                time={this.props.widget.time} 
+                width={this.props.widget.width - 100}
+                height={this.props.widget.height - 100}
+              />
             </div>
           </div>
           <PlotLegend signals={legendSignals} />
