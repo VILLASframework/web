@@ -25,6 +25,7 @@ import { Button, Modal, Glyphicon } from 'react-bootstrap';
 
 import SimulationStore from '../stores/simulation-store';
 import NodeStore from '../stores/node-store';
+import UserStore from '../stores/user-store';
 import AppDispatcher from '../app-dispatcher';
 
 import Table from '../components/table';
@@ -34,13 +35,14 @@ import EditSimulationModelDialog from '../components/dialog/edit-simulation-mode
 
 class Simulation extends Component {
   static getStores() {
-    return [ SimulationStore, NodeStore ];
+    return [ SimulationStore, NodeStore, UserStore ];
   }
 
   static calculateState() {
     return {
       simulations: SimulationStore.getState(),
       nodes: NodeStore.getState(),
+      sessionToken: UserStore.getState().token,
 
       newModal: false,
       deleteModal: false,
@@ -54,11 +56,13 @@ class Simulation extends Component {
 
   componentWillMount() {
     AppDispatcher.dispatch({
-      type: 'simulations/start-load'
+      type: 'simulations/start-load',
+      token: this.state.sessionToken
     });
 
     AppDispatcher.dispatch({
-      type: 'nodes/start-load'
+      type: 'nodes/start-load',
+      token: this.state.sessionToken
     });
   }
 
@@ -86,7 +90,8 @@ class Simulation extends Component {
 
       AppDispatcher.dispatch({
         type: 'simulations/start-edit',
-        data: this.state.simulation
+        data: this.state.simulation,
+        token: this.state.sessionToken
       });
     }
   }
@@ -100,7 +105,8 @@ class Simulation extends Component {
 
     AppDispatcher.dispatch({
       type: 'simulations/start-edit',
-      data: simulation
+      data: simulation,
+      token: this.state.sessionToken
     });
   }
 
@@ -114,7 +120,8 @@ class Simulation extends Component {
 
       AppDispatcher.dispatch({
         type: 'simulations/start-edit',
-        data: simulation
+        data: simulation,
+        token: this.state.sessionToken
       });
     }
   }

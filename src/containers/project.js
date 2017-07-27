@@ -25,6 +25,7 @@ import { Button, Modal, Glyphicon } from 'react-bootstrap';
 
 import AppDispatcher from '../app-dispatcher';
 import ProjectStore from '../stores/project-store';
+import UserStore from '../stores/user-store';
 import VisualizationStore from '../stores/visualization-store';
 
 import CustomTable from '../components/table';
@@ -34,7 +35,7 @@ import EditVisualizationDialog from '../components/dialog/edit-visualization';
 
 class Visualizations extends Component {
   static getStores() {
-    return [ ProjectStore, VisualizationStore ];
+    return [ ProjectStore, VisualizationStore, UserStore ];
   }
 
   static calculateState(prevState, props) {
@@ -59,6 +60,7 @@ class Visualizations extends Component {
       return {
         projects: currentProjects,
         visualizations: currentVisualizations,
+        sessionToken: UserStore.getState().token,
 
         newModal: prevState.newModal,
         deleteModal: prevState.deleteModal,
@@ -78,6 +80,7 @@ class Visualizations extends Component {
       return {
         projects: currentProjects,
         visualizations: currentVisualizations,
+        sessionToken: UserStore.getState().token,
 
         newModal: false,
         deleteModal: false,
@@ -95,14 +98,16 @@ class Visualizations extends Component {
 
   static loadProjects() {
     AppDispatcher.dispatch({
-      type: 'projects/start-load'
+      type: 'projects/start-load',
+      token: this.state.sessionToken
     });
   }
 
   static loadVisualizations(visualizations) {
     AppDispatcher.dispatch({
       type: 'visualizations/start-load',
-      data: visualizations
+      data: visualizations,
+      token: this.state.sessionToken
     });
   }
 
@@ -117,7 +122,8 @@ class Visualizations extends Component {
 
       AppDispatcher.dispatch({
         type: 'visualizations/start-add',
-        data: data
+        data: data,
+        token: this.state.sessionToken
       });
     }
 
@@ -129,7 +135,8 @@ class Visualizations extends Component {
 
     AppDispatcher.dispatch({
       type: 'visualizations/start-remove',
-      data: this.state.modalData
+      data: this.state.modalData,
+      token: this.state.sessionToken
     });
   }
 
@@ -139,7 +146,8 @@ class Visualizations extends Component {
     if (data) {
       AppDispatcher.dispatch({
         type: 'visualizations/start-edit',
-        data: data
+        data: data,
+        token: this.state.sessionToken
       });
     }
   }

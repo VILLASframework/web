@@ -73,8 +73,11 @@ class Visualization extends Component {
   }
 
   componentWillMount() {
+    const token = localStorage.getItem('token');
+
     AppDispatcher.dispatch({
-      type: 'visualizations/start-load'
+      type: 'visualizations/start-load',
+      token
     });
   }
 
@@ -89,9 +92,12 @@ class Visualization extends Component {
         if (project._id === this.state.visualization.project) {
           this.setState({ project: project, simulation: null });
 
+          const token = localStorage.getItem('token');
+
           AppDispatcher.dispatch({
             type: 'simulations/start-load',
-            data: project.simulation
+            data: project.simulation,
+            token
           });
         }
       });
@@ -137,9 +143,12 @@ class Visualization extends Component {
 
         this.setState({ visualization: visualization, project: null });
 
+        const token = localStorage.getItem('token');
+
         AppDispatcher.dispatch({
           type: 'projects/start-load',
-          data: visualization.project
+          data: visualization.project,
+          token
         });
       }
     });
@@ -268,9 +277,12 @@ class Visualization extends Component {
         widgets: this.transformToWidgetsList(this.state.visualization.widgets)
       });
 
+      const token = localStorage.getItem('token');
+
     AppDispatcher.dispatch({
       type: 'visualizations/start-edit',
-      data: visualization
+      data: visualization,
+      token
     });
   }
 

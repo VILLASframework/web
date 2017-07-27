@@ -104,11 +104,13 @@ class App extends Component {
 
     // load all simulators and simulations to fetch simulation data
     AppDispatcher.dispatch({
-      type: 'nodes/start-load'
+      type: 'nodes/start-load',
+      token
     });
 
     AppDispatcher.dispatch({
-      type: 'simulations/start-load'
+      type: 'simulations/start-load',
+      token
     });
   }
 

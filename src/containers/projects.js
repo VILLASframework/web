@@ -25,6 +25,7 @@ import { Button, Modal, Glyphicon } from 'react-bootstrap';
 
 import AppDispatcher from '../app-dispatcher';
 import ProjectStore from '../stores/project-store';
+import UserStore from '../stores/user-store';
 import SimulationStore from '../stores/simulation-store';
 
 import Table from '../components/table';
@@ -34,13 +35,14 @@ import EditProjectDialog from '../components/dialog/edit-project';
 
 class Projects extends Component {
   static getStores() {
-    return [ ProjectStore, SimulationStore ];
+    return [ ProjectStore, SimulationStore, UserStore ];
   }
 
   static calculateState() {
     return {
       projects: ProjectStore.getState(),
       simulations: SimulationStore.getState(),
+      sessionToken: UserStore.getState().token,
 
       newModal: false,
       editModal: false,
@@ -51,11 +53,13 @@ class Projects extends Component {
 
   componentWillMount() {
     AppDispatcher.dispatch({
-      type: 'projects/start-load'
+      type: 'projects/start-load',
+      token: this.state.sessionToken
     });
 
     AppDispatcher.dispatch({
-      type: 'simulations/start-load'
+      type: 'simulations/start-load',
+      token: this.state.sessionToken
     });
   }
 
@@ -65,7 +69,8 @@ class Projects extends Component {
     if (data) {
       AppDispatcher.dispatch({
         type: 'projects/start-add',
-        data: data
+        data: data,
+        token: this.state.sessionToken
       });
     }
   }
@@ -75,7 +80,8 @@ class Projects extends Component {
 
     AppDispatcher.dispatch({
       type: 'projects/start-remove',
-      data: this.state.modalData
+      data: this.state.modalData,
+      token: this.state.sessionToken
     });
   }
 
@@ -85,7 +91,8 @@ class Projects extends Component {
     if (data) {
       AppDispatcher.dispatch({
         type: 'projects/start-edit',
-        data: data
+        data: data,
+        token: this.state.sessionToken
       });
     }
   }

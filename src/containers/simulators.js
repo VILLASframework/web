@@ -25,6 +25,7 @@ import { Button, Modal, Glyphicon } from 'react-bootstrap';
 
 import AppDispatcher from '../app-dispatcher';
 import NodeStore from '../stores/node-store';
+import UserStore from '../stores/user-store';
 
 import NewNodeDialog from '../components/dialog/new-node';
 import EditNodeDialog from '../components/dialog/edit-node';
@@ -34,12 +35,13 @@ import NodeTree from '../components/node-tree';
 
 class Simulators extends Component {
   static getStores() {
-    return [ NodeStore ];
+    return [ NodeStore, UserStore ];
   }
 
   static calculateState() {
     return {
       nodes: NodeStore.getState(),
+      sessionToken: UserStore.getState().token,
 
       newNodeModal: false,
       deleteNodeModal: false,
@@ -57,7 +59,8 @@ class Simulators extends Component {
 
   componentWillMount() {
     AppDispatcher.dispatch({
-      type: 'nodes/start-load'
+      type: 'nodes/start-load',
+      token: this.state.sessionToken
     });
   }
 
@@ -67,7 +70,8 @@ class Simulators extends Component {
     if (data) {
       AppDispatcher.dispatch({
         type: 'nodes/start-add',
-        data: data
+        data: data,
+        token: this.state.sessionToken
       });
     }
   }
@@ -87,7 +91,8 @@ class Simulators extends Component {
     if (data) {
       AppDispatcher.dispatch({
         type: 'nodes/start-edit',
-        data: data
+        data: data,
+        token: this.state.sessionToken
       });
     }
   }
@@ -106,7 +111,8 @@ class Simulators extends Component {
 
     AppDispatcher.dispatch({
       type: 'nodes/start-remove',
-      data: this.state.modalData
+      data: this.state.modalData,
+      token: this.state.sessionToken
     });
   }
 
@@ -128,7 +134,8 @@ class Simulators extends Component {
 
       AppDispatcher.dispatch({
         type: 'nodes/start-edit',
-        data: node
+        data: node,
+        token: this.state.sessionToken
       });
     }
   }
@@ -151,7 +158,8 @@ class Simulators extends Component {
 
       AppDispatcher.dispatch({
         type: 'nodes/start-edit',
-        data: node
+        data: node,
+        token: this.state.sessionToken
       });
     }
   }
@@ -174,7 +182,8 @@ class Simulators extends Component {
 
     AppDispatcher.dispatch({
       type: 'nodes/start-edit',
-      data: node
+      data: node,
+      token: this.state.sessionToken
     });
   }
 
@@ -183,7 +192,8 @@ class Simulators extends Component {
     nodes.forEach((node) => {
       AppDispatcher.dispatch({
         type: 'nodes/start-edit',
-        data: node
+        data: node,
+        token: this.state.sessionToken
       });
     });
   }
