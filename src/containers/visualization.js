@@ -23,6 +23,7 @@ import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import { Button } from 'react-bootstrap';
 import { ContextMenu, MenuItem } from 'react-contextmenu';
+import Slider from 'rc-slider';
 
 import WidgetFactory from '../components/widget-factory';
 import ToolboxItem from '../components/toolbox-item';
@@ -60,7 +61,7 @@ class Visualization extends Component {
       project: prevState.project || null,
       simulation: prevState.simulation || null,
       editing: prevState.editing || false,
-      grid: prevState.grid || false,
+      grid: prevState.grid || [1, 1],
 
       editModal: prevState.editModal || false,
       modalData: prevState.modalData || null,
@@ -332,6 +333,15 @@ class Visualization extends Component {
     return widget;
   }
 
+  setGrid(value) {
+    // value 0 would block all widgets, set 1 as 'grid disabled'
+    if (value === 0) {
+      value = 1;
+    }
+
+    this.setState({ grid: [value, value] });
+  }
+
   render() {
     var current_widgets = this.state.visualization.widgets;
 
@@ -344,13 +354,15 @@ class Visualization extends Component {
             </span>
           </div>
           {this.state.editing ? (
-            <div className='section-buttons-group'>
-              <Button bsStyle="link" onClick={() => this.stopEditing()}>
-                <span className="glyphicon glyphicon-floppy-disk"></span> Save
-              </Button>
-              <Button bsStyle="link" onClick={() => this.discardChanges()}>
-                <span className="glyphicon glyphicon-remove"></span> Cancel
-              </Button>
+            <div>
+              <div className='section-buttons-group'>
+                <Button bsStyle="link" onClick={() => this.stopEditing()}>
+                  <span className="glyphicon glyphicon-floppy-disk"></span> Save
+                </Button>
+                <Button bsStyle="link" onClick={() => this.discardChanges()}>
+                  <span className="glyphicon glyphicon-remove"></span> Cancel
+                </Button>
+              </div>
             </div>
           ) : (
             <div className='section-buttons-group'>
@@ -359,6 +371,14 @@ class Visualization extends Component {
               </Button>
             </div>
           )}
+
+          {this.state.editing &&
+            <div className="section-grid-slider">
+              <span>Grid: {this.state.grid[0] > 1 ? this.state.grid[0] : 'Disabled'}</span>
+
+              <Slider style={{ width: '80px' }} step={5} onChange={value => this.setGrid(value)} />
+            </div>
+          }
         </div>
 
         <div className="box box-content" onContextMenu={ (e) => e.preventDefault() }>

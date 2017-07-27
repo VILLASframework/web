@@ -128,11 +128,6 @@ class Widget extends Component {
   }
 
   render() {
-
-
-
-    //console.log('render widget ' + this.props.data.z + this.props.data.type);
-
     // configure grid
     var grid = this.props.grid;
     if (!grid) {
@@ -143,6 +138,8 @@ class Widget extends Component {
     const widget = this.props.data;
     var borderedWidget = false;
     var element = null;
+
+    //console.log(widget.type + ': ' + widget.z);
 
     // dummy is passed to widgets to keep updating them while in edit mode
     if (widget.type === 'Value') {

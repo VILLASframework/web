@@ -245,7 +245,7 @@ body {
 .section-header div {
   display: inline-block;
   vertical-align: middle;
-  height: 100%;
+  /* height: 100%; */
 }
 
 .section-title {
@@ -268,4 +268,14 @@ body {
 
 .section-header .glyphicon {
   font-size: 0.8em;
+}
+
+.section-grid-slider {
+  height: auto !important;
+
+  float: right;
+}
+
+.section-grid-slider .rc-slider {
+  margin-left: 12px;
 }
