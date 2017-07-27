@@ -42,25 +42,26 @@ class Visualizations extends Component {
 
     let currentProjects = ProjectStore.getState();
     let currentVisualizations = VisualizationStore.getState();
+    let sessionToken = UserStore.getState().token;
 
     if (prevState) {
       var projectUpdate = prevState.project;
 
       // Compare content of the visualizations array, reload projects if changed
       if (JSON.stringify(prevState.visualizations) !== JSON.stringify(currentVisualizations)) {
-        Visualizations.loadProjects();
+        Visualizations.loadProjects(sessionToken);
       }
 
       // Compare content of the projects array, update visualizations if changed
       if (JSON.stringify(prevState.projects) !== JSON.stringify(currentProjects)) {
         projectUpdate = Visualizations.findProjectInState(currentProjects, props.params.project);
-        Visualizations.loadVisualizations(projectUpdate.visualizations);
+        Visualizations.loadVisualizations(projectUpdate.visualizations, sessionToken);
       }
 
       return {
         projects: currentProjects,
         visualizations: currentVisualizations,
-        sessionToken: UserStore.getState().token,
+        sessionToken,
 
         newModal: prevState.newModal,
         deleteModal: prevState.deleteModal,
@@ -74,13 +75,13 @@ class Visualizations extends Component {
       let initialProject = Visualizations.findProjectInState(currentProjects, props.params.project);
       // If projects have been loaded already but visualizations not (redirect from Projects page)
       if (initialProject && (!currentVisualizations || currentVisualizations.length === 0)) {
-        Visualizations.loadVisualizations(initialProject.visualizations);
+        Visualizations.loadVisualizations(initialProject.visualizations, sessionToken);
       }
 
       return {
         projects: currentProjects,
         visualizations: currentVisualizations,
-        sessionToken: UserStore.getState().token,
+        sessionToken,
 
         newModal: false,
         deleteModal: false,
@@ -96,23 +97,23 @@ class Visualizations extends Component {
     return projects.find((project) => project._id === projectId);
   }
 
-  static loadProjects() {
+  static loadProjects(token) {
     AppDispatcher.dispatch({
       type: 'projects/start-load',
-      token: this.state.sessionToken
+      token
     });
   }
 
-  static loadVisualizations(visualizations) {
+  static loadVisualizations(visualizations, token) {
     AppDispatcher.dispatch({
       type: 'visualizations/start-load',
       data: visualizations,
-      token: this.state.sessionToken
+      token
     });
   }
 
   componentWillMount() {
-    Visualizations.loadProjects();
+    Visualizations.loadProjects(this.state.sessionToken);
   }
 
   closeNewModal(data) {
