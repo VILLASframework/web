@@ -7,135 +7,89 @@
  *   Unauthorized copying of this file, via any medium is strictly prohibited.
  **********************************************************************************/
 
-import React, { Component } from 'react';
-import { LineChart } from 'rd3';
-import { scaleOrdinal, schemeCategory10 } from 'd3-scale';
+import React from 'react';
+import { scaleLinear, scaleTime, scaleOrdinal, schemeCategory10 } from 'd3-scale';
+import { extent } from 'd3-array';
+import { line } from 'd3-shape';
+import { axisBottom, axisLeft } from  'd3-axis';
+import { select } from 'd3-selection';
+import { timeFormat } from 'd3-time-format';
 
-class Plot extends Component {
+const leftMargin = 30;
+const bottomMargin = 20;
+
+class Plot extends React.Component {
   constructor(props) {
     super(props);
 
-    this.chartWrapper = null;
-
-    // Initialize plot size and data
-    this.state = Object.assign(
-      { size: { w: 0, h: 0 } },
-      this.getPlotInitData(true)
-    );
-  }
-
-  // Get an object with 'invisible' init data for the last minute.
-  // Include start/end timestamps if required.
-  getPlotInitData(withRangeTimestamps = false) {
-
-    const initSecondTime = Date.now();
-    const initFirstTime = initSecondTime - 1000 * 60; // Decrease 1 min
-    const values = [{ values: [{x: initFirstTime, y: 0}], strokeWidth: 0 }];
-
-    let output = withRangeTimestamps?
-      { sequence: 0, values: values, firstTimestamp: initFirstTime, latestTimestamp: initSecondTime, } :
-      { sequence: 0, values: values };
-
-    return output;
+    this.state = {
+      data: null
+    };
   }
 
   componentWillReceiveProps(nextProps) {
-    let nextData = nextProps.simulatorData;
-
-    // handle plot size
-    const w = this.chartWrapper.offsetWidth - 20;
-    const h = this.chartWrapper.offsetHeight - 20;
-    const currentSize = this.state.size;
-    if (w !== currentSize.w || h !== currentSize.h) {
-        this.setState({size: { w, h } });
+    // check if data is valid
+    if (nextProps.data == null || nextProps.data.length === 0 || nextProps.data[0].length === 0) {
+      this.setState({ data: null });
+      return;
     }
 
-    // If signals were cleared, clear the plot (triggers a new state)
-    if (this.signalsWereJustCleared(nextProps)) { this.clearPlot(); return; }
-
-    // If no signals have been selected, just leave
-    if (nextProps.signals == null || nextProps.signals.length === 0) { return; }
-
-    // Identify simulation reset
-    if (nextData == null || nextData.length === 0 || nextData.values[0].length === 0)  { this.clearPlot(); return; }
-
-    // check if new data, otherwise skip
-    if (this.state.sequence >= nextData.sequence) { return; }
-
-    this.updatePlotData(nextProps);
-
-  }
-
-  signalsWereJustCleared(nextProps) {
-
-    return  this.props.signals &&
-            nextProps.signals &&
-            this.props.signals.length > 0 &&
-            nextProps.signals.length === 0;
-  }
-
-  clearPlot() {
-    this.setState( this.getPlotInitData(false) );
-  }
-
-  updatePlotData(nextProps) {
-    let nextData = nextProps.simulatorData;
-
-    // get timestamps
-    var latestTimestamp = nextData.values[0][nextData.values[0].length - 1].x;
-    var firstTimestamp = latestTimestamp - nextProps.time * 1000;
-    var firstIndex;
-
-    if (nextData.values[0][0].x < firstTimestamp) {
-      // find element index representing firstTimestamp
-      firstIndex = nextData.values[0].findIndex((value) => {
-        return value.x >= firstTimestamp;
-      });
-    } else {
-      firstIndex = 0;
-      firstTimestamp = nextData.values[0][0].x;
-      latestTimestamp = firstTimestamp + nextProps.time * 1000;
+    // only show data in requested time
+    let data = nextProps.data;
+    
+    const firstTimestamp = data[0][data[0].length - 1].x - this.props.time * 1000;
+    if (data[0][0].x < firstTimestamp) {
+      // only show data in range (+100 ms)
+      const index = data[0].findIndex(value => value.x >= firstTimestamp - 100);
+      data = data.map(values => values.slice(index));
     }
 
-    // copy all values for each signal in time region
-    var values = [];
-    nextProps.signals.forEach((signal_index, i, arr) => (
-      // Include signal index, useful to relate them to the signal selection
-      values.push(
-        {
-          index: signal_index,
-          values: nextData.values[signal_index].slice(firstIndex, nextData.values[signal_index].length - 1)})
-    ));
+    // calculate paths for data
+    let xRange = extent(data[0], p => new Date(p.x));
+    if (xRange[1] - xRange[0] < nextProps.time * 1000) {
+      xRange[0] = xRange[1] - nextProps.time * 1000;
+    }
 
-    this.setState({ values: values, firstTimestamp: firstTimestamp, latestTimestamp: latestTimestamp, sequence: nextData.sequence });
+    let yRange = [0, 0];
+
+    data.map(values => {
+      const range = extent(values, p => p.y);
+      if (range[0] < yRange[0]) yRange[0] = range[0];
+      if (range[1] > yRange[1]) yRange[1] = range[1];
+
+      return values;
+    });
+    
+    // create scale functions for both axes
+    const xScale = scaleTime().domain(xRange).range([leftMargin, nextProps.width]);
+    const yScale = scaleLinear().domain(yRange).range([nextProps.height, bottomMargin]);
+    
+    const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(date => timeFormat("%M:%S")(date));
+    const yAxis = axisLeft().scale(yScale).ticks(5);
+
+    // generate paths from data
+    const sparkLine = line().x(p => xScale(p.x)).y(p => yScale(p.y));
+    const lineColor = scaleOrdinal(schemeCategory10);
+
+    const lines = data.map((values, index) => <path d={sparkLine(values)} key={index} style={{ fill: 'none', stroke: lineColor(index) }} />);
+
+    this.setState({ data: lines, xAxis, yAxis });
   }
 
   render() {
-    // Make tick count proportional to the plot width using a rough scale ratio
-    var tickCount = Math.round(this.state.size.w / 80);
+    if (this.state.data == null) return false;
 
-    return (
-        <div className="chart-wrapper" ref={ (domNode) => this.chartWrapper = domNode }>
-            {this.state.sequence != null &&
-                <LineChart
-                width={ this.state.size.w || 100 }
-                height={ this.state.size.h || 100 }
-                margins={{top: 10, right: 0, bottom: 20, left: 45 }}
-                data={this.state.values }
-                colors={ scaleOrdinal(schemeCategory10) }
-                gridHorizontal={true}
-                xAccessor={(d) => { if (d != null) { return new Date(d.x); } }}
-                xAxisTickCount={ tickCount }
-                yAxisLabel={ this.props.yAxisLabel }
-                hoverAnimation={false}
-                circleRadius={0}
-                domain={{ x: [this.state.firstTimestamp, this.state.latestTimestamp] }}
-                />
-            }
-        </div>
+    return(
+      <svg width={this.props.width + leftMargin} height={this.props.height + bottomMargin}>
+        <g ref={node => select(node).call(this.state.xAxis)} style={{ transform: `translateY(${this.props.height}px)` }} />
+        <g ref={node => select(node).call(this.state.yAxis)} style={{ transform: `translateX(${leftMargin}px)`}} />
+
+        <g>
+          {this.state.data}
+        </g>
+      </svg>
     );
   }
-
 }
 
 export default Plot;
