@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-import { Router, Route, hashHistory } from 'react-router';
+import { Router, Route, browserHistory } from 'react-router';
 
 import App from './containers/app';
 import Home from './containers/home';
@@ -37,7 +37,7 @@ import Logout from './containers/logout';
 class Root extends Component {
   render() {
     return (
-      <Router history={hashHistory}>
+      <Router history={browserHistory}>
         <Route path='/' component={App}>
           <Route path='/home' component={Home} />
 
