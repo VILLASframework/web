@@ -89,11 +89,26 @@ class Widget extends Component {
     }
   }
 
+  snapToGrid(value) {
+    if (this.props.grid === 1) return value;
+
+    return Math.round(value / this.props.grid) * this.props.grid;
+  }
+
+  drag(event, ui) {
+    let x = this.snapToGrid(ui.position.left);
+    let y = this.snapToGrid(ui.position.top);
+
+    if (x !== ui.position.left || y !== ui.position.top) {
+      this.rnd.updatePosition({ x, y });
+    }
+  }
+
   dragStop(event, ui) {
     // update widget
     var widget = this.props.data;
-    widget.x = ui.position.left;
-    widget.y = ui.position.top;
+    widget.x = this.snapToGrid(ui.position.left);
+    widget.y = this.snapToGrid(ui.position.top);
 
     this.props.onWidgetChange(widget, this.props.index);
   }
@@ -129,17 +144,14 @@ class Widget extends Component {
 
   render() {
     // configure grid
-    var grid = this.props.grid;
-    if (!grid) {
-      grid = [ 1, 1 ];
-    }
+    let grid = [this.props.grid, this.props.grid];
 
     // get widget element
     const widget = this.props.data;
     var borderedWidget = false;
     var element = null;
 
-    //console.log(widget.type + ': ' + widget.z);
+    //console.log('render: ' + widget.x + ', ' + widget.y);
 
     // dummy is passed to widgets to keep updating them while in edit mode
     if (widget.type === 'Value') {
@@ -187,6 +199,7 @@ class Widget extends Component {
           className={ widgetClasses }
           onResizeStart={ (direction, styleSize, clientSize, event) => this.borderWasClicked(event) } 
           onResizeStop={(direction, styleSize, clientSize, delta) => this.resizeStop(direction, styleSize, clientSize, delta)}
+          onDrag={(event, ui) => this.drag(event, ui)}
           onDragStop={(event, ui) => this.dragStop(event, ui)}
           moveGrid={grid}
           resizeGrid={grid}

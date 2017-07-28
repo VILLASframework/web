@@ -296,14 +296,14 @@ class Visualization extends Component {
   moveWidget(e, data, applyDirection) {
     var widget = this.state.visualization.widgets[data.key];
     var updated_widgets = {};
-    updated_widgets[data.key] =  applyDirection(widget);
+    updated_widgets[data.key] = applyDirection(widget);
     var new_widgets = Object.assign({}, this.state.visualization.widgets, updated_widgets);
 
     var visualization = Object.assign({}, this.state.visualization, {
       widgets: new_widgets
     });
-    this.setState({ visualization: visualization });
 
+    this.setState({ visualization: visualization });
   }
 
   moveAbove(widget) {
@@ -405,7 +405,7 @@ class Visualization extends Component {
           <Dropzone height={this.state.dropZoneHeight} onDrop={(item, position) => this.handleDrop(item, position)} editing={this.state.editing}>
             {current_widgets != null &&
               Object.keys(current_widgets).map( (widget_key) => (
-              <Widget key={widget_key} data={current_widgets[widget_key]} simulation={this.state.simulation} onWidgetChange={(w, k) => this.widgetChange(w, k)} onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)} editing={this.state.editing} index={widget_key} grid={[this.state.visualization.grid, this.state.visualization.grid]} />
+              <Widget key={widget_key} data={current_widgets[widget_key]} simulation={this.state.simulation} onWidgetChange={(w, k) => this.widgetChange(w, k)} onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)} editing={this.state.editing} index={widget_key} grid={this.state.visualization.grid} />
             ))}
 
             <Grid size={this.state.visualization.grid} disabled={this.state.visualization.grid === 1 || !this.state.editing} />
