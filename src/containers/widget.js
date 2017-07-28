@@ -148,7 +148,7 @@ class Widget extends Component {
 
     // get widget element
     const widget = this.props.data;
-    var borderedWidget = false;
+    var borderedWidget = this.props.editing;
     var element = null;
 
     //console.log('render: ' + widget.x + ', ' + widget.y);
@@ -184,7 +184,8 @@ class Widget extends Component {
     let widgetClasses = classNames({
               'widget': !this.props.editing,
               'editing-widget': this.props.editing,
-              'border': borderedWidget
+              'border': borderedWidget,
+              'unselectable': this.props.editing
             });
 
     if (this.props.editing) {
