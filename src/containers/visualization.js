@@ -155,6 +155,12 @@ class Visualization extends Component {
     });
   }
 
+  snapToGrid(value) {
+    if (this.state.visualization.grid === 1) return value;
+
+    return Math.round(value / this.state.visualization.grid) * this.state.visualization.grid;
+  }
+
   handleDrop(item, position) {
 
     let widget = null;
@@ -165,6 +171,10 @@ class Visualization extends Component {
     } else {
       defaultSimulator = this.state.simulation.models[0].simulator;
     }
+
+    // snap position to grid
+    position.x = this.snapToGrid(position.x);
+    position.y = this.snapToGrid(position.y);
 
     // create new widget
     widget = WidgetFactory.createWidgetOfType(item.name, position, defaultSimulator);
