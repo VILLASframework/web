@@ -30,6 +30,7 @@ import EditWidgetSignalControl from './edit-widget-signal-control';
 import EditWidgetSignalsControl from './edit-widget-signals-control';
 import EditWidgetOrientation from './edit-widget-orientation';
 import EditWidgetAspectControl from './edit-widget-aspect-control';
+import EditWidgetTextSizeControl from './edit-widget-text-size-control';
 
 export default function createControls(widgetType = null, widget = null, sessionToken = null, files = null, validateForm, simulation, handleChange) {
     // Use a list to concatenate the controls according to the widget type
@@ -103,8 +104,13 @@ export default function createControls(widgetType = null, widget = null, session
                 <EditWidgetColorControl key={1} widget={widget} controlId={'border_color'} label={'Border color'} validate={(id) => validateForm(id)} handleChange={(e) => handleChange(e)} />)
             }
             break;
+        case 'Label':
+            dialogControls.push(
+                <EditWidgetTextSizeControl key={1} widget={widget} handleChange={e => handleChange(e)} />
+            );
+            break;
         default:
-            console.log('Non-valid widget type');
+            console.log('Non-valid widget type: ' + widgetType);
         }
 
     return dialogControls;

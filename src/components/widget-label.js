@@ -25,7 +25,7 @@ class WidgetLabel extends Component {
   render() {
     return (
       <div className="label-widget">
-        <h4>{this.props.widget.name}</h4>
+        <h4 style={{ fontSize: this.props.widget.textSize + 'px' }}>{this.props.widget.name}</h4>
       </div>
     );
   }

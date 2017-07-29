@@ -54,6 +54,7 @@ class WidgetFactory {
             case 'Label':
                 widget.minWidth = 70;
                 widget.minHeight = 20;
+                widget.textSize = 18;
                 break;
             case 'PlotTable':
                 widget.simulator = defaultSimulator;

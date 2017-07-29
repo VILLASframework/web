@@ -20,7 +20,6 @@
  ******************************************************************************/
 
 .widget {
-    background-color: #fff;
     overflow: auto;
 }
 
@@ -28,7 +27,7 @@
     border: 1px solid lightgray;
 }
 
-.editing-widget {
+.editing-widget:hover {
     background-color: #fff;
 }
 
@@ -451,7 +450,18 @@ div[class*="-widget"] label {
 
 /* Begin label widget */
 .label-widget  {
-    text-align: center;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+
+    padding: 0;
+}
+
+.label-widget h4 {
+    padding: 0;
+    margin: 0;
 }
 /* End label widget */
 
