@@ -65,7 +65,7 @@ export default function createControls(widgetType = null, widget = null, session
         case 'Image': {
             dialogControls.push(
                 <EditImageWidgetControl key={1} sessionToken={sessionToken} widget={widget} files={files} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetAspectControl key={2} lockAspect={widget.lockAspect} handleChange={e => handleChange(e)} />);
+                <EditWidgetAspectControl key={2} widget={widget} handleChange={e => handleChange(e)} />);
             }
             break;
         case 'Gauge': {

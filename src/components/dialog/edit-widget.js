@@ -73,13 +73,15 @@ class EditWidgetDialog extends Component {
         let changeObject = {};
         if (e.target.id === 'simulator') {
           changeObject[e.target.id] = JSON.parse(e.target.value);
+        } else if (e.target.id === 'lockAspect') {
+          changeObject[e.target.id] = e.target.checked;
         } else if (e.target.id === 'file') {
           changeObject[e.target.id] = e.target.value;
 
           // get file and update size
           let file = this.props.files.find(element => element._id === e.target.value);
 
-          // set default size
+          // set default size 
           changeObject.width = file.dimensions.width;
           changeObject.height = file.dimensions.height;
         } else {

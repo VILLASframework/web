@@ -23,12 +23,24 @@ import React from 'react';
 import { FormGroup, Checkbox } from 'react-bootstrap';
 
 class EditWidgetAspectControl extends React.Component {
-  render() {
-    console.log(this.props.lockAspect);
+  constructor(props) {
+    super(props);
 
+    this.state = {
+      widget: {
+        lockAspect: true
+      }
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ widget: nextProps.widget });
+  }
+
+  render() {
     return (
       <FormGroup>
-        <Checkbox id="lockAspect" checked={this.props.lockAspect} onChange={e => this.props.handleChange(e)}>Lock Aspect</Checkbox>
+        <Checkbox id="lockAspect" checked={this.state.widget.lockAspect} onChange={e => this.props.handleChange(e)}>Lock Aspect</Checkbox>
       </FormGroup>
     );
   }
