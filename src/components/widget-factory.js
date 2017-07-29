@@ -71,6 +71,7 @@ class WidgetFactory {
                 widget.minHeight = 100;
                 widget.width = 200;
                 widget.height = 200;
+                widget.lockAspect = true;
                 break;
             case 'Button':
                 widget.minWidth = 100;

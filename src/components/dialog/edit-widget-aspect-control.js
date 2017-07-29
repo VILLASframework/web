@@ -1,7 +1,7 @@
 /**
- * File: widget-image.js
+ * File: edit-widget-aspect-control.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 14.03.2017
+ * Date: 29.07.2017
  *
  * This file is part of VILLASweb.
  *
@@ -20,34 +20,18 @@
  ******************************************************************************/
 
 import React from 'react';
+import { FormGroup, Checkbox } from 'react-bootstrap';
 
-import AppDispatcher from '../app-dispatcher';
-import config from '../config';
-
-class WidgetImage extends React.Component {
-  componentWillReceiveProps(nextProps) {
-    // Query the image referenced by the widget
-    let widgetFile = nextProps.widget.file;
-    if (widgetFile && !nextProps.files.find(file => file._id === widgetFile)) {
-      AppDispatcher.dispatch({
-        type: 'files/start-load',
-        data: widgetFile,
-        token: nextProps.token
-      });
-    }
-  }
-
+class EditWidgetAspectControl extends React.Component {
   render() {
-    let file = this.props.files.find(file => file._id === this.props.widget.file);
+    console.log(this.props.lockAspect);
 
     return (
-      <div className="full">
-        {file &&
-          <img className="full" alt={file.name} src={'/' + config.publicPathBase + file.path} onDragStart={e => e.preventDefault()} />
-        }
-      </div>
+      <FormGroup>
+        <Checkbox id="lockAspect" checked={this.props.lockAspect} onChange={e => this.props.handleChange(e)}>Lock Aspect</Checkbox>
+      </FormGroup>
     );
   }
 }
 
-export default WidgetImage;
+export default EditWidgetAspectControl;

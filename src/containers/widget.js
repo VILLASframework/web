@@ -168,7 +168,7 @@ class Widget extends Component {
       element = <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } />
       borderedWidget = true;
     } else if (widget.type === 'Image') {
-      element = <WidgetImage widget={widget} files={this.state.files} />
+      element = <WidgetImage widget={widget} files={this.state.files} token={this.state.sessionToken} />
     } else if (widget.type === 'Button') {
       element = <WidgetButton widget={widget} editing={this.props.editing} />
     } else if (widget.type === 'NumberInput') {
@@ -195,7 +195,7 @@ class Widget extends Component {
           initial={{ x: Number(widget.x), y: Number(widget.y), width: widget.width, height: widget.height }}
           minWidth={ widget.minWidth }
           minHeight={ widget.minHeight }
-          lockAspectRatio={ widget.lockedAspectRatio }
+          lockAspectRatio={Boolean(widget.lockAspect)}
           bounds={'parent'}
           className={ widgetClasses }
           onResizeStart={ (direction, styleSize, clientSize, event) => this.borderWasClicked(event) } 
