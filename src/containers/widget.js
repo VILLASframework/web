@@ -190,8 +190,8 @@ class Widget extends Component {
         <Rnd
           ref={c => { this.rnd = c; }}
           initial={{ x: Number(widget.x), y: Number(widget.y), width: widget.width, height: widget.height }}
-          minWidth={ widget.minWidth }
-          minHeight={ widget.minHeight }
+          minWidth={widget.minWidth}
+          minHeight={widget.minHeight}
           lockAspectRatio={Boolean(widget.lockAspect)}
           bounds={'parent'}
           className={ widgetClasses }

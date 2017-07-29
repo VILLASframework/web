@@ -20,11 +20,15 @@
  ******************************************************************************/
 
 .widget {
-    overflow: auto;
+    
 }
 
 .border {
     border: 1px solid lightgray;
+}
+
+.editing-widget {
+
 }
 
 .editing-widget:hover {
@@ -450,18 +454,14 @@ div[class*="-widget"] label {
 
 /* Begin label widget */
 .label-widget  {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-
     padding: 0;
 }
 
 .label-widget h4 {
     padding: 0;
     margin: 0;
+
+    word-wrap: break-word;
 }
 /* End label widget */
 
