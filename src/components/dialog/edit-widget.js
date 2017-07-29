@@ -55,6 +55,17 @@ class EditWidgetDialog extends Component {
     }
   }
 
+  assignAspectRatio(changeObject, fileId) {
+    // get aspect ratio of file
+    let file = this.props.files.find(element => element._id === fileId);
+
+    // scale width to match aspect
+    const aspectRatio = file.dimensions.width / file.dimensions.height;
+    changeObject.width = this.state.temporal.height * aspectRatio;
+
+    return changeObject;
+  }
+
   handleChange(e) {
     if (e.constructor === Array) {
       // Every property in the array will be updated
@@ -75,15 +86,16 @@ class EditWidgetDialog extends Component {
           changeObject[e.target.id] = JSON.parse(e.target.value);
         } else if (e.target.id === 'lockAspect') {
           changeObject[e.target.id] = e.target.checked;
+
+          // correct image aspect if turned on
+          if (e.target.checked) {
+            changeObject = this.assignAspectRatio(changeObject, this.state.temporal.file);
+          }
         } else if (e.target.id === 'file') {
           changeObject[e.target.id] = e.target.value;
 
           // get file and update size
-          let file = this.props.files.find(element => element._id === e.target.value);
-
-          // set default size 
-          changeObject.width = file.dimensions.width;
-          changeObject.height = file.dimensions.height;
+          changeObject = this.assignAspectRatio(changeObject, e.target.value);
         } else {
           changeObject[e.target.id] = e.target.value;
         }
