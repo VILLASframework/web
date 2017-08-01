@@ -19,11 +19,12 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
+import React from 'react';
 import { Container } from 'flux/utils';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import NotificationSystem from 'react-notification-system';
+import { Redirect, Route } from 'react-router-dom';
 
 import AppDispatcher from '../app-dispatcher';
 import SimulationStore from '../stores/simulation-store';
@@ -34,57 +35,31 @@ import NotificationsDataManager from '../data-managers/notifications-data-manage
 import Header from '../components/header';
 import Footer from '../components/footer';
 import SidebarMenu from '../components/menu-sidebar';
+
 import Home from './home';
+import Projects from './projects';
+import Project from './project';
+import Simulators from './simulators';
+import Visualization from './visualization';
+import Simulations from './simulations';
+import Simulation from './simulation';
+import Users from './users';
 
 import '../styles/app.css';
 
-class App extends Component {
+class App extends React.Component {
   static getStores() {
     return [ NodeStore, UserStore, SimulationStore ];
   }
 
   static calculateState(prevState) {
-    // get list of running simulators
-    /*var simulators = SimulatorStore.getState().filter(simulator => {
-      return simulator.running === true;
-    });
-
-    // check if running simulators changed
-    if (prevState != null) {
-      var equal = true;
-
-      // compare each element with its old one
-      if (prevState.runningSimulators.length === simulators.length) {
-        equal = prevState.runningSimulators.every(oldSimulator => {
-          const simulator = simulators.find(element => {
-            return element._id === oldSimulator._id;
-          });
-
-          if (simulator == null) {
-            return false;
-          }
-
-          return simulator.running === oldSimulator.running;
-        });
-      } else {
-        equal = false;
-      }
-
-      // replace with old array to prevent change trigger
-      if (equal) {
-        simulators = prevState.runningSimulators;
-      }
-    }*/
-
     let currentUser = UserStore.getState().currentUser;
 
     return {
       nodes: NodeStore.getState(),
       simulations: SimulationStore.getState(),
-      currentRole: currentUser? currentUser.role : '',
-      token: UserStore.getState().token/*,
-
-      runningSimulators: simulators*/
+      currentRole: currentUser ? currentUser.role : '',
+      token: UserStore.getState().token
     };
   }
 
@@ -93,89 +68,34 @@ class App extends Component {
     const token = localStorage.getItem('token');
 
     if (token != null && token !== '') {
+      // save token so we dont logout
+      this.setState({ token });
+
       AppDispatcher.dispatch({
         type: 'users/logged-in',
         token: token
       });
-    } else {
-      // transition to login page
-      this.props.router.push('/login');
     }
+  }
 
+  componentDidMount() {
     // load all simulators and simulations to fetch simulation data
     AppDispatcher.dispatch({
       type: 'nodes/start-load',
-      token
+      token: this.state.token
     });
 
     AppDispatcher.dispatch({
       type: 'simulations/start-load',
-      token
+      token: this.state.token
     });
-  }
 
-  componentDidMount() {
     NotificationsDataManager.setSystem(this.refs.notificationSystem);
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    // check if user is still logged in
-    if (nextState.token == null) {
-      // discard local token
-      localStorage.setItem('token', '');
-
-      this.props.router.push('/login');
-
-      return;
-    }
-
-    // open connection to each node
-    /*const requiredNodes = this.requiredNodesBySimulations();
-
-    requiredNodes.forEach(node => {
-      AppDispatcher.dispatch({
-        type: 'simulatorData/open',
-        identifier: simulator._id,
-        endpoint: node.endpoint,
-        signals: data.signals
-      });
-    });*/
-  }
-
-  /*requiredNodesBySimulations() {
-    var nodes = {};
-
-    this.state.simulations.forEach(simulation => {
-      simulation.models.forEach(model => {
-        // get ID for node
-        var node = this.state.nodes.find(element => {
-          return element.name === model.simulator.node;
-        });
-
-        // add empty node if not existing
-        if (node !== undefined) {
-          if (nodes[node._id] == null) {
-            nodes[node._id] = { simulators: [] }
-          }
-
-          // get simulator id
-          var simulator = node.simulators.find(simulator => {
-            return simulator.name === model.simulator.simulator;
-          });
-
-          nodes[node._id].simulators.push({ id: simulator.id, signals: model.length });
-        }
-      });
-    });
-
-    return nodes;
-  }*/
-
   render() {
-    // get children
-    var children = this.props.children;
-    if (this.props.location.pathname === "/") {
-      children = <Home />
+    if (this.state.token == null) {
+      return (<Redirect to="/login" />);
     }
 
     return (
@@ -186,8 +106,16 @@ class App extends Component {
 
         <div className="app-body">
           <SidebarMenu currentRole={ this.state.currentRole }/>
+
           <div className="app-content">
-            {children}
+            <Route path="/home" component={Home} />
+            <Route exact path="/projects" component={Projects} />
+            <Route path="/projects/:project" component={Project} />
+            <Route path="/visualizations/:visualization" component={Visualization} />
+            <Route exact path="/simulations" component={Simulations} />
+            <Route path="/simulations/:simulation" component={Simulation} />
+            <Route path="/simulators" component={Simulators} />
+            <Route path="/users" component={Users} />
           </div>
         </div>
 

@@ -19,7 +19,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
 import { DropTarget } from 'react-dnd';
 import classNames from 'classnames';
 
@@ -59,14 +59,7 @@ function collect(connect, monitor) {
   };
 }
 
-class Dropzone extends Component {
-  static propTypes = {
-    connectDropTarget: PropTypes.func.isRequired,
-    isOver: PropTypes.bool.isRequired,
-    canDrop: PropTypes.bool.isRequired,
-    onDrop: PropTypes.func.isRequired
-  };
-
+class Dropzone extends React.Component {
   render() {
     var toolboxClass = classNames({
       'box-content': true,

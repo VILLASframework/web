@@ -50,7 +50,7 @@ class UserStore extends ReduceStore {
         SimulatorDataDataManager.closeAll();
 
         // delete user and token
-        return Object.assign({}, state, { token: null });
+        return Object.assign({}, state, { token: null, currentUser: null });
 
       case 'users/logged-in':
         // request logged-in user data
@@ -67,16 +67,15 @@ class UserStore extends ReduceStore {
         return Object.assign({}, state, { currentUser: null, token: null });
 
       case 'users/login-error':
-
         if (action.error && !action.error.handled) {
           // If it was an error and hasn't been handled, the credentials must have been wrong.
           const WRONG_CREDENTIALS_NOTIFICATION = {
             title: 'Incorrect credentials',
             message: 'Please modify and try again.',
             level: 'error'
-          }
-          NotificationsDataManager.addNotification(WRONG_CREDENTIALS_NOTIFICATION);
+          };
 
+          NotificationsDataManager.addNotification(WRONG_CREDENTIALS_NOTIFICATION);
         }
 
         return state;    

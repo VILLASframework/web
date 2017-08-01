@@ -19,7 +19,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
 import { DragSource } from 'react-dnd';
 import classNames from 'classnames';
 
@@ -38,14 +38,7 @@ function collect(connect, monitor) {
   }
 }
 
-class ToolboxItem extends Component {
-  static propTypes = {
-    connectDragSource: PropTypes.func.isRequired,
-    isDragging: PropTypes.bool.isRequired,
-    name: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired
-  };
-
+class ToolboxItem extends React.Component {
   static defaultProps = {
     disabled: false
   };

@@ -19,7 +19,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
+import React from 'react';
 import { Container } from 'flux/utils';
 import { Button } from 'react-bootstrap';
 import { ContextMenu, MenuItem } from 'react-contextmenu';
@@ -41,7 +41,7 @@ import AppDispatcher from '../app-dispatcher';
 import NotificationsDataManager from '../data-managers/notifications-data-manager';
 import NotificationsFactory from '../data-managers/notifications-factory';
 
-class Visualization extends Component {
+class Visualization extends React.Component {
   static getStores() {
     return [ VisualizationStore, ProjectStore, SimulationStore, FileStore, UserStore ];
   }
@@ -74,6 +74,7 @@ class Visualization extends Component {
   }
 
   componentWillMount() {
+    // TODO: Don't fetch token from local, use user-store!
     const token = localStorage.getItem('token');
 
     AppDispatcher.dispatch({
@@ -83,7 +84,7 @@ class Visualization extends Component {
   }
 
   componentDidUpdate() {
-    if (this.state.visualization._id !== this.props.params.visualization) {
+    if (this.state.visualization._id !== this.props.match.params.visualization) {
       this.reloadVisualization();
     }
 
@@ -133,7 +134,7 @@ class Visualization extends Component {
   reloadVisualization() {
     // select visualization by param id
     this.state.visualizations.forEach((tempVisualization) => {
-      if (tempVisualization._id === this.props.params.visualization) {
+      if (tempVisualization._id === this.props.match.params.visualization) {
 
         // convert widgets list to a dictionary
         var visualization = Object.assign({}, tempVisualization, {

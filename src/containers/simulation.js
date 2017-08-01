@@ -19,7 +19,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
+import React from 'react';
 import { Container } from 'flux/utils';
 import { Button, Modal, Glyphicon } from 'react-bootstrap';
 
@@ -33,7 +33,7 @@ import TableColumn from '../components/table-column';
 import NewSimulationModelDialog from '../components/dialog/new-simulation-model';
 import EditSimulationModelDialog from '../components/dialog/edit-simulation-model';
 
-class Simulation extends Component {
+class Simulation extends React.Component {
   static getStores() {
     return [ SimulationStore, NodeStore, UserStore ];
   }
@@ -67,7 +67,7 @@ class Simulation extends Component {
   }
 
   componentDidUpdate() {
-    if (this.state.simulation._id !== this.props.params.simulation) {
+    if (this.state.simulation._id !== this.props.match.params.simulation) {
       this.reloadSimulation();
     }
   }
@@ -75,7 +75,7 @@ class Simulation extends Component {
   reloadSimulation() {
     // select simulation by param id
     this.state.simulations.forEach((simulation) => {
-      if (simulation._id === this.props.params.simulation) {
+      if (simulation._id === this.props.match.params.simulation) {
         // JSON.parse(JSON.stringify(obj)) = deep clone to make also copy of widget objects inside
         this.setState({ simulation: JSON.parse(JSON.stringify(simulation)) });
       }

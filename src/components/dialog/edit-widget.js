@@ -19,20 +19,14 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
 //import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
 import createControls from './edit-widget-control-creator';
 
-class EditWidgetDialog extends Component {
-  static propTypes = {
-    sessionToken: PropTypes.string.isRequired,
-    show: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired
-  };
-
+class EditWidgetDialog extends React.Component {
   valid: true;
 
   constructor(props) {

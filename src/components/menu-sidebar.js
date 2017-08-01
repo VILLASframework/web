@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-import { Link } from 'react-router';
+import { NavLink } from 'react-router-dom';
 
 class SidebarMenu extends Component {
   render() {
@@ -29,14 +29,14 @@ class SidebarMenu extends Component {
         <h2>Menu</h2>
 
         <ul>
-          <li><Link to="/home" activeClassName="active" title="Home">Home</Link></li>
-          <li><Link to="/projects" activeClassName="active" title="Projects">Projects</Link></li>
-          <li><Link to="/simulations" activeClassName="active" title="Simulations">Simulations</Link></li>
-          <li><Link to="/simulators" activeClassName="active" title="Simulators">Simulators</Link></li>
+          <li><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
+          <li><NavLink to="/projects" activeClassName="active" title="Projects">Projects</NavLink></li>
+          <li><NavLink to="/simulations" activeClassName="active" title="Simulations">Simulations</NavLink></li>
+          <li><NavLink to="/simulators" activeClassName="active" title="Simulators">Simulators</NavLink></li>
           { this.props.currentRole === 'admin' ? 
-              <li><Link to="/users" activeClassName="active" title="User Management">User Management</Link></li> : ''
+              <li><NavLink to="/users" activeClassName="active" title="User Management">User Management</NavLink></li> : ''
           }
-          <li><Link to="/logout" title="Logout">Logout</Link></li>
+          <li><NavLink to="/logout" title="Logout">Logout</NavLink></li>
         </ul>
       </div>
     );

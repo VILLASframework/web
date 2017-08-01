@@ -19,23 +19,12 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
-import { Container } from 'flux/utils';
+import React from 'react';
+import { Redirect } from 'react-router-dom';
 
 import AppDispatcher from '../app-dispatcher';
-import UserStore from '../stores/villas-store';
 
-class Home extends Component {
-  static getStores() {
-    return [ UserStore ];
-  }
-
-  static calculateState() {
-    return {
-      currentUser: UserStore.getState().currentUser
-    };
-  }
-
+class Logout extends React.Component {
   componentWillMount() {
     AppDispatcher.dispatch({
       type: 'users/logout'
@@ -45,19 +34,11 @@ class Home extends Component {
     localStorage.setItem('token', '');
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    // check if logged out
-    if (nextState.token == null) {
-      // transition to login page
-      nextProps.router.push('/login');
-    }
-  }
-
   render() {
     return (
-      <span>Login out</span>
+      <Redirect to="/login" />
     );
   }
 }
 
-export default Container.create(Home);
+export default Logout;

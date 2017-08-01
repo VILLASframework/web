@@ -95,25 +95,26 @@ class Widget extends Component {
     return Math.round(value / this.props.grid) * this.props.grid;
   }
 
-  drag(event, ui) {
-    let x = this.snapToGrid(ui.position.left);
-    let y = this.snapToGrid(ui.position.top);
+  drag(event, data) {
+    const x = this.snapToGrid(data.x);
+    const y = this.snapToGrid(data.y);
 
-    if (x !== ui.position.left || y !== ui.position.top) {
+    if (x !== data.x || y !== data.y) {
       this.rnd.updatePosition({ x, y });
+      console.log(this.rnd);
     }
   }
 
-  dragStop(event, ui) {
+  dragStop(event, data) {
     // update widget
-    var widget = this.props.data;
-    widget.x = this.snapToGrid(ui.position.left);
-    widget.y = this.snapToGrid(ui.position.top);
+    let widget = this.props.data;
+    widget.x = this.snapToGrid(data.x);
+    widget.y = this.snapToGrid(data.y);
 
     this.props.onWidgetChange(widget, this.props.index);
   }
 
-  resizeStop(direction, styleSize, clientSize, delta) {
+  resizeStop(direction, delta, event) {
     // update widget
     let widget = Object.assign({}, this.props.data);
 
@@ -126,8 +127,8 @@ class Widget extends Component {
       widget.y -= delta.height;
     }
 
-    widget.width = styleSize.width;
-    widget.height = styleSize.height;
+    widget.width += delta.width;
+    widget.height += delta.height;
 
     this.props.onWidgetChange(widget, this.props.index);
   }
@@ -187,17 +188,17 @@ class Widget extends Component {
       return (
         <Rnd
           ref={c => { this.rnd = c; }}
-          initial={{ x: Number(widget.x), y: Number(widget.y), width: widget.width, height: widget.height }}
+          default={{ x: Number(widget.x), y: Number(widget.y), width: widget.width, height: widget.height }}
           minWidth={widget.minWidth}
           minHeight={widget.minHeight}
           lockAspectRatio={Boolean(widget.lockAspect)}
           bounds={'parent'}
           className={ widgetClasses }
-          onResizeStart={ (direction, styleSize, clientSize, event) => this.borderWasClicked(event) } 
-          onResizeStop={(direction, styleSize, clientSize, delta) => this.resizeStop(direction, styleSize, clientSize, delta)}
-          onDrag={(event, ui) => this.drag(event, ui)}
-          onDragStop={(event, ui) => this.dragStop(event, ui)}
-          moveGrid={grid}
+          onResizeStart={(event, direction, ref) => this.borderWasClicked(event)} 
+          onResizeStop={(event, direction, ref, delta) => this.resizeStop(direction, delta, event)}
+          onDrag={(event, data) => this.drag(event, data)}
+          onDragStop={(event, data) => this.dragStop(event, data)}
+          dragGrid={grid}
           resizeGrid={grid}
           zIndex={widget.z}
         >

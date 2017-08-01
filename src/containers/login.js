@@ -23,6 +23,7 @@ import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import { PageHeader } from 'react-bootstrap';
 import NotificationSystem from 'react-notification-system';
+import { Redirect } from 'react-router-dom';
 
 import LoginForm from '../components/login-form';
 import Header from '../components/header';
@@ -64,14 +65,15 @@ class Login extends Component {
       if (nextState.currentUser != null) {
         // save login in local storage
         localStorage.setItem('token', nextState.token);
-
-        // transition to index
-        nextProps.router.push('/');
       }
     }
   }
 
   render() {
+    if (this.state.currentUser != null) {
+      return (<Redirect to="/" />);
+    }
+
     return (
       <div>
         <NotificationSystem ref="notificationSystem" />

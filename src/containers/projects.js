@@ -19,7 +19,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
+import React from 'react';
 import { Container } from 'flux/utils';
 import { Button, Modal, Glyphicon } from 'react-bootstrap';
 
@@ -33,7 +33,7 @@ import TableColumn from '../components/table-column';
 import NewProjectDialog from '../components/dialog/new-project';
 import EditProjectDialog from '../components/dialog/edit-project';
 
-class Projects extends Component {
+class Projects extends React.Component {
   static getStores() {
     return [ ProjectStore, SimulationStore, UserStore ];
   }

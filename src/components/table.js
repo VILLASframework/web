@@ -21,7 +21,7 @@
 
 import React, { Component } from 'react';
 import { Table, Button, Glyphicon, FormControl, Label } from 'react-bootstrap';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 //import TableColumn from './table-column';
 

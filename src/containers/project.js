@@ -54,7 +54,7 @@ class Visualizations extends Component {
 
       // Compare content of the projects array, update visualizations if changed
       if (JSON.stringify(prevState.projects) !== JSON.stringify(currentProjects)) {
-        projectUpdate = Visualizations.findProjectInState(currentProjects, props.params.project);
+        projectUpdate = Visualizations.findProjectInState(currentProjects, props.match.params.project);
         Visualizations.loadVisualizations(projectUpdate.visualizations, sessionToken);
       }
 
@@ -72,7 +72,7 @@ class Visualizations extends Component {
       };
     } else {
 
-      let initialProject = Visualizations.findProjectInState(currentProjects, props.params.project);
+      let initialProject = Visualizations.findProjectInState(currentProjects, props.match.params.project);
       // If projects have been loaded already but visualizations not (redirect from Projects page)
       if (initialProject && (!currentVisualizations || currentVisualizations.length === 0)) {
         Visualizations.loadVisualizations(initialProject.visualizations, sessionToken);

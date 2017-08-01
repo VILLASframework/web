@@ -19,20 +19,14 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
 import { FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
 
 import Table from '../table';
 import TableColumn from '../table-column';
 import Dialog from './dialog';
 
-class NewSimulationModelDialog extends Component {
-  static propTypes = {
-    show: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    nodes: PropTypes.array.isRequired
-  };
-
+class NewSimulationModelDialog extends React.Component {
   valid: false;
 
   constructor(props) {

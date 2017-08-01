@@ -19,17 +19,10 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-class Dialog extends Component {
-  static propTypes = {
-    title: PropTypes.string.isRequired,
-    show: PropTypes.bool.isRequired,
-    buttonTitle: PropTypes.string.isRequired,
-    onClose: PropTypes.func.isRequired
-  };
-
+class Dialog extends React.Component {
   closeModal() {
     this.props.onClose(false);
   }
