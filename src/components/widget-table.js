@@ -38,7 +38,11 @@ class WidgetTable extends Component {
     // check data
     const simulator = nextProps.widget.simulator;
 
-    if (nextProps.simulation == null || nextProps.data == null || nextProps.data[simulator.node][simulator.simulator] == null || nextProps.data[simulator.node][simulator.simulator].length === 0 || nextProps.data[simulator.node][simulator.simulator].values.length === 0  || nextProps.data[simulator.node][simulator.simulator].values[0].length === 0) {
+    if (nextProps.simulation == null || nextProps.data == null || nextProps.data[simulator.node] == null
+      || nextProps.data[simulator.node][simulator.simulator] == null 
+      || nextProps.data[simulator.node][simulator.simulator].length === 0 
+      || nextProps.data[simulator.node][simulator.simulator].values.length === 0  
+      || nextProps.data[simulator.node][simulator.simulator].values[0].length === 0) {
       // clear values
       this.setState({ rows: [], sequence: null });
       return;
