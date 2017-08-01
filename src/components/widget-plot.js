@@ -52,12 +52,10 @@ class WidgetPlot extends React.Component {
 
     return (
       <div className="plot-widget" ref="wrapper">
-        <h4>{this.props.widget.name}</h4>
-
         <div className="widget-plot">
           <Plot
             data={simulatorData}
-            height={this.props.widget.height - 100}
+            height={this.props.widget.height - 55}
             width={this.props.widget.width - 20}
             time={this.props.widget.time}
           />

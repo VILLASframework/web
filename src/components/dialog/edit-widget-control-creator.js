@@ -43,7 +43,8 @@ export default function createControls(widgetType = null, widget = null, session
             }
             dialogControls.push(
                 <EditWidgetSimulatorControl key={1} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => valueBoundOnChange(e)} />,
-                <EditWidgetSignalControl key={2} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />
+                <EditWidgetSignalControl key={2} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetTextSizeControl key={3} widget={widget} handleChange={e => handleChange(e)} />
             )
         }
         break;
@@ -106,7 +107,9 @@ export default function createControls(widgetType = null, widget = null, session
             break;
         case 'Label':
             dialogControls.push(
-                <EditWidgetTextSizeControl key={1} widget={widget} handleChange={e => handleChange(e)} />
+                <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} validate={id => validateForm(id)} />,
+                <EditWidgetTextSizeControl key={1} widget={widget} handleChange={e => handleChange(e)} />,
+                <EditWidgetColorControl key={2} widget={widget} controlId={'fontColor'} label={'Text color'} handleChange={e => handleChange(e)} />
             );
             break;
         default:

@@ -33,6 +33,7 @@ class WidgetFactory {
                 widget.minHeight = 20;
                 widget.width = 120;
                 widget.height = 70;
+                widget.textSize = 16;
                 break;
             case 'Plot':
                 widget.simulator = defaultSimulator;
@@ -52,9 +53,13 @@ class WidgetFactory {
                 widget.height = 200;
                 break;
             case 'Label':
-                widget.minWidth = 70;
+                widget.minWidth = 20;
                 widget.minHeight = 20;
-                widget.textSize = 18;
+                widget.width = 100;
+                widget.height = 35;
+                widget.name = 'Label';
+                widget.textSize = 32;
+                widget.fontColor = 0;
                 break;
             case 'PlotTable':
                 widget.simulator = defaultSimulator;

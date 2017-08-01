@@ -21,11 +21,18 @@
 
 import React, { Component } from 'react';
 
+import EditWidgetColorControl from './dialog/edit-widget-color-control';
+
 class WidgetLabel extends Component {
   render() {
+    const style = {
+      fontSize: this.props.widget.textSize + 'px',
+      color: EditWidgetColorControl.ColorPalette[this.props.widget.fontColor]
+    };
+
     return (
       <div className="label-widget">
-        <h4 style={{ fontSize: this.props.widget.textSize + 'px' }}>{this.props.widget.name}</h4>
+        <h4 style={style}>{this.props.widget.name}</h4>
       </div>
     );
   }

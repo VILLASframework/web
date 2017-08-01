@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React, { Component, PropTypes } from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+//import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
@@ -124,7 +124,6 @@ class EditWidgetDialog extends Component {
   }
 
   render() {
-
     let controls = null;
     if (this.props.widget) {
       controls = createControls(
@@ -140,11 +139,11 @@ class EditWidgetDialog extends Component {
     return (
       <Dialog show={this.props.show} title="Edit Widget" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form encType='multipart/form-data'>
-          <FormGroup controlId="name" validationState={this.validateForm('name')}>
+          {/*<FormGroup controlId="name" validationState={this.validateForm('name')}>
             <ControlLabel>Name</ControlLabel>
             <FormControl type="text" placeholder="Enter name" value={this.state.temporal.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
-          </FormGroup>
+          </FormGroup>*/}
           { controls || '' }
         </form>
       </Dialog>

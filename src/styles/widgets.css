@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 .widget {
-    
+
 }
 
 .border {
@@ -300,11 +300,14 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
 /* End Plots */
 
 .single-value-widget {
+    padding: 0;
+    margin: 0;
+
     width: 100%;
     height: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
+
+    word-wrap: break-word;
 }
 
 .single-value-widget > * {
@@ -466,6 +469,10 @@ div[class*="-widget"] label {
 /* End label widget */
 
 /* Begin table widget */
+.table-widget table {
+    background-color: #fff;
+}
+
 .table-widget td, .table-widget th {
     text-align: center;
 }

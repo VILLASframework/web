@@ -141,8 +141,6 @@ class WidgetPlotTable extends Component {
 
     return (
       <div className="plot-table-widget" ref="wrapper">
-        <h4>{this.props.widget.name}</h4>
-
         <div className="content">
           <div className="table-plot-row">
             <div className="widget-table">
@@ -159,7 +157,7 @@ class WidgetPlotTable extends Component {
                 data={simulatorData}
                 time={this.props.widget.time} 
                 width={this.props.widget.width - 100}
-                height={this.props.widget.height - 100}
+                height={this.props.widget.height - 55}
               />
             </div>
           </div>
