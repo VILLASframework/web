@@ -41,7 +41,7 @@ import AppDispatcher from '../app-dispatcher';
 import NotificationsDataManager from '../data-managers/notifications-data-manager';
 import NotificationsFactory from '../data-managers/notifications-factory';
 
-import 'react-contextmenu/public/styles.5bb557.css';
+import '../styles/context-menu.css';
 
 class Visualization extends React.Component {
   static getStores() {
