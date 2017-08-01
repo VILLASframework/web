@@ -27,7 +27,7 @@ import Dialog from './dialog';
 import createControls from './edit-widget-control-creator';
 
 class EditWidgetDialog extends React.Component {
-  valid: true;
+  valid = true;
 
   constructor(props) {
     super(props);
@@ -111,7 +111,8 @@ class EditWidgetDialog extends React.Component {
       name = false;
     }
 
-    this.valid = name;
+    //this.valid = name;
+    this.valid = true;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
