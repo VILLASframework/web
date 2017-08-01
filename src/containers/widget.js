@@ -181,7 +181,8 @@ class Widget extends Component {
       'widget': !this.props.editing,
       'editing-widget': this.props.editing,
       'border': borderedWidget,
-      'unselectable': this.props.editing
+      'unselectable': this.props.editing,
+      'locked': widget.locked && this.props.editing
     });
 
     if (this.props.editing) {
@@ -201,12 +202,14 @@ class Widget extends Component {
           dragGrid={grid}
           resizeGrid={grid}
           zIndex={widget.z}
+          enableResizing={!widget.locked}
+          disableDragging={widget.locked}
         >
           <ContextMenuTrigger id={'widgetMenu' + this.props.index} ref={c => this.contextMenuTriggerViaDraggable = c} >
             {element}
           </ContextMenuTrigger>
         </Rnd>
-      );
+      );   
     } else {
       return (
         <div className={ widgetClasses } style={{ width: Number(widget.width), height: Number(widget.height), left: Number(widget.x), top: Number(widget.y), 'zIndex': Number(widget.z), position: 'absolute' }}>

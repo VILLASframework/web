@@ -41,6 +41,8 @@ import AppDispatcher from '../app-dispatcher';
 import NotificationsDataManager from '../data-managers/notifications-data-manager';
 import NotificationsFactory from '../data-managers/notifications-factory';
 
+import 'react-contextmenu/public/styles.5bb557.css';
+
 class Visualization extends React.Component {
   static getStores() {
     return [ VisualizationStore, ProjectStore, SimulationStore, FileStore, UserStore ];
@@ -357,8 +359,36 @@ class Visualization extends React.Component {
     this.setState({ visualization });
   }
 
+  lockWidget(data) {
+    // lock the widget
+    let widget = this.state.visualization.widgets[data.key];
+    widget.locked = true;
+
+    // update visualization
+    let widgets = {};
+    widgets[data.key] = widget;
+    widgets = Object.assign({}, this.state.visualization.widgets, widgets);
+
+    const visualization = Object.assign({}, this.state.visualization, { widgets });
+    this.setState({ visualization });
+  }
+
+  unlockWidget(data) {
+    // lock the widget
+    let widget = this.state.visualization.widgets[data.key];
+    widget.locked = false;
+
+    // update visualization
+    let widgets = {};
+    widgets[data.key] = widget;
+    widgets = Object.assign({}, this.state.visualization.widgets, widgets);
+
+    const visualization = Object.assign({}, this.state.visualization, { widgets });
+    this.setState({ visualization });
+  }
+
   render() {
-    var current_widgets = this.state.visualization.widgets;
+    const current_widgets = this.state.visualization.widgets;
 
     return (
       <div className='section box' >
@@ -425,13 +455,16 @@ class Visualization extends React.Component {
           {current_widgets != null &&
             Object.keys(current_widgets).map( (widget_key) => (
               <ContextMenu id={'widgetMenu'+ widget_key} key={widget_key} >
-                <MenuItem data={{key: widget_key}} onClick={(e, data) => this.editWidget(e, data)}>Edit</MenuItem>
-                <MenuItem data={{key: widget_key}} onClick={(e, data) => this.deleteWidget(e, data)}>Delete</MenuItem>
+                <MenuItem data={{key: widget_key}} disabled={this.state.visualization.widgets[widget_key].locked} onClick={(e, data) => this.editWidget(e, data)}>Edit</MenuItem>
+                <MenuItem data={{key: widget_key}} disabled={this.state.visualization.widgets[widget_key].locked} onClick={(e, data) => this.deleteWidget(e, data)}>Delete</MenuItem>
                 <MenuItem divider />
-                <MenuItem data={{key: widget_key}} onClick={(e, data) => this.moveWidget(e, data, this.moveAbove)}>Move above</MenuItem>
-                <MenuItem data={{key: widget_key}} onClick={(e, data) => this.moveWidget(e, data, this.moveToFront)}>Move to front</MenuItem>
-                <MenuItem data={{key: widget_key}} onClick={(e, data) => this.moveWidget(e, data, this.moveUnderneath)}>Move underneath</MenuItem>
-                <MenuItem data={{key: widget_key}} onClick={(e, data) => this.moveWidget(e, data, this.moveToBack)}>Move to back</MenuItem>
+                <MenuItem data={{key: widget_key}} disabled={this.state.visualization.widgets[widget_key].locked} onClick={(e, data) => this.moveWidget(e, data, this.moveAbove)}>Move above</MenuItem>
+                <MenuItem data={{key: widget_key}} disabled={this.state.visualization.widgets[widget_key].locked} onClick={(e, data) => this.moveWidget(e, data, this.moveToFront)}>Move to front</MenuItem>
+                <MenuItem data={{key: widget_key}} disabled={this.state.visualization.widgets[widget_key].locked} onClick={(e, data) => this.moveWidget(e, data, this.moveUnderneath)}>Move underneath</MenuItem>
+                <MenuItem data={{key: widget_key}} disabled={this.state.visualization.widgets[widget_key].locked} onClick={(e, data) => this.moveWidget(e, data, this.moveToBack)}>Move to back</MenuItem>
+                <MenuItem divider />
+                <MenuItem data={{key: widget_key}} disabled={this.state.visualization.widgets[widget_key].locked} onClick={(e, data) => this.lockWidget(data)}>Lock</MenuItem>
+                <MenuItem data={{key: widget_key}} disabled={!this.state.visualization.widgets[widget_key].locked} onClick={(e, data) => this.unlockWidget(data)}>Unlock</MenuItem>
               </ContextMenu>
           ))}
 
