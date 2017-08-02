@@ -69,7 +69,7 @@ class Projects extends React.Component {
     if (data) {
       AppDispatcher.dispatch({
         type: 'projects/start-add',
-        data: data,
+        data,
         token: this.state.sessionToken
       });
     }

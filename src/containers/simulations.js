@@ -62,7 +62,7 @@ class Simulations extends Component {
     if (data) {
       AppDispatcher.dispatch({
         type: 'simulations/start-add',
-        data: data,
+        data,
         token: this.state.sessionToken
       });
     }
@@ -110,7 +110,7 @@ class Simulations extends Component {
     if (data) {
       AppDispatcher.dispatch({
         type: 'simulations/start-edit',
-        data: data,
+        data,
         token: this.state.sessionToken
       });
     }
