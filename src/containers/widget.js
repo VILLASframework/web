@@ -101,7 +101,6 @@ class Widget extends Component {
 
     if (x !== data.x || y !== data.y) {
       this.rnd.updatePosition({ x, y });
-      console.log(this.rnd);
     }
   }
 
@@ -186,6 +185,8 @@ class Widget extends Component {
     });
 
     if (this.props.editing) {
+      const resizing = { bottom: !widget.locked, bottomLeft: !widget.locked, bottomRight: !widget.locked, left: !widget.locked, right: !widget.locked, top: !widget.locked, topLeft: !widget.locked, topRight: !widget.locked};
+
       return (
         <Rnd
           ref={c => { this.rnd = c; }}
@@ -202,7 +203,7 @@ class Widget extends Component {
           dragGrid={grid}
           resizeGrid={grid}
           zIndex={widget.z}
-          enableResizing={!widget.locked}
+          enableResizing={resizing}
           disableDragging={widget.locked}
         >
           <ContextMenuTrigger id={'widgetMenu' + this.props.index} ref={c => this.contextMenuTriggerViaDraggable = c} >

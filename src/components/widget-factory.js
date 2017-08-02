@@ -33,8 +33,9 @@ class WidgetFactory {
                 widget.minWidth = 70;
                 widget.minHeight = 20;
                 widget.width = 120;
-                widget.height = 70;
+                widget.height = 30;
                 widget.textSize = 16;
+                widget.name = 'Value';
                 break;
             case 'Plot':
                 widget.simulator = defaultSimulator;
@@ -48,9 +49,8 @@ class WidgetFactory {
                 break;
             case 'Table':
                 widget.simulator = defaultSimulator;
-                widget.minWidth = 300;
-                widget.minHeight = 200;
-                widget.width = 400;
+                widget.minWidth = 200;
+                widget.width = 300;
                 widget.height = 200;
                 break;
             case 'Label':

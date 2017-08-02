@@ -32,9 +32,8 @@ class WidgetPlot extends React.Component {
     let simulatorData = [];
 
     // Proceed if a simulation with models and a simulator are available
-    if (simulator && simulation && simulation.models.length > 0) {
-
-      const model = simulation.models.find( model => model.simulator.node === simulator.node && model.simulator.simulator === simulator.simulator );
+    if (simulator && this.props.data[simulator.node] != null && this.props.data[simulator.node][simulator.simulator] != null && simulation && simulation.models.length > 0) {
+      const model = simulation.models.find(model => model.simulator.node === simulator.node && model.simulator.simulator === simulator.simulator);
       const chosenSignals = this.props.widget.signals;
 
       simulatorData = this.props.data[simulator.node][simulator.simulator].values.filter((values, index) => (
@@ -46,6 +45,7 @@ class WidgetPlot extends React.Component {
         if (chosenSignals.includes(signal_index)) {
           accum.push({ index: signal_index, name: model_signal.name });
         }
+        
         return accum;
       }, []);
     }
