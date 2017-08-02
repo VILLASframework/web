@@ -10,23 +10,26 @@ import EditWidgetSimulatorControl from '../../../components/dialog/edit-widget-s
 import EditWidgetSignalControl from '../../../components/dialog/edit-widget-signal-control';
 import EditWidgetSignalsControl from '../../../components/dialog/edit-widget-signals-control';
 import EditWidgetOrientation from '../../../components/dialog/edit-widget-orientation';
+import EditWidgetTextSizeControl from '../../../components/dialog/edit-widget-text-size-control';
+import EditWidgetAspectControl from '../../../components/dialog/edit-widget-aspect-control';
 
 describe('edit widget control creator', () => {
     it('should not return null', () => {
         let controls = createControls('Value', null, null, null, null, null, null);
-        expect(controls).to.be.defined;
+        expect(controls).to.be.not.undefined;
     });
 
     var runs = [
-        { args: { widgetType: 'Value' }, result: { controlNumber: 2, controlTypes: [EditWidgetSimulatorControl, EditWidgetSignalControl] } },
+        { args: { widgetType: 'Value' }, result: { controlNumber: 4, controlTypes: [EditWidgetTextControl, EditWidgetSimulatorControl, EditWidgetSignalControl, EditWidgetTextSizeControl] } },
         { args: { widgetType: 'Plot' }, result: { controlNumber: 4, controlTypes: [EditWidgetTimeControl, EditWidgetSimulatorControl, EditWidgetSignalsControl, EditWidgetTextControl] } },
         { args: { widgetType: 'Table' }, result: { controlNumber: 1, controlTypes: [EditWidgetSimulatorControl] } },
-        { args: { widgetType: 'Image' }, result: { controlNumber: 1, controlTypes: [EditImageWidgetControl] } },
+        { args: { widgetType: 'Image' }, result: { controlNumber: 2, controlTypes: [EditImageWidgetControl, EditWidgetAspectControl] } },
         { args: { widgetType: 'Gauge' }, result: { controlNumber: 2, controlTypes: [EditWidgetSimulatorControl, EditWidgetSignalControl] } },
         { args: { widgetType: 'PlotTable' }, result: { controlNumber: 3, controlTypes: [EditWidgetSimulatorControl, EditWidgetSignalsControl, EditWidgetTextControl] } },
         { args: { widgetType: 'Slider' }, result: { controlNumber: 1, controlTypes: [EditWidgetOrientation] } },
         { args: { widgetType: 'Button' }, result: { controlNumber: 2, controlTypes: [EditWidgetColorControl] } },
         { args: { widgetType: 'Box' }, result: { controlNumber: 1, controlTypes: [EditWidgetColorControl] } },
+        { args: { widgetType: 'Label' }, result: { controlNumber: 3, controlTypes: [EditWidgetTextControl, EditWidgetTextSizeControl, EditWidgetColorControl] } }
     ];
 
     runs.forEach( (run) => {
