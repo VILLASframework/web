@@ -1,4 +1,0 @@
-[submodule "backend"]
-	path = backend
-	url = ../VILLASweb-backend.git
-	branch = develop
