@@ -78,16 +78,21 @@ class SimulatorDataDataManager {
   onMessage(event, node) {
     var message = this.bufferToMessage(event.data);
 
-    AppDispatcher.dispatch({
-      type: 'simulatorData/data-changed',
-      data: message,
-      node: node
-    });
+    if (message !== null) {
+      AppDispatcher.dispatch({
+        type: 'simulatorData/data-changed',
+        data: message,
+        node: node
+      });
+    }
   }
 
   bufferToMessage(blob) {
     // parse incoming message into usable data
     var data = new DataView(blob);
+    if (data.byteLength === 0) {
+      return null;
+    }
 
     let OFFSET_TYPE = 2;
     let OFFSET_VERSION = 4;

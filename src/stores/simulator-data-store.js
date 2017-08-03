@@ -54,18 +54,16 @@ class SimulationDataStore extends ReduceStore {
         return state;
 
       case 'simulatorData/data-changed':
-      // get index for simulator id
-      if (state[action.node._id] == null) {
-        return state;
-      }
+        // get index for simulator id
+        if (state[action.node._id] == null) {
+          return state;
+        }
 
-      let index = action.node.simulators.findIndex(simulator => simulator.id === action.data.id);
-      if (index === -1 || state[action.node._id][index] == null) {
-        return state;
-      }
+        let index = action.node.simulators.findIndex(simulator => simulator.id === action.data.id);
+        if (index === -1 || state[action.node._id][index] == null) {
+          return state;
+        }
 
-      // only add data, if newer than current
-      if (state[action.node._id][index].sequence < action.data.sequence) {
         // add data to simulator
         for (i = 0; i < action.data.length; i++) {
           while (state[action.node._id][index].values.length < i + 1) {
@@ -87,9 +85,6 @@ class SimulationDataStore extends ReduceStore {
 
         // explicit call to prevent array copy
         this.__emitChange();
-      } else {
-        console.log('same sequence ' + state[action.node._id][index].sequence + ' ' + action.data.sequence);
-      }
 
         return state;
 
