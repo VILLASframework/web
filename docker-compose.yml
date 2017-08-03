@@ -50,8 +50,6 @@ services:
 #    ports:
 #      - "8080:15672"
 #      - "5672:5672"
-#    networks:
-#      villas:
 
   # VILLASnode, the gateway between UDP and WebSocket traffic
   node:
@@ -61,3 +59,16 @@ services:
     privileged: true
     restart: always
     command: node /etc/villas/node/websocket-demo.conf
+    volumes:
+      - /villas:/villas
+      - ./etc/node:/etc/villas/node
+
+  # Web Interface for MongoDB
+  mongo-express:
+    image: mongo-express
+    environment:
+      ME_CONFIG_MONGODB_SERVER: database
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: "mongo-admin"
+    ports:
+      - "8081:8081"
