@@ -50,7 +50,6 @@ class Widget extends Component {
   }
 
   static calculateState(prevState) {
-
     let tokenState = UserStore.getState().token;
 
     if (prevState) {
@@ -149,7 +148,7 @@ class Widget extends Component {
     // get widget element
     const widget = this.props.data;
     let borderedWidget = false;
-    var element = null;
+    let element = null;
 
     // dummy is passed to widgets to keep updating them while in edit mode
     if (widget.type === 'Value') {
@@ -180,7 +179,7 @@ class Widget extends Component {
       'widget': !this.props.editing,
       'editing-widget': this.props.editing,
       'border': borderedWidget,
-      'unselectable': this.props.editing,
+      'unselectable': false,
       'locked': widget.locked && this.props.editing
     });
 

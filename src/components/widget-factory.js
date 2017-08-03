@@ -74,8 +74,8 @@ class WidgetFactory {
                 widget.time = 60;
                 break;
             case 'Image':
-                widget.minWidth = 100;
-                widget.minHeight = 100;
+                widget.minWidth = 20;
+                widget.minHeight = 20;
                 widget.width = 200;
                 widget.height = 200;
                 widget.lockAspect = true;

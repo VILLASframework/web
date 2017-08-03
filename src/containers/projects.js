@@ -107,6 +107,14 @@ class Projects extends React.Component {
     return id;
   }
 
+  hasValidSimulation() {
+    const simulations = this.state.simulations.filter(simulation => {
+      return simulation.models.length > 0;
+    });
+    
+    return simulations.length > 0;
+  }
+
   render() {
     return (
       <div className='section'>
@@ -118,10 +126,13 @@ class Projects extends React.Component {
           <TableColumn width='70' editButton deleteButton onEdit={index => this.setState({ editModal: true, modalData: this.state.projects[index] })} onDelete={index => this.setState({ deleteModal: true, modalData: this.state.projects[index] })} />
         </Table>
 
-        <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph='plus' /> Project</Button>
+        <Button onClick={() => this.setState({ newModal: true })} disabled={!this.hasValidSimulation()}><Glyphicon glyph='plus' /> Project</Button>
+
+        {!this.hasValidSimulation() &&
+          <span><i> Simulation with at least one simulation-model required!</i></span>
+        }
 
         <NewProjectDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} simulations={this.state.simulations} />
-
         <EditProjectDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} project={this.state.modalData} simulations={this.state.simulations} />
 
         <Modal show={this.state.deleteModal}>
