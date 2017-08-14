@@ -64,6 +64,29 @@ class NodesDataManager extends RestDataManager {
       });
     });
   }
+
+  update(object, token = null) {
+    var obj = {};
+    obj[this.type] = this.filterKeys(object);
+
+    // filter simulator IDs
+    obj[this.type].simulators = obj[this.type].simulators.map(simulator => {
+      delete simulator.id;
+      return simulator;
+    });
+
+    RestAPI.put(this.makeURL(this.url + '/' + object._id), obj, token).then(response => {
+      AppDispatcher.dispatch({
+        type: this.type + 's/edited',
+        data: Object.assign({}, object, response[this.type])
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: this.type + 's/edit-error',
+        error: error
+      });
+    });
+  }
 }
 
 export default new NodesDataManager();
