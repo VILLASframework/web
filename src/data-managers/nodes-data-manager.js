@@ -48,7 +48,7 @@ class NodesDataManager extends RestDataManager {
       });
 
       AppDispatcher.dispatch({
-        type: 'nodes/edited',
+        type: 'nodes/simulatorsFetched',
         data: node
       });
 
@@ -59,7 +59,7 @@ class NodesDataManager extends RestDataManager {
       });
     }).catch(error => {
       AppDispatcher.dispatch({
-        type: 'nodes/edit-error',
+        type: 'nodes/simulatorsFetch-error',
         error: error
       });
     });

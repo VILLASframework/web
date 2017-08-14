@@ -41,6 +41,17 @@ class NodeStore extends ArrayStore {
 
         return super.reduce(state, action);
 
+      case 'nodes/edited':
+        NodesDataManager.getSimulators(action.data);
+
+        return super.reduce(state, action);
+
+      case 'nodes/simulatorsFetched':
+        return this.updateElements(state, [action.data]);
+
+      case 'nodes/simulatorsFetch-error':
+        return state;
+
       default:
         return super.reduce(state, action);
     }
