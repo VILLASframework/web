@@ -41,7 +41,8 @@ class Login extends Component {
   static calculateState() {
     return {
       currentUser: UserStore.getState().currentUser,
-      token: UserStore.getState().token
+      token: UserStore.getState().token,
+      loginMessage: UserStore.getState().loginMessage
     };
   }
 
@@ -83,7 +84,7 @@ class Login extends Component {
         <div className="login-container">
           <PageHeader>Login</PageHeader>
 
-          <LoginForm />
+          <LoginForm loginMessage={this.state.loginMessage} />
         </div>
 
         <Footer />

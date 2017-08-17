@@ -30,7 +30,8 @@ class LoginForm extends Component {
 
     this.state = {
       username: '',
-      password: ''
+      password: '',
+      disableLogin: true
     }
   }
 
@@ -47,7 +48,15 @@ class LoginForm extends Component {
   }
 
   handleChange(event) {
-    this.setState({ [event.target.id]: event.target.value });
+    let disableLogin = this.state.disableLogin;
+
+    if (event.target.id === 'username') {
+      disableLogin = this.state.password.length === 0 || event.target.value.length === 0;
+    } else if (event.target.id === 'password') {
+      disableLogin = this.state.username.length === 0 || event.target.value.length === 0;
+    }
+
+    this.setState({ [event.target.id]: event.target.value, disableLogin });
   }
 
   render() {
@@ -71,9 +80,17 @@ class LoginForm extends Component {
           </Col>
         </FormGroup>
 
+        {this.props.loginMessage &&
+          <div style={{ marginBottom: '50px', color: 'red' }}>
+            <Col smOffset={2} sm={10} style={{ paddingLeft: '5px' }}>
+              <i>Error: </i>{this.props.loginMessage}
+            </Col>
+          </div>
+        }
+
         <FormGroup>
           <Col smOffset={2} sm={10}>
-            <Button type="submit" onClick={(e) => this.login(e)}>Login</Button>
+            <Button type="submit" disabled={this.state.disableLogin} onClick={e => this.login(e)}>Login</Button>
           </Col>
         </FormGroup>
       </Form>

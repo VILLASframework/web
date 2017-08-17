@@ -23,7 +23,6 @@ import { ReduceStore } from 'flux/utils';
 
 import AppDispatcher from '../app-dispatcher';
 import UsersDataManager from '../data-managers/users-data-manager';
-import NotificationsDataManager from '../data-managers/notifications-data-manager';
 import SimulatorDataDataManager from '../data-managers/simulator-data-data-manager';
 
 class UserStore extends ReduceStore {
@@ -35,7 +34,8 @@ class UserStore extends ReduceStore {
     return {
       users: [],
       currentUser: null,
-      token: null
+      token: null,
+      loginMessage: null
     };
   }
 
@@ -43,7 +43,7 @@ class UserStore extends ReduceStore {
     switch (action.type) {
       case 'users/login':
         UsersDataManager.login(action.username, action.password);
-        return state;
+        return Object.assign({}, state, { loginMessage: null });
 
       case 'users/logout':
         // disconnect from all simulators
@@ -69,13 +69,7 @@ class UserStore extends ReduceStore {
       case 'users/login-error':
         if (action.error && !action.error.handled) {
           // If it was an error and hasn't been handled, the credentials must have been wrong.
-          const WRONG_CREDENTIALS_NOTIFICATION = {
-            title: 'Incorrect credentials',
-            message: 'Please modify and try again.',
-            level: 'error'
-          };
-
-          NotificationsDataManager.addNotification(WRONG_CREDENTIALS_NOTIFICATION);
+          state = Object.assign({}, state, { loginMessage: 'Wrong credentials! Please try again.' });
         }
 
         return state;    
