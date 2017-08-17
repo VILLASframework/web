@@ -24,7 +24,7 @@ describe('edit widget control creator', () => {
         { args: { widgetType: 'Plot' }, result: { controlNumber: 4, controlTypes: [EditWidgetTimeControl, EditWidgetSimulatorControl, EditWidgetSignalsControl, EditWidgetTextControl] } },
         { args: { widgetType: 'Table' }, result: { controlNumber: 1, controlTypes: [EditWidgetSimulatorControl] } },
         { args: { widgetType: 'Image' }, result: { controlNumber: 2, controlTypes: [EditImageWidgetControl, EditWidgetAspectControl] } },
-        { args: { widgetType: 'Gauge' }, result: { controlNumber: 2, controlTypes: [EditWidgetSimulatorControl, EditWidgetSignalControl] } },
+        { args: { widgetType: 'Gauge' }, result: { controlNumber: 3, controlTypes: [EditWidgetTextControl, EditWidgetSimulatorControl, EditWidgetSignalControl] } },
         { args: { widgetType: 'PlotTable' }, result: { controlNumber: 3, controlTypes: [EditWidgetSimulatorControl, EditWidgetSignalsControl, EditWidgetTextControl] } },
         { args: { widgetType: 'Slider' }, result: { controlNumber: 1, controlTypes: [EditWidgetOrientation] } },
         { args: { widgetType: 'Button' }, result: { controlNumber: 2, controlTypes: [EditWidgetColorControl] } },
