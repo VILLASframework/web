@@ -151,7 +151,7 @@ class CustomTable extends Component {
     }
 
     return (
-      <Table style={{ width: this.props.width}} striped hover bordered>
+      <Table style={{ width: this.props.width }} striped hover>
         <thead>
           <tr>
             {this.props.children}

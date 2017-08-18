@@ -25,6 +25,7 @@ import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import NotificationSystem from 'react-notification-system';
 import { Redirect, Route } from 'react-router-dom';
+import { Col } from 'react-bootstrap';
 
 import AppDispatcher from '../app-dispatcher';
 import SimulationStore from '../stores/simulation-store';
@@ -35,6 +36,7 @@ import NotificationsDataManager from '../data-managers/notifications-data-manage
 import Header from '../components/header';
 import Footer from '../components/footer';
 import SidebarMenu from '../components/menu-sidebar';
+import HeaderMenu from '../components/header-menu';
 
 import Home from './home';
 import Projects from './projects';
@@ -59,7 +61,9 @@ class App extends React.Component {
       nodes: NodeStore.getState(),
       simulations: SimulationStore.getState(),
       currentRole: currentUser ? currentUser.role : '',
-      token: UserStore.getState().token
+      token: UserStore.getState().token,
+
+      showSidebarMenu: false
     };
   }
 
@@ -93,34 +97,50 @@ class App extends React.Component {
     NotificationsDataManager.setSystem(this.refs.notificationSystem);
   }
 
+  showSidebarMenu = () => {
+    this.setState({ showSidebarMenu: true });
+  }
+
+  hideSidebarMenu = () => {
+    this.setState({ showSidebarMenu: false });
+  }
+
   render() {
     if (this.state.token == null) {
       return (<Redirect to="/login" />);
     }
 
     return (
-      <div className="app">
-        <NotificationSystem ref="notificationSystem" />
+      <div>
+        <Col style={{ width: this.state.showSidebarMenu ? '280px' : '0px' }} smHidden mdHidden lgHidden className="sidenav">
+          <HeaderMenu onClose={this.hideSidebarMenu} currentRole={this.state.currentRole} />
+        </Col>
 
-        <Header />
+        <div className="app">
+          <NotificationSystem ref="notificationSystem" />
 
-        <div className="app-body">
-          <SidebarMenu currentRole={ this.state.currentRole }/>
+          <Header onMenuButton={this.showSidebarMenu} showMenuButton={this.state.token != null} />
 
-          <div className="app-content">
-            <Route exact path="/" component={Home} />
-            <Route path="/home" component={Home} />
-            <Route exact path="/projects" component={Projects} />
-            <Route path="/projects/:project" component={Project} />
-            <Route path="/visualizations/:visualization" component={Visualization} />
-            <Route exact path="/simulations" component={Simulations} />
-            <Route path="/simulations/:simulation" component={Simulation} />
-            <Route path="/simulators" component={Simulators} />
-            <Route path="/users" component={Users} />
+          <div className="app-body">
+            <Col xsHidden>
+              <SidebarMenu currentRole={this.state.currentRole}/>
+            </Col>
+
+            <div className="app-content">
+              <Route exact path="/" component={Home} />
+              <Route path="/home" component={Home} />
+              <Route exact path="/projects" component={Projects} />
+              <Route path="/projects/:project" component={Project} />
+              <Route path="/visualizations/:visualization" component={Visualization} />
+              <Route exact path="/simulations" component={Simulations} />
+              <Route path="/simulations/:simulation" component={Simulation} />
+              <Route path="/simulators" component={Simulators} />
+              <Route path="/users" component={Users} />
+            </div>
           </div>
-        </div>
 
-        <Footer />
+          <Footer />
+        </div>
       </div>
     );
   }

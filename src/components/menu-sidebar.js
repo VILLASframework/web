@@ -19,10 +19,10 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-class SidebarMenu extends Component {
+class SidebarMenu extends React.Component {
   render() {
     return (
       <div className="menu-sidebar">

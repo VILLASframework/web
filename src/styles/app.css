@@ -26,16 +26,12 @@ body {
   background-color: #6EA2B0 !important;
 }
 
-#root {
-  height: 100vh;
-}
-
 .app {
-  min-width: 800px;
   height: 100%;
   color: #4d4d4d;
 
   font: 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  hyphens: auto;
 }
 
 .app-header {
@@ -51,7 +47,25 @@ body {
   width: 100%;
   margin: 0;
 
-  text-align: center;
+  text-align: left;
+}
+
+@media (min-width: 768px) {
+  .app-header h1 {
+    text-align: center !important;
+  }
+}
+
+.app-header .menu-icon {
+  font-size: 28px;
+  color: #818181;
+  right: 5px;
+
+  padding: 6px 0 0 0;
+}
+
+.btn-link {
+  padding: 0 !important;
 }
 
 .app-footer {
@@ -67,13 +81,6 @@ body {
 }
 
 .app-body {
-  /* Let sidebar grow and content occupy rest of the space */
-  display: flex;
-  float: right;
-  width: 100%;
-  /* Fit between header and footer */
-  min-height: calc(100vh - 140px);
-
   padding: 15px 5px 0px 5px;
 }
 
@@ -83,20 +90,30 @@ body {
 }
 
 .app-content {
-  flex: 1 1 auto;
   padding: 15px 20px;
+
+  width: auto;
+  min-height: 300px;
 
   background-color: #fff;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
               0 9px 18px 0 rgba(0, 0, 0, 0.1);
 }
 
+@media (min-width: 768px) {
+  .app-content {
+    margin-left: 200px !important;
+  }
+}
+
 /**
  * Menus
  */
 .menu-sidebar {
-  display: inline-table;
+  /*display: inline-table;*/
   padding: 20px 25px 20px 25px;
+  width: 180px;
+  float: left;
 
   background-color: #fff;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
@@ -132,6 +149,49 @@ body {
   overflow:hidden;
   visibility:hidden;
   margin-bottom:-1px;
+}
+
+.sidenav {
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 100;
+  background-color: #111;
+  overflow-x: hidden;
+  padding-top: 60px;
+  transition: 0.5s;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+  text-decoration: none;
+}
+
+.sidenav .closeButton {
+  position: absolute;
+  top: -15px;
+  right: 15px;
+  font-size: 56px;
+  margin-left: 50px;
+  text-decoration: none;
+  display: block;
+  color: #818181;
+  transition: 0.3s;
+}
+
+.sidenav .closeButton:hover {
+  text-decoration: none;
+  color: #f1f1f1;
 }
 /**
  * Login form

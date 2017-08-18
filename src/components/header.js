@@ -19,15 +19,21 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
+import React from 'react';
+import { Col, Button, Glyphicon } from 'react-bootstrap';
 
-import '../styles/app.css';
-
-class Header extends Component {
+class Header extends React.Component {
   render() {
     return (
       <header className="app-header">
-        <h1>VILLASweb</h1>
+        <Col xs={10} smOffset={2} sm={8}>
+          <h1>VILLASweb</h1>
+        </Col>
+        <Col xs={2} smHidden mdHidden lgHidden style={{ paddingLeft: 'auto', paddingRight: 0 }}>
+          {this.props.showMenuButton &&
+            <Button bsStyle="link" onClick={this.props.onMenuButton} style={{ float: 'right', marginRight: '10px' }}><Glyphicon glyph="menu-hamburger" className="menu-icon" /></Button>
+          }
+        </Col>
       </header>
     );
   }
