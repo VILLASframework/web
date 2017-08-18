@@ -37,6 +37,7 @@ import VisualizationStore from '../stores/visualization-store';
 import ProjectStore from '../stores/project-store';
 import SimulationStore from '../stores/simulation-store';
 import FileStore from '../stores/file-store';
+import DesignStore from '../stores/design-store';
 import AppDispatcher from '../app-dispatcher';
 import NotificationsDataManager from '../data-managers/notifications-data-manager';
 import NotificationsFactory from '../data-managers/notifications-factory';
@@ -45,7 +46,7 @@ import '../styles/context-menu.css';
 
 class Visualization extends React.Component {
   static getStores() {
-    return [ VisualizationStore, ProjectStore, SimulationStore, FileStore, UserStore ];
+    return [ VisualizationStore, ProjectStore, SimulationStore, FileStore, UserStore, DesignStore ];
   }
 
   static calculateState(prevState) {
@@ -59,6 +60,7 @@ class Visualization extends React.Component {
       projects: ProjectStore.getState(),
       simulations: SimulationStore.getState(),
       files: FileStore.getState(),
+      fullscreen: DesignStore.getState().fullscreen,
 
       visualization: prevState.visualization || {},
       project: prevState.project || null,
@@ -387,6 +389,20 @@ class Visualization extends React.Component {
     this.setState({ visualization });
   }
 
+  setFullscreen = () => {
+    AppDispatcher.dispatch({
+      type: 'design/fullscreen',
+      fullscreen: true
+    });
+  }
+
+  unsetFullscreen = () => {
+    AppDispatcher.dispatch({
+      type: 'design/fullscreen',
+      fullscreen: false
+    });
+  }
+
   render() {
     const current_widgets = this.state.visualization.widgets;
 
@@ -411,9 +427,20 @@ class Visualization extends React.Component {
             </div>
           ) : (
             <div className='section-buttons-group'>
-              <Button bsStyle="link" onClick={() => this.setState({ editing: true })}>
-                <span className="glyphicon glyphicon-pencil"></span> Edit
-              </Button>
+              {this.state.fullscreen === false ? (
+                <span>
+                  <Button bsStyle="link" onClick={() => this.setState({ editing: true })}>
+                    <span className="glyphicon glyphicon-pencil"></span> Edit
+                  </Button>
+                  <Button bsStyle="link" onClick={this.setFullscreen} style={{ marginLeft: '8px' }}>
+                    <span className="glyphicon glyphicon-resize-full"></span> Fullscreen
+                  </Button>
+                </span>
+              ) : (
+                <Button bsStyle="link" onClick={this.unsetFullscreen}>
+                  <span className="glyphicon glyphicon-resize-small"></span> Disable fullscreen
+                </Button>
+              )}
             </div>
           )}
 
