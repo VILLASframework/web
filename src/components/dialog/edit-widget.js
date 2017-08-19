@@ -90,6 +90,8 @@ class EditWidgetDialog extends React.Component {
 
           // get file and update size
           changeObject = this.assignAspectRatio(changeObject, e.target.value);
+        } else if (e.target.type === 'checkbox') {
+          changeObject[e.target.id] = e.target.checked;
         } else {
           changeObject[e.target.id] = e.target.value;
         }

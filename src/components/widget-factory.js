@@ -36,6 +36,7 @@ class WidgetFactory {
                 widget.height = 30;
                 widget.textSize = 16;
                 widget.name = 'Value';
+                widget.showUnit = false;
                 break;
             case 'Plot':
                 widget.simulator = defaultSimulator;

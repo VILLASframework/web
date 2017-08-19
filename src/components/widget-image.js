@@ -45,7 +45,7 @@ class WidgetImage extends React.Component {
         {file ? (
           <img className="full" alt={file.name} src={'/' + config.publicPathBase + file.path} onDragStart={e => e.preventDefault()} />
         ) : (
-          <img className="full" alt="missing-image" src={'/' + config.publicPathBase + 'missing-image.png'} onDragStart={e => e.preventDefault()} />
+          <img className="full" alt="questionmark" src={'/' + config.publicPathBase + 'missing-image.png'} onDragStart={e => e.preventDefault()} />
         )}
       </div>
     );
