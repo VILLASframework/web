@@ -370,12 +370,12 @@ body {
   font-size: 0.8em;
 }
 
-.section-grid-slider {
+.section-buttons-group-right {
   height: auto !important;
 
   float: right;
 }
 
-.section-grid-slider .rc-slider {
+.section-buttons-group-right .rc-slider {
   margin-left: 12px;
 }
