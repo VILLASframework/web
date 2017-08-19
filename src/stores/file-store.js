@@ -30,11 +30,11 @@ class FileStore extends ArrayStore {
   reduce(state, action) {
     switch (action.type) {
       case 'files/start-upload':
-        FilesDataManager.upload(action.data, action.token);
+        FilesDataManager.upload(action.data, action.token, action.progressCallback, action.finishedCallback);
         return state;
 
       case 'files/uploaded':
-        console.log('ready uploaded');
+        //console.log('ready uploaded');
         return state;
 
       case 'files/upload-error':
