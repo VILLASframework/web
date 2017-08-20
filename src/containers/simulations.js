@@ -116,6 +116,14 @@ class Simulations extends Component {
     }
   }
 
+  onModalKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    
+      this.confirmDeleteModal();
+    }
+  }
+
   render() {
     return (
       <div className='section'>
@@ -132,7 +140,7 @@ class Simulations extends Component {
 
         <EditSimulationDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} simulation={this.state.modalSimulation} />
 
-        <Modal show={this.state.deleteModal}>
+        <Modal keyboard show={this.state.deleteModal} onHide={() => this.setState({ deleteModal: false })} onKeyPress={this.onModalKeyPress}>
           <Modal.Header>
             <Modal.Title>Delete Simulation</Modal.Title>
           </Modal.Header>

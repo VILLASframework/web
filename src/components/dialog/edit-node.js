@@ -41,7 +41,9 @@ class NewNodeDialog extends React.Component {
 
   onClose(canceled) {
     if (canceled === false) {
-      this.props.onClose(this.state);
+      if (this.valid) {
+        this.props.onClose(this.state);
+      }
     } else {
       this.props.onClose();
     }

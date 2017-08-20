@@ -43,7 +43,9 @@ class EditWidgetDialog extends React.Component {
 
   onClose(canceled) {
     if (canceled === false) {
-      this.props.onClose(this.state.temporal);
+      if (this.valid) {
+        this.props.onClose(this.state.temporal);
+      }
     } else {
       this.props.onClose();
     }

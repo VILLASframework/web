@@ -198,6 +198,22 @@ class Simulators extends Component {
     });
   }
 
+  onNodeModalKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    
+      this.confirmDeleteNodeModal();
+    }
+  }
+
+  onSimulatorModalKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    
+      this.confirmDeleteSimulatorModal();
+    }
+  }
+
   render() {
     return (
       <div className='section'>
@@ -218,7 +234,7 @@ class Simulators extends Component {
           <EditSimulatorDialog simulator={this.state.modalData.simulators[this.state.modalIndex]} show={this.state.editSimulatorModal} onClose={(data) => this.closeEditSimulatorModal(data)} node={this.state.modalData} />
         }
 
-        <Modal show={this.state.deleteNodeModal}>
+        <Modal keyboard show={this.state.deleteNodeModal} onHide={() => this.setState({ deleteNodeModal: false })} onKeyPress={this.onNodeModalKeyPress}>
           <Modal.Header>
             <Modal.Title>Delete Node</Modal.Title>
           </Modal.Header>
@@ -235,7 +251,7 @@ class Simulators extends Component {
           </Modal.Footer>
         </Modal>
 
-        <Modal show={this.state.deleteSimulatorModal}>
+        <Modal keyboard show={this.state.deleteSimulatorModal} onHide={() => this.setState({ deleteSimulatorModal: false })} onKeyPress={this.onSimulatorModalKeyPress}>
           <Modal.Header>
             <Modal.Title>Delete Simulator</Modal.Title>
           </Modal.Header>

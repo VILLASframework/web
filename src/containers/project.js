@@ -153,6 +153,14 @@ class Visualizations extends Component {
     }
   }
 
+  onModalKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    
+      this.confirmDeleteModal();
+    }
+  }
+
   render() {
     // get visualizations for this project
     var visualizations = [];
@@ -179,7 +187,7 @@ class Visualizations extends Component {
 
         <EditVisualizationDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} visualization={this.state.modalData} />
 
-        <Modal show={this.state.deleteModal}>
+        <Modal keyboard show={this.state.deleteModal} onHide={() => this.setState({ deleteModal: false })} onKeyPress={this.onModalKeyPress}>
           <Modal.Header>
             <Modal.Title>Delete Visualization</Modal.Title>
           </Modal.Header>
