@@ -23,17 +23,15 @@ import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 
 // import AppDispatcher from '../app-dispatcher';
-import VillasStore from '../stores/villas-store';
 import UserStore from '../stores/users-store';
 
 class Home extends Component {
   static getStores() {
-    return [ VillasStore ];
+    return [ UserStore ];
   }
 
   static calculateState() {
     return {
-      villas: VillasStore.getState(),
       currentUser: UserStore.getState().currentUser
       counts: {
         users: UserStore.getState().users.length
