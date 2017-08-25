@@ -25,7 +25,7 @@ class Footer extends Component {
   render() {
     return (
       <footer className="app-footer">
-        Copyright &copy; {new Date().getFullYear()}
+        <a href="http://www.fein-aachen.org/projects/villas-framework/">VILLASweb</a> - Copyright &copy; {new Date().getFullYear()} - <a href="https://acs.eonerc.rwth-aachen.de">Institute for Automation of Complex Power Systems</a> - <a href="https://www.rwth-aachen.de">RWTH Aachen University</a>
       </footer>
     );
   }
