@@ -80,6 +80,10 @@ body {
   clear: both;
 }
 
+.app-footer a {
+  color: #333;
+}
+
 .app-body {
   padding: 15px 5px 0px 5px;
 }
@@ -136,7 +140,7 @@ body {
 .menu-sidebar ul {
   padding-top: 10px;
   list-style: none;
-  white-space: nowrap;  
+  white-space: nowrap;
 }
 
 .menu-sidebar a::after {
