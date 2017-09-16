@@ -13,6 +13,8 @@ RUN npm install
 COPY . /usr/src/app
 RUN npm run build
 
-VOLUME /usr/src/app/build
+# Run the app in a local webserver
+RUN npm install -g serve
+EXPOSE 5000
 
-CMD [ "true" ]
+CMD [ "serve", "-s", "build" ]
