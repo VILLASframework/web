@@ -197,6 +197,19 @@ body {
   text-decoration: none;
   color: #f1f1f1;
 }
+
+/**
+ * Home page
+ */
+.home-container > ul {
+  margin-left: 2em;
+}
+
+.home-container > img {
+	margin: 20px;
+}
+
+
 /**
  * Login form
  */
