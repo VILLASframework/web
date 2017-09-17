@@ -53,7 +53,7 @@ class EditWidgetDialog extends React.Component {
 
   assignAspectRatio(changeObject, fileId) {
     // get aspect ratio of file
-    let file = this.props.files.find(element => element._id === fileId);
+    const file = this.props.files.find(element => element._id === fileId);
 
     // scale width to match aspect
     const aspectRatio = file.dimensions.width / file.dimensions.height;
@@ -94,6 +94,8 @@ class EditWidgetDialog extends React.Component {
           changeObject = this.assignAspectRatio(changeObject, e.target.value);
         } else if (e.target.type === 'checkbox') {
           changeObject[e.target.id] = e.target.checked;
+        } else if (e.target.type === 'number') {
+          changeObject[e.target.id] = Number(e.target.value);
         } else {
           changeObject[e.target.id] = e.target.value;
         }

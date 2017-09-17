@@ -32,6 +32,8 @@ import EditWidgetOrientation from './edit-widget-orientation';
 import EditWidgetAspectControl from './edit-widget-aspect-control';
 import EditWidgetTextSizeControl from './edit-widget-text-size-control';
 import EditWidgetCheckboxControl from './edit-widget-checkbox-control';
+import EditWidgetColorZonesControl from './edit-widget-color-zones-control';
+import EditWidgetMinMaxControl from './edit-widget-min-max-control';
 
 export default function createControls(widgetType = null, widget = null, sessionToken = null, files = null, validateForm, simulation, handleChange) {
     // Use a list to concatenate the controls according to the widget type
@@ -79,7 +81,10 @@ export default function createControls(widgetType = null, widget = null, session
             dialogControls.push(
                 <EditWidgetTextControl key={1} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} validate={id => validateForm(id)} handleChange={e => handleChange(e)} />,
                 <EditWidgetSimulatorControl key={2} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => gaugeBoundOnChange(e) } />,
-                <EditWidgetSignalControl key={3} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />
+                <EditWidgetSignalControl key={3} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={4} widget={widget} controlId="colorZones" text="Show color zones" handleChange={e => handleChange(e)} />,
+                <EditWidgetColorZonesControl key={5} widget={widget} handleChange={e => handleChange(e)} />,
+                <EditWidgetMinMaxControl key={6} widget={widget} controlId="value" handleChange={e => handleChange(e)} />
             );
             break;
         case 'PlotTable':

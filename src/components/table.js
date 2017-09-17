@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-import { Table, Button, Glyphicon, FormControl, Label } from 'react-bootstrap';
+import { Table, Button, Glyphicon, FormControl, Label, Checkbox } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 //import TableColumn from './table-column';
@@ -94,6 +94,12 @@ class CustomTable extends Component {
 
     if (child.props.deleteButton) {
       cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onDelete(index)}><Glyphicon glyph='remove' /></Button>);
+    }
+
+    if (child.props.checkbox) {
+      const checkboxKey = this.props.checkboxKey;
+
+      cell.push(<Checkbox className="table-control-checkbox" inline checked={checkboxKey ? data[checkboxKey] : null} onChange={e => child.props.onChecked(index, e)}></Checkbox>);
     }
 
     return cell;

@@ -33,7 +33,9 @@ class TableColumn extends Component {
     dataIndex: false,
     inlineEditable: false,
     clickable: false,
-    labelKey: null
+    labelKey: null,
+    checkbox: false,
+    checkboxKey: ''
   };
 
   render() {

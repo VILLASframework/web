@@ -105,10 +105,15 @@ class WidgetFactory {
             case 'Gauge':
                 widget.simulator = defaultSimulator;
                 widget.signal = 0;
-                widget.minWidth = 200;
+                widget.minWidth = 100;
                 widget.minHeight = 150;
-                widget.width = 200;
+                widget.width = 150;
                 widget.height = 150;
+                widget.colorZones = false;
+                widget.zones = [];
+                widget.valueMin = 0;
+                widget.valueMax = 1;
+                widget.valueUseMinMax = false;
                 break;
             case 'Box':
                 widget.minWidth = 50;

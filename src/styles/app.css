@@ -247,6 +247,11 @@ body {
   color: #888;
 }
 
+.table-control-checkbox input {
+  position: relative !important;
+  margin-top: 0 !important;
+}
+
 .unselectable {
   -webkit-touch-callout: none !important; /* iOS Safari */
     -webkit-user-select: none !important; /* Safari */
