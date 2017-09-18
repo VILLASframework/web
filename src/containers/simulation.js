@@ -173,42 +173,6 @@ class Simulation extends React.Component {
     }
   }
 
-  exportSimulationModel(data) {
-    // filter properties
-    var model = Object.assign({}, data);
-
-    // get simulator name
-    this.state.simulators.forEach(simulator => {
-      if (simulator._id === model.simulator) {
-        model.simulator = simulator.name;
-      }
-    });
-
-    // show save dialog
-    const blob = new Blob([JSON.stringify(model, null, 2)], { type: 'application/json' });
-    FileSaver.saveAs(blob, model.name + '.json');
-  }
-
-  loadFile(fileList) {
-    // get file
-    const file = fileList[0];
-    if (!file.type.match('application/json')) {
-      return;
-    }
-
-    // create file reader
-    var reader = new FileReader();
-    var self = this;
-
-    reader.onload = function(event) {
-      // read simulation model
-      const simulationModel = JSON.parse(event.target.result);
-      self.setState({ importModal: true, modalData: simulationModel });
-    };
-
-    reader.readAsText(file);
-  }
-
   render() {
     return (
       <div className='section'>

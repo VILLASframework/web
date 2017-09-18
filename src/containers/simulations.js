@@ -141,26 +141,6 @@ class Simulations extends Component {
     }
   }
 
-  loadFile(fileList) {
-    // get file
-    const file = fileList[0];
-    if (!file.type.match('application/json')) {
-      return;
-    }
-
-    // create file reader
-    var reader = new FileReader();
-    var self = this;
-
-    reader.onload = function(event) {
-      // read simulation
-      const simulation = JSON.parse(event.target.result);
-      self.setState({ importModal: true, modalSimulation: simulation });
-    };
-
-    reader.readAsText(file);
-  }
-
   exportSimulation(index) {
     // filter properties
     let simulation = Object.assign({}, this.state.simulations[index]);
