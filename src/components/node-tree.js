@@ -47,6 +47,7 @@ class NodeTree extends React.Component {
       buttons.push(<Button bsSize="small" onClick={() => this.props.onNodeAdd(rowInfo.node)}><Glyphicon glyph="plus" /></Button>);
       buttons.push(<Button bsSize="small" onClick={() => this.props.onNodeEdit(rowInfo.node)}><Glyphicon glyph="pencil" /></Button>);
       buttons.push(<Button bsSize="small" onClick={() => this.props.onNodeDelete(rowInfo.node)}><Glyphicon glyph="trash" /></Button>);
+      buttons.push(<Button bsSize="small" onClick={() => this.props.onNodeExport(rowInfo.node)}><Glyphicon glyph="export" /></Button>);
     } else {
       // get child index
       var index = rowInfo.path[1] - rowInfo.path[0] - 1;

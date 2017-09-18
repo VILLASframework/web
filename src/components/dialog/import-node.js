@@ -1,7 +1,7 @@
 /**
- * File: new-node.js
+ * File: import-node.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 06.07.2017
+ * Date: 03.09.2017
  *
  * This file is part of VILLASweb.
  *
@@ -24,25 +24,23 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
-class NewNodeDialog extends React.Component {
+class ImportNodeDialog extends React.Component {
   valid = false;
+  imported = false;
 
   constructor(props) {
     super(props);
 
-    this.state = {
+    this.state = {
       name: '',
       endpoint: '',
-      config: {},
       simulators: []
     };
   }
 
   onClose(canceled) {
     if (canceled === false) {
-      if (this.valid) {
-        this.props.onClose(this.state);
-      }
+      this.props.onClose(this.state);
     } else {
       this.props.onClose();
     }
@@ -53,13 +51,36 @@ class NewNodeDialog extends React.Component {
   }
 
   resetState() {
-    this.setState({ name: '', endpoint: '', config: {}, simulators: [] });
+    this.setState({ name: '', endpoint: '' });
+
+    this.imported = false;
+  }
+
+  loadFile(fileList) {
+    // get file
+    const file = fileList[0];
+    if (!file.type.match('application/json')) {
+      return;
+    }
+
+    // create file reader
+    var reader = new FileReader();
+    var self = this;
+
+    reader.onload = function(event) {
+      // read simulator
+      const node = JSON.parse(event.target.result);
+      self.imported = true;
+      self.setState({ name: node.name, endpoint: node.endpoint, simulators: node.simulators });
+    };
+
+    reader.readAsText(file);
   }
 
   validateForm(target) {
     // check all controls
-    var endpoint = true;
-    var name = true;
+    let endpoint = true;
+    let name = true;
 
     if (this.state.name === '' || this.props.nodes.find(node => node.name === this.state.name) !== undefined) {
       name = false;
@@ -78,16 +99,21 @@ class NewNodeDialog extends React.Component {
 
   render() {
     return (
-      <Dialog show={this.props.show} title="New Node" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog show={this.props.show} title="Import Simulator" buttonTitle="Import" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
+          <FormGroup controlId="file">
+            <ControlLabel>Simulator File</ControlLabel>
+            <FormControl type="file" onChange={(e) => this.loadFile(e.target.files)} />
+          </FormGroup>
+
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
             <ControlLabel>Name</ControlLabel>
-            <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <FormControl readOnly={!this.imported} type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="endpoint" validationState={this.validateForm('endpoint')}>
             <ControlLabel>Endpoint</ControlLabel>
-            <FormControl type="text" placeholder="Enter endpoint" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
+            <FormControl readOnly={!this.imported} type="text" placeholder="Enter endpoint" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
         </form>
@@ -96,4 +122,4 @@ class NewNodeDialog extends React.Component {
   }
 }
 
-export default NewNodeDialog;
+export default ImportNodeDialog;

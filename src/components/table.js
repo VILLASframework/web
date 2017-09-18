@@ -102,6 +102,10 @@ class CustomTable extends Component {
       cell.push(<Checkbox className="table-control-checkbox" inline checked={checkboxKey ? data[checkboxKey] : null} onChange={e => child.props.onChecked(index, e)}></Checkbox>);
     }
 
+    if (child.props.exportButton) {
+      cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onExport(index)}><Glyphicon glyph='export' /></Button>);
+    }
+
     return cell;
   }
 

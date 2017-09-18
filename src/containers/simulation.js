@@ -22,6 +22,7 @@
 import React from 'react';
 import { Container } from 'flux/utils';
 import { Button, Modal, Glyphicon } from 'react-bootstrap';
+import FileSaver from 'file-saver';
 
 import SimulationStore from '../stores/simulation-store';
 import NodeStore from '../stores/node-store';
@@ -32,6 +33,7 @@ import Table from '../components/table';
 import TableColumn from '../components/table-column';
 import NewSimulationModelDialog from '../components/dialog/new-simulation-model';
 import EditSimulationModelDialog from '../components/dialog/edit-simulation-model';
+import ImportSimulationModelDialog from '../components/dialog/import-simulation-model';
 
 class Simulation extends React.Component {
   static getStores() {
@@ -47,6 +49,7 @@ class Simulation extends React.Component {
       newModal: false,
       deleteModal: false,
       editModal: false,
+      importModal: false,
       modalData: {},
       modalIndex: null,
 
@@ -126,6 +129,20 @@ class Simulation extends React.Component {
     }
   }
 
+  closeImportModal(data) {
+    this.setState({ importModal: false });
+
+    if (data) {
+      this.state.simulation.models.push(data);
+      
+      AppDispatcher.dispatch({
+        type: 'simulations/start-edit',
+        data: this.state.simulation,
+        token: this.state.sessionToken
+      });
+    }
+  }
+
   getSimulatorName(simulator) {
     var name = "undefined";
 
@@ -136,6 +153,16 @@ class Simulation extends React.Component {
     });
 
     return name;
+  }
+
+  exportModel(index) {
+    // filter properties
+    let simulationModel = Object.assign({}, this.state.simulation.models[index]);
+    delete simulationModel.simulator;
+
+    // show save dialog
+    const blob = new Blob([JSON.stringify(simulationModel, null, 2)], { type: 'application/json' });
+    FileSaver.saveAs(blob, 'simulation model - ' + simulationModel.name + '.json');
   }
 
   onModalKeyPress = (event) => {
@@ -155,14 +182,24 @@ class Simulation extends React.Component {
           <TableColumn title='Name' dataKey='name' />
           <TableColumn title='Simulator' dataKey='simulator' width='180' modifier={(simulator) => this.getSimulatorName(simulator)} />
           <TableColumn title='Length' dataKey='length' width='100' />
-          <TableColumn title='' width='70' editButton deleteButton onEdit={(index) => this.setState({ editModal: true, modalData: this.state.simulation.models[index], modalIndex: index })} onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.simulation.models[index], modalIndex: index })} />
+          <TableColumn 
+            title='' 
+            width='100' 
+            editButton 
+            deleteButton 
+            exportButton
+            onEdit={(index) => this.setState({ editModal: true, modalData: this.state.simulation.models[index], modalIndex: index })} 
+            onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.simulation.models[index], modalIndex: index })} 
+            onExport={index => this.exportModel(index)}
+          />
         </Table>
 
         <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Simulation Model</Button>
+        <Button onClick={() => this.setState({ importModal: true })}><Glyphicon glyph="import" /> Import</Button>
 
         <NewSimulationModelDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} nodes={this.state.nodes} />
-
         <EditSimulationModelDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} data={this.state.modalData} nodes={this.state.nodes} />
+        <ImportSimulationModelDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} nodes={this.state.nodes} />
 
         <Modal keyboard show={this.state.deleteModal} onHide={() => this.setState({ deleteModal: false })} onKeyPress={this.onModalKeyPress}>
           <Modal.Header>
