@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button } from 'react-bootstrap';
+import { Button, Glyphicon } from 'react-bootstrap';
 import { ContextMenu, MenuItem } from 'react-contextmenu';
 import Slider from 'rc-slider';
 
@@ -66,6 +66,7 @@ class Visualization extends React.Component {
       project: prevState.project || null,
       simulation: prevState.simulation || null,
       editing: prevState.editing || false,
+      paused: prevState.paused || false,
 
       editModal: prevState.editModal || false,
       modalData: prevState.modalData || null,
@@ -402,6 +403,14 @@ class Visualization extends React.Component {
       fullscreen: false
     });
   }
+  
+  pauseData = () => {
+    this.setState({ paused: true });
+  }
+
+  unpauseData = () => {
+    this.setState({ paused: false });
+  }
 
   render() {
     const current_widgets = this.state.visualization.widgets;
@@ -418,10 +427,10 @@ class Visualization extends React.Component {
             <div>
               <div className='section-buttons-group'>
                 <Button bsStyle="link" onClick={() => this.stopEditing()}>
-                  <span className="glyphicon glyphicon-floppy-disk"></span> Save
+                  <Glyphicon glyph="floppy-disk" /> Save
                 </Button>
-                <Button bsStyle="link" onClick={() => this.discardChanges()}>
-                  <span className="glyphicon glyphicon-remove"></span> Cancel
+                <Button bsStyle="link" onClick={() => this.discardChanges()} style={{ marginLeft: '8px' }}>
+                  <Glyphicon glyph="remove" /> Cancel
                 </Button>
               </div>
             </div>
@@ -444,13 +453,19 @@ class Visualization extends React.Component {
             </div>
           )}
 
-          {this.state.editing &&
-            <div className="section-grid-slider">
-              <span>Grid: {this.state.visualization.grid > 1 ? this.state.visualization.grid : 'Disabled'}</span>
+          <div className="section-buttons-group-right">
+            {this.state.editing ? (
+              <div>
+                <span>Grid: {this.state.visualization.grid > 1 ? this.state.visualization.grid : 'Disabled'}</span>
 
-              <Slider value={this.state.visualization.grid} style={{ width: '80px' }} step={5} onChange={value => this.setGrid(value)} />
-            </div>
-          }
+                <Slider value={this.state.visualization.grid} style={{ width: '80px' }} step={5} onChange={value => this.setGrid(value)} />
+              </div>
+            ) : (this.state.paused ? (
+              <Button bsStyle="info" onClick={this.unpauseData}><Glyphicon glyph="play" /> Live</Button>
+            ): (
+              <Button bsStyle="info" onClick={this.pauseData}><Glyphicon glyph="pause" /> Pause</Button>
+            ))}
+          </div>
         </div>
 
         <div className="box box-content" onContextMenu={ (e) => e.preventDefault() }>
@@ -473,8 +488,18 @@ class Visualization extends React.Component {
 
           <Dropzone height={this.state.dropZoneHeight} onDrop={(item, position) => this.handleDrop(item, position)} editing={this.state.editing}>
             {current_widgets != null &&
-              Object.keys(current_widgets).map( (widget_key) => (
-              <Widget key={widget_key} data={current_widgets[widget_key]} simulation={this.state.simulation} onWidgetChange={(w, k) => this.widgetChange(w, k)} onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)} editing={this.state.editing} index={widget_key} grid={this.state.visualization.grid} />
+              Object.keys(current_widgets).map(widget_key => (
+              <Widget 
+                key={widget_key} 
+                data={current_widgets[widget_key]} 
+                simulation={this.state.simulation} 
+                onWidgetChange={(w, k) => this.widgetChange(w, k)} 
+                onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)} 
+                editing={this.state.editing} 
+                index={widget_key} 
+                grid={this.state.visualization.grid} 
+                paused={this.state.paused}
+              />
             ))}
 
             <Grid size={this.state.visualization.grid} disabled={this.state.visualization.grid === 1 || !this.state.editing} />

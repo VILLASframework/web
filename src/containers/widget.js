@@ -19,7 +19,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
+import React from 'react';
 import { Container } from 'flux/utils';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import Rnd from 'react-rnd';
@@ -45,26 +45,36 @@ import WidgetHTML from '../components/widget-html';
 
 import '../styles/widgets.css';
 
-class Widget extends Component {
+class Widget extends React.Component {
   static getStores() {
     return [ SimulatorDataStore, FileStore, UserStore ];
   }
 
-  static calculateState(prevState) {
-    let tokenState = UserStore.getState().token;
+  static calculateState(prevState, props) {
+    const sessionToken = UserStore.getState().token;
+
+    let simulatorData = {};
+
+    if (props.paused) {
+      if (prevState && prevState.simulatorData) {
+        simulatorData = JSON.parse(JSON.stringify(prevState.simulatorData));
+      }
+    } else {
+      simulatorData = SimulatorDataStore.getState();
+    }
 
     if (prevState) {
       return {
-        sessionToken: tokenState,
-        simulatorData: SimulatorDataStore.getState(),
+        sessionToken,
+        simulatorData,
         files: FileStore.getState(),
 
         sequence: prevState.sequence + 1
-      }
+      };
     } else {
       return {
-        sessionToken: tokenState,
-        simulatorData: SimulatorDataStore.getState(),
+        sessionToken,
+        simulatorData,
         files: FileStore.getState(),
 
         sequence: 0
@@ -144,7 +154,7 @@ class Widget extends Component {
 
   render() {
     // configure grid
-    let grid = [this.props.grid, this.props.grid];
+    const grid = [this.props.grid, this.props.grid];
 
     // get widget element
     const widget = this.props.data;
@@ -223,4 +233,4 @@ class Widget extends Component {
   }
 }
 
-export default Container.create(Widget);
+export default Container.create(Widget, { withProps: true });
