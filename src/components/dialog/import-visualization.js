@@ -85,6 +85,9 @@ class ImportVisualizationDialog extends React.Component {
           case 'Gauge':
             widget.simulator = defaultSimulator;
             break;
+
+          default:
+            break;
         }
       });
 
