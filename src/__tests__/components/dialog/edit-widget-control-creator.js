@@ -13,6 +13,9 @@ import EditWidgetOrientation from '../../../components/dialog/edit-widget-orient
 import EditWidgetTextSizeControl from '../../../components/dialog/edit-widget-text-size-control';
 import EditWidgetAspectControl from '../../../components/dialog/edit-widget-aspect-control';
 import EditWidgetCheckboxControl from '../../../components/dialog/edit-widget-checkbox-control';
+import EditWidgetMinMaxControl from '../../../components/dialog/edit-widget-min-max-control';
+import EditWidgetColorZonesControl from '../../../components/dialog/edit-widget-color-zones-control';
+import EditWidgetHTMLContent from '../../../components/dialog/edit-widget-html-content';
 
 describe('edit widget control creator', () => {
     it('should not return null', () => {
@@ -22,11 +25,11 @@ describe('edit widget control creator', () => {
 
     var runs = [
         { args: { widgetType: 'Value' }, result: { controlNumber: 5, controlTypes: [EditWidgetTextControl, EditWidgetSimulatorControl, EditWidgetSignalControl, EditWidgetTextSizeControl, EditWidgetCheckboxControl] } },
-        { args: { widgetType: 'Plot' }, result: { controlNumber: 4, controlTypes: [EditWidgetTimeControl, EditWidgetSimulatorControl, EditWidgetSignalsControl, EditWidgetTextControl] } },
+        { args: { widgetType: 'Plot' }, result: { controlNumber: 5, controlTypes: [EditWidgetTimeControl, EditWidgetSimulatorControl, EditWidgetSignalsControl, EditWidgetTextControl, EditWidgetMinMaxControl] } },
         { args: { widgetType: 'Table' }, result: { controlNumber: 1, controlTypes: [EditWidgetSimulatorControl] } },
         { args: { widgetType: 'Image' }, result: { controlNumber: 2, controlTypes: [EditImageWidgetControl, EditWidgetAspectControl] } },
-        { args: { widgetType: 'Gauge' }, result: { controlNumber: 3, controlTypes: [EditWidgetTextControl, EditWidgetSimulatorControl, EditWidgetSignalControl] } },
-        { args: { widgetType: 'PlotTable' }, result: { controlNumber: 3, controlTypes: [EditWidgetSimulatorControl, EditWidgetSignalsControl, EditWidgetTextControl] } },
+        { args: { widgetType: 'Gauge' }, result: { controlNumber: 6, controlTypes: [EditWidgetTextControl, EditWidgetSimulatorControl, EditWidgetSignalControl, EditWidgetCheckboxControl, EditWidgetColorZonesControl, EditWidgetMinMaxControl] } },
+        { args: { widgetType: 'PlotTable' }, result: { controlNumber: 5, controlTypes: [EditWidgetSimulatorControl, EditWidgetSignalsControl, EditWidgetTextControl, EditWidgetTimeControl, EditWidgetMinMaxControl] } },
         { args: { widgetType: 'Slider' }, result: { controlNumber: 1, controlTypes: [EditWidgetOrientation] } },
         { args: { widgetType: 'Button' }, result: { controlNumber: 2, controlTypes: [EditWidgetColorControl] } },
         { args: { widgetType: 'Box' }, result: { controlNumber: 1, controlTypes: [EditWidgetColorControl] } },
