@@ -129,6 +129,10 @@ class WidgetFactory {
                 widget.border_color = 0;
                 widget.z = 0;
                 break;
+            case 'HTML':
+                widget.content = '<i>Hello World</i>';
+                break;
+            
             default:
                 widget.width = 100;
                 widget.height = 100;

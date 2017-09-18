@@ -32,12 +32,12 @@ class Dialog extends React.Component {
   }
 
   onKeyPress = (event) => {
-    if (event.key === 'Enter') {
+    /*if (event.key === 'Enter') {
       // prevent input from submitting
       event.preventDefault();
 
       this.closeModal(false);
-    }
+    }*/
   }
 
   render() {

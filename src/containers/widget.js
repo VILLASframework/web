@@ -41,6 +41,7 @@ import WidgetNumberInput from '../components/widget-number-input';
 import WidgetSlider from '../components/widget-slider';
 import WidgetGauge from '../components/widget-gauge';
 import WidgetBox from '../components/widget-box';
+import WidgetHTML from '../components/widget-html';
 
 import '../styles/widgets.css';
 
@@ -173,6 +174,8 @@ class Widget extends Component {
       element = <WidgetGauge widget={widget} data={this.state.simulatorData} editing={this.props.editing} simulation={this.props.simulation} />
     } else if (widget.type === 'Box') {
       element = <WidgetBox widget={widget} editing={this.props.editing} />
+    } else if (widget.type === 'HTML') {
+      element = <WidgetHTML widget={widget} editing={this.props.editing} />
     }
     
     const widgetClasses = classNames({

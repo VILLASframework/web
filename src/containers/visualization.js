@@ -440,6 +440,7 @@ class Visualization extends React.Component {
               <ToolboxItem name="Slider" type="widget" disabled />
               <ToolboxItem name="Gauge" type="widget" />
               <ToolboxItem name="Box" type="widget" />
+              <ToolboxItem name="HTML" type="html" />
             </div>
           }
 

@@ -99,8 +99,6 @@ class Plot extends React.Component {
   }
 
   render() {
-    console.log(this.state);
-
     return <svg width={this.props.width + leftMargin} height={this.props.height + bottomMargin}>
       <g ref={node => select(node).call(this.state.xAxis)} style={{ transform: `translateY(${this.props.height}px)` }} />
       <g ref={node => select(node).call(this.state.yAxis)} style={{ transform: `translateX(${leftMargin}px)`}} />
