@@ -25,7 +25,7 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import Dialog from './dialog';
 
 class NewNodeDialog extends React.Component {
-  valid: false;
+  valid = false;
 
   constructor(props) {
     super(props);

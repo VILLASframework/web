@@ -27,7 +27,7 @@ import TableColumn from '../table-column';
 import Dialog from './dialog';
 
 class NewSimulationModelDialog extends React.Component {
-  valid: false;
+  valid = false;
 
   constructor(props) {
     super(props);

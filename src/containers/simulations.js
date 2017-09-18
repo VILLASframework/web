@@ -21,12 +21,13 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Modal, Glyphicon, FormGroup, FormControl, Form } from 'react-bootstrap';
+import { Button, Modal, Glyphicon } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 
 import AppDispatcher from '../app-dispatcher';
 import SimulationStore from '../stores/simulation-store';
 import UserStore from '../stores/user-store';
+import NodeStore from '../stores/node-store';
 
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
@@ -36,12 +37,13 @@ import ImportSimulationDialog from '../components/dialog/import-simulation';
 
 class Simulations extends Component {
   static getStores() {
-    return [ SimulationStore, UserStore ];
+    return [ SimulationStore, UserStore, NodeStore ];
   }
 
   static calculateState() {
     return {
       simulations: SimulationStore.getState(),
+      nodes: NodeStore.getState(),
       sessionToken: UserStore.getState().token,
 
       newModal: false,
@@ -119,35 +121,24 @@ class Simulations extends Component {
     }
   }
 
+  closeImportModal(data) {
+    this.setState({ importModal: false });
+
+    if (data) {
+      AppDispatcher.dispatch({
+        type: 'simulations/start-add',
+        data,
+        token: this.state.sessionToken
+      });
+    }
+  }
+
   onModalKeyPress = (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
     
       this.confirmDeleteModal();
     }
-  }
-  
-  closeImportModal(data) {
-    this.setState({ importModal : false });
-
-    if (data) {
-      AppDispatcher.dispatch({
-        type: 'simulations/start-add',
-        data: data
-      });
-    }
-  }
-
-  exportSimulation(data) {
-    // filter properties
-    var simulation = Object.assign({}, data);
-    delete simulation._id;
-    delete simulation.projects;
-    delete simulation.running;
-
-    // show save dialog
-    const blob = new Blob([JSON.stringify(simulation, null, 2)], { type: 'application/json' });
-    FileSaver.saveAs(blob, simulation.name + '.json');
   }
 
   loadFile(fileList) {
@@ -170,6 +161,23 @@ class Simulations extends Component {
     reader.readAsText(file);
   }
 
+  exportSimulation(index) {
+    // filter properties
+    let simulation = Object.assign({}, this.state.simulations[index]);
+    delete simulation._id;
+    delete simulation.projects;
+    delete simulation.running;
+    delete simulation.user;
+
+    simulation.models.forEach(model => {
+      delete model.simulator;
+    });
+
+    // show save dialog
+    const blob = new Blob([JSON.stringify(simulation, null, 2)], { type: 'application/json' });
+    FileSaver.saveAs(blob, 'simulation - ' + simulation.name + '.json');
+  }
+
   render() {
     return (
       <div className='section'>
@@ -177,23 +185,23 @@ class Simulations extends Component {
 
         <Table data={this.state.simulations}>
           <TableColumn title='Name' dataKey='name' link='/simulations/' linkKey='_id' />
-          <TableColumn width='100' editButton deleteButton exportButton onEdit={index => this.setState({ editModal: true, modalSimulation: this.state.simulations[index] })} onDelete={index => this.setState({ deleteModal: true, modalSimulation: this.state.simulations[index] })} onExport={(index) => this.exportSimulation(this.state.simulations[index])} />
+          <TableColumn 
+            width='100' 
+            editButton 
+            deleteButton 
+            exportButton 
+            onEdit={index => this.setState({ editModal: true, modalSimulation: this.state.simulations[index] })} 
+            onDelete={index => this.setState({ deleteModal: true, modalSimulation: this.state.simulations[index] })} 
+            onExport={index => this.exportSimulation(index)}
+          />
         </Table>
 
-        <Form inline>
-          <FormGroup>
-            <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Add Simulation</Button>
-          </FormGroup>
-
-          <FormGroup>
-            <FormControl inputRef={ref => { this.fileInput = ref; }} type="file" style={{ display: 'none' }} onChange={(e) => this.loadFile(e.target.files)} />
-            <Button onClick={() => { this.fileInput.click(); }}><Glyphicon glyph="import" /> Import Simulation</Button>
-          </FormGroup>
-        </Form>
+        <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Simulation</Button>
+        <Button onClick={() => this.setState({ importModal: true })}><Glyphicon glyph="import" /> Import</Button>
 
         <NewSimulationDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
         <EditSimulationDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} simulation={this.state.modalSimulation} />
-        <ImportSimulationDialog show={this.state.importModal} onClose={(data) => this.closeImportModal(data)} simulation={this.state.modalSimulation} />
+        <ImportSimulationDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} nodes={this.state.nodes} />
 
         <Modal keyboard show={this.state.deleteModal} onHide={() => this.setState({ deleteModal: false })} onKeyPress={this.onModalKeyPress}>
           <Modal.Header>

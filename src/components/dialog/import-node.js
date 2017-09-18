@@ -1,11 +1,23 @@
 /**
- * File: import-simulator.js
+ * File: import-node.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 04.04.2017
- * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
- *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
- *   Unauthorized copying of this file, via any medium is strictly prohibited.
- **********************************************************************************/
+ * Date: 03.09.2017
+ *
+ * This file is part of VILLASweb.
+ *
+ * VILLASweb is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * VILLASweb is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 import React from 'react';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
@@ -14,13 +26,15 @@ import Dialog from './dialog';
 
 class ImportNodeDialog extends React.Component {
   valid = false;
+  imported = false;
 
   constructor(props) {
     super(props);
 
     this.state = {
       name: '',
-      endpoint: ''
+      endpoint: '',
+      simulators: []
     };
   }
 
@@ -38,6 +52,8 @@ class ImportNodeDialog extends React.Component {
 
   resetState() {
     this.setState({ name: '', endpoint: '' });
+
+    this.imported = false;
   }
 
   loadFile(fileList) {
@@ -53,12 +69,32 @@ class ImportNodeDialog extends React.Component {
 
     reader.onload = function(event) {
       // read simulator
-      const simulator = JSON.parse(event.target.result);
-      self.valid = true;
-      self.setState({ name: simulator.name, endpoint: simulator.endpoint });
+      const node = JSON.parse(event.target.result);
+      self.imported = true;
+      self.setState({ name: node.name, endpoint: node.endpoint, simulators: node.simulators });
     };
 
     reader.readAsText(file);
+  }
+
+  validateForm(target) {
+    // check all controls
+    let endpoint = true;
+    let name = true;
+
+    if (this.state.name === '' || this.props.nodes.find(node => node.name === this.state.name) !== undefined) {
+      name = false;
+    }
+
+    if (this.state.endpoint === '' || this.props.nodes.find(node => node.endpoint === this.state.endpoint) !== undefined) {
+      endpoint = false;
+    }
+
+    this.valid = endpoint && name;
+
+    // return state to control
+    if (target === 'name') return name ? "success" : "error";
+    else return endpoint ? "success" : "error";
   }
 
   render() {
@@ -70,14 +106,14 @@ class ImportNodeDialog extends React.Component {
             <FormControl type="file" onChange={(e) => this.loadFile(e.target.files)} />
           </FormGroup>
 
-          <FormGroup controlId="name">
+          <FormGroup controlId="name" validationState={this.validateForm('name')}>
             <ControlLabel>Name</ControlLabel>
-            <FormControl readOnly type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <FormControl readOnly={!this.imported} type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="endpoint">
+          <FormGroup controlId="endpoint" validationState={this.validateForm('endpoint')}>
             <ControlLabel>Endpoint</ControlLabel>
-            <FormControl readOnly type="text" placeholder="Enter endpoint" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
+            <FormControl readOnly={!this.imported} type="text" placeholder="Enter endpoint" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
         </form>

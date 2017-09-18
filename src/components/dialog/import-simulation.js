@@ -33,21 +33,13 @@ class ImportSimulationDialog extends React.Component {
 
     this.state = {
       name: '',
-      selectedModels: []
+      models: [],
     };
   }
 
   onClose(canceled) {
     if (canceled === false) {
-      // create simulation
-      const simulation = {
-        name: this.state.name,
-        models: this.props.simulation.models.filter((element, index) => {
-          return this.state.selectedModels[index];
-        })
-      };
-
-      this.props.onClose(simulation);
+      this.props.onClose(this.state);
     } else {
       this.props.onClose();
     }
@@ -110,20 +102,6 @@ class ImportSimulationDialog extends React.Component {
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
-  }
-
-  selectModels(event) {
-    // update selection
-    const selectedModels = this.state.selectedModels.map((element, index) => {
-      // eslint-disable-next-line
-      if (event.target.id == index) {
-        return !element;
-      } else {
-        return element;
-      }
-    });
-
-    this.setState({ selectedModels: selectedModels });
   }
 
   render() {
