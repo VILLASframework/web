@@ -26,11 +26,13 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import NotificationSystem from 'react-notification-system';
 import { Redirect, Route } from 'react-router-dom';
 import { Col } from 'react-bootstrap';
+import classNames from 'classnames';
 
 import AppDispatcher from '../app-dispatcher';
 import SimulationStore from '../stores/simulation-store';
 import NodeStore from '../stores/node-store';
 import UserStore from '../stores/user-store';
+import DesignStore from '../stores/design-store';
 import NotificationsDataManager from '../data-managers/notifications-data-manager';
 
 import Header from '../components/header';
@@ -51,7 +53,7 @@ import '../styles/app.css';
 
 class App extends React.Component {
   static getStores() {
-    return [ NodeStore, UserStore, SimulationStore ];
+    return [ NodeStore, UserStore, SimulationStore, DesignStore ];
   }
 
   static calculateState(prevState) {
@@ -63,7 +65,8 @@ class App extends React.Component {
       currentRole: currentUser ? currentUser.role : '',
       token: UserStore.getState().token,
 
-      showSidebarMenu: false
+      showSidebarMenu: false,
+      fullscreen: DesignStore.getState().fullscreen
     };
   }
 
@@ -110,6 +113,15 @@ class App extends React.Component {
       return (<Redirect to="/login" />);
     }
 
+    const bodyClasses = classNames('app-body', {
+      'app-body-spacing': !this.state.fullscreen
+    });
+
+    const contentClasses = classNames('app-content', {
+      'app-content-margin-left': !this.state.fullscreen,
+      'app-content-fullscreen': this.state.fullscreen
+    });
+
     return (
       <div>
         <Col style={{ width: this.state.showSidebarMenu ? '280px' : '0px' }} smHidden mdHidden lgHidden className="sidenav">
@@ -119,14 +131,18 @@ class App extends React.Component {
         <div className="app">
           <NotificationSystem ref="notificationSystem" />
 
-          <Header onMenuButton={this.showSidebarMenu} showMenuButton={this.state.token != null} />
+          {!this.state.fullscreen &&
+            <Header onMenuButton={this.showSidebarMenu} showMenuButton={this.state.token != null} />
+          }
 
-          <div className="app-body">
-            <Col xsHidden>
-              <SidebarMenu currentRole={this.state.currentRole}/>
-            </Col>
+          <div className={bodyClasses} >
+            {!this.state.fullscreen &&
+              <Col xsHidden>
+                <SidebarMenu currentRole={this.state.currentRole} />
+              </Col>
+            }
 
-            <div className="app-content">
+            <div className={contentClasses}>
               <Route exact path="/" component={Home} />
               <Route path="/home" component={Home} />
               <Route exact path="/projects" component={Projects} />
@@ -139,7 +155,9 @@ class App extends React.Component {
             </div>
           </div>
 
-          <Footer />
+          {!this.state.fullscreen &&
+            <Footer />
+          }
         </div>
       </div>
     );
