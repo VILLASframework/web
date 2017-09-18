@@ -7,24 +7,20 @@
  *   Unauthorized copying of this file, via any medium is strictly prohibited.
  **********************************************************************************/
 
-import React, { Component } from 'react';
+import React from 'react';
 import { scaleOrdinal, schemeCategory10 } from 'd3-scale';
 
-class PlotLegend extends Component {
-  // constructor(props) {
-  //   super(props);
-  // }
-
+class PlotLegend extends React.Component {
   render() {
-    var colorScale = scaleOrdinal(schemeCategory10);
+    const colorScale = scaleOrdinal(schemeCategory10);
 
-    return (
-      <div className="plot-legend">
-        { this.props.signals.map( (signal) => 
-          <div key={signal.index} className="signal-legend"><span className="legend-color" style={{ background: colorScale(signal.index) }}>&nbsp;&nbsp;</span> {signal.name} </div>)
-        }
-      </div>
-    );
+    return <div className="plot-legend">
+      {this.props.signals.map(signal => 
+        <div key={signal.index} className="signal-legend">
+          <span className="legend-color" style={{ background: colorScale(signal.index) }}>&nbsp;&nbsp;</span>{signal.name}
+        </div>
+      )}
+    </div>;
   }
 }
 

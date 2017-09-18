@@ -60,7 +60,8 @@ export default function createControls(widgetType = null, widget = null, session
                 <EditWidgetTimeControl key={1} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetSimulatorControl key={2} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => plotBoundOnChange(e)} />,
                 <EditWidgetSignalsControl key={3} controlId={'signals'} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetTextControl key={4} controlId={'ylabel'} label={'Y-Axis name'} placeholder={'Enter a name for the y-axis'} widget={widget} handleChange={(e) => handleChange(e)} />
+                <EditWidgetTextControl key={4} controlId={'ylabel'} label={'Y-Axis name'} placeholder={'Enter a name for the y-axis'} widget={widget} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetMinMaxControl key={5} widget={widget} controlId="y" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Table':
@@ -94,7 +95,9 @@ export default function createControls(widgetType = null, widget = null, session
             dialogControls.push(
                 <EditWidgetSimulatorControl key={1} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => plotTableBoundOnChange(e)} />,
                 <EditWidgetSignalsControl key={2} controlId={'preselectedSignals'} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetTextControl key={3} controlId={'ylabel'} label={'Y-Axis'} placeholder={'Enter a name for the Y-axis'} widget={widget} handleChange={(e) => handleChange(e)} />
+                <EditWidgetTextControl key={3} controlId={'ylabel'} label={'Y-Axis'} placeholder={'Enter a name for the Y-axis'} widget={widget} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetTimeControl key={4} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetMinMaxControl key={5} widget={widget} controlId="y" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Slider':

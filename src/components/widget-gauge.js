@@ -127,8 +127,6 @@ class WidgetGauge extends Component {
       zones = zones.map(zone => {
         return Object.assign({}, zone, { min: (zone.min * step) + +minValue, max: zone.max * step + +minValue, strokeStyle: '#' + zone.strokeStyle });
       });
-
-      console.log(zones);
     }
 
     this.gauge.setOptions({ 

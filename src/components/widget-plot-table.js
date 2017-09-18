@@ -37,7 +37,6 @@ class WidgetPlotTable extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-
     // Update internal selected signals state with props (different array objects)
     if (this.props.widget.signals !== nextProps.widget.signals) {
       this.setState( {signals: nextProps.widget.signals});
@@ -158,6 +157,9 @@ class WidgetPlotTable extends Component {
                 time={this.props.widget.time} 
                 width={this.props.widget.width - 100}
                 height={this.props.widget.height - 55}
+                yMin={this.props.widget.yMin}
+                yMax={this.props.widget.yMax}
+                yUseMinMax={this.props.widget.yUseMinMax}
               />
             </div>
           </div>

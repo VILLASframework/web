@@ -47,6 +47,9 @@ class WidgetFactory {
                 widget.minHeight = 200;
                 widget.width = 400;
                 widget.height = 200;
+                widget.yMin = 0;
+                widget.yMax = 10;
+                widget.yUseMinMax = false;
                 break;
             case 'Table':
                 widget.simulator = defaultSimulator;
@@ -68,11 +71,14 @@ class WidgetFactory {
                 widget.preselectedSignals = [];
                 widget.signals = []; // initialize selected signals
                 widget.ylabel = '';
-                widget.minWidth = 400;
-                widget.minHeight = 300;
-                widget.width = 500;
-                widget.height = 500;
+                widget.minWidth = 200;
+                widget.minHeight = 100;
+                widget.width = 600;
+                widget.height = 300;
                 widget.time = 60;
+                widget.yMin = 0;
+                widget.yMax = 10;
+                widget.yUseMinMax = false;
                 break;
             case 'Image':
                 widget.minWidth = 20;
