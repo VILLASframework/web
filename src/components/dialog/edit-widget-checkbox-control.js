@@ -1,7 +1,7 @@
 /**
- * File: villas-store.js
+ * File: edit-widget-checkbox-control.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
+ * Date: 19.08.2017
  *
  * This file is part of VILLASweb.
  *
@@ -19,25 +19,27 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import { ReduceStore } from 'flux/utils';
+import React from 'react';
+import { FormGroup, Checkbox } from 'react-bootstrap';
 
-import AppDispatcher from '../app-dispatcher';
+class EditWidgetCheckboxControl extends React.Component {
+  constructor(props) {
+    super(props);
 
-class VillasStore extends ReduceStore {
-  constructor() {
-    super(AppDispatcher);
+    this.state = {
+      widget: {}
+    };
   }
 
-  getInitialState() {
-    return {};
+  componentWillReceiveProps(nextProps) {
+    this.setState({ widget: nextProps.widget });
   }
 
-  reduce(state, action) {
-    switch (action.type) {
-      default:
-        return state;
-    }
+  render() {
+    return <FormGroup>
+      <Checkbox id={this.props.controlId} checked={this.state.widget[this.props.controlId] || ''} onChange={e => this.props.handleChange(e)}>{this.props.text}</Checkbox>
+    </FormGroup>;
   }
 }
 
-export default new VillasStore();
+export default EditWidgetCheckboxControl;

@@ -19,12 +19,12 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
-import { FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap';
+import React from 'react';
+import { FormGroup, FormControl, ControlLabel, Button, ProgressBar } from 'react-bootstrap';
 
 import AppDispatcher from '../../app-dispatcher';
 
-class EditImageWidgetControl extends Component {
+class EditImageWidgetControl extends React.Component {
   constructor(props) {
     super(props);
 
@@ -32,7 +32,8 @@ class EditImageWidgetControl extends Component {
       widget: {
         file: ''
       },
-      fileList: null
+      fileList: null,
+      progress: 0
     };
   }
 
@@ -40,11 +41,11 @@ class EditImageWidgetControl extends Component {
     this.setState({ widget: nextProps.widget });
   }
 
-  startFileUpload() {
+  startFileUpload = () => {
     // get selected file
-    var formData = new FormData();
+    let formData = new FormData();
 
-    for (var key in this.state.fileList) {
+    for (let key in this.state.fileList) {
       if (this.state.fileList.hasOwnProperty(key) && this.state.fileList[key] instanceof File) {
         formData.append(key, this.state.fileList[key]);
       }
@@ -54,39 +55,46 @@ class EditImageWidgetControl extends Component {
     AppDispatcher.dispatch({
       type: 'files/start-upload',
       data: formData,
-      token: this.props.sessionToken
+      token: this.props.sessionToken,
+      progressCallback: this.uploadProgress,
+      finishedCallback: this.clearProgress
     });
   }
 
+  uploadProgress = (e) => {
+    this.setState({ progress: Math.round(e.percent) });
+  }
+
+  clearProgress = () => {
+    this.setState({ progress: 0 });
+  }
+
   render() {
-    return (
-      <div>
-        <FormGroup controlId="file">
-          <ControlLabel>Image</ControlLabel>
-          <FormControl componentClass="select" value={this.state.widget.file} onChange={(e) => this.props.handleChange(e)}>
-            {
-              this.props.files.length === 0? (
-                <option disabled value style={{ display: 'none' }}>No images found, please upload one first.</option>
-              ) : (
-                this.props.files.reduce( (entries, file, index) => {
-                    entries.push(<option key={++index} value={file._id}>{file.name}</option>);
-                    return entries;
-                  }, [
-                    <option key={0} value=''>Please select one image</option>
-                  ])
-              )
-            }
-          </FormControl>
-        </FormGroup>
+    return <div>
+      <FormGroup controlId="file">
+        <ControlLabel>Image</ControlLabel>
+        <FormControl componentClass="select" value={this.state.widget.file} onChange={(e) => this.props.handleChange(e)}>
+          {this.props.files.length === 0 ? (
+            <option disabled value style={{ display: 'none' }}>No images found, please upload one first.</option>
+          ) : (
+            this.props.files.reduce((entries, file, index) => {
+              entries.push(<option key={++index} value={file._id}>{file.name}</option>);
+              return entries;
+            }, [
+              <option key={0} value=''>Please select one image</option>
+            ])
+          )}
+        </FormControl>
+      </FormGroup>
 
-        <FormGroup controlId="upload">
-          <ControlLabel>Upload</ControlLabel>
-          <FormControl type="file" onChange={(e) => this.setState({ fileList: e.target.files }) } />
-        </FormGroup>
+      <FormGroup controlId="upload">
+        <ControlLabel>Upload</ControlLabel>
+        <FormControl type="file" onChange={(e) => this.setState({ fileList: e.target.files }) } />
+      </FormGroup>
 
-        <Button bsSize="small" onClick={() => this.startFileUpload() }>Upload</Button>
-      </div>
-    );
+      <ProgressBar striped active now={this.state.progress} label={`${this.state.progress}%`} />
+      <Button bsSize="small" onClick={this.startFileUpload}>Upload</Button>
+    </div>;
   }
 }
 

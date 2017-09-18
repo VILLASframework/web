@@ -128,9 +128,9 @@ class RestAPI {
     });
   }
 
-  upload(url, data, token) {
+  upload(url, data, token, progressCallback) {
     return new Promise(function (resolve, reject) {
-      var req = request.post(url).send(data);
+      const req = request.post(url).send(data).on('progress', progressCallback);
 
       if (token != null) {
         req.set('x-access-token', token);

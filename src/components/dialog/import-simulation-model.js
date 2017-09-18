@@ -1,7 +1,7 @@
 /**
- * File: edit-simulation-model.js
+ * File: import-simulation-model.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 04.03.2017
+ * Date: 03.09.2017
  *
  * This file is part of VILLASweb.
  *
@@ -26,28 +26,38 @@ import Table from '../table';
 import TableColumn from '../table-column';
 import Dialog from './dialog';
 
-class EditSimulationModelDialog extends React.Component {
-  valid: false;
+class ImportSimulationModelDialog extends React.Component {
+  valid = false;
+  imported = false;
 
   constructor(props) {
     super(props);
 
-    this.state = {
+    this.state = {
       name: '',
       simulator: { node: '', simulator: '' },
-      length: 1,
-      mapping: [{ name: 'Signal', type: 'Type' }]
-    }
+      length: '1',
+      mapping: [ { name: 'Signal', type: 'Type' } ]
+    };
   }
 
   onClose(canceled) {
     if (canceled === false) {
-      if (this.valid) {
-        this.props.onClose(this.state);
-      }
+      this.props.onClose(this.state);
     } else {
       this.props.onClose();
     }
+  }
+
+  resetState() {
+    this.setState({
+      name: '',
+      simulator: { node: this.props.nodes[0] ? this.props.nodes[0]._id : '', simulator: this.props.nodes[0].simulators[0] ? 0 : '' },
+      length: '1',
+      mapping: [ { name: 'Signal', type: 'Type' } ]
+    });
+
+    this.imported = false;
   }
 
   handleChange(e) {
@@ -65,8 +75,7 @@ class EditSimulationModelDialog extends React.Component {
     }
 
     if (e.target.id === 'simulator') {
-      var value = e.target.value.split("/");
-      this.setState({ simulator: { node: value[0], simulator: value[1] } });
+      this.setState({ simulator: JSON.parse(e.target.value) });
     } else {
       this.setState({ [e.target.id]: e.target.value });
     }
@@ -84,22 +93,41 @@ class EditSimulationModelDialog extends React.Component {
     this.setState({ mapping: mapping });
   }
 
-  resetState() {
-    this.setState({
-      name: this.props.data.name,
-      simulator: this.props.data.simulator,
-      length: this.props.data.length,
-      mapping: this.props.data.mapping
-    });
+  loadFile(fileList) {
+    // get file
+    const file = fileList[0];
+    if (!file.type.match('application/json')) {
+      return;
+    }
+
+    // create file reader
+    var reader = new FileReader();
+    var self = this;
+
+    reader.onload = function(event) {
+      // read simulator
+      const model = JSON.parse(event.target.result);
+
+      self.imported = true;
+      self.valid = true;
+      self.setState({ name: model.name, mapping: model.mapping, length: model.length, simulator: { node: self.props.nodes[0]._id, simulator: 0 } });
+    };
+
+    reader.readAsText(file);
   }
 
   validateForm(target) {
     // check all controls
     var name = true;
     var length = true;
+    var simulator = true;
 
     if (this.state.name === '') {
       name = false;
+    }
+
+    if (this.state.simulator === '') {
+      simulator = false;
     }
 
     // test if simulatorid is a number (in a string, not type of number)
@@ -107,35 +135,41 @@ class EditSimulationModelDialog extends React.Component {
       length = false;
     }
 
-    this.valid = name && length;
+    this.valid = name && length && simulator;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
     else if (target === 'length') return length ? "success" : "error";
+    else if (target === 'simulator') return simulator ? "success" : "error";
   }
 
   render() {
     return (
-      <Dialog show={this.props.show} title="New Simulation Model" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog show={this.props.show} title="Import Simulation Model" buttonTitle="Import" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
+          <FormGroup controlId="file">
+            <ControlLabel>Simulation Model File</ControlLabel>
+            <FormControl type="file" onChange={(e) => this.loadFile(e.target.files)} />
+          </FormGroup>
+
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
             <ControlLabel>Name</ControlLabel>
-            <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <FormControl readOnly={!this.imported} type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="simulator" validationState={this.validateForm('simulator')}>
+          <FormGroup controlId="simulator">
             <ControlLabel>Simulator</ControlLabel>
-            <FormControl componentClass="select" placeholder="Select simulator" value={this.state.simulator.node + '/' + this.state.simulator.simulator} onChange={(e) => this.handleChange(e)}>
+            <FormControl readOnly={!this.imported} componentClass="select" placeholder="Select simulator" value={JSON.stringify({ node: this.state.simulator.node, simulator: this.state.simulator.simulator})} onChange={(e) => this.handleChange(e)}>
               {this.props.nodes.map(node => (
                 node.simulators.map((simulator, index) => (
-                  <option key={node._id + index} value={node.name + '/' + simulator.name}>{node.name}/{simulator.name}</option>
+                  <option key={node._id + index} value={JSON.stringify({ node: node.name, simulator: simulator.name })}>{node.name}/{simulator.name}</option>
                 ))
               ))}
             </FormControl>
           </FormGroup>
           <FormGroup controlId="length" validationState={this.validateForm('length')}>
             <ControlLabel>Length</ControlLabel>
-            <FormControl type="number" placeholder="Enter length" min="1" value={this.state.length} onChange={(e) => this.handleChange(e)} />
+            <FormControl readOnly={!this.imported} type="number" placeholder="Enter length" min="1" value={this.state.length} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="mapping">
@@ -152,4 +186,4 @@ class EditSimulationModelDialog extends React.Component {
   }
 }
 
-export default EditSimulationModelDialog;
+export default ImportSimulationModelDialog;

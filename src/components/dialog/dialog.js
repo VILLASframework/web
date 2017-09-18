@@ -23,17 +23,26 @@ import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
 class Dialog extends React.Component {
-  closeModal() {
+  closeModal = (event) => {
     this.props.onClose(false);
   }
 
-  cancelModal() {
+  cancelModal = (event) => {
     this.props.onClose(true);
+  }
+
+  onKeyPress = (event) => {
+    /*if (event.key === 'Enter') {
+      // prevent input from submitting
+      event.preventDefault();
+
+      this.closeModal(false);
+    }*/
   }
 
   render() {
     return (
-      <Modal show={this.props.show} onEnter={this.props.onReset}>
+      <Modal keyboard show={this.props.show} onEnter={this.props.onReset} onHide={this.cancelModal} onKeyPress={this.onKeyPress}>
         <Modal.Header>
           <Modal.Title>{this.props.title}</Modal.Title>
         </Modal.Header>
@@ -43,8 +52,8 @@ class Dialog extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={() => this.cancelModal()}>Cancel</Button>
-          <Button bsStyle="primary" type="submit" onClick={() => this.closeModal()} disabled={!this.props.valid}>{this.props.buttonTitle}</Button>
+          <Button onClick={this.cancelModal}>Cancel</Button>
+          <Button onClick={this.closeModal} disabled={!this.props.valid}>{this.props.buttonTitle}</Button>
         </Modal.Footer>
       </Modal>
     );

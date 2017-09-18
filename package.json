@@ -12,6 +12,7 @@
     "d3-shape": "^1.2.0",
     "d3-time-format": "^2.0.5",
     "es6-promise": "^4.0.5",
+    "file-saver": "^1.3.3",
     "flux": "^3.1.2",
     "gaugeJS": "^1.3.2",
     "immutable": "^3.8.1",
@@ -28,11 +29,11 @@
     "react-router": "^4.1.2",
     "react-router-dom": "^4.1.2",
     "react-sortable-tree": "^0.1.19",
-    "superagent": "^3.5.0"
+    "superagent": "^3.5.0",
+    "react-scripts": "1.0.10"
   },
   "devDependencies": {
-    "chai": "^4.1.0",
-    "react-scripts": "1.0.10"
+    "chai": "^4.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

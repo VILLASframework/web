@@ -18,62 +18,31 @@ class WidgetGauge extends Component {
     this.gauge = null;
 
     this.state = {
-      value: 0
+      value: 0,
+      minValue: 0,
+      maxValue: 1
     };
   }
 
-  staticLabels(widget_height) {
-    let label_font_size = Math.floor(widget_height * 0.055); // font scaling factor, integer for performance
-    return {
-          font: label_font_size + 'px "Helvetica Neue"',
-          labels: [0.0, 0.1, 0.5, 0.9, 1.0],
-          color: "#000000",
-          fractionDigits: 1
-        }
-  }
-
-  computeGaugeOptions(widget_height) {
-    return {
-        angle: -0.25,
-        lineWidth: 0.2,
-        pointer: {
-            length: 0.6,
-            strokeWidth: 0.035
-        },
-        radiusScale: 0.9,
-        colorStart: '#6EA2B0',
-        colorStop: '#6EA2B0',
-        strokeColor: '#E0E0E0',
-        highDpiSupport: true,
-        staticLabels: this.staticLabels(widget_height)
-      };
-  }
-
   componentDidMount() {
-    const opts = this.computeGaugeOptions(this.props.widget.height);
-    this.gauge = new Gauge(this.gaugeCanvas).setOptions(opts);
-    this.gauge.maxValue = 1;
-    this.gauge.setMinValue(0);
+    this.gauge = new Gauge(this.gaugeCanvas).setOptions(this.computeGaugeOptions(this.props.widget));
+    this.gauge.maxValue = this.state.maxValue;
+    this.gauge.setMinValue(this.state.minValue);
     this.gauge.animationSpeed = 30;
     this.gauge.set(this.state.value);
-  }
 
-  shouldComponentUpdate(nextProps, nextState) {
-
-    // Check if size changed, resize labels if it did (the canvas itself is scaled with css)
-    if (this.props.widget.height !== nextProps.widget.height) {
-      this.updateAfterResize(nextProps.widget.height);
-    }
-
-    // signal component update only if the value changed
-    return this.state.value !== nextState.value;
+    this.updateLabels(this.state.minValue, this.state.maxValue);
   }
 
   componentWillReceiveProps(nextProps) {
     // update value
     const simulator = nextProps.widget.simulator;
 
-    if (nextProps.data == null || nextProps.data[simulator.node][simulator.simulator] == null || nextProps.data[simulator.node][simulator.simulator].values == null) {
+    if (nextProps.data == null || nextProps.data[simulator.node] == null
+      || nextProps.data[simulator.node][simulator.simulator] == null 
+      || nextProps.data[simulator.node][simulator.simulator].length === 0 
+      || nextProps.data[simulator.node][simulator.simulator].values.length === 0  
+      || nextProps.data[simulator.node][simulator.simulator].values[0].length === 0) {
       this.setState({ value: 0 });
       return;
     }
@@ -83,36 +52,127 @@ class WidgetGauge extends Component {
     // Take just 3 decimal positions
     // Note: Favor this method over Number.toFixed(n) in order to avoid a type conversion, since it returns a String
     if (signal != null) {
-      const new_value = Math.round( signal[signal.length - 1].y * 1e3 ) / 1e3;
-      if (this.state.value !== new_value) {
-        this.setState({ value: new_value });
+      const value = Math.round( signal[signal.length - 1].y * 1e3 ) / 1e3;
+      if (this.state.value !== value && value != null) {
+        this.setState({ value });
+
+        // update min-max if needed
+        let updateLabels = false;
+        let minValue = this.state.minValue;
+        let maxValue = this.state.maxValue;
+
+        if (nextProps.widget.valueUseMinMax) {
+          if (this.state.minValue > nextProps.widget.valueMin) {
+            minValue = nextProps.widget.valueMin;
+
+            this.setState({ minValue });
+            this.gauge.setMinValue(minValue);
+
+            updateLabels = true;
+          }
+
+          if (this.state.maxValue < nextProps.widget.valueMax) {
+            maxValue = nextProps.widget.valueMax;
+
+            this.setState({ maxValue });
+            this.gauge.maxValue = maxValue;
+
+            updateLabels = true;
+          }
+        }
+
+        if (updateLabels === false) {
+          // check if min/max changed
+          if (minValue > this.gauge.minValue) {
+            minValue = this.gauge.minValue;
+            updateLabels = true;
+
+            this.setState({ minValue });
+          }
+
+          if (maxValue < this.gauge.maxValue) {
+            maxValue = this.gauge.maxValue;
+            updateLabels = true;
+
+            this.setState({ maxValue });
+          }
+        }
+
+        if (updateLabels) {
+          this.updateLabels(minValue, maxValue);
+        }
 
         // update gauge's value
-        this.gauge.set(new_value);
+        this.gauge.set(value);
       }
     }
   }
 
-  updateAfterResize(newHeight) {
-    // Update labels after resize
-    this.gauge.setOptions({ staticLabels: this.staticLabels(newHeight) });
+  updateLabels(minValue, maxValue, force) {
+    // calculate labels
+    const labels = [];
+    const labelCount = 5;
+    const labelStep = (maxValue - minValue) / (labelCount - 1);
+
+    for (let i = 0; i < labelCount; i++) {
+      labels.push(minValue + labelStep * i);
+    }
+
+    // calculate zones
+    let zones = this.props.widget.colorZones ? this.props.widget.zones : null;
+    if (zones != null) {
+      // adapt range 0-100 to actual min-max
+      const step = (maxValue - minValue) / 100;
+
+      zones = zones.map(zone => {
+        return Object.assign({}, zone, { min: (zone.min * step) + +minValue, max: zone.max * step + +minValue, strokeStyle: '#' + zone.strokeStyle });
+      });
+    }
+
+    this.gauge.setOptions({ 
+      staticLabels: {
+        font: '10px "Helvetica Neue"',
+        labels,
+        color: "#000000",
+        fractionDigits: 1
+      },
+      staticZones: zones
+    });
+  }
+
+  computeGaugeOptions(widget) {
+    return {
+      angle: -0.25,
+      lineWidth: 0.2,
+      pointer: {
+          length: 0.6,
+          strokeWidth: 0.035
+      },
+      radiusScale: 0.8,
+      colorStart: '#6EA2B0',
+      colorStop: '#6EA2B0',
+      strokeColor: '#E0E0E0',
+      highDpiSupport: true,
+      limitMax: false,
+      limitMin: false
+    };
   }
 
   render() {
-    var componentClass = this.props.editing ? "gauge-widget editing" : "gauge-widget";
-    var signalType = null;
+    const componentClass = this.props.editing ? "gauge-widget editing" : "gauge-widget";
+    let signalType = null;
 
     if (this.props.simulation) {
-      var simulationModel = this.props.simulation.models.filter((model) => model.simulator.node === this.props.widget.simulator.node && model.simulator.simulator === this.props.widget.simulator.simulator)[0];
+      const simulationModel = this.props.simulation.models.filter((model) => model.simulator.node === this.props.widget.simulator.node && model.simulator.simulator === this.props.widget.simulator.simulator)[0];
       signalType = (simulationModel != null && simulationModel.length > 0) ? simulationModel.mapping[this.props.widget.signal].type : '';
     }
 
     return (
-      <div className={ componentClass }>
-          <div className="gauge-name">{ this.props.widget.name }</div>
-          <canvas ref={ (node) => this.gaugeCanvas = node } />
-          <div className="gauge-unit">{ signalType }</div>
-          <div className="gauge-value">{ this.state.value }</div>
+      <div className={componentClass}>
+          <div className="gauge-name">{this.props.widget.name}</div>
+          <canvas ref={node => this.gaugeCanvas = node} />
+          <div className="gauge-unit">{signalType}</div>
+          <div className="gauge-value">{this.state.value}</div>
       </div>
     );
   }

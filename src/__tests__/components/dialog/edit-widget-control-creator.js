@@ -12,6 +12,7 @@ import EditWidgetSignalsControl from '../../../components/dialog/edit-widget-sig
 import EditWidgetOrientation from '../../../components/dialog/edit-widget-orientation';
 import EditWidgetTextSizeControl from '../../../components/dialog/edit-widget-text-size-control';
 import EditWidgetAspectControl from '../../../components/dialog/edit-widget-aspect-control';
+import EditWidgetCheckboxControl from '../../../components/dialog/edit-widget-checkbox-control';
 
 describe('edit widget control creator', () => {
     it('should not return null', () => {
@@ -20,7 +21,7 @@ describe('edit widget control creator', () => {
     });
 
     var runs = [
-        { args: { widgetType: 'Value' }, result: { controlNumber: 4, controlTypes: [EditWidgetTextControl, EditWidgetSimulatorControl, EditWidgetSignalControl, EditWidgetTextSizeControl] } },
+        { args: { widgetType: 'Value' }, result: { controlNumber: 5, controlTypes: [EditWidgetTextControl, EditWidgetSimulatorControl, EditWidgetSignalControl, EditWidgetTextSizeControl, EditWidgetCheckboxControl] } },
         { args: { widgetType: 'Plot' }, result: { controlNumber: 4, controlTypes: [EditWidgetTimeControl, EditWidgetSimulatorControl, EditWidgetSignalsControl, EditWidgetTextControl] } },
         { args: { widgetType: 'Table' }, result: { controlNumber: 1, controlTypes: [EditWidgetSimulatorControl] } },
         { args: { widgetType: 'Image' }, result: { controlNumber: 2, controlTypes: [EditImageWidgetControl, EditWidgetAspectControl] } },

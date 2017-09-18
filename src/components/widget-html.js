@@ -1,7 +1,7 @@
 /**
- * File: file-store.js
+ * File: widget-html.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 16.03.2017
+ * Date: 29.08.2017
  *
  * This file is part of VILLASweb.
  *
@@ -19,32 +19,12 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import ArrayStore from './array-store';
-import FilesDataManager from '../data-managers/files-data-manager';
+import React from 'react';
 
-class FileStore extends ArrayStore {
-  constructor() {
-    super('files', FilesDataManager);
-  }
-
-  reduce(state, action) {
-    switch (action.type) {
-      case 'files/start-upload':
-        FilesDataManager.upload(action.data, action.token, action.progressCallback, action.finishedCallback);
-        return state;
-
-      case 'files/uploaded':
-        //console.log('ready uploaded');
-        return state;
-
-      case 'files/upload-error':
-        console.log(action.error);
-        return state;
-
-      default:
-        return super.reduce(state, action);
-    }
+class WidgetHTML extends React.Component {
+  render() {
+    return <div dangerouslySetInnerHTML={{__html: this.props.widget.content }} />
   }
 }
 
-export default new FileStore();
+export default WidgetHTML;

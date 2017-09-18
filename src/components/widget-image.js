@@ -38,13 +38,15 @@ class WidgetImage extends React.Component {
   }
 
   render() {
-    let file = this.props.files.find(file => file._id === this.props.widget.file);
+    const file = this.props.files.find(file => file._id === this.props.widget.file);
 
     return (
       <div className="full">
-        {file &&
+        {file ? (
           <img className="full" alt={file.name} src={'/' + config.publicPathBase + file.path} onDragStart={e => e.preventDefault()} />
-        }
+        ) : (
+          <img className="full" alt="questionmark" src={'/' + config.publicPathBase + 'missing-image.png'} onDragStart={e => e.preventDefault()} />
+        )}
       </div>
     );
   }

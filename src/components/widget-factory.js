@@ -36,6 +36,7 @@ class WidgetFactory {
                 widget.height = 30;
                 widget.textSize = 16;
                 widget.name = 'Value';
+                widget.showUnit = false;
                 break;
             case 'Plot':
                 widget.simulator = defaultSimulator;
@@ -46,6 +47,9 @@ class WidgetFactory {
                 widget.minHeight = 200;
                 widget.width = 400;
                 widget.height = 200;
+                widget.yMin = 0;
+                widget.yMax = 10;
+                widget.yUseMinMax = false;
                 break;
             case 'Table':
                 widget.simulator = defaultSimulator;
@@ -67,11 +71,14 @@ class WidgetFactory {
                 widget.preselectedSignals = [];
                 widget.signals = []; // initialize selected signals
                 widget.ylabel = '';
-                widget.minWidth = 400;
-                widget.minHeight = 300;
-                widget.width = 500;
-                widget.height = 500;
+                widget.minWidth = 200;
+                widget.minHeight = 100;
+                widget.width = 600;
+                widget.height = 300;
                 widget.time = 60;
+                widget.yMin = 0;
+                widget.yMax = 10;
+                widget.yUseMinMax = false;
                 break;
             case 'Image':
                 widget.minWidth = 20;
@@ -104,10 +111,15 @@ class WidgetFactory {
             case 'Gauge':
                 widget.simulator = defaultSimulator;
                 widget.signal = 0;
-                widget.minWidth = 200;
+                widget.minWidth = 100;
                 widget.minHeight = 150;
-                widget.width = 200;
+                widget.width = 150;
                 widget.height = 150;
+                widget.colorZones = false;
+                widget.zones = [];
+                widget.valueMin = 0;
+                widget.valueMax = 1;
+                widget.valueUseMinMax = false;
                 break;
             case 'Box':
                 widget.minWidth = 50;
@@ -117,6 +129,10 @@ class WidgetFactory {
                 widget.border_color = 0;
                 widget.z = 0;
                 break;
+            case 'HTML':
+                widget.content = '<i>Hello World</i>';
+                break;
+            
             default:
                 widget.width = 100;
                 widget.height = 100;

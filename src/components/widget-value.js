@@ -26,7 +26,8 @@ class WidgetValue extends Component {
     super(props);
 
     this.state = {
-      value: ''
+      value: '',
+      unit: ''
     };
   }
 
@@ -35,17 +36,23 @@ class WidgetValue extends Component {
     const simulator = nextProps.widget.simulator.simulator;
     const node = nextProps.widget.simulator.node;
 
-    //console.log(nextProps.widget.simulator);
-
     if (nextProps.data == null || nextProps.data[node] == null || nextProps.data[node][simulator] == null || nextProps.data[node][simulator].values == null) {
       this.setState({ value: '' });
       return;
     }
 
+    // get unit from simulation model
+    let unit = '';
+
+    if (nextProps.simulation) {
+      const simulationModel = nextProps.simulation.models.find(model => model.simulator.node === node && model.simulator.simulator === simulator);
+      unit = simulationModel.mapping[nextProps.widget.signal].type;
+    }
+    
     // check if value has changed
     const signal = nextProps.data[node][simulator].values[nextProps.widget.signal];
     if (signal != null && this.state.value !== signal[signal.length - 1].y) {
-      this.setState({ value: signal[signal.length - 1].y });
+      this.setState({ value: signal[signal.length - 1].y, unit });
     }
   }
 
@@ -53,7 +60,11 @@ class WidgetValue extends Component {
     var value_to_render = Number(this.state.value);
     return (
       <div className="single-value-widget">
-        <strong  style={{ fontSize: this.props.widget.textSize + 'px' }}>{this.props.widget.name}</strong> <span  style={{ fontSize: this.props.widget.textSize + 'px' }}>{ Number.isNaN(value_to_render)?  NaN : value_to_render.toFixed(3) } </span>
+        <strong style={{ fontSize: this.props.widget.textSize + 'px' }}>{this.props.widget.name}</strong>
+        <span style={{ fontSize: this.props.widget.textSize + 'px' }}>{Number.isNaN(value_to_render) ? NaN : value_to_render.toFixed(3)}</span>
+        {this.props.widget.showUnit &&
+          <span style={{ fontSize: this.props.widget.textSize + 'px' }}>[{this.state.unit}]</span>
+        }
       </div>
     );
   }

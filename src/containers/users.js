@@ -100,6 +100,14 @@ class Users extends Component {
     return HUMAN_ROLE_NAMES.hasOwnProperty(role_key)? HUMAN_ROLE_NAMES[role_key] : '';
   }
 
+  onModalKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    
+      this.confirmDeleteModal();
+    }
+  }
+
   render() {
 
     return (
@@ -119,7 +127,7 @@ class Users extends Component {
 
         <EditUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />
 
-        <Modal show={this.state.deleteModal}>
+        <Modal keyboard show={this.state.deleteModal} onHide={() => this.setState({ deleteModal: false })} onKeyPress={this.onModalKeyPress}>
           <Modal.Header>
             <Modal.Title>Delete user</Modal.Title>
           </Modal.Header>

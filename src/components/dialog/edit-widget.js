@@ -43,7 +43,9 @@ class EditWidgetDialog extends React.Component {
 
   onClose(canceled) {
     if (canceled === false) {
-      this.props.onClose(this.state.temporal);
+      if (this.valid) {
+        this.props.onClose(this.state.temporal);
+      }
     } else {
       this.props.onClose();
     }
@@ -51,7 +53,7 @@ class EditWidgetDialog extends React.Component {
 
   assignAspectRatio(changeObject, fileId) {
     // get aspect ratio of file
-    let file = this.props.files.find(element => element._id === fileId);
+    const file = this.props.files.find(element => element._id === fileId);
 
     // scale width to match aspect
     const aspectRatio = file.dimensions.width / file.dimensions.height;
@@ -90,6 +92,10 @@ class EditWidgetDialog extends React.Component {
 
           // get file and update size
           changeObject = this.assignAspectRatio(changeObject, e.target.value);
+        } else if (e.target.type === 'checkbox') {
+          changeObject[e.target.id] = e.target.checked;
+        } else if (e.target.type === 'number') {
+          changeObject[e.target.id] = Number(e.target.value);
         } else {
           changeObject[e.target.id] = e.target.value;
         }
@@ -134,11 +140,6 @@ class EditWidgetDialog extends React.Component {
     return (
       <Dialog show={this.props.show} title="Edit Widget" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form encType='multipart/form-data'>
-          {/*<FormGroup controlId="name" validationState={this.validateForm('name')}>
-            <ControlLabel>Name</ControlLabel>
-            <FormControl type="text" placeholder="Enter name" value={this.state.temporal.name} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>*/}
           { controls || '' }
         </form>
       </Dialog>

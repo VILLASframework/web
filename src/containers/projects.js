@@ -115,6 +115,14 @@ class Projects extends React.Component {
     return simulations.length > 0;
   }
 
+  onModalKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    
+      this.confirmDeleteModal();
+    }
+  }
+
   render() {
     return (
       <div className='section'>
@@ -135,7 +143,7 @@ class Projects extends React.Component {
         <NewProjectDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} simulations={this.state.simulations} />
         <EditProjectDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} project={this.state.modalData} simulations={this.state.simulations} />
 
-        <Modal show={this.state.deleteModal}>
+        <Modal keyboard show={this.state.deleteModal} onHide={() => this.setState({ deleteModal: false })} onKeyPress={this.onModalKeyPress}>
           <Modal.Header>
             <Modal.Title>Delete Project</Modal.Title>
           </Modal.Header>

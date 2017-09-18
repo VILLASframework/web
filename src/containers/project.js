@@ -22,98 +22,80 @@
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import { Button, Modal, Glyphicon } from 'react-bootstrap';
+import FileSaver from 'file-saver';
 
 import AppDispatcher from '../app-dispatcher';
 import ProjectStore from '../stores/project-store';
 import UserStore from '../stores/user-store';
 import VisualizationStore from '../stores/visualization-store';
+import SimulationStore from '../stores/simulation-store';
 
 import CustomTable from '../components/table';
 import TableColumn from '../components/table-column';
 import NewVisualzationDialog from '../components/dialog/new-visualization';
 import EditVisualizationDialog from '../components/dialog/edit-visualization';
+import ImportVisualizationDialog from '../components/dialog/import-visualization';
 
 class Visualizations extends Component {
   static getStores() {
-    return [ ProjectStore, VisualizationStore, UserStore ];
+    return [ ProjectStore, VisualizationStore, UserStore, SimulationStore ];
   }
 
   static calculateState(prevState, props) {
+    prevState = prevState || {};
 
-    let currentProjects = ProjectStore.getState();
-    let currentVisualizations = VisualizationStore.getState();
-    let sessionToken = UserStore.getState().token;
+    // load project
+    const sessionToken = UserStore.getState().token;
 
-    if (prevState) {
-      var projectUpdate = prevState.project;
+    let project = ProjectStore.getState().find(project => project._id === props.match.params.project);
+    if (project == null) {
+      AppDispatcher.dispatch({
+        type: 'projects/start-load',
+        data: props.match.params.project,
+        token: sessionToken
+      });
 
-      // Compare content of the visualizations array, reload projects if changed
-      if (JSON.stringify(prevState.visualizations) !== JSON.stringify(currentVisualizations)) {
-        Visualizations.loadProjects(sessionToken);
-      }
-
-      // Compare content of the projects array, update visualizations if changed
-      if (JSON.stringify(prevState.projects) !== JSON.stringify(currentProjects)) {
-        projectUpdate = Visualizations.findProjectInState(currentProjects, props.match.params.project);
-        Visualizations.loadVisualizations(projectUpdate.visualizations, sessionToken);
-      }
-
-      return {
-        projects: currentProjects,
-        visualizations: currentVisualizations,
-        sessionToken,
-
-        newModal: prevState.newModal,
-        deleteModal: prevState.deleteModal,
-        editModal: prevState.editModal,
-        modalData: prevState.modalData,
-
-        project: projectUpdate
-      };
-    } else {
-
-      let initialProject = Visualizations.findProjectInState(currentProjects, props.match.params.project);
-      // If projects have been loaded already but visualizations not (redirect from Projects page)
-      if (initialProject && (!currentVisualizations || currentVisualizations.length === 0)) {
-        Visualizations.loadVisualizations(initialProject.visualizations, sessionToken);
-      }
-
-      return {
-        projects: currentProjects,
-        visualizations: currentVisualizations,
-        sessionToken,
-
-        newModal: false,
-        deleteModal: false,
-        editModal: false,
-        modalData: {},
-
-        project: initialProject || {}
-      };
+      project = {};
     }
+
+    // load simulation
+    let simulation = {};
+
+    if (project.simulation != null) {
+      simulation = SimulationStore.getState().find(simulation => simulation._id === project.simulation);
+    }
+
+    // load visualizations
+    let visualizations = [];
+
+    if (project.visualizations != null) {
+      visualizations = VisualizationStore.getState().filter(visualization => project.visualizations.includes(visualization._id));
+    }
+
+    return {
+      visualizations,
+      project,
+      simulation,
+      sessionToken,
+
+      newModal: prevState.newModal || false,
+      deleteModal: prevState.deleteModal || false,
+      editModal: prevState.editModal || false,
+      importModal: prevState.importModal || false,
+      modalData: prevState.modalData || {}
+    };
   }
 
-  static findProjectInState(projects, projectId) {
-    return projects.find((project) => project._id === projectId);
-  }
-
-  static loadProjects(token) {
-    AppDispatcher.dispatch({
-      type: 'projects/start-load',
-      token
-    });
-  }
-
-  static loadVisualizations(visualizations, token) {
+  componentDidMount() {
     AppDispatcher.dispatch({
       type: 'visualizations/start-load',
-      data: visualizations,
-      token
+      token: this.state.sessionToken
     });
-  }
 
-  componentWillMount() {
-    Visualizations.loadProjects(this.state.sessionToken);
+    AppDispatcher.dispatch({
+      type: 'simulations/start-load',
+      token: this.state.sessionToken
+    });
   }
 
   closeNewModal(data) {
@@ -153,33 +135,78 @@ class Visualizations extends Component {
     }
   }
 
-  render() {
-    // get visualizations for this project
-    var visualizations = [];
-    if (this.state.visualizations && this.state.project.visualizations) {
-      visualizations = this.state.visualizations.filter(
-          (visualization) => this.state.project.visualizations.includes(visualization._id)
-        ).sort(
-          (visA, visB) => visA.name.localeCompare(visB.name)
-        );
-    }
+  closeImportModal(data) {
+    this.setState({ importModal: false });
 
+    if (data) {
+      data.project = this.state.project._id;
+
+      AppDispatcher.dispatch({
+        type: 'visualizations/start-add',
+        data,
+        token: this.state.sessionToken
+      });
+
+      this.setState({ project: {} }, () => {
+        AppDispatcher.dispatch({
+          type: 'projects/start-load',
+          data: this.props.match.params.project,
+          token: this.state.sessionToken
+        });
+      });
+    }
+  }
+
+  exportVisualization(index) {
+    // filter properties
+    let visualization = Object.assign({}, this.state.visualizations[index]);
+    delete visualization._id;
+    delete visualization.project;
+    delete visualization.user;
+
+    visualization.widgets.forEach(widget => {
+      delete widget.simulator;
+    });
+
+    // show save dialog
+    const blob = new Blob([JSON.stringify(visualization, null, 2)], { type: 'application/json' });
+    FileSaver.saveAs(blob, 'visualization - ' + visualization.name + '.json');
+  }
+
+  onModalKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    
+      this.confirmDeleteModal();
+    }
+  }
+
+  render() {
     return (
       <div className='section'>
         <h1>{this.state.project.name}</h1>
 
-        <CustomTable data={visualizations}>
+        <CustomTable data={this.state.visualizations}>
           <TableColumn title='Name' dataKey='name' link='/visualizations/' linkKey='_id' />
-          <TableColumn width='70' editButton deleteButton onEdit={(index) => this.setState({ editModal: true, modalData: visualizations[index] })} onDelete={(index) => this.setState({ deleteModal: true, modalData: visualizations[index] })} />
+          <TableColumn 
+            width='100' 
+            editButton 
+            deleteButton 
+            exportButton
+            onEdit={(index) => this.setState({ editModal: true, modalData: this.state.visualizations[index] })} 
+            onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.visualizations[index] })} 
+            onExport={index => this.exportVisualization(index)}
+          />
         </CustomTable>
 
         <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Visualization</Button>
+        <Button onClick={() => this.setState({ importModal: true })}><Glyphicon glyph="import" /> Import</Button>
 
         <NewVisualzationDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
-
         <EditVisualizationDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} visualization={this.state.modalData} />
+        <ImportVisualizationDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} simulation={this.state.simulation} />
 
-        <Modal show={this.state.deleteModal}>
+        <Modal keyboard show={this.state.deleteModal} onHide={() => this.setState({ deleteModal: false })} onKeyPress={this.onModalKeyPress}>
           <Modal.Header>
             <Modal.Title>Delete Visualization</Modal.Title>
           </Modal.Header>

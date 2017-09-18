@@ -27,7 +27,7 @@ import TableColumn from '../table-column';
 import Dialog from './dialog';
 
 class NewSimulationModelDialog extends React.Component {
-  valid: false;
+  valid = false;
 
   constructor(props) {
     super(props);
@@ -42,7 +42,9 @@ class NewSimulationModelDialog extends React.Component {
 
   onClose(canceled) {
     if (canceled === false) {
-      this.props.onClose(this.state);
+      if (this.valid) {
+        this.props.onClose(this.state);
+      }
     } else {
       this.props.onClose();
     }

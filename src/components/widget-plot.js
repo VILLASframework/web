@@ -25,45 +25,59 @@ import Plot from './widget-plot/plot';
 import PlotLegend from './widget-plot/plot-legend';
 
 class WidgetPlot extends React.Component {
-  render() {
-    const simulator = this.props.widget.simulator;
-    const simulation = this.props.simulation;
-    let legendSignals = [];
-    let simulatorData = [];
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      data: [],
+      legend: []
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const simulator = nextProps.widget.simulator;
+    const simulation = nextProps.simulation;
 
     // Proceed if a simulation with models and a simulator are available
-    if (simulator && this.props.data[simulator.node] != null && this.props.data[simulator.node][simulator.simulator] != null && simulation && simulation.models.length > 0) {
+    if (simulator && nextProps.data[simulator.node] != null && nextProps.data[simulator.node][simulator.simulator] != null && simulation && simulation.models.length > 0) {
       const model = simulation.models.find(model => model.simulator.node === simulator.node && model.simulator.simulator === simulator.simulator);
-      const chosenSignals = this.props.widget.signals;
+      const chosenSignals = nextProps.widget.signals;
 
-      simulatorData = this.props.data[simulator.node][simulator.simulator].values.filter((values, index) => (
-        this.props.widget.signals.findIndex(value => value === index) !== -1
+      const data = nextProps.data[simulator.node][simulator.simulator].values.filter((values, index) => (
+        nextProps.widget.signals.findIndex(value => value === index) !== -1
       ));
 
       // Query the signals that will be displayed in the legend
-      legendSignals = model.mapping.reduce( (accum, model_signal, signal_index) => {
+      const legend = model.mapping.reduce( (accum, model_signal, signal_index) => {
         if (chosenSignals.includes(signal_index)) {
           accum.push({ index: signal_index, name: model_signal.name });
         }
         
         return accum;
       }, []);
+
+      this.setState({ data, legend });
+    } else {
+      this.setState({ data: [], legend: [] });
     }
+  }
 
-    return (
-      <div className="plot-widget" ref="wrapper">
-        <div className="widget-plot">
-          <Plot
-            data={simulatorData}
-            height={this.props.widget.height - 55}
-            width={this.props.widget.width - 20}
-            time={this.props.widget.time}
-          />
-        </div>
-
-        <PlotLegend signals={legendSignals} />
+  render() {
+    return <div className="plot-widget" ref="wrapper">
+      <div className="widget-plot">
+        <Plot
+          data={this.state.data}
+          height={this.props.widget.height - 55}
+          width={this.props.widget.width - 20}
+          time={this.props.widget.time}
+          yMin={this.props.widget.yMin}
+          yMax={this.props.widget.yMax}
+          yUseMinMax={this.props.widget.yUseMinMax}
+        />
       </div>
-    );
+
+      <PlotLegend signals={this.state.legend} />
+    </div>;
   }
 }
 
