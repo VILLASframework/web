@@ -35,7 +35,7 @@ body {
 }
 
 .app-body {
-  height: 100%;
+  /*height: 100%;*/
 }
 
 .app-header {
@@ -74,18 +74,17 @@ body {
 
 .app-footer {
   width: 100%;
-  height: 60px;
-  /* Float below body */
-  float: right;
-  padding-top: 20px;
+
+  margin-top: 20px;
+  padding-bottom: 10px;
 
   text-align: center;
-
-  clear: both;
 }
 
 .app-footer a {
-  color: #333;
+  color: #4d4d4d;
+
+  text-decoration: underline;
 }
 
 .app-body-spacing {

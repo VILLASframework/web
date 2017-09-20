@@ -165,13 +165,13 @@ class Widget extends React.Component {
     if (widget.type === 'Value') {
       element = <WidgetValue widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
     } else if (widget.type === 'Plot') {
-      element = <WidgetPlot widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
+      element = <WidgetPlot widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} paused={this.props.paused} />
     } else if (widget.type === 'Table') {
       element = <WidgetTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
     } else if (widget.type === 'Label') {
       element = <WidgetLabel widget={widget} />
     } else if (widget.type === 'PlotTable') {
-      element = <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } />
+      element = <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index)} paused={this.props.paused} />
     } else if (widget.type === 'Image') {
       element = <WidgetImage widget={widget} files={this.state.files} token={this.state.sessionToken} />
     } else if (widget.type === 'Button') {

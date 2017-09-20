@@ -220,7 +220,7 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
 .legend-color {
     height: 50%;
     display: inline-block;
-    vertical-align: middle;
+    margin-right: 5px;
 } 
 
 /* End Plots */
@@ -375,7 +375,7 @@ div[class*="-widget"] label {
     position: absolute;
     width: 100%;
     font-weight: bold;
-    font-size: 1.5em;
+    font-size: 18px;
     bottom: 10%;
     text-align: center;
 }

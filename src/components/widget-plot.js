@@ -73,6 +73,7 @@ class WidgetPlot extends React.Component {
           yMin={this.props.widget.yMin}
           yMax={this.props.widget.yMax}
           yUseMinMax={this.props.widget.yUseMinMax}
+          paused={this.props.paused}
         />
       </div>
 

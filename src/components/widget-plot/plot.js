@@ -23,7 +23,7 @@ class Plot extends React.Component {
     super(props);
 
     // create dummy axes
-    const xScale = scaleTime().domain([Date.now(), Date.now() + 5 * 1000]).range([leftMargin, props.width]);
+    const xScale = scaleTime().domain([Date.now() - props.time * 1000, Date.now()]).range([leftMargin, props.width]);
     const yScale = scaleLinear().domain([0, 10]).range([props.height, bottomMargin]);
 
     const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(date => timeFormat("%M:%S")(date));
@@ -31,16 +31,25 @@ class Plot extends React.Component {
 
     this.state = {
       data: null,
+      lines: null,
       xAxis,
       yAxis
     };
+  }
+
+  componentDidMount() {
+    this.interval = setInterval(this.tick, 50);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   componentWillReceiveProps(nextProps) {
     // check if data is valid
     if (nextProps.data == null || nextProps.data.length === 0 || nextProps.data[0].length === 0) {
       // create empty plot axes
-      const xScale = scaleTime().domain([Date.now(), Date.now() + 5 * 1000]).range([leftMargin, nextProps.width]);
+      const xScale = scaleTime().domain([Date.now() - 5 * nextProps.time * 1000, Date.now()]).range([leftMargin, nextProps.width]);
       const yScale = scaleLinear().domain([0, 10]).range([nextProps.height, bottomMargin]);
   
       const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(date => timeFormat("%M:%S")(date));
@@ -53,27 +62,30 @@ class Plot extends React.Component {
     // only show data in requested time
     let data = nextProps.data;
     
-    const firstTimestamp = data[0][data[0].length - 1].x - nextProps.time * 1000;
+    const firstTimestamp = data[0][data[0].length - 1].x - (nextProps.time + 1) * 1000;
     if (data[0][0].x < firstTimestamp) {
       // only show data in range (+100 ms)
       const index = data[0].findIndex(value => value.x >= firstTimestamp - 100);
       data = data.map(values => values.slice(index));
     }
 
-    // calculate paths for data
-    let xRange = extent(data[0], p => new Date(p.x));
-    if (xRange[1] - xRange[0] < nextProps.time * 1000) {
-      xRange[0] = xRange[1] - nextProps.time * 1000;
+    this.setState({ data });
+  }
+
+  tick = () => {
+    if (this.state.data == null || this.props.paused === true) {
+      return;
     }
 
+    // calculate yRange
     let yRange;
-
-    if (nextProps.yUseMinMax) {
-      yRange = [nextProps.yMin, nextProps.yMax];
+    
+    if (this.props.yUseMinMax) {
+      yRange = [this.props.yMin, this.props.yMax];
     } else {
       yRange = [0, 0];
 
-      data.map(values => {
+      this.props.data.map(values => {
         const range = extent(values, p => p.y);
         if (range[0] < yRange[0]) yRange[0] = range[0];
         if (range[1] > yRange[1]) yRange[1] = range[1];
@@ -81,10 +93,10 @@ class Plot extends React.Component {
         return values;
       });
     }
-    
+
     // create scale functions for both axes
-    const xScale = scaleTime().domain(xRange).range([leftMargin, nextProps.width]);
-    const yScale = scaleLinear().domain(yRange).range([nextProps.height, bottomMargin]);
+    const xScale = scaleTime().domain([Date.now() - this.props.time * 1000, Date.now()]).range([leftMargin, this.props.width]);
+    const yScale = scaleLinear().domain(yRange).range([this.props.height, bottomMargin]);
 
     const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(date => timeFormat("%M:%S")(date));
     const yAxis = axisLeft().scale(yScale).ticks(5);
@@ -93,9 +105,9 @@ class Plot extends React.Component {
     const sparkLine = line().x(p => xScale(p.x)).y(p => yScale(p.y));
     const lineColor = scaleOrdinal(schemeCategory10);
 
-    const lines = data.map((values, index) => <path d={sparkLine(values)} key={index} style={{ fill: 'none', stroke: lineColor(index) }} />);
+    const lines = this.state.data.map((values, index) => <path d={sparkLine(values)} key={index} style={{ fill: 'none', stroke: lineColor(index) }} />);
 
-    this.setState({ data: lines, xAxis, yAxis });
+    this.setState({ lines, xAxis, yAxis });
   }
 
   render() {
@@ -103,8 +115,14 @@ class Plot extends React.Component {
       <g ref={node => select(node).call(this.state.xAxis)} style={{ transform: `translateY(${this.props.height}px)` }} />
       <g ref={node => select(node).call(this.state.yAxis)} style={{ transform: `translateX(${leftMargin}px)`}} />
 
-      <g>
-        {this.state.data}
+      <defs>
+        <clipPath id="lineClipPath">
+          <rect x={leftMargin} y={bottomMargin} width={this.props.width} height={this.props.height} />
+        </clipPath>
+      </defs>
+
+      <g style={{ clipPath: 'url(#lineClipPath)' }}>
+        {this.state.lines}
       </g>
     </svg>;
   }

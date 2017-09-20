@@ -136,8 +136,6 @@ class WidgetPlotTable extends Component {
       return accum;
     }, []);
 
-
-
     return (
       <div className="plot-table-widget" ref="wrapper">
         <div className="content">
@@ -160,6 +158,7 @@ class WidgetPlotTable extends Component {
                 yMin={this.props.widget.yMin}
                 yMax={this.props.widget.yMax}
                 yUseMinMax={this.props.widget.yUseMinMax}
+                paused={this.props.paused}
               />
             </div>
           </div>
