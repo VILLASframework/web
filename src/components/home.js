@@ -57,7 +57,7 @@ class Home extends React.Component {
           VILLASweb is a frontend for distributed real-time simulation hosted by <a href={"mailto:" + config.admin.mail}>{config.admin.name}</a>.
         </p>
         <p>
-          This instance is hosting <Link to="/projects" title="Projects">{this.getCounts('projects')} projects</Link> consisting of <Link to="/simulators" activeClassName="active" title="Simulators">{this.getCounts('nodes')} nodes</Link>, {this.getCounts('visualizations')} visualizations and <Link to="/simulations" activeClassName="active" title="Simulations">{this.getCounts('simulators')} simulations</Link>.
+          This instance is hosting <Link to="/projects" title="Projects">{this.getCounts('projects')} projects</Link> consisting of <Link to="/simulators" title="Simulators">{this.getCounts('nodes')} nodes</Link>, {this.getCounts('visualizations')} visualizations and <Link to="/simulations" title="Simulations">{this.getCounts('simulators')} simulations</Link>.
           A total of <Link to="/users" title="Users">{this.getCounts('users')} users</Link> are registered.<br />
         </p>
         <h3>Credits</h3>
