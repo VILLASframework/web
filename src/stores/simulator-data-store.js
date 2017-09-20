@@ -36,7 +36,7 @@ class SimulationDataStore extends ReduceStore {
   }
 
   reduce(state, action) {
-    var i;
+    var i, j;
 
     switch (action.type) {
       case 'simulatorData/open':
@@ -59,29 +59,34 @@ class SimulationDataStore extends ReduceStore {
           return state;
         }
 
-        let index = action.node.simulators.findIndex(simulator => simulator.id === action.data.id);
-        if (index === -1 || state[action.node._id][index] == null) {
-          return state;
-        }
+        // loop over all samples in a vector
+        for (j = 0; j < action.data.length; j++) {
+          let smp = action.data[j];
 
-        // add data to simulator
-        for (i = 0; i < action.data.length; i++) {
-          while (state[action.node._id][index].values.length < i + 1) {
-            state[action.node._id][index].values.push([]);
+          let index = action.node.simulators.findIndex(simulator => simulator.id === smp.id);
+          if (index === -1 || state[action.node._id][index] == null) {
+            return state;
           }
 
-          state[action.node._id][index].values[i].push({ x: action.data.timestamp, y: action.data.values[i] });
+          // add data to simulator
+          for (i = 0; i < smp.length; i++) {
+            while (state[action.node._id][index].values.length < i + 1) {
+              state[action.node._id][index].values.push([]);
+            }
 
-          // erase old values
-          if (state[action.node._id][index].values[i].length > MAX_VALUES) {
-            const pos = state[action.node._id][index].values[i].length - MAX_VALUES;
-            state[action.node._id][index].values[i].splice(0, pos);
+            state[action.node._id][index].values[i].push({ x: smp.timestamp, y: smp.values[i] });
+
+            // erase old values
+            if (state[action.node._id][index].values[i].length > MAX_VALUES) {
+              const pos = state[action.node._id][index].values[i].length - MAX_VALUES;
+              state[action.node._id][index].values[i].splice(0, pos);
+            }
           }
-        }
 
-        // update metadata
-        state[action.node._id][index].timestamp = action.data.timestamp;
-        state[action.node._id][index].sequence = action.data.sequence;
+          // update metadata
+          state[action.node._id][index].timestamp = smp.timestamp;
+          state[action.node._id][index].sequence = smp.sequence;
+        }
 
         // explicit call to prevent array copy
         this.__emitChange();
