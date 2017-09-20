@@ -19,39 +19,31 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
-import { Container } from 'flux/utils';
+import React from 'react';
 
-import AppDispatcher from '../app-dispatcher';
+import { Link } from 'react-router-dom';
 
-import NodeStore from '../stores/node-store';
-import SimulationStore from '../stores/simulation-store';
-import ProjectStore from '../stores/project-store';
+import RestAPI from '../api/rest-api';
 
 import config from '../config';
 
-class Home extends Component {
-  static getStores() {
-    return [ NodeStore, SimulationStore, ProjectStore ];
+class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
   }
 
-  static calculateState() {
-    return {
-      nodes: NodeStore.getState(),
-      projects: ProjectStore.getState(),
-      simulations: SimulationStore.getState(),
-    };
+  getCounts(type) {
+    if (this.state.hasOwnProperty('counts'))
+      return this.state.counts[type];
+    else
+      return '?';
   }
 
   componentWillMount() {
-    AppDispatcher.dispatch({
-      type: 'projects/start-load',
-      token: this.state.sessionToken
-    });
-
-    AppDispatcher.dispatch({
-      type: 'simulations/start-load',
-      token: this.state.sessionToken
+    RestAPI.get('/api/v1/counts').then(response => {
+      this.setState({ counts: response });
+      console.log(response);
     });
   }
 
@@ -65,7 +57,8 @@ class Home extends Component {
           VILLASweb is a frontend for distributed real-time simulation hosted by <a href={"mailto:" + config.admin.mail}>{config.admin.name}</a>.
         </p>
         <p>
-          This instance is hosting {this.state.projects.length} projects consisting of {this.state.nodes.length} nodes and {this.state.simulations.length} simulations.<br />
+          This instance is hosting <Link to="/projects" title="Projects">{this.getCounts('projects')} projects</Link> consisting of <Link to="/simulators" activeClassName="active" title="Simulators">{this.getCounts('nodes')} nodes</Link>, {this.getCounts('visualizations')} visualizations and <Link to="/simulations" activeClassName="active" title="Simulations">{this.getCounts('simulators')} simulations</Link>.
+          A total of <Link to="/users" title="Users">{this.getCounts('users')} users</Link> are registered.<br />
         </p>
         <h3>Credits</h3>
         <p>VILLASweb is developed by the <a href="http://acs.eonerc.rwth-aachen.de">Institute for Automation of Complex Power Systems</a> at the <a href="https;//www.rwth-aachen.de">RWTH Aachen University</a>.</p>
@@ -94,4 +87,4 @@ class Home extends Component {
   }
 }
 
-export default Container.create(Home);
+export default Home;

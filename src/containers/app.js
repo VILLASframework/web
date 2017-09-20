@@ -35,12 +35,12 @@ import UserStore from '../stores/user-store';
 import DesignStore from '../stores/design-store';
 import NotificationsDataManager from '../data-managers/notifications-data-manager';
 
+import Home from '../components/home';
 import Header from '../components/header';
 import Footer from '../components/footer';
 import SidebarMenu from '../components/menu-sidebar';
 import HeaderMenu from '../components/header-menu';
 
-import Home from './home';
 import Projects from './projects';
 import Project from './project';
 import Simulators from './simulators';
