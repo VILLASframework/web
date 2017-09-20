@@ -69,7 +69,6 @@ class Widget extends React.Component {
         sessionToken,
         simulatorData,
         files: FileStore.getState(),
-
         sequence: prevState.sequence + 1
       };
     } else {
@@ -77,7 +76,6 @@ class Widget extends React.Component {
         sessionToken,
         simulatorData,
         files: FileStore.getState(),
-
         sequence: 0
       };
     }
@@ -89,7 +87,7 @@ class Widget extends React.Component {
     // Reference to the context menu element
     this.contextMenuTriggerViaDraggable = null;
   }
-  
+
   componentWillMount() {
     // If loading for the first time
     if (this.state.sessionToken) {
@@ -101,7 +99,8 @@ class Widget extends React.Component {
   }
 
   snapToGrid(value) {
-    if (this.props.grid === 1) return value;
+    if (this.props.grid === 1)
+      return value;
 
     return Math.round(value / this.props.grid) * this.props.grid;
   }
@@ -190,7 +189,7 @@ class Widget extends React.Component {
     } else if (widget.type === 'HTML') {
       element = <WidgetHTML widget={widget} editing={this.props.editing} />
     }
-    
+
     const widgetClasses = classNames({
       'widget': !this.props.editing,
       'editing-widget': this.props.editing,
@@ -211,7 +210,7 @@ class Widget extends React.Component {
           lockAspectRatio={Boolean(widget.lockAspect)}
           bounds={'parent'}
           className={ widgetClasses }
-          onResizeStart={(event, direction, ref) => this.borderWasClicked(event)} 
+          onResizeStart={(event, direction, ref) => this.borderWasClicked(event)}
           onResizeStop={(event, direction, ref, delta) => this.resizeStop(direction, delta, event)}
           onDrag={(event, data) => this.drag(event, data)}
           onDragStop={(event, data) => this.dragStop(event, data)}
@@ -225,7 +224,7 @@ class Widget extends React.Component {
             {element}
           </ContextMenuTrigger>
         </Rnd>
-      );   
+      );
     } else {
       return (
         <div className={ widgetClasses } style={{ width: Number(widget.width), height: Number(widget.height), left: Number(widget.x), top: Number(widget.y), 'zIndex': Number(widget.z), position: 'absolute' }}>

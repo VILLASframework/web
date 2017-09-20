@@ -86,7 +86,7 @@ export default function createControls(widgetType = null, widget = null, session
             dialogControls.push(
                 <EditImageWidgetControl key={0} sessionToken={sessionToken} widget={widget} files={files} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetAspectControl key={1} widget={widget} handleChange={e => handleChange(e)} />
-            );            
+            );
             break;
         case 'Gauge':
             let gaugeBoundOnChange = (e) => {
@@ -136,7 +136,6 @@ export default function createControls(widgetType = null, widget = null, session
                 <EditWidgetColorControl key={2} widget={widget} controlId={'fontColor'} label={'Text color'} handleChange={e => handleChange(e)} />
             );
             break;
-        
         case 'HTML':
             dialogControls.push(
                 <EditWidgetHTMLContent key={0} widget={widget} placeholder='HTML Code' controlId='content' handleChange={e => handleChange(e)} />

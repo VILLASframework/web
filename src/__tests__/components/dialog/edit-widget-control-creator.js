@@ -41,9 +41,9 @@ describe('edit widget control creator', () => {
         let itMsg = run.args.widgetType + ' widget edit model should have correct controls';
         it(itMsg, () => {
             let controls = createControls(run.args.widgetType, null, null, null, null, null, null);
-            
+
             expect(controls).to.have.lengthOf(run.result.controlNumber);
-            
+
             controls.forEach( (control) => expect(control.type).to.be.oneOf(run.result.controlTypes))
         });
     });

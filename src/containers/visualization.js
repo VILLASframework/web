@@ -403,7 +403,7 @@ class Visualization extends React.Component {
       fullscreen: false
     });
   }
-  
+
   pauseData = () => {
     this.setState({ paused: true });
   }

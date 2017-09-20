@@ -143,7 +143,7 @@ class WidgetFactory {
             case 'HTML':
                 widget.content = '<i>Hello World</i>';
                 break;
-            
+
             default:
                 widget.width = 100;
                 widget.height = 100;
