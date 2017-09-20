@@ -471,6 +471,7 @@ class Visualization extends React.Component {
         <div className="box box-content" onContextMenu={ (e) => e.preventDefault() }>
           {this.state.editing &&
             <div className="toolbox box-header">
+              <ToolboxItem name="Lamp" type="widget" />
               <ToolboxItem name="Value" type="widget" />
               <ToolboxItem name="Plot" type="widget" />
               <ToolboxItem name="Table" type="widget" />
@@ -489,15 +490,15 @@ class Visualization extends React.Component {
           <Dropzone height={this.state.dropZoneHeight} onDrop={(item, position) => this.handleDrop(item, position)} editing={this.state.editing}>
             {current_widgets != null &&
               Object.keys(current_widgets).map(widget_key => (
-              <Widget 
-                key={widget_key} 
-                data={current_widgets[widget_key]} 
-                simulation={this.state.simulation} 
-                onWidgetChange={(w, k) => this.widgetChange(w, k)} 
-                onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)} 
-                editing={this.state.editing} 
-                index={widget_key} 
-                grid={this.state.visualization.grid} 
+              <Widget
+                key={widget_key}
+                data={current_widgets[widget_key]}
+                simulation={this.state.simulation}
+                onWidgetChange={(w, k) => this.widgetChange(w, k)}
+                onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)}
+                editing={this.state.editing}
+                index={widget_key}
+                grid={this.state.visualization.grid}
                 paused={this.state.paused}
               />
             ))}

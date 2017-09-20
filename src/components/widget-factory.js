@@ -27,6 +27,17 @@ class WidgetFactory {
 
         // set type specific properties
         switch(type) {
+            case 'Lamp':
+                widget.simulator = defaultSimulator;
+                widget.signal = 0;
+                widget.minWidth = 5;
+                widget.minHeight = 5;
+                widget.width = 20;
+                widget.height = 20;
+                widget.on_color = 6;
+                widget.off_color = 8;
+                widget.threshold = 0.5;
+                break;
             case 'Value':
                 widget.simulator = defaultSimulator;
                 widget.signal = 0;

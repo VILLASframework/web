@@ -30,6 +30,7 @@ import UserStore from '../stores/user-store';
 import SimulatorDataStore from '../stores/simulator-data-store';
 import FileStore from '../stores/file-store';
 
+import WidgetLamp from '../components/widget-lamp';
 import WidgetValue from '../components/widget-value';
 import WidgetPlot from '../components/widget-plot';
 import WidgetTable from '../components/widget-table';
@@ -162,7 +163,9 @@ class Widget extends React.Component {
     let element = null;
 
     // dummy is passed to widgets to keep updating them while in edit mode
-    if (widget.type === 'Value') {
+    if (widget.type === 'Lamp') {
+      element = <WidgetLamp widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
+    } else if (widget.type === 'Value') {
       element = <WidgetValue widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
     } else if (widget.type === 'Plot') {
       element = <WidgetPlot widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} paused={this.props.paused} />

@@ -52,7 +52,19 @@ export default function createControls(widgetType = null, widget = null, session
                 <EditWidgetTextSizeControl key={3} widget={widget} handleChange={e => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={4} widget={widget} controlId={'showUnit'} text="Show unit" handleChange={e => handleChange(e)} />
             );
-        break;
+            break;
+        case 'Lamp':
+              let lampBoundOnChange = (e) => {
+                  handleChange([e, {target: {id: 'signal', value: 0}}]);
+              }
+              dialogControls.push(
+                <EditWidgetSimulatorControl key={0} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => lampBoundOnChange(e)} />,
+                <EditWidgetSignalControl key={1} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetTextControl key={2} widget={widget} controlId={'threshold'} label={'Threshold'} placeholder={'0.5'} validate={id => validateForm(id)} handleChange={e => handleChange(e)} />,
+                <EditWidgetColorControl key={3} widget={widget} controlId={'on_color'} label={'Color On'} validate={(id) => validateForm(id)} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetColorControl key={4} widget={widget} controlId={'off_color'} label={'Color Off'} validate={(id) => validateForm(id)} handleChange={(e) => handleChange(e)} />,
+              );
+              break;
         case 'Plot':
             let plotBoundOnChange = (e) => {
                 handleChange([e, {target: {id: 'signals', value: []}}]);
