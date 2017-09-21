@@ -82,10 +82,16 @@ class Visualization extends React.Component {
     // TODO: Don't fetch token from local, use user-store!
     const token = localStorage.getItem('token');
 
+    document.addEventListener('keydown', this.handleKeydown.bind(this));
+
     AppDispatcher.dispatch({
       type: 'visualizations/start-load',
       token
     });
+  }
+
+  componentWillUnmount() {
+      document.removeEventListener('keydown', this.handleKeydown.bind(this));
   }
 
   componentDidUpdate() {
@@ -117,6 +123,24 @@ class Visualization extends React.Component {
           this.setState({ simulation: simulation });
         }
       });
+    }
+  }
+
+  handleKeydown(e) {
+    console.log(e);
+
+    switch (e.key) {
+      case ' ':
+      case 'p':
+        this.setState({ paused: !this.state.paused });
+        break;
+      case 'e':
+        this.setState({ editing: !this.state.editing });
+        break;
+      case 'f':
+        this.props.toggleFullscreen();
+        break;
+      default:
     }
   }
 
