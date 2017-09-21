@@ -257,7 +257,7 @@ class Visualization extends React.Component {
 
     this.setState({
       maxWidgetHeight: maxHeight,
-      dropZoneHeight:  maxHeight + 40
+      dropZoneHeight:  maxHeight + 80
     });
   }
   /*
