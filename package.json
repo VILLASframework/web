@@ -24,13 +24,14 @@
     "react-dnd": "^2.2.4",
     "react-dnd-html5-backend": "^2.2.4",
     "react-dom": "^15.4.2",
+    "react-fullscreenable": "^2.4.3",
     "react-notification-system": "^0.2.13",
     "react-rnd": "^5.0.9",
     "react-router": "^4.1.2",
     "react-router-dom": "^4.1.2",
+    "react-scripts": "1.0.10",
     "react-sortable-tree": "^0.1.19",
-    "superagent": "^3.5.0",
-    "react-scripts": "1.0.10"
+    "superagent": "^3.5.0"
   },
   "devDependencies": {
     "chai": "^4.1.0"

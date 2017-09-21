@@ -23,7 +23,9 @@ import React from 'react';
 import { Container } from 'flux/utils';
 import { Button, Glyphicon } from 'react-bootstrap';
 import { ContextMenu, MenuItem } from 'react-contextmenu';
+import Fullscreenable from 'react-fullscreenable';
 import Slider from 'rc-slider';
+import classNames from 'classnames';
 
 import WidgetFactory from '../components/widget-factory';
 import ToolboxItem from '../components/toolbox-item';
@@ -37,7 +39,6 @@ import VisualizationStore from '../stores/visualization-store';
 import ProjectStore from '../stores/project-store';
 import SimulationStore from '../stores/simulation-store';
 import FileStore from '../stores/file-store';
-import DesignStore from '../stores/design-store';
 import AppDispatcher from '../app-dispatcher';
 import NotificationsDataManager from '../data-managers/notifications-data-manager';
 import NotificationsFactory from '../data-managers/notifications-factory';
@@ -46,7 +47,7 @@ import '../styles/context-menu.css';
 
 class Visualization extends React.Component {
   static getStores() {
-    return [ VisualizationStore, ProjectStore, SimulationStore, FileStore, UserStore, DesignStore ];
+    return [ VisualizationStore, ProjectStore, SimulationStore, FileStore, UserStore ];
   }
 
   static calculateState(prevState) {
@@ -60,7 +61,6 @@ class Visualization extends React.Component {
       projects: ProjectStore.getState(),
       simulations: SimulationStore.getState(),
       files: FileStore.getState(),
-      fullscreen: DesignStore.getState().fullscreen,
 
       visualization: prevState.visualization || {},
       project: prevState.project || null,
@@ -414,20 +414,6 @@ class Visualization extends React.Component {
     this.setState({ visualization });
   }
 
-  setFullscreen = () => {
-    AppDispatcher.dispatch({
-      type: 'design/fullscreen',
-      fullscreen: true
-    });
-  }
-
-  unsetFullscreen = () => {
-    AppDispatcher.dispatch({
-      type: 'design/fullscreen',
-      fullscreen: false
-    });
-  }
-
   pauseData = () => {
     this.setState({ paused: true });
   }
@@ -553,4 +539,4 @@ class Visualization extends React.Component {
   }
 }
 
-export default Container.create(Visualization);
+export default Fullscreenable()(Container.create(Visualization));

@@ -216,6 +216,13 @@ body {
 	margin: 20px;
 }
 
+/**
+ * Visualizations
+ */
+.fullscreen-padding {
+  padding: 10px;
+}
+
 
 /**
  * Login form
