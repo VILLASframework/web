@@ -425,56 +425,46 @@ class Visualization extends React.Component {
   render() {
     const current_widgets = this.state.visualization.widgets;
 
+    let boxClasses = classNames('section', 'box', { 'fullscreen-padding': this.props.isFullscreen });
+
+    let buttons = []
+    let editingControls = [];
+
+    if (this.state.editing) {
+      editingControls.push(
+        <div>
+          <span>Grid: {this.state.visualization.grid > 1 ? this.state.visualization.grid : 'Disabled'}</span>
+          <Slider value={this.state.visualization.grid} style={{ width: '80px' }} step={5} onChange={value => this.setGrid(value)} />
+        </div>
+      )
+
+      buttons.push({ click: () => this.stopEditing(), glyph: 'floppy-disk', text: 'Save' });
+      buttons.push({ click: () => this.discardChanges(), glyph: 'remove', text: 'Cancel' });
+    }
+
+    if (!this.props.isFullscreen) {
+      buttons.push({ click: this.props.toggleFullscreen, glyph: 'resize-full', text: 'Fullscreen' });
+      buttons.push({ click: this.state.paused ? this.unpauseData : this.pauseData, glyph: this.state.paused ? 'play' : 'pause', text: this.state.paused  ? 'Live' : 'Pause' });
+
+      if (!this.state.editing)
+        buttons.push({ click: () => this.setState({ editing: true }), glyph: 'pencil', text: 'Edit' });
+    }
+
+    const buttonList = buttons.map((btn, idx) =>
+      <Button key={idx} bsStyle="info" onClick={btn.click} style={{ marginLeft: '8px' }}>
+        <Glyphicon glyph={btn.glyph} /> {btn.text}
+      </Button>
+    );
+
     return (
-      <div className='section box' >
+      <div className={boxClasses} >
         <div className='section-header box-header'>
           <div className="section-title">
-            <span>
-              {this.state.visualization.name}
-            </span>
+            <span>{this.state.visualization.name}</span>
           </div>
-          {this.state.editing ? (
-            <div>
-              <div className='section-buttons-group'>
-                <Button bsStyle="link" onClick={() => this.stopEditing()}>
-                  <Glyphicon glyph="floppy-disk" /> Save
-                </Button>
-                <Button bsStyle="link" onClick={() => this.discardChanges()} style={{ marginLeft: '8px' }}>
-                  <Glyphicon glyph="remove" /> Cancel
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div className='section-buttons-group'>
-              {this.state.fullscreen === false ? (
-                <span>
-                  <Button bsStyle="link" onClick={() => this.setState({ editing: true })}>
-                    <span className="glyphicon glyphicon-pencil"></span> Edit
-                  </Button>
-                  <Button bsStyle="link" onClick={this.setFullscreen} style={{ marginLeft: '8px' }}>
-                    <span className="glyphicon glyphicon-resize-full"></span> Fullscreen
-                  </Button>
-                </span>
-              ) : (
-                <Button bsStyle="link" onClick={this.unsetFullscreen}>
-                  <span className="glyphicon glyphicon-resize-small"></span> Disable fullscreen
-                </Button>
-              )}
-            </div>
-          )}
 
           <div className="section-buttons-group-right">
-            {this.state.editing ? (
-              <div>
-                <span>Grid: {this.state.visualization.grid > 1 ? this.state.visualization.grid : 'Disabled'}</span>
-
-                <Slider value={this.state.visualization.grid} style={{ width: '80px' }} step={5} onChange={value => this.setGrid(value)} />
-              </div>
-            ) : (this.state.paused ? (
-              <Button bsStyle="info" onClick={this.unpauseData}><Glyphicon glyph="play" /> Live</Button>
-            ): (
-              <Button bsStyle="info" onClick={this.pauseData}><Glyphicon glyph="pause" /> Pause</Button>
-            ))}
+            { buttonList }
           </div>
         </div>
 
@@ -494,6 +484,10 @@ class Visualization extends React.Component {
               <ToolboxItem name="Gauge" type="widget" />
               <ToolboxItem name="Box" type="widget" />
               <ToolboxItem name="HTML" type="html" />
+
+              <div className="section-buttons-group-right">
+                { editingControls }
+              </div>
             </div>
           }
 
