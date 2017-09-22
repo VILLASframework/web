@@ -93,13 +93,13 @@ class SimulatorDataDataManager {
       return null;
     }
 
-    let OFFSET_TYPE = 2;
-    let OFFSET_VERSION = 4;
+    const OFFSET_TYPE = 2;
+    const OFFSET_VERSION = 4;
 
-    var id = data.getUint8(1);
-    var bits = data.getUint8(0);
-    var length = data.getUint16(0x02, 1);
-    var bytes = length * 4 + 16;
+    const id = data.getUint8(1);
+    const bits = data.getUint8(0);
+    const length = data.getUint16(0x02, 1);
+    const bytes = length * 4 + 16;
 
     return {
       version: (bits >> OFFSET_VERSION) & 0xF,
@@ -108,19 +108,19 @@ class SimulatorDataDataManager {
       sequence: data.getUint32(0x04, 1),
       timestamp: data.getUint32(0x08, 1) * 1e3 + data.getUint32(0x0C, 1) * 1e-6,
       values: new Float32Array(data.buffer, data.byteOffset + 0x10, length),
-      blob: new DataView(    data.buffer, data.byteOffset + 0x00, bytes),
+      blob: new DataView(data.buffer, data.byteOffset + 0x00, bytes),
       id: id
     };
   }
 
   bufferToMessageArray(blob) {
     /* some local variables for parsing */
-    var offset = 0;
-    var msgs = [];
+    let offset = 0;
+    const msgs = [];
 
     /* for every msg in vector */
     while (offset < blob.byteLength) {
-      var msg = this.bufferToMessage(new DataView(blob, offset));
+      const msg = this.bufferToMessage(new DataView(blob, offset));
 
       if (msg !== undefined) {
         msgs.push(msg);

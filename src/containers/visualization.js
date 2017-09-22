@@ -127,8 +127,6 @@ class Visualization extends React.Component {
   }
 
   handleKeydown(e) {
-    console.log(e);
-
     switch (e.key) {
       case ' ':
       case 'p':

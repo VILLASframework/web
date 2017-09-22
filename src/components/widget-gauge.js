@@ -19,19 +19,19 @@ class WidgetGauge extends Component {
 
     this.state = {
       value: 0,
-      minValue: 0,
-      maxValue: 1
+      minValue: null,
+      maxValue: null
     };
   }
 
   componentDidMount() {
     this.gauge = new Gauge(this.gaugeCanvas).setOptions(this.computeGaugeOptions(this.props.widget));
-    this.gauge.maxValue = this.state.maxValue;
-    this.gauge.setMinValue(this.state.minValue);
+    //this.gauge.maxValue = this.state.maxValue;
+    //this.gauge.setMinValue(this.state.minValue);
     this.gauge.animationSpeed = 30;
-    this.gauge.set(this.state.value);
+    //this.gauge.set(this.state.value);
 
-    this.updateLabels(this.state.minValue, this.state.maxValue);
+    //this.updateLabels(this.state.minValue, this.state.maxValue);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -52,7 +52,7 @@ class WidgetGauge extends Component {
     // Take just 3 decimal positions
     // Note: Favor this method over Number.toFixed(n) in order to avoid a type conversion, since it returns a String
     if (signal != null) {
-      const value = Math.round( signal[signal.length - 1].y * 1e3 ) / 1e3;
+      const value = Math.round(signal[signal.length - 1].y * 1e3) / 1e3;
       if (this.state.value !== value && value != null) {
         this.setState({ value });
 
@@ -60,6 +60,22 @@ class WidgetGauge extends Component {
         let updateLabels = false;
         let minValue = this.state.minValue;
         let maxValue = this.state.maxValue;
+
+        if (minValue == null) {
+          minValue = value - 0.5;
+          updateLabels = true;
+
+          this.setState({ minValue });
+          this.gauge.setMinValue(minValue);
+        }
+
+        if (maxValue == null) {
+          maxValue = value + 0.5;
+          updateLabels = true;
+
+          this.setState({ maxValue });
+          this.gauge.maxValue = maxValue;
+        }
 
         if (nextProps.widget.valueUseMinMax) {
           if (this.state.minValue > nextProps.widget.valueMin) {

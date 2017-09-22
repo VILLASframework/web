@@ -24,7 +24,13 @@ class Plot extends React.Component {
 
     // create dummy axes
     const xScale = scaleTime().domain([Date.now() - props.time * 1000, Date.now()]).range([leftMargin, props.width]);
-    const yScale = scaleLinear().domain([0, 10]).range([props.height, bottomMargin]);
+    let yScale;
+
+    if (props.yUseMinMax) {
+      yScale = scaleLinear().domain([props.yMin, props.yMax]).range([props.height, bottomMargin]);
+    } else {
+      yScale = scaleLinear().domain([0, 10]).range([props.height, bottomMargin]);
+    }
 
     const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(date => timeFormat("%M:%S")(date));
     const yAxis = axisLeft().scale(yScale).ticks(5);
@@ -38,19 +44,29 @@ class Plot extends React.Component {
   }
 
   componentDidMount() {
-    this.interval = setInterval(this.tick, 50);
+    this.createInterval();
   }
 
   componentWillUnmount() {
-    clearInterval(this.interval);
+    this.removeInterval();
   }
 
   componentWillReceiveProps(nextProps) {
-    // check if data is valid
+    if (nextProps.time !== this.props.time) {
+      this.createInterval();
+    }
+
+    // check if data is invalid
     if (nextProps.data == null || nextProps.data.length === 0 || nextProps.data[0].length === 0) {
       // create empty plot axes
       const xScale = scaleTime().domain([Date.now() - 5 * nextProps.time * 1000, Date.now()]).range([leftMargin, nextProps.width]);
-      const yScale = scaleLinear().domain([0, 10]).range([nextProps.height, bottomMargin]);
+      let yScale;
+      
+      if (nextProps.yUseMinMax) {
+        yScale = scaleLinear().domain([nextProps.yMin, nextProps.yMax]).range([nextProps.height, bottomMargin]);
+      } else {
+        yScale = scaleLinear().domain([0, 10]).range([nextProps.height, bottomMargin]);
+      }
   
       const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(date => timeFormat("%M:%S")(date));
       const yAxis = axisLeft().scale(yScale).ticks(5);
@@ -72,25 +88,46 @@ class Plot extends React.Component {
     this.setState({ data });
   }
 
+  createInterval() {
+    this.removeInterval();
+
+    if (this.props.time < 30) {
+      this.interval = setInterval(this.tick, 50);
+    } else if (this.props.time < 120) {
+      this.interval = setInterval(this.tick, 100);
+    } else if (this.props.time < 300) {
+      this.interval = setInterval(this.tick, 200);
+    } else {
+      this.interval = setInterval(this.tick, 1000);
+    }
+  }
+
+  removeInterval() {
+    if (this.interval != null) {
+      clearInterval(this.interval);
+
+      this.interval = null;
+    }
+  }
+
   tick = () => {
     if (this.state.data == null || this.props.paused === true) {
       return;
     }
 
     // calculate yRange
-    let yRange;
+    let yRange = [0, 0];
     
     if (this.props.yUseMinMax) {
       yRange = [this.props.yMin, this.props.yMax];
-    } else {
-      yRange = [0, 0];
+    } else if (this.props.data.length > 0) {
+      yRange = [this.props.data[0][0].y, this.props.data[0][0].y];
 
-      this.props.data.map(values => {
+      this.props.data.forEach(values => {
         const range = extent(values, p => p.y);
+
         if (range[0] < yRange[0]) yRange[0] = range[0];
         if (range[1] > yRange[1]) yRange[1] = range[1];
-
-        return values;
       });
     }
 
