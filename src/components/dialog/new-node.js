@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel, Checkbox } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
@@ -34,7 +34,8 @@ class NewNodeDialog extends React.Component {
       name: '',
       endpoint: '',
       config: {},
-      simulators: []
+      simulators: [],
+      relativeEndpoint: false
     };
   }
 
@@ -49,11 +50,15 @@ class NewNodeDialog extends React.Component {
   }
 
   handleChange(e) {
-    this.setState({ [e.target.id]: e.target.value });
+    if (e.target.type === 'checkbox') {
+      this.setState({ [e.target.id]: e.target.checked });
+    } else {
+      this.setState({ [e.target.id]: e.target.value });
+    }
   }
 
   resetState() {
-    this.setState({ name: '', endpoint: '', config: {}, simulators: [] });
+    this.setState({ name: '', endpoint: '', config: {}, simulators: [], relativeEndpoint: false });
   }
 
   validateForm(target) {
@@ -89,6 +94,9 @@ class NewNodeDialog extends React.Component {
             <ControlLabel>Endpoint</ControlLabel>
             <FormControl type="text" placeholder="Enter endpoint" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup>
+            <Checkbox id="relativeEndpoint" checked={this.state.relativeEndpoint} onChange={e => this.handleChange(e)}>Relative Endpoint</Checkbox>
           </FormGroup>
         </form>
       </Dialog>

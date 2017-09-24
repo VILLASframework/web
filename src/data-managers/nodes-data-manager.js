@@ -28,8 +28,16 @@ class NodesDataManager extends RestDataManager {
     super('node', '/nodes');
   }
 
+  getURL(node) {
+    if (node.relativeEndpoint) {
+      return 'http://' + window.location.host + '/' + node.endpoint + '/api/v1';
+    } else {
+      return 'http://' + node.endpoint + '/api/v1';
+    }
+  }
+
   getSimulators(node) {
-    RestAPI.post('http://' + node.endpoint + '/api/v1', {
+    RestAPI.post(this.getURL(node), {
       action: 'nodes',
       id: node._id
     }).then(response => {

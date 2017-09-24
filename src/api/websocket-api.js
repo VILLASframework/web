@@ -20,9 +20,9 @@
  ******************************************************************************/
 
 class WebsocketAPI {
-  addSocket(endpoint, callbacks) {
+  addSocket(node, callbacks) {
     // create web socket client
-    var socket = new WebSocket(this.getURL(endpoint), 'live');
+    const socket = new WebSocket(this.getURL(node), 'live');
     socket.binaryType = 'arraybuffer';
 
     // register callbacks
@@ -34,8 +34,12 @@ class WebsocketAPI {
     return socket;
   }
 
-  getURL(endpoint) {
-    return 'ws://' + endpoint;
+  getURL(node) {
+    if (node.relativeEndpoint) {
+      return 'ws://' + window.location.host + '/' + node.endpoint;
+    } else {
+      return 'ws://' + node.endpoint;
+    }
   }
 }
 

@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel, Checkbox } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
@@ -34,7 +34,8 @@ class ImportNodeDialog extends React.Component {
     this.state = {
       name: '',
       endpoint: '',
-      simulators: []
+      simulators: [],
+      relativeEndpoint: false
     };
   }
 
@@ -47,11 +48,15 @@ class ImportNodeDialog extends React.Component {
   }
 
   handleChange(e) {
-    this.setState({ [e.target.id]: e.target.value });
+    if (e.target.type === 'checkbox') {
+      this.setState({ [e.target.id]: e.target.checked });
+    } else {
+      this.setState({ [e.target.id]: e.target.value });
+    }
   }
 
   resetState() {
-    this.setState({ name: '', endpoint: '' });
+    this.setState({ name: '', endpoint: '', relativeEndpoint: false });
 
     this.imported = false;
   }
@@ -71,7 +76,7 @@ class ImportNodeDialog extends React.Component {
       // read simulator
       const node = JSON.parse(event.target.result);
       self.imported = true;
-      self.setState({ name: node.name, endpoint: node.endpoint, simulators: node.simulators });
+      self.setState({ name: node.name, endpoint: node.endpoint, simulators: node.simulators, relativeEndpoint: node.relativeEndpoint });
     };
 
     reader.readAsText(file);
@@ -115,6 +120,9 @@ class ImportNodeDialog extends React.Component {
             <ControlLabel>Endpoint</ControlLabel>
             <FormControl readOnly={!this.imported} type="text" placeholder="Enter endpoint" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup>
+            <Checkbox id="relativeEndpoint" checked={this.state.relativeEndpoint} onChange={e => this.handleChange(e)}>Relative Endpoint</Checkbox>
           </FormGroup>
         </form>
       </Dialog>

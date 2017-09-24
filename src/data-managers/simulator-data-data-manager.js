@@ -30,18 +30,18 @@ class SimulatorDataDataManager {
   open(endpoint, node) {
     // pass signals to onOpen callback
     if (this._sockets[node._id] != null) {
-      if (this._sockets[node._id].url !== WebsocketAPI.getURL(endpoint)) {
+      if (this._sockets[node._id].url !== WebsocketAPI.getURL(node)) {
         // replace connection, since endpoint changed
         this._sockets.close();
 
-        this._sockets[node._id] = WebsocketAPI.addSocket(endpoint, { onOpen: (event) => this.onOpen(event, node), onClose: (event) => this.onClose(event, node), onMessage: (event) => this.onMessage(event, node) });
+        this._sockets[node._id] = WebsocketAPI.addSocket(node, { onOpen: (event) => this.onOpen(event, node), onClose: (event) => this.onClose(event, node), onMessage: (event) => this.onMessage(event, node) });
       }
     } else {
       // set flag if a socket to this simulator was already create before
       if (this._sockets[node._id] === null) {
-        this._sockets[node._id] = WebsocketAPI.addSocket(endpoint, { onOpen: (event) => this.onOpen(event, node, false), onClose: (event) => this.onClose(event, node), onMessage: (event) => this.onMessage(event, node) });
+        this._sockets[node._id] = WebsocketAPI.addSocket(node, { onOpen: (event) => this.onOpen(event, node, false), onClose: (event) => this.onClose(event, node), onMessage: (event) => this.onMessage(event, node) });
       } else {
-        this._sockets[node._id] = WebsocketAPI.addSocket(endpoint, { onOpen: (event) => this.onOpen(event, node, true), onClose: (event) => this.onClose(event, node), onMessage: (event) => this.onMessage(event, node) });
+        this._sockets[node._id] = WebsocketAPI.addSocket(node, { onOpen: (event) => this.onOpen(event, node, true), onClose: (event) => this.onClose(event, node), onMessage: (event) => this.onMessage(event, node) });
       }
     }
   }
