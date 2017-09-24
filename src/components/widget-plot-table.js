@@ -44,7 +44,6 @@ class WidgetPlotTable extends Component {
 
     // Identify if there was a change in the preselected signals
     if (nextProps.simulation && (JSON.stringify(nextProps.widget.preselectedSignals) !== JSON.stringify(this.props.widget.preselectedSignals) || this.state.preselectedSignals.length === 0)) {
-
       // Update the currently selected signals by intersecting with the preselected signals
       // Do the same with the plot values
       var intersection = this.computeIntersection(nextProps.widget.preselectedSignals, nextProps.widget.signals);

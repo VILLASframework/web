@@ -59,7 +59,7 @@ class Plot extends React.Component {
     // check if data is invalid
     if (nextProps.data == null || nextProps.data.length === 0 || nextProps.data[0].length === 0) {
       // create empty plot axes
-      const xScale = scaleTime().domain([Date.now() - 5 * nextProps.time * 1000, Date.now()]).range([leftMargin, nextProps.width]);
+      const xScale = scaleTime().domain([Date.now() -  nextProps.time * 1000, Date.now()]).range([leftMargin, nextProps.width]);
       let yScale;
       
       if (nextProps.yUseMinMax) {
@@ -112,6 +112,7 @@ class Plot extends React.Component {
 
   tick = () => {
     if (this.state.data == null || this.props.paused === true) {
+      this.setState({ lines: null });
       return;
     }
 

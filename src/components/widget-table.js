@@ -62,10 +62,12 @@ class WidgetTable extends Component {
     var rows = [];
 
     nextProps.data[simulator.node][simulator.simulator].values.forEach((signal, index) => {
-      rows.push({
-        name: simulationModel.mapping[index].name,
-        value: signal[signal.length - 1].y.toFixed(3)
-      })
+      if (index < simulationModel.mapping.length) {
+        rows.push({
+          name: simulationModel.mapping[index].name,
+          value: signal[signal.length - 1].y.toFixed(3)
+        });
+      }
     });
 
     this.setState({ rows: rows, sequence: nextProps.data[simulator.node][simulator.simulator].sequence });

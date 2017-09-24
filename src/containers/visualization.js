@@ -430,7 +430,7 @@ class Visualization extends React.Component {
 
     if (this.state.editing) {
       editingControls.push(
-        <div>
+        <div key={editingControls.length}>
           <span>Grid: {this.state.visualization.grid > 1 ? this.state.visualization.grid : 'Disabled'}</span>
           <Slider value={this.state.visualization.grid} style={{ width: '80px' }} step={5} onChange={value => this.setGrid(value)} />
         </div>
