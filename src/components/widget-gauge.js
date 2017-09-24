@@ -180,7 +180,7 @@ class WidgetGauge extends Component {
 
     if (this.props.simulation) {
       const simulationModel = this.props.simulation.models.filter((model) => model.simulator.node === this.props.widget.simulator.node && model.simulator.simulator === this.props.widget.simulator.simulator)[0];
-      signalType = (simulationModel != null && simulationModel.length > 0) ? simulationModel.mapping[this.props.widget.signal].type : '';
+      signalType = (simulationModel != null && simulationModel.length > 0 && this.props.widget.signal < simulationModel.length) ? simulationModel.mapping[this.props.widget.signal].type : '';
     }
 
     return (

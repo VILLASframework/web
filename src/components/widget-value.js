@@ -46,7 +46,10 @@ class WidgetValue extends Component {
 
     if (nextProps.simulation) {
       const simulationModel = nextProps.simulation.models.find(model => model.simulator.node === node && model.simulator.simulator === simulator);
-      unit = simulationModel.mapping[nextProps.widget.signal].type;
+      
+      if (nextProps.widget.signal < simulationModel.mapping.length) {
+        unit = simulationModel.mapping[nextProps.widget.signal].type;
+      }
     }
     
     // check if value has changed
