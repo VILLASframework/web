@@ -50,7 +50,7 @@ class WidgetPlot extends React.Component {
       // Query the signals that will be displayed in the legend
       const legend = model.mapping.reduce( (accum, model_signal, signal_index) => {
         if (chosenSignals.includes(signal_index)) {
-          accum.push({ index: signal_index, name: model_signal.name });
+          accum.push({ index: signal_index, name: model_signal.name, type: model_signal.type });
         }
         
         return accum;

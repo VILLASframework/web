@@ -149,15 +149,26 @@ class Plot extends React.Component {
   }
 
   render() {
-    return <svg width={this.props.width + leftMargin} height={this.props.height + bottomMargin}>
-      <g ref={node => select(node).call(this.state.xAxis)} style={{ transform: `translateY(${this.props.height}px)` }} />
-      <g ref={node => select(node).call(this.state.yAxis)} style={{ transform: `translateX(${leftMargin}px)`}} />
+    const yLabelPos = {
+      x: 12,
+      y: this.props.height / 2
+    }
+
+    let labelMargin = 0;
+
+    if (this.props.yLabel !== "") {
+      labelMargin = 20;
+    }
+
+    return <svg width={this.props.width + leftMargin + labelMargin} height={this.props.height + bottomMargin}>
+      <g ref={node => select(node).call(this.state.xAxis)} style={{ transform: `translateX(${labelMargin}px) translateY(${this.props.height}px)` }} />
+      <g ref={node => select(node).call(this.state.yAxis)} style={{ transform: `translateX(${leftMargin + labelMargin}px)`}} />
       
-      <text strokeWidth="0.01" textAnchor="left" x={10} y={15}>{this.props.yLabel}</text>
+      <text strokeWidth="0.01" textAnchor="middle" x={yLabelPos.x} y={yLabelPos.y} transform={`rotate(270 ${yLabelPos.x} ${yLabelPos.y})`}>{this.props.yLabel}</text>
 
       <defs>
         <clipPath id="lineClipPath">
-          <rect x={leftMargin} y={bottomMargin} width={this.props.width} height={this.props.height} />
+          <rect x={leftMargin + labelMargin} y={bottomMargin} width={this.props.width} height={this.props.height} />
         </clipPath>
       </defs>
 

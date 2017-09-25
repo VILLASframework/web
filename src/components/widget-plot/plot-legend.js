@@ -17,7 +17,7 @@ class PlotLegend extends React.Component {
     return <div className="plot-legend">
       {this.props.signals.map(signal => 
         <div key={signal.index} className="signal-legend">
-          <span className="legend-color" style={{ background: colorScale(signal.index) }}>&nbsp;&nbsp;</span>{signal.name}
+          <span className="legend-color" style={{ background: colorScale(signal.index) }}>&nbsp;&nbsp;</span>{signal.name} [{signal.type}]
         </div>
       )}
     </div>;
