@@ -17,19 +17,25 @@ import { timeFormat } from 'd3-time-format';
 
 const leftMargin = 30;
 const bottomMargin = 20;
+const rightMargin = 10;
 
 class Plot extends React.Component {
   constructor(props) {
     super(props);
 
     // create dummy axes
-    const xScale = scaleTime().domain([Date.now() - props.time * 1000, Date.now()]).range([leftMargin, props.width]);
+    let labelMargin = 0;
+    if (props.yLabel !== '') {
+      labelMargin = 20;
+    }
+
+    const xScale = scaleTime().domain([Date.now() - props.time * 1000, Date.now()]).range([0, props.width - leftMargin - labelMargin - rightMargin]);
     let yScale;
 
     if (props.yUseMinMax) {
-      yScale = scaleLinear().domain([props.yMin, props.yMax]).range([props.height, bottomMargin]);
+      yScale = scaleLinear().domain([props.yMin, props.yMax]).range([props.height, 0]);
     } else {
-      yScale = scaleLinear().domain([0, 10]).range([props.height, bottomMargin]);
+      yScale = scaleLinear().domain([0, 10]).range([props.height, 0]);
     }
 
     const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(date => timeFormat("%M:%S")(date));
@@ -39,7 +45,8 @@ class Plot extends React.Component {
       data: null,
       lines: null,
       xAxis,
-      yAxis
+      yAxis,
+      labelMargin
     };
   }
 
@@ -56,22 +63,27 @@ class Plot extends React.Component {
       this.createInterval();
     }
 
+    let labelMargin = 0;
+    if (nextProps.yLabel !== '') {
+      labelMargin = 20;
+    }
+
     // check if data is invalid
     if (nextProps.data == null || nextProps.data.length === 0 || nextProps.data[0].length === 0) {
       // create empty plot axes
-      const xScale = scaleTime().domain([Date.now() -  nextProps.time * 1000, Date.now()]).range([leftMargin, nextProps.width]);
+      const xScale = scaleTime().domain([Date.now() -  nextProps.time * 1000, Date.now()]).range([0, nextProps.width - leftMargin - labelMargin - rightMargin]);
       let yScale;
       
       if (nextProps.yUseMinMax) {
-        yScale = scaleLinear().domain([nextProps.yMin, nextProps.yMax]).range([nextProps.height, bottomMargin]);
+        yScale = scaleLinear().domain([nextProps.yMin, nextProps.yMax]).range([nextProps.height, 0]);
       } else {
-        yScale = scaleLinear().domain([0, 10]).range([nextProps.height, bottomMargin]);
+        yScale = scaleLinear().domain([0, 10]).range([nextProps.height, 0]);
       }
   
       const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(date => timeFormat("%M:%S")(date));
       const yAxis = axisLeft().scale(yScale).ticks(5);
 
-      this.setState({ data: null, xAxis, yAxis });
+      this.setState({ data: null, xAxis, yAxis, labelMargin });
       return;
     }
 
@@ -85,7 +97,7 @@ class Plot extends React.Component {
       data = data.map(values => values.slice(index));
     }
 
-    this.setState({ data });
+    this.setState({ data, labelMargin });
   }
 
   createInterval() {
@@ -133,8 +145,8 @@ class Plot extends React.Component {
     }
 
     // create scale functions for both axes
-    const xScale = scaleTime().domain([Date.now() - this.props.time * 1000, Date.now()]).range([leftMargin, this.props.width]);
-    const yScale = scaleLinear().domain(yRange).range([this.props.height, bottomMargin]);
+    const xScale = scaleTime().domain([Date.now() - this.props.time * 1000, Date.now()]).range([0, this.props.width - leftMargin - this.state.labelMargin - rightMargin]);
+    const yScale = scaleLinear().domain(yRange).range([this.props.height - bottomMargin, 0]);
 
     const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(date => timeFormat("%M:%S")(date));
     const yAxis = axisLeft().scale(yScale).ticks(5);
@@ -154,21 +166,16 @@ class Plot extends React.Component {
       y: this.props.height / 2
     }
 
-    let labelMargin = 0;
-
-    if (this.props.yLabel !== "") {
-      labelMargin = 20;
-    }
-
-    return <svg width={this.props.width + leftMargin + labelMargin} height={this.props.height + bottomMargin}>
-      <g ref={node => select(node).call(this.state.xAxis)} style={{ transform: `translateX(${labelMargin}px) translateY(${this.props.height}px)` }} />
-      <g ref={node => select(node).call(this.state.yAxis)} style={{ transform: `translateX(${leftMargin + labelMargin}px)`}} />
+    return <svg width={this.props.width - rightMargin + 1} height={this.props.height + bottomMargin}>
+      <g ref={node => select(node).call(this.state.xAxis)} style={{ transform: `translateX(${leftMargin + this.state.labelMargin}px) translateY(${this.props.height - bottomMargin}px)` }} />
+      <g ref={node => select(node).call(this.state.yAxis)} style={{ transform: `translateX(${leftMargin + this.state.labelMargin}px)`}} />
       
       <text strokeWidth="0.01" textAnchor="middle" x={yLabelPos.x} y={yLabelPos.y} transform={`rotate(270 ${yLabelPos.x} ${yLabelPos.y})`}>{this.props.yLabel}</text>
+      <text strokeWidth="0.01" textAnchor="end" x={this.props.width - rightMargin} y={this.props.height + bottomMargin - 5}>Time [s]</text>
 
       <defs>
         <clipPath id="lineClipPath">
-          <rect x={leftMargin + labelMargin} y={bottomMargin} width={this.props.width} height={this.props.height} />
+          <rect x={leftMargin + this.state.labelMargin} y={0} width={this.props.width - leftMargin - this.state.labelMargin - rightMargin} height={this.props.height - bottomMargin} />
         </clipPath>
       </defs>
 
