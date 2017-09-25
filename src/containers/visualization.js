@@ -82,7 +82,7 @@ class Visualization extends React.Component {
     // TODO: Don't fetch token from local, use user-store!
     const token = localStorage.getItem('token');
 
-    document.addEventListener('keydown', this.handleKeydown.bind(this));
+    //document.addEventListener('keydown', this.handleKeydown.bind(this));
 
     AppDispatcher.dispatch({
       type: 'visualizations/start-load',
@@ -91,7 +91,7 @@ class Visualization extends React.Component {
   }
 
   componentWillUnmount() {
-      document.removeEventListener('keydown', this.handleKeydown.bind(this));
+      //document.removeEventListener('keydown', this.handleKeydown.bind(this));
   }
 
   componentDidUpdate() {
@@ -126,7 +126,7 @@ class Visualization extends React.Component {
     }
   }
 
-  handleKeydown(e) {
+  /*handleKeydown(e) {
     switch (e.key) {
       case ' ':
       case 'p':
@@ -140,7 +140,7 @@ class Visualization extends React.Component {
         break;
       default:
     }
-  }
+  }*/
 
   getNewWidgetKey() {
     // Increase the counter and update the state
