@@ -19,6 +19,8 @@ const leftMargin = 30;
 const bottomMargin = 20;
 const rightMargin = 10;
 
+let uniqueIdentifier = 0;
+
 class Plot extends React.Component {
   constructor(props) {
     super(props);
@@ -33,9 +35,9 @@ class Plot extends React.Component {
     let yScale;
 
     if (props.yUseMinMax) {
-      yScale = scaleLinear().domain([props.yMin, props.yMax]).range([props.height, 0]);
+      yScale = scaleLinear().domain([props.yMin, props.yMax]).range([props.height - bottomMargin, 0]);
     } else {
-      yScale = scaleLinear().domain([0, 10]).range([props.height, 0]);
+      yScale = scaleLinear().domain([0, 10]).range([props.height - bottomMargin, 0]);
     }
 
     const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(date => timeFormat("%M:%S")(date));
@@ -46,7 +48,8 @@ class Plot extends React.Component {
       lines: null,
       xAxis,
       yAxis,
-      labelMargin
+      labelMargin,
+      identifier: uniqueIdentifier++
     };
   }
 
@@ -75,9 +78,9 @@ class Plot extends React.Component {
       let yScale;
       
       if (nextProps.yUseMinMax) {
-        yScale = scaleLinear().domain([nextProps.yMin, nextProps.yMax]).range([nextProps.height, 0]);
+        yScale = scaleLinear().domain([nextProps.yMin, nextProps.yMax]).range([nextProps.height - bottomMargin, 0]);
       } else {
-        yScale = scaleLinear().domain([0, 10]).range([nextProps.height, 0]);
+        yScale = scaleLinear().domain([0, 10]).range([nextProps.height - bottomMargin, 0]);
       }
   
       const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(date => timeFormat("%M:%S")(date));
@@ -174,12 +177,12 @@ class Plot extends React.Component {
       <text strokeWidth="0.01" textAnchor="end" x={this.props.width - rightMargin} y={this.props.height + bottomMargin - 5}>Time [s]</text>
 
       <defs>
-        <clipPath id="lineClipPath">
+        <clipPath id={"lineClipPath" + this.state.identifier}>
           <rect x={leftMargin + this.state.labelMargin} y={0} width={this.props.width - leftMargin - this.state.labelMargin - rightMargin} height={this.props.height - bottomMargin} />
         </clipPath>
       </defs>
 
-      <g style={{ clipPath: 'url(#lineClipPath)' }}>
+      <g style={{ clipPath: 'url(#lineClipPath' + this.state.identifier + ')' }}>
         {this.state.lines}
       </g>
     </svg>;
