@@ -64,6 +64,8 @@ class WidgetPlot extends React.Component {
 
   render() {
     return <div className="plot-widget" ref="wrapper">
+      <PlotLegend signals={this.state.legend} />
+
       <div className="widget-plot">
         <Plot
           data={this.state.data}
@@ -77,8 +79,6 @@ class WidgetPlot extends React.Component {
           yLabel={this.props.widget.ylabel}
         />
       </div>
-
-      <PlotLegend signals={this.state.legend} />
     </div>;
   }
 }

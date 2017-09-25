@@ -79,7 +79,8 @@ class WidgetPlotTable extends Component {
               accum.push(
                 {
                   index: signal_index,
-                  name: model_signal.name
+                  name: model_signal.name,
+                  type: model_signal.type
                 }
               )
             }
@@ -129,7 +130,8 @@ class WidgetPlotTable extends Component {
       if (this.state.signals.includes(signal.index)) {
         accum.push({
           index: signal.index,
-          name: signal.name
+          name: signal.name,
+          type: signal.type
         });
       }
       return accum;
@@ -138,6 +140,8 @@ class WidgetPlotTable extends Component {
     return (
       <div className="plot-table-widget" ref="wrapper">
         <div className="content">
+          <PlotLegend signals={legendSignals} />
+
           <div className="table-plot-row">
             <div className="widget-table">
               { checkBoxes.length > 0 ? (
@@ -162,7 +166,6 @@ class WidgetPlotTable extends Component {
               />
             </div>
           </div>
-          <PlotLegend signals={legendSignals} />
         </div>
       </div>
     );
