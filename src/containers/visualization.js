@@ -482,6 +482,7 @@ class Visualization extends React.Component {
               <ToolboxItem name="Gauge" type="widget" />
               <ToolboxItem name="Box" type="widget" />
               <ToolboxItem name="HTML" type="html" />
+              <ToolboxItem name="Topology" type="widget" />
 
               <div className="section-buttons-group-right">
                 { editingControls }
