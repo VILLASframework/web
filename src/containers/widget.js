@@ -190,7 +190,7 @@ class Widget extends React.Component {
     } else if (widget.type === 'HTML') {
       element = <WidgetHTML widget={widget} editing={this.props.editing} />
     } else if (widget.type === 'Topology') {
-      element = <WidgetTopology widget={widget} editing={this.props.editing} />
+      element = <WidgetTopology widget={widget} files={this.state.files} />
     }
 
     const widgetClasses = classNames({

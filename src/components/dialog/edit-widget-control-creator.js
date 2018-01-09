@@ -83,8 +83,10 @@ export default function createControls(widgetType = null, widget = null, session
             );
             break;
         case 'Image':
+            // Restrict to only image file types (MIME)
+            let imageControlFiles = files == null? [] : files.filter(file => file.type.includes('image'));
             dialogControls.push(
-                <EditImageWidgetControl key={0} sessionToken={sessionToken} widget={widget} files={files} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />,
+                <EditImageWidgetControl key={0} sessionToken={sessionToken} widget={widget} files={imageControlFiles} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetAspectControl key={1} widget={widget} handleChange={e => handleChange(e)} />
             );
             break;
@@ -139,6 +141,13 @@ export default function createControls(widgetType = null, widget = null, session
         case 'HTML':
             dialogControls.push(
                 <EditWidgetHTMLContent key={0} widget={widget} placeholder='HTML Code' controlId='content' handleChange={e => handleChange(e)} />
+            );
+            break;
+        case 'Topology':
+            // Restrict to only xml files (MIME)
+            let topologyControlFiles = files == null? [] : files.filter( file => file.type.includes('xml'));
+            dialogControls.push(
+                <EditImageWidgetControl key={0} sessionToken={sessionToken} widget={widget} files={topologyControlFiles} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />
             );
             break;
 
