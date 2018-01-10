@@ -120,7 +120,7 @@ class WidgetTopology extends React.Component {
             this.setState({'visualizationState': 'ready' });
             window.cimxml.clearXmlData()
             window.cimsvg.setFileCount(1);
-            response.text().then( contents => {
+            return response.text().then( contents => {            
               window.cimsvg.loadFile(contents);
               attachComponentEvents();
             });
