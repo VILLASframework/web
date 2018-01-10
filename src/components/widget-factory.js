@@ -143,6 +143,10 @@ class WidgetFactory {
             case 'HTML':
                 widget.content = '<i>Hello World</i>';
                 break;
+            case 'Topology':
+                widget.width = 600;
+                widget.height = 400;
+                break;
 
             default:
                 widget.width = 100;
