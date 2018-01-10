@@ -53,13 +53,13 @@ class ToolboxItem extends React.Component {
 
     if (this.props.disabled === false) {
       return this.props.connectDragSource(
-        <span className={itemClass}>
+        <span className={itemClass} title={this.props.title}>
           {this.props.name}
         </span>
       , {dropEffect});
     } else {
       return (
-        <span className={itemClass}>
+        <span className={itemClass} title={this.props.title}>
           {this.props.name}
         </span>
       );
