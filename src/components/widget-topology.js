@@ -49,7 +49,7 @@ const msgContainerStyle = Object.assign({
   backgroundColor: '#ececec'
 },spinnerContainerStyle)
 
-const failedMsgStyle = {
+const msgStyle = {
   fontWeight: 'bold'
 }
 
@@ -78,6 +78,11 @@ class WidgetTopology extends React.Component {
     }
   }
 
+  attachComponentEvents() {
+    window.onMouseOver = (e) => console.log(e);
+    window.onMouseLeave = (e) => console.log(e);
+  }
+
   componentWillReceiveProps(nextProps) {
     const file = nextProps.files.find(file => file._id === nextProps.widget.file);
     // Ensure model is requested only once or a different was selected
@@ -90,14 +95,26 @@ class WidgetTopology extends React.Component {
             this.setState({'visualizationState': 'ready' });
             window.cimxml.clearXmlData()
             window.cimsvg.setFileCount(1);
-            response.text().then( contents => window.cimsvg.loadFile(contents));
+            response.text().then( contents => {
+              window.cimsvg.loadFile(contents);
+              this.attachComponentEvents();
+            });
           } else {
             throw new Error('Request failed');
           }
         })
         .catch(error => {
-          this.setState({'visualizationState': 'failed' });
+          this.setState({
+            'visualizationState': 'show_message',
+            'message': 'Topology could not be loaded.'});
         });
+      }
+    } else {
+      // No file has been selected
+      if (!nextProps.widget.file) {
+        this.setState({
+          'visualizationState': 'show_message',
+          'message': 'Select a topology model first.'});
       }
     }
   }
@@ -108,8 +125,8 @@ class WidgetTopology extends React.Component {
     switch(this.state.visualizationState) {
       case 'loading':
         markup = <div style={spinnerContainerStyle}><div className="loader" /></div>; break;
-      case 'failed':
-        markup = <div style={msgContainerStyle}><div style={failedMsgStyle}>Topology could not be loaded</div></div>; break;
+      case 'show_message':
+        markup = <div style={msgContainerStyle}><div style={msgStyle}>{ this.state.message }</div></div>; break;
       default:
         markup = (<div>
           <ReactSVGPanZoom
