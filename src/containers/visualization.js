@@ -454,6 +454,10 @@ class Visualization extends React.Component {
       </Button>
     );
 
+    // Only one topology widget at the time is supported
+    let thereIsTopologyWidget = current_widgets && Object.values(current_widgets).filter( widget => widget.type === 'Topology').length > 0;
+    let topologyItemMsg = !thereIsTopologyWidget? '' : 'Currently only one is supported';
+    
     return (
       <div className={boxClasses} >
         <div className='section-header box-header'>
@@ -482,7 +486,7 @@ class Visualization extends React.Component {
               <ToolboxItem name="Gauge" type="widget" />
               <ToolboxItem name="Box" type="widget" />
               <ToolboxItem name="HTML" type="html" />
-              <ToolboxItem name="Topology" type="widget" />
+              <ToolboxItem name="Topology" type="widget" disabled={thereIsTopologyWidget} title={topologyItemMsg}/>
 
               <div className="section-buttons-group-right">
                 { editingControls }
