@@ -53,6 +53,32 @@ const msgStyle = {
   fontWeight: 'bold'
 }
 
+// Initialize functions
+function attachComponentEvents() {
+  window.onMouseOver = (e) => show(textSibling(e));
+  window.onMouseLeave = (e) => hide(textSibling(e));
+}
+
+function textSibling(e) {
+  // Find sibling text element and toggle its visibility
+  let gParent = e.target.parentElement;
+  return gParent.getElementsByTagName('text')[0];
+}
+
+function show(element) {
+  element.style.visibility = 'inherit';
+}
+
+function hide(element) {
+  element.style.visibility = 'hidden';
+}
+
+// De-initialize functions
+function detachComponentEvents() {
+  window.onMouseOver = null;
+  window.onMouseLeave = null;
+}
+
 class WidgetTopology extends React.Component {
   constructor(props) {
     super(props);
@@ -78,9 +104,8 @@ class WidgetTopology extends React.Component {
     }
   }
 
-  attachComponentEvents() {
-    window.onMouseOver = (e) => console.log(e);
-    window.onMouseLeave = (e) => console.log(e);
+  componentWillUnmount() {
+    detachComponentEvents();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -97,7 +122,7 @@ class WidgetTopology extends React.Component {
             window.cimsvg.setFileCount(1);
             response.text().then( contents => {
               window.cimsvg.loadFile(contents);
-              this.attachComponentEvents();
+              attachComponentEvents();
             });
           } else {
             throw new Error('Request failed');
