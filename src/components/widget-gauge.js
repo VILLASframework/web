@@ -40,15 +40,14 @@ class WidgetGauge extends Component {
 
     if (nextProps.data == null || nextProps.data[simulator.node] == null
       || nextProps.data[simulator.node][simulator.simulator] == null 
-      || nextProps.data[simulator.node][simulator.simulator].length === 0 
-      || nextProps.data[simulator.node][simulator.simulator].values.length === 0  
-      || nextProps.data[simulator.node][simulator.simulator].values[0].length === 0) {
+      || nextProps.data[simulator.node][simulator.simulator].output.values.length === 0  
+      || nextProps.data[simulator.node][simulator.simulator].output.values[0].length === 0) {
       this.setState({ value: 0 });
       return;
     }
 
     // check if value has changed
-    const signal = nextProps.data[simulator.node][simulator.simulator].values[nextProps.widget.signal];
+    const signal = nextProps.data[simulator.node][simulator.simulator].output.values[nextProps.widget.signal];
     // Take just 3 decimal positions
     // Note: Favor this method over Number.toFixed(n) in order to avoid a type conversion, since it returns a String
     if (signal != null) {
@@ -180,7 +179,7 @@ class WidgetGauge extends Component {
 
     if (this.props.simulation) {
       const simulationModel = this.props.simulation.models.filter((model) => model.simulator.node === this.props.widget.simulator.node && model.simulator.simulator === this.props.widget.simulator.simulator)[0];
-      signalType = (simulationModel != null && simulationModel.length > 0 && this.props.widget.signal < simulationModel.length) ? simulationModel.mapping[this.props.widget.signal].type : '';
+      signalType = (simulationModel != null && simulationModel.length > 0 && this.props.widget.signal < simulationModel.length) ? simulationModel.outputMapping[this.props.widget.signal].type : '';
     }
 
     return (

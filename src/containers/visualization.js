@@ -480,9 +480,9 @@ class Visualization extends React.Component {
               <ToolboxItem name="Label" type="widget" />
               <ToolboxItem name="Image" type="widget" />
               <ToolboxItem name="PlotTable" type="widget" />
-              <ToolboxItem name="Button" type="widget" disabled />
-              <ToolboxItem name="NumberInput" type="widget" disabled />
-              <ToolboxItem name="Slider" type="widget" disabled />
+              <ToolboxItem name="Button" type="widget" />
+              <ToolboxItem name="NumberInput" type="widget" />
+              <ToolboxItem name="Slider" type="widget" />
               <ToolboxItem name="Gauge" type="widget" />
               <ToolboxItem name="Box" type="widget" />
               <ToolboxItem name="HTML" type="html" />

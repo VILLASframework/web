@@ -55,11 +55,9 @@ class WidgetSlider extends Component {
   }
 
   valueChanged(newValue) {
-    // Enable to propagate action
-    // let newWidget = Object.assign({}, this.props.widget, { 
-    //     value: newValue
-    //   });
-    // this.props.onWidgetChange(newWidget);
+    if (this.props.onInputChanged) {
+      this.props.onInputChanged(newValue);
+    }
   }
 
   render() {

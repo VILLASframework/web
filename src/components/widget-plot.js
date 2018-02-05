@@ -43,12 +43,12 @@ class WidgetPlot extends React.Component {
       const model = simulation.models.find(model => model.simulator.node === simulator.node && model.simulator.simulator === simulator.simulator);
       const chosenSignals = nextProps.widget.signals;
 
-      const data = nextProps.data[simulator.node][simulator.simulator].values.filter((values, index) => (
+      const data = nextProps.data[simulator.node][simulator.simulator].output.values.filter((values, index) => (
         nextProps.widget.signals.findIndex(value => value === index) !== -1
       ));
 
       // Query the signals that will be displayed in the legend
-      const legend = model.mapping.reduce( (accum, model_signal, signal_index) => {
+      const legend = model.outputMapping.reduce( (accum, model_signal, signal_index) => {
         if (chosenSignals.includes(signal_index)) {
           accum.push({ index: signal_index, name: model_signal.name, type: model_signal.type });
         }

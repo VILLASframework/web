@@ -29,6 +29,7 @@ class RestDataManager {
     this.url = url;
     this.type = type;
     this.keyFilter = keyFilter;
+    this.onLoad = null;
   }
 
   makeURL(part) {
@@ -61,6 +62,10 @@ class RestDataManager {
           type: this.type + 's/loaded',
           data: data
         });
+
+        if (this.onLoad != null) {
+          this.onLoad(data);
+        }
       }).catch(error => {
         AppDispatcher.dispatch({
           type: this.type + 's/load-error',
@@ -78,6 +83,10 @@ class RestDataManager {
           type: this.type + 's/loaded',
           data: data
         });
+
+        if (this.onLoad != null) {
+          this.onLoad(data);
+        }
       }).catch(error => {
         AppDispatcher.dispatch({
           type: this.type + 's/load-error',
