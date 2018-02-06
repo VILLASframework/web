@@ -24,15 +24,12 @@ We recommend Docker to get started quickly:
 
 ```bash
 $ git clone --recursive git@git.rwth-aachen.de:VILLASframework/VILLASweb.git
+$ cd VILLASweb
 $ npm install
-$ npm build
-$ docker-compose up
-$ ./sample-data.sh import
+$ npm start
 ```
 
 The default user and password are configured in the `config.js` file of the _backend_. By default they are: __admin__ / __admin__.
-
-For development you can use `npm start` to spawn a local webserver.
 
 ## Copyright
 
