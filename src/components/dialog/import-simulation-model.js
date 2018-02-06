@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
 
 import Table from '../table';
 import TableColumn from '../table-column';
@@ -36,8 +36,10 @@ class ImportSimulationModelDialog extends React.Component {
     this.state = {
       name: '',
       simulator: { node: '', simulator: '' },
-      length: '1',
-      mapping: [ { name: 'Signal', type: 'Type' } ]
+      outputLength: '1',
+      inputLength: '1',
+      outputMapping: [ { name: 'Signal', type: 'Type' } ],
+      inputMapping: [{ name: 'Signal', type: 'Type' }]
     };
   }
 
@@ -53,24 +55,34 @@ class ImportSimulationModelDialog extends React.Component {
     this.setState({
       name: '',
       simulator: { node: this.props.nodes[0] ? this.props.nodes[0]._id : '', simulator: this.props.nodes[0].simulators[0] ? 0 : '' },
-      length: '1',
-      mapping: [ { name: 'Signal', type: 'Type' } ]
+      outputLength: '1',
+      inputLength: '1',
+      outputMapping: [{ name: 'Signal', type: 'Type' }],
+      inputMapping: [{ name: 'Signal', type: 'Type' }]
     });
 
     this.imported = false;
   }
 
   handleChange(e) {
-    if (e.target.id === 'length') {
+    let mapping = null;
+
+    if (e.target.id === 'outputLength') {
+      mapping = this.state.outputMapping;
+    } else if (e.target.id === 'inputLength') {
+      mapping = this.state.inputMapping;
+    }
+
+    if (mapping != null) {
       // change mapping size
-      if (e.target.value > this.state.mapping.length) {
+      if (e.target.value > mapping.length) {
         // add missing signals
-        while (this.state.mapping.length < e.target.value) {
-          this.state.mapping.push({ name: 'Signal', type: 'Type' });
+        while (mapping.length < e.target.value) {
+          mapping.push({ name: 'Signal', type: 'Type' });
         }
       } else {
         // remove signals
-        this.state.mapping.splice(e.target.value, this.state.mapping.length - e.target.value);
+        mapping.splice(e.target.value, mapping.length - e.target.value);
       }
     }
 
@@ -81,8 +93,8 @@ class ImportSimulationModelDialog extends React.Component {
     }
   }
 
-  handleMappingChange(event, row, column) {
-    var mapping = this.state.mapping;
+  handleMappingChange(key, event, row, column) {
+    const mapping = this.state[key];
 
     if (column === 1) {
       mapping[row].name = event.target.value;
@@ -90,7 +102,7 @@ class ImportSimulationModelDialog extends React.Component {
       mapping[row].type = event.target.value;
     }
 
-    this.setState({ mapping: mapping });
+    this.setState({ [key]: mapping });
   }
 
   loadFile(fileList) {
@@ -119,7 +131,8 @@ class ImportSimulationModelDialog extends React.Component {
   validateForm(target) {
     // check all controls
     var name = true;
-    var length = true;
+    let inputLength = true;
+    let outputLength = true;
     var simulator = true;
 
     if (this.state.name === '') {
@@ -131,15 +144,20 @@ class ImportSimulationModelDialog extends React.Component {
     }
 
     // test if simulatorid is a number (in a string, not type of number)
-    if (!/^\d+$/.test(this.state.length)) {
-      length = false;
+    if (!/^\d+$/.test(this.state.outputLength)) {
+      outputLength = false;
     }
 
-    this.valid = name && length && simulator;
+    if (!/^\d+$/.test(this.state.inputLength)) {
+      inputLength = false;
+    }
+
+    this.valid = name && inputLength && outputLength && simulator;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
-    else if (target === 'length') return length ? "success" : "error";
+    else if (target === 'outputLength') return outputLength ? "success" : "error";
+    else if (target === 'inputLength') return inputLength ? "success" : "error";
     else if (target === 'simulator') return simulator ? "success" : "error";
   }
 
@@ -167,17 +185,32 @@ class ImportSimulationModelDialog extends React.Component {
               ))}
             </FormControl>
           </FormGroup>
-          <FormGroup controlId="length" validationState={this.validateForm('length')}>
-            <ControlLabel>Length</ControlLabel>
-            <FormControl readOnly={!this.imported} type="number" placeholder="Enter length" min="1" value={this.state.length} onChange={(e) => this.handleChange(e)} />
+          <FormGroup controlId="outputLength" validationState={this.validateForm('outputLength')}>
+            <ControlLabel>Output Length</ControlLabel>
+            <FormControl type="number" placeholder="Enter length" min="1" value={this.state.outputLength} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="mapping">
-            <ControlLabel>Mapping</ControlLabel>
-            <Table data={this.state.mapping}>
+          <FormGroup controlId="outputMapping">
+            <ControlLabel>Output Mapping</ControlLabel>
+            <HelpBlock>Click Name or Type cell to edit</HelpBlock>
+            <Table data={this.state.outputMapping}>
               <TableColumn title='ID' width='60' dataIndex />
-              <TableColumn title='Name' dataKey='name' inlineEditable onInlineChange={(event, row, column) => this.handleMappingChange(event, row, column)} />
-              <TableColumn title='Type' dataKey='type' inlineEditable onInlineChange={(event, row, column) => this.handleMappingChange(event, row, column)} />
+              <TableColumn title='Name' dataKey='name' inlineEditable onInlineChange={(event, row, column) => this.handleMappingChange('outputMapping', event, row, column)} />
+              <TableColumn title='Type' dataKey='type' inlineEditable onInlineChange={(event, row, column) => this.handleMappingChange('outputMapping', event, row, column)} />
+            </Table>
+          </FormGroup>
+          <FormGroup controlId="inputLength" validationState={this.validateForm('inputLength')}>
+            <ControlLabel>Input Length</ControlLabel>
+            <FormControl type="number" placeholder="Enter length" min="1" value={this.state.inputLength} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="inputMapping">
+            <ControlLabel>Input Mapping</ControlLabel>
+            <HelpBlock>Click Name or Type cell to edit</HelpBlock>
+            <Table data={this.state.inputMapping}>
+              <TableColumn title='ID' width='60' dataIndex />
+              <TableColumn title='Name' dataKey='name' inlineEditable onInlineChange={(event, row, column) => this.handleMappingChange('inputMapping', event, row, column)} />
+              <TableColumn title='Type' dataKey='type' inlineEditable onInlineChange={(event, row, column) => this.handleMappingChange('inputMapping', event, row, column)} />
             </Table>
           </FormGroup>
         </form>

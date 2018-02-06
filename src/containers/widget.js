@@ -153,6 +153,15 @@ class Widget extends React.Component {
     }
   }
 
+  inputDataChanged(widget, data) {
+    AppDispatcher.dispatch({
+      type: 'simulatorData/inputChanged',
+      simulator: widget.simulator,
+      signal: widget.signal,
+      data
+    });
+  }
+
   render() {
     // configure grid
     const grid = [this.props.grid, this.props.grid];
@@ -182,7 +191,7 @@ class Widget extends React.Component {
     } else if (widget.type === 'NumberInput') {
       element = <WidgetNumberInput widget={widget} editing={this.props.editing} />
     } else if (widget.type === 'Slider') {
-      element = <WidgetSlider widget={widget} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } />
+      element = <WidgetSlider widget={widget} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } onInputChanged={(value) => this.inputDataChanged(widget, value)} />
     } else if (widget.type === 'Gauge') {
       element = <WidgetGauge widget={widget} data={this.state.simulatorData} editing={this.props.editing} simulation={this.props.simulation} />
     } else if (widget.type === 'Box') {

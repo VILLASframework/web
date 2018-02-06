@@ -105,12 +105,16 @@ class WidgetFactory {
                 widget.height = 100;
                 widget.background_color = 1;
                 widget.font_color = 0;
+                widget.simulator = defaultSimulator;
+                widget.signal = 0;
                 break;
             case 'NumberInput':
                 widget.minWidth = 200;
                 widget.minHeight = 50;
                 widget.width = 200;
                 widget.height = 50;
+                widget.simulator = defaultSimulator;
+                widget.signal = 0;
                 break;
             case 'Slider':
                 widget.minWidth = 380;
@@ -118,6 +122,8 @@ class WidgetFactory {
                 widget.width = 400;
                 widget.height = 50;
                 widget.orientation = WidgetSlider.OrientationTypes.HORIZONTAL.value; // Assign default orientation
+                widget.simulator = defaultSimulator;
+                widget.signal = 0;
                 break;
             case 'Gauge':
                 widget.simulator = defaultSimulator;

@@ -46,11 +46,30 @@ class SimulationDataStore extends ReduceStore {
       case 'simulatorData/opened':
         // create entry for simulator
         state[action.node._id] = {};
+        return state;
 
-        action.node.simulators.forEach((simulator, index) => {
-          state[action.node._id][index] = { sequence: -1, values: [] };
-        });
+      case 'simulatorData/prepare':
+        if (state[action.node.node] == null) {
+          return state;
+        }
 
+        state[action.node.node][action.node.simulator] = { 
+          output: {
+            sequence: -1,
+            length: action.outputLength,
+            values: []
+          },
+          input: {
+            sequence: -1,
+            length: action.inputLength,
+            version: 2,
+            type: 0,
+            id: action.node.simulator,
+            timestamp: Date.now(),
+            values: new Array(action.inputLength).fill(0)
+          }
+        };
+        
         return state;
 
       case 'simulatorData/data-changed':
@@ -70,27 +89,42 @@ class SimulationDataStore extends ReduceStore {
 
           // add data to simulator
           for (i = 0; i < smp.length; i++) {
-            while (state[action.node._id][index].values.length < i + 1) {
-              state[action.node._id][index].values.push([]);
+            while (state[action.node._id][index].output.values.length < i + 1) {
+              state[action.node._id][index].output.values.push([]);
             }
 
-            state[action.node._id][index].values[i].push({ x: smp.timestamp, y: smp.values[i] });
+            state[action.node._id][index].output.values[i].push({ x: smp.timestamp, y: smp.values[i] });
 
             // erase old values
-            if (state[action.node._id][index].values[i].length > MAX_VALUES) {
-              const pos = state[action.node._id][index].values[i].length - MAX_VALUES;
-              state[action.node._id][index].values[i].splice(0, pos);
+            if (state[action.node._id][index].output.values[i].length > MAX_VALUES) {
+              const pos = state[action.node._id][index].output.values[i].length - MAX_VALUES;
+              state[action.node._id][index].output.values[i].splice(0, pos);
             }
           }
 
           // update metadata
-          state[action.node._id][index].timestamp = smp.timestamp;
-          state[action.node._id][index].sequence = smp.sequence;
+          state[action.node._id][index].output.timestamp = smp.timestamp;
+          state[action.node._id][index].output.sequence = smp.sequence;
         }
 
         // explicit call to prevent array copy
         this.__emitChange();
 
+        return state;
+
+      case 'simulatorData/inputChanged':
+        // find simulator in node array
+        if (state[action.simulator.node] == null || state[action.simulator.node][action.simulator.simulator] == null) {
+          return state;
+        }
+
+        // update message properties
+        state[action.simulator.node][action.simulator.simulator].input.timestamp = Date.now();
+        state[action.simulator.node][action.simulator.simulator].input.sequence++;
+        state[action.simulator.node][action.simulator.simulator].input.values[action.signal] = action.data;
+
+        SimulatorDataDataManager.send(state[action.simulator.node][action.simulator.simulator].input, action.simulator.node);
+        
         return state;
 
       case 'simulatorData/closed':

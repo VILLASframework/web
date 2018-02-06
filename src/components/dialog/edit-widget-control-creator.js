@@ -117,13 +117,17 @@ export default function createControls(widgetType = null, widget = null, session
             break;
         case 'Slider':
             dialogControls.push(
-                <EditWidgetOrientation key={0} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />
+                <EditWidgetOrientation key={0} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetSimulatorControl key={1} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => valueBoundOnChange(e)} />,
+                <EditWidgetSignalControl key={2} widget={widget} input validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />
             );
             break;
         case 'Button':
             dialogControls.push(
                 <EditWidgetColorControl key={0} widget={widget} controlId={'background_color'} label={'Background'} validate={(id) => validateForm(id)} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetColorControl key={1} widget={widget} controlId={'font_color'} label={'Font color'} validate={(id) => validateForm(id)} handleChange={(e) => handleChange(e)} />
+                <EditWidgetColorControl key={1} widget={widget} controlId={'font_color'} label={'Font color'} validate={(id) => validateForm(id)} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetSimulatorControl key={2} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => valueBoundOnChange(e)} />,
+                <EditWidgetSignalControl key={3} widget={widget} input validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />
             );
             break;
         case 'Box':
@@ -148,6 +152,14 @@ export default function createControls(widgetType = null, widget = null, session
             let topologyControlFiles = files == null? [] : files.filter( file => file.type.includes('xml'));
             dialogControls.push(
                 <EditImageWidgetControl key={0} sessionToken={sessionToken} widget={widget} files={topologyControlFiles} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />
+            );
+            break;
+
+        case 'NumberInput':
+            dialogControls.push(
+                <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} validate={id => validateForm(id)} handleChange={e => handleChange(e)} />,
+                <EditWidgetSimulatorControl key={1} widget={widget} validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => valueBoundOnChange(e)} />,
+                <EditWidgetSignalControl key={2} widget={widget} input validate={(id) => validateForm(id)} simulation={simulation} handleChange={(e) => handleChange(e)} />
             );
             break;
 

@@ -26,10 +26,10 @@ class WebsocketAPI {
     socket.binaryType = 'arraybuffer';
 
     // register callbacks
-    if (callbacks.onOpen) socket.addEventListener('open', event => callbacks.onOpen(event));
-    if (callbacks.onClose) socket.addEventListener('close', event => callbacks.onClose(event));
-    if (callbacks.onMessage) socket.addEventListener('message', event => callbacks.onMessage(event));
-    if (callbacks.onError) socket.addEventListener('error', event => callbacks.onError(event));
+    if (callbacks.onOpen) socket.onopen = callbacks.onOpen;
+    if (callbacks.onClose) socket.onclose = callbacks.onClose;
+    if (callbacks.onMessage) socket.onmessage = callbacks.onMessage;
+    if (callbacks.onError) socket.onerror = callbacks.onError;
 
     return socket;
   }

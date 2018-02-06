@@ -40,9 +40,9 @@ class WidgetTable extends Component {
 
     if (nextProps.simulation == null || nextProps.data == null || nextProps.data[simulator.node] == null
       || nextProps.data[simulator.node][simulator.simulator] == null 
-      || nextProps.data[simulator.node][simulator.simulator].length === 0 
-      || nextProps.data[simulator.node][simulator.simulator].values.length === 0  
-      || nextProps.data[simulator.node][simulator.simulator].values[0].length === 0) {
+      || nextProps.data[simulator.node][simulator.simulator].output.length === 0 
+      || nextProps.data[simulator.node][simulator.simulator].output.values.length === 0  
+      || nextProps.data[simulator.node][simulator.simulator].output.values[0].length === 0) {
       // clear values
       this.setState({ rows: [], sequence: null });
       return;
@@ -61,16 +61,16 @@ class WidgetTable extends Component {
     // get rows
     var rows = [];
 
-    nextProps.data[simulator.node][simulator.simulator].values.forEach((signal, index) => {
-      if (index < simulationModel.mapping.length) {
+    nextProps.data[simulator.node][simulator.simulator].output.values.forEach((signal, index) => {
+      if (index < simulationModel.outputMapping.length) {
         rows.push({
-          name: simulationModel.mapping[index].name,
+          name: simulationModel.outputMapping[index].name,
           value: signal[signal.length - 1].y.toFixed(3)
         });
       }
     });
 
-    this.setState({ rows: rows, sequence: nextProps.data[simulator.node][simulator.simulator].sequence });
+    this.setState({ rows: rows, sequence: nextProps.data[simulator.node][simulator.simulator].output.sequence });
   }
 
   render() {

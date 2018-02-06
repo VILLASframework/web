@@ -22,6 +22,9 @@
 import WebsocketAPI from '../api/websocket-api';
 import AppDispatcher from '../app-dispatcher';
 
+const OFFSET_TYPE = 2;
+const OFFSET_VERSION = 4;
+
 class SimulatorDataDataManager {
   constructor() {
     this._sockets = {};
@@ -34,14 +37,14 @@ class SimulatorDataDataManager {
         // replace connection, since endpoint changed
         this._sockets.close();
 
-        this._sockets[node._id] = WebsocketAPI.addSocket(node, { onOpen: (event) => this.onOpen(event, node), onClose: (event) => this.onClose(event, node), onMessage: (event) => this.onMessage(event, node) });
+        this._sockets[node._id] = WebsocketAPI.addSocket(node, { onOpen: (event) => this.onOpen(event, node), onClose: (event) => this.onClose(event, node), onMessage: (event) => this.onMessage(event, node), onError: (error) => this.onError(error, node) });
       }
     } else {
       // set flag if a socket to this simulator was already create before
       if (this._sockets[node._id] === null) {
-        this._sockets[node._id] = WebsocketAPI.addSocket(node, { onOpen: (event) => this.onOpen(event, node, false), onClose: (event) => this.onClose(event, node), onMessage: (event) => this.onMessage(event, node) });
+        this._sockets[node._id] = WebsocketAPI.addSocket(node, { onOpen: (event) => this.onOpen(event, node, false), onClose: (event) => this.onClose(event, node), onMessage: (event) => this.onMessage(event, node), onError: (error) => this.onError(error, node) });
       } else {
-        this._sockets[node._id] = WebsocketAPI.addSocket(node, { onOpen: (event) => this.onOpen(event, node, true), onClose: (event) => this.onClose(event, node), onMessage: (event) => this.onMessage(event, node) });
+        this._sockets[node._id] = WebsocketAPI.addSocket(node, { onOpen: (event) => this.onOpen(event, node, true), onClose: (event) => this.onClose(event, node), onMessage: (event) => this.onMessage(event, node), onError: (error) => this.onError(error, node) });
       }
     }
   }
@@ -54,6 +57,18 @@ class SimulatorDataDataManager {
         delete this._sockets[key];
       }
     }
+  }
+
+  send(message, nodeId) {
+    const socket = this._sockets[nodeId];
+    if (socket == null) {
+      return false;
+    }
+
+    const data = this.messageToBuffer(message);
+    socket.send(data);
+
+    return true;
   }
 
   onOpen(event, node, firstOpen) {
@@ -75,6 +90,10 @@ class SimulatorDataDataManager {
     delete this._sockets[node._id];
   }
 
+  onError(error, node) {
+    console.error('Error on ' + node._id + ':' + error);
+  }
+
   onMessage(event, node) {
     var msgs = this.bufferToMessageArray(event.data);
 
@@ -92,9 +111,6 @@ class SimulatorDataDataManager {
     if (data.byteLength === 0) {
       return null;
     }
-
-    const OFFSET_TYPE = 2;
-    const OFFSET_VERSION = 4;
 
     const id = data.getUint8(1);
     const bits = data.getUint8(0);
@@ -129,6 +145,30 @@ class SimulatorDataDataManager {
     }
 
     return msgs;
+  }
+
+  messageToBuffer(message) {
+    const buffer = new ArrayBuffer(16 + 4 * message.length);
+    const view = new DataView(buffer);
+
+    let bits = 0;
+    bits |= (message.version & 0xF) << OFFSET_VERSION;
+    bits |= (message.type & 0x3) << OFFSET_TYPE;
+
+    const sec = Math.floor(message.timestamp / 1e3);
+    const nsec = (message.timestamp - sec * 1e3) * 1e6;
+
+    view.setUint8(0x00, bits, true);
+    view.setUint8(0x01, message.id, true);
+    view.setUint16(0x02, message.length, true);
+    view.setUint32(0x04, message.sequence, true);
+    view.setUint32(0x08, sec, true);
+    view.setUint32(0x0C, nsec, true);
+
+    const data = new Float32Array(buffer, 0x10, message.length);
+    data.set(message.values);
+
+    return buffer;
   }
 }
 

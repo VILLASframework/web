@@ -38,13 +38,13 @@ class WidgetLamp extends Component {
     const simulator = nextProps.widget.simulator.simulator;
     const node = nextProps.widget.simulator.node;
 
-    if (nextProps.data == null || nextProps.data[node] == null || nextProps.data[node][simulator] == null || nextProps.data[node][simulator].values == null) {
+    if (nextProps.data == null || nextProps.data[node] == null || nextProps.data[node][simulator] == null || nextProps.data[node][simulator].output.values == null) {
       this.setState({ value: '' });
       return;
     }
 
     // check if value has changed
-    const signal = nextProps.data[node][simulator].values[nextProps.widget.signal];
+    const signal = nextProps.data[node][simulator].output.values[nextProps.widget.signal];
     if (signal != null && this.state.value !== signal[signal.length - 1].y) {
       this.setState({ value: signal[signal.length - 1].y });
     }

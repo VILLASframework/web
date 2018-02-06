@@ -71,7 +71,7 @@ class WidgetPlotTable extends Component {
     // Proceed if a simulation model is available
     if (simulationModel) {
       // Create checkboxes using the signal indices from simulation model
-      preselectedSignals = simulationModel.mapping.reduce(
+      preselectedSignals = simulationModel.outputMapping.reduce(
         // Loop through simulation model signals
         (accum, model_signal, signal_index) => {
           // Append them if they belong to the current selected type
@@ -107,7 +107,7 @@ class WidgetPlotTable extends Component {
     let simulatorData = [];
 
     if (this.props.data[simulator.node] != null && this.props.data[simulator.node][simulator.simulator] != null) {
-      simulatorData = this.props.data[simulator.node][simulator.simulator].values.filter((values, index) => (
+      simulatorData = this.props.data[simulator.node][simulator.simulator].output.values.filter((values, index) => (
         this.props.widget.signals.findIndex(value => value === index) !== -1
       ));
     }
