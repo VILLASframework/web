@@ -35,11 +35,16 @@ class WebsocketAPI {
   }
 
   getURL(node) {
-    if (node.relativeEndpoint) {
-      return 'ws://' + window.location.host + '/' + node.endpoint;
-    } else {
-      return 'ws://' + node.endpoint;
-    }
+    //  create an anchor element (note: no need to append this element to the document)
+    var link = document.createElement('a');
+    link.href = node.endpoint;
+
+    if (link.protocol === 'https:')
+      link.protocol = 'wss:';
+    else
+      link.protocol = 'ws:';
+
+    return link.href;
   }
 }
 

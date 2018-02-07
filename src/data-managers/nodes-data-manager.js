@@ -29,11 +29,12 @@ class NodesDataManager extends RestDataManager {
   }
 
   getURL(node) {
-    if (node.relativeEndpoint) {
-      return 'http://' + window.location.host + '/' + node.endpoint + '/api/v1';
-    } else {
-      return 'http://' + node.endpoint + '/api/v1';
-    }
+    //  create an anchor element (note: no need to append this element to the document)
+    var link = document.createElement('a');
+    link.href = node.endpoint;
+    link.pathname = link.pathname + 'api/v1';
+
+    return link.href;
   }
 
   getSimulators(node) {
