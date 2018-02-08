@@ -16,8 +16,6 @@ import EditWidgetCheckboxControl from '../../../components/dialog/edit-widget-ch
 import EditWidgetMinMaxControl from '../../../components/dialog/edit-widget-min-max-control';
 import EditWidgetColorZonesControl from '../../../components/dialog/edit-widget-color-zones-control';
 import EditWidgetHTMLContent from '../../../components/dialog/edit-widget-html-content';
-import editWidgetSimulatorControl from '../../../components/dialog/edit-widget-simulator-control';
-import editWidgetSignalControl from '../../../components/dialog/edit-widget-signal-control';
 
 describe('edit widget control creator', () => {
     it('should not return null', () => {
@@ -38,7 +36,7 @@ describe('edit widget control creator', () => {
         { args: { widgetType: 'Box' }, result: { controlNumber: 1, controlTypes: [EditWidgetColorControl] } },
         { args: { widgetType: 'Label' }, result: { controlNumber: 3, controlTypes: [EditWidgetTextControl, EditWidgetTextSizeControl, EditWidgetColorControl] } },
         { args: { widgetType: 'HTML' }, result: { controlNumber: 1, controlTypes: [EditWidgetHTMLContent] } },
-        { args: { widgetType: 'NumberInput'}, result: { controlNumber: 3, controlTypes: [EditWidgetTextControl, editWidgetSimulatorControl, editWidgetSignalControl] } }
+        { args: { widgetType: 'NumberInput'}, result: { controlNumber: 3, controlTypes: [EditWidgetTextControl, EditWidgetSimulatorControl, EditWidgetSignalControl] } }
     ];
 
     runs.forEach( (run) => {
