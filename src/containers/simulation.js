@@ -25,7 +25,7 @@ import { Button, Modal, Glyphicon } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 
 import SimulationStore from '../stores/simulation-store';
-import NodeStore from '../stores/node-store';
+import SimulatorStore from '../stores/simulator-store';
 import UserStore from '../stores/user-store';
 import AppDispatcher from '../app-dispatcher';
 
@@ -37,13 +37,13 @@ import ImportSimulationModelDialog from '../components/dialog/import-simulation-
 
 class Simulation extends React.Component {
   static getStores() {
-    return [ SimulationStore, NodeStore, UserStore ];
+    return [ SimulationStore, SimulatorStore, UserStore ];
   }
 
   static calculateState() {
     return {
       simulations: SimulationStore.getState(),
-      nodes: NodeStore.getState(),
+      simulators: SimulatorStore.getState(),
       sessionToken: UserStore.getState().token,
 
       newModal: false,
@@ -64,7 +64,7 @@ class Simulation extends React.Component {
     });
 
     AppDispatcher.dispatch({
-      type: 'nodes/start-load',
+      type: 'simulators/start-load',
       token: this.state.sessionToken
     });
   }
@@ -143,16 +143,16 @@ class Simulation extends React.Component {
     }
   }
 
-  getSimulatorName(simulator) {
-    var name = "undefined";
-
-    this.state.nodes.forEach(node => {
-      if (node._id === simulator.node) {
-        name = node.name + '/' + node.simulators[simulator.simulator].name;
+  getSimulatorName(simulatorId) {
+    for (let simulator of this.state.simulators) {
+      if (simulator._id === simulatorId) {
+        if ('name' in simulator.rawProperties) {
+          return simulator.rawProperties.name;
+        } else {
+          return simulator.uuid;
+        }
       }
-    });
-
-    return name;
+    }
   }
 
   exportModel(index) {
@@ -197,9 +197,9 @@ class Simulation extends React.Component {
         <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Simulation Model</Button>
         <Button onClick={() => this.setState({ importModal: true })}><Glyphicon glyph="import" /> Import</Button>
 
-        <NewSimulationModelDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} nodes={this.state.nodes} />
-        <EditSimulationModelDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} data={this.state.modalData} nodes={this.state.nodes} />
-        <ImportSimulationModelDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} nodes={this.state.nodes} />
+        <NewSimulationModelDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} simulators={this.state.simulators} />
+        <EditSimulationModelDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} data={this.state.modalData} simulators={this.state.simulators} />
+        <ImportSimulationModelDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} simulators={this.state.simulators} />
 
         <Modal keyboard show={this.state.deleteModal} onHide={() => this.setState({ deleteModal: false })} onKeyPress={this.onModalKeyPress}>
           <Modal.Header>

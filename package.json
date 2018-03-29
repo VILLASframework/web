@@ -16,6 +16,7 @@
     "flux": "^3.1.2",
     "gaugeJS": "^1.3.2",
     "immutable": "^3.8.1",
+    "lodash": "^4.17.5",
     "rc-slider": "^8.3.0",
     "react": "^15.4.2",
     "react-bootstrap": "^0.31.1",

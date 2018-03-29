@@ -38,11 +38,10 @@ class WidgetTable extends Component {
     // check data
     const simulator = nextProps.widget.simulator;
 
-    if (nextProps.simulation == null || nextProps.data == null || nextProps.data[simulator.node] == null
-      || nextProps.data[simulator.node][simulator.simulator] == null 
-      || nextProps.data[simulator.node][simulator.simulator].output.length === 0 
-      || nextProps.data[simulator.node][simulator.simulator].output.values.length === 0  
-      || nextProps.data[simulator.node][simulator.simulator].output.values[0].length === 0) {
+    if (nextProps.simulation == null || nextProps.data == null || nextProps.data[simulator] == null
+      || nextProps.data[simulator].output.length === 0 
+      || nextProps.data[simulator].output.values.length === 0  
+      || nextProps.data[simulator].output.values[0].length === 0) {
       // clear values
       this.setState({ rows: [], sequence: null });
       return;
@@ -61,7 +60,7 @@ class WidgetTable extends Component {
     // get rows
     var rows = [];
 
-    nextProps.data[simulator.node][simulator.simulator].output.values.forEach((signal, index) => {
+    nextProps.data[simulator].output.values.forEach((signal, index) => {
       if (index < simulationModel.outputMapping.length) {
         rows.push({
           name: simulationModel.outputMapping[index].name,
@@ -70,7 +69,7 @@ class WidgetTable extends Component {
       }
     });
 
-    this.setState({ rows: rows, sequence: nextProps.data[simulator.node][simulator.simulator].output.sequence });
+    this.setState({ rows: rows, sequence: nextProps.data[simulator].output.sequence });
   }
 
   render() {

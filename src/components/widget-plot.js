@@ -39,11 +39,11 @@ class WidgetPlot extends React.Component {
     const simulation = nextProps.simulation;
 
     // Proceed if a simulation with models and a simulator are available
-    if (simulator && nextProps.data[simulator.node] != null && nextProps.data[simulator.node][simulator.simulator] != null && simulation && simulation.models.length > 0) {
-      const model = simulation.models.find(model => model.simulator.node === simulator.node && model.simulator.simulator === simulator.simulator);
+    if (simulator && nextProps.data[simulator] != null && nextProps.data[simulator] != null && simulation && simulation.models.length > 0) {
+      const model = simulation.models.find(model => model.simulator === simulator);
       const chosenSignals = nextProps.widget.signals;
 
-      const data = nextProps.data[simulator.node][simulator.simulator].output.values.filter((values, index) => (
+      const data = nextProps.data[simulator].output.values.filter((values, index) => (
         nextProps.widget.signals.findIndex(value => value === index) !== -1
       ));
 

@@ -20,6 +20,7 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
+import _ from 'lodash';
 import { Table, Button, Glyphicon, FormControl, Label, Checkbox } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
@@ -46,19 +47,27 @@ class CustomTable extends Component {
 
   addCell(data, index, child) {
     // add data to cell
-    const dataKey = child.props.dataKey;
-    var cell = [];
+    let content = null;
 
-    if (dataKey && data[dataKey] != null) {
-      // get content
-      var content;
-      const modifier = child.props.modifier;
-
-      if (modifier) {
-        content = modifier(data[dataKey]);
-      } else {
-        content = data[dataKey].toString();
+    if ('dataKeys' in child.props) {
+      for (let key of child.props.dataKeys) {
+        if (_.get(data, key) != null) {
+          content = _.get(data, key);
+          break;
+        }
       }
+    } else if ('dataKey' in child.props) {
+      content = _.get(data, child.props.dataKey);
+    }
+
+    const modifier = child.props.modifier;
+    if (modifier && content != null) {
+      content = modifier(content);
+    }
+
+    let cell = [];
+    if (content != null) {
+      content = content.toString();
 
       // check if cell should be a link
       const linkKey = child.props.linkKey;
@@ -89,21 +98,21 @@ class CustomTable extends Component {
 
     // add buttons
     if (child.props.editButton) {
-      cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onEdit(index)}><Glyphicon glyph='pencil' /></Button>);
+      cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onEdit(index)} disabled={child.props.onEdit == null}><Glyphicon glyph='pencil' /></Button>);
     }
 
     if (child.props.deleteButton) {
-      cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onDelete(index)}><Glyphicon glyph='remove' /></Button>);
+      cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onDelete(index)} disabled={child.props.onDelete == null}><Glyphicon glyph='remove' /></Button>);
     }
 
     if (child.props.checkbox) {
       const checkboxKey = this.props.checkboxKey;
 
-      cell.push(<Checkbox className="table-control-checkbox" inline checked={checkboxKey ? data[checkboxKey] : null} onChange={e => child.props.onChecked(index, e)}></Checkbox>);
+      cell.push(<Checkbox className="table-control-checkbox" inline checked={checkboxKey ? data[checkboxKey] : null} onChange={e => child.props.onChecked(index, e)} />);
     }
 
     if (child.props.exportButton) {
-      cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onExport(index)}><Glyphicon glyph='export' /></Button>);
+      cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onExport(index)} disabled={child.props.onExport == null}><Glyphicon glyph='export' /></Button>);
     }
 
     return cell;
@@ -155,7 +164,7 @@ class CustomTable extends Component {
 
   render() {
     // get children
-    var children = this.props.children;
+    let children = this.props.children;
     if (Array.isArray(this.props.children) === false) {
       children = [ children ];
     }

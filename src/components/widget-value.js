@@ -33,10 +33,7 @@ class WidgetValue extends Component {
 
   componentWillReceiveProps(nextProps) {
     // update value
-    const simulator = nextProps.widget.simulator.simulator;
-    const node = nextProps.widget.simulator.node;
-
-    if (nextProps.data == null || nextProps.data[node] == null || nextProps.data[node][simulator] == null || nextProps.data[node][simulator].output.values == null) {
+    if (nextProps.data == null || nextProps.data[nextProps.widget.simulator] == null || nextProps.data[nextProps.widget.simulator].output == null || nextProps.data[nextProps.widget.simulator].output.values == null) {
       this.setState({ value: '' });
       return;
     }
@@ -45,7 +42,7 @@ class WidgetValue extends Component {
     let unit = '';
 
     if (nextProps.simulation) {
-      const simulationModel = nextProps.simulation.models.find(model => model.simulator.node === node && model.simulator.simulator === simulator);
+      const simulationModel = nextProps.simulation.models.find(model => model.simulator === nextProps.widget.simulator);
       
       if (nextProps.widget.signal < simulationModel.outputMapping.length) {
         unit = simulationModel.outputMapping[nextProps.widget.signal].type;
@@ -53,7 +50,7 @@ class WidgetValue extends Component {
     }
     
     // check if value has changed
-    const signal = nextProps.data[node][simulator].output.values[nextProps.widget.signal];
+    const signal = nextProps.data[nextProps.widget.simulator].output.values[nextProps.widget.signal];
     if (signal != null && this.state.value !== signal[signal.length - 1].y) {
       this.setState({ value: signal[signal.length - 1].y, unit });
     }

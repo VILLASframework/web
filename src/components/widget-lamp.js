@@ -35,16 +35,15 @@ class WidgetLamp extends Component {
 
   componentWillReceiveProps(nextProps) {
     // update value
-    const simulator = nextProps.widget.simulator.simulator;
-    const node = nextProps.widget.simulator.node;
+    const simulator = nextProps.widget.simulator;
 
-    if (nextProps.data == null || nextProps.data[node] == null || nextProps.data[node][simulator] == null || nextProps.data[node][simulator].output.values == null) {
+    if (nextProps.data == null || nextProps.data[simulator] == null || nextProps.data[simulator].output.values == null) {
       this.setState({ value: '' });
       return;
     }
 
     // check if value has changed
-    const signal = nextProps.data[node][simulator].output.values[nextProps.widget.signal];
+    const signal = nextProps.data[simulator].output.values[nextProps.widget.signal];
     if (signal != null && this.state.value !== signal[signal.length - 1].y) {
       this.setState({ value: signal[signal.length - 1].y });
     }

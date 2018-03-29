@@ -21,256 +21,170 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Modal, Glyphicon } from 'react-bootstrap';
+import { Button, Modal, Glyphicon, DropdownButton, MenuItem } from 'react-bootstrap';
 import FileSaver from 'file-saver';
+import _ from 'lodash';
 
 import AppDispatcher from '../app-dispatcher';
-import NodeStore from '../stores/node-store';
+import SimulatorStore from '../stores/simulator-store';
 import UserStore from '../stores/user-store';
 
-import NewNodeDialog from '../components/dialog/new-node';
-import EditNodeDialog from '../components/dialog/edit-node';
+import Table from '../components/table';
+import TableColumn from '../components/table-column';
 import NewSimulatorDialog from '../components/dialog/new-simulator';
 import EditSimulatorDialog from '../components/dialog/edit-simulator';
-import NodeTree from '../components/node-tree';
-import ImportNodeDialog from '../components/dialog/import-node';
+import ImportSimulatorDialog from '../components/dialog/import-simulator';
 
 class Simulators extends Component {
   static getStores() {
-    return [ NodeStore, UserStore ];
+    return [ UserStore, SimulatorStore ];
   }
 
   static calculateState() {
     return {
-      nodes: NodeStore.getState(),
       sessionToken: UserStore.getState().token,
+      simulators: SimulatorStore.getState(),
 
-      newNodeModal: false,
-      deleteNodeModal: false,
-      editNodeModal: false,
-      importModal: false,
-      exportModal: false,
+      modalSimulator: {},
+      deleteModal: false,
 
-      addSimulatorModal: false,
-      editSimulatorModal: false,
-      deleteSimulatorModal: false,
-
-      modalData: {},
-      modalIndex: 0,
-      modalName: ''
+      runAction: 0,
+      runTitle: 'Reset',
+      selectedSimulators: []
     };
   }
 
   componentWillMount() {
     AppDispatcher.dispatch({
-      type: 'nodes/start-load',
+      type: 'simulators/start-load',
       token: this.state.sessionToken
     });
   }
 
-  closeNewNodeModal(data) {
-    this.setState({ newNodeModal: false });
+  closeNewModal(data) {
+    this.setState({ newModal : false });
 
     if (data) {
       AppDispatcher.dispatch({
-        type: 'nodes/start-add',
-        data: data,
-        token: this.state.sessionToken
-      });
-    }
-  }
-
-  showEditNodeModal(data) {
-    // find node with id
-    var node = this.state.nodes.find((element) => {
-      return element._id === data.id;
-    });
-
-    this.setState({ editNodeModal: true, modalData: node });
-  }
-
-  closeEditNodeModal(data) {
-    this.setState({ editNodeModal: false });
-
-    if (data) {
-      AppDispatcher.dispatch({
-        type: 'nodes/start-edit',
-        data: data,
-        token: this.state.sessionToken
-      });
-    }
-  }
-
-  showDeleteNodeModal(data) {
-    // find node with id
-    var node = this.state.nodes.find((element) => {
-      return element._id === data.id;
-    });
-
-    this.setState({ deleteNodeModal: true, modalData: node });
-  }
-
-  confirmDeleteNodeModal() {
-    this.setState({ deleteModal: false });
-
-    AppDispatcher.dispatch({
-      type: 'nodes/start-remove',
-      data: this.state.modalData,
-      token: this.state.sessionToken
-    });
-  }
-
-  showAddSimulatorModal(data) {
-    // find node with id
-    var node = this.state.nodes.find((element) => {
-      return element._id === data.id;
-    });
-
-    this.setState({ addSimulatorModal: true, modalData: node });
-  }
-
-  closeAddSimulatorModal(data) {
-    this.setState({ addSimulatorModal: false });
-
-    if (data) {
-      var node = this.state.modalData;
-      node.simulators.push(data);
-
-      AppDispatcher.dispatch({
-        type: 'nodes/start-edit',
-        data: node,
-        token: this.state.sessionToken
-      });
-    }
-  }
-
-  showEditSimulatorModal(data, index) {
-    // find node with id
-    var node = this.state.nodes.find((element) => {
-      return element._id === data.id;
-    });
-
-    this.setState({ editSimulatorModal: true, modalData: node, modalIndex: index });
-  }
-
-  closeEditSimulatorModal(data) {
-    this.setState({ editSimulatorModal: false });
-
-    if (data) {
-      var node = this.state.modalData;
-      node.simulators[this.state.modalIndex] = data;
-
-      AppDispatcher.dispatch({
-        type: 'nodes/start-edit',
-        data: node,
-        token: this.state.sessionToken
-      });
-    }
-  }
-
-  showDeleteSimulatorModal(data, index) {
-    // find node with id
-    var node = this.state.nodes.find((element) => {
-      return element._id === data.id;
-    });
-
-    this.setState({ deleteSimulatorModal: true, modalData: node, modalIndex: index, modalName: data.children[index].title });
-  }
-
-  confirmDeleteSimulatorModal() {
-    this.setState({ deleteSimulatorModal: false });
-
-    // remove simulator
-    var node = this.state.modalData;
-    node.simulators.splice(this.state.modalIndex);
-
-    AppDispatcher.dispatch({
-      type: 'nodes/start-edit',
-      data: node,
-      token: this.state.sessionToken
-    });
-  }
-  
-  closeImportNodeModal(data) {
-    this.setState({ importNodeModal: false });
-
-    if (data) {
-      AppDispatcher.dispatch({
-        type: 'nodes/start-add',
+        type: 'simulators/start-add',
         data,
         token: this.state.sessionToken
       });
     }
   }
 
-  exportNode(data) {
-    const node = this.state.nodes.find((element) => {
-      return element._id === data.id;
-    });
+  closeEditModal(data) {
+    this.setState({ editModal : false });
 
+    if (data) {
+      let simulator = this.state.simulators[this.state.modalIndex];
+      simulator.properties = data;
+      this.setState({ simulator });
+
+      AppDispatcher.dispatch({
+        type: 'simulators/start-edit',
+        data: simulator,
+        token: this.state.sessionToken
+      });
+    }
+  }
+
+  confirmDeleteModal() {
+    this.setState({ deleteModal: false });
+
+    AppDispatcher.dispatch({
+      type: 'simulators/start-remove',
+      data: this.state.modalSimulator,
+      token: this.state.sessionToken
+    });
+  }
+
+  exportSimulator(index) {
     // filter properties
-    let simulator = Object.assign({}, node);
+    let simulator = Object.assign({}, this.state.simulators[index]);
     delete simulator._id;
-
-    simulator.simulators.forEach(simulator => {
-      delete simulator.id;
-    });
 
     // show save dialog
     const blob = new Blob([JSON.stringify(simulator, null, 2)], { type: 'application/json' });
-    FileSaver.saveAs(blob, 'node - ' + node.name + '.json');
+    FileSaver.saveAs(blob, 'simulator - ' + (simulator.properties.name || simulator.rawProperties.name || 'undefined') + '.json');
   }
 
-  labelStyle(value) {
-    if (value === true) return 'success';
-    else return 'warning';
-  }
+  closeImportModal(data) {
+    this.setState({ importModal: false });
 
-  onTreeDataChange(nodes) {
-    // update all at once
-    nodes.forEach((node) => {
+    if (data) {
       AppDispatcher.dispatch({
-        type: 'nodes/start-edit',
-        data: node,
+        type: 'simulators/start-add',
+        data,
         token: this.state.sessionToken
       });
-    });
-  }
-
-  onNodeModalKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-    
-      this.confirmDeleteNodeModal();
     }
   }
 
-  onSimulatorModalKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-    
-      this.confirmDeleteSimulatorModal();
-    }
-  }
+  onSimulatorChecked(index, event) {
+    const selectedSimulators = this.state.selectedSimulators;
+    for (let key in selectedSimulators) {
+      if (selectedSimulators[key] === index) {
+        // update existing entry
+        if (event.target.checked) {
+          return;
+        }
 
-  loadFile(fileList) {
-    // get file
-    const file = fileList[0];
-    if (!file.type.match('application/json')) {
+        selectedSimulators.splice(key, 1);
+
+        this.setState({ selectedSimulators });
+        return;
+      }
+    }
+
+    // add new entry
+    if (event.target.checked === false) {
       return;
     }
 
-    // create file reader
-    var reader = new FileReader();
-    var self = this;
+    selectedSimulators.push(index);
+    this.setState({ selectedSimulators });
+  }
 
-    reader.onload = function(event) {
-      // read simulator
-      const simulator = JSON.parse(event.target.result);
-      self.setState({ importModal: true, modalSimulator: simulator });
-    };
+  setRunAction(index) {
+    let runTitle = '';
+    switch (index) {
+      case '0':
+        runTitle = 'Reset';
+        break;
 
-    reader.readAsText(file);
+      case '1':
+        runTitle = 'Shutdown';
+        break;
+
+      default:
+        console.log('Unknown index ' + index);
+        break;
+    }
+
+    this.setState({ runAction: index, runTitle });
+  }
+
+  runAction() {
+    for (let index of this.state.selectedSimulators) {
+      let data;
+      switch (this.state.runAction) {
+        case '0':
+          data = { action: 'reset' };
+          break;
+
+        case '1':
+          data = { action: 'shutdown' };
+          break;
+      }
+  
+      AppDispatcher.dispatch({
+        type: 'simulators/start-action',
+        simulator: this.state.simulators[index],
+        data,
+        token: this.state.sessionToken
+      });
+    }
   }
 
   render() {
@@ -278,61 +192,55 @@ class Simulators extends Component {
       <div className='section'>
         <h1>Simulators</h1>
 
-        <Button onClick={() => this.setState({ newNodeModal: true })}><Glyphicon glyph="plus" /> Node</Button>
-        <Button onClick={() => this.setState({ importNodeModal: true })}><Glyphicon glyph="import" /> Import</Button>
+        <Table data={this.state.simulators}>
+          <TableColumn checkbox onChecked={(index, event) => this.onSimulatorChecked(index, event)} width='30' />
+          <TableColumn title='Name' dataKeys={['properties.name', 'rawProperties.name']} />
+          <TableColumn title='State' dataKey='state' />
+          <TableColumn title='Model' dataKey='model' />
+          <TableColumn title='Endpoint' dataKeys={['properties.endpoint', 'rawProperties.endpoint']} />
+          <TableColumn title='Host' dataKey='host' />
+          <TableColumn title='UUID' dataKey='uuid' />
+          <TableColumn 
+            width='100' 
+            editButton
+            exportButton
+            deleteButton
+            onEdit={index => this.setState({ editModal: true, modalSimulator: this.state.simulators[index], modalIndex: index })} 
+            onExport={index => this.exportSimulator(index)}
+            onDelete={index => this.setState({ deleteModal: true, modalSimulator: this.state.simulators[index], modalIndex: index })}
+          />
+        </Table>
 
-        <br />
-        <small><i>Hint: Node names must be unique. Simulator names must be unique on a node.</i></small>
+        <div style={{ float: 'left' }}>
+          <DropdownButton title={this.state.runTitle} id="simulator-action-dropdown" onSelect={(index) => this.setRunAction(index)}>
+            <MenuItem eventKey="0" active={this.state.runAction === '0'}>Reset</MenuItem>
+            <MenuItem eventKey="1" active={this.state.runAction === '1'}>Shutdown</MenuItem>
+          </DropdownButton>
 
-        <NodeTree 
-          data={this.state.nodes} 
-          onDataChange={(treeData) => this.onTreeDataChange(treeData)} 
-          onNodeDelete={(node) => this.showDeleteNodeModal(node)} 
-          onNodeEdit={(node) => this.showEditNodeModal(node)} 
-          onNodeAdd={(node) => this.showAddSimulatorModal(node)} 
-          onNodeExport={node => this.exportNode(node)}
-          onSimulatorEdit={(node, index) => this.showEditSimulatorModal(node, index)} 
-          onSimulatorDelete={(node, index) => this.showDeleteSimulatorModal(node, index)} 
-        />
+          <Button disabled={this.state.selectedSimulators.length <= 0} onClick={() => this.runAction()}>Run</Button>
+        </div>
 
-        <NewNodeDialog show={this.state.newNodeModal} onClose={(data) => this.closeNewNodeModal(data)} nodes={this.state.nodes} />
-        <EditNodeDialog node={this.state.modalData} show={this.state.editNodeModal} onClose={(data) => this.closeEditNodeModal(data)} nodes={this.state.nodes} />
-        <NewSimulatorDialog show={this.state.addSimulatorModal} onClose={(data) => this.closeAddSimulatorModal(data)} node={this.state.modalData}/>
-        <ImportNodeDialog show={this.state.importNodeModal} onClose={data => this.closeImportNodeModal(data)} nodes={this.state.nodes} />
+        <div style={{ float: 'right' }}>
+          <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Simulator</Button>
+          <Button onClick={() => this.setState({ importModal: true })}><Glyphicon glyph="import" /> Import</Button>
+        </div>
 
-        {this.state.editSimulatorModal &&
-          <EditSimulatorDialog simulator={this.state.modalData.simulators[this.state.modalIndex]} show={this.state.editSimulatorModal} onClose={(data) => this.closeEditSimulatorModal(data)} node={this.state.modalData} />
-        }
+        <NewSimulatorDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
+        <EditSimulatorDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} simulator={this.state.modalSimulator} />
+        <ImportSimulatorDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} />
 
-        <Modal keyboard show={this.state.deleteNodeModal} onHide={() => this.setState({ deleteNodeModal: false })} onKeyPress={this.onNodeModalKeyPress}>
-          <Modal.Header>
-            <Modal.Title>Delete Node</Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body>
-            Are you sure you want to delete the node <strong>'{this.state.modalData.name}'</strong>?
-            <br />
-            This will delete all simulators assigned to this node.
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button onClick={() => this.setState({ deleteNodeModal: false })}>Cancel</Button>
-            <Button bsStyle="danger" onClick={() => this.confirmDeleteNodeModal()}>Delete</Button>
-          </Modal.Footer>
-        </Modal>
-
-        <Modal keyboard show={this.state.deleteSimulatorModal} onHide={() => this.setState({ deleteSimulatorModal: false })} onKeyPress={this.onSimulatorModalKeyPress}>
+        <Modal keyboard show={this.state.deleteModal} onHide={() => this.setState({ deleteModal: false })} onKeyPress={this.onModalKeyPress}>
           <Modal.Header>
             <Modal.Title>Delete Simulator</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
-            Are you sure you want to delete the simulator <strong>'{this.state.modalName}'</strong>?
+            Are you sure you want to delete the simulator<strong>'{_.get(this.state.modalSimulator, 'properties.name') || _.get(this.state.modalSimulator, 'rawProperties.name') || 'Unknown'}'</strong>?
           </Modal.Body>
 
           <Modal.Footer>
-            <Button onClick={() => this.setState({ deleteSimulatorModal: false })}>Cancel</Button>
-            <Button bsStyle="danger" onClick={() => this.confirmDeleteSimulatorModal()}>Delete</Button>
+            <Button onClick={() => this.setState({ deleteModal: false })}>Cancel</Button>
+            <Button bsStyle="danger" onClick={() => this.confirmDeleteModal()}>Delete</Button>
           </Modal.Footer>
         </Modal>
       </div>

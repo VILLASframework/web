@@ -64,7 +64,7 @@ class WidgetPlotTable extends Component {
 
     // get simulation model
     const simulationModel = nextProps.simulation.models.find((model) => {
-      return (model.simulator.node === simulator.node && model.simulator.simulator === simulator.simulator);
+      return (model.simulator === simulator);
     });
 
     let preselectedSignals = [];
@@ -106,8 +106,8 @@ class WidgetPlotTable extends Component {
     let simulator = this.props.widget.simulator;
     let simulatorData = [];
 
-    if (this.props.data[simulator.node] != null && this.props.data[simulator.node][simulator.simulator] != null) {
-      simulatorData = this.props.data[simulator.node][simulator.simulator].output.values.filter((values, index) => (
+    if (this.props.data[simulator] != null) {
+      simulatorData = this.props.data[simulator].output.values.filter((values, index) => (
         this.props.widget.signals.findIndex(value => value === index) !== -1
       ));
     }

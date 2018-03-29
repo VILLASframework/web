@@ -38,16 +38,15 @@ class WidgetGauge extends Component {
     // update value
     const simulator = nextProps.widget.simulator;
 
-    if (nextProps.data == null || nextProps.data[simulator.node] == null
-      || nextProps.data[simulator.node][simulator.simulator] == null 
-      || nextProps.data[simulator.node][simulator.simulator].output.values.length === 0  
-      || nextProps.data[simulator.node][simulator.simulator].output.values[0].length === 0) {
+    if (nextProps.data == null || nextProps.data[simulator] == null
+      || nextProps.data[simulator].output.values.length === 0  
+      || nextProps.data[simulator].output.values[0].length === 0) {
       this.setState({ value: 0 });
       return;
     }
 
     // check if value has changed
-    const signal = nextProps.data[simulator.node][simulator.simulator].output.values[nextProps.widget.signal];
+    const signal = nextProps.data[simulator].output.values[nextProps.widget.signal];
     // Take just 3 decimal positions
     // Note: Favor this method over Number.toFixed(n) in order to avoid a type conversion, since it returns a String
     if (signal != null) {
