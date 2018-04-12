@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button, Modal, Glyphicon } from 'react-bootstrap';
+import { Button, Glyphicon } from 'react-bootstrap';
 
 import AppDispatcher from '../app-dispatcher';
 import ProjectStore from '../stores/project-store';
@@ -32,6 +32,8 @@ import Table from '../components/table';
 import TableColumn from '../components/table-column';
 import NewProjectDialog from '../components/dialog/new-project';
 import EditProjectDialog from '../components/dialog/edit-project';
+
+import DeleteDialog from '../components/dialog/delete-dialog';
 
 class Projects extends React.Component {
   static getStores() {
@@ -75,8 +77,12 @@ class Projects extends React.Component {
     }
   }
 
-  confirmDeleteModal() {
+  closeDeleteModal = confirmDelete => {
     this.setState({ deleteModal: false });
+
+    if (confirmDelete === false) {
+      return;
+    }
 
     AppDispatcher.dispatch({
       type: 'projects/start-remove',
@@ -143,20 +149,7 @@ class Projects extends React.Component {
         <NewProjectDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} simulations={this.state.simulations} />
         <EditProjectDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} project={this.state.modalData} simulations={this.state.simulations} />
 
-        <Modal keyboard show={this.state.deleteModal} onHide={() => this.setState({ deleteModal: false })} onKeyPress={this.onModalKeyPress}>
-          <Modal.Header>
-            <Modal.Title>Delete Project</Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body>
-            Are you sure you want to delete the project <strong>'{this.state.modalData.name}'</strong>?
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button onClick={() => this.setState({ deleteModal: false})}>Cancel</Button>
-            <Button bsStyle='danger' onClick={() => this.confirmDeleteModal()}>Delete</Button>
-          </Modal.Footer>
-        </Modal>
+        <DeleteDialog title="project" name={this.state.modalData.name} show={this.state.deleteModal} onClose={this.closeDeleteModal} />
       </div>
     );
   }

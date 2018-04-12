@@ -21,7 +21,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Modal, Glyphicon } from 'react-bootstrap';
+import { Button, Glyphicon } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 
@@ -34,7 +34,9 @@ import TableColumn from '../components/table-column';
 import NewSimulatorDialog from '../components/dialog/new-simulator';
 import EditSimulatorDialog from '../components/dialog/edit-simulator';
 import ImportSimulatorDialog from '../components/dialog/import-simulator';
+
 import SimulatorAction from '../components/simulator-action';
+import DeleteDialog from '../components/dialog/delete-dialog';
 
 class Simulators extends Component {
   static getStores() {
@@ -88,8 +90,12 @@ class Simulators extends Component {
     }
   }
 
-  confirmDeleteModal() {
+  closeDeleteModal = confirmDelete => {
     this.setState({ deleteModal: false });
+
+    if (confirmDelete === false) {
+      return;
+    }
 
     AppDispatcher.dispatch({
       type: 'simulators/start-remove',
@@ -196,20 +202,7 @@ class Simulators extends Component {
         <EditSimulatorDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} simulator={this.state.modalSimulator} />
         <ImportSimulatorDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} />
 
-        <Modal keyboard show={this.state.deleteModal} onHide={() => this.setState({ deleteModal: false })} onKeyPress={this.onModalKeyPress}>
-          <Modal.Header>
-            <Modal.Title>Delete Simulator</Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body>
-            Are you sure you want to delete the simulator<strong>'{_.get(this.state.modalSimulator, 'properties.name') || _.get(this.state.modalSimulator, 'rawProperties.name') || 'Unknown'}'</strong>?
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button onClick={() => this.setState({ deleteModal: false })}>Cancel</Button>
-            <Button bsStyle="danger" onClick={() => this.confirmDeleteModal()}>Delete</Button>
-          </Modal.Footer>
-        </Modal>
+        <DeleteDialog title="simulator" name={_.get(this.state.modalSimulator, 'properties.name') || _.get(this.state.modalSimulator, 'rawProperties.name') || 'Unknown'} show={this.state.deleteModal} onClose={this.closeDeleteModal} />
       </div>
     );
   }

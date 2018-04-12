@@ -21,7 +21,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Modal, Glyphicon } from 'react-bootstrap';
+import { Button, Glyphicon } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 
 import AppDispatcher from '../app-dispatcher';
@@ -35,6 +35,8 @@ import TableColumn from '../components/table-column';
 import NewVisualzationDialog from '../components/dialog/new-visualization';
 import EditVisualizationDialog from '../components/dialog/edit-visualization';
 import ImportVisualizationDialog from '../components/dialog/import-visualization';
+
+import DeleteDialog from '../components/dialog/delete-dialog';
 
 class Visualizations extends Component {
   static getStores() {
@@ -113,8 +115,12 @@ class Visualizations extends Component {
     this.setState({ newModal: false });
   }
 
-  confirmDeleteModal() {
+  closeDeleteModal = confirmDelete => {
     this.setState({ deleteModal: false });
+
+    if (confirmDelete === false) {
+      return;
+    } 
 
     AppDispatcher.dispatch({
       type: 'visualizations/start-remove',
@@ -206,20 +212,7 @@ class Visualizations extends Component {
         <EditVisualizationDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} visualization={this.state.modalData} />
         <ImportVisualizationDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} simulation={this.state.simulation} />
 
-        <Modal keyboard show={this.state.deleteModal} onHide={() => this.setState({ deleteModal: false })} onKeyPress={this.onModalKeyPress}>
-          <Modal.Header>
-            <Modal.Title>Delete Visualization</Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body>
-            Are you sure you want to delete the visualization <strong>'{this.state.modalData.name}'</strong>?
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button onClick={() => this.setState({ deleteModal: false })}>Cancel</Button>
-            <Button bsStyle="danger" onClick={() => this.confirmDeleteModal()}>Delete</Button>
-          </Modal.Footer>
-        </Modal>
+        <DeleteDialog title="visualization" name={this.state.modalData.name} show={this.state.deleteModal} onClose={this.closeDeleteModal} />
       </div>
     );
   }

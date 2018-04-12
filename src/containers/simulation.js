@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button, Modal, Glyphicon } from 'react-bootstrap';
+import { Button, Glyphicon } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 
 import SimulationStore from '../stores/simulation-store';
@@ -34,7 +34,9 @@ import TableColumn from '../components/table-column';
 import NewSimulationModelDialog from '../components/dialog/new-simulation-model';
 import EditSimulationModelDialog from '../components/dialog/edit-simulation-model';
 import ImportSimulationModelDialog from '../components/dialog/import-simulation-model';
+
 import SimulatorAction from '../components/simulator-action';
+import DeleteDialog from '../components/dialog/delete-dialog';
 
 class Simulation extends React.Component {
   static getStores() {
@@ -102,12 +104,19 @@ class Simulation extends React.Component {
     }
   }
 
-  confirmDeleteModal() {
+  closeDeleteModal = confirmDelete => {
+    console.log('closeDeleteModal called');
+
+    if (confirmDelete === false) {
+      this.setState({ deleteModal: false });
+      return;
+    }
+
     // remove model from simulation
-    var simulation = this.state.simulation;
+    const simulation = this.state.simulation;
     simulation.models.splice(this.state.modalIndex, 1);
 
-    this.setState({ deleteModal: false, simulation: simulation });
+    this.setState({ deleteModal: false, simulation });
 
     AppDispatcher.dispatch({
       type: 'simulations/start-edit',
@@ -166,14 +175,6 @@ class Simulation extends React.Component {
     // show save dialog
     const blob = new Blob([JSON.stringify(simulationModel, null, 2)], { type: 'application/json' });
     FileSaver.saveAs(blob, 'simulation model - ' + simulationModel.name + '.json');
-  }
-
-  onModalKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-    
-      this.confirmDeleteModal();
-    }
   }
 
   onSimulationModelChecked(index, event) {
@@ -263,24 +264,11 @@ class Simulation extends React.Component {
           <Button onClick={() => this.setState({ importModal: true })}><Glyphicon glyph="import" /> Import</Button>
         </div>
 
-        <NewSimulationModelDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} simulators={this.state.simulators} />
-        <EditSimulationModelDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} data={this.state.modalData} simulators={this.state.simulators} />
+        <NewSimulationModelDialog show={this.state.newModal} onClose={data => this.closeNewModal(data)} simulators={this.state.simulators} />
+        <EditSimulationModelDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} data={this.state.modalData} simulators={this.state.simulators} />
         <ImportSimulationModelDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} simulators={this.state.simulators} />
 
-        <Modal keyboard show={this.state.deleteModal} onHide={() => this.setState({ deleteModal: false })} onKeyPress={this.onModalKeyPress}>
-          <Modal.Header>
-            <Modal.Title>Delete Simulation Model</Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body>
-            Are you sure you want to delete the simulation model <strong>'{this.state.modalData.name}'</strong>?
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button onClick={() => this.setState({ deleteModal: false })}>Cancel</Button>
-            <Button bsStyle="danger" onClick={() => this.confirmDeleteModal()}>Delete</Button>
-          </Modal.Footer>
-        </Modal>
+        <DeleteDialog title="simulation model" name={this.state.modalData.name} show={this.state.deleteModal} onClose={this.closeDeleteModal} />
       </div>
     );
   }

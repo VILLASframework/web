@@ -21,7 +21,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Modal, Glyphicon } from 'react-bootstrap';
+import { Button, Glyphicon } from 'react-bootstrap';
 
 import AppDispatcher from '../app-dispatcher';
 import UserStore from '../stores/user-store';
@@ -31,6 +31,8 @@ import Table from '../components/table';
 import TableColumn from '../components/table-column';
 import NewUserDialog from '../components/dialog/new-user';
 import EditUserDialog from '../components/dialog/edit-user';
+
+import DeleteDialog from '../components/dialog/delete-dialog';
 
 class Users extends Component {
   static getStores() {
@@ -72,8 +74,12 @@ class Users extends Component {
     }
   }
 
-  confirmDeleteModal() {
+  closeDeleteModal = confirmDelete => {
     this.setState({ deleteModal: false });
+
+    if (confirmDelete === false) {
+      return;
+    }
 
     AppDispatcher.dispatch({
       type: 'users/start-remove',
@@ -124,23 +130,9 @@ class Users extends Component {
         <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph='plus' /> User</Button>
 
         <NewUserDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
-
         <EditUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />
 
-        <Modal keyboard show={this.state.deleteModal} onHide={() => this.setState({ deleteModal: false })} onKeyPress={this.onModalKeyPress}>
-          <Modal.Header>
-            <Modal.Title>Delete user</Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body>
-            Are you sure you want to delete the user <strong>'{this.state.modalData.username}'</strong>?
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button onClick={() => this.setState({ deleteModal: false})}>Cancel</Button>
-            <Button bsStyle='danger' onClick={() => this.confirmDeleteModal()}>Delete</Button>
-          </Modal.Footer>
-        </Modal>
+        <DeleteDialog title="user" name={this.state.modalData.username} show={this.state.deleteModal} onClose={this.closeDeleteModal} />
       </div>
     );
   }
