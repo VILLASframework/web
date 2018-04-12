@@ -21,7 +21,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Modal, Glyphicon, DropdownButton, MenuItem } from 'react-bootstrap';
+import { Button, Modal, Glyphicon } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 
@@ -34,6 +34,7 @@ import TableColumn from '../components/table-column';
 import NewSimulatorDialog from '../components/dialog/new-simulator';
 import EditSimulatorDialog from '../components/dialog/edit-simulator';
 import ImportSimulatorDialog from '../components/dialog/import-simulator';
+import SimulatorAction from '../components/simulator-action';
 
 class Simulators extends Component {
   static getStores() {
@@ -48,8 +49,6 @@ class Simulators extends Component {
       modalSimulator: {},
       deleteModal: false,
 
-      runAction: 0,
-      runTitle: 'Reset',
       selectedSimulators: []
     };
   }
@@ -146,42 +145,12 @@ class Simulators extends Component {
     this.setState({ selectedSimulators });
   }
 
-  setRunAction(index) {
-    let runTitle = '';
-    switch (index) {
-      case '0':
-        runTitle = 'Reset';
-        break;
-
-      case '1':
-        runTitle = 'Shutdown';
-        break;
-
-      default:
-        console.log('Unknown index ' + index);
-        break;
-    }
-
-    this.setState({ runAction: index, runTitle });
-  }
-
-  runAction() {
+  runAction = action => {
     for (let index of this.state.selectedSimulators) {
-      let data;
-      switch (this.state.runAction) {
-        case '0':
-          data = { action: 'reset' };
-          break;
-
-        case '1':
-          data = { action: 'shutdown' };
-          break;
-      }
-  
       AppDispatcher.dispatch({
         type: 'simulators/start-action',
         simulator: this.state.simulators[index],
-        data,
+        data: action.data,
         token: this.state.sessionToken
       });
     }
@@ -212,12 +181,10 @@ class Simulators extends Component {
         </Table>
 
         <div style={{ float: 'left' }}>
-          <DropdownButton title={this.state.runTitle} id="simulator-action-dropdown" onSelect={(index) => this.setRunAction(index)}>
-            <MenuItem eventKey="0" active={this.state.runAction === '0'}>Reset</MenuItem>
-            <MenuItem eventKey="1" active={this.state.runAction === '1'}>Shutdown</MenuItem>
-          </DropdownButton>
-
-          <Button disabled={this.state.selectedSimulators.length <= 0} onClick={() => this.runAction()}>Run</Button>
+          <SimulatorAction 
+            runDisabled={false} 
+            runAction={this.runAction}
+            actions={[ { id: '0', title: 'Reset', data: { action: 'reset' } }, { id: '1', title: 'Shutdown', data: { action: 'shutdown' } } ]}/>
         </div>
 
         <div style={{ float: 'right' }}>

@@ -38,8 +38,8 @@ class SimulatorStore extends ArrayStore {
           } else if (simulator.rawProperties != null && 'endpoint' in simulator.rawProperties) {
             SimulatorDataDataManager.open(simulator.rawProperties.endpoint, simulator._id);
           } else {
-            console.warn('Endpoint not found for simulator');
-            console.log(simulator);
+            // console.warn('Endpoint not found for simulator');
+            // console.log(simulator);
           }
         }
 

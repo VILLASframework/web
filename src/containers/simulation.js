@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button, Modal, Glyphicon, DropdownButton, MenuItem } from 'react-bootstrap';
+import { Button, Modal, Glyphicon } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 
 import SimulationStore from '../stores/simulation-store';
@@ -34,6 +34,7 @@ import TableColumn from '../components/table-column';
 import NewSimulationModelDialog from '../components/dialog/new-simulation-model';
 import EditSimulationModelDialog from '../components/dialog/edit-simulation-model';
 import ImportSimulationModelDialog from '../components/dialog/import-simulation-model';
+import SimulatorAction from '../components/simulator-action';
 
 class Simulation extends React.Component {
   static getStores() {
@@ -55,8 +56,6 @@ class Simulation extends React.Component {
 
       simulation: {},
 
-      runAction: 0,
-      runTitle: 'Start',
       selectedSimulationModels: []
     }
   }
@@ -202,57 +201,7 @@ class Simulation extends React.Component {
     this.setState({ selectedSimulationModels });
   }
 
-  setRunAction(index) {
-    let runTitle = '';
-    switch (index) {
-      case '0':
-        runTitle = 'Start';
-        break;
-
-      case '1':
-        runTitle = 'Stop';
-        break;
-
-      case '2':
-        runTitle = 'Pause';
-        break;
-
-      case '3':
-        runTitle = 'Resume';
-        break;
-
-      default:
-        console.log('Unknown index ' + index);
-        break;
-    }
-
-    this.setState({ runAction: index, runTitle });
-  }
-
-  runAction() {
-    let data;
-    switch (this.state.runAction) {
-      case '0':
-        data = { action: 'start' };
-        break;
-
-      case '1':
-        data = { action: 'stop' };
-        break;
-
-      case '2':
-        data = { action: 'pause' };
-        break;
-
-      case '3':
-        data = { action: 'resume' };
-        break;
-
-      default:
-        console.warn('Unknown simulator action: ' + this.state.runAction);
-        return;
-    }
-
+  runAction = action => {
     for (let index of this.state.selectedSimulationModels) {
       // get simulator for model
       let simulator = null;
@@ -269,7 +218,7 @@ class Simulation extends React.Component {
       AppDispatcher.dispatch({
         type: 'simulators/start-action',
         simulator,
-        data,
+        data: action.data,
         token: this.state.sessionToken
       });
     }
@@ -298,14 +247,15 @@ class Simulation extends React.Component {
         </Table>
 
         <div style={{ float: 'left' }}>
-          <DropdownButton title={this.state.runTitle} id="simulation-model-action-dropdown" onSelect={index => this.setRunAction(index)}>
-            <MenuItem eventKey="0" active={this.state.runAction === '0'}>Start</MenuItem>
-            <MenuItem eventKey="1" active={this.state.runAction === '1'}>Stop</MenuItem>
-            <MenuItem eventKey="2" active={this.state.runAction === '2'}>Pause</MenuItem>
-            <MenuItem eventKey="3" active={this.state.runAction === '3'}>Resume</MenuItem>
-          </DropdownButton>
-
-          <Button disabled={this.state.selectedSimulationModels.length <= 0} onClick={() => this.runAction()}>Run</Button>
+          <SimulatorAction 
+            runDisabled={false} 
+            runAction={this.runAction}
+            actions={[ 
+              { id: '0', title: 'Start', data: { action: 'start' } }, 
+              { id: '1', title: 'Stop', data: { action: 'stop' } }, 
+              { id: '2', title: 'Pause', data: { action: 'pause' } }, 
+              { id: '3', title: 'Resume', data: { action: 'resume' } } 
+            ]}/>
         </div>
 
         <div style={{ float: 'right' }}>
