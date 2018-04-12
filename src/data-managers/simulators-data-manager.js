@@ -29,6 +29,7 @@ class SimulatorsDataManager extends RestDataManager {
     }
 
     doAction(simulator, action, token = null) {
+        // TODO: Make only simulator id dependent
         RestAPI.post(this.makeURL(this.url + '/' + simulator._id), action, token).then(response => {
             AppDispatcher.dispatch({
                 type: 'simulators/action-started',
