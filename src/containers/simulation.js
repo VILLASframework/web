@@ -230,30 +230,30 @@ class Simulation extends React.Component {
   }
 
   runAction() {
+    let data;
+    switch (this.state.runAction) {
+      case '0':
+        data = { action: 'start' };
+        break;
+
+      case '1':
+        data = { action: 'stop' };
+        break;
+
+      case '2':
+        data = { action: 'pause' };
+        break;
+
+      case '3':
+        data = { action: 'resume' };
+        break;
+
+      default:
+        console.warn('Unknown simulator action: ' + this.state.runAction);
+        return;
+    }
+
     for (let index of this.state.selectedSimulationModels) {
-      let data;
-      switch (this.state.runAction) {
-        case '0':
-          data = { action: 'start' };
-          break;
-
-        case '1':
-          data = { action: 'stop' };
-          break;
-
-        case '2':
-          data = { action: 'pause' };
-          break;
-
-        case '3':
-          data = { action: 'resume' };
-          break;
-
-        default:
-          console.warn('Unknown simulator action: ' + this.state.runAction);
-          return;
-      }
-
       // get simulator for model
       let simulator = null;
       for (let sim of this.state.simulators) {
@@ -281,7 +281,7 @@ class Simulation extends React.Component {
         <h1>{this.state.simulation.name}</h1>
 
         <Table data={this.state.simulation.models}>
-        <TableColumn checkbox onChecked={(index, event) => this.onSimulationModelChecked(index, event)} width='30' />
+          <TableColumn checkbox onChecked={(index, event) => this.onSimulationModelChecked(index, event)} width='30' />
           <TableColumn title='Name' dataKey='name' />
           <TableColumn title='Simulator' dataKey='simulator' width='180' modifier={(simulator) => this.getSimulatorName(simulator)} />
           <TableColumn title='Length' dataKey='length' width='100' />
@@ -298,7 +298,7 @@ class Simulation extends React.Component {
         </Table>
 
         <div style={{ float: 'left' }}>
-        <DropdownButton title={this.state.runTitle} id="simulation-model-action-dropdown" onSelect={index => this.setRunAction(index)}>
+          <DropdownButton title={this.state.runTitle} id="simulation-model-action-dropdown" onSelect={index => this.setRunAction(index)}>
             <MenuItem eventKey="0" active={this.state.runAction === '0'}>Start</MenuItem>
             <MenuItem eventKey="1" active={this.state.runAction === '1'}>Stop</MenuItem>
             <MenuItem eventKey="2" active={this.state.runAction === '2'}>Pause</MenuItem>

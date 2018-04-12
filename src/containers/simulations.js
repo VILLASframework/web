@@ -21,13 +21,13 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Modal, Glyphicon } from 'react-bootstrap';
+import { Button, Modal, Glyphicon, DropdownButton, MenuItem } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 
 import AppDispatcher from '../app-dispatcher';
 import SimulationStore from '../stores/simulation-store';
 import UserStore from '../stores/user-store';
-import NodeStore from '../stores/node-store';
+import SimulatorStore from '../stores/simulator-store';
 
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
@@ -37,20 +37,24 @@ import ImportSimulationDialog from '../components/dialog/import-simulation';
 
 class Simulations extends Component {
   static getStores() {
-    return [ SimulationStore, UserStore, NodeStore ];
+    return [ SimulationStore, UserStore, SimulatorStore ];
   }
 
   static calculateState() {
     return {
       simulations: SimulationStore.getState(),
-      nodes: NodeStore.getState(),
+      simulators: SimulatorStore.getState(),
       sessionToken: UserStore.getState().token,
 
       newModal: false,
       deleteModal: false,
       editModal: false,
       importModal: false,
-      modalSimulation: {}
+      modalSimulation: {},
+
+      runAction: 0,
+      runTitle: 'Start',
+      selectedSimulations: []
     };
   }
 
@@ -158,12 +162,113 @@ class Simulations extends Component {
     FileSaver.saveAs(blob, 'simulation - ' + simulation.name + '.json');
   }
 
+  onSimulationChecked(index, event) {
+    const selectedSimulations = this.state.selectedSimulations;
+    for (let key in selectedSimulations) {
+      if (selectedSimulations[key] === index) {
+        // update existing entry
+        if (event.target.checked) {
+          return;
+        }
+
+        selectedSimulations.splice(key, 1);
+
+        this.setState({ selectedSimulations });
+        return;
+      }
+    }
+
+    // add new entry
+    if (event.target.checked === false) {
+      return;
+    }
+
+    selectedSimulations.push(index);
+    this.setState({ selectedSimulations });
+  }
+
+  setRunAction(index) {
+    let runTitle = '';
+    switch (index) {
+      case '0':
+        runTitle = 'Start';
+        break;
+
+      case '1':
+        runTitle = 'Stop';
+        break;
+
+      case '2':
+        runTitle = 'Pause';
+        break;
+
+      case '3':
+        runTitle = 'Resume';
+        break;
+
+      default:
+        console.log('Unknown index ' + index);
+        break;
+    }
+
+    this.setState({ runAction: index, runTitle });
+  }
+
+  runAction() {
+    let data;
+    switch (this.state.runAction) {
+      case '0':
+        data = { action: 'start' };
+        break;
+
+      case '1':
+        data = { action: 'stop' };
+        break;
+
+      case '2':
+        data = { action: 'pause' };
+        break;
+
+      case '3':
+        data = { action: 'resume' };
+        break;
+
+      default:
+        console.warn('Unknown simulator action: ' + this.state.runAction);
+        return;
+    }
+
+    for (let index of this.state.selectedSimulations) {
+      for (let model of this.state.simulations[index].models) {
+        // get simulator for model
+        let simulator = null;
+        for (let sim of this.state.simulators) {
+          if (sim._id === model.simulator) {
+            simulator = sim;
+          }
+        }
+
+        if (simulator == null) {
+          continue;
+        }
+    
+        AppDispatcher.dispatch({
+          type: 'simulators/start-action',
+          simulator,
+          data,
+          token: this.state.sessionToken
+        });
+      }
+    }
+  }
+
   render() {
     return (
       <div className='section'>
         <h1>Simulations</h1>
 
         <Table data={this.state.simulations}>
+          <TableColumn checkbox onChecked={(index, event) => this.onSimulationChecked(index, event)} width='30' />
           <TableColumn title='Name' dataKey='name' link='/simulations/' linkKey='_id' />
           <TableColumn 
             width='100' 
@@ -176,8 +281,21 @@ class Simulations extends Component {
           />
         </Table>
 
-        <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Simulation</Button>
-        <Button onClick={() => this.setState({ importModal: true })}><Glyphicon glyph="import" /> Import</Button>
+        <div style={{ float: 'left' }}>
+          <DropdownButton title={this.state.runTitle} id="simulation-action-dropdown" onSelect={index => this.setRunAction(index)}>
+            <MenuItem eventKey="0" active={this.state.runAction === '0'}>Start</MenuItem>
+            <MenuItem eventKey="1" active={this.state.runAction === '1'}>Stop</MenuItem>
+            <MenuItem eventKey="2" active={this.state.runAction === '2'}>Pause</MenuItem>
+            <MenuItem eventKey="3" active={this.state.runAction === '3'}>Resume</MenuItem>
+          </DropdownButton>
+
+          <Button disabled={this.state.selectedSimulations.length <= 0} onClick={() => this.runAction()}>Run</Button>
+        </div>
+
+        <div style={{ float: 'right' }}>
+          <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Simulation</Button>
+          <Button onClick={() => this.setState({ importModal: true })}><Glyphicon glyph="import" /> Import</Button>
+        </div>
 
         <NewSimulationDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
         <EditSimulationDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} simulation={this.state.modalSimulation} />
