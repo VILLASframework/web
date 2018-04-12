@@ -178,7 +178,7 @@ class Simulation extends React.Component {
   }
 
   onSimulationModelChecked(index, event) {
-    const selectedSimulationModels = this.state.selectedSimulationModels;
+    const selectedSimulationModels = Object.assign([], this.state.selectedSimulationModels);
     for (let key in selectedSimulationModels) {
       if (selectedSimulationModels[key] === index) {
         // update existing entry
@@ -249,7 +249,7 @@ class Simulation extends React.Component {
 
         <div style={{ float: 'left' }}>
           <SimulatorAction 
-            runDisabled={false} 
+            runDisabled={this.state.selectedSimulationModels.length === 0} 
             runAction={this.runAction}
             actions={[ 
               { id: '0', title: 'Start', data: { action: 'start' } }, 

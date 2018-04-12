@@ -127,7 +127,7 @@ class Simulators extends Component {
   }
 
   onSimulatorChecked(index, event) {
-    const selectedSimulators = this.state.selectedSimulators;
+    const selectedSimulators = Object.assign([], this.state.selectedSimulators);
     for (let key in selectedSimulators) {
       if (selectedSimulators[key] === index) {
         // update existing entry
@@ -188,7 +188,7 @@ class Simulators extends Component {
 
         <div style={{ float: 'left' }}>
           <SimulatorAction 
-            runDisabled={false} 
+            runDisabled={this.state.selectedSimulators.length === 0} 
             runAction={this.runAction}
             actions={[ { id: '0', title: 'Reset', data: { action: 'reset' } }, { id: '1', title: 'Shutdown', data: { action: 'shutdown' } } ]}/>
         </div>
@@ -198,8 +198,8 @@ class Simulators extends Component {
           <Button onClick={() => this.setState({ importModal: true })}><Glyphicon glyph="import" /> Import</Button>
         </div>
 
-        <NewSimulatorDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
-        <EditSimulatorDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} simulator={this.state.modalSimulator} />
+        <NewSimulatorDialog show={this.state.newModal} onClose={data => this.closeNewModal(data)} />
+        <EditSimulatorDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} simulator={this.state.modalSimulator} />
         <ImportSimulatorDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} />
 
         <DeleteDialog title="simulator" name={_.get(this.state.modalSimulator, 'properties.name') || _.get(this.state.modalSimulator, 'rawProperties.name') || 'Unknown'} show={this.state.deleteModal} onClose={this.closeDeleteModal} />
