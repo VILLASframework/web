@@ -19,6 +19,8 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
+import _ from 'lodash';
+
 import ArrayStore from './array-store';
 import SimulatorsDataManager from '../data-managers/simulators-data-manager';
 import SimulatorDataDataManager from '../data-managers/simulator-data-data-manager';
@@ -33,12 +35,12 @@ class SimulatorStore extends ArrayStore {
       case 'simulators/loaded':
         // connect to each simulator
         for (let simulator of action.data) {
-          if (simulator.endpoint != null && 'endpoint' in simulator.properties) {
-            SimulatorDataDataManager.open(simulator.properties.endpoint, simulator._id);
-          } else if (simulator.rawProperties != null && 'endpoint' in simulator.rawProperties) {
-            SimulatorDataDataManager.open(simulator.rawProperties.endpoint, simulator._id);
+          const endpoint = _.get(simulator, 'properties.endpoint') || _.get(simulator, 'rawProperties.endpoint');
+
+          if (endpoint != null && endpoint !== '') {
+            SimulatorDataDataManager.open(endpoint, simulator._id);
           } else {
-            // console.warn('Endpoint not found for simulator');
+            console.warn('Endpoint not found for simulator at ' + endpoint);
             // console.log(simulator);
           }
         }
