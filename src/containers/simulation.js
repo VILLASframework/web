@@ -23,6 +23,7 @@ import React from 'react';
 import { Container } from 'flux/utils';
 import { Button, Glyphicon } from 'react-bootstrap';
 import FileSaver from 'file-saver';
+import _ from 'lodash';
 
 import SimulationStore from '../stores/simulation-store';
 import SimulatorStore from '../stores/simulator-store';
@@ -159,7 +160,7 @@ class Simulation extends React.Component {
     for (let simulator of this.state.simulators) {
       if (simulator._id === simulatorId) {
         if ('name' in simulator.rawProperties) {
-          return simulator.rawProperties.name;
+          return _.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name');
         } else {
           return simulator.uuid;
         }

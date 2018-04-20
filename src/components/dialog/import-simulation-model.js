@@ -21,6 +21,7 @@
 
 import React from 'react';
 import { FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
+import _ from 'lodash';
 
 import Table from '../table';
 import TableColumn from '../table-column';
@@ -175,7 +176,7 @@ class ImportSimulationModelDialog extends React.Component {
             <ControlLabel>Simulator</ControlLabel>
             <FormControl readOnly={!this.imported} componentClass="select" placeholder="Select simulator" value={this.state.simulator} onChange={(e) => this.handleChange(e)}>
               {this.props.simulators.map(simulator => (
-                <option key={simulator._id} value={simulator}>{simulator.rawProperties.name}</option>
+                <option key={simulator._id} value={simulator}>{_.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name')}</option>
               ))}
             </FormControl>
           </FormGroup>
