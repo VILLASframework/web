@@ -40,7 +40,7 @@ class SimulatorStore extends ArrayStore {
           if (endpoint != null && endpoint !== '') {
             SimulatorDataDataManager.open(endpoint, simulator._id);
           } else {
-            console.warn('Endpoint not found for simulator at ' + endpoint);
+            // console.warn('Endpoint not found for simulator at ' + endpoint);
             // console.log(simulator);
           }
         }

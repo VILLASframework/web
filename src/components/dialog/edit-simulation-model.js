@@ -34,8 +34,10 @@ class EditSimulationModelDialog extends React.Component {
     super(props);
 
     this.state = {
+      _id: '',
       name: '',
       simulator: '',
+      simulation: '',
       outputLength: 1,
       inputLength: 1,
       outputMapping: [{ name: 'Signal', type: 'Type' }],
@@ -92,6 +94,8 @@ class EditSimulationModelDialog extends React.Component {
 
   resetState() {
     this.setState({
+      _id: this.props.data._id,
+      simulation: this.props.data.simulation,
       name: this.props.data.name,
       simulator: this.props.data.simulator,
       outputLength: this.props.data.outputLength,

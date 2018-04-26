@@ -27,6 +27,7 @@ import _ from 'lodash';
 
 import SimulationStore from '../stores/simulation-store';
 import SimulatorStore from '../stores/simulator-store';
+import SimulationModelStore from '../stores/simulation-model-store';
 import UserStore from '../stores/user-store';
 import AppDispatcher from '../app-dispatcher';
 
@@ -41,14 +42,36 @@ import DeleteDialog from '../components/dialog/delete-dialog';
 
 class Simulation extends React.Component {
   static getStores() {
-    return [ SimulationStore, SimulatorStore, UserStore ];
+    return [ SimulationStore, SimulatorStore, SimulationModelStore, UserStore ];
   }
 
-  static calculateState() {
+  static calculateState(prevState, props) {
+    // get selected simulation
+    const sessionToken = UserStore.getState().token;
+
+    let simulation = SimulationStore.getState().find(s => s._id === props.match.params.simulation);
+    if (simulation == null) {
+      AppDispatcher.dispatch({
+        type: 'simulations/start-load',
+        data: props.match.params.simulation,
+        token: sessionToken
+      });
+
+      simulation = {};
+    }
+
+    // load models
+    let simulationModels = [];
+    if (simulation.models != null) {
+      simulationModels = SimulationModelStore.getState().filter(m => simulation.models.includes(m._id));
+    }
+
     return {
-      simulations: SimulationStore.getState(),
+      simulationModels,
+      simulation,
+
       simulators: SimulatorStore.getState(),
-      sessionToken: UserStore.getState().token,
+      sessionToken,
 
       newModal: false,
       deleteModal: false,
@@ -56,8 +79,6 @@ class Simulation extends React.Component {
       importModal: false,
       modalData: {},
       modalIndex: null,
-
-      simulation: {},
 
       selectedSimulationModels: []
     }
@@ -70,24 +91,13 @@ class Simulation extends React.Component {
     });
 
     AppDispatcher.dispatch({
-      type: 'simulators/start-load',
+      type: 'simulationModels/start-load',
       token: this.state.sessionToken
     });
-  }
 
-  componentDidUpdate() {
-    if (this.state.simulation._id !== this.props.match.params.simulation) {
-      this.reloadSimulation();
-    }
-  }
-
-  reloadSimulation() {
-    // select simulation by param id
-    this.state.simulations.forEach((simulation) => {
-      if (simulation._id === this.props.match.params.simulation) {
-        // JSON.parse(JSON.stringify(obj)) = deep clone to make also copy of widget objects inside
-        this.setState({ simulation: JSON.parse(JSON.stringify(simulation)) });
-      }
+    AppDispatcher.dispatch({
+      type: 'simulators/start-load',
+      token: this.state.sessionToken
     });
   }
 
@@ -95,33 +105,34 @@ class Simulation extends React.Component {
     this.setState({ newModal : false });
 
     if (data) {
-      this.state.simulation.models.push(data);
+      data.simulation = this.state.simulation._id;
 
       AppDispatcher.dispatch({
-        type: 'simulations/start-edit',
-        data: this.state.simulation,
+        type: 'simulationModels/start-add',
+        data,
         token: this.state.sessionToken
+      });
+
+      this.setState({ simulation: {} }, () => {
+        AppDispatcher.dispatch({
+          type: 'simulations/start-load',
+          data: this.props.match.params.simulation,
+          token: this.state.sessionToken
+        });
       });
     }
   }
 
   closeDeleteModal = confirmDelete => {
-    console.log('closeDeleteModal called');
+    this.setState({ deleteModal: false });
 
     if (confirmDelete === false) {
-      this.setState({ deleteModal: false });
       return;
     }
 
-    // remove model from simulation
-    const simulation = this.state.simulation;
-    simulation.models.splice(this.state.modalIndex, 1);
-
-    this.setState({ deleteModal: false, simulation });
-
     AppDispatcher.dispatch({
-      type: 'simulations/start-edit',
-      data: simulation,
+      type: 'simulationModels/start-remove',
+      data: this.state.modalData,
       token: this.state.sessionToken
     });
   }
@@ -130,13 +141,9 @@ class Simulation extends React.Component {
     this.setState({ editModal : false });
 
     if (data) {
-      var simulation = this.state.simulation;
-      simulation.models[this.state.modalIndex] = data;
-      this.setState({ simulation: simulation });
-
       AppDispatcher.dispatch({
-        type: 'simulations/start-edit',
-        data: simulation,
+        type: 'simulationModels/start-edit',
+        data,
         token: this.state.sessionToken
       });
     }
@@ -146,12 +153,20 @@ class Simulation extends React.Component {
     this.setState({ importModal: false });
 
     if (data) {
-      this.state.simulation.models.push(data);
+      data.simulation = this.state.simulation._id;
       
       AppDispatcher.dispatch({
-        type: 'simulations/start-edit',
-        data: this.state.simulation,
+        type: 'simulationModels/start-add',
+        data,
         token: this.state.sessionToken
+      });
+
+      this.setState({ simulation: {} }, () => {
+        AppDispatcher.dispatch({
+          type: 'simulations/start-load',
+          data: this.props.match.params.simulation,
+          token: this.state.sessionToken
+        });
       });
     }
   }
@@ -231,19 +246,20 @@ class Simulation extends React.Component {
       <div className='section'>
         <h1>{this.state.simulation.name}</h1>
 
-        <Table data={this.state.simulation.models}>
+        <Table data={this.state.simulationModels}>
           <TableColumn checkbox onChecked={(index, event) => this.onSimulationModelChecked(index, event)} width='30' />
           <TableColumn title='Name' dataKey='name' />
           <TableColumn title='Simulator' dataKey='simulator' width='180' modifier={(simulator) => this.getSimulatorName(simulator)} />
-          <TableColumn title='Length' dataKey='length' width='100' />
+          <TableColumn title='Output' dataKey='outputLength' width='100' />
+          <TableColumn title='Input' dataKey='inputLength' width='100' />
           <TableColumn 
             title='' 
             width='100' 
             editButton 
             deleteButton 
             exportButton
-            onEdit={(index) => this.setState({ editModal: true, modalData: this.state.simulation.models[index], modalIndex: index })} 
-            onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.simulation.models[index], modalIndex: index })} 
+            onEdit={(index) => this.setState({ editModal: true, modalData: this.state.simulationModels[index], modalIndex: index })} 
+            onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.simulationModels[index], modalIndex: index })} 
             onExport={index => this.exportModel(index)}
           />
         </Table>
@@ -275,4 +291,4 @@ class Simulation extends React.Component {
   }
 }
 
-export default Container.create(Simulation);
+export default Container.create(Simulation, { withProps: true });
