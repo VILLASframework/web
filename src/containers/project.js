@@ -101,6 +101,8 @@ class Visualizations extends Component {
   }
 
   closeNewModal(data) {
+    this.setState({ newModal: false });
+
     if (data) {
       // add project to visualization
       data.project = this.state.project._id;
@@ -110,9 +112,15 @@ class Visualizations extends Component {
         data: data,
         token: this.state.sessionToken
       });
-    }
 
-    this.setState({ newModal: false });
+      this.setState({ project: {} }, () => {
+        AppDispatcher.dispatch({
+          type: 'projects/start-load',
+          data: this.props.match.params.project,
+          token: this.state.sessionToken
+        });
+      });
+    }
   }
 
   closeDeleteModal = confirmDelete => {
