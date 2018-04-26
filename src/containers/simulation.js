@@ -185,12 +185,13 @@ class Simulation extends React.Component {
 
   exportModel(index) {
     // filter properties
-    let simulationModel = Object.assign({}, this.state.simulation.models[index]);
-    delete simulationModel.simulator;
+    const model = Object.assign({}, this.state.simulationModels[index]);
+    delete model.simulator;
+    delete model.simulation;
 
     // show save dialog
-    const blob = new Blob([JSON.stringify(simulationModel, null, 2)], { type: 'application/json' });
-    FileSaver.saveAs(blob, 'simulation model - ' + simulationModel.name + '.json');
+    const blob = new Blob([JSON.stringify(model, null, 2)], { type: 'application/json' });
+    FileSaver.saveAs(blob, 'simulation model - ' + model.name + '.json');
   }
 
   onSimulationModelChecked(index, event) {
@@ -223,7 +224,7 @@ class Simulation extends React.Component {
       // get simulator for model
       let simulator = null;
       for (let sim of this.state.simulators) {
-        if (sim._id === this.state.simulation.models[index].simulator) {
+        if (sim._id === this.state.simulationModels[index].simulator) {
           simulator = sim;
         }
       }
