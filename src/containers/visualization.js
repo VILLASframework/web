@@ -192,12 +192,12 @@ class Visualization extends React.Component {
   handleDrop(item, position) {
 
     let widget = null;
-    let defaultSimulator = null;
+    let defaultSimulationModel = null;
 
     if (this.state.simulation.models && this.state.simulation.models.length === 0) {
       NotificationsDataManager.addNotification(NotificationsFactory.NO_SIM_MODEL_AVAILABLE);
     } else {
-      defaultSimulator = this.state.simulation.models[0].simulator;
+      defaultSimulationModel = this.state.simulation.models[0];
     }
 
     // snap position to grid
@@ -205,7 +205,7 @@ class Visualization extends React.Component {
     position.y = this.snapToGrid(position.y);
 
     // create new widget
-    widget = WidgetFactory.createWidgetOfType(item.name, position, defaultSimulator);
+    widget = WidgetFactory.createWidgetOfType(item.name, position, defaultSimulationModel);
 
     var new_widgets = this.state.visualization.widgets;
 
