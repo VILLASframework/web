@@ -126,8 +126,12 @@ class Plot extends React.Component {
   }
 
   tick = () => {
-    if (this.state.data == null || this.props.paused === true) {
+    if (this.state.data == null) {
       this.setState({ lines: null });
+      return;
+    }
+
+    if (this.props.paused === true) {
       return;
     }
 
