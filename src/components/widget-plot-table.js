@@ -103,7 +103,7 @@ class WidgetPlotTable extends Component {
     const simulator = this.props.simulationModel.simulator;
     let simulatorData = [];
 
-    if (this.props.data[simulator] != null) {
+    if (this.props.data[simulator] != null && this.props.data[simulator].output != null && this.props.data[simulator].output.values != null) {
       simulatorData = this.props.data[simulator].output.values.filter((values, index) => (
         this.props.widget.signals.findIndex(value => value === index) !== -1
       ));
