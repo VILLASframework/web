@@ -36,6 +36,7 @@ class WidgetPlot extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.simulationModel == null) {
+      this.setState({ data: [], legend: [] });
       return;
     }
 

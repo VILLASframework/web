@@ -28,7 +28,7 @@ class EditWidgetSignalControl extends Component {
 
     this.state = {
       widget: {
-        simulator: {}
+        simulationModel: ''
       }
     };
   }
@@ -39,19 +39,16 @@ class EditWidgetSignalControl extends Component {
   }
 
   render() {
+    const simulationModel = this.props.simulationModels.find(m => m._id === this.state.widget.simulationModel);
+
     let signalsToRender = [];
 
-    if (this.props.simulation) {
-      // get selected simulation model
-      const simulationModel = this.props.simulation.models.find( model => model.simulator.node === this.state.widget.simulator.node && model.simulator.simulator === this.state.widget.simulator.simulator );
-
-      // If simulation model update the signals to render
+    if (simulationModel != null) {
       if (this.props.input) {
         signalsToRender = simulationModel ? simulationModel.inputMapping : [];
       } else {
         signalsToRender = simulationModel ? simulationModel.outputMapping : [];
       }
-      
     }
 
     return (

@@ -36,6 +36,7 @@ class WidgetGauge extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.simulationModel == null) {
+      this.setState({ value: 0 });
       return;
     }
 

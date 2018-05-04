@@ -28,7 +28,7 @@ class EditWidgetSimulatorControl extends Component {
 
     this.state = {
       widget: {
-        simulator: {}
+        simulationModel: ''
       }
     };
   }
@@ -40,15 +40,15 @@ class EditWidgetSimulatorControl extends Component {
 
   render() {
     return (
-        <FormGroup controlId="simulator">
+        <FormGroup controlId="simulationModel">
             <ControlLabel>Simulation Model</ControlLabel>
-            <FormControl componentClass="select" placeholder="Select simulation model" value={JSON.stringify(this.state.widget.simulator) || '' } onChange={(e) => this.props.handleChange(e)}>
+            <FormControl componentClass="select" placeholder="Select simulation model" value={this.state.widget.simulationModel || '' } onChange={(e) => this.props.handleChange(e)}>
             {
-              this.props.simulation.models.length === 0? (
+              this.props.simulationModels.length === 0 ? (
               <option disabled value style={{ display: 'none' }}> No simulation models available. </option>
             ) : (
-              this.props.simulation.models.map((model, index) => (
-                <option key={index} value={JSON.stringify(model.simulator)}>{model.name}</option>
+              this.props.simulationModels.map((model, index) => (
+                <option key={index} value={model._id}>{model.name}</option>
               )))
             }
             </FormControl>
