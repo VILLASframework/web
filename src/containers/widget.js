@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { ContextMenuTrigger } from 'react-contextmenu';
+import { ContextMenuProvider } from 'react-contexify';
 import Rnd from 'react-rnd';
 import classNames from 'classnames';
 
@@ -252,9 +252,9 @@ class Widget extends React.Component {
           enableResizing={resizing}
           disableDragging={widget.locked}
         >
-          <ContextMenuTrigger id={'widgetMenu' + this.props.index} ref={c => this.contextMenuTriggerViaDraggable = c} >
+          <ContextMenuProvider id={'widgetMenu' + this.props.index}>
             {element}
-          </ContextMenuTrigger>
+          </ContextMenuProvider>
         </Rnd>
       );
     } else {

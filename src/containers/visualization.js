@@ -22,7 +22,7 @@
 import React from 'react';
 import { Container } from 'flux/utils';
 import { Button, Glyphicon } from 'react-bootstrap';
-import { ContextMenu, MenuItem } from 'react-contextmenu';
+import { ContextMenu, Item, Separator } from 'react-contexify';
 import Fullscreenable from 'react-fullscreenable';
 import Slider from 'rc-slider';
 import classNames from 'classnames';
@@ -44,7 +44,7 @@ import AppDispatcher from '../app-dispatcher';
 import NotificationsDataManager from '../data-managers/notifications-data-manager';
 import NotificationsFactory from '../data-managers/notifications-factory';
 
-import '../styles/context-menu.css';
+import 'react-contexify/dist/ReactContexify.min.css';
 
 class Visualization extends React.Component {
   static getStores() {
@@ -521,20 +521,22 @@ class Visualization extends React.Component {
           </Dropzone>
 
           {current_widgets != null &&
-            Object.keys(current_widgets).map( (widget_key) => (
-              <ContextMenu id={'widgetMenu'+ widget_key} key={widget_key} >
-                <MenuItem data={{key: widget_key}} disabled={this.state.visualization.widgets[widget_key].locked} onClick={(e, data) => this.editWidget(e, data)}>Edit</MenuItem>
-                <MenuItem data={{key: widget_key}} disabled={this.state.visualization.widgets[widget_key].locked} onClick={(e, data) => this.deleteWidget(e, data)}>Delete</MenuItem>
-                <MenuItem divider />
-                <MenuItem data={{key: widget_key}} disabled={this.state.visualization.widgets[widget_key].locked} onClick={(e, data) => this.moveWidget(e, data, this.moveAbove)}>Move above</MenuItem>
-                <MenuItem data={{key: widget_key}} disabled={this.state.visualization.widgets[widget_key].locked} onClick={(e, data) => this.moveWidget(e, data, this.moveToFront)}>Move to front</MenuItem>
-                <MenuItem data={{key: widget_key}} disabled={this.state.visualization.widgets[widget_key].locked} onClick={(e, data) => this.moveWidget(e, data, this.moveUnderneath)}>Move underneath</MenuItem>
-                <MenuItem data={{key: widget_key}} disabled={this.state.visualization.widgets[widget_key].locked} onClick={(e, data) => this.moveWidget(e, data, this.moveToBack)}>Move to back</MenuItem>
-                <MenuItem divider />
-                <MenuItem data={{key: widget_key}} disabled={this.state.visualization.widgets[widget_key].locked} onClick={(e, data) => this.lockWidget(data)}>Lock</MenuItem>
-                <MenuItem data={{key: widget_key}} disabled={!this.state.visualization.widgets[widget_key].locked} onClick={(e, data) => this.unlockWidget(data)}>Unlock</MenuItem>
+            Object.keys(current_widgets).map(widget_key => {
+              const data = { key: widget_key };
+
+              return <ContextMenu id={'widgetMenu'+ widget_key} key={widget_key}>
+                <Item disabled={this.state.visualization.widgets[widget_key].locked} onClick={e => this.editWidget(e, data)}>Edit</Item>
+                <Item disabled={this.state.visualization.widgets[widget_key].locked} onClick={e => this.deleteWidget(e, data)}>Delete</Item>
+                <Separator />
+                <Item disabled={this.state.visualization.widgets[widget_key].locked} onClick={e => this.moveWidget(e, data, this.moveAbove)}>Move above</Item>
+                <Item disabled={this.state.visualization.widgets[widget_key].locked} onClick={e => this.moveWidget(e, data, this.moveToFront)}>Move to front</Item>
+                <Item disabled={this.state.visualization.widgets[widget_key].locked} onClick={e => this.moveWidget(e, data, this.moveUnderneath)}>Move underneath</Item>
+                <Item disabled={this.state.visualization.widgets[widget_key].locked} onClick={e => this.moveWidget(e, data, this.moveToBack)}>Move to back</Item>
+                <Separator />
+                <Item disabled={this.state.visualization.widgets[widget_key].locked} onClick={e => this.lockWidget(data)}>Lock</Item>
+                <Item disabled={!this.state.visualization.widgets[widget_key].locked} onClick={e => this.unlockWidget(data)}>Unlock</Item>
               </ContextMenu>
-          ))}
+            })}
 
           <EditWidget sessionToken={this.state.sessionToken} show={this.state.editModal} onClose={(data) => this.closeEdit(data)} widget={this.state.modalData} simulationModels={this.state.simulationModels} files={this.state.files} />
         </div>
