@@ -43,7 +43,7 @@ class WidgetPlot extends React.Component {
     const simulator = nextProps.simulationModel.simulator;
 
     // Proceed if a simulation with models and a simulator are available
-    if (simulator && nextProps.data[simulator] != null && nextProps.data[simulator] != null) {
+    if (simulator && nextProps.data[simulator] != null && nextProps.data[simulator] != null && nextProps.data[simulator].output != null && nextProps.data[simulator].output.values != null) {
       const chosenSignals = nextProps.widget.signals;
 
       const data = nextProps.data[simulator].output.values.filter((values, index) => (

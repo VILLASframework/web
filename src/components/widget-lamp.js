@@ -42,7 +42,7 @@ class WidgetLamp extends Component {
     const simulator = nextProps.simulationModel.simulator;
 
     // update value
-    if (nextProps.data == null || nextProps.data[simulator] == null || nextProps.data[simulator].output.values == null) {
+    if (nextProps.data == null || nextProps.data[simulator] == null || nextProps.data[simulator].output == null || nextProps.data[simulator].output.values == null) {
       this.setState({ value: '' });
       return;
     }

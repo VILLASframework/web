@@ -44,6 +44,8 @@ class WidgetGauge extends Component {
     
     // update value
     if (nextProps.data == null || nextProps.data[simulator] == null
+      || nextProps.data[simulator].output == null
+      || nextProps.data[simulator].output.values == null
       || nextProps.data[simulator].output.values.length === 0  
       || nextProps.data[simulator].output.values[0].length === 0) {
       this.setState({ value: 0 });
