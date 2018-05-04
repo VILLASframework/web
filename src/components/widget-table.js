@@ -35,10 +35,14 @@ class WidgetTable extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // check data
+    if (nextProps.simulationModel == null) {
+      return;
+    }
+
     const simulator = nextProps.simulationModel.simulator;
 
-    if (nextProps.data == null || nextProps.simulationModel == null
+    // check data
+    if (nextProps.data == null
       || nextProps.data[simulator] == null
       || nextProps.data[simulator].output.length === 0 
       || nextProps.data[simulator].output.values.length === 0  
