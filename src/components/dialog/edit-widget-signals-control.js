@@ -54,14 +54,13 @@ class EditWidgetSignalsControl extends Component {
   }
 
   render() {
+    const simulationModel = this.props.simulationModels.find(m => m._id === this.state.widget.simulationModel);
+
     let signalsToRender = [];
 
-    if (this.props.simulation) {
-      // get selected simulation model
-      const simulationModel = this.props.simulation.models.find( model => model.simulator.node === this.state.widget.simulator.node && model.simulator.simulator === this.state.widget.simulator.simulator );
-
+    if (simulationModel != null) {
       // If simulation model update the signals to render
-      signalsToRender = simulationModel? simulationModel.outputMapping : [];
+      signalsToRender = simulationModel ? simulationModel.outputMapping : [];
     }
 
     return (
