@@ -36,9 +36,10 @@ class WidgetTable extends Component {
 
   componentWillReceiveProps(nextProps) {
     // check data
-    const simulator = nextProps.widget.simulator;
+    const simulator = nextProps.simulationModel.simulator;
 
-    if (nextProps.simulation == null || nextProps.data == null || nextProps.data[simulator] == null
+    if (nextProps.data == null || nextProps.simulationModel == null
+      || nextProps.data[simulator] == null
       || nextProps.data[simulator].output.length === 0 
       || nextProps.data[simulator].output.values.length === 0  
       || nextProps.data[simulator].output.values[0].length === 0) {
@@ -52,18 +53,13 @@ class WidgetTable extends Component {
       return;
     }*/
 
-    // get simulation model
-    const simulationModel = nextProps.simulation.models.find((model) => {
-      return (model.simulator.node === simulator.node && model.simulator.simulator === simulator.simulator);
-    });
-
     // get rows
-    var rows = [];
+    const rows = [];
 
     nextProps.data[simulator].output.values.forEach((signal, index) => {
-      if (index < simulationModel.outputMapping.length) {
+      if (index < nextProps.simulationModel.outputMapping.length) {
         rows.push({
-          name: simulationModel.outputMapping[index].name,
+          name: nextProps.simulationModel.outputMapping[index].name,
           value: signal[signal.length - 1].y.toFixed(3)
         });
       }
