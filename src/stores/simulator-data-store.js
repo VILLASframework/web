@@ -36,24 +36,14 @@ class SimulationDataStore extends ReduceStore {
   }
 
   reduce(state, action) {
-    var i, j;
-
     switch (action.type) {
-      case 'simulatorData/open':
-        SimulatorDataDataManager.open(action.endpoint, action.node);
-        return state;
-
       case 'simulatorData/opened':
         // create entry for simulator
-        state[action.node._id] = {};
+        state[action.id] = {};
         return state;
 
       case 'simulatorData/prepare':
-        if (state[action.node.node] == null) {
-          return state;
-        }
-
-        state[action.node.node][action.node.simulator] = { 
+        state[action.id] = { 
           output: {
             sequence: -1,
             length: action.outputLength,
@@ -64,47 +54,49 @@ class SimulationDataStore extends ReduceStore {
             length: action.inputLength,
             version: 2,
             type: 0,
-            id: action.node.simulator,
+            id: 0,
             timestamp: Date.now(),
             values: new Array(action.inputLength).fill(0)
           }
         };
-        
+
+        this.__emitChange();
         return state;
 
       case 'simulatorData/data-changed':
         // get index for simulator id
-        if (state[action.node._id] == null) {
+        if (state[action.id] == null) {
           return state;
         }
 
+        if (state[action.id].output == null) {
+          state[action.id].output = {
+            values: []
+          };
+        }
+
         // loop over all samples in a vector
-        for (j = 0; j < action.data.length; j++) {
+        for (let j = 0; j < action.data.length; j++) {
           let smp = action.data[j];
 
-          let index = action.node.simulators.findIndex(simulator => simulator.id === smp.id);
-          if (index === -1 || state[action.node._id][index] == null) {
-            return state;
-          }
-
           // add data to simulator
-          for (i = 0; i < smp.length; i++) {
-            while (state[action.node._id][index].output.values.length < i + 1) {
-              state[action.node._id][index].output.values.push([]);
+          for (let i = 0; i < smp.length; i++) {
+            while (state[action.id].output.values.length < i + 1) {
+              state[action.id].output.values.push([]);
             }
 
-            state[action.node._id][index].output.values[i].push({ x: smp.timestamp, y: smp.values[i] });
+            state[action.id].output.values[i].push({ x: smp.timestamp, y: smp.values[i] });
 
             // erase old values
-            if (state[action.node._id][index].output.values[i].length > MAX_VALUES) {
-              const pos = state[action.node._id][index].output.values[i].length - MAX_VALUES;
-              state[action.node._id][index].output.values[i].splice(0, pos);
+            if (state[action.id].output.values[i].length > MAX_VALUES) {
+              const pos = state[action.id].output.values[i].length - MAX_VALUES;
+              state[action.id].output.values[i].splice(0, pos);
             }
           }
 
           // update metadata
-          state[action.node._id][index].output.timestamp = smp.timestamp;
-          state[action.node._id][index].output.sequence = smp.sequence;
+          state[action.id].output.timestamp = smp.timestamp;
+          state[action.id].output.sequence = smp.sequence;
         }
 
         // explicit call to prevent array copy

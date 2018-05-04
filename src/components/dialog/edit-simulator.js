@@ -21,24 +21,36 @@
 
 import React from 'react';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import _ from 'lodash';
 
 import Dialog from './dialog';
 
 class EditSimulatorDialog extends React.Component {
-  valid: false;
+  valid = true;
 
   constructor(props) {
     super(props);
 
     this.state = {
-      name: ''
+      name: '',
+      endpoint: ''
     };
   }
 
   onClose(canceled) {
     if (canceled === false) {
       if (this.valid) {
-        this.props.onClose(this.state);
+        let data = {};
+
+        if (this.state.name != null && this.state.name !== "" && this.state.name !== _.get(this.props.simulator, 'rawProperties.name')) {
+          data.name = this.state.name;
+        }
+
+        if (this.state.endpoint != null && this.state.endpoint !== "" && this.state.endpoint !== "http://" && this.state.endpoint !== _.get(this.props.simulator, 'rawProperties.endpoint')) {
+          data.endpoint = this.state.endpoint;
+        }
+
+        this.props.onClose(data);
       }
     } else {
       this.props.onClose();
@@ -51,31 +63,23 @@ class EditSimulatorDialog extends React.Component {
 
   resetState() {
     this.setState({
-      name: this.props.simulator.name
+      name: _.get(this.props.simulator, 'properties.name') || _.get(this.props.simulator, 'rawProperties.name'),
+      endpoint: _.get(this.props.simulator, 'properties.endpoint') || _.get(this.props.simulator, 'rawProperties.endpoint')
     });
-  }
-
-  validateForm(target) {
-    // check all controls
-    var name = true;
-
-    if (this.state.name === '' || this.props.node.simulators.find(simulator => this.props.simulator.name !== this.state.name && simulator.name === this.state.name) !== undefined) {
-      name = false;
-    }
-
-    this.valid = name;
-
-    // return state to control
-    if (target === 'name') return name ? "success" : "error";
   }
 
   render() {
     return (
       <Dialog show={this.props.show} title="Edit Simulator" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
-          <FormGroup controlId="name" validationState={this.validateForm('name')}>
+          <FormGroup controlId="name">
             <ControlLabel>Name</ControlLabel>
-            <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder={_.get(this.props.simulator, 'rawProperties.name')} value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="endpoint">
+            <ControlLabel>Endpoint</ControlLabel>
+            <FormControl type="text" placeholder={_.get(this.props.simulator, 'rawProperties.endpoint')} value={this.state.endpoint || 'http://' } onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
         </form>

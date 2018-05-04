@@ -1,7 +1,7 @@
 /**
- * File: simulation-data-manager.js
+ * File: simulator-data-manager.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 04.03.2017
+ * Date: 03.03.2018
  *
  * This file is part of VILLASweb.
  *
@@ -20,35 +20,28 @@
  ******************************************************************************/
 
 import RestDataManager from './rest-data-manager';
+import RestAPI from '../api/rest-api';
 import AppDispatcher from '../app-dispatcher';
 
-class SimulationsDataManager extends RestDataManager {
-  constructor() {
-    super('simulation', '/simulations', [ '_id', 'name', 'projects', 'models' ]);
-
-    this.onLoad = this.onSimulationsLoad;
-  }
-
-  onSimulationsLoad(data) {
-    if (Array.isArray(data)) {
-      for (let simulation of data) {
-        this.loadSimulationData(simulation);
-      }
-    } else {
-      this.loadSimulationData(data);
+class SimulatorsDataManager extends RestDataManager {
+    constructor() {
+        super('simulator', '/simulators');
     }
-  }
 
-  loadSimulationData(simulation) {
-    for (let model of simulation.models) {
-      AppDispatcher.dispatch({
-        type: 'simulatorData/prepare',
-        inputLength: parseInt(model.inputLength, 10),
-        outputLength: parseInt(model.outputLength, 10),
-        id: model.simulator
-      });
+    doAction(simulator, action, token = null) {
+        // TODO: Make only simulator id dependent
+        RestAPI.post(this.makeURL(this.url + '/' + simulator._id), action, token).then(response => {
+            AppDispatcher.dispatch({
+                type: 'simulators/action-started',
+                data: response
+            });
+        }).catch(error => {
+            AppDispatcher.dispatch({
+                type: 'simulators/action-error',
+                error
+            }); 
+        });
     }
-  }
 }
 
-export default new SimulationsDataManager();
+export default new SimulatorsDataManager();

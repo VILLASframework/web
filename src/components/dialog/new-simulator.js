@@ -25,20 +25,33 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import Dialog from './dialog';
 
 class NewSimulatorDialog extends React.Component {
-  valid: false;
+  valid = false;
 
   constructor(props) {
     super(props);
 
     this.state = {
-      name: ''
+      name: '',
+      endpoint: '',
+      uuid: ''
     };
   }
 
   onClose(canceled) {
     if (canceled === false) {
       if (this.valid) {
-        this.props.onClose(this.state);
+        const data = { 
+          properties: {
+            name: this.state.name
+          },
+          uuid: this.state.uuid
+        };
+
+        if (this.state.endpoint != null && this.state.endpoint !== "" && this.state.endpoint !== 'http://') {
+          data.properties.endpoint = this.state.endpoint;
+        }
+
+        this.props.onClose(data);
       }
     } else {
       this.props.onClose();
@@ -50,21 +63,27 @@ class NewSimulatorDialog extends React.Component {
   }
 
   resetState() {
-    this.setState({ name: '' });
+    this.setState({ name: '', endpoint: 'http://', uuid: '' });
   }
 
   validateForm(target) {
     // check all controls
-    var name = true;
+    let name = true;
+    let uuid = true;
 
-    if (this.state.name === '' || this.props.node.simulators == null || this.props.node.simulators.find(simulator => simulator.name === this.state.name) !== undefined) {
+    if (this.state.name === '') {
       name = false;
     }
 
-    this.valid = name;
+    if (this.state.uuid === '') {
+      uuid = false;
+    }
+
+    this.valid = name || uuid;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
+    if (target === 'uuid') return uuid ? "success" : "error";
   }
 
   render() {
@@ -74,6 +93,16 @@ class NewSimulatorDialog extends React.Component {
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
             <ControlLabel>Name</ControlLabel>
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="endpoint">
+            <ControlLabel>Endpoint</ControlLabel>
+            <FormControl type="text" placeholder="Enter endpoint" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="uuid" validationState={this.validateForm('uuid')}>
+            <ControlLabel>UUID</ControlLabel>
+            <FormControl type="text" placeholder="Enter uuid" value={this.state.uuid} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
         </form>

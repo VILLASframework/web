@@ -21,11 +21,13 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button, Modal, Glyphicon } from 'react-bootstrap';
+import { Button, Glyphicon } from 'react-bootstrap';
 import FileSaver from 'file-saver';
+import _ from 'lodash';
 
 import SimulationStore from '../stores/simulation-store';
-import NodeStore from '../stores/node-store';
+import SimulatorStore from '../stores/simulator-store';
+import SimulationModelStore from '../stores/simulation-model-store';
 import UserStore from '../stores/user-store';
 import AppDispatcher from '../app-dispatcher';
 
@@ -35,16 +37,41 @@ import NewSimulationModelDialog from '../components/dialog/new-simulation-model'
 import EditSimulationModelDialog from '../components/dialog/edit-simulation-model';
 import ImportSimulationModelDialog from '../components/dialog/import-simulation-model';
 
+import SimulatorAction from '../components/simulator-action';
+import DeleteDialog from '../components/dialog/delete-dialog';
+
 class Simulation extends React.Component {
   static getStores() {
-    return [ SimulationStore, NodeStore, UserStore ];
+    return [ SimulationStore, SimulatorStore, SimulationModelStore, UserStore ];
   }
 
-  static calculateState() {
+  static calculateState(prevState, props) {
+    // get selected simulation
+    const sessionToken = UserStore.getState().token;
+
+    let simulation = SimulationStore.getState().find(s => s._id === props.match.params.simulation);
+    if (simulation == null) {
+      AppDispatcher.dispatch({
+        type: 'simulations/start-load',
+        data: props.match.params.simulation,
+        token: sessionToken
+      });
+
+      simulation = {};
+    }
+
+    // load models
+    let simulationModels = [];
+    if (simulation.models != null) {
+      simulationModels = SimulationModelStore.getState().filter(m => simulation.models.includes(m._id));
+    }
+
     return {
-      simulations: SimulationStore.getState(),
-      nodes: NodeStore.getState(),
-      sessionToken: UserStore.getState().token,
+      simulationModels,
+      simulation,
+
+      simulators: SimulatorStore.getState(),
+      sessionToken,
 
       newModal: false,
       deleteModal: false,
@@ -53,7 +80,7 @@ class Simulation extends React.Component {
       modalData: {},
       modalIndex: null,
 
-      simulation: {}
+      selectedSimulationModels: []
     }
   }
 
@@ -64,24 +91,13 @@ class Simulation extends React.Component {
     });
 
     AppDispatcher.dispatch({
-      type: 'nodes/start-load',
+      type: 'simulationModels/start-load',
       token: this.state.sessionToken
     });
-  }
 
-  componentDidUpdate() {
-    if (this.state.simulation._id !== this.props.match.params.simulation) {
-      this.reloadSimulation();
-    }
-  }
-
-  reloadSimulation() {
-    // select simulation by param id
-    this.state.simulations.forEach((simulation) => {
-      if (simulation._id === this.props.match.params.simulation) {
-        // JSON.parse(JSON.stringify(obj)) = deep clone to make also copy of widget objects inside
-        this.setState({ simulation: JSON.parse(JSON.stringify(simulation)) });
-      }
+    AppDispatcher.dispatch({
+      type: 'simulators/start-load',
+      token: this.state.sessionToken
     });
   }
 
@@ -89,26 +105,34 @@ class Simulation extends React.Component {
     this.setState({ newModal : false });
 
     if (data) {
-      this.state.simulation.models.push(data);
+      data.simulation = this.state.simulation._id;
 
       AppDispatcher.dispatch({
-        type: 'simulations/start-edit',
-        data: this.state.simulation,
+        type: 'simulationModels/start-add',
+        data,
         token: this.state.sessionToken
+      });
+
+      this.setState({ simulation: {} }, () => {
+        AppDispatcher.dispatch({
+          type: 'simulations/start-load',
+          data: this.props.match.params.simulation,
+          token: this.state.sessionToken
+        });
       });
     }
   }
 
-  confirmDeleteModal() {
-    // remove model from simulation
-    var simulation = this.state.simulation;
-    simulation.models.splice(this.state.modalIndex, 1);
+  closeDeleteModal = confirmDelete => {
+    this.setState({ deleteModal: false });
 
-    this.setState({ deleteModal: false, simulation: simulation });
+    if (confirmDelete === false) {
+      return;
+    }
 
     AppDispatcher.dispatch({
-      type: 'simulations/start-edit',
-      data: simulation,
+      type: 'simulationModels/start-remove',
+      data: this.state.modalData,
       token: this.state.sessionToken
     });
   }
@@ -117,13 +141,9 @@ class Simulation extends React.Component {
     this.setState({ editModal : false });
 
     if (data) {
-      var simulation = this.state.simulation;
-      simulation.models[this.state.modalIndex] = data;
-      this.setState({ simulation: simulation });
-
       AppDispatcher.dispatch({
-        type: 'simulations/start-edit',
-        data: simulation,
+        type: 'simulationModels/start-edit',
+        data,
         token: this.state.sessionToken
       });
     }
@@ -133,43 +153,92 @@ class Simulation extends React.Component {
     this.setState({ importModal: false });
 
     if (data) {
-      this.state.simulation.models.push(data);
+      data.simulation = this.state.simulation._id;
       
       AppDispatcher.dispatch({
-        type: 'simulations/start-edit',
-        data: this.state.simulation,
+        type: 'simulationModels/start-add',
+        data,
         token: this.state.sessionToken
+      });
+
+      this.setState({ simulation: {} }, () => {
+        AppDispatcher.dispatch({
+          type: 'simulations/start-load',
+          data: this.props.match.params.simulation,
+          token: this.state.sessionToken
+        });
       });
     }
   }
 
-  getSimulatorName(simulator) {
-    var name = "undefined";
-
-    this.state.nodes.forEach(node => {
-      if (node._id === simulator.node) {
-        name = node.name + '/' + node.simulators[simulator.simulator].name;
+  getSimulatorName(simulatorId) {
+    for (let simulator of this.state.simulators) {
+      if (simulator._id === simulatorId) {
+        if ('name' in simulator.rawProperties) {
+          return _.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name');
+        } else {
+          return simulator.uuid;
+        }
       }
-    });
-
-    return name;
+    }
   }
 
   exportModel(index) {
     // filter properties
-    let simulationModel = Object.assign({}, this.state.simulation.models[index]);
-    delete simulationModel.simulator;
+    const model = Object.assign({}, this.state.simulationModels[index]);
+    delete model.simulator;
+    delete model.simulation;
 
     // show save dialog
-    const blob = new Blob([JSON.stringify(simulationModel, null, 2)], { type: 'application/json' });
-    FileSaver.saveAs(blob, 'simulation model - ' + simulationModel.name + '.json');
+    const blob = new Blob([JSON.stringify(model, null, 2)], { type: 'application/json' });
+    FileSaver.saveAs(blob, 'simulation model - ' + model.name + '.json');
   }
 
-  onModalKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-    
-      this.confirmDeleteModal();
+  onSimulationModelChecked(index, event) {
+    const selectedSimulationModels = Object.assign([], this.state.selectedSimulationModels);
+    for (let key in selectedSimulationModels) {
+      if (selectedSimulationModels[key] === index) {
+        // update existing entry
+        if (event.target.checked) {
+          return;
+        }
+
+        selectedSimulationModels.splice(key, 1);
+
+        this.setState({ selectedSimulationModels });
+        return;
+      }
+    }
+
+    // add new entry
+    if (event.target.checked === false) {
+      return;
+    }
+
+    selectedSimulationModels.push(index);
+    this.setState({ selectedSimulationModels });
+  }
+
+  runAction = action => {
+    for (let index of this.state.selectedSimulationModels) {
+      // get simulator for model
+      let simulator = null;
+      for (let sim of this.state.simulators) {
+        if (sim._id === this.state.simulationModels[index].simulator) {
+          simulator = sim;
+        }
+      }
+
+      if (simulator == null) {
+        continue;
+      }
+  
+      AppDispatcher.dispatch({
+        type: 'simulators/start-action',
+        simulator,
+        data: action.data,
+        token: this.state.sessionToken
+      });
     }
   }
 
@@ -178,46 +247,49 @@ class Simulation extends React.Component {
       <div className='section'>
         <h1>{this.state.simulation.name}</h1>
 
-        <Table data={this.state.simulation.models}>
+        <Table data={this.state.simulationModels}>
+          <TableColumn checkbox onChecked={(index, event) => this.onSimulationModelChecked(index, event)} width='30' />
           <TableColumn title='Name' dataKey='name' />
           <TableColumn title='Simulator' dataKey='simulator' width='180' modifier={(simulator) => this.getSimulatorName(simulator)} />
-          <TableColumn title='Length' dataKey='length' width='100' />
+          <TableColumn title='Output' dataKey='outputLength' width='100' />
+          <TableColumn title='Input' dataKey='inputLength' width='100' />
           <TableColumn 
             title='' 
             width='100' 
             editButton 
             deleteButton 
             exportButton
-            onEdit={(index) => this.setState({ editModal: true, modalData: this.state.simulation.models[index], modalIndex: index })} 
-            onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.simulation.models[index], modalIndex: index })} 
+            onEdit={(index) => this.setState({ editModal: true, modalData: this.state.simulationModels[index], modalIndex: index })} 
+            onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.simulationModels[index], modalIndex: index })} 
             onExport={index => this.exportModel(index)}
           />
         </Table>
 
-        <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Simulation Model</Button>
-        <Button onClick={() => this.setState({ importModal: true })}><Glyphicon glyph="import" /> Import</Button>
+        <div style={{ float: 'left' }}>
+          <SimulatorAction 
+            runDisabled={this.state.selectedSimulationModels.length === 0} 
+            runAction={this.runAction}
+            actions={[ 
+              { id: '0', title: 'Start', data: { action: 'start' } }, 
+              { id: '1', title: 'Stop', data: { action: 'stop' } }, 
+              { id: '2', title: 'Pause', data: { action: 'pause' } }, 
+              { id: '3', title: 'Resume', data: { action: 'resume' } } 
+            ]}/>
+        </div>
 
-        <NewSimulationModelDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} nodes={this.state.nodes} />
-        <EditSimulationModelDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} data={this.state.modalData} nodes={this.state.nodes} />
-        <ImportSimulationModelDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} nodes={this.state.nodes} />
+        <div style={{ float: 'right' }}>
+          <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Simulation Model</Button>
+          <Button onClick={() => this.setState({ importModal: true })}><Glyphicon glyph="import" /> Import</Button>
+        </div>
 
-        <Modal keyboard show={this.state.deleteModal} onHide={() => this.setState({ deleteModal: false })} onKeyPress={this.onModalKeyPress}>
-          <Modal.Header>
-            <Modal.Title>Delete Simulation Model</Modal.Title>
-          </Modal.Header>
+        <NewSimulationModelDialog show={this.state.newModal} onClose={data => this.closeNewModal(data)} simulators={this.state.simulators} />
+        <EditSimulationModelDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} data={this.state.modalData} simulators={this.state.simulators} />
+        <ImportSimulationModelDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} simulators={this.state.simulators} />
 
-          <Modal.Body>
-            Are you sure you want to delete the simulation model <strong>'{this.state.modalData.name}'</strong>?
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button onClick={() => this.setState({ deleteModal: false })}>Cancel</Button>
-            <Button bsStyle="danger" onClick={() => this.confirmDeleteModal()}>Delete</Button>
-          </Modal.Footer>
-        </Modal>
+        <DeleteDialog title="simulation model" name={this.state.modalData.name} show={this.state.deleteModal} onClose={this.closeDeleteModal} />
       </div>
     );
   }
 }
 
-export default Container.create(Simulation);
+export default Container.create(Simulation, { withProps: true });

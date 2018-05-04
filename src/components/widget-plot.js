@@ -35,20 +35,23 @@ class WidgetPlot extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const simulator = nextProps.widget.simulator;
-    const simulation = nextProps.simulation;
+    if (nextProps.simulationModel == null) {
+      this.setState({ data: [], legend: [] });
+      return;
+    }
+
+    const simulator = nextProps.simulationModel.simulator;
 
     // Proceed if a simulation with models and a simulator are available
-    if (simulator && nextProps.data[simulator.node] != null && nextProps.data[simulator.node][simulator.simulator] != null && simulation && simulation.models.length > 0) {
-      const model = simulation.models.find(model => model.simulator.node === simulator.node && model.simulator.simulator === simulator.simulator);
+    if (simulator && nextProps.data[simulator] != null && nextProps.data[simulator] != null) {
       const chosenSignals = nextProps.widget.signals;
 
-      const data = nextProps.data[simulator.node][simulator.simulator].output.values.filter((values, index) => (
+      const data = nextProps.data[simulator].output.values.filter((values, index) => (
         nextProps.widget.signals.findIndex(value => value === index) !== -1
       ));
 
       // Query the signals that will be displayed in the legend
-      const legend = model.outputMapping.reduce( (accum, model_signal, signal_index) => {
+      const legend = nextProps.simulationModel.outputMapping.reduce( (accum, model_signal, signal_index) => {
         if (chosenSignals.includes(signal_index)) {
           accum.push({ index: signal_index, name: model_signal.name, type: model_signal.type });
         }

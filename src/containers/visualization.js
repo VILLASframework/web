@@ -38,6 +38,7 @@ import UserStore from '../stores/user-store';
 import VisualizationStore from '../stores/visualization-store';
 import ProjectStore from '../stores/project-store';
 import SimulationStore from '../stores/simulation-store';
+import SimulationModelStore from '../stores/simulation-model-store';
 import FileStore from '../stores/file-store';
 import AppDispatcher from '../app-dispatcher';
 import NotificationsDataManager from '../data-managers/notifications-data-manager';
@@ -47,12 +48,17 @@ import '../styles/context-menu.css';
 
 class Visualization extends React.Component {
   static getStores() {
-    return [ VisualizationStore, ProjectStore, SimulationStore, FileStore, UserStore ];
+    return [ VisualizationStore, ProjectStore, SimulationStore, SimulationModelStore, FileStore, UserStore ];
   }
 
-  static calculateState(prevState) {
+  static calculateState(prevState, props) {
     if (prevState == null) {
       prevState = {};
+    }
+
+    let simulationModels = [];
+    if (prevState.simulation != null) {
+      simulationModels = SimulationModelStore.getState().filter(m => prevState.simulation.models.includes(m._id));
     }
 
     return {
@@ -65,6 +71,7 @@ class Visualization extends React.Component {
       visualization: prevState.visualization || {},
       project: prevState.project || null,
       simulation: prevState.simulation || null,
+      simulationModels,
       editing: prevState.editing || false,
       paused: prevState.paused || false,
 
@@ -192,12 +199,12 @@ class Visualization extends React.Component {
   handleDrop(item, position) {
 
     let widget = null;
-    let defaultSimulator = null;
+    let defaultSimulationModel = null;
 
     if (this.state.simulation.models && this.state.simulation.models.length === 0) {
       NotificationsDataManager.addNotification(NotificationsFactory.NO_SIM_MODEL_AVAILABLE);
     } else {
-      defaultSimulator = this.state.simulation.models[0].simulator;
+      defaultSimulationModel = this.state.simulation.models[0];
     }
 
     // snap position to grid
@@ -205,7 +212,7 @@ class Visualization extends React.Component {
     position.y = this.snapToGrid(position.y);
 
     // create new widget
-    widget = WidgetFactory.createWidgetOfType(item.name, position, defaultSimulator);
+    widget = WidgetFactory.createWidgetOfType(item.name, position, defaultSimulationModel);
 
     var new_widgets = this.state.visualization.widgets;
 
@@ -529,11 +536,11 @@ class Visualization extends React.Component {
               </ContextMenu>
           ))}
 
-          <EditWidget sessionToken={this.state.sessionToken} show={this.state.editModal} onClose={(data) => this.closeEdit(data)} widget={this.state.modalData} simulation={this.state.simulation} files={this.state.files} />
+          <EditWidget sessionToken={this.state.sessionToken} show={this.state.editModal} onClose={(data) => this.closeEdit(data)} widget={this.state.modalData} simulationModels={this.state.simulationModels} files={this.state.files} />
         </div>
       </div>
     );
   }
 }
 
-export default Fullscreenable()(Container.create(Visualization));
+export default Fullscreenable()(Container.create(Visualization, { withProps: true }));

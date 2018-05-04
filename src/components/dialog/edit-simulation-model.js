@@ -21,20 +21,23 @@
 
 import React from 'react';
 import { FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
+import _ from 'lodash';
 
 import Table from '../table';
 import TableColumn from '../table-column';
 import Dialog from './dialog';
 
 class EditSimulationModelDialog extends React.Component {
-  valid: false;
+  valid = false;
 
   constructor(props) {
     super(props);
 
     this.state = {
+      _id: '',
       name: '',
-      simulator: { node: '', simulator: '' },
+      simulator: '',
+      simulation: '',
       outputLength: 1,
       inputLength: 1,
       outputMapping: [{ name: 'Signal', type: 'Type' }],
@@ -74,12 +77,7 @@ class EditSimulationModelDialog extends React.Component {
       }
     }
 
-    if (e.target.id === 'simulator') {
-      var value = e.target.value.split("/");
-      this.setState({ simulator: { node: value[0], simulator: value[1] } });
-    } else {
-      this.setState({ [e.target.id]: e.target.value });
-    }
+    this.setState({ [e.target.id]: e.target.value });
   }
 
   handleMappingChange(key, event, row, column) {
@@ -96,6 +94,8 @@ class EditSimulationModelDialog extends React.Component {
 
   resetState() {
     this.setState({
+      _id: this.props.data._id,
+      simulation: this.props.data.simulation,
       name: this.props.data.name,
       simulator: this.props.data.simulator,
       outputLength: this.props.data.outputLength,
@@ -143,11 +143,9 @@ class EditSimulationModelDialog extends React.Component {
           </FormGroup>
           <FormGroup controlId="simulator" validationState={this.validateForm('simulator')}>
             <ControlLabel>Simulator</ControlLabel>
-            <FormControl componentClass="select" placeholder="Select simulator" value={this.state.simulator.node + '/' + this.state.simulator.simulator} onChange={(e) => this.handleChange(e)}>
-              {this.props.nodes.map(node => (
-                node.simulators.map((simulator, index) => (
-                  <option key={node._id + index} value={node.name + '/' + simulator.name}>{node.name}/{simulator.name}</option>
-                ))
+            <FormControl componentClass="select" placeholder="Select simulator" value={this.state.simulator} onChange={(e) => this.handleChange(e)}>
+              {this.props.simulators.map(simulator => (
+                <option key={simulator._id} value={simulator._id}>{_.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name')}</option>
               ))}
             </FormControl>
           </FormGroup>

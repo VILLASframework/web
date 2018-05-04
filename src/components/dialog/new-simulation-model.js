@@ -21,6 +21,7 @@
 
 import React from 'react';
 import { FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
+import _ from 'lodash';
 
 import Table from '../table';
 import TableColumn from '../table-column';
@@ -34,7 +35,7 @@ class NewSimulationModelDialog extends React.Component {
 
     this.state = {
       name: '',
-      simulator: { node: '', simulator: '' },
+      simulator: '',
       outputLength: '1',
       inputLength: '1',
       outputMapping: [ { name: 'Signal', type: 'Type' } ],
@@ -74,11 +75,7 @@ class NewSimulationModelDialog extends React.Component {
       }
     }
 
-    if (e.target.id === 'simulator') {
-      this.setState({ simulator: JSON.parse(e.target.value) });
-    } else {
-      this.setState({ [e.target.id]: e.target.value });
-    }
+    this.setState({ [e.target.id]: e.target.value });
   }
 
   handleMappingChange(key, event, row, column) {
@@ -96,7 +93,7 @@ class NewSimulationModelDialog extends React.Component {
   resetState() {
     this.setState({
       name: '',
-      simulator: { node: this.props.nodes[0] ? this.props.nodes[0]._id : '', simulator: this.props.nodes[0].simulators[0] ? 0 : '' },
+      simulator: this.props.simulators[0]._id || '',
       outputLength: '1',
       inputLength: '1',
       outputMapping: [{ name: 'Signal', type: 'Type' }],
@@ -109,14 +106,9 @@ class NewSimulationModelDialog extends React.Component {
     let name = true;
     let inputLength = true;
     let outputLength = true;
-    let simulator = true;
 
     if (this.state.name === '') {
       name = false;
-    }
-
-    if (this.state.simulator === '') {
-      simulator = false;
     }
 
     // test if simulatorid is a number (in a string, not type of number)
@@ -128,13 +120,12 @@ class NewSimulationModelDialog extends React.Component {
       inputLength = false;
     }
 
-    this.valid = name && inputLength && outputLength && simulator;
+    this.valid = name && inputLength && outputLength;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
     else if (target === 'outputLength') return outputLength ? "success" : "error";
     else if (target === 'inputLength') return inputLength ? "success" : "error";
-    else if (target === 'simulator') return simulator ? "success" : "error";
   }
 
   render() {
@@ -146,13 +137,11 @@ class NewSimulationModelDialog extends React.Component {
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="simulator" validationState={this.validateForm('simulator')}>
+          <FormGroup controlId="simulator">
             <ControlLabel>Simulator</ControlLabel>
-            <FormControl componentClass="select" placeholder="Select simulator" value={JSON.stringify({ node: this.state.simulator.node, simulator: this.state.simulator.simulator})} onChange={(e) => this.handleChange(e)}>
-              {this.props.nodes.map(node => (
-                node.simulators.map((simulator, index) => (
-                  <option key={node._id + index} value={JSON.stringify({ node: node._id, simulator: index })}>{node.name}/{simulator.name}</option>
-                ))
+            <FormControl componentClass="select" placeholder="Select simulator" value={this.state.simulator} onChange={(e) => this.handleChange(e)}>
+              {this.props.simulators.map(simulator => (
+                <option key={simulator._id} value={simulator._id}>{_.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name')}</option>
               ))}
             </FormControl>
           </FormGroup>

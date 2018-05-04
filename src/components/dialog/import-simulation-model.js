@@ -21,6 +21,7 @@
 
 import React from 'react';
 import { FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
+import _ from 'lodash';
 
 import Table from '../table';
 import TableColumn from '../table-column';
@@ -35,7 +36,7 @@ class ImportSimulationModelDialog extends React.Component {
 
     this.state = {
       name: '',
-      simulator: { node: '', simulator: '' },
+      simulator: '',
       outputLength: '1',
       inputLength: '1',
       outputMapping: [ { name: 'Signal', type: 'Type' } ],
@@ -54,7 +55,7 @@ class ImportSimulationModelDialog extends React.Component {
   resetState() {
     this.setState({
       name: '',
-      simulator: { node: this.props.nodes[0] ? this.props.nodes[0]._id : '', simulator: this.props.nodes[0].simulators[0] ? 0 : '' },
+      simulator: '',
       outputLength: '1',
       inputLength: '1',
       outputMapping: [{ name: 'Signal', type: 'Type' }],
@@ -86,11 +87,7 @@ class ImportSimulationModelDialog extends React.Component {
       }
     }
 
-    if (e.target.id === 'simulator') {
-      this.setState({ simulator: JSON.parse(e.target.value) });
-    } else {
-      this.setState({ [e.target.id]: e.target.value });
-    }
+    this.setState({ [e.target.id]: e.target.value });
   }
 
   handleMappingChange(key, event, row, column) {
@@ -177,11 +174,9 @@ class ImportSimulationModelDialog extends React.Component {
           </FormGroup>
           <FormGroup controlId="simulator">
             <ControlLabel>Simulator</ControlLabel>
-            <FormControl readOnly={!this.imported} componentClass="select" placeholder="Select simulator" value={JSON.stringify({ node: this.state.simulator.node, simulator: this.state.simulator.simulator})} onChange={(e) => this.handleChange(e)}>
-              {this.props.nodes.map(node => (
-                node.simulators.map((simulator, index) => (
-                  <option key={node._id + index} value={JSON.stringify({ node: node.name, simulator: simulator.name })}>{node.name}/{simulator.name}</option>
-                ))
+            <FormControl readOnly={!this.imported} componentClass="select" placeholder="Select simulator" value={this.state.simulator} onChange={(e) => this.handleChange(e)}>
+              {this.props.simulators.map(simulator => (
+                <option key={simulator._id} value={simulator}>{_.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name')}</option>
               ))}
             </FormControl>
           </FormGroup>

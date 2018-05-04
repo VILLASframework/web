@@ -28,6 +28,7 @@ import classNames from 'classnames';
 import AppDispatcher from '../app-dispatcher';
 import UserStore from '../stores/user-store';
 import SimulatorDataStore from '../stores/simulator-data-store';
+import SimulationModelStore from '../stores/simulation-model-store';
 import FileStore from '../stores/file-store';
 
 import WidgetLamp from '../components/widget-lamp';
@@ -49,7 +50,7 @@ import '../styles/widgets.css';
 
 class Widget extends React.Component {
   static getStores() {
-    return [ SimulatorDataStore, FileStore, UserStore ];
+    return [ SimulatorDataStore, SimulationModelStore, FileStore, UserStore ];
   }
 
   static calculateState(prevState, props) {
@@ -70,14 +71,18 @@ class Widget extends React.Component {
         sessionToken,
         simulatorData,
         files: FileStore.getState(),
-        sequence: prevState.sequence + 1
+        sequence: prevState.sequence + 1,
+
+        simulationModels: SimulationModelStore.getState()
       };
     } else {
       return {
         sessionToken,
         simulatorData,
         files: FileStore.getState(),
-        sequence: 0
+        sequence: 0,
+
+        simulationModels: SimulationModelStore.getState()
       };
     }
   }
@@ -94,6 +99,11 @@ class Widget extends React.Component {
     if (this.state.sessionToken) {
       AppDispatcher.dispatch({
         type: 'files/start-load',
+        token: this.state.sessionToken
+      });
+
+      AppDispatcher.dispatch({
+        type: 'simulationModels/start-load',
         token: this.state.sessionToken
       });
     }
@@ -171,19 +181,29 @@ class Widget extends React.Component {
     let borderedWidget = false;
     let element = null;
 
+    let simulationModel = null;
+
+    for (let model of this.state.simulationModels) {
+      if (model._id !== widget.simulationModel) {
+        continue;
+      }
+
+      simulationModel = model;
+    }
+
     // dummy is passed to widgets to keep updating them while in edit mode
     if (widget.type === 'Lamp') {
-      element = <WidgetLamp widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
+      element = <WidgetLamp widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
     } else if (widget.type === 'Value') {
-      element = <WidgetValue widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
+      element = <WidgetValue widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
     } else if (widget.type === 'Plot') {
-      element = <WidgetPlot widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} paused={this.props.paused} />
+      element = <WidgetPlot widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} paused={this.props.paused} />
     } else if (widget.type === 'Table') {
-      element = <WidgetTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} />
+      element = <WidgetTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
     } else if (widget.type === 'Label') {
       element = <WidgetLabel widget={widget} />
     } else if (widget.type === 'PlotTable') {
-      element = <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulation={this.props.simulation} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index)} paused={this.props.paused} />
+      element = <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index)} paused={this.props.paused} />
     } else if (widget.type === 'Image') {
       element = <WidgetImage widget={widget} files={this.state.files} token={this.state.sessionToken} />
     } else if (widget.type === 'Button') {
@@ -193,7 +213,7 @@ class Widget extends React.Component {
     } else if (widget.type === 'Slider') {
       element = <WidgetSlider widget={widget} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } onInputChanged={(value) => this.inputDataChanged(widget, value)} />
     } else if (widget.type === 'Gauge') {
-      element = <WidgetGauge widget={widget} data={this.state.simulatorData} editing={this.props.editing} simulation={this.props.simulation} />
+      element = <WidgetGauge widget={widget} data={this.state.simulatorData} editing={this.props.editing} simulationModel={simulationModel} />
     } else if (widget.type === 'Box') {
       element = <WidgetBox widget={widget} editing={this.props.editing} />
     } else if (widget.type === 'HTML') {

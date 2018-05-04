@@ -1,7 +1,7 @@
 /**
- * File: simulation-data-manager.js
+ * File: simulation-models-data-manager.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 04.03.2017
+ * Date: 20.04.2018
  *
  * This file is part of VILLASweb.
  *
@@ -20,35 +20,5 @@
  ******************************************************************************/
 
 import RestDataManager from './rest-data-manager';
-import AppDispatcher from '../app-dispatcher';
 
-class SimulationsDataManager extends RestDataManager {
-  constructor() {
-    super('simulation', '/simulations', [ '_id', 'name', 'projects', 'models' ]);
-
-    this.onLoad = this.onSimulationsLoad;
-  }
-
-  onSimulationsLoad(data) {
-    if (Array.isArray(data)) {
-      for (let simulation of data) {
-        this.loadSimulationData(simulation);
-      }
-    } else {
-      this.loadSimulationData(data);
-    }
-  }
-
-  loadSimulationData(simulation) {
-    for (let model of simulation.models) {
-      AppDispatcher.dispatch({
-        type: 'simulatorData/prepare',
-        inputLength: parseInt(model.inputLength, 10),
-        outputLength: parseInt(model.outputLength, 10),
-        id: model.simulator
-      });
-    }
-  }
-}
-
-export default new SimulationsDataManager();
+export default new RestDataManager('simulationModel', '/models');

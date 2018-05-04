@@ -30,22 +30,17 @@ class SimulatorDataDataManager {
     this._sockets = {};
   }
 
-  open(endpoint, node) {
+  open(endpoint, identifier) {
     // pass signals to onOpen callback
-    if (this._sockets[node._id] != null) {
-      if (this._sockets[node._id].url !== WebsocketAPI.getURL(node)) {
+    if (this._sockets[identifier] != null) {
+      if (this._sockets[identifier].url !== WebsocketAPI.getURL(endpoint)) {
         // replace connection, since endpoint changed
         this._sockets.close();
 
-        this._sockets[node._id] = WebsocketAPI.addSocket(node, { onOpen: (event) => this.onOpen(event, node), onClose: (event) => this.onClose(event, node), onMessage: (event) => this.onMessage(event, node), onError: (error) => this.onError(error, node) });
+        this._sockets[identifier] = WebsocketAPI.addSocket(endpoint, { onOpen: (event) => this.onOpen(event, identifier), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier), onError: (error) => this.onError(error, identifier) });
       }
     } else {
-      // set flag if a socket to this simulator was already create before
-      if (this._sockets[node._id] === null) {
-        this._sockets[node._id] = WebsocketAPI.addSocket(node, { onOpen: (event) => this.onOpen(event, node, false), onClose: (event) => this.onClose(event, node), onMessage: (event) => this.onMessage(event, node), onError: (error) => this.onError(error, node) });
-      } else {
-        this._sockets[node._id] = WebsocketAPI.addSocket(node, { onOpen: (event) => this.onOpen(event, node, true), onClose: (event) => this.onClose(event, node), onMessage: (event) => this.onMessage(event, node), onError: (error) => this.onError(error, node) });
-      }
+      this._sockets[identifier] = WebsocketAPI.addSocket(endpoint, { onOpen: (event) => this.onOpen(event, identifier, false), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier), onError: (error) => this.onError(error, identifier) });
     }
   }
 
@@ -59,8 +54,8 @@ class SimulatorDataDataManager {
     }
   }
 
-  send(message, nodeId) {
-    const socket = this._sockets[nodeId];
+  send(message, identifier) {
+    const socket = this._sockets[identifier];
     if (socket == null) {
       return false;
     }
@@ -68,40 +63,42 @@ class SimulatorDataDataManager {
     const data = this.messageToBuffer(message);
     socket.send(data);
 
+    console.log(data);
+
     return true;
   }
 
-  onOpen(event, node, firstOpen) {
+  onOpen(event, identifier, firstOpen) {
     AppDispatcher.dispatch({
       type: 'simulatorData/opened',
-      node: node,
+      id: identifier,
       firstOpen: firstOpen
     });
   }
 
-  onClose(event, node) {
+  onClose(event, identifier) {
     AppDispatcher.dispatch({
       type: 'simulatorData/closed',
-      node: node,
+      id: identifier,
       notification: (event.code !== 4000)
     });
 
     // remove from list, keep null reference for flag detection
-    delete this._sockets[node._id];
+    delete this._sockets[identifier];
   }
 
-  onError(error, node) {
-    console.error('Error on ' + node._id + ':' + error);
+  onError(error, identifier) {
+    console.error('Error on ' + identifier + ':' + error);
   }
 
-  onMessage(event, node) {
+  onMessage(event, identifier) {
     var msgs = this.bufferToMessageArray(event.data);
 
     if (msgs.length > 0) {
       AppDispatcher.dispatch({
         type: 'simulatorData/data-changed',
         data: msgs,
-        node: node
+        id: identifier
       });
     }
   }

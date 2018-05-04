@@ -12,7 +12,7 @@ import WidgetSlider from './widget-slider';
 
 class WidgetFactory {
 
-    static createWidgetOfType(type, position, defaultSimulator = null) {
+    static createWidgetOfType(type, position, defaultSimulationModel = null) {
 
         let widget = {
             name: 'Name',
@@ -28,7 +28,7 @@ class WidgetFactory {
         // set type specific properties
         switch(type) {
             case 'Lamp':
-                widget.simulator = defaultSimulator;
+                widget.simulationModel = defaultSimulationModel;
                 widget.signal = 0;
                 widget.minWidth = 5;
                 widget.minHeight = 5;
@@ -39,7 +39,7 @@ class WidgetFactory {
                 widget.threshold = 0.5;
                 break;
             case 'Value':
-                widget.simulator = defaultSimulator;
+                widget.simulationModel = defaultSimulationModel;
                 widget.signal = 0;
                 widget.minWidth = 70;
                 widget.minHeight = 20;
@@ -50,7 +50,7 @@ class WidgetFactory {
                 widget.showUnit = false;
                 break;
             case 'Plot':
-                widget.simulator = defaultSimulator;
+                widget.simulationModel = defaultSimulationModel;
                 widget.signals = [ 0 ];
                 widget.ylabel = '';
                 widget.time = 60;
@@ -63,7 +63,7 @@ class WidgetFactory {
                 widget.yUseMinMax = false;
                 break;
             case 'Table':
-                widget.simulator = defaultSimulator;
+                widget.simulationModel = defaultSimulationModel;
                 widget.minWidth = 200;
                 widget.width = 300;
                 widget.height = 200;
@@ -78,7 +78,7 @@ class WidgetFactory {
                 widget.fontColor = 0;
                 break;
             case 'PlotTable':
-                widget.simulator = defaultSimulator;
+                widget.simulationModel = defaultSimulationModel;
                 widget.preselectedSignals = [];
                 widget.signals = []; // initialize selected signals
                 widget.ylabel = '';
@@ -105,7 +105,7 @@ class WidgetFactory {
                 widget.height = 100;
                 widget.background_color = 1;
                 widget.font_color = 0;
-                widget.simulator = defaultSimulator;
+                widget.simulationModel = defaultSimulationModel;
                 widget.signal = 0;
                 break;
             case 'NumberInput':
@@ -113,7 +113,7 @@ class WidgetFactory {
                 widget.minHeight = 50;
                 widget.width = 200;
                 widget.height = 50;
-                widget.simulator = defaultSimulator;
+                widget.simulationModel = defaultSimulationModel;
                 widget.signal = 0;
                 break;
             case 'Slider':
@@ -122,11 +122,11 @@ class WidgetFactory {
                 widget.width = 400;
                 widget.height = 50;
                 widget.orientation = WidgetSlider.OrientationTypes.HORIZONTAL.value; // Assign default orientation
-                widget.simulator = defaultSimulator;
+                widget.simulationModel = defaultSimulationModel;
                 widget.signal = 0;
                 break;
             case 'Gauge':
-                widget.simulator = defaultSimulator;
+                widget.simulationModel = defaultSimulationModel;
                 widget.signal = 0;
                 widget.minWidth = 100;
                 widget.minHeight = 150;

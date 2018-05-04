@@ -20,9 +20,9 @@
  ******************************************************************************/
 
 class WebsocketAPI {
-  addSocket(node, callbacks) {
+  addSocket(endpoint, callbacks) {
     // create web socket client
-    const socket = new WebSocket(this.getURL(node), 'live');
+    const socket = new WebSocket(this.getURL(endpoint), 'live');
     socket.binaryType = 'arraybuffer';
 
     // register callbacks
@@ -34,10 +34,10 @@ class WebsocketAPI {
     return socket;
   }
 
-  getURL(node) {
+  getURL(endpoint) {
     //  create an anchor element (note: no need to append this element to the document)
     var link = document.createElement('a');
-    link.href = node.endpoint;
+    link.href = endpoint;
 
     if (link.protocol === 'https:')
       link.protocol = 'wss:';

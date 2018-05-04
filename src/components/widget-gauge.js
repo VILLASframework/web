@@ -35,19 +35,23 @@ class WidgetGauge extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // update value
-    const simulator = nextProps.widget.simulator;
+    if (nextProps.simulationModel == null) {
+      this.setState({ value: 0 });
+      return;
+    }
 
-    if (nextProps.data == null || nextProps.data[simulator.node] == null
-      || nextProps.data[simulator.node][simulator.simulator] == null 
-      || nextProps.data[simulator.node][simulator.simulator].output.values.length === 0  
-      || nextProps.data[simulator.node][simulator.simulator].output.values[0].length === 0) {
+    const simulator = nextProps.simulationModel.simulator;
+    
+    // update value
+    if (nextProps.data == null || nextProps.data[simulator] == null
+      || nextProps.data[simulator].output.values.length === 0  
+      || nextProps.data[simulator].output.values[0].length === 0) {
       this.setState({ value: 0 });
       return;
     }
 
     // check if value has changed
-    const signal = nextProps.data[simulator.node][simulator.simulator].output.values[nextProps.widget.signal];
+    const signal = nextProps.data[simulator].output.values[nextProps.widget.signal];
     // Take just 3 decimal positions
     // Note: Favor this method over Number.toFixed(n) in order to avoid a type conversion, since it returns a String
     if (signal != null) {
@@ -177,9 +181,8 @@ class WidgetGauge extends Component {
     const componentClass = this.props.editing ? "gauge-widget editing" : "gauge-widget";
     let signalType = null;
 
-    if (this.props.simulation) {
-      const simulationModel = this.props.simulation.models.filter((model) => model.simulator.node === this.props.widget.simulator.node && model.simulator.simulator === this.props.widget.simulator.simulator)[0];
-      signalType = (simulationModel != null && simulationModel.length > 0 && this.props.widget.signal < simulationModel.length) ? simulationModel.outputMapping[this.props.widget.signal].type : '';
+    if (this.props.simulationModel != null) {
+      signalType = (this.props.simulationModel != null && this.props.simulationModel.outputLength > 0 && this.props.widget.signal < this.props.simulationModel.outputLength) ? this.props.simulationModel.outputMapping[this.props.widget.signal].type : '';
     }
 
     return (

@@ -1,7 +1,7 @@
 /**
- * File: import-node.js
+ * File: new-simulator.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 03.09.2017
+ * Date: 27.03.2018
  *
  * This file is part of VILLASweb.
  *
@@ -21,10 +21,11 @@
 
 import React from 'react';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import _ from 'lodash';
 
 import Dialog from './dialog';
 
-class ImportNodeDialog extends React.Component {
+class ImportSimulatorDialog extends React.Component {
   valid = false;
   imported = false;
 
@@ -34,30 +35,37 @@ class ImportNodeDialog extends React.Component {
     this.state = {
       name: '',
       endpoint: '',
-      simulators: []
+      uuid: ''
     };
   }
 
   onClose(canceled) {
     if (canceled === false) {
-      this.props.onClose(this.state);
+      if (this.valid) {
+        const data = { 
+          properties: {
+            name: this.state.name
+          },
+          uuid: this.state.uuid
+        };
+
+        if (this.state.endpoint != null && this.state.endpoint !== "" && this.state.endpoint !== 'http://') {
+          data.properties.endpoint = this.state.endpoint;
+        }
+
+        this.props.onClose(data);
+      }
     } else {
       this.props.onClose();
     }
   }
 
   handleChange(e) {
-    if (e.target.type === 'checkbox') {
-      this.setState({ [e.target.id]: e.target.checked });
-    } else {
-      this.setState({ [e.target.id]: e.target.value });
-    }
+    this.setState({ [e.target.id]: e.target.value });
   }
 
   resetState() {
-    this.setState({ name: '', endpoint: '' });
-
-    this.imported = false;
+    this.setState({ name: '', endpoint: 'http://', uuid: '' });
   }
 
   loadFile(fileList) {
@@ -73,9 +81,13 @@ class ImportNodeDialog extends React.Component {
 
     reader.onload = function(event) {
       // read simulator
-      const node = JSON.parse(event.target.result);
+      const simulator = JSON.parse(event.target.result);
       self.imported = true;
-      self.setState({ name: node.name, endpoint: node.endpoint, simulators: node.simulators });
+      self.setState({ 
+        name: _.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name'), 
+        endpoint: _.get(simulator, 'properties.endpoint') || _.get(simulator, 'rawProperties.endpoint'),
+        uuid: simulator.uuid 
+      });
     };
 
     reader.readAsText(file);
@@ -83,27 +95,27 @@ class ImportNodeDialog extends React.Component {
 
   validateForm(target) {
     // check all controls
-    let endpoint = true;
     let name = true;
+    let uuid = true;
 
-    if (this.state.name === '' || this.props.nodes.find(node => node.name === this.state.name) !== undefined) {
+    if (this.state.name === '') {
       name = false;
     }
 
-    if (this.state.endpoint === '' || this.props.nodes.find(node => node.endpoint === this.state.endpoint) !== undefined) {
-      endpoint = false;
+    if (this.state.uuid === '') {
+      uuid = false;
     }
 
-    this.valid = endpoint && name;
+    this.valid = name || uuid;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
-    else return endpoint ? "success" : "error";
+    if (target === 'uuid') return uuid ? "success" : "error";
   }
 
   render() {
     return (
-      <Dialog show={this.props.show} title="Import Simulator" buttonTitle="Import" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog show={this.props.show} title="New Simulator" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
           <FormGroup controlId="file">
             <ControlLabel>Simulator File</ControlLabel>
@@ -112,12 +124,17 @@ class ImportNodeDialog extends React.Component {
 
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
             <ControlLabel>Name</ControlLabel>
-            <FormControl readOnly={!this.imported} type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="endpoint" validationState={this.validateForm('endpoint')}>
+          <FormGroup controlId="endpoint">
             <ControlLabel>Endpoint</ControlLabel>
-            <FormControl readOnly={!this.imported} type="text" placeholder="Enter endpoint" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder="Enter endpoint" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="uuid" validationState={this.validateForm('uuid')}>
+            <ControlLabel>UUID</ControlLabel>
+            <FormControl type="text" placeholder="Enter uuid" value={this.state.uuid} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
         </form>
@@ -126,4 +143,4 @@ class ImportNodeDialog extends React.Component {
   }
 }
 
-export default ImportNodeDialog;
+export default ImportSimulatorDialog;

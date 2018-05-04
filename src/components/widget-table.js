@@ -35,14 +35,20 @@ class WidgetTable extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // check data
-    const simulator = nextProps.widget.simulator;
+    if (nextProps.simulationModel == null) {
+      this.setState({ rows: [], sequence: null });
+      return;
+    }
 
-    if (nextProps.simulation == null || nextProps.data == null || nextProps.data[simulator.node] == null
-      || nextProps.data[simulator.node][simulator.simulator] == null 
-      || nextProps.data[simulator.node][simulator.simulator].output.length === 0 
-      || nextProps.data[simulator.node][simulator.simulator].output.values.length === 0  
-      || nextProps.data[simulator.node][simulator.simulator].output.values[0].length === 0) {
+    const simulator = nextProps.simulationModel.simulator;
+
+    // check data
+    if (nextProps.data == null
+      || nextProps.data[simulator] == null
+      || nextProps.data[simulator].output == null
+      || nextProps.data[simulator].output.length === 0 
+      || nextProps.data[simulator].output.values.length === 0  
+      || nextProps.data[simulator].output.values[0].length === 0) {
       // clear values
       this.setState({ rows: [], sequence: null });
       return;
@@ -53,24 +59,19 @@ class WidgetTable extends Component {
       return;
     }*/
 
-    // get simulation model
-    const simulationModel = nextProps.simulation.models.find((model) => {
-      return (model.simulator.node === simulator.node && model.simulator.simulator === simulator.simulator);
-    });
-
     // get rows
-    var rows = [];
+    const rows = [];
 
-    nextProps.data[simulator.node][simulator.simulator].output.values.forEach((signal, index) => {
-      if (index < simulationModel.outputMapping.length) {
+    nextProps.data[simulator].output.values.forEach((signal, index) => {
+      if (index < nextProps.simulationModel.outputMapping.length) {
         rows.push({
-          name: simulationModel.outputMapping[index].name,
+          name: nextProps.simulationModel.outputMapping[index].name,
           value: signal[signal.length - 1].y.toFixed(3)
         });
       }
     });
 
-    this.setState({ rows: rows, sequence: nextProps.data[simulator.node][simulator.simulator].output.sequence });
+    this.setState({ rows: rows, sequence: nextProps.data[simulator].output.sequence });
   }
 
   render() {

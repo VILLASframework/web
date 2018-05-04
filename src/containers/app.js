@@ -29,7 +29,7 @@ import { Col } from 'react-bootstrap';
 
 import AppDispatcher from '../app-dispatcher';
 import SimulationStore from '../stores/simulation-store';
-import NodeStore from '../stores/node-store';
+import SimulatorStore from '../stores/simulator-store';
 import UserStore from '../stores/user-store';
 import NotificationsDataManager from '../data-managers/notifications-data-manager';
 
@@ -51,14 +51,14 @@ import '../styles/app.css';
 
 class App extends React.Component {
   static getStores() {
-    return [ NodeStore, UserStore, SimulationStore ];
+    return [ SimulatorStore, UserStore, SimulationStore ];
   }
 
   static calculateState(prevState) {
     let currentUser = UserStore.getState().currentUser;
 
     return {
-      nodes: NodeStore.getState(),
+      simulators: SimulatorStore.getState(),
       simulations: SimulationStore.getState(),
       currentRole: currentUser ? currentUser.role : '',
       token: UserStore.getState().token,
@@ -85,7 +85,7 @@ class App extends React.Component {
   componentDidMount() {
     // load all simulators and simulations to fetch simulation data
     AppDispatcher.dispatch({
-      type: 'nodes/start-load',
+      type: 'simulators/start-load',
       token: this.state.token
     });
 

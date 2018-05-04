@@ -35,7 +35,7 @@ class EditWidgetDialog extends React.Component {
     this.state = {
       temporal: {
         name: '',
-        simulator: {},
+        simulationModel: '',
         signal: 0
       }
     };
@@ -66,11 +66,7 @@ class EditWidgetDialog extends React.Component {
     if (e.constructor === Array) {
       // Every property in the array will be updated
       let changes = e.reduce( (changesObject, event) => {
-        if (event.target.id === 'simulator') {
-          changesObject[event.target.id] = JSON.parse(event.target.value);
-        } else {
-          changesObject[event.target.id] = event.target.value;
-        }
+        changesObject[event.target.id] = event.target.value;
 
         return changesObject;
       }, {});
@@ -78,9 +74,7 @@ class EditWidgetDialog extends React.Component {
       this.setState({ temporal: Object.assign({}, this.state.temporal, changes ) });
     } else {
         let changeObject = {};
-        if (e.target.id === 'simulator') {
-          changeObject[e.target.id] = JSON.parse(e.target.value);
-        } else if (e.target.id === 'lockAspect') {
+        if (e.target.id === 'lockAspect') {
           changeObject[e.target.id] = e.target.checked;
 
           // correct image aspect if turned on
@@ -135,7 +129,7 @@ class EditWidgetDialog extends React.Component {
             this.props.sessionToken,
             this.props.files,
             (id) => this.validateForm(id),
-            this.props.simulation,
+            this.props.simulationModels,
             (e) => this.handleChange(e));
     }
 

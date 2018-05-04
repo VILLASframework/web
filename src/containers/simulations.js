@@ -21,13 +21,13 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Modal, Glyphicon } from 'react-bootstrap';
+import { Button, Glyphicon } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 
 import AppDispatcher from '../app-dispatcher';
 import SimulationStore from '../stores/simulation-store';
 import UserStore from '../stores/user-store';
-import NodeStore from '../stores/node-store';
+import SimulatorStore from '../stores/simulator-store';
 
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
@@ -35,22 +35,27 @@ import NewSimulationDialog from '../components/dialog/new-simulation';
 import EditSimulationDialog from '../components/dialog/edit-simulation';
 import ImportSimulationDialog from '../components/dialog/import-simulation';
 
+import SimulatorAction from '../components/simulator-action';
+import DeleteDialog from '../components/dialog/delete-dialog';
+
 class Simulations extends Component {
   static getStores() {
-    return [ SimulationStore, UserStore, NodeStore ];
+    return [ SimulationStore, UserStore, SimulatorStore ];
   }
 
   static calculateState() {
     return {
       simulations: SimulationStore.getState(),
-      nodes: NodeStore.getState(),
+      simulators: SimulatorStore.getState(),
       sessionToken: UserStore.getState().token,
 
       newModal: false,
       deleteModal: false,
       editModal: false,
       importModal: false,
-      modalSimulation: {}
+      modalSimulation: {},
+
+      selectedSimulations: []
     };
   }
 
@@ -86,8 +91,12 @@ class Simulations extends Component {
     this.setState({ deleteModal: true, modalSimulation: deleteSimulation });
   }
 
-  confirmDeleteModal() {
+  closeDeleteModal = confirmDelete => {
     this.setState({ deleteModal: false });
+
+    if (confirmDelete === false) {
+      return;
+    }
 
     AppDispatcher.dispatch({
       type: 'simulations/start-remove',
@@ -158,12 +167,63 @@ class Simulations extends Component {
     FileSaver.saveAs(blob, 'simulation - ' + simulation.name + '.json');
   }
 
+  onSimulationChecked(index, event) {
+    const selectedSimulations = Object.assign([], this.state.selectedSimulations);
+    for (let key in selectedSimulations) {
+      if (selectedSimulations[key] === index) {
+        // update existing entry
+        if (event.target.checked) {
+          return;
+        }
+
+        selectedSimulations.splice(key, 1);
+
+        this.setState({ selectedSimulations });
+        return;
+      }
+    }
+
+    // add new entry
+    if (event.target.checked === false) {
+      return;
+    }
+
+    selectedSimulations.push(index);
+    this.setState({ selectedSimulations });
+  }
+
+  runAction = action => {
+    for (let index of this.state.selectedSimulations) {
+      for (let model of this.state.simulations[index].models) {
+        // get simulator for model
+        let simulator = null;
+        for (let sim of this.state.simulators) {
+          if (sim._id === model.simulator) {
+            simulator = sim;
+          }
+        }
+
+        if (simulator == null) {
+          continue;
+        }
+    
+        AppDispatcher.dispatch({
+          type: 'simulators/start-action',
+          simulator,
+          data: action.data,
+          token: this.state.sessionToken
+        });
+      }
+    }
+  }
+
   render() {
     return (
       <div className='section'>
         <h1>Simulations</h1>
 
         <Table data={this.state.simulations}>
+          <TableColumn checkbox onChecked={(index, event) => this.onSimulationChecked(index, event)} width='30' />
           <TableColumn title='Name' dataKey='name' link='/simulations/' linkKey='_id' />
           <TableColumn 
             width='100' 
@@ -176,27 +236,28 @@ class Simulations extends Component {
           />
         </Table>
 
-        <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Simulation</Button>
-        <Button onClick={() => this.setState({ importModal: true })}><Glyphicon glyph="import" /> Import</Button>
+        <div style={{ float: 'left' }}>
+          <SimulatorAction 
+            runDisabled={this.state.selectedSimulations.length === 0} 
+            runAction={this.runAction}
+            actions={[ 
+              { id: '0', title: 'Start', data: { action: 'start' } }, 
+              { id: '1', title: 'Stop', data: { action: 'stop' } }, 
+              { id: '2', title: 'Pause', data: { action: 'pause' } }, 
+              { id: '3', title: 'Resume', data: { action: 'resume' } } 
+            ]}/>
+        </div>
+
+        <div style={{ float: 'right' }}>
+          <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Simulation</Button>
+          <Button onClick={() => this.setState({ importModal: true })}><Glyphicon glyph="import" /> Import</Button>
+        </div>
 
         <NewSimulationDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
         <EditSimulationDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} simulation={this.state.modalSimulation} />
         <ImportSimulationDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} nodes={this.state.nodes} />
 
-        <Modal keyboard show={this.state.deleteModal} onHide={() => this.setState({ deleteModal: false })} onKeyPress={this.onModalKeyPress}>
-          <Modal.Header>
-            <Modal.Title>Delete Simulation</Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body>
-            Are you sure you want to delete the simulation <strong>'{this.state.modalSimulation.name}'</strong>?
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button onClick={() => this.setState({ deleteModal: false })}>Cancel</Button>
-            <Button bsStyle="danger" onClick={() => this.confirmDeleteModal()}>Delete</Button>
-          </Modal.Footer>
-        </Modal>
+        <DeleteDialog title="simulation" name={this.state.modalSimulation.name} show={this.state.deleteModal} onClose={this.closeDeleteModal} />
       </div>
     );
   }
