@@ -96,6 +96,10 @@ class WidgetPlotTable extends Component {
     let checkBoxes = [];
 
     // Data passed to plot
+    if (this.props.simulationModel == null) {
+      return <div />;
+    }
+
     const simulator = this.props.simulationModel.simulator;
     let simulatorData = [];
 
