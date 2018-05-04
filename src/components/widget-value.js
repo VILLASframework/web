@@ -32,8 +32,15 @@ class WidgetValue extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.simulationModel == null) {
+      this.setState({ value: '' });
+      return;
+    }
+
+    const simulator = nextProps.simulationModel.simulator;
+
     // update value
-    if (nextProps.data == null || nextProps.simulationModel == null || nextProps.data[nextProps.simulationModel.simulator] == null || nextProps.data[nextProps.simulationModel.simulator].output == null || nextProps.data[nextProps.simulationModel.simulator].output.values == null) {
+    if (nextProps.data == null || nextProps.data[simulator] == null || nextProps.data[simulator].output == null || nextProps.data[simulator].output.values == null) {
       this.setState({ value: '' });
       return;
     }
@@ -41,7 +48,7 @@ class WidgetValue extends Component {
     const unit = nextProps.simulationModel.outputMapping[nextProps.widget.signal].type;
     
     // check if value has changed
-    const signal = nextProps.data[nextProps.simulationModel.simulator].output.values[nextProps.widget.signal];
+    const signal = nextProps.data[simulator].output.values[nextProps.widget.signal];
     if (signal != null && this.state.value !== signal[signal.length - 1].y) {
       this.setState({ value: signal[signal.length - 1].y, unit });
     }
