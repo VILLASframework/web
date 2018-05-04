@@ -155,6 +155,7 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-right: 10px;
 }
 
 .plot-table-widget small {

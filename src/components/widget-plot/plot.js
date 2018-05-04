@@ -149,7 +149,7 @@ class Plot extends React.Component {
 
     // create scale functions for both axes
     const xScale = scaleTime().domain([Date.now() - this.props.time * 1000, Date.now()]).range([0, this.props.width - leftMargin - this.state.labelMargin - rightMargin]);
-    const yScale = scaleLinear().domain(yRange).range([this.props.height - bottomMargin, 0]);
+    const yScale = scaleLinear().domain(yRange).range([this.props.height - bottomMargin, 5]);
 
     const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(date => timeFormat("%M:%S")(date));
     const yAxis = axisLeft().scale(yScale).ticks(5);
