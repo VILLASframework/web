@@ -43,7 +43,7 @@ class SimulationDataStore extends ReduceStore {
         return state;
 
       case 'simulatorData/prepare':
-        state[action.id] = { 
+        state[action.id] = {
           output: {
             sequence: -1,
             length: action.outputLength,
@@ -106,17 +106,17 @@ class SimulationDataStore extends ReduceStore {
 
       case 'simulatorData/inputChanged':
         // find simulator in node array
-        if (state[action.simulator.node] == null || state[action.simulator.node][action.simulator.simulator] == null) {
+        if (state[action.simulator] == null) {
           return state;
         }
 
         // update message properties
-        state[action.simulator.node][action.simulator.simulator].input.timestamp = Date.now();
-        state[action.simulator.node][action.simulator.simulator].input.sequence++;
-        state[action.simulator.node][action.simulator.simulator].input.values[action.signal] = action.data;
+        state[action.simulator].input.timestamp = Date.now();
+        state[action.simulator].input.sequence++;
+        state[action.simulator].input.values[action.signal] = action.data;
 
-        SimulatorDataDataManager.send(state[action.simulator.node][action.simulator.simulator].input, action.simulator.node);
-        
+        SimulatorDataDataManager.send(state[action.simulator].input, action.simulator);
+
         return state;
 
       case 'simulatorData/closed':
