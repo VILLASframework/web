@@ -245,7 +245,7 @@ class Simulation extends React.Component {
 
         <Table data={this.state.simulationModels}>
           <TableColumn checkbox onChecked={(index, event) => this.onSimulationModelChecked(index, event)} width='30' />
-          <TableColumn title='Name' dataKey='name' />
+          <TableColumn title='Name' dataKey='name' link='/simulationModel/' linkKey='_id' />
           <TableColumn title='Simulator' dataKey='simulator' width='180' modifier={(simulator) => this.getSimulatorName(simulator)} />
           <TableColumn title='Output' dataKey='outputLength' width='100' />
           <TableColumn title='Input' dataKey='inputLength' width='100' />

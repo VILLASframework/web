@@ -45,6 +45,7 @@ import Simulators from './simulators';
 import Visualization from './visualization';
 import Simulations from './simulations';
 import Simulation from './simulation';
+import SimulationModel from './simulationModel';
 import Users from './users';
 
 import '../styles/app.css';
@@ -134,6 +135,7 @@ class App extends React.Component {
               <Route path="/visualizations/:visualization" component={Visualization} />
               <Route exact path="/simulations" component={Simulations} />
               <Route path="/simulations/:simulation" component={Simulation} />
+              <Route path="/simulationModel/:simulationModel" component={SimulationModel} />
               <Route path="/simulators" component={Simulators} />
               <Route path="/users" component={Users} />
             </div>
