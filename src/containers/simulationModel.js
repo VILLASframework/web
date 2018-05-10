@@ -28,6 +28,7 @@ import UserStore from '../stores/user-store';
 import AppDispatcher from '../app-dispatcher';
 
 import SelectSimulator from './selectSimulator';
+import SelectFile from './selectFile';
 
 class SimulationModel extends React.Component {
     static getStores() {
@@ -63,12 +64,24 @@ class SimulationModel extends React.Component {
         console.log(simulator);
     }
 
+    handleModelChange = file => {
+        console.log(file);
+    }
+
+    handleConfigurationChange = file => {
+        console.log(file);
+    }
+
     render() {
         return <div className='section'>
             <h1>{this.state.simulationModel.name}</h1>
 
             <form onSubmit={this.submitForm}>
                 <SelectSimulator onChange={this.handleSimulatorChange} value={this.state.simulationModel.simulator} />
+
+                <SelectFile type='model' name='Model' onChange={this.handleModelChange} value={this.state.simulationModel.model} />
+
+                <SelectFile type='configuration' name='Configuration' onChange={this.handleConfigurationChange} value={this.state.simulationModel.configuration} />
 
                 <Button bsStyle='primary' onClick={this.saveChanges}>Save</Button>
             </form>

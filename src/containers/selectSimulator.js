@@ -25,17 +25,15 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import _ from 'lodash';
 
 import SimulatorStore from '../stores/simulator-store';
-import UserStore from '../stores/user-store';
 
 class SelectSimulator extends React.Component {
     static getStores() {
-        return [ SimulatorStore, UserStore ];
+        return [ SimulatorStore ];
     }
 
     static calculateState() {
         return {
             simulators: SimulatorStore.getState(),
-            sessionToken: UserStore.getState().token,
             selectedSimulator: ''
         };
     }
@@ -58,13 +56,12 @@ class SelectSimulator extends React.Component {
     }
 
     handleChange = event => {
-        // update selection
         this.setState({ selectedSimulator: event.target.value });
 
         // send complete simulator to callback
-        const simulator = this.state.simulators.find(s => s._id === event.target.value);
-
         if (this.props.onChange != null) {
+            const simulator = this.state.simulators.find(s => s._id === event.target.value);
+
             this.props.onChange(simulator);
         }
     }

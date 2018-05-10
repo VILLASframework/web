@@ -30,8 +30,10 @@ class FilesDataManager extends RestDataManager {
 
   upload(file, token = null, progressCallback = null, finishedCallback = null) {
     RestAPI.upload(this.makeURL('/upload'), file, token, progressCallback).then(response => {
+      console.log(response);
+
       AppDispatcher.dispatch({
-        type: 'files/uploaded'
+        type: 'files/uploaded',
       });
 
       // Trigger a files reload
