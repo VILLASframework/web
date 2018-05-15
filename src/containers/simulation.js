@@ -154,7 +154,7 @@ class Simulation extends React.Component {
 
     if (data) {
       data.simulation = this.state.simulation._id;
-      
+
       AppDispatcher.dispatch({
         type: 'simulationModels/start-add',
         data,
@@ -174,11 +174,7 @@ class Simulation extends React.Component {
   getSimulatorName(simulatorId) {
     for (let simulator of this.state.simulators) {
       if (simulator._id === simulatorId) {
-        if ('name' in simulator.rawProperties) {
-          return _.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name');
-        } else {
-          return simulator.uuid;
-        }
+        return _.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name') ||  simulator.uuid;
       }
     }
   }
@@ -232,7 +228,7 @@ class Simulation extends React.Component {
       if (simulator == null) {
         continue;
       }
-  
+
       AppDispatcher.dispatch({
         type: 'simulators/start-action',
         simulator,
@@ -253,27 +249,27 @@ class Simulation extends React.Component {
           <TableColumn title='Simulator' dataKey='simulator' width='180' modifier={(simulator) => this.getSimulatorName(simulator)} />
           <TableColumn title='Output' dataKey='outputLength' width='100' />
           <TableColumn title='Input' dataKey='inputLength' width='100' />
-          <TableColumn 
-            title='' 
-            width='100' 
-            editButton 
-            deleteButton 
+          <TableColumn
+            title=''
+            width='100'
+            editButton
+            deleteButton
             exportButton
-            onEdit={(index) => this.setState({ editModal: true, modalData: this.state.simulationModels[index], modalIndex: index })} 
-            onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.simulationModels[index], modalIndex: index })} 
+            onEdit={(index) => this.setState({ editModal: true, modalData: this.state.simulationModels[index], modalIndex: index })}
+            onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.simulationModels[index], modalIndex: index })}
             onExport={index => this.exportModel(index)}
           />
         </Table>
 
         <div style={{ float: 'left' }}>
-          <SimulatorAction 
-            runDisabled={this.state.selectedSimulationModels.length === 0} 
+          <SimulatorAction
+            runDisabled={this.state.selectedSimulationModels.length === 0}
             runAction={this.runAction}
-            actions={[ 
-              { id: '0', title: 'Start', data: { action: 'start' } }, 
-              { id: '1', title: 'Stop', data: { action: 'stop' } }, 
-              { id: '2', title: 'Pause', data: { action: 'pause' } }, 
-              { id: '3', title: 'Resume', data: { action: 'resume' } } 
+            actions={[
+              { id: '0', title: 'Start', data: { action: 'start' } },
+              { id: '1', title: 'Stop', data: { action: 'stop' } },
+              { id: '2', title: 'Pause', data: { action: 'pause' } },
+              { id: '3', title: 'Resume', data: { action: 'resume' } }
             ]}/>
         </div>
 
