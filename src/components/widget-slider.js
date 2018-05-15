@@ -14,7 +14,7 @@ import 'rc-slider/assets/index.css';
 
 class WidgetSlider extends Component {
 
-  static  get OrientationTypes() { 
+  static get OrientationTypes() {
     return ({
       HORIZONTAL: {value: 0, name: 'Horizontal'},
       VERTICAL: {value: 1, name: 'Vertical'}
@@ -38,7 +38,7 @@ class WidgetSlider extends Component {
     if (this.props.widget.orientation !== nextProps.widget.orientation) {
       let baseWidget = nextProps.widget;
       // Exchange dimensions and constraints
-      let newWidget = Object.assign({}, baseWidget, { 
+      let newWidget = Object.assign({}, baseWidget, {
         width: baseWidget.height,
         height: baseWidget.width,
         minWidth: baseWidget.minHeight,
@@ -61,7 +61,6 @@ class WidgetSlider extends Component {
   }
 
   render() {
-    
     let isVertical = this.props.widget.orientation === WidgetSlider.OrientationTypes.VERTICAL.value;
 
     let fields = {
