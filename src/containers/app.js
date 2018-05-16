@@ -45,7 +45,7 @@ import Simulators from './simulators';
 import Visualization from './visualization';
 import Simulations from './simulations';
 import Simulation from './simulation';
-import SimulationModel from './simulationModel';
+import SimulationModel from './simulation-model';
 import Users from './users';
 
 import '../styles/app.css';
