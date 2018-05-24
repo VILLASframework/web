@@ -63,8 +63,6 @@ class SimulatorDataDataManager {
     const data = this.messageToBuffer(message);
     socket.send(data);
 
-    console.log(data);
-
     return true;
   }
 
