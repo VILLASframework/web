@@ -35,7 +35,7 @@ class WebsocketAPI {
   }
 
   getURL(endpoint) {
-    //  create an anchor element (note: no need to append this element to the document)
+    // create an anchor element (note: no need to append this element to the document)
     var link = document.createElement('a');
     link.href = endpoint;
 
