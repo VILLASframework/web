@@ -111,11 +111,12 @@ class SelectFile extends React.Component {
             <option key={f._id} value={f._id}>{f.name}</option>
         );
 
-        const divStyle = {
-            
+        const progressBarStyle = {
+            marginLeft: '100px', 
+            marginTop: '-25px'
         };
 
-        return <div style={divStyle}>
+        return <div>
             <FormGroup>
                 <Col componentClass={ControlLabel} sm={3} md={2}>
                     {this.props.name}
@@ -140,12 +141,9 @@ class SelectFile extends React.Component {
                         Upload file
                     </Button>
 
-                    <ProgressBar striped active now={this.state.uploadProgress} label={this.state.uploadProgress + '%'} />
+                    <ProgressBar striped active now={this.state.uploadProgress} label={this.state.uploadProgress + '%'} style={progressBarStyle} />
                 </Col>
             </FormGroup>
-
-            
-            
         </div>;
     }
 }
