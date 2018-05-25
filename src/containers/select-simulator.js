@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel, Col } from 'react-bootstrap';
 import _ from 'lodash';
 
 import SimulatorStore from '../stores/simulator-store';
@@ -72,10 +72,15 @@ class SelectSimulator extends React.Component {
         );
 
         return <FormGroup>
-            <ControlLabel>Simulator</ControlLabel>
-            <FormControl componentClass='select' placeholder='Select simulator' value={this.state.selectedSimulator} onChange={this.handleChange}>
-                {simulatorOptions}
-            </FormControl>
+            <Col componentClass={ControlLabel} sm={3} md={2}>
+                Simulator
+            </Col>
+
+            <Col sm={9} md={10}>
+                <FormControl componentClass='select' placeholder='Select simulator' value={this.state.selectedSimulator} onChange={this.handleChange}>
+                    {simulatorOptions}
+                </FormControl>
+            </Col>
         </FormGroup>;
     }
 }

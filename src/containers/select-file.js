@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { FormGroup, FormControl, ControlLabel, Button, ProgressBar } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel, Button, ProgressBar, Col } from 'react-bootstrap';
 
 import FileStore from '../stores/file-store';
 import UserStore from '../stores/user-store';
@@ -39,7 +39,7 @@ class SelectFile extends React.Component {
             sessionToken: UserStore.getState().token,
             selectedFile: '',
             uploadFile: null,
-            uploadProgress: 0
+            uploadProgress: 100
         };
     }
 
@@ -111,21 +111,41 @@ class SelectFile extends React.Component {
             <option key={f._id} value={f._id}>{f.name}</option>
         );
 
-        return <div>
+        const divStyle = {
+            
+        };
+
+        return <div style={divStyle}>
             <FormGroup>
-                <ControlLabel>{this.props.name}</ControlLabel>
-                <FormControl componentClass='select' placeholder='Select file' onChange={this.handleChange}>
-                    {fileOptions}
-                </FormControl>
+                <Col componentClass={ControlLabel} sm={3} md={2}>
+                    {this.props.name}
+                </Col>
+                
+                <Col sm={9} md={10}>
+                    <FormControl componentClass='select' placeholder='Select file' onChange={this.handleChange}>
+                        {fileOptions}
+                    </FormControl>
+                </Col>
             </FormGroup>
 
             <FormGroup>
-                <ControlLabel>Upload {this.props.name}</ControlLabel>
-                <FormControl type='file' onChange={this.selectUploadFile} />
+                <Col sm={9} md={10} smOffset={3} mdOffset={2}>
+                    <FormControl type='file' onChange={this.selectUploadFile} />
+                </Col>
             </FormGroup>
 
-            <ProgressBar striped active now={this.state.uploadProgress} label={this.state.uploadProgress + '%'} />
-            <Button bsSize='small' onClick={this.startFileUpload}>Upload file</Button>
+            <FormGroup>
+                <Col sm={9} md={10} smOffset={3} mdOffset={2}>
+                    <Button bsSize='small' onClick={this.startFileUpload}>
+                        Upload file
+                    </Button>
+
+                    <ProgressBar striped active now={this.state.uploadProgress} label={this.state.uploadProgress + '%'} />
+                </Col>
+            </FormGroup>
+
+            
+            
         </div>;
     }
 }

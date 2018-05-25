@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button } from 'react-bootstrap';
+import { Button, Col, Form } from 'react-bootstrap';
 
 import SimulationModelStore from '../stores/simulation-model-store';
 import UserStore from '../stores/user-store';
@@ -78,25 +78,40 @@ class SimulationModel extends React.Component {
         console.log(signals);
     }
 
+    handleInputMappingChange = (length, signals) => {
+        console.log(length);
+        console.log(signals);
+    }
+
     render() {
+        const sectionStyle = {
+            
+        };
+
         return <div className='section'>
             <h1>{this.state.simulationModel.name}</h1>
 
-            <form onSubmit={this.submitForm}>
-                <div>
+            <Form horizontal onSubmit={this.submitForm}>
+                <Col xs={12} sm={12} style={sectionStyle}>
                     <SelectSimulator onChange={this.handleSimulatorChange} value={this.state.simulationModel.simulator} />
 
                     <SelectFile type='model' name='Model' onChange={this.handleModelChange} value={this.state.simulationModel.model} />
 
                     <SelectFile type='configuration' name='Configuration' onChange={this.handleConfigurationChange} value={this.state.simulationModel.configuration} />
-                </div>
+                </Col>
 
-                <div>
+                <Col xs={12} sm={6} style={sectionStyle}>
                     <SignalMapping name='Output' length={this.state.simulationModel.outputLength} signals={this.state.simulationModel.outputMapping} onChange={this.handleOutputMappingChange} />
-                </div>
+                </Col>
+
+                <Col xs={12} sm={6} style={sectionStyle}>
+                    <SignalMapping name='Input' length={this.state.simulationModel.inputLength} signals={this.state.simulationModel.inputMapping} onChange={this.handleInputMappingChange} />
+                </Col>
+
+                <div style={{ clear: 'both' }}></div>
 
                 <Button bsStyle='primary' onClick={this.saveChanges}>Save</Button>
-            </form>
+            </Form>
         </div>;
     }
 }
