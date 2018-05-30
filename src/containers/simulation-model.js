@@ -59,11 +59,25 @@ class SimulationModel extends React.Component {
     }
 
     saveChanges = () => {
+        AppDispatcher.dispatch({
+            type: 'simulationModels/start-edit',
+            data: this.state.simulationModel,
+            token: this.state.sessionToken
+        });
 
+        this.props.history.push('/simulations/' + this.state.simulationModel.simulation);
+    }
+
+    discardChanges = () => {
+        this.props.history.push('/simulations/' + this.state.simulationModel.simulation);
     }
 
     handleSimulatorChange = simulator => {
-        console.log(simulator);
+        const simulationModel = this.state.simulationModel;
+
+        simulationModel.simulator = simulator;
+
+        this.setState({ simulationModel });
     }
 
     handleModelChange = file => {
@@ -75,25 +89,41 @@ class SimulationModel extends React.Component {
     }
 
     handleOutputMappingChange = (length, signals) => {
-        console.log(length);
-        console.log(signals);
+        const simulationModel = this.state.simulationModel;
+
+        simulationModel.outputMapping = signals;
+        simulationModel.outputLength = length;
+
+        this.setState({ simulationModel });
     }
 
     handleInputMappingChange = (length, signals) => {
-        console.log(length);
-        console.log(signals);
+        const simulationModel = this.state.simulationModel;
+
+        simulationModel.inputMapping = signals;
+        simulationModel.inputLength = length;
+
+        this.setState({ simulationModel });
+    }
+
+    handleTitleChange = title => {
+        const simulationModel = this.state.simulationModel;
+
+        simulationModel.name = title;
+
+        this.setState({ simulationModel });
     }
 
     render() {
-        const sectionStyle = {
-            
+        const buttonStyle = {
+            marginRight: '10px'
         };
 
         return <div className='section'>
-            <EditableHeader title={this.state.simulationModel.name} />
+            <EditableHeader title={this.state.simulationModel.name} onChange={this.handleTitleChange} />
 
             <Form horizontal onSubmit={this.submitForm}>
-                <Col xs={12} sm={12} style={sectionStyle}>
+                <Col xs={12} sm={12}>
                     <SelectSimulator onChange={this.handleSimulatorChange} value={this.state.simulationModel.simulator} />
 
                     <SelectFile type='model' name='Model' onChange={this.handleModelChange} value={this.state.simulationModel.model} />
@@ -101,17 +131,18 @@ class SimulationModel extends React.Component {
                     <SelectFile type='configuration' name='Configuration' onChange={this.handleConfigurationChange} value={this.state.simulationModel.configuration} />
                 </Col>
 
-                <Col xs={12} sm={6} style={sectionStyle}>
+                <Col xs={12} sm={6}>
                     <SignalMapping name='Output' length={this.state.simulationModel.outputLength} signals={this.state.simulationModel.outputMapping} onChange={this.handleOutputMappingChange} />
                 </Col>
 
-                <Col xs={12} sm={6} style={sectionStyle}>
+                <Col xs={12} sm={6}>
                     <SignalMapping name='Input' length={this.state.simulationModel.inputLength} signals={this.state.simulationModel.inputMapping} onChange={this.handleInputMappingChange} />
                 </Col>
 
                 <div style={{ clear: 'both' }}></div>
 
-                <Button bsStyle='primary' onClick={this.saveChanges}>Save</Button>
+                <Button onClick={this.discardChanges} style={buttonStyle}>Cancel</Button>
+                <Button bsStyle='primary' onClick={this.saveChanges} style={buttonStyle}>Save</Button>
             </Form>
         </div>;
     }
