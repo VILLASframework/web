@@ -24,15 +24,14 @@ import _ from 'lodash';
 import { Table, Button, Glyphicon, FormControl, Label, Checkbox } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-//import TableColumn from './table-column';
-
 class CustomTable extends Component {
   constructor(props) {
     super(props);
 
     this.activeInput = null;
+
     this.state = {
-      rows: [],
+      rows: this.getRows(props),
       editCell: [ -1, -1 ]
     };
   }
@@ -119,30 +118,9 @@ class CustomTable extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // check if data exists
-    if (nextProps.data == null) {
-      this.setState({ rows: [] });
-      return;
-    }
+    const rows = this.getRows(nextProps);
 
-    // create row data
-    var rows = nextProps.data.map((data, index) => {
-      // check if multiple columns
-      if (Array.isArray(nextProps.children)) {
-        var row = [];
-
-        nextProps.children.forEach(child => {
-          row.push(this.addCell(data, index, child));
-        });
-
-        return row;
-      } else {
-        // table only has a single column
-        return [ this.addCell(data, index, nextProps.children) ];
-      }
-    });
-
-    this.setState({ rows: rows });
+    this.setState({ rows });
   }
 
   componentDidUpdate() {
@@ -160,6 +138,28 @@ class CustomTable extends Component {
   cellLostFocus() {
     // Reset cell selection state
     this.setState({ editCell: [ -1, -1 ] });
+  }
+
+  getRows(props) {
+    if (props.data == null) {
+      return [];
+    }
+
+    return props.data.map((data, index) => {
+      // check if multiple columns
+      if (Array.isArray(props.children) === false) {
+        // table only has a single column
+        return [ this.addCell(data, index, props.children) ];
+      }
+
+      const row = [];
+
+      for (let child of props.children) {
+        row.push(this.addCell(data, index, child));
+      }
+
+      return row;
+    });
   }
 
   render() {
