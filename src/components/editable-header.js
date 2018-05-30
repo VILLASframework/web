@@ -37,45 +37,69 @@ class EditableHeader extends React.Component {
         this.setState({ title: nextProps.title });
     }
 
-    startEditing = () => {
+    edit = () => {
         this.setState({ editing: true });
     }
 
-    stopEditing = () => {
+    save = () => {
         this.setState({ editing: false });
+
+        if (this.props.onChange != null) {
+            this.props.onChange(this.state.title);
+        }
+    }
+
+    cancel = () => {
+        this.setState({ editing: false, title: this.props.title });
     }
 
     onChange = event => {
-
+        this.setState({ title: event.target.value });
     }
 
     render() {
+        const wrapperStyle= {
+            float: 'left'
+        };
+
+        const glyphStyle = {
+            float: 'left',
+
+            marginLeft: '10px',
+            marginTop: '25px',
+            marginBottom: '20px'
+        };
+
         if (this.state.editing) {
             const editStyle = {
-                maxWidth: '500px'
+                maxWidth: '500px',
+
+                marginTop: '10px'
             };
 
             return <div>
-                <form>
+                <form style={wrapperStyle}>
                     <FormControl type='text' bsSize='large' value={this.state.title} onChange={this.onChange} style={editStyle} />
                 </form>
 
-                <Glyphicon glyph='ok' onClick={this.stopEditing} />
+                <a onClick={this.save}><Glyphicon glyph='ok' style={glyphStyle} /></a>
+                <a onClick={this.cancel}><Glyphicon glyph='remove' style={glyphStyle} /></a>
             </div>;
         }
 
         return <div>
-            <h1>
+            <h1 style={wrapperStyle}>
                 {this.state.title}
             </h1>
 
-            <Glyphicon glyph='pencil' onClick={this.startEditing} />
+            <a onClick={this.edit}><Glyphicon glyph='pencil' style={glyphStyle} /></a>
         </div>;
     }
 }
 
 EditableHeader.PropTypes = {
-    title: PropTypes.string
+    title: PropTypes.string.isRequired,
+    onChange: PropTypes.func
 };
 
 export default EditableHeader;
