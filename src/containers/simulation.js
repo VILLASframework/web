@@ -136,26 +136,30 @@ class Simulation extends React.Component {
     });
   }
 
-  closeImportModal(data) {
+  importSimulationModel = simulationModel => {
     this.setState({ importModal: false });
 
-    if (data) {
-      data.simulation = this.state.simulation._id;
+    if (simulationModel == null) {
+      return;
+    }
 
+    simulationModel.simulation = this.state.simulation._id;
+
+    console.log(simulationModel);
+    
+    AppDispatcher.dispatch({
+      type: 'simulationModels/start-add',
+      data: simulationModel,
+      token: this.state.sessionToken
+    });
+
+    this.setState({ simulation: {} }, () => {
       AppDispatcher.dispatch({
-        type: 'simulationModels/start-add',
-        data,
+        type: 'simulations/start-load',
+        data: this.props.match.params.simulation,
         token: this.state.sessionToken
       });
-
-      this.setState({ simulation: {} }, () => {
-        AppDispatcher.dispatch({
-          type: 'simulations/start-load',
-          data: this.props.match.params.simulation,
-          token: this.state.sessionToken
-        });
-      });
-    }
+    });
   }
 
   getSimulatorName(simulatorId) {
@@ -169,6 +173,7 @@ class Simulation extends React.Component {
   exportModel(index) {
     // filter properties
     const model = Object.assign({}, this.state.simulationModels[index]);
+    
     delete model.simulator;
     delete model.simulation;
 
@@ -268,7 +273,7 @@ class Simulation extends React.Component {
 
       <div style={{ clear: 'both' }} />
 
-      <ImportSimulationModelDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} simulators={this.state.simulators} />
+      <ImportSimulationModelDialog show={this.state.importModal} onClose={this.importSimulationModel} simulators={this.state.simulators} />
 
       <DeleteDialog title="simulation model" name={this.state.modalData.name} show={this.state.deleteModal} onClose={this.closeDeleteModal} />
     </div>;

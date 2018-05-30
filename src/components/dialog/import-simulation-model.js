@@ -20,193 +20,88 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import _ from 'lodash';
 
-import Table from '../table';
-import TableColumn from '../table-column';
 import Dialog from './dialog';
 
 class ImportSimulationModelDialog extends React.Component {
-  valid = false;
   imported = false;
 
   constructor(props) {
     super(props);
 
     this.state = {
-      name: '',
-      simulator: '',
-      outputLength: '1',
-      inputLength: '1',
-      outputMapping: [ { name: 'Signal', type: 'Type' } ],
-      inputMapping: [{ name: 'Signal', type: 'Type' }]
+      model: {}
     };
   }
 
-  onClose(canceled) {
-    if (canceled === false) {
-      this.props.onClose(this.state);
-    } else {
+  onClose = canceled => {
+    if (canceled) {
       this.props.onClose();
+
+      return;
     }
+
+    this.props.onClose(this.state.model);
   }
 
-  resetState() {
+  resetState = () => {
     this.setState({
-      name: '',
-      simulator: '',
-      outputLength: '1',
-      inputLength: '1',
-      outputMapping: [{ name: 'Signal', type: 'Type' }],
-      inputMapping: [{ name: 'Signal', type: 'Type' }]
+      model: {}
     });
 
     this.imported = false;
   }
 
-  handleChange(e) {
-    let mapping = null;
-
-    if (e.target.id === 'outputLength') {
-      mapping = this.state.outputMapping;
-    } else if (e.target.id === 'inputLength') {
-      mapping = this.state.inputMapping;
-    }
-
-    if (mapping != null) {
-      // change mapping size
-      if (e.target.value > mapping.length) {
-        // add missing signals
-        while (mapping.length < e.target.value) {
-          mapping.push({ name: 'Signal', type: 'Type' });
-        }
-      } else {
-        // remove signals
-        mapping.splice(e.target.value, mapping.length - e.target.value);
-      }
-    }
-
-    this.setState({ [e.target.id]: e.target.value });
-  }
-
-  handleMappingChange(key, event, row, column) {
-    const mapping = this.state[key];
-
-    if (column === 1) {
-      mapping[row].name = event.target.value;
-    } else if (column === 2) {
-      mapping[row].type = event.target.value;
-    }
-
-    this.setState({ [key]: mapping });
-  }
-
-  loadFile(fileList) {
+  loadFile = event => {
     // get file
-    const file = fileList[0];
-    if (!file.type.match('application/json')) {
+    const file = event.target.files[0];
+    if (file.type.match('application/json') === false) {
       return;
     }
 
     // create file reader
-    var reader = new FileReader();
-    var self = this;
+    const reader = new FileReader();
+    const self = this;
 
-    reader.onload = function(event) {
-      // read simulator
+    reader.onload = event => {
       const model = JSON.parse(event.target.result);
 
+      model.simulator = this.props.simulators.length > 0 ? this.props.simulators[0]._id : null;
+
       self.imported = true;
-      self.valid = true;
-      self.setState({ name: model.name, mapping: model.mapping, length: model.length, simulator: { node: self.props.nodes[0]._id, simulator: 0 } });
+
+      this.setState({ model });
     };
 
     reader.readAsText(file);
   }
 
-  validateForm(target) {
-    // check all controls
-    var name = true;
-    let inputLength = true;
-    let outputLength = true;
-    var simulator = true;
+  handleSimulatorChange = event => {
+    const model = this.state.model;
 
-    if (this.state.name === '') {
-      name = false;
-    }
+    model.simulator = event.target.value;
 
-    if (this.state.simulator === '') {
-      simulator = false;
-    }
-
-    // test if simulatorid is a number (in a string, not type of number)
-    if (!/^\d+$/.test(this.state.outputLength)) {
-      outputLength = false;
-    }
-
-    if (!/^\d+$/.test(this.state.inputLength)) {
-      inputLength = false;
-    }
-
-    this.valid = name && inputLength && outputLength && simulator;
-
-    // return state to control
-    if (target === 'name') return name ? "success" : "error";
-    else if (target === 'outputLength') return outputLength ? "success" : "error";
-    else if (target === 'inputLength') return inputLength ? "success" : "error";
-    else if (target === 'simulator') return simulator ? "success" : "error";
+    this.setState({ model });
   }
 
   render() {
     return (
-      <Dialog show={this.props.show} title="Import Simulation Model" buttonTitle="Import" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog show={this.props.show} title="Import Simulation Model" buttonTitle="Import" onClose={this.onClose} onReset={this.resetState} valid={this.imported}>
         <form>
-          <FormGroup controlId="file">
+          <FormGroup controlId='file'>
             <ControlLabel>Simulation Model File</ControlLabel>
-            <FormControl type="file" onChange={(e) => this.loadFile(e.target.files)} />
+            <FormControl type='file' onChange={this.loadFile} />
           </FormGroup>
 
-          <FormGroup controlId="name" validationState={this.validateForm('name')}>
-            <ControlLabel>Name</ControlLabel>
-            <FormControl readOnly={!this.imported} type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup controlId="simulator">
+          <FormGroup controlId='simulator'>
             <ControlLabel>Simulator</ControlLabel>
-            <FormControl readOnly={!this.imported} componentClass="select" placeholder="Select simulator" value={this.state.simulator} onChange={(e) => this.handleChange(e)}>
+            <FormControl disabled={this.imported === false} componentClass='select' placeholder='Select simulator' value={this.state.model.simulator} onChange={this.handleSimulatorChange}>
               {this.props.simulators.map(simulator => (
-                <option key={simulator._id} value={simulator}>{_.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name')}</option>
+                <option key={simulator._id} value={simulator._id}>{_.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name')}</option>
               ))}
             </FormControl>
-          </FormGroup>
-          <FormGroup controlId="outputLength" validationState={this.validateForm('outputLength')}>
-            <ControlLabel>Output Length</ControlLabel>
-            <FormControl type="number" placeholder="Enter length" min="1" value={this.state.outputLength} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup controlId="outputMapping">
-            <ControlLabel>Output Mapping</ControlLabel>
-            <HelpBlock>Click Name or Type cell to edit</HelpBlock>
-            <Table data={this.state.outputMapping}>
-              <TableColumn title='ID' width='60' dataIndex />
-              <TableColumn title='Name' dataKey='name' inlineEditable onInlineChange={(event, row, column) => this.handleMappingChange('outputMapping', event, row, column)} />
-              <TableColumn title='Type' dataKey='type' inlineEditable onInlineChange={(event, row, column) => this.handleMappingChange('outputMapping', event, row, column)} />
-            </Table>
-          </FormGroup>
-          <FormGroup controlId="inputLength" validationState={this.validateForm('inputLength')}>
-            <ControlLabel>Input Length</ControlLabel>
-            <FormControl type="number" placeholder="Enter length" min="1" value={this.state.inputLength} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup controlId="inputMapping">
-            <ControlLabel>Input Mapping</ControlLabel>
-            <HelpBlock>Click Name or Type cell to edit</HelpBlock>
-            <Table data={this.state.inputMapping}>
-              <TableColumn title='ID' width='60' dataIndex />
-              <TableColumn title='Name' dataKey='name' inlineEditable onInlineChange={(event, row, column) => this.handleMappingChange('inputMapping', event, row, column)} />
-              <TableColumn title='Type' dataKey='type' inlineEditable onInlineChange={(event, row, column) => this.handleMappingChange('inputMapping', event, row, column)} />
-            </Table>
           </FormGroup>
         </form>
       </Dialog>
