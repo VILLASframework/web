@@ -196,6 +196,10 @@ class Visualizations extends Component {
   }
 
   render() {
+    const buttonStyle = {
+      marginRight: '10px'
+    };
+
     return (
       <div className='section'>
         <h1>{this.state.project.name}</h1>
@@ -213,8 +217,8 @@ class Visualizations extends Component {
           />
         </CustomTable>
 
-        <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Visualization</Button>
-        <Button onClick={() => this.setState({ importModal: true })}><Glyphicon glyph="import" /> Import</Button>
+        <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Glyphicon glyph="plus" /> Visualization</Button>
+        <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Glyphicon glyph="import" /> Import</Button>
 
         <NewVisualzationDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
         <EditVisualizationDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} visualization={this.state.modalData} />

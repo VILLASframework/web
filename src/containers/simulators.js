@@ -163,6 +163,10 @@ class Simulators extends Component {
   }
 
   render() {
+    const buttonStyle = {
+      marginLeft: '10px'
+    };
+
     return (
       <div className='section'>
         <h1>Simulators</h1>
@@ -194,9 +198,11 @@ class Simulators extends Component {
         </div>
 
         <div style={{ float: 'right' }}>
-          <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Simulator</Button>
-          <Button onClick={() => this.setState({ importModal: true })}><Glyphicon glyph="import" /> Import</Button>
+          <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Glyphicon glyph="plus" /> Simulator</Button>
+          <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Glyphicon glyph="import" /> Import</Button>
         </div>
+
+        <div style={{ clear: 'both' }} />
 
         <NewSimulatorDialog show={this.state.newModal} onClose={data => this.closeNewModal(data)} />
         <EditSimulatorDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} simulator={this.state.modalSimulator} />

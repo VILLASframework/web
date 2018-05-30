@@ -218,6 +218,10 @@ class Simulations extends Component {
   }
 
   render() {
+    const buttonStyle = {
+      marginLeft: '10px'
+    };
+
     return (
       <div className='section'>
         <h1>Simulations</h1>
@@ -249,9 +253,11 @@ class Simulations extends Component {
         </div>
 
         <div style={{ float: 'right' }}>
-          <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Simulation</Button>
-          <Button onClick={() => this.setState({ importModal: true })}><Glyphicon glyph="import" /> Import</Button>
+          <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Glyphicon glyph="plus" /> Simulation</Button>
+          <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Glyphicon glyph="import" /> Import</Button>
         </div>
+
+        <div style={{ clear: 'both' }} />
 
         <NewSimulationDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
         <EditSimulationDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} simulation={this.state.modalSimulation} />
