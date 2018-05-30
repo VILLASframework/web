@@ -123,7 +123,7 @@ class SelectFile extends React.Component {
                 </Col>
                 
                 <Col sm={9} md={10}>
-                    <FormControl componentClass='select' placeholder='Select file' onChange={this.handleChange}>
+                    <FormControl disabled={this.props.disabled} componentClass='select' placeholder='Select file' onChange={this.handleChange}>
                         {fileOptions}
                     </FormControl>
                 </Col>
@@ -131,13 +131,13 @@ class SelectFile extends React.Component {
 
             <FormGroup>
                 <Col sm={9} md={10} smOffset={3} mdOffset={2}>
-                    <FormControl type='file' onChange={this.selectUploadFile} />
+                    <FormControl disabled={this.props.disabled} type='file' onChange={this.selectUploadFile} />
                 </Col>
             </FormGroup>
 
             <FormGroup>
                 <Col sm={9} md={10} smOffset={3} mdOffset={2}>
-                    <Button bsSize='small' onClick={this.startFileUpload}>
+                    <Button disabled={this.props.disabled} bsSize='small' onClick={this.startFileUpload}>
                         Upload file
                     </Button>
 

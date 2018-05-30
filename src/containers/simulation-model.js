@@ -126,9 +126,9 @@ class SimulationModel extends React.Component {
                 <Col xs={12} sm={12}>
                     <SelectSimulator onChange={this.handleSimulatorChange} value={this.state.simulationModel.simulator} />
 
-                    <SelectFile type='model' name='Model' onChange={this.handleModelChange} value={this.state.simulationModel.model} />
+                    <SelectFile disabled type='model' name='Model' onChange={this.handleModelChange} value={this.state.simulationModel.model} />
 
-                    <SelectFile type='configuration' name='Configuration' onChange={this.handleConfigurationChange} value={this.state.simulationModel.configuration} />
+                    <SelectFile disabled type='configuration' name='Configuration' onChange={this.handleConfigurationChange} value={this.state.simulationModel.configuration} />
                 </Col>
 
                 <Col xs={12} sm={6}>
