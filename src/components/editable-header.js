@@ -24,6 +24,8 @@ import PropTypes from 'prop-types';
 import { Glyphicon, FormControl } from 'react-bootstrap';
 
 class EditableHeader extends React.Component {
+    titleInput = null;
+
     constructor(props) {
         super(props);
 
@@ -79,7 +81,7 @@ class EditableHeader extends React.Component {
 
             return <div>
                 <form style={wrapperStyle}>
-                    <FormControl type='text' bsSize='large' value={this.state.title} onChange={this.onChange} style={editStyle} />
+                    <FormControl type='text' bsSize='large' value={this.state.title} onChange={this.onChange} style={editStyle} autoFocus />
                 </form>
 
                 <a onClick={this.save}><Glyphicon glyph='ok' style={glyphStyle} /></a>
