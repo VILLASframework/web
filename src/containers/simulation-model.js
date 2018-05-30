@@ -1,7 +1,7 @@
 /**
  * File: simulationModel.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 10.08.2018
+ * Date: 10.05.2018
  *
  * This file is part of VILLASweb.
  *
@@ -30,6 +30,7 @@ import AppDispatcher from '../app-dispatcher';
 import SelectSimulator from './select-simulator';
 import SelectFile from './select-file';
 import SignalMapping from '../components/signal-mapping';
+import EditableHeader from '../components/editable-header';
 
 class SimulationModel extends React.Component {
     static getStores() {
@@ -89,7 +90,7 @@ class SimulationModel extends React.Component {
         };
 
         return <div className='section'>
-            <h1>{this.state.simulationModel.name}</h1>
+            <EditableHeader title={this.state.simulationModel.name} />
 
             <Form horizontal onSubmit={this.submitForm}>
                 <Col xs={12} sm={12} style={sectionStyle}>

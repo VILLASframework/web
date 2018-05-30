@@ -1,7 +1,7 @@
 /**
  * File: selectSimulator.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 10.08.2018
+ * Date: 10.05.2018
  *
  * This file is part of VILLASweb.
  *
