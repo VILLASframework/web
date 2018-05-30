@@ -31,7 +31,7 @@ describe('edit widget control creator', () => {
         { args: { widgetType: 'Image' }, result: { controlNumber: 2, controlTypes: [EditImageWidgetControl, EditWidgetAspectControl] } },
         { args: { widgetType: 'Gauge' }, result: { controlNumber: 6, controlTypes: [EditWidgetTextControl, EditWidgetSimulatorControl, EditWidgetSignalControl, EditWidgetCheckboxControl, EditWidgetColorZonesControl, EditWidgetMinMaxControl] } },
         { args: { widgetType: 'PlotTable' }, result: { controlNumber: 5, controlTypes: [EditWidgetSimulatorControl, EditWidgetSignalsControl, EditWidgetTextControl, EditWidgetTimeControl, EditWidgetMinMaxControl] } },
-        { args: { widgetType: 'Slider' }, result: { controlNumber: 3, controlTypes: [EditWidgetOrientation, EditWidgetSimulatorControl, EditWidgetSignalControl] } },
+        { args: { widgetType: 'Slider' }, result: { controlNumber: 4, controlTypes: [EditWidgetTextControl, EditWidgetOrientation, EditWidgetSimulatorControl, EditWidgetSignalControl] } },
         { args: { widgetType: 'Button' }, result: { controlNumber: 4, controlTypes: [EditWidgetColorControl, EditWidgetSimulatorControl, EditWidgetSignalControl] } },
         { args: { widgetType: 'Box' }, result: { controlNumber: 1, controlTypes: [EditWidgetColorControl] } },
         { args: { widgetType: 'Label' }, result: { controlNumber: 3, controlTypes: [EditWidgetTextControl, EditWidgetTextSizeControl, EditWidgetColorControl] } },

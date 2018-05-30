@@ -33,8 +33,6 @@ import AppDispatcher from '../app-dispatcher';
 
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
-import NewSimulationModelDialog from '../components/dialog/new-simulation-model';
-import EditSimulationModelDialog from '../components/dialog/edit-simulation-model';
 import ImportSimulationModelDialog from '../components/dialog/import-simulation-model';
 
 import SimulatorAction from '../components/simulator-action';
@@ -73,12 +71,9 @@ class Simulation extends React.Component {
       simulators: SimulatorStore.getState(),
       sessionToken,
 
-      newModal: false,
       deleteModal: false,
-      editModal: false,
       importModal: false,
       modalData: {},
-      modalIndex: null,
 
       selectedSimulationModels: []
     }
@@ -101,26 +96,30 @@ class Simulation extends React.Component {
     });
   }
 
-  closeNewModal(data) {
-    this.setState({ newModal : false });
+  addSimulationModel = () => {
+    const simulationModel = {
+      simulation: this.state.simulation._id,
+      name: 'New Simulation Model',
+      simulator: this.state.simulators.length > 0 ? this.state.simulators[0]._id : null,
+      outputLength: 1,
+      outputMapping: [{ name: 'Signal', type: 'Type' }],
+      inputLength: 1,
+      inputMapping: [{ name: 'Signal', type: 'Type' }]
+    };
 
-    if (data) {
-      data.simulation = this.state.simulation._id;
+    AppDispatcher.dispatch({
+      type: 'simulationModels/start-add',
+      data: simulationModel,
+      token: this.state.sessionToken
+    });
 
+    this.setState({ simulation: {} }, () => {
       AppDispatcher.dispatch({
-        type: 'simulationModels/start-add',
-        data,
+        type: 'simulations/start-load',
+        data: this.props.match.params.simulation,
         token: this.state.sessionToken
       });
-
-      this.setState({ simulation: {} }, () => {
-        AppDispatcher.dispatch({
-          type: 'simulations/start-load',
-          data: this.props.match.params.simulation,
-          token: this.state.sessionToken
-        });
-      });
-    }
+    });
   }
 
   closeDeleteModal = confirmDelete => {
@@ -137,38 +136,30 @@ class Simulation extends React.Component {
     });
   }
 
-  closeEditModal(data) {
-    this.setState({ editModal : false });
-
-    if (data) {
-      AppDispatcher.dispatch({
-        type: 'simulationModels/start-edit',
-        data,
-        token: this.state.sessionToken
-      });
-    }
-  }
-
-  closeImportModal(data) {
+  importSimulationModel = simulationModel => {
     this.setState({ importModal: false });
 
-    if (data) {
-      data.simulation = this.state.simulation._id;
+    if (simulationModel == null) {
+      return;
+    }
 
+    simulationModel.simulation = this.state.simulation._id;
+
+    console.log(simulationModel);
+    
+    AppDispatcher.dispatch({
+      type: 'simulationModels/start-add',
+      data: simulationModel,
+      token: this.state.sessionToken
+    });
+
+    this.setState({ simulation: {} }, () => {
       AppDispatcher.dispatch({
-        type: 'simulationModels/start-add',
-        data,
+        type: 'simulations/start-load',
+        data: this.props.match.params.simulation,
         token: this.state.sessionToken
       });
-
-      this.setState({ simulation: {} }, () => {
-        AppDispatcher.dispatch({
-          type: 'simulations/start-load',
-          data: this.props.match.params.simulation,
-          token: this.state.sessionToken
-        });
-      });
-    }
+    });
   }
 
   getSimulatorName(simulatorId) {
@@ -182,6 +173,7 @@ class Simulation extends React.Component {
   exportModel(index) {
     // filter properties
     const model = Object.assign({}, this.state.simulationModels[index]);
+    
     delete model.simulator;
     delete model.simulation;
 
@@ -239,52 +231,52 @@ class Simulation extends React.Component {
   }
 
   render() {
-    return (
-      <div className='section'>
-        <h1>{this.state.simulation.name}</h1>
+    const buttonStyle = {
+      marginLeft: '10px'
+    };
 
-        <Table data={this.state.simulationModels}>
-          <TableColumn checkbox onChecked={(index, event) => this.onSimulationModelChecked(index, event)} width='30' />
-          <TableColumn title='Name' dataKey='name' />
-          <TableColumn title='Simulator' dataKey='simulator' width='180' modifier={(simulator) => this.getSimulatorName(simulator)} />
-          <TableColumn title='Output' dataKey='outputLength' width='100' />
-          <TableColumn title='Input' dataKey='inputLength' width='100' />
-          <TableColumn
-            title=''
-            width='100'
-            editButton
-            deleteButton
-            exportButton
-            onEdit={(index) => this.setState({ editModal: true, modalData: this.state.simulationModels[index], modalIndex: index })}
-            onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.simulationModels[index], modalIndex: index })}
-            onExport={index => this.exportModel(index)}
-          />
-        </Table>
+    return <div className='section'>
+      <h1>{this.state.simulation.name}</h1>
 
-        <div style={{ float: 'left' }}>
-          <SimulatorAction
-            runDisabled={this.state.selectedSimulationModels.length === 0}
-            runAction={this.runAction}
-            actions={[
-              { id: '0', title: 'Start', data: { action: 'start' } },
-              { id: '1', title: 'Stop', data: { action: 'stop' } },
-              { id: '2', title: 'Pause', data: { action: 'pause' } },
-              { id: '3', title: 'Resume', data: { action: 'resume' } }
-            ]}/>
-        </div>
+      <Table data={this.state.simulationModels}>
+        <TableColumn checkbox onChecked={(index, event) => this.onSimulationModelChecked(index, event)} width='30' />
+        <TableColumn title='Name' dataKey='name' link='/simulationModel/' linkKey='_id' />
+        <TableColumn title='Simulator' dataKey='simulator' modifier={(simulator) => this.getSimulatorName(simulator)} />
+        <TableColumn title='Output' dataKey='outputLength' width='100' />
+        <TableColumn title='Input' dataKey='inputLength' width='100' />
+        <TableColumn 
+          title='' 
+          width='70' 
+          deleteButton 
+          exportButton
+          onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.simulationModels[index], modalIndex: index })} 
+          onExport={index => this.exportModel(index)}
+        />
+      </Table>
 
-        <div style={{ float: 'right' }}>
-          <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph="plus" /> Simulation Model</Button>
-          <Button onClick={() => this.setState({ importModal: true })}><Glyphicon glyph="import" /> Import</Button>
-        </div>
-
-        <NewSimulationModelDialog show={this.state.newModal} onClose={data => this.closeNewModal(data)} simulators={this.state.simulators} />
-        <EditSimulationModelDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} data={this.state.modalData} simulators={this.state.simulators} />
-        <ImportSimulationModelDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} simulators={this.state.simulators} />
-
-        <DeleteDialog title="simulation model" name={this.state.modalData.name} show={this.state.deleteModal} onClose={this.closeDeleteModal} />
+      <div style={{ float: 'left' }}>
+        <SimulatorAction 
+          runDisabled={this.state.selectedSimulationModels.length === 0} 
+          runAction={this.runAction}
+          actions={[
+            { id: '0', title: 'Start', data: { action: 'start' } }, 
+            { id: '1', title: 'Stop', data: { action: 'stop' } }, 
+            { id: '2', title: 'Pause', data: { action: 'pause' } }, 
+            { id: '3', title: 'Resume', data: { action: 'resume' } } 
+          ]}/>
       </div>
-    );
+
+      <div style={{ float: 'right' }}>
+        <Button onClick={this.addSimulationModel} style={buttonStyle}><Glyphicon glyph="plus" /> Simulation Model</Button>
+        <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Glyphicon glyph="import" /> Import</Button>
+      </div>
+
+      <div style={{ clear: 'both' }} />
+
+      <ImportSimulationModelDialog show={this.state.importModal} onClose={this.importSimulationModel} simulators={this.state.simulators} />
+
+      <DeleteDialog title="simulation model" name={this.state.modalData.name} show={this.state.deleteModal} onClose={this.closeDeleteModal} />
+    </div>;
   }
 }
 
