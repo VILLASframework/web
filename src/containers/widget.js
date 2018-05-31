@@ -164,9 +164,19 @@ class Widget extends React.Component {
   }
 
   inputDataChanged(widget, data) {
+    let simulationModel = null;
+
+    for (let model of this.state.simulationModels) {
+      if (model._id !== widget.simulationModel) {
+        continue;
+      }
+
+      simulationModel = model;
+    }
+
     AppDispatcher.dispatch({
       type: 'simulatorData/inputChanged',
-      simulator: widget.simulator,
+      simulator: simulationModel.simulator,
       signal: widget.signal,
       data
     });
