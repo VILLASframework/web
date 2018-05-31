@@ -164,9 +164,19 @@ class Widget extends React.Component {
   }
 
   inputDataChanged(widget, data) {
+    let simulationModel = null;
+
+    for (let model of this.state.simulationModels) {
+      if (model._id !== widget.simulationModel) {
+        continue;
+      }
+
+      simulationModel = model;
+    }
+
     AppDispatcher.dispatch({
       type: 'simulatorData/inputChanged',
-      simulator: widget.simulator,
+      simulator: simulationModel.simulator,
       signal: widget.signal,
       data
     });
@@ -209,9 +219,9 @@ class Widget extends React.Component {
     } else if (widget.type === 'Button') {
       element = <WidgetButton widget={widget} editing={this.props.editing} />
     } else if (widget.type === 'NumberInput') {
-      element = <WidgetNumberInput widget={widget} editing={this.props.editing} />
+      element = <WidgetNumberInput widget={widget} editing={this.props.editing} simulationModel={simulationModel} />
     } else if (widget.type === 'Slider') {
-      element = <WidgetSlider widget={widget} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } onInputChanged={(value) => this.inputDataChanged(widget, value)} />
+      element = <WidgetSlider widget={widget} editing={this.props.editing} simulationModel={simulationModel} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } onInputChanged={(value) => this.inputDataChanged(widget, value)} />
     } else if (widget.type === 'Gauge') {
       element = <WidgetGauge widget={widget} data={this.state.simulatorData} editing={this.props.editing} simulationModel={simulationModel} />
     } else if (widget.type === 'Box') {

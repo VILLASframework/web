@@ -54,7 +54,6 @@ class SimulationDataStore extends ReduceStore {
             length: action.inputLength,
             version: 2,
             type: 0,
-            id: 0,
             timestamp: Date.now(),
             values: new Array(action.inputLength).fill(0)
           }

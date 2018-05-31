@@ -63,8 +63,6 @@ class SimulatorDataDataManager {
     const data = this.messageToBuffer(message);
     socket.send(data);
 
-    console.log(data);
-
     return true;
   }
 
@@ -156,7 +154,6 @@ class SimulatorDataDataManager {
     const nsec = (message.timestamp - sec * 1e3) * 1e6;
 
     view.setUint8(0x00, bits, true);
-    view.setUint8(0x01, message.id, true);
     view.setUint16(0x02, message.length, true);
     view.setUint32(0x04, message.sequence, true);
     view.setUint32(0x08, sec, true);

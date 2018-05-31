@@ -20,5 +20,31 @@
  ******************************************************************************/
 
 import RestDataManager from './rest-data-manager';
+import AppDispatcher from '../app-dispatcher';
 
-export default new RestDataManager('simulationModel', '/models');
+class SimulationModelDataManager extends RestDataManager {
+  constructor() {
+    super('simulationModel', '/models');
+
+    this.onLoad = this.onModelsLoad;
+  }
+
+  onModelsLoad(data) {
+    if (!Array.isArray(data))
+      data = [ data ];
+
+    for (let model of data)
+      this.loadModelData(model);
+  }
+
+  loadModelData(model) {
+    AppDispatcher.dispatch({
+      type: 'simulatorData/prepare',
+      inputLength: parseInt(model.inputLength, 10),
+      outputLength: parseInt(model.outputLength, 10),
+      id: model.simulator
+    });
+  }
+}
+
+export default new SimulationModelDataManager();
