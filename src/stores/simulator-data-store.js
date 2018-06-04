@@ -107,7 +107,7 @@ class SimulationDataStore extends ReduceStore {
 
       case 'simulatorData/inputChanged':
         // find simulator in node array
-        if (state[action.simulator] == null) {
+        if (state[action.simulator] == null || state[action.simulator].input == null) {
           return state;
         }
 
