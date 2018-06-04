@@ -20,21 +20,60 @@
  ******************************************************************************/
 
 class WebsocketAPI {
-  addSocket(endpoint, callbacks) {
-    // create web socket client
-    const socket = new WebSocket(this.getURL(endpoint), 'live');
-    socket.binaryType = 'arraybuffer';
+  constructor(endpoint, callbacks) {
+    this.endpoint = endpoint;
+    this.callbacks = callbacks;
 
-    // register callbacks
-    if (callbacks.onOpen) socket.onopen = callbacks.onOpen;
-    if (callbacks.onClose) socket.onclose = callbacks.onClose;
-    if (callbacks.onMessage) socket.onmessage = callbacks.onMessage;
-    if (callbacks.onError) socket.onerror = callbacks.onError;
+    this.isClosing = false;
 
-    return socket;
+    this.connect(endpoint, callbacks);
   }
 
-  getURL(endpoint) {
+  connect(endpoint, callbacks) {
+    // create web socket client
+    this.socket = new WebSocket(WebsocketAPI.getURL(endpoint), 'live');
+    this.socket.binaryType = 'arraybuffer';
+    this.socket.onclose = this.onClose;
+
+    // register callbacks
+    if (callbacks.onOpen)
+        this.socket.onopen = callbacks.onOpen;
+    if (callbacks.onMessage)
+        this.socket.onmessage = callbacks.onMessage;
+    if (callbacks.onError)
+        this.socket.onerror = callbacks.onError;
+  }
+
+  reconnect() {
+    //console.log("Reconnecting: " + this.endpoint);
+    this.connect(this.endpoint, this.callbacks);
+  }
+
+  get url() {
+    return WebsocketAPI.getURL(this.endpoint);
+  }
+
+  send(data) {
+    this.socket.send(data);
+  }
+
+  close(code, reason) {
+    this.isClosing = true;
+    this.socket.close(code, reason);
+  }
+
+  onClose = e => {
+    if (this.isClosing) {
+      if (this.callbacks.onClose)
+        this.callbacks.onClose(e);
+    }
+    else {
+      //console.log("Connection to " + this.endpoint + " dropped. Attempt reconnect in 1 sec");
+      window.setTimeout(() => { this.reconnect(); }, 500);
+    }
+  }
+
+  static getURL(endpoint) {
     // create an anchor element (note: no need to append this element to the document)
     var link = document.createElement('a');
     link.href = endpoint;
@@ -48,4 +87,4 @@ class WebsocketAPI {
   }
 }
 
-export default new WebsocketAPI();
+export default WebsocketAPI;
