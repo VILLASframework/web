@@ -40,7 +40,7 @@ class NewSimulatorDialog extends React.Component {
   onClose(canceled) {
     if (canceled === false) {
       if (this.valid) {
-        const data = { 
+        const data = {
           properties: {
             name: this.state.name
           },
@@ -86,6 +86,14 @@ class NewSimulatorDialog extends React.Component {
     if (target === 'uuid') return uuid ? "success" : "error";
   }
 
+  uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      // eslint-disable-next-line
+      var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
   render() {
     return (
       <Dialog show={this.props.show} title="New Simulator" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
@@ -102,7 +110,7 @@ class NewSimulatorDialog extends React.Component {
           </FormGroup>
           <FormGroup controlId="uuid" validationState={this.validateForm('uuid')}>
             <ControlLabel>UUID</ControlLabel>
-            <FormControl type="text" placeholder="Enter uuid" value={this.state.uuid} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder="Enter uuid" defaultValue={this.uuidv4()} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
         </form>
