@@ -111,7 +111,7 @@ class Simulators extends Component {
 
     // show save dialog
     const blob = new Blob([JSON.stringify(simulator, null, 2)], { type: 'application/json' });
-    FileSaver.saveAs(blob, 'simulator - ' + (simulator.properties.name || simulator.rawProperties.name || 'undefined') + '.json');
+    FileSaver.saveAs(blob, 'simulator - ' + (_.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name') || 'undefined') + '.json');
   }
 
   closeImportModal(data) {
@@ -179,20 +179,20 @@ class Simulators extends Component {
           <TableColumn title='Endpoint' dataKeys={['properties.endpoint', 'rawProperties.endpoint']} />
           <TableColumn title='Host' dataKey='host' />
           <TableColumn title='UUID' dataKey='uuid' />
-          <TableColumn 
-            width='100' 
+          <TableColumn
+            width='100'
             editButton
             exportButton
             deleteButton
-            onEdit={index => this.setState({ editModal: true, modalSimulator: this.state.simulators[index], modalIndex: index })} 
+            onEdit={index => this.setState({ editModal: true, modalSimulator: this.state.simulators[index], modalIndex: index })}
             onExport={index => this.exportSimulator(index)}
             onDelete={index => this.setState({ deleteModal: true, modalSimulator: this.state.simulators[index], modalIndex: index })}
           />
         </Table>
 
         <div style={{ float: 'left' }}>
-          <SimulatorAction 
-            runDisabled={this.state.selectedSimulators.length === 0} 
+          <SimulatorAction
+            runDisabled={this.state.selectedSimulators.length === 0}
             runAction={this.runAction}
             actions={[ { id: '0', title: 'Reset', data: { action: 'reset' } }, { id: '1', title: 'Shutdown', data: { action: 'shutdown' } } ]}/>
         </div>
