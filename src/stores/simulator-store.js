@@ -48,6 +48,14 @@ class SimulatorStore extends ArrayStore {
         return super.reduce(state, action);
 
       case 'simulators/edited':
+        // connect to each simulator
+        const simulator = action.data;
+        const endpoint = _.get(simulator, 'properties.endpoint') || _.get(simulator, 'rawProperties.endpoint');
+
+        if (endpoint != null && endpoint !== '') {
+          SimulatorDataDataManager.update(endpoint, simulator._id);
+        }
+
         return super.reduce(state, action);
 
       case 'simulators/fetched':

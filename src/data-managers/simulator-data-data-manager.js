@@ -32,24 +32,27 @@ class SimulatorDataDataManager {
 
   open(endpoint, identifier) {
     // pass signals to onOpen callback
-    if (this._sockets[identifier] != null) {
-      if (this._sockets[identifier].url !== WebsocketAPI.getURL(endpoint)) {
-        // replace connection, since endpoint changed
-        this._sockets.close();
+    if (this._sockets[identifier] != null)
+      return; // already open?
 
-        this._sockets[identifier] = new WebsocketAPI(endpoint, { onOpen: (event) => this.onOpen(event, identifier), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier), onError: (error) => this.onError(error, identifier) });
+    this._sockets[identifier] = new WebsocketAPI(endpoint, { onOpen: (event) => this.onOpen(event, identifier, true), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier), onError: (error) => this.onError(error, identifier) });
+  }
+
+  update(endpoint, identifier) {
+    if (this._sockets[identifier] != null) {
+      if (this._sockets[identifier].endpoint !== endpoint) {
+        this._sockets[identifier].close();
+        this._sockets[identifier] = new WebsocketAPI(endpoint, { onOpen: (event) => this.onOpen(event, identifier, false), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier), onError: (error) => this.onError(error, identifier) });
       }
-    } else {
-      this._sockets[identifier] = new WebsocketAPI(endpoint, { onOpen: (event) => this.onOpen(event, identifier, false), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier), onError: (error) => this.onError(error, identifier) });
     }
   }
 
   closeAll() {
     // close every open socket
-    for (var key in this._sockets) {
-      if (this._sockets.hasOwnProperty(key)) {
-        this._sockets[key].close(4000);
-        delete this._sockets[key];
+    for (var identifier in this._sockets) {
+      if (this._sockets.hasOwnProperty(identifier)) {
+        this._sockets[identifier].close(4000);
+        delete this._sockets[identifier];
       }
     }
   }
