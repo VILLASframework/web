@@ -31,8 +31,12 @@ class SignalMapping extends React.Component {
     constructor(props) {
         super(props);
 
+        var length = props.length;
+        if (length === undefined)
+          length = 1;
+
         this.state = {
-            length: props.length,
+            length: length,
             signals: props.signals
         };
     }
@@ -56,7 +60,7 @@ class SignalMapping extends React.Component {
 
         // update signals to represent length
         const signals = this.state.signals;
-        
+
         if (this.state.length < length) {
             while (signals.length < length) {
                 signals.push({ name: 'Signal', type: 'Type' });
@@ -76,13 +80,15 @@ class SignalMapping extends React.Component {
     handleMappingChange = (event, row, column) => {
         const signals = this.state.signals;
 
+        const length = this.state.length;
+
         if (column === 1) {
             signals[row].name = event.target.value;
         } else if (column === 2) {
             signals[row].type = event.target.value;
         }
 
-        this.setState({ signals });
+        this.setState({ length, signals });
 
         if (this.props.onChange != null) {
             this.props.onChange(this.state.length, signals);
@@ -93,7 +99,7 @@ class SignalMapping extends React.Component {
         return <div>
             <FormGroup validationState={this.validateLength()}>
                 <ControlLabel>{this.props.name} Length</ControlLabel>
-                <FormControl type='number' placeholder='Enter length' min='1' value={this.state.length} onChange={this.handleLengthChange} />
+                <FormControl name='length' type='number' placeholder='Enter length' defaultValue={this.state.length} min='1' onBlur={this.handleLengthChange} />
                 <FormControl.Feedback />
             </FormGroup>
 
