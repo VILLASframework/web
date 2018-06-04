@@ -39,7 +39,9 @@ class SimulationDataStore extends ReduceStore {
     switch (action.type) {
       case 'simulatorData/opened':
         // create entry for simulator
-        state[action.id] = {};
+        if (state[action.id] === undefined)
+            state[action.id] = {};
+
         return state;
 
       case 'simulatorData/prepare':
