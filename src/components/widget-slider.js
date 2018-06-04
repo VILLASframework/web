@@ -51,6 +51,9 @@ class WidgetSlider extends Component {
   }
 
   valueIsChanging(newValue) {
+    if (this.props.widget.continous_update)
+      this.valueChanged(newValue);
+
     this.setState({ value: newValue });
   }
 

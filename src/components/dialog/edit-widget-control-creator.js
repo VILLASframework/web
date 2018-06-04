@@ -120,7 +120,8 @@ export default function createControls(widgetType = null, widget = null, session
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} validate={id => validateForm(id)} />,
                 <EditWidgetOrientation key={1} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetSimulatorControl key={2} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetSignalControl key={3} widget={widget} input validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />
+                <EditWidgetSignalControl key={3} widget={widget} input validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={4} text={'Continous Update'} controlId={'continous_update'} widget={widget} input simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />
             );
             break;
         case 'Button':
