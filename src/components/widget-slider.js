@@ -25,15 +25,30 @@ class WidgetSlider extends Component {
     super(props);
 
     this.state = {
-        value: 50
+        value: Number.parseFloat(this.props.widget.default_value),
+        unit: ''
     };
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.simulationModel == null) {
+      return;
+    }
+
     // Update value
     if (nextProps.widget.value && this.state.value !== nextProps.widget.value) {
-      this.setState({ value: nextProps.widget.value })
+      this.setState({
+        value: nextProps.widget.value,
+      });
     }
+
+    // Update unit
+    if (nextProps.widget.simulationModel && this.state.unit !== nextProps.simulationModel.inputMapping[nextProps.widget.signal].type) {
+      this.setState({
+        unit: nextProps.simulationModel.inputMapping[nextProps.widget.signal].type
+      });
+    }
+
     // Check if the orientation changed, update the size if it did
     if (this.props.widget.orientation !== nextProps.widget.orientation) {
       let baseWidget = nextProps.widget;
@@ -68,9 +83,12 @@ class WidgetSlider extends Component {
 
     let fields = {
       'name': this.props.widget.name,
-      'control': <Slider min={0} max={100} value={ this.state.value } step={ 0.1 } disabled={ this.props.editing } vertical={ isVertical } onChange={ (v) => this.valueIsChanging(v) } onAfterChange={ (v) => this.valueChanged(v) }/>,
-      'value': this.state.value
+      'control': <Slider min={ this.props.widget.rangeMin } max={ this.props.widget.rangeMax } step={ Number.parseFloat(this.props.widget.step) } value={ this.state.value } disabled={ this.props.editing } vertical={ isVertical } onChange={ (v) => this.valueIsChanging(v) } onAfterChange={ (v) => this.valueChanged(v) }/>,
+      'value': Number.parseFloat(this.state.value).toPrecision(3)
     }
+
+    if (this.props.widget.showUnit)
+      fields.value += ' [' + this.state.unit + ']';
 
     var widgetClasses = classNames({
                     'slider-widget': true,

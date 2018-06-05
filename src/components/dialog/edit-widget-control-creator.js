@@ -22,6 +22,7 @@
 import React from 'react';
 
 import EditWidgetTextControl from './edit-widget-text-control';
+import EditWidgetNumberControl from './edit-widget-number-control';
 import EditWidgetColorControl from './edit-widget-color-control';
 import EditWidgetTimeControl from './edit-widget-time-control';
 import EditImageWidgetControl from './edit-widget-image-control';
@@ -121,7 +122,11 @@ export default function createControls(widgetType = null, widget = null, session
                 <EditWidgetOrientation key={1} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetSimulatorControl key={2} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetSignalControl key={3} widget={widget} input validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetCheckboxControl key={4} text={'Continous Update'} controlId={'continous_update'} widget={widget} input simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />
+                <EditWidgetCheckboxControl key={4} text={'Continous Update'} controlId={'continous_update'} widget={widget} input simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={5} widget={widget} controlId={'showUnit'} text="Show unit" handleChange={e => handleChange(e)} />,
+                <EditWidgetMinMaxControl key={6} widget={widget} controlId={'range'} handleChange={e => handleChange(e)} />,
+                <EditWidgetNumberControl key={7} widget={widget} controlId={'step'} label={'Step Size'} placeholder={0.1} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetNumberControl key={8} widget={widget} controlId={'default_value'} label={'Default Value'} placeholder={50} handleChange={(e) => handleChange(e)} />
             );
             break;
         case 'Button':
