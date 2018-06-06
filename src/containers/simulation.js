@@ -221,6 +221,10 @@ class Simulation extends React.Component {
         continue;
       }
 
+      if (action.data.action === 'start') {
+        action.data.parameters = this.state.simulationModels[index].startParameters; 
+      }
+
       AppDispatcher.dispatch({
         type: 'simulators/start-action',
         simulator,

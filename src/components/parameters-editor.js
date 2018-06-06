@@ -21,7 +21,6 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ControlLabel, Col } from 'react-bootstrap';
 import JsonView from 'react-json-view';
 
 class ParametersEditor extends React.Component {
