@@ -28,6 +28,7 @@
     "react-dnd-html5-backend": "^2.2.4",
     "react-dom": "^15.4.2",
     "react-fullscreenable": "^2.4.3",
+    "react-json-view": "^1.17.0",
     "react-notification-system": "^0.2.13",
     "react-rnd": "^7.4.0",
     "react-router": "^4.1.2",

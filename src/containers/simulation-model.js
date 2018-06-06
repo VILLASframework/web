@@ -31,6 +31,7 @@ import SelectSimulator from './select-simulator';
 import SelectFile from './select-file';
 import SignalMapping from '../components/signal-mapping';
 import EditableHeader from '../components/editable-header';
+import ParametersEditor from '../components/parameters-editor';
 
 class SimulationModel extends React.Component {
     static getStores() {
@@ -114,6 +115,14 @@ class SimulationModel extends React.Component {
         this.setState({ simulationModel });
     }
 
+    handleStartParametersChange = startParameters => {
+        const simulationModel = this.state.simulationModel;
+
+        simulationModel.startParameters = startParameters;
+
+        this.setState({ simulationModel });
+    }
+
     render() {
         const buttonStyle = {
             marginRight: '10px'
@@ -129,6 +138,8 @@ class SimulationModel extends React.Component {
                     <SelectFile disabled type='model' name='Model' onChange={this.handleModelChange} value={this.state.simulationModel.model} />
 
                     <SelectFile disabled type='configuration' name='Configuration' onChange={this.handleConfigurationChange} value={this.state.simulationModel.configuration} />
+
+                    <ParametersEditor name='Start Parameters' content={this.state.simulationModel.startParameters} onChange={this.handleStartParametersChange} />
                 </Col>
 
                 <Col xs={12} sm={6}>
