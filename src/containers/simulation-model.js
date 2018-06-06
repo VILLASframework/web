@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button, Col, Form } from 'react-bootstrap';
+import { Button, Col, Form, ControlLabel } from 'react-bootstrap';
 
 import SimulationModelStore from '../stores/simulation-model-store';
 import UserStore from '../stores/user-store';
@@ -139,7 +139,16 @@ class SimulationModel extends React.Component {
 
                     <SelectFile disabled type='configuration' name='Configuration' onChange={this.handleConfigurationChange} value={this.state.simulationModel.configuration} />
 
-                    <ParametersEditor name='Start Parameters' content={this.state.simulationModel.startParameters} onChange={this.handleStartParametersChange} />
+                    <div>
+                        <Col componentClass={ControlLabel} sm={3} md={2}>
+                            Start Parameters                            
+                        </Col>
+                        
+                        <Col sm={9} md={10}>
+                            <ParametersEditor content={this.state.simulationModel.startParameters} onChange={this.handleStartParametersChange} />
+                        </Col>
+                    </div>
+                    
                 </Col>
 
                 <Col xs={12} sm={6}>

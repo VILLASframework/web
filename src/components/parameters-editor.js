@@ -53,12 +53,7 @@ class ParametersEditor extends React.Component {
             border: '1px solid lightgray'
         };
 
-        return <div>
-            <Col componentClass={ControlLabel} sm={3} md={2}>
-                {this.props.name}
-            </Col>
-            
-            <Col sm={9} md={10} style={containerStyle}>
+        return <div style={containerStyle}>
                 <JsonView
                     src={this.props.content}
                     name={false}
@@ -67,19 +62,16 @@ class ParametersEditor extends React.Component {
                     onEdit={this.onEdit}
                     onDelete={this.onDelete}
                 />
-            </Col>
         </div>;
     }
 }
 
 ParametersEditor.PropTypes = {
-    name: PropTypes.string,
     content: PropTypes.object,
     onChange: PropTypes.func
 };
 
 ParametersEditor.defaultProps = {
-    name: "Parameters",
     content: {}
 };
 
