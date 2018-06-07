@@ -165,6 +165,42 @@ class Simulators extends Component {
     }
   }
 
+  labelSimulatorState = state => {
+    if (state === 'unknown' || state === 'shutdown') {
+      return <span>
+        <Label>offline</Label>
+
+        {state}
+      </span>;
+    }
+
+    return <span>
+      <Label>online</Label>
+      
+      {state}
+    </span>;
+  }
+
+  isSimulatorOnline(state) {
+    return state !== 'shutdown' && state !== 'unknown';
+  }
+
+  stateLabelStyle = state => {
+    if (this.isSimulatorOnline(state)) {
+      return 'success';
+    }
+
+    return 'danger';
+  }
+
+  stateLabelModifier = state => {
+    if (this.isSimulatorOnline(state)) {
+      return 'online';
+    }
+
+    return 'offline';
+  }
+
   render() {
     const buttonStyle = {
       marginLeft: '10px'
@@ -177,7 +213,7 @@ class Simulators extends Component {
         <Table data={this.state.simulators}>
           <TableColumn checkbox onChecked={(index, event) => this.onSimulatorChecked(index, event)} width='30' />
           <TableColumn title='Name' dataKeys={['properties.name', 'rawProperties.name']} />
-          <TableColumn title='State' dataKey='state' />
+          <TableColumn title='State' dataKey='state' labelKey='state' labelModifier={this.stateLabelModifier} labelStyle={this.stateLabelStyle} />
           <TableColumn title='Model' dataKey='model' />
           <TableColumn title='Endpoint' dataKeys={['properties.endpoint', 'rawProperties.endpoint']} />
           <TableColumn title='Host' dataKey='host' />
