@@ -121,7 +121,7 @@ class Simulations extends Component {
   closeEditModal(data) {
     this.setState({ editModal : false });
 
-    if (data) {
+    if (data != null) {
       AppDispatcher.dispatch({
         type: 'simulations/start-edit',
         data,

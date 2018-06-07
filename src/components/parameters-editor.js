@@ -26,19 +26,19 @@ import JsonView from 'react-json-view';
 class ParametersEditor extends React.Component {
     onAdd = event => {
         if (this.props.onChange != null) {
-            this.props.onChange(event.updated_src);
+            this.props.onChange(JSON.parse(JSON.stringify(event.updated_src)));
         }
     }
 
     onEdit = event => {
         if (this.props.onChange != null) {
-            this.props.onChange(event.updated_src);
+            this.props.onChange(JSON.parse(JSON.stringify(event.updated_src)));
         }
     }
 
     onDelete = event => {
         if (this.props.onChange != null) {
-            this.props.onChange(event.updated_src);
+            this.props.onChange(JSON.parse(JSON.stringify(event.updated_src)));
         }
     }
 
@@ -48,30 +48,33 @@ class ParametersEditor extends React.Component {
 
             paddingTop: '5px',
             paddingBottom: '5px',
+            paddingLeft: '8px',
 
             border: '1px solid lightgray'
         };
 
         return <div style={containerStyle}>
-                <JsonView
-                    src={this.props.content}
-                    name={false}
-                    displayDataTypes={false}
-                    onAdd={this.onAdd}
-                    onEdit={this.onEdit}
-                    onDelete={this.onDelete}
-                />
+            <JsonView
+                src={this.props.content}
+                name={false}
+                displayDataTypes={false}
+                onAdd={this.props.disabled ? undefined : this.onAdd}
+                onEdit={this.props.disabled ? undefined : this.onEdit}
+                onDelete={this.props.disabled ? undefined : this.onDelete}
+            />
         </div>;
     }
 }
 
 ParametersEditor.PropTypes = {
     content: PropTypes.object,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    disabled: PropTypes.bool
 };
 
 ParametersEditor.defaultProps = {
-    content: {}
+    content: {},
+    disabled: false
 };
 
 export default ParametersEditor;

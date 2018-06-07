@@ -21,4 +21,4 @@
 
 import RestDataManager from './rest-data-manager';
 
-export default new RestDataManager('simulation', '/simulations', [ '_id', 'name', 'projects', 'models' ]);
+export default new RestDataManager('simulation', '/simulations', [ '_id', 'name', 'projects', 'models', 'startParameters' ]);
