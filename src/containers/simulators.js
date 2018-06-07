@@ -44,10 +44,13 @@ class Simulators extends Component {
   }
 
   static calculateState() {
+    const simulators = SimulatorStore.getState().sort((a, b) => {
+      return a.stateUpdatedAt < b.stateUpdatedAt;
+    });
+
     return {
       sessionToken: UserStore.getState().token,
-      simulators: SimulatorStore.getState(),
-
+      simulators,
       modalSimulator: {},
       deleteModal: false,
 
@@ -162,6 +165,46 @@ class Simulators extends Component {
     }
   }
 
+  isSimulatorOutdated(simulator) {
+    const fiveMinutes = 5 * 60 * 1000;
+
+    return Date.now() - new Date(simulator.stateUpdatedAt) > fiveMinutes;
+  }
+
+  isSimulatorOnline(state) {
+    return state !== 'shutdown' && state !== 'unknown';
+  }
+
+  stateLabelStyle = (state, simulator) => {
+    if (this.isSimulatorOutdated(simulator)) {
+      return 'default';
+    }
+
+    if (this.isSimulatorOnline(state)) {
+      return 'success';
+    }
+
+    return 'danger';
+  }
+
+  stateLabelModifier = (state, simulator) => {
+    if (this.isSimulatorOutdated(simulator)) {
+      return 'unknown';
+    }
+
+    if (this.isSimulatorOnline(state)) {
+      return 'online';
+    }
+
+    return 'offline';
+  }
+
+  stateUpdateModifier = updatedAt => {
+    const date = new Date(updatedAt);
+
+    return date.toLocaleString('de-DE');
+  }
+
   render() {
     const buttonStyle = {
       marginLeft: '10px'
@@ -174,8 +217,8 @@ class Simulators extends Component {
         <Table data={this.state.simulators}>
           <TableColumn checkbox onChecked={(index, event) => this.onSimulatorChecked(index, event)} width='30' />
           <TableColumn title='Name' dataKeys={['properties.name', 'rawProperties.name']} />
-          <TableColumn title='State' dataKey='state' />
-          <TableColumn title='Model' dataKey='model' />
+          <TableColumn title='State' dataKey='state' labelKey='state' labelModifier={this.stateLabelModifier} labelStyle={this.stateLabelStyle} />
+          <TableColumn title='State Update' dataKey='stateUpdatedAt' modifier={this.stateUpdateModifier} />
           <TableColumn title='Endpoint' dataKeys={['properties.endpoint', 'rawProperties.endpoint']} />
           <TableColumn title='Host' dataKey='host' />
           <TableColumn title='UUID' dataKey='uuid' />
