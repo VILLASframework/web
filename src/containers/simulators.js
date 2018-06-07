@@ -199,6 +199,12 @@ class Simulators extends Component {
     return 'offline';
   }
 
+  stateUpdateModifier = updatedAt => {
+    const date = new Date(updatedAt);
+
+    return date.toLocaleString('de-DE');
+  }
+
   render() {
     const buttonStyle = {
       marginLeft: '10px'
@@ -212,7 +218,7 @@ class Simulators extends Component {
           <TableColumn checkbox onChecked={(index, event) => this.onSimulatorChecked(index, event)} width='30' />
           <TableColumn title='Name' dataKeys={['properties.name', 'rawProperties.name']} />
           <TableColumn title='State' dataKey='state' labelKey='state' labelModifier={this.stateLabelModifier} labelStyle={this.stateLabelStyle} />
-          <TableColumn title='Model' dataKey='model' />
+          <TableColumn title='State Update' dataKey='stateUpdatedAt' modifier={this.stateUpdateModifier} />
           <TableColumn title='Endpoint' dataKeys={['properties.endpoint', 'rawProperties.endpoint']} />
           <TableColumn title='Host' dataKey='host' />
           <TableColumn title='UUID' dataKey='uuid' />
