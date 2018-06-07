@@ -165,27 +165,21 @@ class Simulators extends Component {
     }
   }
 
-  labelSimulatorState = state => {
-    if (state === 'unknown' || state === 'shutdown') {
-      return <span>
-        <Label>offline</Label>
+  isSimulatorOutdated(simulator) {
+    const fiveMinutes = 5 * 60 * 1000;
 
-        {state}
-      </span>;
-    }
-
-    return <span>
-      <Label>online</Label>
-      
-      {state}
-    </span>;
+    return Date.now() - new Date(simulator.stateUpdatedAt) > fiveMinutes;
   }
 
   isSimulatorOnline(state) {
     return state !== 'shutdown' && state !== 'unknown';
   }
 
-  stateLabelStyle = state => {
+  stateLabelStyle = (state, simulator) => {
+    if (this.isSimulatorOutdated(simulator)) {
+      return 'default';
+    }
+
     if (this.isSimulatorOnline(state)) {
       return 'success';
     }
@@ -193,7 +187,11 @@ class Simulators extends Component {
     return 'danger';
   }
 
-  stateLabelModifier = state => {
+  stateLabelModifier = (state, simulator) => {
+    if (this.isSimulatorOutdated(simulator)) {
+      return 'unknown';
+    }
+
     if (this.isSimulatorOnline(state)) {
       return 'online';
     }
