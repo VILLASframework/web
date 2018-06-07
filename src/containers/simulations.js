@@ -75,8 +75,6 @@ class Simulations extends Component {
   }
 
   componentDidUpdate() {
-    console.log('componentDidUpdate');
-
     const simulationModelIds = [];
     const simulatorIds = [];
 
@@ -86,7 +84,7 @@ class Simulations extends Component {
 
         if (model == null) {
           simulationModelIds.push(modelId);
-
+          
           continue;
         }
 
@@ -278,8 +276,6 @@ class Simulations extends Component {
     const buttonStyle = {
       marginLeft: '10px'
     };
-
-    console.log(this.state.simulationModels.length);
 
     return (
       <div className='section'>
