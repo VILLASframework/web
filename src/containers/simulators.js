@@ -44,10 +44,13 @@ class Simulators extends Component {
   }
 
   static calculateState() {
+    const simulators = SimulatorStore.getState().sort((a, b) => {
+      return a.stateUpdatedAt < b.stateUpdatedAt;
+    });
+
     return {
       sessionToken: UserStore.getState().token,
-      simulators: SimulatorStore.getState(),
-
+      simulators,
       modalSimulator: {},
       deleteModal: false,
 
