@@ -16,6 +16,7 @@ import EditWidgetCheckboxControl from '../../../components/dialog/edit-widget-ch
 import EditWidgetMinMaxControl from '../../../components/dialog/edit-widget-min-max-control';
 import EditWidgetColorZonesControl from '../../../components/dialog/edit-widget-color-zones-control';
 import EditWidgetHTMLContent from '../../../components/dialog/edit-widget-html-content';
+import EditWidgetNumberControl from '../../../components/dialog/edit-widget-number-control';
 
 describe('edit widget control creator', () => {
     it('should not return null', () => {
@@ -31,7 +32,7 @@ describe('edit widget control creator', () => {
         { args: { widgetType: 'Image' }, result: { controlNumber: 2, controlTypes: [EditImageWidgetControl, EditWidgetAspectControl] } },
         { args: { widgetType: 'Gauge' }, result: { controlNumber: 6, controlTypes: [EditWidgetTextControl, EditWidgetSimulatorControl, EditWidgetSignalControl, EditWidgetCheckboxControl, EditWidgetColorZonesControl, EditWidgetMinMaxControl] } },
         { args: { widgetType: 'PlotTable' }, result: { controlNumber: 5, controlTypes: [EditWidgetSimulatorControl, EditWidgetSignalsControl, EditWidgetTextControl, EditWidgetTimeControl, EditWidgetMinMaxControl] } },
-        { args: { widgetType: 'Slider' }, result: { controlNumber: 4, controlTypes: [EditWidgetTextControl, EditWidgetOrientation, EditWidgetSimulatorControl, EditWidgetSignalControl] } },
+        { args: { widgetType: 'Slider' }, result: { controlNumber: 9, controlTypes: [EditWidgetTextControl, EditWidgetOrientation, EditWidgetSimulatorControl, EditWidgetSignalControl, EditWidgetCheckboxControl, EditWidgetCheckboxControl, EditWidgetMinMaxControl, EditWidgetNumberControl, EditWidgetNumberControl] } },
         { args: { widgetType: 'Button' }, result: { controlNumber: 4, controlTypes: [EditWidgetColorControl, EditWidgetSimulatorControl, EditWidgetSignalControl] } },
         { args: { widgetType: 'Box' }, result: { controlNumber: 1, controlTypes: [EditWidgetColorControl] } },
         { args: { widgetType: 'Label' }, result: { controlNumber: 3, controlTypes: [EditWidgetTextControl, EditWidgetTextSizeControl, EditWidgetColorControl] } },
