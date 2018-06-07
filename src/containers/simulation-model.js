@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button, Col, Form } from 'react-bootstrap';
+import { Button, Col, Form, ControlLabel } from 'react-bootstrap';
 
 import SimulationModelStore from '../stores/simulation-model-store';
 import UserStore from '../stores/user-store';
@@ -31,6 +31,7 @@ import SelectSimulator from './select-simulator';
 import SelectFile from './select-file';
 import SignalMapping from '../components/signal-mapping';
 import EditableHeader from '../components/editable-header';
+import ParametersEditor from '../components/parameters-editor';
 
 class SimulationModel extends React.Component {
     static getStores() {
@@ -114,6 +115,14 @@ class SimulationModel extends React.Component {
         this.setState({ simulationModel });
     }
 
+    handleStartParametersChange = startParameters => {
+        const simulationModel = this.state.simulationModel;
+
+        simulationModel.startParameters = startParameters;
+
+        this.setState({ simulationModel });
+    }
+
     render() {
         const buttonStyle = {
             marginRight: '10px'
@@ -129,6 +138,17 @@ class SimulationModel extends React.Component {
                     <SelectFile disabled type='model' name='Model' onChange={this.handleModelChange} value={this.state.simulationModel.model} />
 
                     <SelectFile disabled type='configuration' name='Configuration' onChange={this.handleConfigurationChange} value={this.state.simulationModel.configuration} />
+
+                    <div>
+                        <Col componentClass={ControlLabel} sm={3} md={2}>
+                            Start Parameters                            
+                        </Col>
+                        
+                        <Col sm={9} md={10}>
+                            <ParametersEditor content={this.state.simulationModel.startParameters} onChange={this.handleStartParametersChange} />
+                        </Col>
+                    </div>
+                    
                 </Col>
 
                 <Col xs={12} sm={6}>

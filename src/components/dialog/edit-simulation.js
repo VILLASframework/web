@@ -23,69 +23,81 @@ import React from 'react';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 import Dialog from './dialog';
+import ParametersEditor from '../parameters-editor';
 
 class EditSimulationDialog extends React.Component {
-  valid: false;
+    valid = true;
 
-  constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
 
-    this.state = {
-      name: '',
-      _id: ''
-    }
-  }
-
-  onClose(canceled) {
-    if (canceled === false) {
-      if (this.valid) {
-        this.props.onClose(this.state);
-      }
-    } else {
-      this.props.onClose();
-    }
-  }
-
-  handleChange(e) {
-    this.setState({ [e.target.id]: e.target.value });
-  }
-
-  resetState() {
-    this.setState({
-      name: this.props.simulation.name,
-      _id: this.props.simulation._id
-    });
-  }
-
-  validateForm(target) {
-    // check all controls
-    var name = true;
-
-    if (this.state.name === '') {
-      name = false;
+        this.state = {
+            name: '',
+            _id: '',
+            startParameters: {}
+        };
     }
 
-    this.valid = name;
+    onClose = canceled => {
+        if (canceled) {
+            if (this.props.onClose != null) {
+                this.props.onClose();
+            }
 
-    // return state to control
-    if (target === 'name') return name ? "success" : "error";
+            return;
+        }
 
-    return "success";
-  }
+        if (this.valid && this.props.onClose != null) {
+            this.props.onClose(this.state);
+        }
+    }
 
-  render() {
-    return (
-      <Dialog show={this.props.show} title="Edit Simulation" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
-        <form>
-          <FormGroup controlId="name" validationState={this.validateForm('name')}>
-            <ControlLabel>Name</ControlLabel>
-            <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-        </form>
-      </Dialog>
-    );
-  }
+    handleChange = event => {
+        this.setState({ [event.target.id]: event.target.value });
+    }
+
+    resetState = () => {
+        this.setState({
+            name: this.props.simulation.name,
+            _id: this.props.simulation._id,
+            startParameters: this.props.simulation.startParameters || {}
+        });
+    }
+
+    handleStartParametersChange = startParameters => {
+        this.setState({ startParameters });
+    }
+
+    validateForm(target) {
+        let name = true;
+
+        if (this.state.name === '') {
+            name = false;
+        }
+
+        this.valid = name;
+
+        // return state to control
+        if (target === 'name') return name ? 'success' : 'error';
+    }
+
+    render() {
+        return <Dialog show={this.props.show} title='Edit Simulation' buttonTitle='Save' onClose={this.onClose} onReset={this.resetState} valid={true}>
+            <form>
+                <FormGroup controlId='name' validationState={this.validateForm('name')}>
+                    <ControlLabel>Name</ControlLabel>
+                    <FormControl type='text' placeholder='Enter name' value={this.state.name} onChange={this.handleChange} />
+                    <FormControl.Feedback />
+                </FormGroup>
+
+                <FormGroup controlId='startParameters'>
+                    <ControlLabel>Start Parameters</ControlLabel>
+
+                    <ParametersEditor content={this.state.startParameters} onChange={this.handleStartParametersChange} />
+                </FormGroup>
+            </form>
+        </Dialog>;
+    }
 }
 
 export default EditSimulationDialog;
