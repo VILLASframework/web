@@ -28,6 +28,7 @@ import AppDispatcher from '../app-dispatcher';
 import SimulationStore from '../stores/simulation-store';
 import UserStore from '../stores/user-store';
 import SimulatorStore from '../stores/simulator-store';
+import SimulationModelStore from '../stores/simulation-model-store';
 
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
@@ -40,14 +41,21 @@ import DeleteDialog from '../components/dialog/delete-dialog';
 
 class Simulations extends Component {
   static getStores() {
-    return [ SimulationStore, UserStore, SimulatorStore ];
+    return [ SimulationStore, UserStore, SimulatorStore, SimulationModelStore ];
   }
 
   static calculateState() {
+    const simulations = SimulationStore.getState();
+    const simulationModels = SimulationModelStore.getState();
+    const simulators = SimulatorStore.getState();
+
+    const sessionToken = UserStore.getState().token;
+
     return {
-      simulations: SimulationStore.getState(),
-      simulators: SimulatorStore.getState(),
-      sessionToken: UserStore.getState().token,
+      simulations,
+      simulationModels,
+      simulators,
+      sessionToken,
 
       newModal: false,
       deleteModal: false,
@@ -59,11 +67,50 @@ class Simulations extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     AppDispatcher.dispatch({
       type: 'simulations/start-load',
       token: this.state.sessionToken
     });
+  }
+
+  componentDidUpdate() {
+    console.log('componentDidUpdate');
+
+    const simulationModelIds = [];
+    const simulatorIds = [];
+
+    for (let simulation of this.state.simulations) {
+      for (let modelId of simulation.models) {
+        const model = this.state.simulationModels.find(m => m != null && m._id === modelId);
+
+        if (model == null) {
+          simulationModelIds.push(modelId);
+
+          continue;
+        }
+
+        if (this.state.simulators.includes(s => s._id === model.simulator) === false) {
+          simulatorIds.push(model.simulator);
+        }
+      }
+    }
+
+    if (simulationModelIds.length > 0) {
+      AppDispatcher.dispatch({
+        type: 'simulationModels/start-load',
+        data: simulationModelIds,
+        token: this.state.sessionToken
+      });
+    }
+    
+    if (simulatorIds.length > 0) {
+      AppDispatcher.dispatch({
+        type: 'simulators/start-load',
+        data: simulatorIds,
+        token: this.state.sessionToken
+      });
+    }
   }
 
   closeNewModal(data) {
@@ -195,16 +242,26 @@ class Simulations extends Component {
   runAction = action => {
     for (let index of this.state.selectedSimulations) {
       for (let model of this.state.simulations[index].models) {
+        // get simulation model
+        const simulationModel = this.state.simulationModels.find(m => m != null && m._id === model);
+        if (simulationModel == null) {
+          continue;
+        }
+
         // get simulator for model
         let simulator = null;
         for (let sim of this.state.simulators) {
-          if (sim._id === model.simulator) {
+          if (sim._id === simulationModel.simulator) {
             simulator = sim;
           }
         }
 
         if (simulator == null) {
           continue;
+        }
+
+        if (action.data.action === 'start') {
+          action.data.parameters = this.state.simulationModels[index].startParameters; 
         }
     
         AppDispatcher.dispatch({
@@ -221,6 +278,8 @@ class Simulations extends Component {
     const buttonStyle = {
       marginLeft: '10px'
     };
+
+    console.log(this.state.simulationModels.length);
 
     return (
       <div className='section'>

@@ -61,7 +61,7 @@ class Simulation extends React.Component {
     // load models
     let simulationModels = [];
     if (simulation.models != null) {
-      simulationModels = SimulationModelStore.getState().filter(m => simulation.models.includes(m._id));
+      simulationModels = SimulationModelStore.getState().filter(m => m != null && simulation.models.includes(m._id));
     }
 
     return {
