@@ -84,7 +84,7 @@ class Simulations extends Component {
 
         if (model == null) {
           simulationModelIds.push(modelId);
-          
+
           continue;
         }
 
@@ -259,7 +259,7 @@ class Simulations extends Component {
         }
 
         if (action.data.action === 'start') {
-          action.data.parameters = this.state.simulationModels[index].startParameters; 
+          action.data.parameters = Object.assign({}, this.state.simulations[index].startParameters, simulationModel.startParameters); 
         }
     
         AppDispatcher.dispatch({
