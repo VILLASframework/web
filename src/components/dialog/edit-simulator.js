@@ -24,6 +24,7 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import _ from 'lodash';
 
 import Dialog from './dialog';
+import ParametersEditor from '../parameters-editor';
 
 class EditSimulatorDialog extends React.Component {
   valid = true;
@@ -81,6 +82,10 @@ class EditSimulatorDialog extends React.Component {
             <ControlLabel>Endpoint</ControlLabel>
             <FormControl type="text" placeholder={_.get(this.props.simulator, 'rawProperties.endpoint')} value={this.state.endpoint || 'http://' } onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId='properties'>
+            <ControlLabel>Properties</ControlLabel>
+            <ParametersEditor content={_.merge({}, this.props.simulator.rawProperties, this.props.simulator.properties)} disabled={true} />
           </FormGroup>
         </form>
       </Dialog>
