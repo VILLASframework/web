@@ -166,13 +166,16 @@ class Simulators extends Component {
   }
 
   isSimulatorOutdated(simulator) {
+    if (!simulator.stateUpdatedAt)
+      return true;
+
     const fiveMinutes = 5 * 60 * 1000;
 
     return Date.now() - new Date(simulator.stateUpdatedAt) > fiveMinutes;
   }
 
   isSimulatorOnline(state) {
-    return state !== 'shutdown' && state !== 'unknown';
+    return state != '' && state !== 'shutdown' && state !== 'unknown';
   }
 
   stateLabelStyle = (state, simulator) => {
@@ -218,10 +221,11 @@ class Simulators extends Component {
           <TableColumn checkbox onChecked={(index, event) => this.onSimulatorChecked(index, event)} width='30' />
           <TableColumn title='Name' dataKeys={['properties.name', 'rawProperties.name']} />
           <TableColumn title='State' dataKey='state' labelKey='state' labelModifier={this.stateLabelModifier} labelStyle={this.stateLabelStyle} />
-          <TableColumn title='State Update' dataKey='stateUpdatedAt' modifier={this.stateUpdateModifier} />
-          <TableColumn title='Endpoint' dataKeys={['properties.endpoint', 'rawProperties.endpoint']} />
+          <TableColumn title='Type' dataKeys={['properties.type', 'rawProperties.type']} />
+          <TableColumn title='Location' dataKeys={['properties.location', 'rawProperties.location']} />
+          <TableColumn title='Realm' dataKeys={['properties.realm', 'rawProperties.realm']} />
           <TableColumn title='Host' dataKey='host' />
-          <TableColumn title='UUID' dataKey='uuid' />
+          <TableColumn title='Last Update' dataKey='stateUpdatedAt' modifier={this.stateUpdateModifier} />
           <TableColumn
             width='100'
             editButton
