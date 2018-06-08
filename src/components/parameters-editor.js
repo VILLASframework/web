@@ -58,6 +58,8 @@ class ParametersEditor extends React.Component {
                 src={this.props.content}
                 name={false}
                 displayDataTypes={false}
+                displayObjectSize={false}
+                enableClipboard={false}
                 onAdd={this.props.disabled ? undefined : this.onAdd}
                 onEdit={this.props.disabled ? undefined : this.onEdit}
                 onDelete={this.props.disabled ? undefined : this.onDelete}
