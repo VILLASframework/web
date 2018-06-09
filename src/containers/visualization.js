@@ -464,7 +464,7 @@ class Visualization extends React.Component {
     // Only one topology widget at the time is supported
     let thereIsTopologyWidget = current_widgets && Object.values(current_widgets).filter( widget => widget.type === 'Topology').length > 0;
     let topologyItemMsg = !thereIsTopologyWidget? '' : 'Currently only one is supported';
-    
+
     return (
       <div className={boxClasses} >
         <div className='section-header box-header'>

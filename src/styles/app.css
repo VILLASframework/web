@@ -152,14 +152,14 @@ body {
 
 .menu-sidebar a::after {
   /* Trick to make menu items to be as wide as in bold */
-  display:block;
-  content:attr(title);
-  font-weight:bold;
-  height:1px;
-  color:transparent;
-  overflow:hidden;
-  visibility:hidden;
-  margin-bottom:-1px;
+  display: block;
+  content: attr(title);
+  font-weight: bold;
+  height: 1px;
+  color: transparent;
+  overflow: hidden;
+  visibility: hidden;
+  margin-bottom: -1px;
 }
 
 .sidenav {
