@@ -190,6 +190,7 @@ class Widget extends React.Component {
     const widget = this.props.data;
     let borderedWidget = false;
     let element = null;
+    let zIndex = Number(widget.z);
 
     let simulationModel = null;
 
@@ -232,6 +233,9 @@ class Widget extends React.Component {
       element = <WidgetTopology widget={widget} files={this.state.files} />
     }
 
+    if (widget.type === 'Box')
+      zIndex = 0;
+
     const widgetClasses = classNames({
       'widget': !this.props.editing,
       'editing-widget': this.props.editing,
@@ -258,18 +262,25 @@ class Widget extends React.Component {
           onDragStop={(event, data) => this.dragStop(event, data)}
           dragGrid={grid}
           resizeGrid={grid}
-          zIndex={widget.z}
+          z={zIndex}
           enableResizing={resizing}
           disableDragging={widget.locked}
         >
-          <ContextMenuProvider id={'widgetMenu' + this.props.index}>
+          <ContextMenuProvider className={'full'} id={'widgetMenu' + this.props.index}>
             {element}
           </ContextMenuProvider>
         </Rnd>
       );
     } else {
       return (
-        <div className={ widgetClasses } style={{ width: Number(widget.width), height: Number(widget.height), left: Number(widget.x), top: Number(widget.y), 'zIndex': Number(widget.z), position: 'absolute' }}>
+        <div
+          className={ widgetClasses }
+          style={{
+            width: Number(widget.width), height: Number(widget.height),
+            left: Number(widget.x), top: Number(widget.y),
+            zIndex: zIndex,
+            position: 'absolute'
+          }}>
           {element}
         </div>
       );
