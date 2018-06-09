@@ -125,8 +125,8 @@ export default function createControls(widgetType = null, widget = null, session
                 <EditWidgetCheckboxControl key={4} text={'Continous Update'} controlId={'continous_update'} widget={widget} input simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={5} widget={widget} controlId={'showUnit'} text="Show unit" handleChange={e => handleChange(e)} />,
                 <EditWidgetMinMaxControl key={6} widget={widget} controlId={'range'} handleChange={e => handleChange(e)} />,
-                <EditWidgetNumberControl key={7} widget={widget} controlId={'step'} label={'Step Size'} placeholder={0.1} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetNumberControl key={8} widget={widget} controlId={'default_value'} label={'Default Value'} placeholder={50} handleChange={(e) => handleChange(e)} />
+                <EditWidgetNumberControl key={7} widget={widget} controlId={'step'} label={'Step Size'} defaultValue={0.1} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetNumberControl key={8} widget={widget} controlId={'default_value'} label={'Default Value'} defaultValue={50} handleChange={(e) => handleChange(e)} />
             );
             break;
         case 'Button':

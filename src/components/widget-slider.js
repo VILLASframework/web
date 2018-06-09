@@ -38,7 +38,6 @@ class WidgetSlider extends Component {
     super(props);
 
     this.state = {
-        value: Number.parseFloat(this.props.widget.default_value),
         unit: ''
     };
   }
@@ -49,14 +48,14 @@ class WidgetSlider extends Component {
     }
 
     // Update value
-    if (nextProps.widget.value && this.state.value !== nextProps.widget.value) {
+    if (nextProps.widget.default_value && this.state.value === undefined) {
       this.setState({
-        value: nextProps.widget.value,
+        value: nextProps.widget.default_value,
       });
     }
 
     // Update unit
-    if (nextProps.widget.simulationModel && this.state.unit !== nextProps.simulationModel.inputMapping[nextProps.widget.signal].type) {
+    if (nextProps.widget.simulationModel && nextProps.simulationModel.inputMapping && this.state.unit !== nextProps.simulationModel.inputMapping[nextProps.widget.signal].type) {
       this.setState({
         unit: nextProps.simulationModel.inputMapping[nextProps.widget.signal].type
       });
@@ -95,13 +94,11 @@ class WidgetSlider extends Component {
     let isVertical = this.props.widget.orientation === WidgetSlider.OrientationTypes.VERTICAL.value;
 
     let fields = {
-      'name': this.props.widget.name,
-      'control': <Slider min={ this.props.widget.rangeMin } max={ this.props.widget.rangeMax } step={ Number.parseFloat(this.props.widget.step) } value={ this.state.value } disabled={ this.props.editing } vertical={ isVertical } onChange={ (v) => this.valueIsChanging(v) } onAfterChange={ (v) => this.valueChanged(v) }/>,
-      'value': Number.parseFloat(this.state.value).toPrecision(3)
+      name: this.props.widget.name,
+      control: <Slider min={ this.props.widget.rangeMin } max={ this.props.widget.rangeMax } step={ this.props.widget.step } value={ this.state.value } disabled={ this.props.editing } vertical={ isVertical } onChange={ (v) => this.valueIsChanging(v) } onAfterChange={ (v) => this.valueChanged(v) }/>,
+      value: <span>{ Number.parseFloat(this.state.value).toPrecision(3) }</span>,
+      unit: <span className="signal-unit">{ this.state.unit }</span>
     }
-
-    if (this.props.widget.showUnit)
-      fields.value += ' [' + this.state.unit + ']';
 
     var widgetClasses = classNames({
                     'slider-widget': true,
@@ -121,7 +118,8 @@ class WidgetSlider extends Component {
         <div className={widgetClasses}>
           <label>{ fields.name }</label>
           { fields.control }
-          <span>{ fields.value }</span>
+          { fields.value }
+          { this.props.widget.showUnit && fields.unit }
         </div>
       )
     );
