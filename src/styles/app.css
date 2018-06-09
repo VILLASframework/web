@@ -61,7 +61,6 @@ body {
 }
 
 .app-header .menu-icon {
-  font-size: 28px;
   color: #818181;
   right: 5px;
 
@@ -303,12 +302,7 @@ body {
 .toolbox-item {
   display: inline-block;
 
-  padding: 5px 10px;
-
-  margin-right: 10px;
-
-  border: 1px solid gray;
-
+  margin-right: 5px;
   cursor: move;
 }
 

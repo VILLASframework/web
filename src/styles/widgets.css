@@ -192,11 +192,7 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
   display: flex;
   -webkit-flex: 1 1 auto;
   flex: 1 1 auto;
-}
-
-.chart-wrapper {
-  width: 100%;
-  padding-left: 10px;
+  margin-bottom: 5px;
 }
 
 .plot-legend {
@@ -207,22 +203,46 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
   flex-shrink: 0;
   flex-wrap: wrap;
   justify-content: space-around;
-  margin-bottom: 5px;
 }
 
 .signal-legend {
-    font-size: 0.8em;
-    font-weight: 700;
-    padding-left: 5px;
+    float: left;
+    list-style-type: none;
+    font-size: 1.2em;
+    padding-left: 10px;
     padding-right: 5px;
-    overflow: hidden;
+    vertical-align: middle;
 }
 
-.legend-color {
-    height: 50%;
-    display: inline-block;
-    margin-right: 5px;
-} 
+li.signal-legend::before {
+    content: '■';
+}
+
+.signal-legend span {
+    font-size: 0.8em;
+}
+
+.signal-legend-name {
+    margin-left: 5px;
+    font-weight: 700;
+    color: black;
+}
+
+span.signal-unit {
+    color: grey;
+    font-style: italic;
+    font-weight: 50%;
+}
+
+span.signal-unit::before {
+    content: '[';
+    font-style: normal;
+}
+
+span.signal-unit::after {
+    content: ']';
+    font-style: normal;
+}
 
 /* End Plots */
 
