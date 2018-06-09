@@ -2,10 +2,23 @@
  * File: plot.js
  * Author: Ricardo Hernandez-Montoya <rhernandez@gridhound.de>
  * Date: 10.04.2017
- * Copyright: 2017, Institute for Automation of Complex Power Systems, EONERC
- *   This file is part of VILLASweb. All Rights Reserved. Proprietary and confidential.
- *   Unauthorized copying of this file, via any medium is strictly prohibited.
- **********************************************************************************/
+ * Copyright: 2018, Institute for Automation of Complex Power Systems, EONERC
+ *
+ * This file is part of VILLASweb.
+ *
+ * VILLASweb is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * VILLASweb is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 
 import React from 'react';
 import { scaleLinear, scaleTime, scaleOrdinal, schemeCategory10 } from 'd3-scale';
@@ -14,9 +27,11 @@ import { line } from 'd3-shape';
 import { axisBottom, axisLeft } from  'd3-axis';
 import { select } from 'd3-selection';
 import { timeFormat } from 'd3-time-format';
+import { format } from 'd3';
 
-const leftMargin = 30;
-const bottomMargin = 20;
+const topMargin = 10;
+const bottomMargin = 25;
+const leftMargin = 40;
 const rightMargin = 10;
 
 let uniqueIdentifier = 0;
@@ -28,20 +43,20 @@ class Plot extends React.Component {
     // create dummy axes
     let labelMargin = 0;
     if (props.yLabel !== '') {
-      labelMargin = 20;
+      labelMargin = 30;
     }
 
     const xScale = scaleTime().domain([Date.now() - props.time * 1000, Date.now()]).range([0, props.width - leftMargin - labelMargin - rightMargin]);
     let yScale;
 
     if (props.yUseMinMax) {
-      yScale = scaleLinear().domain([props.yMin, props.yMax]).range([props.height - bottomMargin, 0]);
+      yScale = scaleLinear().domain([props.yMin, props.yMax]).range([props.height + topMargin - bottomMargin, topMargin]);
     } else {
-      yScale = scaleLinear().domain([0, 10]).range([props.height - bottomMargin, 0]);
+      yScale = scaleLinear().domain([0, 10]).range([props.height + topMargin - bottomMargin, topMargin]);
     }
 
-    const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(date => timeFormat("%M:%S")(date));
-    const yAxis = axisLeft().scale(yScale).ticks(5);
+    const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(timeFormat("%M:%S"));
+    const yAxis = axisLeft().scale(yScale).ticks(5).tickFormat(format(".1g"));
 
     this.state = {
       data: null,
@@ -68,7 +83,7 @@ class Plot extends React.Component {
 
     let labelMargin = 0;
     if (nextProps.yLabel !== '') {
-      labelMargin = 20;
+      labelMargin = 30;
     }
 
     // check if data is invalid
@@ -76,15 +91,15 @@ class Plot extends React.Component {
       // create empty plot axes
       const xScale = scaleTime().domain([Date.now() -  nextProps.time * 1000, Date.now()]).range([0, nextProps.width - leftMargin - labelMargin - rightMargin]);
       let yScale;
-      
+
       if (nextProps.yUseMinMax) {
-        yScale = scaleLinear().domain([nextProps.yMin, nextProps.yMax]).range([nextProps.height - bottomMargin, 0]);
+        yScale = scaleLinear().domain([nextProps.yMin, nextProps.yMax]).range([nextProps.height + topMargin - bottomMargin, topMargin]);
       } else {
-        yScale = scaleLinear().domain([0, 10]).range([nextProps.height - bottomMargin, 0]);
+        yScale = scaleLinear().domain([0, 10]).range([nextProps.height + topMargin - bottomMargin, topMargin]);
       }
-  
-      const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(date => timeFormat("%M:%S")(date));
-      const yAxis = axisLeft().scale(yScale).ticks(5);
+
+      const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(timeFormat("%M:%S"));
+      const yAxis = axisLeft().scale(yScale).ticks(5).tickFormat(format(".1g"));
 
       this.setState({ data: null, xAxis, yAxis, labelMargin });
       return;
@@ -92,7 +107,7 @@ class Plot extends React.Component {
 
     // only show data in requested time
     let data = nextProps.data;
-    
+
     const firstTimestamp = data[0][data[0].length - 1].x - (nextProps.time + 1) * 1000;
     if (data[0][0].x < firstTimestamp) {
       // only show data in range (+100 ms)
@@ -137,7 +152,7 @@ class Plot extends React.Component {
 
     // calculate yRange
     let yRange = [0, 0];
-    
+
     if (this.props.yUseMinMax) {
       yRange = [this.props.yMin, this.props.yMax];
     } else if (this.props.data.length > 0) {
@@ -153,10 +168,10 @@ class Plot extends React.Component {
 
     // create scale functions for both axes
     const xScale = scaleTime().domain([Date.now() - this.props.time * 1000, Date.now()]).range([0, this.props.width - leftMargin - this.state.labelMargin - rightMargin]);
-    const yScale = scaleLinear().domain(yRange).range([this.props.height - bottomMargin, 5]);
+    const yScale = scaleLinear().domain(yRange).range([this.props.height + topMargin - bottomMargin, topMargin]);
 
-    const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(date => timeFormat("%M:%S")(date));
-    const yAxis = axisLeft().scale(yScale).ticks(5);
+    const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(timeFormat("%M:%S"));
+    const yAxis = axisLeft().scale(yScale).ticks(5).tickFormat(format(".1g"));
 
     // generate paths from data
     const sparkLine = line().x(p => xScale(p.x)).y(p => yScale(p.y));
@@ -173,16 +188,16 @@ class Plot extends React.Component {
       y: this.props.height / 2
     }
 
-    return <svg width={this.props.width - rightMargin + 1} height={this.props.height + bottomMargin}>
-      <g ref={node => select(node).call(this.state.xAxis)} style={{ transform: `translateX(${leftMargin + this.state.labelMargin}px) translateY(${this.props.height - bottomMargin}px)` }} />
-      <g ref={node => select(node).call(this.state.yAxis)} style={{ transform: `translateX(${leftMargin + this.state.labelMargin}px)`}} />
-      
-      <text strokeWidth="0.01" textAnchor="middle" x={yLabelPos.x} y={yLabelPos.y} transform={`rotate(270 ${yLabelPos.x} ${yLabelPos.y})`}>{this.props.yLabel}</text>
-      <text strokeWidth="0.01" textAnchor="end" x={this.props.width - rightMargin} y={this.props.height + bottomMargin - 5}>Time [s]</text>
+    return <svg width={this.props.width - rightMargin + 1} height={this.props.height + topMargin + bottomMargin}>
+      <g ref={node => select(node).call(this.state.xAxis)} style={{ transform: `translateX(${leftMargin + this.state.labelMargin}px) translateY(${this.props.height + topMargin - bottomMargin}px)` }} />
+      <g ref={node => select(node).call(this.state.yAxis)} style={{ transform: `translateX(${leftMargin + this.state.labelMargin}px)` }} />
+
+      <text strokeWidth="0.005" textAnchor="middle" x={yLabelPos.x} y={yLabelPos.y} transform={`rotate(270 ${yLabelPos.x} ${yLabelPos.y})`}>{this.props.yLabel}</text>
+      <text strokeWidth="0.005" textAnchor="end" x={this.props.width - rightMargin} y={this.props.height + topMargin + bottomMargin - 10}>Time [s]</text>
 
       <defs>
         <clipPath id={"lineClipPath" + this.state.identifier}>
-          <rect x={leftMargin + this.state.labelMargin} y={0} width={this.props.width - leftMargin - this.state.labelMargin - rightMargin} height={this.props.height - bottomMargin} />
+          <rect x={leftMargin + this.state.labelMargin} y={topMargin} width={this.props.width - leftMargin - this.state.labelMargin - rightMargin} height={this.props.height - bottomMargin} />
         </clipPath>
       </defs>
 
