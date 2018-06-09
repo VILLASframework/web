@@ -20,8 +20,10 @@
  ******************************************************************************/
 
 import React from 'react';
+import { Button } from 'react-bootstrap';
 import { DragSource } from 'react-dnd';
 import classNames from 'classnames';
+import Icon from './icon';
 
 const toolboxItemSource = {
   beginDrag(props) {
@@ -53,15 +55,22 @@ class ToolboxItem extends React.Component {
 
     if (this.props.disabled === false) {
       return this.props.connectDragSource(
-        <span className={itemClass} title={this.props.title}>
-          {this.props.name}
-        </span>
+        <div className={itemClass}>
+          <Button>
+            {this.props.icon && <Icon style={{marginRight: '5px'}} icon={this.props.icon} /> }
+            {this.props.name}
+          </Button>
+        </div>
       , {dropEffect});
-    } else {
+    }
+    else {
       return (
-        <span className={itemClass} title={this.props.title}>
-          {this.props.name}
-        </span>
+        <div className={itemClass}>
+          <Button>
+            {this.props.icon && <Icon style={{marginRight: '5px'}} icon={this.props.icon} /> }
+            {this.props.name}
+          </Button>
+        </div>
       );
     }
   }

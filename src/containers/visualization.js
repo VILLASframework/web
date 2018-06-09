@@ -21,12 +21,13 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Button, ButtonToolbar } from 'react-bootstrap';
 import { ContextMenu, Item, Separator } from 'react-contexify';
 import Fullscreenable from 'react-fullscreenable';
 import Slider from 'rc-slider';
 import classNames from 'classnames';
 
+import Icon from '../components/icon';
 import WidgetFactory from '../components/widget-factory';
 import ToolboxItem from '../components/toolbox-item';
 import Dropzone from '../components/dropzone';
@@ -434,30 +435,29 @@ class Visualization extends React.Component {
 
     let buttons = []
     let editingControls = [];
+    let gridControl = {};
 
     if (this.state.editing) {
-      editingControls.push(
-        <div key={editingControls.length}>
-          <span>Grid: {this.state.visualization.grid > 1 ? this.state.visualization.grid : 'Disabled'}</span>
-          <Slider value={this.state.visualization.grid} style={{ width: '80px' }} step={5} onChange={value => this.setGrid(value)} />
-        </div>
-      )
+      buttons.push({ click: () => this.stopEditing(), icon: 'save', text: 'Save' });
+      buttons.push({ click: () => this.discardChanges(), icon: 'ban', text: 'Cancel' });
 
-      buttons.push({ click: () => this.stopEditing(), glyph: 'floppy-disk', text: 'Save' });
-      buttons.push({ click: () => this.discardChanges(), glyph: 'remove', text: 'Cancel' });
+      gridControl = <div key={editingControls.length}>
+                      <span>Grid: {this.state.visualization.grid > 1 ? this.state.visualization.grid : 'Disabled'}</span>
+                      <Slider value={this.state.visualization.grid} style={{ width: '80px' }} step={5} onChange={value => this.setGrid(value)} />
+                    </div>
     }
 
     if (!this.props.isFullscreen) {
-      buttons.push({ click: this.props.toggleFullscreen, glyph: 'resize-full', text: 'Fullscreen' });
-      buttons.push({ click: this.state.paused ? this.unpauseData : this.pauseData, glyph: this.state.paused ? 'play' : 'pause', text: this.state.paused  ? 'Live' : 'Pause' });
+      buttons.push({ click: this.props.toggleFullscreen, icon: 'expand', text: 'Fullscreen' });
+      buttons.push({ click: this.state.paused ? this.unpauseData : this.pauseData, icon: this.state.paused ? 'play' : 'pause', text: this.state.paused  ? 'Live' : 'Pause' });
 
       if (!this.state.editing)
-        buttons.push({ click: () => this.setState({ editing: true }), glyph: 'pencil', text: 'Edit' });
+        buttons.push({ click: () => this.setState({ editing: true }), icon: 'edit', text: 'Edit' });
     }
 
     const buttonList = buttons.map((btn, idx) =>
       <Button key={idx} bsStyle="info" onClick={btn.click} style={{ marginLeft: '8px' }}>
-        <Glyphicon glyph={btn.glyph} /> {btn.text}
+        <Icon icon={btn.icon} /> {btn.text}
       </Button>
     );
 
@@ -473,31 +473,33 @@ class Visualization extends React.Component {
           </div>
 
           <div className="section-buttons-group-right">
+            { this.state.editing && gridControl }
             { buttonList }
           </div>
         </div>
 
         <div className="box box-content" onContextMenu={ (e) => e.preventDefault() }>
           {this.state.editing &&
-            <div className="toolbox box-header">
-              <ToolboxItem name="Lamp" type="widget" />
-              <ToolboxItem name="Value" type="widget" />
-              <ToolboxItem name="Plot" type="widget" />
-              <ToolboxItem name="Table" type="widget" />
-              <ToolboxItem name="Label" type="widget" />
-              <ToolboxItem name="Image" type="widget" />
-              <ToolboxItem name="PlotTable" type="widget" />
-              <ToolboxItem name="Button" type="widget" />
-              <ToolboxItem name="NumberInput" type="widget" />
-              <ToolboxItem name="Slider" type="widget" />
-              <ToolboxItem name="Gauge" type="widget" />
-              <ToolboxItem name="Box" type="widget" />
-              <ToolboxItem name="HTML" type="html" />
-              <ToolboxItem name="Topology" type="widget" disabled={thereIsTopologyWidget} title={topologyItemMsg}/>
-
-              <div className="section-buttons-group-right">
+            <div className="toolbar">
+              <ButtonToolbar className="section-buttons-group-right">
                 { editingControls }
-              </div>
+              </ButtonToolbar>
+              <ButtonToolbar className="toolbox box-header">
+                <ToolboxItem icon="lightbulb" name="Lamp" type="widget" />
+                <ToolboxItem icon="font" name="Value" type="widget" />
+                <ToolboxItem icon="chart-area" name="Plot" type="widget" />
+                <ToolboxItem icon="table" name="Table" type="widget" />
+                <ToolboxItem icon="tag" name="Label" type="widget" />
+                <ToolboxItem icon="image" name="Image" type="widget" />
+                <ToolboxItem icon="table" name="PlotTable" type="widget" />
+                <ToolboxItem icon="dot-circle" name="Button" type="widget" />
+                <ToolboxItem icon="i-cursor" name="Input" type="widget" />
+                <ToolboxItem icon="sliders-h" name="Slider" type="widget" />
+                <ToolboxItem icon="tachometer-alt" name="Gauge" type="widget" />
+                <ToolboxItem icon="square" name="Box" type="widget" />
+                <ToolboxItem icon="code" name="HTML" type="html" />
+                <ToolboxItem icon="project-diagram" name="Topology" type="widget" disabled={thereIsTopologyWidget} title={topologyItemMsg}/>
+              </ButtonToolbar>
             </div>
           }
 
@@ -524,17 +526,20 @@ class Visualization extends React.Component {
             Object.keys(current_widgets).map(widget_key => {
               const data = { key: widget_key };
 
-              return <ContextMenu id={'widgetMenu'+ widget_key} key={widget_key}>
-                <Item disabled={this.state.visualization.widgets[widget_key].locked} onClick={e => this.editWidget(e, data)}>Edit</Item>
-                <Item disabled={this.state.visualization.widgets[widget_key].locked} onClick={e => this.deleteWidget(e, data)}>Delete</Item>
+              const locked = this.state.visualization.widgets[widget_key].locked;
+              const disabledMove = locked || this.state.visualization.widgets[widget_key].type === 'Box';
+
+              return <ContextMenu style={{zIndex: 100}} id={'widgetMenu'+ widget_key} key={widget_key}>
+                <Item disabled={locked} onClick={e => this.editWidget(e, data)}>Edit</Item>
+                <Item disabled={locked} onClick={e => this.deleteWidget(e, data)}>Delete</Item>
                 <Separator />
-                <Item disabled={this.state.visualization.widgets[widget_key].locked} onClick={e => this.moveWidget(e, data, this.moveAbove)}>Move above</Item>
-                <Item disabled={this.state.visualization.widgets[widget_key].locked} onClick={e => this.moveWidget(e, data, this.moveToFront)}>Move to front</Item>
-                <Item disabled={this.state.visualization.widgets[widget_key].locked} onClick={e => this.moveWidget(e, data, this.moveUnderneath)}>Move underneath</Item>
-                <Item disabled={this.state.visualization.widgets[widget_key].locked} onClick={e => this.moveWidget(e, data, this.moveToBack)}>Move to back</Item>
+                <Item disabled={disabledMove} onClick={e => this.moveWidget(e, data, this.moveAbove)}>Move above</Item>
+                <Item disabled={disabledMove} onClick={e => this.moveWidget(e, data, this.moveToFront)}>Move to front</Item>
+                <Item disabled={disabledMove} onClick={e => this.moveWidget(e, data, this.moveUnderneath)}>Move underneath</Item>
+                <Item disabled={disabledMove} onClick={e => this.moveWidget(e, data, this.moveToBack)}>Move to back</Item>
                 <Separator />
-                <Item disabled={this.state.visualization.widgets[widget_key].locked} onClick={e => this.lockWidget(data)}>Lock</Item>
-                <Item disabled={!this.state.visualization.widgets[widget_key].locked} onClick={e => this.unlockWidget(data)}>Unlock</Item>
+                <Item disabled={locked} onClick={e => this.lockWidget(data)}>Lock</Item>
+                <Item disabled={!locked} onClick={e => this.unlockWidget(data)}>Unlock</Item>
               </ContextMenu>
             })}
 
