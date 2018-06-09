@@ -106,7 +106,6 @@ class SimulationDataStore extends ReduceStore {
         return state;
 
       case 'simulatorData/inputChanged':
-        // find simulator in node array
         if (state[action.simulator] == null || state[action.simulator].input == null) {
           return state;
         }
@@ -117,18 +116,6 @@ class SimulationDataStore extends ReduceStore {
         state[action.simulator].input.values[action.signal] = action.data;
 
         SimulatorDataDataManager.send(state[action.simulator].input, action.simulator);
-
-        return state;
-
-      case 'simulatorData/closed':
-        // close and delete socket
-        if (state[action.node] != null) {
-          // delete data
-          //delete state[action.identifier];
-          //state[action.identifier] = null;
-
-          //this.__emitChange();
-        }
 
         return state;
 
