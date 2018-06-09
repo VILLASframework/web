@@ -21,7 +21,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 
@@ -29,6 +29,7 @@ import AppDispatcher from '../app-dispatcher';
 import SimulatorStore from '../stores/simulator-store';
 import UserStore from '../stores/user-store';
 
+import Icon from '../components/icon';
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
 import NewSimulatorDialog from '../components/dialog/new-simulator';
@@ -175,7 +176,7 @@ class Simulators extends Component {
   }
 
   isSimulatorOnline(state) {
-    return state != '' && state !== 'shutdown' && state !== 'unknown';
+    return state !== '' && state !== 'shutdown' && state !== 'unknown';
   }
 
   stateLabelStyle = (state, simulator) => {
@@ -245,8 +246,8 @@ class Simulators extends Component {
         </div>
 
         <div style={{ float: 'right' }}>
-          <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Glyphicon glyph="plus" /> Simulator</Button>
-          <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Glyphicon glyph="import" /> Import</Button>
+          <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" /> Simulator</Button>
+          <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
         </div>
 
         <div style={{ clear: 'both' }} />

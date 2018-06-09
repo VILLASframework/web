@@ -1,7 +1,7 @@
 /**
- * File: header.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
+ * File: icon.js
+ * Author: Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * Date: 09.06.2018
  *
  * This file is part of VILLASweb.
  *
@@ -20,24 +20,16 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Col, Button } from 'react-bootstrap';
-import Icon from './icon';
 
-class Header extends React.Component {
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+
+import '@fortawesome/fontawesome-free-solid';
+
+class Icon extends React.Component {
+
   render() {
-    return (
-      <header className="app-header">
-        <Col xs={10} smOffset={2} sm={8}>
-          <h1>VILLASweb</h1>
-        </Col>
-        <Col xs={2} smHidden mdHidden lgHidden style={{ paddingLeft: 'auto', paddingRight: 0 }}>
-          {this.props.showMenuButton &&
-            <Button bsStyle="link" onClick={this.props.onMenuButton} style={{ float: 'right', marginRight: '10px' }}><Icon size="3x" icon="bars" className="menu-icon" /></Button>
-          }
-        </Col>
-      </header>
-    );
+    return <FontAwesomeIcon size={this.props.size} style={this.props.style} icon={this.props.icon} />
   }
 }
 
-export default Header;
+export default Icon;

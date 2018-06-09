@@ -21,7 +21,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 
 import AppDispatcher from '../app-dispatcher';
@@ -30,6 +30,7 @@ import UserStore from '../stores/user-store';
 import SimulatorStore from '../stores/simulator-store';
 import SimulationModelStore from '../stores/simulation-model-store';
 
+import Icon from '../components/icon';
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
 import NewSimulationDialog from '../components/dialog/new-simulation';
@@ -101,7 +102,7 @@ class Simulations extends Component {
         token: this.state.sessionToken
       });
     }
-    
+
     if (simulatorIds.length > 0) {
       AppDispatcher.dispatch({
         type: 'simulators/start-load',
@@ -190,7 +191,7 @@ class Simulations extends Component {
   onModalKeyPress = (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
-    
+
       this.confirmDeleteModal();
     }
   }
@@ -259,9 +260,9 @@ class Simulations extends Component {
         }
 
         if (action.data.action === 'start') {
-          action.data.parameters = Object.assign({}, this.state.simulations[index].startParameters, simulationModel.startParameters); 
+          action.data.parameters = Object.assign({}, this.state.simulations[index].startParameters, simulationModel.startParameters);
         }
-    
+
         AppDispatcher.dispatch({
           type: 'simulators/start-action',
           simulator,
@@ -284,32 +285,32 @@ class Simulations extends Component {
         <Table data={this.state.simulations}>
           <TableColumn checkbox onChecked={(index, event) => this.onSimulationChecked(index, event)} width='30' />
           <TableColumn title='Name' dataKey='name' link='/simulations/' linkKey='_id' />
-          <TableColumn 
-            width='100' 
-            editButton 
-            deleteButton 
-            exportButton 
-            onEdit={index => this.setState({ editModal: true, modalSimulation: this.state.simulations[index] })} 
-            onDelete={index => this.setState({ deleteModal: true, modalSimulation: this.state.simulations[index] })} 
+          <TableColumn
+            width='100'
+            editButton
+            deleteButton
+            exportButton
+            onEdit={index => this.setState({ editModal: true, modalSimulation: this.state.simulations[index] })}
+            onDelete={index => this.setState({ deleteModal: true, modalSimulation: this.state.simulations[index] })}
             onExport={index => this.exportSimulation(index)}
           />
         </Table>
 
         <div style={{ float: 'left' }}>
-          <SimulatorAction 
-            runDisabled={this.state.selectedSimulations.length === 0} 
+          <SimulatorAction
+            runDisabled={this.state.selectedSimulations.length === 0}
             runAction={this.runAction}
-            actions={[ 
-              { id: '0', title: 'Start', data: { action: 'start' } }, 
-              { id: '1', title: 'Stop', data: { action: 'stop' } }, 
-              { id: '2', title: 'Pause', data: { action: 'pause' } }, 
-              { id: '3', title: 'Resume', data: { action: 'resume' } } 
+            actions={[
+              { id: '0', title: 'Start', data: { action: 'start' } },
+              { id: '1', title: 'Stop', data: { action: 'stop' } },
+              { id: '2', title: 'Pause', data: { action: 'pause' } },
+              { id: '3', title: 'Resume', data: { action: 'resume' } }
             ]}/>
         </div>
 
         <div style={{ float: 'right' }}>
-          <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Glyphicon glyph="plus" /> Simulation</Button>
-          <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Glyphicon glyph="import" /> Import</Button>
+          <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" /> Simulation</Button>
+          <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
         </div>
 
         <div style={{ clear: 'both' }} />

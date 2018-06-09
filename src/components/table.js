@@ -21,8 +21,9 @@
 
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { Table, Button, Glyphicon, FormControl, Label, Checkbox } from 'react-bootstrap';
+import { Table, Button, FormControl, Label, Checkbox } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import Icon from './icon';
 
 class CustomTable extends Component {
   constructor(props) {
@@ -97,11 +98,11 @@ class CustomTable extends Component {
 
     // add buttons
     if (child.props.editButton) {
-      cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onEdit(index)} disabled={child.props.onEdit == null}><Glyphicon glyph='pencil' /></Button>);
+      cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onEdit(index)} disabled={child.props.onEdit == null}><Icon icon='edit' /></Button>);
     }
 
     if (child.props.deleteButton) {
-      cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onDelete(index)} disabled={child.props.onDelete == null}><Glyphicon glyph='remove' /></Button>);
+      cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onDelete(index)} disabled={child.props.onDelete == null}><Icon icon='trash' /></Button>);
     }
 
     if (child.props.checkbox) {
@@ -111,7 +112,7 @@ class CustomTable extends Component {
     }
 
     if (child.props.exportButton) {
-      cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onExport(index)} disabled={child.props.onExport == null}><Glyphicon glyph='export' /></Button>);
+      cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onExport(index)} disabled={child.props.onExport == null}><Icon icon='download' /></Button>);
     }
 
     return cell;

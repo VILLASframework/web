@@ -21,13 +21,14 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 import AppDispatcher from '../app-dispatcher';
 import ProjectStore from '../stores/project-store';
 import UserStore from '../stores/user-store';
 import SimulationStore from '../stores/simulation-store';
 
+import Icon from '../components/icon';
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
 import NewProjectDialog from '../components/dialog/new-project';
@@ -117,14 +118,14 @@ class Projects extends React.Component {
     const simulations = this.state.simulations.filter(simulation => {
       return simulation.models.length > 0;
     });
-    
+
     return simulations.length > 0;
   }
 
   onModalKeyPress = (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
-    
+
       this.confirmDeleteModal();
     }
   }
@@ -140,7 +141,7 @@ class Projects extends React.Component {
           <TableColumn width='70' editButton deleteButton onEdit={index => this.setState({ editModal: true, modalData: this.state.projects[index] })} onDelete={index => this.setState({ deleteModal: true, modalData: this.state.projects[index] })} />
         </Table>
 
-        <Button onClick={() => this.setState({ newModal: true })} disabled={!this.hasValidSimulation()}><Glyphicon glyph='plus' /> Project</Button>
+        <Button onClick={() => this.setState({ newModal: true })} disabled={!this.hasValidSimulation()}><Icon icon='plus' /> Project</Button>
 
         {!this.hasValidSimulation() &&
           <span><i> Simulation with at least one simulation-model required!</i></span>

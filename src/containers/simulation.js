@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 
@@ -31,6 +31,7 @@ import SimulationModelStore from '../stores/simulation-model-store';
 import UserStore from '../stores/user-store';
 import AppDispatcher from '../app-dispatcher';
 
+import Icon from '../components/icon';
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
 import ImportSimulationModelDialog from '../components/dialog/import-simulation-model';
@@ -146,7 +147,7 @@ class Simulation extends React.Component {
     simulationModel.simulation = this.state.simulation._id;
 
     console.log(simulationModel);
-    
+
     AppDispatcher.dispatch({
       type: 'simulationModels/start-add',
       data: simulationModel,
@@ -173,7 +174,7 @@ class Simulation extends React.Component {
   exportModel(index) {
     // filter properties
     const model = Object.assign({}, this.state.simulationModels[index]);
-    
+
     delete model.simulator;
     delete model.simulation;
 
@@ -222,7 +223,7 @@ class Simulation extends React.Component {
       }
 
       if (action.data.action === 'start') {
-        action.data.parameters = this.state.simulationModels[index].startParameters; 
+        action.data.parameters = this.state.simulationModels[index].startParameters;
       }
 
       AppDispatcher.dispatch({
@@ -248,31 +249,31 @@ class Simulation extends React.Component {
         <TableColumn title='Simulator' dataKey='simulator' modifier={(simulator) => this.getSimulatorName(simulator)} />
         <TableColumn title='Output' dataKey='outputLength' width='100' />
         <TableColumn title='Input' dataKey='inputLength' width='100' />
-        <TableColumn 
-          title='' 
-          width='70' 
-          deleteButton 
+        <TableColumn
+          title=''
+          width='70'
+          deleteButton
           exportButton
-          onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.simulationModels[index], modalIndex: index })} 
+          onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.simulationModels[index], modalIndex: index })}
           onExport={index => this.exportModel(index)}
         />
       </Table>
 
       <div style={{ float: 'left' }}>
-        <SimulatorAction 
-          runDisabled={this.state.selectedSimulationModels.length === 0} 
+        <SimulatorAction
+          runDisabled={this.state.selectedSimulationModels.length === 0}
           runAction={this.runAction}
           actions={[
-            { id: '0', title: 'Start', data: { action: 'start' } }, 
-            { id: '1', title: 'Stop', data: { action: 'stop' } }, 
-            { id: '2', title: 'Pause', data: { action: 'pause' } }, 
-            { id: '3', title: 'Resume', data: { action: 'resume' } } 
+            { id: '0', title: 'Start', data: { action: 'start' } },
+            { id: '1', title: 'Stop', data: { action: 'stop' } },
+            { id: '2', title: 'Pause', data: { action: 'pause' } },
+            { id: '3', title: 'Resume', data: { action: 'resume' } }
           ]}/>
       </div>
 
       <div style={{ float: 'right' }}>
-        <Button onClick={this.addSimulationModel} style={buttonStyle}><Glyphicon glyph="plus" /> Simulation Model</Button>
-        <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Glyphicon glyph="import" /> Import</Button>
+        <Button onClick={this.addSimulationModel} style={buttonStyle}><Icon icon="plus" /> Simulation Model</Button>
+        <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
       </div>
 
       <div style={{ clear: 'both' }} />

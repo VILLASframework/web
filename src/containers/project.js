@@ -21,7 +21,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 
 import AppDispatcher from '../app-dispatcher';
@@ -30,6 +30,7 @@ import UserStore from '../stores/user-store';
 import VisualizationStore from '../stores/visualization-store';
 import SimulationStore from '../stores/simulation-store';
 
+import Icon from '../components/icon';
 import CustomTable from '../components/table';
 import TableColumn from '../components/table-column';
 import NewVisualzationDialog from '../components/dialog/new-visualization';
@@ -128,7 +129,7 @@ class Visualizations extends Component {
 
     if (confirmDelete === false) {
       return;
-    } 
+    }
 
     AppDispatcher.dispatch({
       type: 'visualizations/start-remove',
@@ -190,7 +191,7 @@ class Visualizations extends Component {
   onModalKeyPress = (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
-    
+
       this.confirmDeleteModal();
     }
   }
@@ -206,19 +207,19 @@ class Visualizations extends Component {
 
         <CustomTable data={this.state.visualizations}>
           <TableColumn title='Name' dataKey='name' link='/visualizations/' linkKey='_id' />
-          <TableColumn 
-            width='100' 
-            editButton 
-            deleteButton 
+          <TableColumn
+            width='100'
+            editButton
+            deleteButton
             exportButton
-            onEdit={(index) => this.setState({ editModal: true, modalData: this.state.visualizations[index] })} 
-            onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.visualizations[index] })} 
+            onEdit={(index) => this.setState({ editModal: true, modalData: this.state.visualizations[index] })}
+            onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.visualizations[index] })}
             onExport={index => this.exportVisualization(index)}
           />
         </CustomTable>
 
-        <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Glyphicon glyph="plus" /> Visualization</Button>
-        <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Glyphicon glyph="import" /> Import</Button>
+        <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" /> Visualization</Button>
+        <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
 
         <NewVisualzationDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
         <EditVisualizationDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} visualization={this.state.modalData} />

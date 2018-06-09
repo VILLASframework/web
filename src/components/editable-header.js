@@ -21,7 +21,8 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Glyphicon, FormControl } from 'react-bootstrap';
+import { FormControl } from 'react-bootstrap';
+import Icon from './icon';
 
 class EditableHeader extends React.Component {
     titleInput = null;
@@ -64,7 +65,7 @@ class EditableHeader extends React.Component {
             float: 'left'
         };
 
-        const glyphStyle = {
+        const iconStyle = {
             float: 'left',
 
             marginLeft: '10px',
@@ -84,8 +85,8 @@ class EditableHeader extends React.Component {
                     <FormControl type='text' bsSize='large' value={this.state.title} onChange={this.onChange} style={editStyle} autoFocus />
                 </form>
 
-                <a onClick={this.save}><Glyphicon glyph='ok' style={glyphStyle} /></a>
-                <a onClick={this.cancel}><Glyphicon glyph='remove' style={glyphStyle} /></a>
+                <a onClick={this.save}><Icon icon='check' style={iconStyle} /></a>
+                <a onClick={this.cancel}><Icon icon='times' style={iconStyle} /></a>
             </div>;
         }
 
@@ -94,7 +95,7 @@ class EditableHeader extends React.Component {
                 {this.state.title}
             </h1>
 
-            <a onClick={this.edit}><Glyphicon glyph='pencil' style={glyphStyle} /></a>
+            <a onClick={this.edit}><Icon icon='edit' style={iconStyle} /></a>
         </div>;
     }
 }

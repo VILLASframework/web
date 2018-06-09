@@ -21,12 +21,13 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 import AppDispatcher from '../app-dispatcher';
 import UserStore from '../stores/user-store';
 import UsersStore from '../stores/users-store';
 
+import Icon from '../components/icon';
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
 import NewUserDialog from '../components/dialog/new-user';
@@ -102,14 +103,14 @@ class Users extends Component {
 
   getHumanRoleName(role_key) {
     const HUMAN_ROLE_NAMES = {admin: 'Administrator', user: 'User', guest: 'Guest'};
-    
+
     return HUMAN_ROLE_NAMES.hasOwnProperty(role_key)? HUMAN_ROLE_NAMES[role_key] : '';
   }
 
   onModalKeyPress = (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
-    
+
       this.confirmDeleteModal();
     }
   }
@@ -127,7 +128,7 @@ class Users extends Component {
           <TableColumn width='70' editButton deleteButton onEdit={index => this.setState({ editModal: true, modalData: this.state.users[index] })} onDelete={index => this.setState({ deleteModal: true, modalData: this.state.users[index] })} />
         </Table>
 
-        <Button onClick={() => this.setState({ newModal: true })}><Glyphicon glyph='plus' /> User</Button>
+        <Button onClick={() => this.setState({ newModal: true })}><Icon icon='plus' /> User</Button>
 
         <NewUserDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
         <EditUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />

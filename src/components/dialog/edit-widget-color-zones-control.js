@@ -20,8 +20,10 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, ControlLabel, Button, Glyphicon } from 'react-bootstrap';
+import { FormGroup, ControlLabel, Button } from 'react-bootstrap';
 
+
+import Icon from '../icon';
 import Table from '../table';
 import TableColumn from '../table-column';
 
@@ -67,7 +69,7 @@ class EditWidgetColorZonesControl extends React.Component {
   changeCell = (event, row, column) => {
     // change row
     const widget = this.state.widget;
-    
+
     if (column === 1) {
       widget.zones[row].strokeStyle = event.target.value;
     } else if (column === 2) {
@@ -96,7 +98,7 @@ class EditWidgetColorZonesControl extends React.Component {
   checkedCell = (row, event) => {
     // update selected rows
     const selectedZones = this.state.selectedZones;
-    
+
     if (event.target.checked) {
       if (selectedZones.indexOf(row) === -1) {
         selectedZones.push(row);
@@ -122,8 +124,8 @@ class EditWidgetColorZonesControl extends React.Component {
         <TableColumn title="Maximum" dataKey="max" inlineEditable onInlineChange={this.changeCell} />
       </Table>
 
-      <Button onClick={this.addZone} disabled={!this.props.widget.colorZones}><Glyphicon glyph="plus" /> Add</Button>
-      <Button onClick={this.removeZones} disabled={!this.props.widget.colorZones}><Glyphicon glyph="minus" /> Remove</Button>
+      <Button onClick={this.addZone} disabled={!this.props.widget.colorZones}><Icon icon="plus" /> Add</Button>
+      <Button onClick={this.removeZones} disabled={!this.props.widget.colorZones}><Icon icon="minus" /> Remove</Button>
     </FormGroup>;
   }
 }
