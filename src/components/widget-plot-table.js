@@ -137,8 +137,6 @@ class WidgetPlotTable extends Component {
     return (
       <div className="plot-table-widget" ref="wrapper">
         <div className="content">
-          <PlotLegend signals={legendSignals} />
-
           <div className="table-plot-row">
             <div className="widget-table">
               { checkBoxes.length > 0 ? (
@@ -150,9 +148,9 @@ class WidgetPlotTable extends Component {
             </div>
 
             <div className="widget-plot">
-              <Plot 
+              <Plot
                 data={simulatorData}
-                time={this.props.widget.time} 
+                time={this.props.widget.time}
                 width={this.props.widget.width - 100}
                 height={this.props.widget.height - 55}
                 yMin={this.props.widget.yMin}
@@ -163,6 +161,7 @@ class WidgetPlotTable extends Component {
               />
             </div>
           </div>
+          <PlotLegend signals={legendSignals} />
         </div>
       </div>
     );
