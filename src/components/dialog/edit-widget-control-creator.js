@@ -162,7 +162,7 @@ export default function createControls(widgetType = null, widget = null, session
             );
             break;
 
-        case 'NumberInput':
+        case 'Input':
             dialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} validate={id => validateForm(id)} handleChange={e => handleChange(e)} />,
                 <EditWidgetSimulatorControl key={1} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => valueBoundOnChange(e)} />,

@@ -10,8 +10,8 @@
 import React, { Component } from 'react';
 import { Form, FormGroup, Col, ControlLabel, FormControl } from 'react-bootstrap';
 
-class WidgetNumberInput extends Component {
-  
+class WidgetInput extends Component {
+
   static whichValidationStateIs( condition ) {
     switch(condition) {
         case 'ok': return null;
@@ -25,23 +25,23 @@ class WidgetNumberInput extends Component {
 
     this.state = {
         value: '',
-        validationState: WidgetNumberInput.whichValidationStateIs('ok')
+        validationState: WidgetInput.whichValidationStateIs('ok')
     };
   }
 
   validateInput(e) {
       if (e.target.value === '' || e.target.value.endsWith('.')) {
         this.setState({
-            validationState: WidgetNumberInput.whichValidationStateIs('ok'),
+            validationState: WidgetInput.whichValidationStateIs('ok'),
             value: e.target.value });
       } else {
         var num = Number(e.target.value);
         if (Number.isNaN(num)) {
-            this.setState({ validationState: WidgetNumberInput.whichValidationStateIs('error'),
+            this.setState({ validationState: WidgetInput.whichValidationStateIs('error'),
                 value: e.target.value });
         } else {
             this.setState({
-                validationState: WidgetNumberInput.whichValidationStateIs('ok'),
+                validationState: WidgetInput.whichValidationStateIs('ok'),
                 value: num });
         }
       }
@@ -66,4 +66,4 @@ class WidgetNumberInput extends Component {
   }
 }
 
-export default WidgetNumberInput;
+export default WidgetInput;

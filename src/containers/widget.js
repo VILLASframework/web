@@ -39,7 +39,7 @@ import WidgetLabel from '../components/widget-label';
 import WidgetPlotTable from '../components/widget-plot-table';
 import WidgetImage from '../components/widget-image';
 import WidgetButton from '../components/widget-button';
-import WidgetNumberInput from '../components/widget-number-input';
+import WidgetInput from '../components/widget-input';
 import WidgetSlider from '../components/widget-slider';
 import WidgetGauge from '../components/widget-gauge';
 import WidgetBox from '../components/widget-box';
@@ -218,8 +218,8 @@ class Widget extends React.Component {
       element = <WidgetImage widget={widget} files={this.state.files} token={this.state.sessionToken} />
     } else if (widget.type === 'Button') {
       element = <WidgetButton widget={widget} editing={this.props.editing} />
-    } else if (widget.type === 'NumberInput') {
-      element = <WidgetNumberInput widget={widget} editing={this.props.editing} simulationModel={simulationModel} />
+    } else if (widget.type === 'Input') {
+      element = <WidgetInput widget={widget} editing={this.props.editing} simulationModel={simulationModel} />
     } else if (widget.type === 'Slider') {
       element = <WidgetSlider widget={widget} editing={this.props.editing} simulationModel={simulationModel} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } onInputChanged={(value) => this.inputDataChanged(widget, value)} />
     } else if (widget.type === 'Gauge') {

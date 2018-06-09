@@ -108,7 +108,7 @@ class WidgetFactory {
                 widget.simulationModel = defaultSimulationModel;
                 widget.signal = 0;
                 break;
-            case 'NumberInput':
+            case 'Input':
                 widget.minWidth = 200;
                 widget.minHeight = 50;
                 widget.width = 200;

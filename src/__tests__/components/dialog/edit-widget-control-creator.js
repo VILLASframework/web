@@ -37,7 +37,7 @@ describe('edit widget control creator', () => {
         { args: { widgetType: 'Box' }, result: { controlNumber: 1, controlTypes: [EditWidgetColorControl] } },
         { args: { widgetType: 'Label' }, result: { controlNumber: 3, controlTypes: [EditWidgetTextControl, EditWidgetTextSizeControl, EditWidgetColorControl] } },
         { args: { widgetType: 'HTML' }, result: { controlNumber: 1, controlTypes: [EditWidgetHTMLContent] } },
-        { args: { widgetType: 'NumberInput'}, result: { controlNumber: 3, controlTypes: [EditWidgetTextControl, EditWidgetSimulatorControl, EditWidgetSignalControl] } }
+        { args: { widgetType: 'Input'}, result: { controlNumber: 3, controlTypes: [EditWidgetTextControl, EditWidgetSimulatorControl, EditWidgetSignalControl] } }
     ];
 
     runs.forEach( (run) => {
