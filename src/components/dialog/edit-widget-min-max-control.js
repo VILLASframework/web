@@ -29,7 +29,7 @@ class EditWidgetMinMaxControl extends React.Component {
     const widget = {};
     widget[props.controlID + "UseMinMax"] = false;
     widget[props.controlId + "Min"] = 0;
-    widget[props.controlId + "Max"] = 1;
+    widget[props.controlId + "Max"] = 100;
 
     this.state = {
       widget
