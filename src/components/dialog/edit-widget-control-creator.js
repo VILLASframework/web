@@ -139,7 +139,8 @@ export default function createControls(widgetType = null, widget = null, session
             break;
         case 'Box':
             dialogControls.push(
-                <EditWidgetColorControl key={0} widget={widget} controlId={'border_color'} label={'Border color'} validate={(id) => validateForm(id)} handleChange={(e) => handleChange(e)} />
+                <EditWidgetColorControl key={0} widget={widget} controlId={'border_color'} label={'Border color'} validate={(id) => validateForm(id)} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetColorControl key={1} widget={widget} controlId={'background_color'} label={'Background color'} handleChange={e => handleChange(e)} />
             );
             break;
         case 'Label':
