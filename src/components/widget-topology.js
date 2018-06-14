@@ -84,17 +84,21 @@ class WidgetTopology extends React.Component {
     super(props);
     this.svgElem = null;
     this.Viewer = null;
-    
+
     this.state = {
       visualizationState: 'initial'
     };
   }
 
+  setSVG(svg) {
+    this.svgElem = svg;
+    window.cimsvg.setSVG(svg); // function not available in upstream source
+    window.cimview.setSVG(svg); // function not available in upstream source
+  }
+
   componentDidMount() {
     if (this.svgElem) {
       window.cimjson.setImagePathBase(process.env.PUBLIC_URL + '/Pintura/');
-      window.cimsvg.setSVG(this.svgElem); // function not available in upstream source
-      window.cimview.init(this.svgElem);
       window.onMouseLeave = function() {};
       window.onMouseOver = function() {};
       window.onMouseLeave = function() {};
@@ -120,8 +124,9 @@ class WidgetTopology extends React.Component {
             this.setState({'visualizationState': 'ready' });
             window.cimxml.clearXmlData()
             window.cimsvg.setFileCount(1);
-            return response.text().then( contents => {            
+            return response.text().then( contents => {
               window.cimsvg.loadFile(contents);
+              window.cimview.fit();
               attachComponentEvents();
             });
           } else {
@@ -156,11 +161,15 @@ class WidgetTopology extends React.Component {
         markup = (<div>
           <ReactSVGPanZoom
                   ref={Viewer => this.Viewer = Viewer}
-                  style={{outline: "1px solid black"}}
+                  style={{outline: "1px solid grey"}}
                   detectAutoPan={false}
+                  miniaturePosition="none"
+                  toolbarPosition="none"
+                  background="white"
+                  tool="pan"
                   width={this.props.widget.width-2} height={this.props.widget.height-2} >
                   <svg width={this.props.widget.width} height={this.props.widget.height}>
-                    <svg ref={ c => this.svgElem = c }width={this.props.widget.width} height={this.props.widget.height}>
+                    <svg ref={ c => this.setSVG(c) } width={this.props.widget.width} height={this.props.widget.height}>
                       <rect id="backing" style={pinturaBackingStyle} />
                       <g id="grid" style={pinturaGridStyle} />
                       <g id="diagrams"/>
