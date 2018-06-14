@@ -24,6 +24,7 @@ class WebsocketAPI {
     this.endpoint = endpoint;
     this.callbacks = callbacks;
 
+    this.wasConnected = false;
     this.isClosing = false;
 
     this.connect(endpoint, callbacks);
@@ -34,14 +35,12 @@ class WebsocketAPI {
     this.socket = new WebSocket(WebsocketAPI.getURL(endpoint), 'live');
     this.socket.binaryType = 'arraybuffer';
     this.socket.onclose = this.onClose;
+    this.socket.onopen = this.onOpen;
+    this.socket.onerror = this.onError;
 
     // register callbacks
-    if (callbacks.onOpen)
-        this.socket.onopen = callbacks.onOpen;
     if (callbacks.onMessage)
         this.socket.onmessage = callbacks.onMessage;
-    if (callbacks.onError)
-        this.socket.onerror = callbacks.onError;
   }
 
   reconnect() {
@@ -62,14 +61,30 @@ class WebsocketAPI {
     this.socket.close(code, reason);
   }
 
+  onError = e => {
+    console.error('Error on WebSocket connection to: ' + this.endpoint + ':', e);
+
+    if ('onError' in this.callbacks)
+      this.callbacks.onError(e);
+  }
+
+  onOpen = e => {
+    this.wasConnected = true;
+
+    if ('onOpen' in this.callbacks)
+        this.callbacks.onOpen(e);
+  }
+
   onClose = e => {
     if (this.isClosing) {
-      if (this.callbacks.onClose)
+      if ('onClose' in this.callbacks)
         this.callbacks.onClose(e);
     }
     else {
-      //console.log("Connection to " + this.endpoint + " dropped. Attempt reconnect in 1 sec");
-      window.setTimeout(() => { this.reconnect(); }, 500);
+      if (this.wasConnected) {
+        console.log("Connection to " + this.endpoint + " dropped. Attempt reconnect in 1 sec");
+        window.setTimeout(() => { this.reconnect(); }, 1000);
+      }
     }
   }
 
