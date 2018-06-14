@@ -156,8 +156,12 @@ class WidgetTopology extends React.Component {
         markup = (<div>
           <ReactSVGPanZoom
                   ref={Viewer => this.Viewer = Viewer}
-                  style={{outline: "1px solid black"}}
+                  style={{outline: "1px solid grey"}}
                   detectAutoPan={false}
+                  miniaturePosition="none"
+                  toolbarPosition="none"
+                  background="white"
+                  tool="pan"
                   width={this.props.widget.width-2} height={this.props.widget.height-2} >
                   <svg width={this.props.widget.width} height={this.props.widget.height}>
                     <svg ref={ c => this.svgElem = c }width={this.props.widget.width} height={this.props.widget.height}>
