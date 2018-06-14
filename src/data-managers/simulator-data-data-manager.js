@@ -35,7 +35,7 @@ class SimulatorDataDataManager {
     if (this._sockets[identifier] != null)
       return; // already open?
 
-    this._sockets[identifier] = new WebsocketAPI(endpoint, { onOpen: (event) => this.onOpen(event, identifier, true), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier), onError: (error) => this.onError(error, identifier) });
+    this._sockets[identifier] = new WebsocketAPI(endpoint, { onOpen: (event) => this.onOpen(event, identifier, true), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier) });
   }
 
   update(endpoint, identifier) {
@@ -86,10 +86,6 @@ class SimulatorDataDataManager {
 
     // remove from list, keep null reference for flag detection
     delete this._sockets[identifier];
-  }
-
-  onError(error, identifier) {
-    console.error('Error on ' + identifier + ':' + error);
   }
 
   onMessage(event, identifier) {
