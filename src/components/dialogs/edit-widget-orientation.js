@@ -22,7 +22,7 @@
 import React, { Component } from 'react';
 import { FormGroup, Col, Row, Radio, ControlLabel } from 'react-bootstrap';
 
-import WidgetSlider from '../widget-slider';
+import WidgetSlider from '../widgets/slider';
 
 class EditWidgetOrientation extends Component {
   constructor(props) {
@@ -52,11 +52,11 @@ class EditWidgetOrientation extends Component {
               Orientation
             </Col>
             <Col sm={10}>
-              { 
+              {
                 Object.keys(WidgetSlider.OrientationTypes).map( (type) => {
                   let value = WidgetSlider.OrientationTypes[type].value;
                   let name = WidgetSlider.OrientationTypes[type].name;
-                  
+
                   return (
                     <Radio inline key={value} name='orientation' checked={ value === this.state.widget.orientation } onChange={(e) => this.handleOrientationChange(value)}>
                       { name }

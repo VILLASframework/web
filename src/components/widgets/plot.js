@@ -1,5 +1,5 @@
 /**
- * File: widget-plot.js
+ * File: plot.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 08.03.2017
  *
@@ -21,8 +21,8 @@
 
 import React from 'react';
 
-import Plot from './widget-plot/plot';
-import PlotLegend from './widget-plot/plot-legend';
+import Plot from '../widget-plot/plot';
+import PlotLegend from '../widget-plot/plot-legend';
 
 class WidgetPlot extends React.Component {
   constructor(props) {

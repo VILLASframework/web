@@ -1,5 +1,5 @@
 /**
- * File: widget-plot-table.js
+ * File: plot-table.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 15.03.2017
  *
@@ -23,8 +23,8 @@ import React, { Component } from 'react';
 import classNames from 'classnames';
 import { FormGroup, Checkbox } from 'react-bootstrap';
 
-import Plot from './widget-plot/plot';
-import PlotLegend from './widget-plot/plot-legend';
+import Plot from '../widget-plot/plot';
+import PlotLegend from '../widget-plot/plot-legend';
 
 class WidgetPlotTable extends Component {
   constructor(props) {

@@ -33,12 +33,12 @@ import SimulationModelStore from '../stores/simulation-model-store';
 import Icon from '../components/icon';
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
-import NewSimulationDialog from '../components/dialog/new-simulation';
-import EditSimulationDialog from '../components/dialog/edit-simulation';
-import ImportSimulationDialog from '../components/dialog/import-simulation';
+import NewSimulationDialog from '../components/dialogs/new-simulation';
+import EditSimulationDialog from '../components/dialogs/edit-simulation';
+import ImportSimulationDialog from '../components/dialogs/import-simulation';
 
 import SimulatorAction from '../components/simulator-action';
-import DeleteDialog from '../components/dialog/delete-dialog';
+import DeleteDialog from '../components/dialogs/delete-dialog';
 
 class Simulations extends Component {
   static getStores() {

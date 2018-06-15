@@ -31,10 +31,10 @@ import SimulationStore from '../stores/simulation-store';
 import Icon from '../components/icon';
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
-import NewProjectDialog from '../components/dialog/new-project';
-import EditProjectDialog from '../components/dialog/edit-project';
+import NewProjectDialog from '../components/dialogs/new-project';
+import EditProjectDialog from '../components/dialogs/edit-project';
 
-import DeleteDialog from '../components/dialog/delete-dialog';
+import DeleteDialog from '../components/dialogs/delete-dialog';
 
 class Projects extends React.Component {
   static getStores() {

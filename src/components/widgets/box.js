@@ -1,5 +1,5 @@
 /**
- * File: widget-box.js
+ * File: box.js
  * Author: Ricardo Hernandez-Montoya <rhernandez@gridhound.de>
  * Date: 25.04.2017
  * Copyright: 2018, Institute for Automation of Complex Power Systems, EONERC
@@ -22,7 +22,7 @@
 
 import React, { Component } from 'react';
 
-import EditWidgetColorControl from './dialog/edit-widget-color-control';
+import EditWidgetColorControl from '../dialogs/edit-widget-color-control';
 
 class WidgetBox extends Component {
   render() {

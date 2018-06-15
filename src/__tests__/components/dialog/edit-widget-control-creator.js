@@ -1,22 +1,22 @@
 
 import { expect } from 'chai';
 
-import createControls from '../../../components/dialog/edit-widget-control-creator';
-import EditWidgetTextControl from '../../../components/dialog/edit-widget-text-control';
-import EditWidgetColorControl from '../../../components/dialog/edit-widget-color-control';
-import EditWidgetTimeControl from '../../../components/dialog/edit-widget-time-control';
-import EditImageWidgetControl from '../../../components/dialog/edit-widget-image-control';
-import EditWidgetSimulatorControl from '../../../components/dialog/edit-widget-simulator-control';
-import EditWidgetSignalControl from '../../../components/dialog/edit-widget-signal-control';
-import EditWidgetSignalsControl from '../../../components/dialog/edit-widget-signals-control';
-import EditWidgetOrientation from '../../../components/dialog/edit-widget-orientation';
-import EditWidgetTextSizeControl from '../../../components/dialog/edit-widget-text-size-control';
-import EditWidgetAspectControl from '../../../components/dialog/edit-widget-aspect-control';
-import EditWidgetCheckboxControl from '../../../components/dialog/edit-widget-checkbox-control';
-import EditWidgetMinMaxControl from '../../../components/dialog/edit-widget-min-max-control';
-import EditWidgetColorZonesControl from '../../../components/dialog/edit-widget-color-zones-control';
-import EditWidgetHTMLContent from '../../../components/dialog/edit-widget-html-content';
-import EditWidgetNumberControl from '../../../components/dialog/edit-widget-number-control';
+import createControls from '../../../components/dialogs/edit-widget-control-creator';
+import EditWidgetTextControl from '../../../components/dialogs/edit-widget-text-control';
+import EditWidgetColorControl from '../../../components/dialogs/edit-widget-color-control';
+import EditWidgetTimeControl from '../../../components/dialogs/edit-widget-time-control';
+import EditImageWidgetControl from '../../../components/dialogs/edit-widget-image-control';
+import EditWidgetSimulatorControl from '../../../components/dialogs/edit-widget-simulator-control';
+import EditWidgetSignalControl from '../../../components/dialogs/edit-widget-signal-control';
+import EditWidgetSignalsControl from '../../../components/dialogs/edit-widget-signals-control';
+import EditWidgetOrientation from '../../../components/dialogs/edit-widget-orientation';
+import EditWidgetTextSizeControl from '../../../components/dialogs/edit-widget-text-size-control';
+import EditWidgetAspectControl from '../../../components/dialogs/edit-widget-aspect-control';
+import EditWidgetCheckboxControl from '../../../components/dialogs/edit-widget-checkbox-control';
+import EditWidgetMinMaxControl from '../../../components/dialogs/edit-widget-min-max-control';
+import EditWidgetColorZonesControl from '../../../components/dialogs/edit-widget-color-zones-control';
+import EditWidgetHTMLContent from '../../../components/dialogs/edit-widget-html-content';
+import EditWidgetNumberControl from '../../../components/dialogs/edit-widget-number-control';
 
 describe('edit widget control creator', () => {
     it('should not return null', () => {

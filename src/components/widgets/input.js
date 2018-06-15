@@ -1,5 +1,5 @@
 /**
- * File: widget-number-input.js
+ * File: input.js
  * Author: Ricardo Hernandez-Montoya <rhernandez@gridhound.de>
  * Date: 29.03.2017
  * Copyright: 2018, Institute for Automation of Complex Power Systems, EONERC

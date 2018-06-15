@@ -34,10 +34,10 @@ import AppDispatcher from '../app-dispatcher';
 import Icon from '../components/icon';
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
-import ImportSimulationModelDialog from '../components/dialog/import-simulation-model';
+import ImportSimulationModelDialog from '../components/dialogs/import-simulation-model';
 
 import SimulatorAction from '../components/simulator-action';
-import DeleteDialog from '../components/dialog/delete-dialog';
+import DeleteDialog from '../components/dialogs/delete-dialog';
 
 class Simulation extends React.Component {
   static getStores() {

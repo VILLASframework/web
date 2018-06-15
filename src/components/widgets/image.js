@@ -1,5 +1,5 @@
 /**
- * File: widget-image.js
+ * File: image.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 14.03.2017
  *
@@ -21,8 +21,8 @@
 
 import React from 'react';
 
-import AppDispatcher from '../app-dispatcher';
-import config from '../config';
+import AppDispatcher from '../../app-dispatcher';
+import config from '../../config';
 
 class WidgetImage extends React.Component {
   componentWillReceiveProps(nextProps) {

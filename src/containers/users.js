@@ -30,10 +30,10 @@ import UsersStore from '../stores/users-store';
 import Icon from '../components/icon';
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
-import NewUserDialog from '../components/dialog/new-user';
-import EditUserDialog from '../components/dialog/edit-user';
+import NewUserDialog from '../components/dialogs/new-user';
+import EditUserDialog from '../components/dialogs/edit-user';
 
-import DeleteDialog from '../components/dialog/delete-dialog';
+import DeleteDialog from '../components/dialogs/delete-dialog';
 
 class Users extends Component {
   static getStores() {

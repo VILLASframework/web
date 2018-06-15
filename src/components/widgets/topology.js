@@ -1,5 +1,5 @@
 /**
- * File: widget-topology.js
+ * File: topology.js
  * Author: Ricardo Hernandez-Montoya <rhernandez@gridhound.de>
  * Date: 08.01.2018
  *
@@ -21,8 +21,8 @@
 
 import React from 'react';
 import {ReactSVGPanZoom} from 'react-svg-pan-zoom';
-import config from '../config';
-import '../styles/simple-spinner.css';
+import config from '../../config';
+import '../../styles/simple-spinner.css';
 
 
 // Do not show Pintura's grid

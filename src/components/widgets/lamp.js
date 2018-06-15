@@ -1,7 +1,7 @@
 /**
- * File: widget-value.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 04.03.2017
+ * File: lamp.js
+ * Author: Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * Date: 20.09.2017
  *
  * This file is part of VILLASweb.
  *
@@ -21,13 +21,15 @@
 
 import React, { Component } from 'react';
 
-class WidgetValue extends Component {
+import EditWidgetColorControl from '../dialogs/edit-widget-color-control';
+
+class WidgetLamp extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       value: '',
-      unit: ''
+      threshold: 0
     };
   }
 
@@ -45,27 +47,32 @@ class WidgetValue extends Component {
       return;
     }
 
-    const unit = nextProps.simulationModel.outputMapping[nextProps.widget.signal].type;
-    
     // check if value has changed
     const signal = nextProps.data[simulator].output.values[nextProps.widget.signal];
     if (signal != null && this.state.value !== signal[signal.length - 1].y) {
-      this.setState({ value: signal[signal.length - 1].y, unit });
+      this.setState({ value: signal[signal.length - 1].y });
     }
   }
 
   render() {
-    var value_to_render = Number(this.state.value);
+    let colors = EditWidgetColorControl.ColorPalette;
+    let color;
+
+    if (Number(this.state.value) > Number(this.props.widget.threshold))
+      color = colors[this.props.widget.on_color];
+    else
+      color = colors[this.props.widget.off_color];
+
+    let style = {
+      backgroundColor: color,
+      width:  this.props.widget.width,
+      height: this.props.widget.height
+    }
+
     return (
-      <div className="single-value-widget">
-        <strong style={{ fontSize: this.props.widget.textSize + 'px' }}>{this.props.widget.name}</strong>
-        <span style={{ fontSize: this.props.widget.textSize + 'px' }}>{Number.isNaN(value_to_render) ? NaN : value_to_render.toFixed(3)}</span>
-        {this.props.widget.showUnit &&
-          <span style={{ fontSize: this.props.widget.textSize + 'px' }}>[{this.state.unit}]</span>
-        }
-      </div>
+      <div className="lamp-widget" style={style} />
     );
   }
 }
 
-export default WidgetValue;
+export default WidgetLamp;

@@ -32,12 +32,12 @@ import UserStore from '../stores/user-store';
 import Icon from '../components/icon';
 import Table from '../components/table';
 import TableColumn from '../components/table-column';
-import NewSimulatorDialog from '../components/dialog/new-simulator';
-import EditSimulatorDialog from '../components/dialog/edit-simulator';
-import ImportSimulatorDialog from '../components/dialog/import-simulator';
+import NewSimulatorDialog from '../components/dialogs/new-simulator';
+import EditSimulatorDialog from '../components/dialogs/edit-simulator';
+import ImportSimulatorDialog from '../components/dialogs/import-simulator';
 
 import SimulatorAction from '../components/simulator-action';
-import DeleteDialog from '../components/dialog/delete-dialog';
+import DeleteDialog from '../components/dialogs/delete-dialog';
 
 class Simulators extends Component {
   static getStores() {

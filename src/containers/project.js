@@ -33,11 +33,11 @@ import SimulationStore from '../stores/simulation-store';
 import Icon from '../components/icon';
 import CustomTable from '../components/table';
 import TableColumn from '../components/table-column';
-import NewVisualzationDialog from '../components/dialog/new-visualization';
-import EditVisualizationDialog from '../components/dialog/edit-visualization';
-import ImportVisualizationDialog from '../components/dialog/import-visualization';
+import NewVisualzationDialog from '../components/dialogs/new-visualization';
+import EditVisualizationDialog from '../components/dialogs/edit-visualization';
+import ImportVisualizationDialog from '../components/dialogs/import-visualization';
 
-import DeleteDialog from '../components/dialog/delete-dialog';
+import DeleteDialog from '../components/dialogs/delete-dialog';
 
 class Visualizations extends Component {
   static getStores() {

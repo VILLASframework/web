@@ -32,7 +32,7 @@ import WidgetFactory from '../components/widget-factory';
 import ToolboxItem from '../components/toolbox-item';
 import Dropzone from '../components/dropzone';
 import Widget from './widget';
-import EditWidget from '../components/dialog/edit-widget';
+import EditWidget from '../components/dialogs/edit-widget';
 import Grid from '../components/grid';
 
 import UserStore from '../stores/user-store';

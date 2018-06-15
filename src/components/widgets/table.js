@@ -1,5 +1,5 @@
 /**
- * File: widget-table.js
+ * File: table.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 14.03.2017
  *
@@ -21,8 +21,8 @@
 
 import React, { Component } from 'react';
 
-import Table from './table';
-import TableColumn from './table-column';
+import Table from '../table';
+import TableColumn from '../table-column';
 
 class WidgetTable extends Component {
   constructor(props) {
@@ -46,7 +46,7 @@ class WidgetTable extends Component {
     if (nextProps.data == null
       || nextProps.data[simulator] == null
       || nextProps.data[simulator].output == null
-      || nextProps.data[simulator].output.values.length === 0  
+      || nextProps.data[simulator].output.values.length === 0
       || nextProps.data[simulator].output.values[0].length === 0) {
       // clear values
       this.setState({ rows: [], sequence: null });

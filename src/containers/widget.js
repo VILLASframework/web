@@ -31,20 +31,20 @@ import SimulatorDataStore from '../stores/simulator-data-store';
 import SimulationModelStore from '../stores/simulation-model-store';
 import FileStore from '../stores/file-store';
 
-import WidgetLamp from '../components/widget-lamp';
-import WidgetValue from '../components/widget-value';
-import WidgetPlot from '../components/widget-plot';
-import WidgetTable from '../components/widget-table';
-import WidgetLabel from '../components/widget-label';
-import WidgetPlotTable from '../components/widget-plot-table';
-import WidgetImage from '../components/widget-image';
-import WidgetButton from '../components/widget-button';
-import WidgetInput from '../components/widget-input';
-import WidgetSlider from '../components/widget-slider';
-import WidgetGauge from '../components/widget-gauge';
-import WidgetBox from '../components/widget-box';
-import WidgetHTML from '../components/widget-html';
-import WidgetTopology from '../components/widget-topology';
+import WidgetLamp from '../components/widgets/lamp';
+import WidgetValue from '../components/widgets/value';
+import WidgetPlot from '../components/widgets/plot';
+import WidgetTable from '../components/widgets/table';
+import WidgetLabel from '../components/widgets/label';
+import WidgetPlotTable from '../components/widgets/plot-table';
+import WidgetImage from '../components/widgets/image';
+import WidgetButton from '../components/widgets/button';
+import WidgetInput from '../components/widgets/input';
+import WidgetSlider from '../components/widgets/slider';
+import WidgetGauge from '../components/widgets/gauge';
+import WidgetBox from '../components/widgets/box';
+import WidgetHTML from '../components/widgets/html';
+import WidgetTopology from '../components/widgets/topology';
 
 import '../styles/widgets.css';
 

@@ -1,5 +1,5 @@
 /**
- * File: widget-label.js
+ * File: label.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 14.03.2017
  *
@@ -21,7 +21,7 @@
 
 import React, { Component } from 'react';
 
-import EditWidgetColorControl from './dialog/edit-widget-color-control';
+import EditWidgetColorControl from '../dialogs/edit-widget-color-control';
 
 class WidgetLabel extends Component {
   render() {

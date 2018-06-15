@@ -1,5 +1,5 @@
 /**
- * File: widget-html.js
+ * File: html.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 29.08.2017
  *

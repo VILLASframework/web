@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-import WidgetSlider from './widget-slider';
+import WidgetSlider from './widgets/slider';
 
 class WidgetFactory {
 
