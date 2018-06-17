@@ -20,6 +20,7 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
+import { format } from 'd3';
 
 class WidgetValue extends Component {
   constructor(props) {
@@ -59,7 +60,7 @@ class WidgetValue extends Component {
     return (
       <div className="single-value-widget">
         <strong style={{ fontSize: this.props.widget.textSize + 'px' }}>{this.props.widget.name}</strong>
-        <span style={{ fontSize: this.props.widget.textSize + 'px' }}>{Number.isNaN(value_to_render) ? NaN : value_to_render.toFixed(3)}</span>
+        <span style={{ fontSize: this.props.widget.textSize + 'px' }}>{Number.isNaN(value_to_render) ? NaN : format('.3s')(value_to_render)}</span>
         {this.props.widget.showUnit &&
           <span style={{ fontSize: this.props.widget.textSize + 'px' }}>[{this.state.unit}]</span>
         }
