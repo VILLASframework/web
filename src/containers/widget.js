@@ -218,11 +218,11 @@ class Widget extends React.Component {
     } else if (widget.type === 'Image') {
       element = <WidgetImage widget={widget} files={this.state.files} token={this.state.sessionToken} />
     } else if (widget.type === 'Button') {
-      element = <WidgetButton widget={widget} editing={this.props.editing} />
+      element = <WidgetButton widget={widget} editing={this.props.editing} simulationModel={simulationModel} onInputChanged={(value) => this.inputDataChanged(widget, value)} />
     } else if (widget.type === 'Input') {
-      element = <WidgetInput widget={widget} editing={this.props.editing} simulationModel={simulationModel} />
+      element = <WidgetInput widget={widget} editing={this.props.editing} simulationModel={simulationModel} onInputChanged={(value) => this.inputDataChanged(widget, value)} />
     } else if (widget.type === 'Slider') {
-      element = <WidgetSlider widget={widget} editing={this.props.editing} simulationModel={simulationModel} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } onInputChanged={(value) => this.inputDataChanged(widget, value)} />
+      element = <WidgetSlider widget={widget} editing={this.props.editing} simulationModel={simulationModel} onInputChanged={(value) => this.inputDataChanged(widget, value)} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } />
     } else if (widget.type === 'Gauge') {
       element = <WidgetGauge widget={widget} data={this.state.simulatorData} editing={this.props.editing} simulationModel={simulationModel} />
     } else if (widget.type === 'Box') {
