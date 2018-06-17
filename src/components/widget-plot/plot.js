@@ -56,7 +56,7 @@ class Plot extends React.Component {
     }
 
     const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(timeFormat("%M:%S"));
-    const yAxis = axisLeft().scale(yScale).ticks(5).tickFormat(format(".1g"));
+    const yAxis = axisLeft().scale(yScale).ticks(5).tickFormat(format(".3s"));
 
     this.state = {
       data: null,
@@ -99,7 +99,7 @@ class Plot extends React.Component {
       }
 
       const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(timeFormat("%M:%S"));
-      const yAxis = axisLeft().scale(yScale).ticks(5).tickFormat(format(".1g"));
+      const yAxis = axisLeft().scale(yScale).ticks(5).tickFormat(format(".3s"));
 
       this.setState({ data: null, xAxis, yAxis, labelMargin });
       return;
@@ -171,7 +171,7 @@ class Plot extends React.Component {
     const yScale = scaleLinear().domain(yRange).range([this.props.height + topMargin - bottomMargin, topMargin]);
 
     const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(timeFormat("%M:%S"));
-    const yAxis = axisLeft().scale(yScale).ticks(5).tickFormat(format(".1g"));
+    const yAxis = axisLeft().scale(yScale).ticks(5).tickFormat(format(".3s"));
 
     // generate paths from data
     const sparkLine = line().x(p => xScale(p.x)).y(p => yScale(p.y));

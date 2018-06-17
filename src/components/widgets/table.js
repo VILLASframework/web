@@ -20,6 +20,7 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
+import { format } from 'd3';
 
 import Table from '../table';
 import TableColumn from '../table-column';
@@ -30,7 +31,8 @@ class WidgetTable extends Component {
 
     this.state = {
       rows: [],
-      sequence: null
+      sequence: null,
+      showUnit: false
     };
   }
 
@@ -48,8 +50,9 @@ class WidgetTable extends Component {
       || nextProps.data[simulator].output == null
       || nextProps.data[simulator].output.values.length === 0
       || nextProps.data[simulator].output.values[0].length === 0) {
+
       // clear values
-      this.setState({ rows: [], sequence: null });
+      this.setState({ rows: [], sequence: null, showUnit: false });
       return;
     }
 
@@ -65,20 +68,28 @@ class WidgetTable extends Component {
       if (index < nextProps.simulationModel.outputMapping.length) {
         rows.push({
           name: nextProps.simulationModel.outputMapping[index].name,
-          value: signal[signal.length - 1].y.toFixed(3)
+          unit: nextProps.simulationModel.outputMapping[index].type,
+          value: signal[signal.length - 1].y
         });
       }
     });
 
-    this.setState({ rows: rows, sequence: nextProps.data[simulator].output.sequence });
+    this.setState({ showUnit: nextProps.showUnit, rows: rows, sequence: nextProps.data[simulator].output.sequence });
   }
 
   render() {
+    var columns = [
+      <TableColumn title="Signal" dataKey="name" width={120} />,
+      <TableColumn title="Value" dataKey="value" modifier={format('.4s')} />
+    ];
+
+    if (this.props.widget.showUnit)
+      columns.push(<TableColumn title="Unit" dataKey="unit" />)
+
     return (
       <div className="table-widget">
         <Table data={this.state.rows}>
-          <TableColumn title="Signal" dataKey="name" width={120} />
-          <TableColumn title="Value" dataKey="value" />
+          { columns }
         </Table>
       </div>
     );

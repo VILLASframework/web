@@ -21,6 +21,7 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
+import { format } from 'd3';
 import classNames from 'classnames';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
@@ -64,6 +65,7 @@ class WidgetSlider extends Component {
     // Check if the orientation changed, update the size if it did
     if (this.props.widget.orientation !== nextProps.widget.orientation) {
       let baseWidget = nextProps.widget;
+
       // Exchange dimensions and constraints
       let newWidget = Object.assign({}, baseWidget, {
         width: baseWidget.height,
@@ -73,6 +75,7 @@ class WidgetSlider extends Component {
         maxWidth: baseWidget.maxHeight,
         maxHeight: baseWidget.maxWidth
       });
+
       nextProps.onWidgetChange(newWidget);
     }
   }
@@ -96,7 +99,7 @@ class WidgetSlider extends Component {
     let fields = {
       name: this.props.widget.name,
       control: <Slider min={ this.props.widget.rangeMin } max={ this.props.widget.rangeMax } step={ this.props.widget.step } value={ this.state.value } disabled={ this.props.editing } vertical={ isVertical } onChange={ (v) => this.valueIsChanging(v) } onAfterChange={ (v) => this.valueChanged(v) }/>,
-      value: <span>{ Number.parseFloat(this.state.value).toPrecision(3) }</span>,
+      value: <span>{ format('.3s')(Number.parseFloat(this.state.value)) }</span>,
       unit: <span className="signal-unit">{ this.state.unit }</span>
     }
 
