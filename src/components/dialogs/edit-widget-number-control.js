@@ -38,10 +38,9 @@ class EditWidgetNumberControl extends Component {
 
   render() {
     return (
-        <FormGroup controlId={this.props.controlId} validationState={this.props.validate ? this.props.validate(this.props.controlId) : null}>
+        <FormGroup controlId={this.props.controlId}>
           <ControlLabel>{this.props.label}</ControlLabel>
-          <FormControl type="number" defaultValue={this.props.defaultValue} value={this.state.widget[this.props.controlId]} onChange={e => this.props.handleChange(e)} />
-          <FormControl.Feedback />
+          <FormControl type="number" step="any" defaultValue={this.props.defaultValue} value={this.state.widget[this.props.controlId] || 0} onChange={e => this.props.handleChange(e)} />
         </FormGroup>
     );
   }

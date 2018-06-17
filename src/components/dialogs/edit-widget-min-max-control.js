@@ -49,10 +49,10 @@ class EditWidgetMinMaxControl extends React.Component {
         <tbody>
           <tr>
             <td>
-              Min: <FormControl type="number" id={this.props.controlId + "Min"} disabled={!this.state.widget[this.props.controlId + "UseMinMax"]} placeholder="Minimum value" value={this.state.widget[this.props.controlId + 'Min']} onChange={e => this.props.handleChange(e)} />
+              Min: <FormControl type="number" step="any" id={this.props.controlId + "Min"} disabled={!this.state.widget[this.props.controlId + "UseMinMax"]} placeholder="Minimum value" value={this.state.widget[this.props.controlId + 'Min']} onChange={e => this.props.handleChange(e)} />
             </td>
             <td>
-              Max: <FormControl type="number" id={this.props.controlId + "Max"} disabled={!this.state.widget[this.props.controlId + "UseMinMax"]} placeholder="Maximum value" value={this.state.widget[this.props.controlId + 'Max']} onChange={e => this.props.handleChange(e)} />
+              Max: <FormControl type="number" step="any" id={this.props.controlId + "Max"} disabled={!this.state.widget[this.props.controlId + "UseMinMax"]} placeholder="Maximum value" value={this.state.widget[this.props.controlId + 'Max']} onChange={e => this.props.handleChange(e)} />
             </td>
           </tr>
         </tbody>
