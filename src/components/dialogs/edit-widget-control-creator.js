@@ -80,7 +80,8 @@ export default function createControls(widgetType = null, widget = null, session
             break;
         case 'Table':
             dialogControls.push(
-                <EditWidgetSimulatorControl key={0} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />
+                <EditWidgetSimulatorControl key={0} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={1} widget={widget} controlId={'showUnit'} text="Show unit" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Image':
@@ -130,11 +131,15 @@ export default function createControls(widgetType = null, widget = null, session
             );
             break;
         case 'Button':
+            let buttonBoundOnChange = (e) => {
+              handleChange([e, {target: {id: 'signal', value: 0}}]);
+            }
             dialogControls.push(
-                <EditWidgetColorControl key={0} widget={widget} controlId={'background_color'} label={'Background'} validate={(id) => validateForm(id)} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetColorControl key={1} widget={widget} controlId={'font_color'} label={'Font color'} validate={(id) => validateForm(id)} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetSimulatorControl key={2} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => valueBoundOnChange(e)} />,
-                <EditWidgetSignalControl key={3} widget={widget} input validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />
+                <EditWidgetSimulatorControl key={0} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => buttonBoundOnChange(e)} />,
+                <EditWidgetSignalControl key={1} widget={widget} controlId={'signal'} input validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={2} widget={widget} controlId={'toggle'} text="Toggle" handleChange={e => handleChange(e)} />,
+                <EditWidgetNumberControl key={3} widget={widget} controlId={'on_value'} label={'On Value'} defaultValue={1} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetNumberControl key={4} widget={widget} controlId={'off_value'} label={'Off Value'} defaultValue={0} handleChange={(e) => handleChange(e)} />
             );
             break;
         case 'Box':
@@ -164,10 +169,13 @@ export default function createControls(widgetType = null, widget = null, session
             break;
 
         case 'Input':
+            let inputBoundOnChange = (e) => {
+              handleChange([e, {target: {id: 'signal', value: 0}}]);
+            }
             dialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} validate={id => validateForm(id)} handleChange={e => handleChange(e)} />,
-                <EditWidgetSimulatorControl key={1} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => valueBoundOnChange(e)} />,
-                <EditWidgetSignalControl key={2} widget={widget} input validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />
+                <EditWidgetSimulatorControl key={1} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => inputBoundOnChange(e)} />,
+                <EditWidgetSignalControl key={2} widget={widget} controlId={'signal'} input validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />
             );
             break;
 
