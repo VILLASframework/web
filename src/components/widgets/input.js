@@ -21,56 +21,68 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-import { Form, FormGroup, Col, ControlLabel, FormControl } from 'react-bootstrap';
+import { Form, FormGroup, Col, ControlLabel, FormControl, InputGroup } from 'react-bootstrap';
 
 class WidgetInput extends Component {
-
-  static whichValidationStateIs( condition ) {
-    switch(condition) {
-        case 'ok': return null;
-        case 'error': return 'error';
-        default: return 'error';
-    }
-  }
 
   constructor(props) {
     super(props);
 
     this.state = {
         value: '',
-        validationState: WidgetInput.whichValidationStateIs('ok')
+        unit: ''
     };
   }
 
-  validateInput(e) {
-      if (e.target.value === '' || e.target.value.endsWith('.')) {
-        this.setState({
-            validationState: WidgetInput.whichValidationStateIs('ok'),
-            value: e.target.value });
-      } else {
-        var num = Number(e.target.value);
-        if (Number.isNaN(num)) {
-            this.setState({ validationState: WidgetInput.whichValidationStateIs('error'),
-                value: e.target.value });
-        } else {
-            this.setState({
-                validationState: WidgetInput.whichValidationStateIs('ok'),
-                value: num });
-        }
-      }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.simulationModel == null) {
+      return;
+    }
+
+    // Update value
+    if (nextProps.widget.default_value && this.state.value === undefined) {
+      this.setState({
+        value: nextProps.widget.default_value
+      });
+    }
+
+    // Update unit
+    if (nextProps.widget.simulationModel && nextProps.simulationModel.inputMapping && this.state.unit !== nextProps.simulationModel.inputMapping[nextProps.widget.signal].type) {
+      this.setState({
+        unit: nextProps.simulationModel.inputMapping[nextProps.widget.signal].type
+      });
+    }
+  }
+
+  valueIsChanging(newValue) {
+    this.setState({ value: newValue });
+  }
+
+  valueChanged(newValue) {
+    if (this.props.onInputChanged) {
+      this.props.onInputChanged(newValue);
+    }
+  }
+
+  handleKeyPress(e) {
+    if(e.charCode === 13) {
+      this.valueChanged(this.state.value)
+    }
   }
 
   render() {
     return (
       <div className="number-input-widget full">
           <Form componentClass="fieldset" horizontal>
-              <FormGroup controlId="formValidationError3" validationState={ this.state.validationState} >
+              <FormGroup>
                   <Col componentClass={ControlLabel} xs={3}>
                     {this.props.widget.name}
                   </Col>
                   <Col xs={9}>
-                    <FormControl type="text" disabled={ this.props.editing } onInput={ (e) => this.validateInput(e) } placeholder="Enter value" value={ this.state.value } />
-                    <FormControl.Feedback />
+                    <InputGroup>
+                      <FormControl type="number" step="any" disabled={ this.props.editing } onKeyPress={ (e) => this.handleKeyPress(e) } onBlur={ (e) => this.valueChanged(this.state.value) } onChange={ (e) => this.valueIsChanging(e.target.value) } placeholder="Enter value" value={ this.state.value } />
+                      <InputGroup.Addon>{this.state.unit}</InputGroup.Addon>
+                    </InputGroup>
                   </Col>
                 </FormGroup>
             </Form>
