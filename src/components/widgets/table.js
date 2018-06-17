@@ -79,12 +79,12 @@ class WidgetTable extends Component {
 
   render() {
     var columns = [
-      <TableColumn title="Signal" dataKey="name" width={120} />,
-      <TableColumn title="Value" dataKey="value" modifier={format('.4s')} />
+      <TableColumn key={1} title="Signal" dataKey="name" width={120} />,
+      <TableColumn key={2} title="Value" dataKey="value" modifier={format('.4s')} />
     ];
 
     if (this.props.widget.showUnit)
-      columns.push(<TableColumn title="Unit" dataKey="unit" />)
+      columns.push(<TableColumn key={3} title="Unit" dataKey="unit" />)
 
     return (
       <div className="table-widget">
