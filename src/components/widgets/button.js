@@ -21,34 +21,44 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-
-import EditWidgetColorControl from '../dialogs/edit-widget-color-control';
+import { Button } from 'react-bootstrap';
 
 class WidgetButton extends Component {
 
-  action(e) {
-    e.target.blur(); // Remove focus
-    console.log('Button widget action');
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      pressed: false
+    }
+  }
+
+  onPress(e) {
+    if (!this.props.widget.toggle) {
+      this.setState({ pressed: true });
+      this.valueChanged(this.props.widget.on_value);
+    }
+  }
+
+  onRelease(e) {
+    let nextState = false;
+    if (this.props.widget.toggle) {
+      nextState = !this.state.pressed;
+    }
+
+    this.setState({ pressed: nextState });
+    this.valueChanged(nextState ? this.props.widget.on_value : this.props.widget.off_value);
+  }
+
+  valueChanged(newValue) {
+    if (this.props.onInputChanged)
+      this.props.onInputChanged(newValue);
   }
 
   render() {
-
-    let colors = EditWidgetColorControl.ColorPalette;
-
-    let colorStyle = {
-      background: colors[this.props.widget.background_color],
-      color: colors[this.props.widget.font_color],
-      borderColor: colors[this.props.widget.font_color]
-    }
-
     return (
       <div className="button-widget full">
-          { this.props.editing ? (
-                <button className="full btn btn-default" type="button" disabled onClick={ this.action } style={colorStyle}>{this.props.widget.name}</button>
-            ) : (
-                <button className="full btn btn-default" type="button" onClick={ this.action } style={colorStyle}>{this.props.widget.name}</button>
-            )
-          }
+          <Button active={ this.state.pressed } disabled={ this.props.editing } onMouseDown={ (e) => this.onPress(e) } onMouseUp={ (e) => this.onRelease(e) }>{this.props.widget.name}</Button>
       </div>
     );
   }

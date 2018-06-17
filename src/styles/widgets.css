@@ -265,18 +265,7 @@ span.signal-unit::after {
 }
 
 /* Button widget styling */
-.button-widget button {
-    border-radius: 25px;
-    border-style: double;
-    border-width: 4px;
-    overflow-x: hidden;
-    font-weight: 500;
-    font-size: 1.2em;
-}
 
-.button-widget button:hover {
-    border-style: double;
-}
 /* End button widget styling */
 
 .full {
