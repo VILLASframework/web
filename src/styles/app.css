@@ -218,8 +218,9 @@ body {
 /**
  * Visualizations
  */
-.fullscreen-padding {
+.fullscreen-container {
   padding: 10px;
+  background-color: white;
 }
 
 

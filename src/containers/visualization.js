@@ -431,7 +431,7 @@ class Visualization extends React.Component {
   render() {
     const current_widgets = this.state.visualization.widgets;
 
-    let boxClasses = classNames('section', 'box', { 'fullscreen-padding': this.props.isFullscreen });
+    let boxClasses = classNames('section', 'box', { 'fullscreen-container': this.props.isFullscreen });
 
     let buttons = []
     let editingControls = [];
