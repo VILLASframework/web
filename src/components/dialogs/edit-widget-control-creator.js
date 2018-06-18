@@ -42,6 +42,11 @@ export default function createControls(widgetType = null, widget = null, session
     var dialogControls = [];
 
     switch(widgetType) {
+        case 'Action':
+            dialogControls.push(
+              <EditWidgetSimulatorControl key={0} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
+            )
+            break;
         case 'Value':
             let valueBoundOnChange = (e) => {
                 handleChange([e, {target: {id: 'signal', value: 0}}]);

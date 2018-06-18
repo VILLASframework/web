@@ -39,6 +39,9 @@ class WidgetFactory {
 
         // set type specific properties
         switch(type) {
+            case 'Action':
+                widget.simulationModel = defaultSimulationModel;
+                break;
             case 'Lamp':
                 widget.simulationModel = defaultSimulationModel;
                 widget.signal = 0;

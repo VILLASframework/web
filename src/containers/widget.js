@@ -31,6 +31,7 @@ import SimulatorDataStore from '../stores/simulator-data-store';
 import SimulationModelStore from '../stores/simulation-model-store';
 import FileStore from '../stores/file-store';
 
+import WidgetAction from '../components/widgets/action';
 import WidgetLamp from '../components/widgets/lamp';
 import WidgetValue from '../components/widgets/value';
 import WidgetPlot from '../components/widgets/plot';
@@ -203,7 +204,9 @@ class Widget extends React.Component {
     }
 
     // dummy is passed to widgets to keep updating them while in edit mode
-    if (widget.type === 'Lamp') {
+    if (widget.type === 'Action') {
+      element = <WidgetAction widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
+    } else if (widget.type === 'Lamp') {
       element = <WidgetLamp widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
     } else if (widget.type === 'Value') {
       element = <WidgetValue widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
