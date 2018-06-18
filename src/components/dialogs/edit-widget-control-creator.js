@@ -140,11 +140,12 @@ export default function createControls(widgetType = null, widget = null, session
               handleChange([e, {target: {id: 'signal', value: 0}}]);
             }
             dialogControls.push(
-                <EditWidgetSimulatorControl key={0} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => buttonBoundOnChange(e)} />,
-                <EditWidgetSignalControl key={1} widget={widget} controlId={'signal'} input validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetCheckboxControl key={2} widget={widget} controlId={'toggle'} text="Toggle" handleChange={e => handleChange(e)} />,
-                <EditWidgetNumberControl key={3} widget={widget} controlId={'on_value'} label={'On Value'} defaultValue={1} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetNumberControl key={4} widget={widget} controlId={'off_value'} label={'Off Value'} defaultValue={0} handleChange={(e) => handleChange(e)} />
+                <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} validate={id => validateForm(id)} />,
+                <EditWidgetSimulatorControl key={1} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => buttonBoundOnChange(e)} />,
+                <EditWidgetSignalControl key={2} widget={widget} controlId={'signal'} input validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={3} widget={widget} controlId={'toggle'} text="Toggle" handleChange={e => handleChange(e)} />,
+                <EditWidgetNumberControl key={4} widget={widget} controlId={'on_value'} label={'On Value'} defaultValue={1} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetNumberControl key={5} widget={widget} controlId={'off_value'} label={'Off Value'} defaultValue={0} handleChange={(e) => handleChange(e)} />
             );
             break;
         case 'Box':
