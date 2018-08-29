@@ -20,7 +20,6 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Button } from 'react-bootstrap';
 import { DragSource } from 'react-dnd';
 import classNames from 'classnames';
 import Icon from './icon';
@@ -56,20 +55,20 @@ class ToolboxItem extends React.Component {
     if (this.props.disabled === false) {
       return this.props.connectDragSource(
         <div className={itemClass}>
-          <Button>
+          <span className="btn btn-default">
             {this.props.icon && <Icon style={{marginRight: '5px'}} icon={this.props.icon} /> }
             {this.props.name}
-          </Button>
+          </span>
         </div>
       , {dropEffect});
     }
     else {
       return (
         <div className={itemClass}>
-          <Button>
+          <span className="btn btn-default">
             {this.props.icon && <Icon style={{marginRight: '5px'}} icon={this.props.icon} /> }
             {this.props.name}
-          </Button>
+          </span>
         </div>
       );
     }
