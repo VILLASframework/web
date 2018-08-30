@@ -63,7 +63,7 @@ class NewSimulatorDialog extends React.Component {
   }
 
   resetState() {
-    this.setState({ name: '', endpoint: 'http://', uuid: '' });
+    this.setState({ name: '', endpoint: 'http://', uuid: this.uuidv4()});
   }
 
   validateForm(target) {
@@ -79,7 +79,7 @@ class NewSimulatorDialog extends React.Component {
       uuid = false;
     }
 
-    this.valid = name || uuid;
+    this.valid = name && uuid;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
@@ -110,7 +110,7 @@ class NewSimulatorDialog extends React.Component {
           </FormGroup>
           <FormGroup controlId="uuid" validationState={this.validateForm('uuid')}>
             <ControlLabel>UUID</ControlLabel>
-            <FormControl type="text" placeholder="Enter uuid" defaultValue={this.uuidv4()} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder="Enter uuid" value={this.state.uuid} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
         </form>
