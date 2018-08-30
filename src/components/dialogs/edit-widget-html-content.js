@@ -31,15 +31,20 @@ class EditWidgetHTMLContent extends React.Component {
     };
   }
 
+  handleKeyIgnore(event){
+  // This function prevents a keystroke from beeing handled by dialog.js
+  event.stopPropagation();
+  }
+
   componentWillReceiveProps(nextProps) {
-      // Update state's widget with props
+    // Update state's widget with props
     this.setState({ widget: nextProps.widget });
   }
 
   render() {
     return <FormGroup controlId={this.props.controlId}>
       <ControlLabel>HTML Content</ControlLabel>
-      <FormControl componentClass="textarea" style={{ height: 200 }} placeholder={this.props.placeholder} value={this.state.widget[this.props.controlId] || ''} onChange={e => this.props.handleChange(e)} />
+      <FormControl onKeyPress={this.handleKeyIgnore} componentClass="textarea" style={{ height: 200 }} placeholder={this.props.placeholder} value={this.state.widget[this.props.controlId] || ''} onChange={e => this.props.handleChange(e)} />
     </FormGroup>;
   }
 }

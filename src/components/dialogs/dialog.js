@@ -31,13 +31,21 @@ class Dialog extends React.Component {
     this.props.onClose(true);
   }
 
+  /**
+   * To prevent Enter hanlding user onKeyPress={this.handleKeyIgnore} in that form element
+   * and the following handler in the corresponding file:
+   *
+   * //this function prevents a keystroke from beeing handled by dialog.js
+   * handleKeyIgnore(event){
+   *   event.stopPropagation();
+   * }
+   */
   onKeyPress = (event) => {
-    /*if (event.key === 'Enter') {
+    if (event.key === 'Enter') {
       // prevent input from submitting
       event.preventDefault();
-
       this.closeModal(false);
-    }*/
+    }
   }
 
   render() {
