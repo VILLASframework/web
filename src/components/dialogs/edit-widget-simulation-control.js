@@ -1,5 +1,5 @@
 /**
- * File: edit-widget-simulator-control.js
+ * File: edit-widget-simulation-control.js
  * Author: Ricardo Hernandez-Montoya <rhernandez@gridhound.de>
  * Date: 03.04.2017
  *
@@ -22,7 +22,7 @@
 import React, { Component } from 'react';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
-class EditWidgetSimulatorControl extends Component {
+class EditWidgetSimulationControl extends Component {
   constructor(props) {
     super(props);
 
@@ -57,4 +57,4 @@ class EditWidgetSimulatorControl extends Component {
   }
 }
 
-export default EditWidgetSimulatorControl;
+export default EditWidgetSimulationControl;

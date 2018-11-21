@@ -6,7 +6,7 @@ import EditWidgetTextControl from '../../../components/dialogs/edit-widget-text-
 import EditWidgetColorControl from '../../../components/dialogs/edit-widget-color-control';
 import EditWidgetTimeControl from '../../../components/dialogs/edit-widget-time-control';
 import EditImageWidgetControl from '../../../components/dialogs/edit-widget-image-control';
-import EditWidgetSimulatorControl from '../../../components/dialogs/edit-widget-simulator-control';
+import EditWidgetSimulationControl from '../../../components/dialogs/edit-widget-simulation-control';
 import EditWidgetSignalControl from '../../../components/dialogs/edit-widget-signal-control';
 import EditWidgetSignalsControl from '../../../components/dialogs/edit-widget-signals-control';
 import EditWidgetOrientation from '../../../components/dialogs/edit-widget-orientation';
@@ -25,19 +25,19 @@ describe('edit widget control creator', () => {
     });
 
     var runs = [
-        { args: { widgetType: 'Lamp' }, result: { controlNumber: 5, controlTypes: [EditWidgetSimulatorControl, EditWidgetSignalControl, EditWidgetTextControl, EditWidgetColorControl, EditWidgetColorControl] } },
-        { args: { widgetType: 'Value' }, result: { controlNumber: 5, controlTypes: [EditWidgetTextControl, EditWidgetSimulatorControl, EditWidgetSignalControl, EditWidgetTextSizeControl, EditWidgetCheckboxControl] } },
-        { args: { widgetType: 'Plot' }, result: { controlNumber: 5, controlTypes: [EditWidgetTimeControl, EditWidgetSimulatorControl, EditWidgetSignalsControl, EditWidgetTextControl, EditWidgetMinMaxControl] } },
-        { args: { widgetType: 'Table' }, result: { controlNumber: 1, controlTypes: [EditWidgetSimulatorControl] } },
+        { args: { widgetType: 'Lamp' }, result: { controlNumber: 5, controlTypes: [EditWidgetSimulationControl, EditWidgetSignalControl, EditWidgetTextControl, EditWidgetColorControl, EditWidgetColorControl] } },
+        { args: { widgetType: 'Value' }, result: { controlNumber: 5, controlTypes: [EditWidgetTextControl, EditWidgetSimulationControl, EditWidgetSignalControl, EditWidgetTextSizeControl, EditWidgetCheckboxControl] } },
+        { args: { widgetType: 'Plot' }, result: { controlNumber: 5, controlTypes: [EditWidgetTimeControl, EditWidgetSimulationControl, EditWidgetSignalsControl, EditWidgetTextControl, EditWidgetMinMaxControl] } },
+        { args: { widgetType: 'Table' }, result: { controlNumber: 1, controlTypes: [EditWidgetSimulationControl] } },
         { args: { widgetType: 'Image' }, result: { controlNumber: 2, controlTypes: [EditImageWidgetControl, EditWidgetAspectControl] } },
-        { args: { widgetType: 'Gauge' }, result: { controlNumber: 6, controlTypes: [EditWidgetTextControl, EditWidgetSimulatorControl, EditWidgetSignalControl, EditWidgetCheckboxControl, EditWidgetColorZonesControl, EditWidgetMinMaxControl] } },
-        { args: { widgetType: 'PlotTable' }, result: { controlNumber: 5, controlTypes: [EditWidgetSimulatorControl, EditWidgetSignalsControl, EditWidgetTextControl, EditWidgetTimeControl, EditWidgetMinMaxControl] } },
-        { args: { widgetType: 'Slider' }, result: { controlNumber: 9, controlTypes: [EditWidgetTextControl, EditWidgetOrientation, EditWidgetSimulatorControl, EditWidgetSignalControl, EditWidgetCheckboxControl, EditWidgetCheckboxControl, EditWidgetMinMaxControl, EditWidgetNumberControl, EditWidgetNumberControl] } },
-        { args: { widgetType: 'Button' }, result: { controlNumber: 4, controlTypes: [EditWidgetColorControl, EditWidgetSimulatorControl, EditWidgetSignalControl] } },
+        { args: { widgetType: 'Gauge' }, result: { controlNumber: 6, controlTypes: [EditWidgetTextControl, EditWidgetSimulationControl, EditWidgetSignalControl, EditWidgetCheckboxControl, EditWidgetColorZonesControl, EditWidgetMinMaxControl] } },
+        { args: { widgetType: 'PlotTable' }, result: { controlNumber: 5, controlTypes: [EditWidgetSimulationControl, EditWidgetSignalsControl, EditWidgetTextControl, EditWidgetTimeControl, EditWidgetMinMaxControl] } },
+        { args: { widgetType: 'Slider' }, result: { controlNumber: 9, controlTypes: [EditWidgetTextControl, EditWidgetOrientation, EditWidgetSimulationControl, EditWidgetSignalControl, EditWidgetCheckboxControl, EditWidgetCheckboxControl, EditWidgetMinMaxControl, EditWidgetNumberControl, EditWidgetNumberControl] } },
+        { args: { widgetType: 'Button' }, result: { controlNumber: 4, controlTypes: [EditWidgetColorControl, EditWidgetSimulationControl, EditWidgetSignalControl] } },
         { args: { widgetType: 'Box' }, result: { controlNumber: 2, controlTypes: [EditWidgetColorControl, EditWidgetColorControl] } },
         { args: { widgetType: 'Label' }, result: { controlNumber: 3, controlTypes: [EditWidgetTextControl, EditWidgetTextSizeControl, EditWidgetColorControl] } },
         { args: { widgetType: 'HTML' }, result: { controlNumber: 1, controlTypes: [EditWidgetHTMLContent] } },
-        { args: { widgetType: 'Input'}, result: { controlNumber: 3, controlTypes: [EditWidgetTextControl, EditWidgetSimulatorControl, EditWidgetSignalControl] } }
+        { args: { widgetType: 'Input'}, result: { controlNumber: 3, controlTypes: [EditWidgetTextControl, EditWidgetSimulationControl, EditWidgetSignalControl] } }
     ];
 
     runs.forEach( (run) => {
