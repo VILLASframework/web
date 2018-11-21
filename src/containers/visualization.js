@@ -150,15 +150,11 @@ class Visualization extends React.Component {
     }
   }*/
 
-  getNewWidgetKey() {
-    // Increase the counter and update the state
-    return this.state.last_widget_key++;
-  }
-
   transformToWidgetsDict(widgets) {
     var widgetsDict = {};
     // Create a new key and make a copy of the widget object
-    widgets.forEach( (widget) => widgetsDict[this.getNewWidgetKey()] = Object.assign({}, widget) );
+    var key = 0;
+    widgets.forEach( (widget) => widgetsDict[key++] = Object.assign({}, widget) );
     return widgetsDict;
   }
 
@@ -216,9 +212,9 @@ class Visualization extends React.Component {
     widget = WidgetFactory.createWidgetOfType(item.name, position, defaultSimulationModel);
 
     var new_widgets = this.state.visualization.widgets;
+    var new_key = Object.keys(new_widgets).length;
 
-    var widget_key = this.getNewWidgetKey();
-    new_widgets[widget_key] = widget;
+    new_widgets[new_key] = widget;
 
     var visualization = Object.assign({}, this.state.visualization, {
       widgets: new_widgets
