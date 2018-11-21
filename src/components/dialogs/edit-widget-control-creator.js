@@ -36,12 +36,21 @@ import EditWidgetCheckboxControl from './edit-widget-checkbox-control';
 import EditWidgetColorZonesControl from './edit-widget-color-zones-control';
 import EditWidgetMinMaxControl from './edit-widget-min-max-control';
 import EditWidgetHTMLContent from './edit-widget-html-content';
+import EditWidgetParametersControl from './edit-widget-parameters-control';
 
 export default function createControls(widgetType = null, widget = null, sessionToken = null, files = null, validateForm, simulationModels, handleChange) {
     // Use a list to concatenate the controls according to the widget type
     var dialogControls = [];
 
     switch(widgetType) {
+        case 'CustomAction':
+            dialogControls.push(
+              <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} validate={id => validateForm(id)} handleChange={e => handleChange(e)} />,
+              <EditWidgetTextControl key={1} widget={widget} controlId={'icon'} label={'Icon'} placeholder={'Enter an awesome font icon name'} validate={id => validateForm(id)} handleChange={e => handleChange(e)} />,
+              <EditWidgetSimulationControl key={2} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
+              <EditWidgetParametersControl key={3} widget={widget} controlId={'action'} label={'Action'} handleChange={(e) => handleChange(e)} />
+            )
+            break;
         case 'Action':
             dialogControls.push(
               <EditWidgetSimulationControl key={0} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />

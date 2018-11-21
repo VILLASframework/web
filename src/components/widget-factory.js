@@ -20,6 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
+
 import WidgetSlider from './widgets/slider';
 
 class WidgetFactory {
@@ -39,6 +40,22 @@ class WidgetFactory {
 
         // set type specific properties
         switch(type) {
+            case 'CustomAction':
+                widget.action = {
+                  action: 'start',
+                  model: {
+                    url: 'ftp://user:pass@example.com/projectA/model.zip'
+                  },
+                  parameters: {
+                    timestep: 50e-6
+                  }
+                };
+                widget.name = 'Action';
+                widget.icon = 'star';
+                widget.width = 100;
+                widget.height = 50;
+                widget.simulationModel = defaultSimulationModel;
+                break;
             case 'Action':
                 widget.simulationModel = defaultSimulationModel;
                 break;

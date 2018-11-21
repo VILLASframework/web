@@ -480,6 +480,7 @@ class Visualization extends React.Component {
                 { editingControls }
               </ButtonToolbar>
               <ButtonToolbar className="toolbox box-header">
+                <ToolboxItem icon="star" name="CustomAction" type="widget" />
                 <ToolboxItem icon="play" name="Action" type="widget" disabled={true} />
                 <ToolboxItem icon="lightbulb" name="Lamp" type="widget" />
                 <ToolboxItem icon="font" name="Value" type="widget" />
