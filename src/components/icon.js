@@ -21,9 +21,13 @@
 
 import React from 'react';
 
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-import '@fortawesome/fontawesome-free-solid';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+//import '@fortawesome/free-regular-svg-icons';
+
+library.add(fas);
 
 class Icon extends React.Component {
 
