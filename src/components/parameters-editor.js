@@ -68,7 +68,7 @@ class ParametersEditor extends React.Component {
     }
 }
 
-ParametersEditor.PropTypes = {
+ParametersEditor.propTypes = {
     content: PropTypes.object,
     onChange: PropTypes.func,
     disabled: PropTypes.bool
