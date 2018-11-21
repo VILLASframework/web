@@ -81,8 +81,7 @@ class Visualization extends React.Component {
       modalIndex: prevState.modalIndex || null,
 
       maxWidgetHeight: prevState.maxWidgetHeight  || 0,
-      dropZoneHeight: prevState.dropZoneHeight  || 0,
-      last_widget_key: prevState.last_widget_key  || 0
+      dropZoneHeight: prevState.dropZoneHeight  || 0
     };
   }
 
@@ -169,7 +168,7 @@ class Visualization extends React.Component {
 
         // convert widgets list to a dictionary
         var visualization = Object.assign({}, tempVisualization, {
-            widgets: tempVisualization.widgets? this.transformToWidgetsDict(tempVisualization.widgets) : {}
+            widgets: tempVisualization.widgets ? this.transformToWidgetsDict(tempVisualization.widgets) : {}
         });
 
         this.computeHeightWithWidgets(visualization.widgets);
