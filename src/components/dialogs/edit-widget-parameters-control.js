@@ -37,11 +37,20 @@ class EditWidgetParametersControl extends Component {
     this.setState({ widget: nextProps.widget });
   }
 
+  handleChange(value) {
+    this.props.handleChange({
+      target: {
+        id: this.props.controlId,
+        value: value
+      }
+    });
+  }
+
   render() {
     return (
         <FormGroup controlId={this.props.controlId} validationState={this.props.validate ? this.props.validate(this.props.controlId) : null}>
           <ControlLabel>{this.props.label}</ControlLabel>
-          <ParametersEditor content={this.state.widget[this.props.controlId] || {}} onChange={e => this.props.handleChange(e)} />
+          <ParametersEditor content={this.state.widget[this.props.controlId] || {}} onChange={(v)=> this.handleChange(v)} />
         </FormGroup>
     );
   }
