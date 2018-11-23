@@ -41,15 +41,20 @@ class WidgetFactory {
         // set type specific properties
         switch(type) {
             case 'CustomAction':
-                widget.action = {
-                  action: 'start',
-                  model: {
-                    url: 'ftp://user:pass@example.com/projectA/model.zip'
+                widget.actions = [
+                  {
+                    action: 'stop'
                   },
-                  parameters: {
-                    timestep: 50e-6
+                  {
+                    action: 'pause',
+                    model: {
+                      url: 'ftp://user:pass@example.com/projectA/model.zip'
+                    },
+                    parameters: {
+                      timestep: 50e-6
+                    }
                   }
-                };
+                ];
                 widget.name = 'Action';
                 widget.icon = 'star';
                 widget.width = 100;

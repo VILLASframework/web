@@ -28,7 +28,7 @@ class SimulatorsDataManager extends RestDataManager {
         super('simulator', '/simulators');
     }
 
-    doAction(simulator, action, token = null) {
+    doActions(simulator, action, token = null) {
         // TODO: Make only simulator id dependent
         RestAPI.post(this.makeURL(this.url + '/' + simulator._id), action, token).then(response => {
             AppDispatcher.dispatch({
@@ -39,7 +39,7 @@ class SimulatorsDataManager extends RestDataManager {
             AppDispatcher.dispatch({
                 type: 'simulators/action-error',
                 error
-            }); 
+            });
         });
     }
 }

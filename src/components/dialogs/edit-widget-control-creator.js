@@ -48,7 +48,7 @@ export default function createControls(widgetType = null, widget = null, session
               <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} validate={id => validateForm(id)} handleChange={e => handleChange(e)} />,
               <EditWidgetTextControl key={1} widget={widget} controlId={'icon'} label={'Icon'} placeholder={'Enter an awesome font icon name'} validate={id => validateForm(id)} handleChange={e => handleChange(e)} />,
               <EditWidgetSimulationControl key={2} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
-              <EditWidgetParametersControl key={3} widget={widget} controlId={'action'} label={'Action'} handleChange={(e) => handleChange(e)} />
+              <EditWidgetParametersControl key={3} widget={widget} controlId={'actions'} label={'Actions'} handleChange={(e) => handleChange(e)} />
             )
             break;
         case 'Action':

@@ -54,7 +54,7 @@ class WidgetCustomAction extends Component {
     AppDispatcher.dispatch({
       type: 'simulators/start-action',
       simulator: this.state.simulator,
-      data: this.props.widget.action,
+      data: this.props.widget.actions,
       token: this.state.sessionToken
     });
   }

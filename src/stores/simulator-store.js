@@ -65,7 +65,10 @@ class SimulatorStore extends ArrayStore {
         return state;
 
       case 'simulators/start-action':
-        SimulatorsDataManager.doAction(action.simulator, action.data, action.token);
+        if (!Array.isArray(action.data))
+          action.data = [ action.data ]
+
+        SimulatorsDataManager.doActions(action.simulator, action.data, action.token);
         return state;
 
       case 'simulators/action-error':
