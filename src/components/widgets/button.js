@@ -58,7 +58,7 @@ class WidgetButton extends Component {
   render() {
     return (
       <div className="button-widget full">
-          <Button active={ this.state.pressed } disabled={ this.props.editing } onMouseDown={ (e) => this.onPress(e) } onMouseUp={ (e) => this.onRelease(e) }>{this.props.widget.name}</Button>
+          <Button className="full" active={ this.state.pressed } disabled={ this.props.editing } onMouseDown={ (e) => this.onPress(e) } onMouseUp={ (e) => this.onRelease(e) }>{this.props.widget.name}</Button>
       </div>
     );
   }

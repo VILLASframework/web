@@ -60,9 +60,11 @@ class WidgetCustomAction extends Component {
   }
 
   render() {
-    const btnStyle = { width: '100%', height: '100%' };
-
-    return <Button disabled={this.state.simulator === null} style={btnStyle} onClick={(e) => this.onClick()}><Icon icon={this.props.widget.icon} /> <span dangerouslySetInnerHTML={{ __html: this.props.widget.name }} /></Button>;
+    return <div className="widget-custom-action full">
+      <Button className="full" disabled={this.state.simulator === null} onClick={(e) => this.onClick()}>
+        <Icon icon={this.props.widget.icon} /> <span dangerouslySetInnerHTML={{ __html: this.props.widget.name }} />
+      </Button>
+    </div>;
   }
 }
 
