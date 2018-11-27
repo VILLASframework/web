@@ -89,7 +89,7 @@ class CustomTable extends Component {
         labelContent = child.props.labelModifier(labelContent, data);
       }
 
-      cell.push(<span>&nbsp;<Label bsStyle={child.props.labelStyle(data[labelKey], data)}>{labelContent.toString()}</Label></span>);
+      cell.push(<span>&nbsp;<Label bsClass={child.props.labelStyle(data[labelKey], data)}>{labelContent.toString()}</Label></span>);
     }
 
     if (child.props.dataIndex) {

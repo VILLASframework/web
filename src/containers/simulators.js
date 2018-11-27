@@ -91,6 +91,7 @@ class Simulators extends Component {
     });
   }
 
+
   closeNewModal(data) {
     this.setState({ newModal : false });
 
@@ -200,32 +201,39 @@ class Simulators extends Component {
     return Date.now() - new Date(simulator.stateUpdatedAt) > fiveMinutes;
   }
 
-  isSimulatorOnline(state) {
-    return state !== '' && state !== 'shutdown' && state !== 'unknown';
-  }
-
   stateLabelStyle = (state, simulator) => {
-    if (this.isSimulatorOutdated(simulator)) {
-      return 'default';
+    var style = [ 'label' ];
+
+    if (this.isSimulatorOutdated(simulator) && state !== 'shutdown') {
+      style.push('label-outdated');
     }
 
-    if (this.isSimulatorOnline(state)) {
-      return 'success';
+    switch (state) {
+      case 'running':
+        style.push('label-success');
+        break;
+
+      case 'paused':
+        style.push('label-info');
+        break;
+
+      case 'idle':
+        style.push('label-primary');
+        break;
+
+      case 'error':
+        style.push('label-danger');
+        break;
+
+      case 'shutdown':
+        style.push('label-warning');
+        break;
+
+      default:
+        style.push('label-default');
     }
 
-    return 'danger';
-  }
-
-  stateLabelModifier = (state, simulator) => {
-    if (this.isSimulatorOutdated(simulator)) {
-      return 'unknown';
-    }
-
-    if (this.isSimulatorOnline(state)) {
-      return 'online';
-    }
-
-    return 'offline';
+    return style.join(' ');
   }
 
   stateUpdateModifier = updatedAt => {
@@ -246,10 +254,11 @@ class Simulators extends Component {
         <Table data={this.state.simulators}>
           <TableColumn checkbox onChecked={(index, event) => this.onSimulatorChecked(index, event)} width='30' />
           <TableColumn title='Name' dataKeys={['properties.name', 'rawProperties.name']} />
-          <TableColumn title='State' dataKey='state' labelKey='state' labelModifier={this.stateLabelModifier} labelStyle={this.stateLabelStyle} />
+          <TableColumn title='State' labelKey='state' tooltipKey='error' labelModifier={this.stateLabelModifier} labelStyle={this.stateLabelStyle} />
+          <TableColumn title='Category' dataKeys={['properties.category', 'rawProperties.category']} />
           <TableColumn title='Type' dataKeys={['properties.type', 'rawProperties.type']} />
           <TableColumn title='Location' dataKeys={['properties.location', 'rawProperties.location']} />
-          <TableColumn title='Realm' dataKeys={['properties.realm', 'rawProperties.realm']} />
+          {/* <TableColumn title='Realm' dataKeys={['properties.realm', 'rawProperties.realm']} /> */}
           <TableColumn title='Host' dataKey='host' />
           <TableColumn title='Last Update' dataKey='stateUpdatedAt' modifier={this.stateUpdateModifier} />
           <TableColumn
