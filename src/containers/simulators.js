@@ -89,6 +89,20 @@ class Simulators extends Component {
       type: 'simulators/start-load',
       token: this.state.sessionToken
     });
+
+    // Start timer for periodic refresh
+    this.timer = window.setInterval(() => this.refresh(), 1000);
+  }
+
+  componentWillUnmount() {
+    window.clearInterval(this.timer);
+  }
+
+  refresh() {
+    AppDispatcher.dispatch({
+      type: 'simulators/start-load',
+      token: this.state.sessionToken
+    });
   }
 
 
