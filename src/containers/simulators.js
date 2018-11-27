@@ -44,9 +44,34 @@ class Simulators extends Component {
     return [ UserStore, SimulatorStore ];
   }
 
+  static statePrio(state) {
+    switch (state) {
+      case 'running':
+      case 'starting':
+        return 1;
+      case 'paused':
+      case 'pausing':
+      case 'resuming':
+        return 2;
+      case 'idle':
+        return 3;
+      case 'shutdown':
+        return 4;
+      case 'error':
+        return 10;
+      default:
+        return 99;
+    }
+  }
+
   static calculateState() {
     const simulators = SimulatorStore.getState().sort((a, b) => {
-      return a.stateUpdatedAt < b.stateUpdatedAt;
+      if (a.state !== b.state)
+        return this.statePrio(a.state) > this.statePrio(b.state);
+      else if (a.name !== b.name)
+        return a.name < b.name;
+      else
+        return a.stateUpdatedAt < b.stateUpdatedAt;
     });
 
     return {
