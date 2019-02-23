@@ -65,7 +65,7 @@ For other licensing options please consult [Prof. Antonello Monti](mailto:amonti
 
 [![EONERC ACS Logo](doc/pictures/eonerc_logo.png)](http://www.acs.eonerc.rwth-aachen.de)
 
- - Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
+ - Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
 
 [Institute for Automation of Complex Power Systems (ACS)](http://www.acs.eonerc.rwth-aachen.de)  
 [EON Energy Research Center (EONERC)](http://www.eonerc.rwth-aachen.de)  
