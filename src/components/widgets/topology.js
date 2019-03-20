@@ -23,7 +23,7 @@ import React from 'react';
 import {ReactSVGPanZoom} from 'react-svg-pan-zoom';
 import config from '../../config';
 import '../../styles/simple-spinner.css';
-
+import { cimsvg } from 'libcimsvg';
 
 // Do not show Pintura's grid
 const pinturaGridStyle = {
@@ -82,7 +82,7 @@ function detachComponentEvents() {
 class WidgetTopology extends React.Component {
   constructor(props) {
     super(props);
-    this.svgElem = null;
+    this.svgElem = React.createRef();
     this.Viewer = null;
 
     this.state = {
@@ -90,15 +90,8 @@ class WidgetTopology extends React.Component {
     };
   }
 
-  setSVG(svg) {
-    this.svgElem = svg;
-    window.cimsvg.setSVG(svg); // function not available in upstream source
-    window.cimview.setSVG(svg); // function not available in upstream source
-  }
-
   componentDidMount() {
     if (this.svgElem) {
-      window.cimjson.setImagePathBase(process.env.PUBLIC_URL + '/Pintura/');
       window.onMouseLeave = function() {};
       window.onMouseOver = function() {};
       window.onMouseLeave = function() {};
@@ -122,18 +115,25 @@ class WidgetTopology extends React.Component {
         .then( response => {
           if (response.status === 200) {
             this.setState({'visualizationState': 'ready' });
-            window.cimxml.clearXmlData()
-            window.cimsvg.setFileCount(1);
             return response.text().then( contents => {
-              window.cimsvg.loadFile(contents);
-              window.cimview.fit();
-              attachComponentEvents();
+              if (this.svgElem) {
+                let cimsvgInstance = new cimsvg(this.svgElem.current);
+                cimsvg.setCimsvg(cimsvgInstance);
+                cimsvgInstance.setFileCount(1);
+                cimsvgInstance.loadFile(contents);
+                //cimsvgInstance.fit();
+                attachComponentEvents();
+              }
+              else {
+                console.error("The svgElem variable is not initialized before the attempt to create the cimsvg instance.");
+              }
             });
           } else {
             throw new Error('Request failed');
           }
         })
         .catch(error => {
+          console.error(error);
           this.setState({
             'visualizationState': 'show_message',
             'message': 'Topology could not be loaded.'});
@@ -169,10 +169,10 @@ class WidgetTopology extends React.Component {
                   tool="pan"
                   width={this.props.widget.width-2} height={this.props.widget.height-2} >
                   <svg width={this.props.widget.width} height={this.props.widget.height}>
-                    <svg ref={ c => this.setSVG(c) } width={this.props.widget.width} height={this.props.widget.height}>
-                      <rect id="backing" style={pinturaBackingStyle} />
-                      <g id="grid" style={pinturaGridStyle} />
-                      <g id="diagrams"/>
+                    <svg ref={ this.svgElem } width={this.props.widget.width} height={this.props.widget.height}>
+                      <rect className="backing" style={pinturaBackingStyle} />
+                      <g className="grid" style={pinturaGridStyle} />
+                      <g className="diagrams"/>
                     </svg>
                   </svg>
           </ReactSVGPanZoom>
