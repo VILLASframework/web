@@ -22,7 +22,7 @@
     "handlebars": "^4.1.1",
     "immutable": "^3.8.1",
     "jszip": "^3.2.0",
-    "libcimsvg": "git+ssh://git@git.rwth-aachen.de:acs/public/villas/pintura-npm-package.git",
+    "libcimsvg": "git+https://git.rwth-aachen.de/acs/public/cim/pintura-npm-package.git",
     "lodash": "^4.17.11",
     "prop-types": "^15.6.2",
     "rc-slider": "^8.6.3",
