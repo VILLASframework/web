@@ -4,6 +4,8 @@ FROM node:8.2
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
+RUN apt install -y git
+
 # use changes to package.json to force Docker not to use the cache
 # when we change our application's nodejs dependencies:
 ADD package.json /usr/src/app
