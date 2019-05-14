@@ -1,6 +1,5 @@
 variables:
   GIT_SUBMODULE_STRATEGY: normal
-  CI: "true"
 
 cache:
   untracked: true
@@ -12,8 +11,17 @@ cache:
     - .yarn
 
 stages:
+  - prepare
   - build
   - test
+  
+prepare:
+  stage: prepare
+  script:
+    - docker build -t villas/web-dev .
+  tags:
+    - linux
+    - shell
 
 build_job:
   stage: build
@@ -22,7 +30,7 @@ build_job:
   script:
     - npm install
     - npm run build
-  image: node:7.9.0-slim
+  image: villas/web-dev
   artifacts:
     paths:
       - build/
@@ -34,7 +42,7 @@ test_job:
   stage: test
   script:
     - npm test
-  image: node:7.9.0-slim
+  image: villas/web-dev
   dependencies:
     - build_job
   tags:
