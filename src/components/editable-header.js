@@ -100,7 +100,7 @@ class EditableHeader extends React.Component {
     }
 }
 
-EditableHeader.PropTypes = {
+EditableHeader.propTypes = {
     title: PropTypes.string.isRequired,
     onChange: PropTypes.func
 };
