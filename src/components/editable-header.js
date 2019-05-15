@@ -85,8 +85,8 @@ class EditableHeader extends React.Component {
                     <FormControl type='text' bsSize='large' value={this.state.title} onChange={this.onChange} style={editStyle} autoFocus />
                 </form>
 
-                <a onClick={this.save}><Icon icon='check' style={iconStyle} /></a>
-                <a onClick={this.cancel}><Icon icon='times' style={iconStyle} /></a>
+                <a href={'#'} onClick={this.save}><Icon icon='check' style={iconStyle} /></a>
+                <a href={'#'} onClick={this.cancel}><Icon icon='times' style={iconStyle} /></a>
             </div>;
         }
 
@@ -95,12 +95,12 @@ class EditableHeader extends React.Component {
                 {this.state.title}
             </h1>
 
-            <a onClick={this.edit}><Icon icon='edit' style={iconStyle} /></a>
+            <a href={'#'} onClick={this.edit}><Icon icon='edit' style={iconStyle} /></a>
         </div>;
     }
 }
 
-EditableHeader.PropTypes = {
+EditableHeader.propTypes = {
     title: PropTypes.string.isRequired,
     onChange: PropTypes.func
 };
