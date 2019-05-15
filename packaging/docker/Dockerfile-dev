@@ -1,0 +1,4 @@
+FROM node:12.2
+
+RUN apt-git install -y \
+        git

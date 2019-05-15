@@ -1,9 +1,11 @@
 variables:
   GIT_SUBMODULE_STRATEGY: normal
+  DOCKER_TAG: ${CI_COMMIT_REF_NAME}
+  DOCKER_IMAGE_DEV: villas/web-dev:${DOCKER_TAG}
 
 cache:
   untracked: true
-  key: "$CI_PROJECT_ID"
+  key: ${CI_PROJECT_ID}
   paths:
     - node_modules/
     - _site/vendor/
@@ -18,7 +20,7 @@ stages:
 prepare:
   stage: prepare
   script:
-    - docker build -t villas/web-dev .
+    - docker build -t ${DOCKER_IMAGE_DEV} -f packaging/docker/Dockerfile.dev .
   tags:
     - linux
     - shell
@@ -30,7 +32,7 @@ build_job:
   script:
     - npm install
     - npm run build
-  image: villas/web-dev
+  image: ${DOCKER_IMAGE_DEV}
   artifacts:
     paths:
       - build/
@@ -42,7 +44,7 @@ test_job:
   stage: test
   script:
     - npm test
-  image: villas/web-dev
+  image: ${DOCKER_IMAGE_DEV}
   dependencies:
     - build_job
   tags:
