@@ -1,7 +1,7 @@
 variables:
   GIT_SUBMODULE_STRATEGY: normal
   DOCKER_TAG: ${CI_COMMIT_REF_NAME}
-  DOCKER_IMAGE_DEV: villas/web-dev:${DOCKER_TAG}
+  DOCKER_IMAGE_DEV: villas/web-dev:${CI_COMMIT_REF_NAME}
 
 cache:
   untracked: true
