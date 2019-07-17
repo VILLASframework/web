@@ -1,4 +1,4 @@
-FROM node:12.2 AS builder
+FROM node:8.2 AS builder
 
 RUN apt-get install -y \
         git
