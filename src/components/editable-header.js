@@ -21,7 +21,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormControl } from 'react-bootstrap';
+import { FormControl, Button } from 'react-bootstrap';
 import Icon from './icon';
 
 class EditableHeader extends React.Component {
@@ -85,8 +85,8 @@ class EditableHeader extends React.Component {
                     <FormControl type='text' bsSize='large' value={this.state.title} onChange={this.onChange} style={editStyle} autoFocus />
                 </form>
 
-                <a href={'#'} onClick={this.save}><Icon icon='check' style={iconStyle} /></a>
-                <a href={'#'} onClick={this.cancel}><Icon icon='times' style={iconStyle} /></a>
+                <Button onClick={this.save}><Icon icon='check' style={iconStyle} /></Button>
+                <Button onClick={this.cancel}><Icon icon='times' style={iconStyle} /></Button>
             </div>;
         }
 
@@ -95,7 +95,7 @@ class EditableHeader extends React.Component {
                 {this.state.title}
             </h1>
 
-            <a href={'#'} onClick={this.edit}><Icon icon='edit' style={iconStyle} /></a>
+            <Button onClick={this.edit}><Icon icon='edit' style={iconStyle} /></Button>
         </div>;
     }
 }
