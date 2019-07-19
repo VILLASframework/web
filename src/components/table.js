@@ -74,7 +74,7 @@ class CustomTable extends Component {
       if (linkKey && data[linkKey] != null) {
         cell.push(<Link to={child.props.link + data[linkKey]}>{content}</Link>);
       } else if (child.props.clickable) {
-        cell.push(<Button onClick={() => child.props.onClick(index)}>{content}</Button>);
+        cell.push(<Button bsStyle="link" onClick={() => child.props.onClick(index)}>{content}</Button>);
       } else {
         cell.push(content);
       }
