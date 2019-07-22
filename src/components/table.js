@@ -21,7 +21,7 @@
 
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { Table, Button, FormControl, Label, Checkbox } from 'react-bootstrap';
+import { Table, Button, FormControl, FormLabel, FormCheck } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Icon from './icon';
 
@@ -89,7 +89,7 @@ class CustomTable extends Component {
         labelContent = child.props.labelModifier(labelContent, data);
       }
 
-      cell.push(<span>&nbsp;<Label bsClass={child.props.labelStyle(data[labelKey], data)}>{labelContent.toString()}</Label></span>);
+      cell.push(<span>&nbsp;<FormLabel bsClass={child.props.labelStyle(data[labelKey], data)}>{labelContent.toString()}</FormLabel></span>);
     }
 
     if (child.props.dataIndex) {
@@ -108,7 +108,7 @@ class CustomTable extends Component {
     if (child.props.checkbox) {
       const checkboxKey = this.props.checkboxKey;
 
-      cell.push(<Checkbox className="table-control-checkbox" inline checked={checkboxKey ? data[checkboxKey] : null} onChange={e => child.props.onChecked(index, e)} />);
+      cell.push(<FormCheck className="table-control-checkbox" inline checked={checkboxKey ? data[checkboxKey] : null} onChange={e => child.props.onChecked(index, e)} />);
     }
 
     if (child.props.exportButton) {

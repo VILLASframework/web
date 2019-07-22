@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel, FormText } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
@@ -84,23 +84,23 @@ class NewUserDialog extends React.Component {
       <Dialog show={this.props.show} title="New user" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
           <FormGroup controlId="username" validationState={this.validateForm('username')}>
-            <ControlLabel>Username</ControlLabel>
+            <FormLabel>Username</FormLabel>
             <FormControl type="text" placeholder="Enter username" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
-            <HelpBlock>Min 3 characters.</HelpBlock>
+            <FormText>Min 3 characters.</FormText>
           </FormGroup>
           <FormGroup controlId="mail">
-            <ControlLabel>E-mail</ControlLabel>
+            <FormLabel>E-mail</FormLabel>
             <FormControl type="text" placeholder="Enter e-mail" value={this.state.mail} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="password" validationState={this.validateForm('password')}>
-            <ControlLabel>Password</ControlLabel>
+            <FormLabel>Password</FormLabel>
             <FormControl type="text" placeholder="Enter password" value={this.state.password} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="role" validationState={this.validateForm('role')}>
-            <ControlLabel>Role</ControlLabel>
+            <FormLabel>Role</FormLabel>
             <FormControl componentClass="select" placeholder="Select role" value={this.state.role} onChange={(e) => this.handleChange(e)}>
               <option key='1' value='admin'>Administrator</option>
               <option key='2' value='user'>User</option>

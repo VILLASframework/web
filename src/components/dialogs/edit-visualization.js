@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
@@ -78,7 +78,7 @@ class EditVisualizationDialog extends React.Component {
       <Dialog show={this.props.show} title="Edit Visualization" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
-            <ControlLabel>Name</ControlLabel>
+            <FormLabel>Name</FormLabel>
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>

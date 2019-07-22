@@ -21,7 +21,7 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-import { Form, FormGroup, Col, ControlLabel, FormControl, InputGroup } from 'react-bootstrap';
+import { Form, FormGroup, Col, FormLabel, FormControl, InputGroup } from 'react-bootstrap';
 
 class WidgetInput extends Component {
 
@@ -75,7 +75,7 @@ class WidgetInput extends Component {
       <div className="number-input-widget full">
           <Form componentClass="fieldset" horizontal>
               <FormGroup>
-                  <Col componentClass={ControlLabel} xs={3}>
+                  <Col componentClass={FormLabel} xs={3}>
                     {this.props.widget.name}
                   </Col>
                   <Col xs={9}>

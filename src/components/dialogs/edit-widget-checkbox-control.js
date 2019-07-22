@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, Checkbox } from 'react-bootstrap';
+import { FormGroup, FormCheck } from 'react-bootstrap';
 
 class EditWidgetCheckboxControl extends React.Component {
   constructor(props) {
@@ -37,7 +37,7 @@ class EditWidgetCheckboxControl extends React.Component {
 
   render() {
     return <FormGroup>
-      <Checkbox id={this.props.controlId} checked={this.state.widget[this.props.controlId] || ''} onChange={e => this.props.handleChange(e)}>{this.props.text}</Checkbox>
+      <FormCheck id={this.props.controlId} checked={this.state.widget[this.props.controlId] || ''} onChange={e => this.props.handleChange(e)}>{this.props.text}</FormCheck>
     </FormGroup>;
   }
 }

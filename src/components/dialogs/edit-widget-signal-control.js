@@ -20,7 +20,7 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
 class EditWidgetSignalControl extends Component {
   constructor(props) {
@@ -53,7 +53,7 @@ class EditWidgetSignalControl extends Component {
 
     return (
         <FormGroup controlId="signal">
-          <ControlLabel>Signal</ControlLabel>
+          <FormLabel>Signal</FormLabel>
           <FormControl componentClass="select" placeholder="Select signal" value={this.state.widget.signal} onChange={(e) => this.props.handleChange(e)}>
             {
               signalsToRender.length === 0 ? (

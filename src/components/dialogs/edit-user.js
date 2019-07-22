@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
@@ -82,16 +82,16 @@ class EditUserDialog extends React.Component {
       <Dialog show={this.props.show} title="Edit user" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
           <FormGroup controlId="username" validationState={this.validateForm('username')}>
-            <ControlLabel>Username</ControlLabel>
+            <FormLabel>Username</FormLabel>
             <FormControl type="text" placeholder="Enter username" value={this.state.username} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="mail">
-            <ControlLabel>E-mail</ControlLabel>
+            <FormLabel>E-mail</FormLabel>
             <FormControl type="text" placeholder="Enter e-mail" value={this.state.mail} onChange={(e) => this.handleChange(e)} />
           </FormGroup>
           <FormGroup controlId="role" validationState={this.validateForm('role')}>
-            <ControlLabel>Role</ControlLabel>
+            <FormLabel>Role</FormLabel>
             <FormControl componentClass="select" placeholder="Select role" value={this.state.role} onChange={(e) => this.handleChange(e)}>
               <option key='1' value='admin'>Administrator</option>
               <option key='2' value='user'>User</option>

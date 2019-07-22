@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { DragDropContext } from 'react-dnd';
+import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import NotificationSystem from 'react-notification-system';
 import { Redirect, Route } from 'react-router-dom';
@@ -51,6 +51,7 @@ import Users from './users';
 import '../styles/app.css';
 
 class App extends React.Component {
+
   static getStores() {
     return [ SimulatorStore, UserStore, SimulationStore ];
   }
@@ -112,40 +113,44 @@ class App extends React.Component {
     }
 
     return (
-      <div>
-        <Col style={{ width: this.state.showSidebarMenu ? '280px' : '0px' }} smHidden mdHidden lgHidden className="sidenav">
-          <HeaderMenu onClose={this.hideSidebarMenu} currentRole={this.state.currentRole} />
-        </Col>
+      <DndProvider backend={HTML5Backend} >
+        <div>
+          <Col style={{ width: this.state.showSidebarMenu ? '280px' : '0px' }} smHidden mdHidden lgHidden className="sidenav">
+            <HeaderMenu onClose={this.hideSidebarMenu} currentRole={this.state.currentRole} />
+          </Col>
 
-        <div className="app">
-          <NotificationSystem ref="notificationSystem" />
+          <div className="app">
+            <NotificationSystem ref="notificationSystem" />
 
-          <Header onMenuButton={this.showSidebarMenu} showMenuButton={this.state.token != null} />
+            <Header onMenuButton={this.showSidebarMenu} showMenuButton={this.state.token != null} />
 
-          <div className={`app-body app-body-spacing`} >
-            <Col xsHidden>
-              <SidebarMenu currentRole={this.state.currentRole} />
-            </Col>
+            <div className={`app-body app-body-spacing`} >
+              <Col xsHidden>
+                <SidebarMenu currentRole={this.state.currentRole} />
+              </Col>
 
-            <div className={`app-content app-content-margin-left`}>
-              <Route exact path="/" component={Home} />
-              <Route path="/home" component={Home} />
-              <Route exact path="/projects" component={Projects} />
-              <Route path="/projects/:project" component={Project} />
-              <Route path="/visualizations/:visualization" component={Visualization} />
-              <Route exact path="/simulations" component={Simulations} />
-              <Route path="/simulations/:simulation" component={Simulation} />
-              <Route path="/simulationModel/:simulationModel" component={SimulationModel} />
-              <Route path="/simulators" component={Simulators} />
-              <Route path="/users" component={Users} />
+              <div className={`app-content app-content-margin-left`}>
+                <Route exact path="/" component={Home} />
+                <Route path="/home" component={Home} />
+                <Route exact path="/projects" component={Projects} />
+                <Route path="/projects/:project" component={Project} />
+                <Route path="/visualizations/:visualization" component={Visualization} />
+                <Route exact path="/simulations" component={Simulations} />
+                <Route path="/simulations/:simulation" component={Simulation} />
+                <Route path="/simulationModel/:simulationModel" component={SimulationModel} />
+                <Route path="/simulators" component={Simulators} />
+                <Route path="/users" component={Users} />
+              </div>
             </div>
-          </div>
 
-          <Footer />
+            <Footer />
+          </div>
         </div>
-      </div>
-    );
+      </DndProvider>
+    )
   }
 }
 
-export default DragDropContext(HTML5Backend)(Container.create(App));
+let fluxContainerConverter = require('./FluxContainerConverter');
+export default Container.create(fluxContainerConverter.convert(App));
+//DragDropContext(HTML5Backend)(Container.create(App));

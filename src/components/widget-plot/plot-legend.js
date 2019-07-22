@@ -21,7 +21,8 @@
  ******************************************************************************/
 
 import React from 'react';
-import { scaleOrdinal, schemeCategory10 } from 'd3-scale';
+import { scaleOrdinal} from 'd3-scale';
+import {schemeCategory10} from 'd3-scale-chromatic'
 
 class PlotLegend extends React.Component {
   render() {

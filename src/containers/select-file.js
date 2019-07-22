@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { FormGroup, FormControl, ControlLabel, Button, ProgressBar, Col } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel, Button, ProgressBar, Col } from 'react-bootstrap';
 
 import FileStore from '../stores/file-store';
 import UserStore from '../stores/user-store';
@@ -118,7 +118,7 @@ class SelectFile extends React.Component {
 
         return <div>
             <FormGroup>
-                <Col componentClass={ControlLabel} sm={3} md={2}>
+                <Col componentClass={FormLabel} sm={3} md={2}>
                     {this.props.name}
                 </Col>
                 
@@ -148,4 +148,5 @@ class SelectFile extends React.Component {
     }
 }
 
-export default Container.create(SelectFile);
+let fluxContainerConverter = require('./FluxContainerConverter');
+export default Container.create(fluxContainerConverter.convert(SelectFile));

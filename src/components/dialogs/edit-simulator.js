@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 import _ from 'lodash';
 
 import Dialog from './dialog';
@@ -74,17 +74,17 @@ class EditSimulatorDialog extends React.Component {
       <Dialog show={this.props.show} title="Edit Simulator" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
           <FormGroup controlId="name">
-            <ControlLabel>Name</ControlLabel>
+            <FormLabel>Name</FormLabel>
             <FormControl type="text" placeholder={_.get(this.props.simulator, 'rawProperties.name')} value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="endpoint">
-            <ControlLabel>Endpoint</ControlLabel>
+            <FormLabel>Endpoint</FormLabel>
             <FormControl type="text" placeholder={_.get(this.props.simulator, 'rawProperties.endpoint')} value={this.state.endpoint || 'http://' } onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId='properties'>
-            <ControlLabel>Properties</ControlLabel>
+            <FormLabel>Properties</FormLabel>
             <ParametersEditor content={_.merge({}, this.props.simulator.rawProperties, this.props.simulator.properties)} disabled={true} />
           </FormGroup>
         </form>

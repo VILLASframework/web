@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 import _ from 'lodash';
 
 import Dialog from './dialog';
@@ -91,12 +91,12 @@ class ImportSimulationModelDialog extends React.Component {
       <Dialog show={this.props.show} title="Import Simulation Model" buttonTitle="Import" onClose={this.onClose} onReset={this.resetState} valid={this.imported}>
         <form>
           <FormGroup controlId='file'>
-            <ControlLabel>Simulation Model File</ControlLabel>
+            <FormLabel>Simulation Model File</FormLabel>
             <FormControl type='file' onChange={this.loadFile} />
           </FormGroup>
 
           <FormGroup controlId='simulator'>
-            <ControlLabel>Simulator</ControlLabel>
+            <FormLabel>Simulator</FormLabel>
             <FormControl disabled={this.imported === false} componentClass='select' placeholder='Select simulator' value={this.state.model.simulator} onChange={this.handleSimulatorChange}>
               {this.props.simulators.map(simulator => (
                 <option key={simulator._id} value={simulator._id}>{_.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name')}</option>

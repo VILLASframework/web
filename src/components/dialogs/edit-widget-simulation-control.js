@@ -20,7 +20,7 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
 class EditWidgetSimulationControl extends Component {
   constructor(props) {
@@ -41,7 +41,7 @@ class EditWidgetSimulationControl extends Component {
   render() {
     return (
         <FormGroup controlId="simulationModel">
-            <ControlLabel>Simulation Model</ControlLabel>
+            <FormLabel>Simulation Model</FormLabel>
             <FormControl componentClass="select" placeholder="Select simulation model" value={this.state.widget.simulationModel || '' } onChange={(e) => this.props.handleChange(e)}>
             {
               this.props.simulationModels.length === 0 ? (

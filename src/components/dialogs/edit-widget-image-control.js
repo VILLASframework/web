@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel, Button, ProgressBar } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel, Button, ProgressBar } from 'react-bootstrap';
 
 import AppDispatcher from '../../app-dispatcher';
 
@@ -72,7 +72,7 @@ class EditImageWidgetControl extends React.Component {
   render() {
     return <div>
       <FormGroup controlId="file">
-        <ControlLabel>Image</ControlLabel>
+        <FormLabel>Image</FormLabel>
         <FormControl componentClass="select" value={this.state.widget.file} onChange={(e) => this.props.handleChange(e)}>
           {this.props.files.length === 0 ? (
             <option disabled value style={{ display: 'none' }}>No images found, please upload one first.</option>
@@ -88,7 +88,7 @@ class EditImageWidgetControl extends React.Component {
       </FormGroup>
 
       <FormGroup controlId="upload">
-        <ControlLabel>Upload</ControlLabel>
+        <FormLabel>Upload</FormLabel>
         <FormControl type="file" onChange={(e) => this.setState({ fileList: e.target.files }) } />
       </FormGroup>
 

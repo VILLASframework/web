@@ -20,7 +20,7 @@
  **********************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
 class EditWidgetHTMLContent extends React.Component {
   constructor(props) {
@@ -43,7 +43,7 @@ class EditWidgetHTMLContent extends React.Component {
 
   render() {
     return <FormGroup controlId={this.props.controlId}>
-      <ControlLabel>HTML Content</ControlLabel>
+      <FormLabel>HTML Content</FormLabel>
       <FormControl onKeyPress={this.handleKeyIgnore} componentClass="textarea" style={{ height: 200 }} placeholder={this.props.placeholder} value={this.state.widget[this.props.controlId] || ''} onChange={e => this.props.handleChange(e)} />
     </FormGroup>;
   }

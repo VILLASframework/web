@@ -20,7 +20,7 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, Checkbox, ControlLabel, FormControl } from 'react-bootstrap';
+import { FormGroup, FormCheck, FormLabel, FormControl } from 'react-bootstrap';
 
 class EditWidgetSignalsControl extends Component {
   constructor(props) {
@@ -65,13 +65,13 @@ class EditWidgetSignalsControl extends Component {
 
     return (
         <FormGroup>
-          <ControlLabel>Signals</ControlLabel>
+          <FormLabel>Signals</FormLabel>
           {
             signalsToRender.length === 0 || !this.state.widget.hasOwnProperty(this.props.controlId)? (
               <FormControl.Static>No signals available.</FormControl.Static>
             ) : (
               signalsToRender.map((signal, index) => (
-                <Checkbox key={index} checked={this.state.widget[this.props.controlId].indexOf(index) !== -1} onChange={(e) => this.handleSignalChange(e.target.checked, index)}>{signal.name}</Checkbox>
+                <FormCheck key={index} checked={this.state.widget[this.props.controlId].indexOf(index) !== -1} onChange={(e) => this.handleSignalChange(e.target.checked, index)}>{signal.name}</FormCheck>
                 ))
             )
           }

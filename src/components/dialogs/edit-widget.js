@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-//import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+//import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
 import Dialog from './dialog';
 

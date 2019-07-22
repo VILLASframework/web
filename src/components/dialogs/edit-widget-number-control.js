@@ -20,7 +20,7 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
 class EditWidgetNumberControl extends Component {
   constructor(props) {
@@ -39,7 +39,7 @@ class EditWidgetNumberControl extends Component {
   render() {
     return (
         <FormGroup controlId={this.props.controlId}>
-          <ControlLabel>{this.props.label}</ControlLabel>
+          <FormLabel>{this.props.label}</FormLabel>
           <FormControl type="number" step="any" defaultValue={this.props.defaultValue} value={this.state.widget[this.props.controlId] || 0} onChange={e => this.props.handleChange(e)} />
         </FormGroup>
     );

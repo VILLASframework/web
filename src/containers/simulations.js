@@ -325,4 +325,5 @@ class Simulations extends Component {
   }
 }
 
-export default Container.create(Simulations);
+let fluxContainerConverter = require('./FluxContainerConverter');
+export default Container.create(fluxContainerConverter.convert(Simulations));

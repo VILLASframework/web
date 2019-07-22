@@ -21,7 +21,7 @@
 
 import React, { Component } from 'react';
 import classNames from 'classnames';
-import { FormGroup, Checkbox } from 'react-bootstrap';
+import { FormGroup, FormCheck } from 'react-bootstrap';
 
 import Plot from '../widget-plot/plot';
 import PlotLegend from '../widget-plot/plot-legend';
@@ -118,7 +118,7 @@ class WidgetPlotTable extends Component {
           'btn-default': true,
           'active': checked
         });
-        return <Checkbox key={signal.index} className={chkBxClasses} checked={checked} disabled={ this.props.editing } onChange={(e) => this.updateSignalSelection(signal.index, e.target.checked) } > { signal.name } </Checkbox>
+        return <FormCheck key={signal.index} className={chkBxClasses} checked={checked} disabled={ this.props.editing } onChange={(e) => this.updateSignalSelection(signal.index, e.target.checked) } > { signal.name } </FormCheck>
       });
     }
 

@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button, Col, Form, ControlLabel } from 'react-bootstrap';
+import { Button, Col, Form, FormLabel } from 'react-bootstrap';
 
 import SimulationModelStore from '../stores/simulation-model-store';
 import UserStore from '../stores/user-store';
@@ -140,7 +140,7 @@ class SimulationModel extends React.Component {
                     <SelectFile disabled type='configuration' name='Configuration' onChange={this.handleConfigurationChange} value={this.state.simulationModel.configuration} />
 
                     <div>
-                        <Col componentClass={ControlLabel} sm={3} md={2}>
+                        <Col componentClass={FormLabel} sm={3} md={2}>
                             Start Parameters                            
                         </Col>
                         
@@ -168,4 +168,5 @@ class SimulationModel extends React.Component {
     }
 }
 
-export default Container.create(SimulationModel, { withProps: true });
+let fluxContainerConverter = require('./FluxContainerConverter');
+export default Container.create(fluxContainerConverter.convert(SimulationModel), { withProps: true });

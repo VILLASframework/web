@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel, Checkbox, Table } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel, FormCheck, Table } from 'react-bootstrap';
 
 class EditWidgetMinMaxControl extends React.Component {
   constructor(props) {
@@ -42,8 +42,8 @@ class EditWidgetMinMaxControl extends React.Component {
 
   render() {
     return <FormGroup>
-      <ControlLabel>{this.props.label}</ControlLabel>
-      <Checkbox id={this.props.controlId + "UseMinMax"} checked={this.state.widget[this.props.controlId + "UseMinMax"] || ''} onChange={e => this.props.handleChange(e)}>Enable min-max</Checkbox>
+      <FormLabel>{this.props.label}</FormLabel>
+      <FormCheck id={this.props.controlId + "UseMinMax"} checked={this.state.widget[this.props.controlId + "UseMinMax"] || ''} onChange={e => this.props.handleChange(e)}>Enable min-max</FormCheck>
 
       <Table>
         <tbody>

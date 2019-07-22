@@ -21,16 +21,18 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, Col, Row, Radio, ControlLabel } from 'react-bootstrap';
+import { FormGroup, Col, Row, FormCheck, FormLabel } from 'react-bootstrap';
 import classNames from 'classnames';
-import { scaleOrdinal, schemeCategory20 } from 'd3-scale';
+import { scaleOrdinal } from 'd3-scale';
+import {schemeCategory10} from 'd3-scale-chromatic'
+// schemeCategory20 no longer available in d3
 
 class EditWidgetColorControl extends Component {
 
   static get ColorPalette() {
     let colorCount = 0;
     const colors = [];
-    const colorScale = scaleOrdinal(schemeCategory20);
+    const colorScale = scaleOrdinal(schemeCategory10);
     while (colorCount < 20) { colors.push(colorScale(colorCount)); colorCount++; }
     colors.unshift('#000', '#FFF'); // include black and white
 
@@ -55,7 +57,7 @@ class EditWidgetColorControl extends Component {
     return (
       <FormGroup bsClass="color-control">
         <Row>
-          <Col componentClass={ControlLabel} style={{whiteSpace: 'nowrap' }} sm={2}>
+          <Col componentClass={FormLabel} style={{whiteSpace: 'nowrap' }} sm={2}>
             { this.props.label }
           </Col>
           <Col sm={10} bsClass='colors-column'>
@@ -70,7 +72,7 @@ class EditWidgetColorControl extends Component {
                   'checked': idx === this.state.widget[this.props.controlId]
                 });
 
-                return (<Radio key={idx} name={this.props.controlId} style={colorStyle} className={checkedClass} value={idx} inline onChange={(e) => this.props.handleChange({target: { id: this.props.controlId, value: idx}})} />)
+                return (<FormCheck type='radio' key={idx} name={this.props.controlId} style={colorStyle} className={checkedClass} value={idx} inline onChange={(e) => this.props.handleChange({target: { id: this.props.controlId, value: idx}})} />)
               }
             )
           }

@@ -21,7 +21,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { PageHeader } from 'react-bootstrap';
+import { NavbarBrand } from 'react-bootstrap';
 import NotificationSystem from 'react-notification-system';
 import { Redirect } from 'react-router-dom';
 
@@ -82,7 +82,7 @@ class Login extends Component {
         <Header />
 
         <div className="login-container">
-          <PageHeader>Login</PageHeader>
+          <NavbarBrand>Login</NavbarBrand>
 
           <LoginForm loginMessage={this.state.loginMessage} />
         </div>
@@ -93,4 +93,5 @@ class Login extends Component {
   }
 }
 
-export default Container.create(Login);
+let fluxContainerConverter = require('./FluxContainerConverter');
+export default Container.create(fluxContainerConverter.convert(Login));

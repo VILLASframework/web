@@ -22,7 +22,7 @@
 import React from 'react';
 import { Container } from 'flux/utils';
 import { ContextMenuProvider } from 'react-contexify';
-import Rnd from 'react-rnd';
+import { Rnd } from 'react-rnd';
 import classNames from 'classnames';
 
 import AppDispatcher from '../app-dispatcher';
@@ -294,4 +294,5 @@ class Widget extends React.Component {
   }
 }
 
-export default Container.create(Widget, { withProps: true });
+let fluxContainerConverter = require('./FluxContainerConverter');
+export default Container.create(fluxContainerConverter.convert(Widget), { withProps: true });

@@ -20,7 +20,7 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormLabel } from 'react-bootstrap';
 import ParametersEditor from '../parameters-editor';
 
 class EditWidgetParametersControl extends Component {
@@ -49,7 +49,7 @@ class EditWidgetParametersControl extends Component {
   render() {
     return (
         <FormGroup controlId={this.props.controlId} validationState={this.props.validate ? this.props.validate(this.props.controlId) : null}>
-          <ControlLabel>{this.props.label}</ControlLabel>
+          <FormLabel>{this.props.label}</FormLabel>
           <ParametersEditor content={this.state.widget[this.props.controlId] || {}} onChange={(v)=> this.handleChange(v)} />
         </FormGroup>
     );

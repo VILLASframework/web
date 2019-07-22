@@ -21,7 +21,8 @@
  ******************************************************************************/
 
 import React from 'react';
-import { scaleLinear, scaleTime, scaleOrdinal, schemeCategory10 } from 'd3-scale';
+import { scaleLinear, scaleTime, scaleOrdinal} from 'd3-scale';
+import {schemeCategory10} from 'd3-scale-chromatic'
 import { extent } from 'd3-array';
 import { line } from 'd3-shape';
 import { axisBottom, axisLeft } from  'd3-axis';

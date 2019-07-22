@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { FormGroup, FormControl, ControlLabel, Col } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel, Col } from 'react-bootstrap';
 import _ from 'lodash';
 
 import SimulatorStore from '../stores/simulator-store';
@@ -72,7 +72,7 @@ class SelectSimulator extends React.Component {
         );
 
         return <FormGroup>
-            <Col componentClass={ControlLabel} sm={3} md={2}>
+            <Col componentClass={FormLabel} sm={3} md={2}>
                 Simulator
             </Col>
 
@@ -85,4 +85,5 @@ class SelectSimulator extends React.Component {
     }
 }
 
-export default Container.create(SelectSimulator);
+let fluxContainerConverter = require('./FluxContainerConverter');
+export default Container.create(fluxContainerConverter.convert(SelectSimulator));

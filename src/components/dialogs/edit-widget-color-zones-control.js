@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, ControlLabel, Button } from 'react-bootstrap';
+import { FormGroup, FormLabel, Button } from 'react-bootstrap';
 
 
 import Icon from '../icon';
@@ -115,7 +115,7 @@ class EditWidgetColorZonesControl extends React.Component {
 
   render() {
     return <FormGroup>
-      <ControlLabel>Color zones</ControlLabel>
+      <FormLabel>Color zones</FormLabel>
 
       <Table data={this.state.widget.zones}>
         <TableColumn width="20" checkbox onChecked={this.checkedCell} />

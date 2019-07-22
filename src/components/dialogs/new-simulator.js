@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
@@ -99,17 +99,17 @@ class NewSimulatorDialog extends React.Component {
       <Dialog show={this.props.show} title="New Simulator" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
-            <ControlLabel>Name</ControlLabel>
+            <FormLabel>Name</FormLabel>
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="endpoint">
-            <ControlLabel>Endpoint</ControlLabel>
+            <FormLabel>Endpoint</FormLabel>
             <FormControl type="text" placeholder="Enter endpoint" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="uuid" validationState={this.validateForm('uuid')}>
-            <ControlLabel>UUID</ControlLabel>
+            <FormLabel>UUID</FormLabel>
             <FormControl type="text" placeholder="Enter uuid" value={this.state.uuid} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>

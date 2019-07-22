@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, Checkbox } from 'react-bootstrap';
+import { FormGroup, FormCheck } from 'react-bootstrap';
 
 class EditWidgetAspectControl extends React.Component {
   constructor(props) {
@@ -40,7 +40,7 @@ class EditWidgetAspectControl extends React.Component {
   render() {
     return (
       <FormGroup>
-        <Checkbox id="lockAspect" checked={this.state.widget.lockAspect} onChange={e => this.props.handleChange(e)}>Lock Aspect</Checkbox>
+        <FormCheck id="lockAspect" checked={this.state.widget.lockAspect} onChange={e => this.props.handleChange(e)}>Lock Aspect</FormCheck>
       </FormGroup>
     );
   }

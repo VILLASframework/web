@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-import { Form, Button, FormGroup, FormControl, ControlLabel, Col } from 'react-bootstrap';
+import { Form, Button, FormGroup, FormControl, FormLabel, Col } from 'react-bootstrap';
 
 import AppDispatcher from '../app-dispatcher';
 
@@ -63,7 +63,7 @@ class LoginForm extends Component {
     return (
       <Form horizontal>
         <FormGroup controlId="username">
-          <Col componentClass={ControlLabel} sm={2}>
+          <Col componentClass={FormLabel} sm={2}>
             Username
           </Col>
           <Col sm={10}>
@@ -72,7 +72,7 @@ class LoginForm extends Component {
         </FormGroup>
 
         <FormGroup controlId="password">
-          <Col componentClass={ControlLabel} sm={2}>
+          <Col componentClass={FormLabel} sm={2}>
             Password
           </Col>
           <Col sm={10}>

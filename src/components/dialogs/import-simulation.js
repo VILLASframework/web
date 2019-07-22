@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
 import Dialog from './dialog';
 import ParametersEditor from '../parameters-editor';
@@ -119,25 +119,25 @@ class ImportSimulationDialog extends React.Component {
         return <Dialog show={this.props.show} title="Import Simulation" buttonTitle="Import" onClose={this.onClose} onReset={this.resetState} valid={this.valid}>
             <form>
                 <FormGroup controlId="file">
-                    <ControlLabel>Simulation File</ControlLabel>
+                    <FormLabel>Simulation File</FormLabel>
                     <FormControl type="file" onChange={this.loadFile} />
                 </FormGroup>
 
                 <FormGroup controlId="name" validationState={this.validateForm('name')}>
-                    <ControlLabel>Name</ControlLabel>
+                    <FormLabel>Name</FormLabel>
                     <FormControl readOnly={this.imported === false} type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
                     <FormControl.Feedback />
                 </FormGroup>
 
                 <FormGroup>
-                    <ControlLabel>Start Parameters</ControlLabel>
+                    <FormLabel>Start Parameters</FormLabel>
 
                     <ParametersEditor content={this.state.startParameters} onChange={this.handleStartParametersChange} disabled={this.imported === false} />
                 </FormGroup>
 
                 {/* {this.state.models.map((model, index) => (
                     <FormGroup controlId="simulator" key={index}>
-                        <ControlLabel>{model.name} - Simulator</ControlLabel>
+                        <FormLabel>{model.name} - Simulator</FormLabel>
                         <FormControl componentClass="select" placeholder="Select simulator" value={JSON.stringify({ node: model.simulator.node, simulator: model.simulator.simulator})} onChange={(e) => this.handleChange(e, index)}>
                             {this.props.nodes.map(node => (
                                 node.simulators.map((simulator, index) => (

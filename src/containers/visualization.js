@@ -547,4 +547,5 @@ class Visualization extends React.Component {
   }
 }
 
-export default Fullscreenable()(Container.create(Visualization, { withProps: true }));
+let fluxContainerConverter = require('./FluxContainerConverter');
+export default Fullscreenable()(Container.create(fluxContainerConverter.convert(Visualization), { withProps: true }));

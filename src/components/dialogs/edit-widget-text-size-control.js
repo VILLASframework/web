@@ -20,7 +20,7 @@
  **********************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
 class EditWidgetTextSizeControl extends React.Component {
   render() {
@@ -28,7 +28,7 @@ class EditWidgetTextSizeControl extends React.Component {
 
     return (
       <FormGroup controlId="textSize">
-        <ControlLabel>Text size</ControlLabel>
+        <FormLabel>Text size</FormLabel>
         <FormControl componentClass="select" value={this.props.widget.textSize} onChange={e => this.props.handleChange(e)}>
           {sizes.map((size, index) => (
             <option key={index} value={size}>{size}</option>

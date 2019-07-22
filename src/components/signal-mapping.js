@@ -21,7 +21,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel, FormText } from 'react-bootstrap';
 import validator from 'validator';
 
 import Table from './table';
@@ -98,14 +98,14 @@ class SignalMapping extends React.Component {
     render() {
         return <div>
             <FormGroup validationState={this.validateLength()}>
-                <ControlLabel>{this.props.name} Length</ControlLabel>
+                <FormLabel>{this.props.name} Length</FormLabel>
                 <FormControl name='length' type='number' placeholder='Enter length' defaultValue={this.state.length} min='1' onBlur={this.handleLengthChange} />
                 <FormControl.Feedback />
             </FormGroup>
 
             <FormGroup>
-                <ControlLabel>{this.props.name} Mapping</ControlLabel>
-                <HelpBlock>Click <i>name</i> or <i>type</i> cell to edit</HelpBlock>
+                <FormLabel>{this.props.name} Mapping</FormLabel>
+                <FormText>Click <i>name</i> or <i>type</i> cell to edit</FormText>
                 <Table data={this.props.signals}>
                     <TableColumn title='ID' width='60' dataIndex />
                     <TableColumn title='Name' dataKey='name' inlineEditable onInlineChange={this.handleMappingChange} />

@@ -20,7 +20,7 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel, FormText } from 'react-bootstrap';
 
 class EditWidgetTimeControl extends Component {
   constructor(props) {
@@ -41,9 +41,9 @@ class EditWidgetTimeControl extends Component {
 
     return (
       <FormGroup controlId="time">
-        <ControlLabel>Time</ControlLabel>
+        <FormLabel>Time</FormLabel>
         <FormControl type="number" min="1" max="300" placeholder="Enter time" value={this.state.widget.time} onChange={(e) => this.props.handleChange(e)} />
-        <HelpBlock>Time in seconds</HelpBlock>
+        <FormText>Time in seconds</FormText>
       </FormGroup>
     );
   }

@@ -20,7 +20,7 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, Col, Row, Radio, ControlLabel } from 'react-bootstrap';
+import { FormGroup, Col, Row, FormCheck, FormLabel } from 'react-bootstrap';
 
 import WidgetSlider from '../widgets/slider';
 
@@ -48,7 +48,7 @@ class EditWidgetOrientation extends Component {
     return (
         <FormGroup controlId="orientation">
           <Row>
-            <Col componentClass={ControlLabel} sm={2}>
+            <Col componentClass={FormLabel} sm={2}>
               Orientation
             </Col>
             <Col sm={10}>
@@ -58,9 +58,9 @@ class EditWidgetOrientation extends Component {
                   let name = WidgetSlider.OrientationTypes[type].name;
 
                   return (
-                    <Radio inline key={value} name='orientation' checked={ value === this.state.widget.orientation } onChange={(e) => this.handleOrientationChange(value)}>
+                    <FormCheck inline key={value} type='radio' name='orientation' checked={ value === this.state.widget.orientation } onChange={(e) => this.handleOrientationChange(value)}>
                       { name }
-                    </Radio>)
+                    </FormCheck>)
                 })
               }
             </Col>

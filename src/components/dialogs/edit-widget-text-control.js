@@ -20,7 +20,7 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
 class EditWidgetTextControl extends Component {
   constructor(props) {
@@ -39,7 +39,7 @@ class EditWidgetTextControl extends Component {
   render() {
     return (
         <FormGroup controlId={this.props.controlId} validationState={this.props.validate ? this.props.validate(this.props.controlId) : null}>
-          <ControlLabel>{this.props.label}</ControlLabel>
+          <FormLabel>{this.props.label}</FormLabel>
           <FormControl type="text" placeholder={this.props.placeholder} value={this.state.widget[this.props.controlId] || ''} onChange={e => this.props.handleChange(e)} />
           <FormControl.Feedback />
         </FormGroup>

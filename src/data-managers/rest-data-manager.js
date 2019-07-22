@@ -22,7 +22,7 @@
 import RestAPI from '../api/rest-api';
 import AppDispatcher from '../app-dispatcher';
 
-const API_URL = '/api/v1';
+const API_URL = '/api/v2';
 
 class RestDataManager {
   constructor(type, url, keyFilter) {

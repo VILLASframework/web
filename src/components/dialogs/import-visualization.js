@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
@@ -118,12 +118,12 @@ class ImportVisualizationDialog extends React.Component {
       <Dialog show={this.props.show} title="Import Visualization" buttonTitle="Import" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
           <FormGroup controlId="file">
-            <ControlLabel>Visualization File</ControlLabel>
+            <FormLabel>Visualization File</FormLabel>
             <FormControl type="file" onChange={(e) => this.loadFile(e.target.files)} />
           </FormGroup>
 
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
-            <ControlLabel>Name</ControlLabel>
+            <FormLabel>Name</FormLabel>
             <FormControl readOnly={!this.imported} type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>

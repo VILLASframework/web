@@ -231,4 +231,5 @@ class Visualizations extends Component {
   }
 }
 
-export default Container.create(Visualizations, {withProps: true});
+let fluxContainerConverter = require('./FluxContainerConverter');
+export default Container.create(fluxContainerConverter.convert(Visualizations), {withProps: true});

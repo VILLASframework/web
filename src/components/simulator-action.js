@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Button, DropdownButton, MenuItem } from 'react-bootstrap';
+import { Button, DropdownButton, DropdownItem } from 'react-bootstrap';
 
 class SimulatorAction extends React.Component {
     constructor(props) {
@@ -50,9 +50,9 @@ class SimulatorAction extends React.Component {
 
     render() {
         const actionList = this.props.actions.map(action => (
-            <MenuItem key={action.id} eventKey={action.id} active={this.state.selectedAction === action.id}>
+            <DropdownItem key={action.id} eventKey={action.id} active={this.state.selectedAction === action.id}>
                 {action.title}
-            </MenuItem>
+            </DropdownItem>
         ));
 
         return <div>

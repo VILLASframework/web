@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
 import Dialog from './dialog';
 import ParametersEditor from '../parameters-editor';
@@ -85,13 +85,13 @@ class EditSimulationDialog extends React.Component {
         return <Dialog show={this.props.show} title='Edit Simulation' buttonTitle='Save' onClose={this.onClose} onReset={this.resetState} valid={true}>
             <form>
                 <FormGroup controlId='name' validationState={this.validateForm('name')}>
-                    <ControlLabel>Name</ControlLabel>
+                    <FormLabel>Name</FormLabel>
                     <FormControl type='text' placeholder='Enter name' value={this.state.name} onChange={this.handleChange} />
                     <FormControl.Feedback />
                 </FormGroup>
 
                 <FormGroup controlId='startParameters'>
-                    <ControlLabel>Start Parameters</ControlLabel>
+                    <FormLabel>Start Parameters</FormLabel>
 
                     <ParametersEditor content={this.state.startParameters} onChange={this.handleStartParametersChange} />
                 </FormGroup>
