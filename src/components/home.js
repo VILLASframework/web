@@ -41,9 +41,9 @@ class Home extends React.Component {
   }
 
   componentWillMount() {
-    RestAPI.get('/api/v1/counts').then(response => {
-      this.setState({ counts: response });
-    });
+    //RestAPI.get('/api/v1/counts').then(response => {
+    //  this.setState({ counts: response });
+    //});
   }
 
   render() {
