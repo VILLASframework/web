@@ -21,16 +21,24 @@
 
 import React from 'react';
 
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 
-import RestAPI from '../api/rest-api';
+//import RestAPI from '../api/rest-api';
 
 import config from '../config';
+import UserStore from "../stores/user-store";
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    let currentUser = UserStore.getState().currentUser;
+
+    this.state = {
+      currentRole: currentUser ? currentUser.role : '',
+      currentUsername: currentUser ? currentUser.username: '',
+      currentUserID: currentUser ? currentUser.id: 0,
+      token: UserStore.getState().token
+    };
   }
 
   getCounts(type) {
@@ -56,15 +64,21 @@ class Home extends React.Component {
           VILLASweb is a frontend for distributed real-time simulation hosted by <a href={"mailto:" + config.admin.mail}>{config.admin.name}</a>.
         </p>
         <p>
-          This instance is hosting <Link to="/projects" title="Projects">{this.getCounts('projects')} projects</Link> consisting of <Link to="/simulators" title="Simulators">{this.getCounts('simulators')} simulators</Link>, {this.getCounts('visualizations')} visualizations and <Link to="/simulations" title="Simulations">{this.getCounts('simulations')} simulations</Link>.
-          A total of <Link to="/users" title="Users">{this.getCounts('users')} users</Link> are registered.<br />
+        You are logged in as user {this.state.currentUsername} with ID {this.state.currentUserID} and role {this.state.currentRole}.
         </p>
+        {/*
+          <p>
+            This instance is hosting <Link to="/projects" title="Projects">{this.getCounts('projects')} projects</Link> consisting of <Link to="/simulators" title="Simulators">{this.getCounts('simulators')} simulators</Link>, {this.getCounts('visualizations')} visualizations and <Link to="/simulations" title="Simulations">{this.getCounts('simulations')} simulations</Link>.
+            A total of <Link to="/users" title="Users">{this.getCounts('users')} users</Link> are registered.<br />
+          </p>
+        */}
         <h3>Credits</h3>
         <p>VILLASweb is developed by the <a href="http://acs.eonerc.rwth-aachen.de">Institute for Automation of Complex Power Systems</a> at the <a href="https;//www.rwth-aachen.de">RWTH Aachen University</a>.</p>
         <ul>
           <li><a href="mailto:mgrigull@eonerc.rwth-aachen.de">Markus Grigull</a></li>
           <li><a href="mailto:stvogel@eonerc.rwth-aachen.de">Steffen Vogel</a></li>
           <li><a href="mailto:mstevic@eonerc.rwth-aachen.de">Marija Stevic</a></li>
+          <li><a href="mailto:sonja.happ@eonerc.rwth-aachen.de">Sonja Happ</a></li>
         </ul>
         <h3>Links</h3>
         <ul>

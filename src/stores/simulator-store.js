@@ -38,7 +38,7 @@ class SimulatorStore extends ArrayStore {
           const endpoint = _.get(simulator, 'properties.endpoint') || _.get(simulator, 'rawProperties.endpoint');
 
           if (endpoint != null && endpoint !== '') {
-            SimulatorDataDataManager.open(endpoint, simulator._id);
+            SimulatorDataDataManager.open(endpoint, simulator.id);
           } else {
             // console.warn('Endpoint not found for simulator at ' + endpoint);
             // console.log(simulator);
@@ -53,7 +53,8 @@ class SimulatorStore extends ArrayStore {
         const endpoint = _.get(simulator, 'properties.endpoint') || _.get(simulator, 'rawProperties.endpoint');
 
         if (endpoint != null && endpoint !== '') {
-          SimulatorDataDataManager.update(endpoint, simulator._id);
+          console.log("Updating simulatorid " + simulator.id);
+          SimulatorDataDataManager.update(endpoint, simulator.id);
         }
 
         return super.reduce(state, action);

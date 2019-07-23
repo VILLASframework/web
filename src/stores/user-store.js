@@ -35,6 +35,7 @@ class UserStore extends ReduceStore {
       users: [],
       currentUser: null,
       token: null,
+      userid: 0,
       loginMessage: null
     };
   }
@@ -54,14 +55,13 @@ class UserStore extends ReduceStore {
 
       case 'users/logged-in':
         // // request logged-in user data
-        //UsersDataManager.getCurrentUser(action.token);
+        UsersDataManager.getCurrentUser(action.token, action.userid);
 
-        //save token and logged-in user
-        return Object.assign({}, state, { token: action.token, currentUser: action.user  });
+        return Object.assign({}, state, { token: action.token, userid: action.userid});
 
-      //case 'users/current-user':
+      case 'users/current-user':
       //  // save logged-in user
-      //  return Object.assign({}, state, { currentUser: action.user });
+        return Object.assign({}, state, { currentUser: action.user});
 
       case 'users/current-user-error':
         // discard user token

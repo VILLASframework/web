@@ -26,6 +26,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import NotificationSystem from 'react-notification-system';
 import { Redirect, Route } from 'react-router-dom';
 import { Col } from 'react-bootstrap';
+import { Hidden } from 'react-grid-system'
 
 import AppDispatcher from '../app-dispatcher';
 import SimulationStore from '../stores/simulation-store';
@@ -63,6 +64,8 @@ class App extends React.Component {
       simulators: SimulatorStore.getState(),
       simulations: SimulationStore.getState(),
       currentRole: currentUser ? currentUser.role : '',
+      currentUsername: currentUser ? currentUser.username: '',
+      currentUserID: UserStore.getState().userid,
       token: UserStore.getState().token,
 
       showSidebarMenu: false,
@@ -72,6 +75,7 @@ class App extends React.Component {
   componentWillMount() {
     // if token stored locally, request user
     const token = localStorage.getItem('token');
+    const userid = localStorage.getItem('userid');
 
     if (token != null && token !== '') {
       // save token so we dont logout
@@ -79,7 +83,8 @@ class App extends React.Component {
 
       AppDispatcher.dispatch({
         type: 'users/logged-in',
-        token: token
+        token: token,
+        userid: userid
       });
     }
   }
@@ -115,17 +120,22 @@ class App extends React.Component {
     return (
       <DndProvider backend={HTML5Backend} >
         <div>
+          {/*
           <Col style={{ width: this.state.showSidebarMenu ? '280px' : '0px' }} smHidden mdHidden lgHidden className="sidenav">
-            <HeaderMenu onClose={this.hideSidebarMenu} currentRole={this.state.currentRole} />
-          </Col>
+          */}
+          <Hidden sm md lg xl>
+            <Col style={{ width: this.state.showSidebarMenu ? '280px' : '0px' }} className="sidenav">
+                <HeaderMenu onClose={this.hideSidebarMenu} currentRole={this.state.currentRole} />
+            </Col>
+          </Hidden>
 
           <div className="app">
             <NotificationSystem ref="notificationSystem" />
 
-            <Header onMenuButton={this.showSidebarMenu} showMenuButton={this.state.token != null} />
+            <Header onMenuButton={this.showSidebarMenu} showMenuButton={false} />
 
             <div className={`app-body app-body-spacing`} >
-              <Col xsHidden>
+              <Col xs={false}>
                 <SidebarMenu currentRole={this.state.currentRole} />
               </Col>
 

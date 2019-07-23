@@ -99,7 +99,7 @@ class ImportSimulationModelDialog extends React.Component {
             <FormLabel>Simulator</FormLabel>
             <FormControl disabled={this.imported === false} componentClass='select' placeholder='Select simulator' value={this.state.model.simulator} onChange={this.handleSimulatorChange}>
               {this.props.simulators.map(simulator => (
-                <option key={simulator._id} value={simulator._id}>{_.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name')}</option>
+                <option key={simulator.id} value={simulator.id}>{_.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name')}</option>
               ))}
             </FormControl>
           </FormGroup>

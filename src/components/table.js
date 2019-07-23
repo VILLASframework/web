@@ -74,7 +74,7 @@ class CustomTable extends Component {
       if (linkKey && data[linkKey] != null) {
         cell.push(<Link to={child.props.link + data[linkKey]}>{content}</Link>);
       } else if (child.props.clickable) {
-        cell.push(<Button bsStyle="link" onClick={() => child.props.onClick(index)}>{content}</Button>);
+        cell.push(<Button variant="link" onClick={() => child.props.onClick(index)}>{content}</Button>);
       } else {
         cell.push(content);
       }
@@ -89,7 +89,13 @@ class CustomTable extends Component {
         labelContent = child.props.labelModifier(labelContent, data);
       }
 
-      cell.push(<span>&nbsp;<FormLabel bsClass={child.props.labelStyle(data[labelKey], data)}>{labelContent.toString()}</FormLabel></span>);
+      cell.push(<span>
+        &nbsp;
+          <FormLabel column={false} classes={child.props.labelStyle(data[labelKey], data)}>
+            {labelContent.toString()}
+          </FormLabel>
+      </span>
+      );
     }
 
     if (child.props.dataIndex) {
@@ -98,11 +104,11 @@ class CustomTable extends Component {
 
     // add buttons
     if (child.props.editButton) {
-      cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onEdit(index)} disabled={child.props.onEdit == null}><Icon icon='edit' /></Button>);
+      cell.push(<Button variant='table-control-button' onClick={() => child.props.onEdit(index)} disabled={child.props.onEdit == null}><Icon icon='edit' /></Button>);
     }
 
     if (child.props.deleteButton) {
-      cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onDelete(index)} disabled={child.props.onDelete == null}><Icon icon='trash' /></Button>);
+      cell.push(<Button variant='table-control-button' onClick={() => child.props.onDelete(index)} disabled={child.props.onDelete == null}><Icon icon='trash' /></Button>);
     }
 
     if (child.props.checkbox) {
@@ -112,7 +118,7 @@ class CustomTable extends Component {
     }
 
     if (child.props.exportButton) {
-      cell.push(<Button bsClass='table-control-button' onClick={() => child.props.onExport(index)} disabled={child.props.onExport == null}><Icon icon='download' /></Button>);
+      cell.push(<Button variant='table-control-button' onClick={() => child.props.onExport(index)} disabled={child.props.onExport == null}><Icon icon='download' /></Button>);
     }
 
     return cell;

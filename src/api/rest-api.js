@@ -58,7 +58,8 @@ class RestAPI {
       var req = request.get(url);
 
       if (token != null) {
-        req.set('x-access-token', token);
+        req.set('Authorization', "Bearer " + token);
+
       }
 
       req.end(function (error, res) {
@@ -76,7 +77,7 @@ class RestAPI {
       var req = request.post(url).send(body).timeout({ response: 5000 }); // Simple response start timeout (3s)
 
       if (token != null) {
-        req.set('x-access-token', token);
+        req.set('Authorization', "Bearer " + token);
       }
       
       req.end(function (error, res) {
@@ -97,7 +98,7 @@ class RestAPI {
       var req = request.delete(url);
 
       if (token != null) {
-        req.set('x-access-token', token);
+        req.set('Authorization', "Bearer " + token);
       }
 
       req.end(function (error, res) {
@@ -115,7 +116,7 @@ class RestAPI {
       var req = request.put(url).send(body);
 
       if (token != null) {
-        req.set('x-access-token', token);
+        req.set('Authorization', "Bearer " + token);
       }
 
       req.end(function (error, res) {
@@ -133,7 +134,7 @@ class RestAPI {
       const req = request.post(url).send(data).on('progress', progressCallback);
 
       if (token != null) {
-        req.set('x-access-token', token);
+        req.set('Authorization', "Bearer " + token);
       }
 
       req.end(function (error, res) {

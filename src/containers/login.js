@@ -42,7 +42,8 @@ class Login extends Component {
     return {
       currentUser: UserStore.getState().currentUser,
       token: UserStore.getState().token,
-      loginMessage: UserStore.getState().loginMessage
+      loginMessage: UserStore.getState().loginMessage,
+      userid: UserStore.getState().userid
     };
   }
 
@@ -54,11 +55,13 @@ class Login extends Component {
     // if token stored locally, request user
     if (nextState.token == null) {
       const token = localStorage.getItem('token');
+      const userid = localStorage.getItem('userid');
 
       if (token != null && token !== '' && nextState.currentUser == null) {
         AppDispatcher.dispatch({
           type: 'users/logged-in',
-          token: token
+          token: token,
+          userid: userid
         });
       }
     } else {
@@ -66,6 +69,7 @@ class Login extends Component {
       if (nextState.currentUser != null) {
         // save login in local storage
         localStorage.setItem('token', nextState.token);
+        localStorage.setItem('userid', nextState.userid);
       }
     }
   }

@@ -114,7 +114,7 @@ class RestDataManager {
   }
 
   remove(object, token = null) {
-    RestAPI.delete(this.makeURL(this.url + '/' + object._id), token).then(response => {
+    RestAPI.delete(this.makeURL(this.url + '/' + object.id), token).then(response => {
       AppDispatcher.dispatch({
         type: this.type + 's/removed',
         data: response[this.type],
@@ -132,7 +132,7 @@ class RestDataManager {
     var obj = {};
     obj[this.type] = this.filterKeys(object);
 
-    RestAPI.put(this.makeURL(this.url + '/' + object._id), obj, token).then(response => {
+    RestAPI.put(this.makeURL(this.url + '/' + object.id), obj, token).then(response => {
       AppDispatcher.dispatch({
         type: this.type + 's/edited',
         data: response[this.type]

@@ -66,12 +66,15 @@ class Simulators extends Component {
 
   static calculateState() {
     const simulators = SimulatorStore.getState().sort((a, b) => {
-      if (a.state !== b.state)
-        return this.statePrio(a.state) > this.statePrio(b.state);
-      else if (a.name !== b.name)
+      if (a.state !== b.state) {
+          return Simulators.statePrio(a.state) > Simulators.statePrio(b.state);
+      }
+      else if (a.name !== b.name) {
         return a.name < b.name;
-      else
+      }
+      else {
         return a.stateUpdatedAt < b.stateUpdatedAt;
+      }
     });
 
     return {
@@ -123,6 +126,9 @@ class Simulators extends Component {
 
     if (data) {
       let simulator = this.state.simulators[this.state.modalIndex];
+      console.log("modalIndex: " + this.state.modalIndex);
+      console.log("Simulator Host:" + simulator.host);
+      console.log("Simulator at index 1: " + this.state.simulators[1].host)
       simulator.properties = data;
       this.setState({ simulator });
 
@@ -151,7 +157,7 @@ class Simulators extends Component {
   exportSimulator(index) {
     // filter properties
     let simulator = Object.assign({}, this.state.simulators[index]);
-    delete simulator._id;
+    delete simulator.id;
 
     // show save dialog
     const blob = new Blob([JSON.stringify(simulator, null, 2)], { type: 'application/json' });
@@ -206,7 +212,7 @@ class Simulators extends Component {
     }
   }
 
-  isSimulatorOutdated(simulator) {
+  static isSimulatorOutdated(simulator) {
     if (!simulator.stateUpdatedAt)
       return true;
 
@@ -215,10 +221,10 @@ class Simulators extends Component {
     return Date.now() - new Date(simulator.stateUpdatedAt) > fiveMinutes;
   }
 
-  stateLabelStyle = (state, simulator) => {
+  static stateLabelStyle(state, simulator){
     var style = [ 'label' ];
 
-    if (this.isSimulatorOutdated(simulator) && state !== 'shutdown') {
+    if (Simulators.isSimulatorOutdated(simulator) && state !== 'shutdown') {
       style.push('label-outdated');
     }
 
@@ -250,7 +256,7 @@ class Simulators extends Component {
     return style.join(' ');
   }
 
-  stateUpdateModifier = updatedAt => {
+  static stateUpdateModifier(updatedAt) {
     const date = new Date(updatedAt);
 
     return date.toLocaleString('de-DE');
@@ -268,15 +274,15 @@ class Simulators extends Component {
         <Table data={this.state.simulators}>
           <TableColumn checkbox onChecked={(index, event) => this.onSimulatorChecked(index, event)} width='30' />
           <TableColumn title='Name' dataKeys={['properties.name', 'rawProperties.name']} />
-          <TableColumn title='State' labelKey='state' tooltipKey='error' labelModifier={this.stateLabelModifier} labelStyle={this.stateLabelStyle} />
+          <TableColumn title='State' labelKey='state' tooltipKey='error' labelModifier={Simulators.stateLabelModifier} labelStyle={Simulators.stateLabelStyle} />
           <TableColumn title='Category' dataKeys={['properties.category', 'rawProperties.category']} />
           <TableColumn title='Type' dataKeys={['properties.type', 'rawProperties.type']} />
           <TableColumn title='Location' dataKeys={['properties.location', 'rawProperties.location']} />
           {/* <TableColumn title='Realm' dataKeys={['properties.realm', 'rawProperties.realm']} /> */}
           <TableColumn title='Host' dataKey='host' />
-          <TableColumn title='Last Update' dataKey='stateUpdatedAt' modifier={this.stateUpdateModifier} />
+          <TableColumn title='Last Update' dataKey='stateUpdatedAt' modifier={Simulators.stateUpdateModifier} />
           <TableColumn
-            width='100'
+            width='200'
             editButton
             exportButton
             deleteButton

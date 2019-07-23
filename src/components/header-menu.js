@@ -26,14 +26,15 @@ import { NavLink } from 'react-router-dom';
 export default class HeaderMenu extends React.Component {
   render() {
     return <div>
-      <Button className="closeButton" bsStyle="link" onClick={this.props.onClose}>&times;</Button>
+
+      <Button className="closeButton" variant="link" onClick={this.props.onClose}>&times;</Button>
 
       <ul>
         <li><NavLink to="/home" activeClassName="active" title="Home" onClick={this.props.onClose}>Home</NavLink></li>
         <li><NavLink to="/projects" activeClassName="active" title="Projects" onClick={this.props.onClose}>Projects</NavLink></li>
         <li><NavLink to="/simulations" activeClassName="active" title="Simulations" onClick={this.props.onClose}>Simulations</NavLink></li>
         <li><NavLink to="/simulators" activeClassName="active" title="Simulators" onClick={this.props.onClose}>Simulators</NavLink></li>
-        { this.props.currentRole === 'admin' ? 
+        { this.props.currentRole === 'Admin' ?
             <li><NavLink to="/users" activeClassName="active" title="User Management" onClick={this.props.onClose}>User Management</NavLink></li> : ''
         }
         <li><NavLink to="/logout" title="Logout" onClick={this.props.onClose}>Logout</NavLink></li>

@@ -74,17 +74,17 @@ class EditSimulatorDialog extends React.Component {
       <Dialog show={this.props.show} title="Edit Simulator" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
           <FormGroup controlId="name">
-            <FormLabel>Name</FormLabel>
-            <FormControl type="text" placeholder={_.get(this.props.simulator, 'rawProperties.name')} value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <FormLabel column={false}>Name</FormLabel>
+            <FormControl type="text" placeholder={_.get(this.props.simulator, 'properties.name')} value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="endpoint">
-            <FormLabel>Endpoint</FormLabel>
-            <FormControl type="text" placeholder={_.get(this.props.simulator, 'rawProperties.endpoint')} value={this.state.endpoint || 'http://' } onChange={(e) => this.handleChange(e)} />
+            <FormLabel column={false}>Endpoint</FormLabel>
+            <FormControl type="text" placeholder={_.get(this.props.simulator, 'properties.endpoint')} value={this.state.endpoint || 'http://' } onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId='properties'>
-            <FormLabel>Properties</FormLabel>
+            <FormLabel column={false}>Properties</FormLabel>
             <ParametersEditor content={_.merge({}, this.props.simulator.rawProperties, this.props.simulator.properties)} disabled={true} />
           </FormGroup>
         </form>

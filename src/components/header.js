@@ -21,20 +21,25 @@
 
 import React from 'react';
 import { Col, Button } from 'react-bootstrap';
+import { Hidden } from 'react-grid-system'
 import Icon from './icon';
 
 class Header extends React.Component {
   render() {
     return (
       <header className="app-header">
-        <Col xs={10} smOffset={2} sm={8}>
+        <Col xs={{span: 10}} sm={{span: 8, offset: 2}}>
           <h1>VILLASweb</h1>
         </Col>
-        <Col xs={2} smHidden mdHidden lgHidden style={{ paddingLeft: 'auto', paddingRight: 0 }}>
-          {this.props.showMenuButton &&
-            <Button bsStyle="link" onClick={this.props.onMenuButton} style={{ float: 'right', marginRight: '10px' }}><Icon size="3x" icon="bars" className="menu-icon" /></Button>
-          }
-        </Col>
+        <Hidden sm md lg xl>
+          <Col xs={2} style={{ paddingLeft: 'auto', paddingRight: 0 }}>
+            {this.props.showMenuButton &&
+              <Button variant="link" onClick={this.props.onMenuButton} style={{ float: 'right', marginRight: '10px' }}>
+                <Icon size="3x" icon="bars" className="menu-icon" />
+              </Button>
+            }
+          </Col>
+        </Hidden>
       </header>
     );
   }

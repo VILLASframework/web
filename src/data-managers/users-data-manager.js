@@ -33,7 +33,8 @@ class UsersDataManager extends RestDataManager {
       AppDispatcher.dispatch({
         type: 'users/logged-in',
         token: response.token,
-        user: response.user
+        user: response.user,
+        userid: response.user.id
       });
     }).catch(error => {
       AppDispatcher.dispatch({
@@ -43,19 +44,19 @@ class UsersDataManager extends RestDataManager {
     });
   }
 
-  //getCurrentUser(token) {
-  //  RestAPI.get(this.makeURL('/users/me'), token).then(response => {
-  //    AppDispatcher.dispatch({
-  //      type: 'users/current-user',
-  //      user: response.user
-  //    });
-  //  }).catch(error => {
-  //    AppDispatcher.dispatch({
-  //      type: 'users/current-user-error',
-  //      error: error
-  //    });
-  //  });
-  //}
+  getCurrentUser(token, id) {
+    RestAPI.get(this.makeURL('/users/' + id), token).then(response => {
+      AppDispatcher.dispatch({
+        type: 'users/current-user',
+        user: response.user
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'users/current-user-error',
+        error: error
+      });
+    });
+  }
   
 }
 

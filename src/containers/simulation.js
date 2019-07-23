@@ -101,7 +101,7 @@ class Simulation extends React.Component {
     const simulationModel = {
       simulation: this.state.simulation._id,
       name: 'New Simulation Model',
-      simulator: this.state.simulators.length > 0 ? this.state.simulators[0]._id : null,
+      simulator: this.state.simulators.length > 0 ? this.state.simulators[0].id : null,
       outputLength: 1,
       outputMapping: [{ name: 'Signal', type: 'Type' }],
       inputLength: 1,
@@ -165,7 +165,7 @@ class Simulation extends React.Component {
 
   getSimulatorName(simulatorId) {
     for (let simulator of this.state.simulators) {
-      if (simulator._id === simulatorId) {
+      if (simulator.id === simulatorId) {
         return _.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name') ||  simulator.uuid;
       }
     }

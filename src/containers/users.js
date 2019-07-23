@@ -102,7 +102,7 @@ class Users extends Component {
   }
 
   getHumanRoleName(role_key) {
-    const HUMAN_ROLE_NAMES = {admin: 'Administrator', user: 'User', guest: 'Guest'};
+    const HUMAN_ROLE_NAMES = {Admin: 'Administrator', User: 'User', Guest: 'Guest'};
 
     return HUMAN_ROLE_NAMES.hasOwnProperty(role_key)? HUMAN_ROLE_NAMES[role_key] : '';
   }

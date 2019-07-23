@@ -61,20 +61,16 @@ class LoginForm extends Component {
 
   render() {
     return (
-      <Form horizontal>
+      <Form>
         <FormGroup controlId="username">
-          <Col componentClass={FormLabel} sm={2}>
-            Username
-          </Col>
+          <FormLabel column={true} sm={2}>Username</FormLabel>
           <Col sm={10}>
             <FormControl type="text" placeholder="Username" onChange={(e) => this.handleChange(e)} />
           </Col>
         </FormGroup>
 
         <FormGroup controlId="password">
-          <Col componentClass={FormLabel} sm={2}>
-            Password
-          </Col>
+          <FormLabel column={true} sm={2}>Password</FormLabel>
           <Col sm={10}>
             <FormControl type="password" placeholder="Password" onChange={(e) => this.handleChange(e)} />
           </Col>
@@ -82,14 +78,14 @@ class LoginForm extends Component {
 
         {this.props.loginMessage &&
           <div style={{ marginBottom: '50px', color: 'red' }}>
-            <Col smOffset={2} sm={10} style={{ paddingLeft: '5px' }}>
+            <Col sm={{span: 10, offset: 2}} style={{ paddingLeft: '5px' }}>
               <i>Error: </i>{this.props.loginMessage}
             </Col>
           </div>
         }
 
         <FormGroup>
-          <Col smOffset={2} sm={10}>
+          <Col sm={{span: 10, offset: 2}}>
             <Button type="submit" disabled={this.state.disableLogin} onClick={e => this.login(e)}>Login</Button>
           </Col>
         </FormGroup>

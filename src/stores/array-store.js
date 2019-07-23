@@ -39,7 +39,7 @@ class ArrayStore extends ReduceStore {
     // search for existing element to update
     state.forEach((element, index, array) => {
       newElements = newElements.filter((updateElement, newIndex) => {
-        if (element._id === updateElement._id) {
+        if (element.id === updateElement.id) {
           // update each property
           for (var key in updateElement) {
             if (updateElement.hasOwnProperty(key)) {

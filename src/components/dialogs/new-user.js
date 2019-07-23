@@ -34,7 +34,8 @@ class NewUserDialog extends React.Component {
       username: '',
       mail: '',
       role: 'admin',
-      password: ''
+      password: '',
+      id: 0
     };
   }
 
@@ -57,7 +58,8 @@ class NewUserDialog extends React.Component {
       username: '',
       mail: '',
       role: 'admin',
-      password: ''
+      password: '',
+      id: 0
     });
   }
 
@@ -65,8 +67,9 @@ class NewUserDialog extends React.Component {
     // check all controls
     let username = this.state.username !== '' && this.state.username.length >= 3;
     let password = this.state.password !== '';
+    let id = this.state.id !== 0;
 
-    this.valid =  username && password;
+    this.valid =  username && password && id;
 
     // return state to control
     switch(target) {
@@ -74,6 +77,8 @@ class NewUserDialog extends React.Component {
         return username ? "success" : "error";
       case 'password':
         return password ? "success" : "error";
+      case 'id':
+        return id ? "success" : "error";
       default:
         return "success";
     }

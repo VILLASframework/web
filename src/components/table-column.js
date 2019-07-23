@@ -36,7 +36,10 @@ class TableColumn extends Component {
     clickable: false,
     labelKey: null,
     checkbox: false,
-    checkboxKey: ''
+    checkboxKey: '',
+    labelStyle: null,
+    labelModifier: null
+
   };
 
   render() {

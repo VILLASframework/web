@@ -46,7 +46,7 @@ class SelectSimulator extends React.Component {
         let selectedSimulator = nextProps.value;
         if (selectedSimulator == null) {
             if (this.state.simulators.length > 0) {
-                selectedSimulator = this.state.simulators[0]._id;
+                selectedSimulator = this.state.simulators[0].id;
             } else {
                 selectedSimulator = '';
             }
@@ -60,7 +60,7 @@ class SelectSimulator extends React.Component {
 
         // send complete simulator to callback
         if (this.props.onChange != null) {
-            const simulator = this.state.simulators.find(s => s._id === event.target.value);
+            const simulator = this.state.simulators.find(s => s.id === event.target.value);
 
             this.props.onChange(simulator);
         }
