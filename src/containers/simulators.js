@@ -79,6 +79,7 @@ class Simulators extends Component {
 
     return {
       sessionToken: UserStore.getState().token,
+      sessionUserID: UserStore.getState().userid,
       simulators,
       modalSimulator: {},
       deleteModal: false,
@@ -90,11 +91,12 @@ class Simulators extends Component {
   componentWillMount() {
     AppDispatcher.dispatch({
       type: 'simulators/start-load',
-      token: this.state.sessionToken
+      token: this.state.sessionToken,
+      userid: this.state.sessionUserID
     });
 
     // Start timer for periodic refresh
-    this.timer = window.setInterval(() => this.refresh(), 1000);
+    this.timer = window.setInterval(() => this.refresh(), 5000);
   }
 
   componentWillUnmount() {
@@ -104,7 +106,8 @@ class Simulators extends Component {
   refresh() {
     AppDispatcher.dispatch({
       type: 'simulators/start-load',
-      token: this.state.sessionToken
+      token: this.state.sessionToken,
+      userid: this.state.sessionUserID
     });
   }
 
@@ -116,7 +119,8 @@ class Simulators extends Component {
       AppDispatcher.dispatch({
         type: 'simulators/start-add',
         data,
-        token: this.state.sessionToken
+        token: this.state.sessionToken,
+        userid: this.state.sessionUserID
       });
     }
   }
@@ -135,12 +139,13 @@ class Simulators extends Component {
       AppDispatcher.dispatch({
         type: 'simulators/start-edit',
         data: simulator,
-        token: this.state.sessionToken
+        token: this.state.sessionToken,
+        userid: this.state.sessionUserID
       });
     }
   }
 
-  closeDeleteModal = confirmDelete => {
+  closeDeleteModal(confirmDelete){
     this.setState({ deleteModal: false });
 
     if (confirmDelete === false) {
@@ -150,7 +155,8 @@ class Simulators extends Component {
     AppDispatcher.dispatch({
       type: 'simulators/start-remove',
       data: this.state.modalSimulator,
-      token: this.state.sessionToken
+      token: this.state.sessionToken,
+      userid: this.state.sessionUserID
     });
   }
 
@@ -171,7 +177,8 @@ class Simulators extends Component {
       AppDispatcher.dispatch({
         type: 'simulators/start-add',
         data,
-        token: this.state.sessionToken
+        token: this.state.sessionToken,
+        userid: this.state.sessionUserID
       });
     }
   }
@@ -207,7 +214,8 @@ class Simulators extends Component {
         type: 'simulators/start-action',
         simulator: this.state.simulators[index],
         data: action.data,
-        token: this.state.sessionToken
+        token: this.state.sessionToken,
+        userid: this.state.sessionUserID
       });
     }
   }
@@ -310,7 +318,7 @@ class Simulators extends Component {
         <EditSimulatorDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} simulator={this.state.modalSimulator} />
         <ImportSimulatorDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} />
 
-        <DeleteDialog title="simulator" name={_.get(this.state.modalSimulator, 'properties.name') || _.get(this.state.modalSimulator, 'rawProperties.name') || 'Unknown'} show={this.state.deleteModal} onClose={this.closeDeleteModal} />
+        <DeleteDialog title="simulator" name={_.get(this.state.modalSimulator, 'properties.name') || _.get(this.state.modalSimulator, 'rawProperties.name') || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
       </div>
     );
   }
