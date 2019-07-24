@@ -89,11 +89,14 @@ class Home extends React.Component {
         <h3>Funding</h3>
         <p>The development of <a href="http://fein-aachen.org/projects/villas-framework/">VILLASframework</a> projects have received funding from</p>
         <ul>
+          <li><a href="http://www.acs.eonerc.rwth-aachen.de/cms/E-ON-ERC-ACS/Forschung/Forschungsprojekte/Gruppe-Real-Time-Simulation-and-Hardware/~qxvw/Urban-Energy-Lab-4/">Urban Energy Lab 4.0</a> a project funded by OP EFRE NRW (European Regional Development Fund) for the setup of a novel energy research infrastructure.</li>
           <li><a href="http://www.re-serve.eu">RESERVE</a> a European Union’s Horizon 2020 research and innovation programme under grant agreement No 727481</li>
           <li><a href="http://www.jara.org/en/research/energy">JARA-ENERGY</a>. Jülich-Aachen Research Alliance (JARA) is an initiative of RWTH Aachen University and Forschungszentrum Jülich.</li>
         </ul>
         <img height={100} src={require('../img/european_commission.svg')} alt="Logo EU" />
         <img height={70} src={require('../img/reserve.svg')} alt="Logo EU" />
+        <img height={70} src={require('../img/uel_efre.jpeg')} alt="Logo UEL OP EFRE NRW" />
+        <img height={70} src={require('../img/uel.png')} alt="Logo UEL" />
         <img height={60} src={require('../img/eonerc_rwth.svg')} alt="Logo ACS" />
         {
           //<img height={70} src={require('../img/jara.svg')} alt="Logo JARA" />
