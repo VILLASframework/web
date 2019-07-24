@@ -96,7 +96,7 @@ class Simulators extends Component {
     });
 
     // Start timer for periodic refresh
-    this.timer = window.setInterval(() => this.refresh(), 5000);
+    this.timer = window.setInterval(() => this.refresh(), 10000);
   }
 
   componentWillUnmount() {

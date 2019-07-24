@@ -41,7 +41,7 @@ class EditSimulatorDialog extends React.Component {
   onClose(canceled) {
     if (canceled === false) {
       if (this.valid) {
-        let data = {};
+        let data = this.props.simulator.properties;
 
         if (this.state.name != null && this.state.name !== "" && this.state.name !== _.get(this.props.simulator, 'rawProperties.name')) {
           data.name = this.state.name;
@@ -85,7 +85,7 @@ class EditSimulatorDialog extends React.Component {
           </FormGroup>
           <FormGroup controlId='properties'>
             <FormLabel column={false}>Properties</FormLabel>
-            <ParametersEditor content={_.merge({}, this.props.simulator.rawProperties, this.props.simulator.properties)} disabled={true} />
+            <ParametersEditor content={_.merge({}, _.get(this.props.simulator, 'rawProperties'), _.get(this.props.simulator, 'properties'))} disabled={true} />
           </FormGroup>
         </form>
       </Dialog>
