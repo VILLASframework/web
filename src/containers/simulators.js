@@ -96,7 +96,7 @@ class Simulators extends Component {
     });
 
     // Start timer for periodic refresh
-    this.timer = window.setInterval(() => this.refresh(), 10000);
+    this.timer = window.setInterval(() => this.refresh(), 1000);
   }
 
   componentWillUnmount() {
@@ -104,11 +104,17 @@ class Simulators extends Component {
   }
 
   refresh() {
-    AppDispatcher.dispatch({
-      type: 'simulators/start-load',
-      token: this.state.sessionToken,
-      userid: this.state.sessionUserID
-    });
+
+    if (this.state.editModal || this.state.deleteModal){
+      // do nothing since a dialog is open at the moment
+    }
+    else {
+      AppDispatcher.dispatch({
+        type: 'simulators/start-load',
+        token: this.state.sessionToken,
+        userid: this.state.sessionUserID
+      });
+    }
   }
 
 
