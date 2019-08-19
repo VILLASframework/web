@@ -75,7 +75,7 @@ class Users extends Component {
     }
   }
 
-  closeDeleteModal = confirmDelete => {
+  closeDeleteModal(confirmDelete) {
     this.setState({ deleteModal: false });
 
     if (confirmDelete === false) {
@@ -134,7 +134,7 @@ class Users extends Component {
         <NewUserDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
         <EditUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />
 
-        <DeleteDialog title="user" name={this.state.modalData.username} show={this.state.deleteModal} onClose={this.closeDeleteModal} />
+        <DeleteDialog title="user" name={this.state.modalData.username} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
       </div>
     );
   }
