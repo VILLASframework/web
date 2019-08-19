@@ -123,6 +123,7 @@ class Users extends Component {
 
         <Table data={this.state.users}>
           <TableColumn title='Username' width='150' dataKey='username' />
+          <TableColumn title='ID' width='150' dataKey='id' />
           <TableColumn title='E-mail' dataKey='mail'  />
           <TableColumn title='Role' dataKey='role'   modifier={(role) => this.getHumanRoleName(role)} />
           <TableColumn width='70' editButton deleteButton onEdit={index => this.setState({ editModal: true, modalData: this.state.users[index] })} onDelete={index => this.setState({ deleteModal: true, modalData: this.state.users[index] })} />
