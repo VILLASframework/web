@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, FormLabel, FormText } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel, FormText, Col } from 'react-bootstrap';
 
 import Dialog from './dialog';
 
@@ -33,9 +33,8 @@ class NewUserDialog extends React.Component {
     this.state = {
       username: '',
       mail: '',
-      role: 'admin',
+      role: 'User',
       password: '',
-      id: 0
     };
   }
 
@@ -51,65 +50,52 @@ class NewUserDialog extends React.Component {
 
   handleChange(e) {
     this.setState({ [e.target.id]: e.target.value });
+
+    // check all controls
+    let username = this.state.username !== '' && this.state.username.length >= 3;
+    let password = this.state.password !== '';
+    let role = this.state.role !== '';
+    let mail = this.state.mail !== '';
+
+    this.valid =  username && password && role && mail;
+
   }
 
   resetState() {
     this.setState({
       username: '',
       mail: '',
-      role: 'admin',
+      role: 'User',
       password: '',
-      id: 0
     });
-  }
-
-  validateForm(target) {
-    // check all controls
-    let username = this.state.username !== '' && this.state.username.length >= 3;
-    let password = this.state.password !== '';
-    let id = this.state.id !== 0;
-
-    this.valid =  username && password && id;
-
-    // return state to control
-    switch(target) {
-      case 'username':
-        return username ? "success" : "error";
-      case 'password':
-        return password ? "success" : "error";
-      case 'id':
-        return id ? "success" : "error";
-      default:
-        return "success";
-    }
   }
 
   render() {
     return (
       <Dialog show={this.props.show} title="New user" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
-          <FormGroup controlId="username" validationState={this.validateForm('username')}>
+          <FormGroup as={Col} controlId="username">
             <FormLabel>Username</FormLabel>
             <FormControl type="text" placeholder="Enter username" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
             <FormText>Min 3 characters.</FormText>
           </FormGroup>
-          <FormGroup controlId="mail">
+          <FormGroup as={Col} controlId="mail">
             <FormLabel>E-mail</FormLabel>
             <FormControl type="text" placeholder="Enter e-mail" value={this.state.mail} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="password" validationState={this.validateForm('password')}>
+          <FormGroup as={Col} controlId="password">
             <FormLabel>Password</FormLabel>
             <FormControl type="text" placeholder="Enter password" value={this.state.password} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="role" validationState={this.validateForm('role')}>
+          <FormGroup as={Col} controlId="role">
             <FormLabel>Role</FormLabel>
-            <FormControl componentClass="select" placeholder="Select role" value={this.state.role} onChange={(e) => this.handleChange(e)}>
-              <option key='1' value='admin'>Administrator</option>
-              <option key='2' value='user'>User</option>
-              <option key='3' value='guest'>Guest</option>
+            <FormControl as="select" placeholder="Select role" value={this.state.role} onChange={(e) => this.handleChange(e)}>
+              <option key='1' value='Admin'>Administrator</option>
+              <option key='2' value='User'>User</option>
+              <option key='3' value='Guest'>Guest</option>
             </FormControl>
           </FormGroup>
         </form>
