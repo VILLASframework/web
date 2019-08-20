@@ -1,22 +1,22 @@
 
 import { expect } from 'chai';
 
-import createControls from '../widget/edit-widget-control-creator';
-import EditWidgetTextControl from '../widget/edit-widget-text-control';
-import EditWidgetColorControl from '../widget/edit-widget-color-control';
-import EditWidgetTimeControl from '../widget/edit-widget-time-control';
-import EditImageWidgetControl from '../widget/edit-widget-image-control';
-import EditWidgetSimulationControl from '../widget/edit-widget-simulation-control';
-import EditWidgetSignalControl from '../widget/edit-widget-signal-control';
-import EditWidgetSignalsControl from '../widget/edit-widget-signals-control';
-import EditWidgetOrientation from '../widget/edit-widget-orientation';
-import EditWidgetTextSizeControl from '../widget/edit-widget-text-size-control';
-import EditWidgetAspectControl from '../widget/edit-widget-aspect-control';
-import EditWidgetCheckboxControl from '../widget/edit-widget-checkbox-control';
-import EditWidgetMinMaxControl from '../widget/edit-widget-min-max-control';
-import EditWidgetColorZonesControl from '../widget/edit-widget-color-zones-control';
-import EditWidgetHTMLContent from '../widget/edit-widget-html-content';
-import EditWidgetNumberControl from '../widget/edit-widget-number-control';
+import createControls from '../../widget/edit-widget-control-creator';
+import EditWidgetTextControl from '../../widget/edit-widget-text-control';
+import EditWidgetColorControl from '../../widget/edit-widget-color-control';
+import EditWidgetTimeControl from '../../widget/edit-widget-time-control';
+import EditImageWidgetControl from '../../widget/edit-widget-image-control';
+import EditWidgetSimulationControl from '../../widget/edit-widget-simulation-control';
+import EditWidgetSignalControl from '../../widget/edit-widget-signal-control';
+import EditWidgetSignalsControl from '../../widget/edit-widget-signals-control';
+import EditWidgetOrientation from '../../widget/edit-widget-orientation';
+import EditWidgetTextSizeControl from '../../widget/edit-widget-text-size-control';
+import EditWidgetAspectControl from '../../widget/edit-widget-aspect-control';
+import EditWidgetCheckboxControl from '../../widget/edit-widget-checkbox-control';
+import EditWidgetMinMaxControl from '../../widget/edit-widget-min-max-control';
+import EditWidgetColorZonesControl from '../../widget/edit-widget-color-zones-control';
+import EditWidgetHTMLContent from '../../widget/edit-widget-html-content';
+import EditWidgetNumberControl from '../../widget/edit-widget-number-control';
 
 describe('edit widget control creator', () => {
     it('should not return null', () => {
