@@ -1,7 +1,7 @@
 /**
- * File: router.js
+ * File: label.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
+ * Date: 14.03.2017
  *
  * This file is part of VILLASweb.
  *
@@ -19,25 +19,23 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import React, { Component } from 'react';
 
-import App from './app';
-import Login from './user/login';
-import Logout from './user/logout';
+import EditWidgetColorControl from '../edit-widget-color-control';
 
-class Root extends React.Component {
+class WidgetLabel extends Component {
   render() {
+    const style = {
+      fontSize: this.props.widget.textSize + 'px',
+      color: EditWidgetColorControl.ColorPalette[this.props.widget.fontColor]
+    };
+
     return (
-      <BrowserRouter>
-        <Switch>
-          <Route path='/login' component={Login} />
-          <Route path='/logout' component={Logout} />
-          <Route path='/' component={App} />
-        </Switch>
-      </BrowserRouter>
+      <div className="label-widget">
+        <h4 style={style}>{this.props.widget.name}</h4>
+      </div>
     );
   }
 }
 
-export default Root;
+export default WidgetLabel;
