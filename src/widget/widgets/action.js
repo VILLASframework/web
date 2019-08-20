@@ -1,7 +1,8 @@
 /**
- * File: router.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
+ * File: action.js
+ * Author: Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * Date: 17.06.2018
+ * Copyright: 2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * This file is part of VILLASweb.
  *
@@ -19,25 +20,29 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import React, { Component } from 'react';
+import { Button, ButtonGroup } from 'react-bootstrap';
+import Icon from '../../common/icon';
 
-import App from './app';
-import Login from './user/login';
-import Logout from './user/logout';
+class WidgetAction extends Component {
+  constructor(props) {
+    super(props);
 
-class Root extends React.Component {
+    this.state = {
+    };
+  }
+
+  onClick(e) {
+
+  }
+
   render() {
-    return (
-      <BrowserRouter>
-        <Switch>
-          <Route path='/login' component={Login} />
-          <Route path='/logout' component={Logout} />
-          <Route path='/' component={App} />
-        </Switch>
-      </BrowserRouter>
-    );
+    return <ButtonGroup>
+            <Button onClick={this.onClick} ><Icon icon="play" /> Start</Button>
+            <Button onClick={this.onClick} ><Icon icon="pause" /> Pause</Button>
+            <Button onClick={this.onClick} ><Icon icon="stop" /> Stop</Button>
+          </ButtonGroup>;
   }
 }
 
-export default Root;
+export default WidgetAction;

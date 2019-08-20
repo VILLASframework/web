@@ -1,7 +1,7 @@
 /**
- * File: router.js
+ * File: simulation-model-store.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
+ * Date: 20.04.2018
  *
  * This file is part of VILLASweb.
  *
@@ -19,25 +19,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import ArrayStore from '../common/array-store';
+import SimulationModelsDataManager from './simulation-models-data-manager';
 
-import App from './app';
-import Login from './user/login';
-import Logout from './user/logout';
-
-class Root extends React.Component {
-  render() {
-    return (
-      <BrowserRouter>
-        <Switch>
-          <Route path='/login' component={Login} />
-          <Route path='/logout' component={Logout} />
-          <Route path='/' component={App} />
-        </Switch>
-      </BrowserRouter>
-    );
-  }
-}
-
-export default Root;
+export default new ArrayStore('simulationModels', SimulationModelsDataManager);

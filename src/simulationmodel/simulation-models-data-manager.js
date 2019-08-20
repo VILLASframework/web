@@ -1,7 +1,7 @@
 /**
- * File: router.js
+ * File: simulation-models-data-manager.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
+ * Date: 20.04.2018
  *
  * This file is part of VILLASweb.
  *
@@ -19,25 +19,32 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import RestDataManager from '../common/data-managers/rest-data-manager';
+import AppDispatcher from '../common/app-dispatcher';
 
-import App from './app';
-import Login from './user/login';
-import Logout from './user/logout';
+class SimulationModelDataManager extends RestDataManager {
+  constructor() {
+    super('simulationModel', '/models');
 
-class Root extends React.Component {
-  render() {
-    return (
-      <BrowserRouter>
-        <Switch>
-          <Route path='/login' component={Login} />
-          <Route path='/logout' component={Logout} />
-          <Route path='/' component={App} />
-        </Switch>
-      </BrowserRouter>
-    );
+    this.onLoad = this.onModelsLoad;
+  }
+
+  onModelsLoad(data) {
+    if (!Array.isArray(data))
+      data = [ data ];
+
+    for (let model of data)
+      this.loadModelData(model);
+  }
+
+  loadModelData(model) {
+    AppDispatcher.dispatch({
+      type: 'simulatorData/prepare',
+      inputLength: parseInt(model.inputLength, 10),
+      outputLength: parseInt(model.outputLength, 10),
+      id: model.simulator
+    });
   }
 }
 
-export default Root;
+export default new SimulationModelDataManager();
