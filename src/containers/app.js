@@ -29,7 +29,7 @@ import { Col } from 'react-bootstrap';
 import { Hidden } from 'react-grid-system'
 
 import AppDispatcher from '../app-dispatcher';
-import SimulationStore from '../stores/simulation-store';
+import ScenarioStore from '../stores/scenario-store';
 import SimulatorStore from '../stores/simulator-store';
 import UserStore from '../stores/user-store';
 import NotificationsDataManager from '../data-managers/notifications-data-manager';
@@ -40,12 +40,14 @@ import Footer from '../components/footer';
 import SidebarMenu from '../components/menu-sidebar';
 import HeaderMenu from '../components/header-menu';
 
-import Projects from './projects';
-import Project from './project';
+//import Projects from './projects';
+//import Project from './project';
 import Simulators from './simulators';
 import Visualization from './visualization';
-import Simulations from './simulations';
-import Simulation from './simulation';
+//import Simulations from './simulations';
+//import Simulation from './simulation';
+import Scenarios from './scenarios'
+import Scenario from './scenario'
 import SimulationModel from './simulation-model';
 import Users from './users';
 
@@ -54,7 +56,7 @@ import '../styles/app.css';
 class App extends React.Component {
 
   static getStores() {
-    return [ SimulatorStore, UserStore, SimulationStore ];
+    return [ SimulatorStore, UserStore, ScenarioStore];
   }
 
   static calculateState(prevState) {
@@ -62,7 +64,7 @@ class App extends React.Component {
 
     return {
       simulators: SimulatorStore.getState(),
-      simulations: SimulationStore.getState(),
+      scenarios: ScenarioStore.getState(),
       currentRole: currentUser ? currentUser.role : '',
       currentUsername: currentUser ? currentUser.username: '',
       currentUserID: UserStore.getState().userid,
@@ -90,14 +92,14 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // load all simulators and simulations to fetch simulation data
+    // load all simulators and scenarios to fetch data
     AppDispatcher.dispatch({
       type: 'simulators/start-load',
       token: this.state.token
     });
 
     AppDispatcher.dispatch({
-      type: 'simulations/start-load',
+      type: 'scenarios/start-load',
       token: this.state.token
     });
 
@@ -142,11 +144,9 @@ class App extends React.Component {
               <div className={`app-content app-content-margin-left`}>
                 <Route exact path="/" component={Home} />
                 <Route path="/home" component={Home} />
-                <Route exact path="/projects" component={Projects} />
-                <Route path="/projects/:project" component={Project} />
                 <Route path="/visualizations/:visualization" component={Visualization} />
-                <Route exact path="/simulations" component={Simulations} />
-                <Route path="/simulations/:simulation" component={Simulation} />
+                <Route exact path="/scenarios" component={Scenarios} />
+                <Route path="/scenarios/:scenario" component={Scenario} />
                 <Route path="/simulationModel/:simulationModel" component={SimulationModel} />
                 <Route path="/simulators" component={Simulators} />
                 <Route path="/users" component={Users} />
@@ -160,6 +160,12 @@ class App extends React.Component {
     )
   }
 }
+
+// Removed routes
+//<Route exact path="/projects" component={Projects} />
+//<Route path="/projects/:project" component={Project} />
+//<Route exact path="/simulations" component={Simulations} />
+//<Route path="/simulations/:simulation" component={Simulation} />
 
 let fluxContainerConverter = require('./FluxContainerConverter');
 export default Container.create(fluxContainerConverter.convert(App));

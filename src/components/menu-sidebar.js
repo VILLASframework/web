@@ -22,6 +22,9 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
+//<li><NavLink to="/simulations" activeClassName="active" title="Simulations">Simulations</NavLink></li>
+//<li><NavLink to="/projects" activeClassName="active" title="Projects">Projects</NavLink></li>
+
 class SidebarMenu extends React.Component {
   render() {
     return (
@@ -30,8 +33,7 @@ class SidebarMenu extends React.Component {
 
         <ul>
           <li><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
-          <li><NavLink to="/projects" activeClassName="active" title="Projects">Projects</NavLink></li>
-          <li><NavLink to="/simulations" activeClassName="active" title="Simulations">Simulations</NavLink></li>
+          <li><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
           <li><NavLink to="/simulators" activeClassName="active" title="Simulators">Simulators</NavLink></li>
           { this.props.currentRole === 'Admin' ?
               <li><NavLink to="/users" activeClassName="active" title="User Management">User Management</NavLink></li> : ''

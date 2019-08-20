@@ -39,7 +39,7 @@ class SimulationModel extends React.Component {
     }
 
     static calculateState(prevState, props) {
-        const simulationModel = SimulationModelStore.getState().find(m => m._id === props.match.params.simulationModel);
+        const simulationModel = SimulationModelStore.getState().find(m => m.id === props.match.params.simulationModel);
 
         return {
             simulationModel: simulationModel || {},
@@ -66,11 +66,11 @@ class SimulationModel extends React.Component {
             token: this.state.sessionToken
         });
 
-        this.props.history.push('/simulations/' + this.state.simulationModel.simulation);
+        this.props.history.push('/scenarios/' + this.state.simulationModel.scenarioID);
     }
 
     discardChanges = () => {
-        this.props.history.push('/simulations/' + this.state.simulationModel.simulation);
+        this.props.history.push('/scenarios/' + this.state.simulationModel.scenarioID);
     }
 
     handleSimulatorChange = simulator => {
@@ -141,14 +141,14 @@ class SimulationModel extends React.Component {
 
                     <div>
                         <Col componentClass={FormLabel} sm={3} md={2}>
-                            Start Parameters                            
+                            Start Parameters
                         </Col>
-                        
+
                         <Col sm={9} md={10}>
                             <ParametersEditor content={this.state.simulationModel.startParameters} onChange={this.handleStartParametersChange} />
                         </Col>
                     </div>
-                    
+
                 </Col>
 
                 <Col xs={12} sm={6}>
