@@ -25,7 +25,7 @@ import AppDispatcher from "../common/app-dispatcher";
 
 class ScenariosDataManager extends RestDataManager {
   constructor() {
-    super('scenario', '/scenarios');
+    super('scenario', '/scenarios', ['id', 'name', 'running', 'simulationModelIDs', 'userIDs', 'dashboardIDs', 'startParameters' ]);
   }
 
   getSimulationModels(token, id) {

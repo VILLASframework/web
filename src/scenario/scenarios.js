@@ -49,6 +49,7 @@ class Scenarios extends Component {
     const scenarios = ScenarioStore.getState();
     const simulationModels = SimulationModelStore.getState();
     const simulators = SimulatorStore.getState();
+    const dashboards = []; // TODO get dashboards with DashboadStore.getState() here
 
     const sessionToken = UserStore.getState().token;
 
@@ -56,6 +57,7 @@ class Scenarios extends Component {
       scenarios,
       simulationModels,
       simulators,
+      dashboards,
       sessionToken,
 
       newModal: false,
@@ -78,9 +80,13 @@ class Scenarios extends Component {
   componentDidUpdate() {
     const simulationModelIds = [];
     const simulatorIds = [];
+    const dashboardIds = [];
+
 
     for (let scenario of this.state.scenarios) {
-      for (let modelId of scenario.simulationModels) {
+      // collect missing simulationModels
+      // TODO response of backend has to contain simulationModelIDs and dashboardIDs per scenario
+      for (let modelId of scenario.simulationModelIDs) {
         const model = this.state.simulationModels.find(m => m != null && m.id === modelId);
 
         if (model == null) {
@@ -89,12 +95,23 @@ class Scenarios extends Component {
           continue;
         }
 
-        if (this.state.simulators.includes(s => s._id === model.simulator) === false) {
-          simulatorIds.push(model.simulator);
+        // collect missing simulators
+        if (this.state.simulators.includes(s => s.id === model.simulatorID) === false) {
+          simulatorIds.push(model.simulatorID);
+        }
+      }
+
+      // collect missing dashboards
+      for (let dashboardId of scenario.dashboardIDs) {
+        const dashboard = this.state.dashboards.find(d => d != null && d.id === dashboardId);
+
+        if (dashboard == null) {
+          dashboardIds.push(dashboardId);
         }
       }
     }
 
+    // load missing simulationModels
     if (simulationModelIds.length > 0) {
       AppDispatcher.dispatch({
         type: 'simulationModels/start-load',
@@ -103,12 +120,22 @@ class Scenarios extends Component {
       });
     }
 
+    // load missing simulators
     if (simulatorIds.length > 0) {
       AppDispatcher.dispatch({
         type: 'simulators/start-load',
         data: simulatorIds,
         token: this.state.sessionToken
       });
+    }
+
+    // load missing dashboards
+    if (dashboardIds.length > 0) {
+      AppDispatcher.dispatch( {
+        type: 'dashboards/start-load',
+        data: dashboardIds,
+        token: this.state.sessionToken
+      })
     }
   }
 
@@ -270,7 +297,7 @@ class Scenarios extends Component {
         });
       }
     }
-  }
+  };
 
   render() {
     const buttonStyle = {
