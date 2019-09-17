@@ -34,6 +34,7 @@ class EditScenarioDialog extends React.Component {
     this.state = {
       name: '',
       id: '',
+      running: false,
       startParameters: {}
     };
   }
@@ -69,25 +70,26 @@ class EditScenarioDialog extends React.Component {
     this.setState({
       name: this.props.scenario.name,
       id: this.props.scenario.id,
+      running: this.props.scenario.running,
       startParameters: this.props.scenario.startParameters || {}
     });
-  }
+  };
 
   handleStartParametersChange = startParameters => {
     this.setState({ startParameters });
-  }
+  };
 
   render() {
     return <Dialog show={this.props.show} title='Edit Scenario' buttonTitle='Save' onClose={this.onClose} onReset={this.resetState} valid={true}>
       <form>
         <FormGroup as={Col} controlId='name'>
-          <FormLabel>Name</FormLabel>
+          <FormLabel column={false}>Name</FormLabel>
           <FormControl type='text' placeholder='Enter name' value={this.state.name} onChange={this.handleChange} />
           <FormControl.Feedback />
         </FormGroup>
 
         <FormGroup as={Col} controlId='startParameters'>
-          <FormLabel>Start Parameters</FormLabel>
+          <FormLabel column={false}>Start Parameters</FormLabel>
 
           <ParametersEditor content={this.state.startParameters} onChange={this.handleStartParametersChange} />
         </FormGroup>

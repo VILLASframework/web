@@ -27,8 +27,6 @@ import FileSaver from 'file-saver';
 import AppDispatcher from '../common/app-dispatcher';
 import ScenarioStore from './scenario-store';
 import UserStore from '../user/user-store';
-import SimulatorStore from '../simulator/simulator-store';
-import SimulationModelStore from '../simulationmodel/simulation-model-store';
 
 import Icon from '../common/icon';
 import Table from '../common/table';
@@ -37,27 +35,19 @@ import NewScenarioDialog from './new-scenario';
 import EditScenarioDialog from './edit-scenario';
 import ImportScenarioDialog from './import-scenario';
 
-import SimulatorAction from '../simulator/simulator-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
 
 class Scenarios extends Component {
   static getStores() {
-    return [ ScenarioStore, UserStore, SimulatorStore, SimulationModelStore ];
+    return [ ScenarioStore, UserStore ];
   }
 
   static calculateState() {
     const scenarios = ScenarioStore.getState();
-    const simulationModels = SimulationModelStore.getState();
-    const simulators = SimulatorStore.getState();
-    const dashboards = []; // TODO get dashboards with DashboadStore.getState() here
-
     const sessionToken = UserStore.getState().token;
 
     return {
       scenarios,
-      simulationModels,
-      simulators,
-      dashboards,
       sessionToken,
 
       newModal: false,
@@ -77,67 +67,7 @@ class Scenarios extends Component {
     });
   }
 
-  componentDidUpdate() {
-    const simulationModelIds = [];
-    const simulatorIds = [];
-    const dashboardIds = [];
-
-
-    for (let scenario of this.state.scenarios) {
-      // collect missing simulationModels
-      // TODO response of backend has to contain simulationModelIDs and dashboardIDs per scenario
-      for (let modelId of scenario.simulationModelIDs) {
-        const model = this.state.simulationModels.find(m => m != null && m.id === modelId);
-
-        if (model == null) {
-          simulationModelIds.push(modelId);
-
-          continue;
-        }
-
-        // collect missing simulators
-        if (this.state.simulators.includes(s => s.id === model.simulatorID) === false) {
-          simulatorIds.push(model.simulatorID);
-        }
-      }
-
-      // collect missing dashboards
-      for (let dashboardId of scenario.dashboardIDs) {
-        const dashboard = this.state.dashboards.find(d => d != null && d.id === dashboardId);
-
-        if (dashboard == null) {
-          dashboardIds.push(dashboardId);
-        }
-      }
-    }
-
-    // load missing simulationModels
-    if (simulationModelIds.length > 0) {
-      AppDispatcher.dispatch({
-        type: 'simulationModels/start-load',
-        data: simulationModelIds,
-        token: this.state.sessionToken
-      });
-    }
-
-    // load missing simulators
-    if (simulatorIds.length > 0) {
-      AppDispatcher.dispatch({
-        type: 'simulators/start-load',
-        data: simulatorIds,
-        token: this.state.sessionToken
-      });
-    }
-
-    // load missing dashboards
-    if (dashboardIds.length > 0) {
-      AppDispatcher.dispatch( {
-        type: 'dashboards/start-load',
-        data: dashboardIds,
-        token: this.state.sessionToken
-      })
-    }
-  }
+  componentDidUpdate() {}
 
   closeNewModal(data) {
     this.setState({ newModal : false });
@@ -164,7 +94,7 @@ class Scenarios extends Component {
     this.setState({ deleteModal: true, modalScenario: deleteScenario });
   }
 
-  closeDeleteModal = confirmDelete => {
+  closeDeleteModal(confirmDelete) {
     this.setState({ deleteModal: false });
 
     if (confirmDelete === false) {
@@ -176,7 +106,7 @@ class Scenarios extends Component {
       data: this.state.modalScenario,
       token: this.state.sessionToken
     });
-  }
+  };
 
   showEditModal(id) {
     // get scenario by id
@@ -221,83 +151,20 @@ class Scenarios extends Component {
 
       this.confirmDeleteModal();
     }
-  }
+  };
 
   exportScenario(index) {
     // filter properties
     let scenario = Object.assign({}, this.state.scenarios[index]);
     delete scenario.id;
-    delete scenario.users;
-    delete scenario.dashboards;
 
-    scenario.simulationModels.forEach(model => {
-      delete model.simulator;
-    });
+    // TODO request missing scenario parameters (Dashboards and Simulation Modles) recursively for export
 
     // show save dialog
     const blob = new Blob([JSON.stringify(scenario, null, 2)], { type: 'application/json' });
     FileSaver.saveAs(blob, 'scenario - ' + scenario.name + '.json');
   }
 
-  onScenarioChecked(index, event) {
-    const selectedScenarios = Object.assign([], this.state.selectedScenarios);
-    for (let key in selectedScenarios) {
-      if (selectedScenarios[key] === index) {
-        // update existing entry
-        if (event.target.checked) {
-          return;
-        }
-
-        selectedScenarios.splice(key, 1);
-
-        this.setState({ selectedScenarios });
-        return;
-      }
-    }
-
-    // add new entry
-    if (event.target.checked === false) {
-      return;
-    }
-
-    selectedScenarios.push(index);
-    this.setState({ selectedScenarios });
-  }
-
-  runAction = action => {
-    for (let index of this.state.selectedScenarios) {
-      for (let model of this.state.scenarios[index].simulationModels) {
-        // get simulation model
-        const simulationModel = this.state.simulationModels.find(m => m != null && m.id === model);
-        if (simulationModel == null) {
-          continue;
-        }
-
-        // get simulator for model
-        let simulator = null;
-        for (let sim of this.state.simulators) {
-          if (sim.id === simulationModel.simulatorID) {
-            simulator = sim;
-          }
-        }
-
-        if (simulator == null) {
-          continue;
-        }
-
-        if (action.data.action === 'start') {
-          action.data.parameters = Object.assign({}, this.state.scenarios[index].startParameters, simulationModel.startParameters);
-        }
-
-        AppDispatcher.dispatch({
-          type: 'simulators/start-action',
-          simulator,
-          data: action.data,
-          token: this.state.sessionToken
-        });
-      }
-    }
-  };
 
   render() {
     const buttonStyle = {
@@ -309,10 +176,11 @@ class Scenarios extends Component {
         <h1>Scenarios</h1>
 
         <Table data={this.state.scenarios}>
-          <TableColumn checkbox onChecked={(index, event) => this.onScenarioChecked(index, event)} width='30' />
           <TableColumn title='Name' dataKey='name' link='/scenarios/' linkKey='id' />
+          <TableColumn title='ID' dataKey='id' link='/scenarios/' linkKey='id' />
+          <TableColumn title='Running' dataKey='running' link='/scenarios/' linkKey='id' />
           <TableColumn
-            width='100'
+            width='200'
             editButton
             deleteButton
             exportButton
@@ -321,18 +189,6 @@ class Scenarios extends Component {
             onExport={index => this.exportScenario(index)}
           />
         </Table>
-
-        <div style={{ float: 'left' }}>
-          <SimulatorAction
-            runDisabled={this.state.selectedScenarios.length === 0}
-            runAction={this.runAction}
-            actions={[
-              { id: '0', title: 'Start', data: { action: 'start' } },
-              { id: '1', title: 'Stop', data: { action: 'stop' } },
-              { id: '2', title: 'Pause', data: { action: 'pause' } },
-              { id: '3', title: 'Resume', data: { action: 'resume' } }
-            ]}/>
-        </div>
 
         <div style={{ float: 'right' }}>
           <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" /> Scenario</Button>
@@ -345,7 +201,7 @@ class Scenarios extends Component {
         <EditScenarioDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} scenario={this.state.modalScenario} />
         <ImportScenarioDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} nodes={this.state.nodes} />
 
-        <DeleteDialog title="scenario" name={this.state.modalScenario.name} show={this.state.deleteModal} onClose={this.closeDeleteModal} />
+        <DeleteDialog title="scenario" name={this.state.modalScenario.name} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
       </div>
     );
   }
