@@ -29,13 +29,24 @@ import UserStore from '../stores/user-store';
 import AppDispatcher from '../app-dispatcher';
 
 class SelectFile extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = { type: props.type}
+    }
+
     static getStores() {
         return [ FileStore, UserStore ];
     }
 
     static calculateState() {
+
+        let static_files = [ { _id: "1", name: "Small Energy Consumer Example", url: "http://137.226.248.190:8082?uri=http://137.226.248.190:4040/files/file1.xml"},
+                     { _id: "2", name: "WSCC-09_Neplan", url: "http://137.226.248.190:8082?uri=http://137.226.248.190:4040/files/file2.zip" } ];
+
         return {
-            files: FileStore.getState(),
+            files: static_files,
+            pinturaUrl: static_files[0].url,
             sessionToken: UserStore.getState().token,
             selectedFile: '',
             uploadFile: null,
@@ -75,6 +86,7 @@ class SelectFile extends React.Component {
             const file = this.state.files.find(f => f._id === event.target.value);
 
             this.props.onChange(file);
+            this.setState({ pinturaUrl: file.url });
         }
     }
 
@@ -107,14 +119,23 @@ class SelectFile extends React.Component {
     }
 
     render() {
-        const fileOptions = this.state.files.map(f => 
-            <option key={f._id} value={f._id}>{f.name}</option>
-        );
+        let fileOptions = null;
+        if (this.state.type === "model") {
+            fileOptions = this.state.files.map(f =>
+                <option key={f._id} value={f._id}>{f.name}</option>
+            );
+        }
 
         const progressBarStyle = {
             marginLeft: '100px', 
             marginTop: '-25px'
         };
+
+        let modelOption = <Col sm={9} md={5}>
+                              <Button href={this.state.pinturaUrl} bsSize='small' target="_blank" rel="noopener noreferrer"> Edit Model </Button>
+                          </Col>;
+
+        let option = this.state.type === "model" ? modelOption : null;
 
         return <div>
             <FormGroup>
@@ -122,18 +143,13 @@ class SelectFile extends React.Component {
                     {this.props.name}
                 </Col>
                 
-                <Col sm={9} md={10}>
+                <Col sm={9} md={5}>
                     <FormControl disabled={this.props.disabled} componentClass='select' placeholder='Select file' onChange={this.handleChange}>
                         {fileOptions}
                     </FormControl>
                 </Col>
-            </FormGroup>
-
-            <FormGroup>
-                <Col sm={9} md={10} smOffset={3} mdOffset={2}>
-                    <FormControl disabled={this.props.disabled} type='file' onChange={this.selectUploadFile} />
-                </Col>
-            </FormGroup>
+                {option}
+            </FormGroup>;
 
             <FormGroup>
                 <Col sm={9} md={10} smOffset={3} mdOffset={2}>
