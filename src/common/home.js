@@ -64,7 +64,7 @@ class Home extends React.Component {
           VILLASweb is a frontend for distributed real-time simulation hosted by <a href={"mailto:" + config.admin.mail}>{config.admin.name}</a>.
         </p>
         <p>
-        You are logged in as user {this.state.currentUsername} with ID {this.state.currentUserID} and role {this.state.currentRole}.
+        You are logged in as user <b>{this.state.currentUsername}</b> with <b>ID {this.state.currentUserID}</b> and role <b>{this.state.currentRole}</b>.
         </p>
         {/*
           <p>
