@@ -50,6 +50,7 @@ import Scenarios from './scenario/scenarios';
 import Scenario from './scenario/scenario';
 import SimulationModel from './simulationmodel/simulation-model';
 import Users from './user/users';
+import User from './user/user';
 
 import './styles/app.css';
 
@@ -108,11 +109,11 @@ class App extends React.Component {
 
   showSidebarMenu = () => {
     this.setState({ showSidebarMenu: true });
-  }
+  };
 
   hideSidebarMenu = () => {
     this.setState({ showSidebarMenu: false });
-  }
+  };
 
   render() {
     if (this.state.token == null) {
@@ -149,6 +150,7 @@ class App extends React.Component {
                 <Route path="/scenarios/:scenario" component={Scenario} />
                 <Route path="/simulationModel/:simulationModel" component={SimulationModel} />
                 <Route path="/simulators" component={Simulators} />
+                <Route path="/user" component={User} />
                 <Route path="/users" component={Users} />
               </div>
             </div>
