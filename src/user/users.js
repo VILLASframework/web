@@ -113,7 +113,7 @@ class Users extends Component {
 
       this.confirmDeleteModal();
     }
-  }
+  };
 
   render() {
 
@@ -127,7 +127,7 @@ class Users extends Component {
           <TableColumn title='E-mail' dataKey='mail'  />
           <TableColumn title='Role' dataKey='role'   modifier={(role) => this.getHumanRoleName(role)} />
           <TableColumn title='Active' dataKey='active' />
-          <TableColumn width='70' editButton deleteButton onEdit={index => this.setState({ editModal: true, modalData: this.state.users[index] })} onDelete={index => this.setState({ deleteModal: true, modalData: this.state.users[index] })} />
+          <TableColumn width='200' editButton deleteButton onEdit={index => this.setState({ editModal: true, modalData: this.state.users[index] })} onDelete={index => this.setState({ deleteModal: true, modalData: this.state.users[index] })} />
         </Table>
 
         <Button onClick={() => this.setState({ newModal: true })}><Icon icon='plus' /> User</Button>
