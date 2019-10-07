@@ -38,7 +38,7 @@ class UsersStore extends ArrayStore {
             title: 'Failed to add new user',
             message: action.error.response.body.message,
             level: 'error'
-          }
+          };
           NotificationsDataManager.addNotification(USER_ADD_ERROR_NOTIFICATION);
 
         }
@@ -51,7 +51,7 @@ class UsersStore extends ArrayStore {
             title: 'Failed to edit user',
             message: action.error.response.body.message,
             level: 'error'
-          }
+          };
           NotificationsDataManager.addNotification(USER_EDIT_ERROR_NOTIFICATION);
 
         }
