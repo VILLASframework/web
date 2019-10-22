@@ -115,6 +115,10 @@ class ArrayStore extends ReduceStore {
         this.dataManager.update(action.data, action.token);
         return state;
 
+      case this.type + '/start-own-edit':
+        this.dataManager.update(action.data, action.token);
+        return state;
+
       case this.type + '/edited':
         return this.updateElements(state, [action.data]);
 

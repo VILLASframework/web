@@ -21,28 +21,28 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import {Button, Col, Row, FormGroup, FormLabel} from 'react-bootstrap';
+import {Button, Col, Row} from 'react-bootstrap';
 
 import AppDispatcher from '../common/app-dispatcher';
 import UserStore from './user-store';
+import UsersStore from './users-store';
+
 
 import Icon from '../common/icon';
-import EditUserDialog from './edit-user';
+import EditOwnUserDialog from './edit-own-user'
 
-import DeleteDialog from '../common/dialogs/delete-dialog';
-import ParametersEditor from "../common/parameters-editor";
 
 class User extends Component {
   static getStores() {
-    return [ UserStore ];
+    return [ UserStore, UsersStore ];
   }
 
   static calculateState(prevState, props) {
-    prevState = prevState || {};
+    //prevState = prevState || {};
 
-    const sessionToken = UserStore.getState().token;
-
+    let sessionToken = UserStore.getState().token;
     let user = UserStore.getState().currentUser;
+  
 
     if(user === null) {
       AppDispatcher.dispatch({
@@ -60,38 +60,31 @@ class User extends Component {
       user,
 
       token: sessionToken,
-      editModal: prevState.editModal || false,
-      deleteModal: prevState.deleteModal || false,
-      modalData: prevState.modalData || {}
+      newModal: false,
+      editModal: false,
+      update: false,
+      modalData: {}
     };
   }
 
 
-  closeDeleteModal(confirmDelete) {
-    this.setState({ deleteModal: false });
-
-    if (confirmDelete === false) {
-      return;
-    }
-
-    AppDispatcher.dispatch({
-      type: 'users/start-remove',
-      data: this.state.modalData,
-      token: this.state.token
-    });
-  }
 
   closeEditModal(data) {
     this.setState({ editModal: false });
+    console.log(data);
 
     if (data) {
+
+      
       AppDispatcher.dispatch({
-        type: 'users/start-edit',
+        type: 'users/start-own-edit',
         data: data,
         token: this.state.token
       });
     }
+    
   }
+
 
   getHumanRoleName(role_key) {
     const HUMAN_ROLE_NAMES = {Admin: 'Administrator', User: 'User', Guest: 'Guest'};
@@ -99,13 +92,6 @@ class User extends Component {
     return HUMAN_ROLE_NAMES.hasOwnProperty(role_key)? HUMAN_ROLE_NAMES[role_key] : '';
   }
 
-  onModalKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-
-      this.confirmDeleteModal();
-    }
-  };
 
   render() {
 
@@ -129,6 +115,9 @@ class User extends Component {
             <Col xs={3}>Role: </Col>
             <Col xs={3}> {this.state.user.role} </Col>
           </Row>
+          <Button onClick={() => this.setState({ editModal: true })}><Icon icon='edit' /> Edit!</Button>
+
+          <EditOwnUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />
 
         </form>
 
@@ -137,19 +126,7 @@ class User extends Component {
   }
 }
 
-{/*<Button onClick={() => this.setState({ editModal: true })}><Icon icon='edit' /> Edit</Button>*/}
-{/*<Button onClick={() => this.setState({ deleteModal: true })}><Icon icon='trash' /> Delete</Button>*/}
 
-{/*<EditUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />*/}
-{/*<DeleteDialog title="user" name={this.state.modalData.username} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />*/}
-
-{/*<Table data={this.state.user}>*/}
-{/*  <TableColumn title='Username' width='150' dataKey='username' />*/}
-{/*  <TableColumn title='ID' width='150' dataKey='id' />*/}
-{/*  <TableColumn title='E-mail' dataKey='mail'  />*/}
-{/*  <TableColumn title='Role' dataKey='role'   modifier={(role) => this.getHumanRoleName(role)} />*/}
-{/*  <TableColumn title='Active' dataKey='active'/>*/}
-{/*</Table>*/}
 
 
 let fluxContainerConverter = require('../common/FluxContainerConverter');
