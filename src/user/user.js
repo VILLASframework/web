@@ -74,13 +74,18 @@ class User extends Component {
     console.log(data);
 
     if (data) {
-
+      if(data.password === data.confirmpassword){
       
       AppDispatcher.dispatch({
         type: 'users/start-own-edit',
         data: data,
         token: this.state.token
       });
+    }
+
+    else{
+      console.log("error: not the same password");
+    }
     }
     
   }
@@ -115,7 +120,7 @@ class User extends Component {
             <Col xs={3}>Role: </Col>
             <Col xs={3}> {this.state.user.role} </Col>
           </Row>
-          <Button onClick={() => this.setState({ editModal: true })}><Icon icon='edit' /> Edit!</Button>
+          <Button onClick={() => this.setState({ editModal: true })}><Icon icon='edit' /> Edit</Button>
 
           <EditOwnUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />
 

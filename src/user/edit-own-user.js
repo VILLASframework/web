@@ -34,12 +34,13 @@ class EditOwnUserDialog extends React.Component {
 
     this.state = {
       username: '',
-      currentpassword: '',
       mail: '',
       role: '',
       id: '',
       password: '',
-      active: ''
+      oldPassword: '',
+      active: '',
+      confirmpassword: ''
     }
   }
 
@@ -68,7 +69,8 @@ class EditOwnUserDialog extends React.Component {
     var mail = true;
     var pw = true;
     var active = true;
-    var currentpassword = true;
+    var oldPassword = true;
+    var confirmpassword = true;
 
     if (this.state.username === '') {
       username = false;
@@ -87,8 +89,12 @@ class EditOwnUserDialog extends React.Component {
       active = false;
     }
 
-    if(this.state.currentpassword === ''){
-      currentpassword = false;
+    if(this.state.oldPassword === ''){
+      oldPassword = false;
+    }
+
+    if(this.state.confirmpassword === ''){
+      confirmpassword = false;
     }
 
     
@@ -98,7 +104,7 @@ class EditOwnUserDialog extends React.Component {
     });
 
     // form is valid if any of the fields contain somethig
-    this.valid = username || role || active || currentpassword || mail || pw;
+    this.valid = username || role || active || oldPassword || mail || pw || confirmpassword;
 
   }
 
@@ -124,14 +130,19 @@ class EditOwnUserDialog extends React.Component {
             <FormLabel>E-mail</FormLabel>
             <FormControl type="text" placeholder="Enter e-mail" value={this.state.mail} onChange={(e) => this.handleChange(e)} />
           </FormGroup>
-          <FormGroup as={Col} controlId="currentpassword">
+          <FormGroup  as={Col} controlId="oldPassword">
             <FormLabel>Old Password</FormLabel>
-            <FormControl type="text" placeholder="Enter current password" value={this.state.currentpassword} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="password" placeholder="Enter current password" value={this.state.oldPassword} onChange={(e) => this.handleChange(e)} />
           </FormGroup>
 
           <FormGroup as={Col} controlId="password">
             <FormLabel>New Password</FormLabel>
-            <FormControl type="text" placeholder="Enter password" value={this.state.password} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="password" placeholder="Enter password" value={this.state.password} onChange={(e) => this.handleChange(e)} />
+          </FormGroup>
+
+          <FormGroup as={Col} controlId="confirmpassword">
+            <FormLabel>Confirm New Password</FormLabel>
+            <FormControl type="password" placeholder="Enter password" value={this.state.confirmpassword} onChange={(e) => this.handleChange(e)} />
           </FormGroup>
         </form>
       </Dialog>
