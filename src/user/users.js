@@ -103,7 +103,11 @@ class Users extends Component {
     }
 
     else{
-      console.log("error: not the same password");
+      AppDispatcher.dispatch({
+        type: 'users/confirm-pw-doesnt-match',
+        data: data,
+        token: this.state.token
+      });
     }
     }
   }

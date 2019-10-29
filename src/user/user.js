@@ -84,7 +84,11 @@ class User extends Component {
     }
 
     else{
-      console.log("error: not the same password");
+      AppDispatcher.dispatch({
+        type: 'users/confirm-pw-doesnt-match',
+        data: data,
+        token: this.state.token
+      });
     }
     }
     
@@ -120,6 +124,8 @@ class User extends Component {
             <Col xs={3}>Role: </Col>
             <Col xs={3}> {this.state.user.role} </Col>
           </Row>
+
+          
           <Button onClick={() => this.setState({ editModal: true })}><Icon icon='edit' /> Edit</Button>
 
           <EditOwnUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />

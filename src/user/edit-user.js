@@ -37,7 +37,8 @@ class EditUserDialog extends React.Component {
       id: '',
       password: '',
       active: '',
-      confirmpassword: ''
+      confirmpassword: '',
+      oldPassword: ''
     }
   }
 
@@ -61,6 +62,7 @@ class EditUserDialog extends React.Component {
     var pw = true;
     var active = true;
     var confirmpassword = true;
+    var oldPW = true;
 
 
     if (this.state.username === '') {
@@ -87,9 +89,12 @@ class EditUserDialog extends React.Component {
       confirmpassword = false;
     }
 
+    if(this.state.oldPassword === ''){
+      oldPW = false;
+    }
 
     // form is valid if any of the fields contain somethig
-    this.valid = username || role || mail || pw || active || confirmpassword;
+    this.valid = username || role || mail || pw || active || confirmpassword || oldPW;
 
   }
 
@@ -114,6 +119,10 @@ class EditUserDialog extends React.Component {
           <FormGroup as={Col} controlId="mail">
             <FormLabel>E-mail</FormLabel>
             <FormControl type="text" placeholder="Enter e-mail" value={this.state.mail} onChange={(e) => this.handleChange(e)} />
+          </FormGroup>
+          <FormGroup  as={Col} controlId="oldPassword">
+            <FormLabel>Old Password</FormLabel>
+            <FormControl type="password" placeholder="Enter current password" value={this.state.oldPassword} onChange={(e) => this.handleChange(e)} />
           </FormGroup>
           <FormGroup as={Col} controlId="password">
             <FormLabel>Password</FormLabel>

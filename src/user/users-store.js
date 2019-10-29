@@ -55,7 +55,7 @@ class UsersStore extends ArrayStore {
           NotificationsDataManager.addNotification(USER_EDIT_ERROR_NOTIFICATION);
 
         }
-        return super.reduce(state, action);
+        return super.reduce(state, action); 
 
       default:
         return super.reduce(state, action);

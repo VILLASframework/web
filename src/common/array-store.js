@@ -22,6 +22,7 @@
 import { ReduceStore } from 'flux/utils';
 
 import AppDispatcher from './app-dispatcher';
+import NotificationsDataManager from '../common/data-managers/notifications-data-manager';
 
 class ArrayStore extends ReduceStore {
   constructor(type, dataManager) {
@@ -84,9 +85,18 @@ class ArrayStore extends ReduceStore {
         }
 
       case this.type + '/load-error':
-        // TODO: Add error message
-        return state;
-
+        if (action.error && !action.error.handled && action.error.response) {
+        
+          const USER_LOAD_ERROR_NOTIFICATION = {
+            title: 'Failed to load',
+            message: action.error.response.body.message,
+            level: 'error'
+          };
+          NotificationsDataManager.addNotification(USER_LOAD_ERROR_NOTIFICATION);
+  
+        }
+        return super.reduce(state, action);
+  
       case this.type + '/start-add':
         this.dataManager.add(action.data, action.token);
         return state;
@@ -95,8 +105,9 @@ class ArrayStore extends ReduceStore {
         return this.updateElements(state, [action.data]);
 
       case this.type + '/add-error':
-        // TODO: Add error message
-        return state;
+        
+         return state;
+
 
       case this.type + '/start-remove':
         this.dataManager.remove(action.data, action.token);
@@ -108,9 +119,18 @@ class ArrayStore extends ReduceStore {
         });
 
       case this.type + '/remove-error':
-        // TODO: Add error message
-        return state;
+        if (action.error && !action.error.handled && action.error.response) {
 
+          const USER_REMOVE_ERROR_NOTIFICATION = {
+            title: 'Failed to add remove ',
+            message: action.error.response.body.message,
+            level: 'error'
+          };
+          NotificationsDataManager.addNotification(USER_REMOVE_ERROR_NOTIFICATION);
+  
+        }
+        return super.reduce(state, action);
+  
       case this.type + '/start-edit':
         this.dataManager.update(action.data, action.token);
         return state;
@@ -122,9 +142,17 @@ class ArrayStore extends ReduceStore {
       case this.type + '/edited':
         return this.updateElements(state, [action.data]);
 
-      case this.type + '/edit-error':
-        // TODO: Add error message
+      case this.type + '/confirm-pw-doesnt-match':
+          const USER_PW_ERROR_NOTIFICATION = {
+            title: 'The new password does not match',
+            message: 'Try again',
+            level: 'error'
+          };
+          NotificationsDataManager.addNotification(USER_PW_ERROR_NOTIFICATION);
         return state;
+
+      case this.type + '/edit-error':
+          return state;
 
       default:
         return state;
