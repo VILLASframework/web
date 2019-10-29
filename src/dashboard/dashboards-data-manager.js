@@ -1,5 +1,5 @@
 /**
- * File: visualizations-data-manager.js
+ * File: dashboards-data-manager.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 03.03.2017
  *
@@ -21,4 +21,4 @@
 
 import RestDataManager from '../common/data-managers/rest-data-manager';
 
-export default new RestDataManager('visualization', '/visualizations');
+export default new RestDataManager('dashboard', '/dashboards');

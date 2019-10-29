@@ -1,5 +1,5 @@
 /**
- * File: new-visualization.js
+ * File: new-dashboard.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 03.03.2017
  *
@@ -24,15 +24,14 @@ import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
 import Dialog from '../common/dialogs/dialog';
 
-class EditVisualizationDialog extends React.Component {
+class NewVisualzationDialog extends React.Component {
   valid: false;
 
   constructor(props) {
     super(props);
 
     this.state = {
-      name: '',
-      _id: ''
+      name: ''
     }
   }
 
@@ -51,10 +50,7 @@ class EditVisualizationDialog extends React.Component {
   }
 
   resetState() {
-    this.setState({
-      name: this.props.visualization.name,
-      _id: this.props.visualization._id
-    });
+    this.setState({ name: '' });
   }
 
   validateForm(target) {
@@ -75,7 +71,7 @@ class EditVisualizationDialog extends React.Component {
 
   render() {
     return (
-      <Dialog show={this.props.show} title="Edit Visualization" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog show={this.props.show} title="New Dashboard" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
             <FormLabel>Name</FormLabel>
@@ -88,4 +84,4 @@ class EditVisualizationDialog extends React.Component {
   }
 }
 
-export default EditVisualizationDialog;
+export default NewVisualzationDialog;

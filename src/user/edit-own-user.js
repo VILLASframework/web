@@ -60,7 +60,6 @@ class EditOwnUserDialog extends React.Component {
 
   handleChange(e) {
     let user = UserStore.getState().currentUser;
-    console.log("edit-own-user, handlechange methode called");
     this.setState({ [e.target.id]: e.target.value });
 
     // check all controls

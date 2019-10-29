@@ -1,5 +1,5 @@
 /**
- * File: visualization-store.js
+ * File: dashboard-store.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 02.03.2017
  *
@@ -20,6 +20,6 @@
  ******************************************************************************/
 
 import ArrayStore from '../common/array-store';
-import VisualizationsDataManager from './visualizations-data-manager';
+import DashboardsDataManager from './dashboards-data-manager';
 
-export default new ArrayStore('visualizations', VisualizationsDataManager);
+export default new ArrayStore('dashboards', DashboardsDataManager);

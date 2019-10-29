@@ -27,21 +27,21 @@ import FileSaver from 'file-saver';
 import AppDispatcher from '../common/app-dispatcher';
 import ProjectStore from './project-store';
 import UserStore from '../user/user-store';
-import VisualizationStore from '../visualization/visualization-store';
+import DashboardStore from '../dashboard/dashboard-store';
 import SimulationStore from '../simulation/simulation-store';
 
 import Icon from '../common/icon';
 import CustomTable from '../common/table';
 import TableColumn from '../common/table-column';
-import NewVisualzationDialog from '../visualization/new-visualization';
-import EditVisualizationDialog from '../visualization/edit-visualization';
-import ImportVisualizationDialog from '../visualization/import-visualization';
+import NewVisualzationDialog from '../dashboard/new-dashboard';
+import EditDashboardDialog from '../dashboard/edit-dashboard';
+import ImportDashboardDialog from '../dashboard/import-dashboard';
 
 import DeleteDialog from '../common/dialogs/delete-dialog';
 
-class Visualizations extends Component {
+class Dashboards extends Component {
   static getStores() {
-    return [ ProjectStore, VisualizationStore, UserStore, SimulationStore ];
+    return [ ProjectStore, DashboardStore, UserStore, SimulationStore ];
   }
 
   static calculateState(prevState, props) {
@@ -68,15 +68,15 @@ class Visualizations extends Component {
       simulation = SimulationStore.getState().find(simulation => simulation._id === project.simulation);
     }
 
-    // load visualizations
-    let visualizations = [];
+    // load dashboards
+    let dashboards = [];
 
-    if (project.visualizations != null) {
-      visualizations = VisualizationStore.getState().filter(visualization => project.visualizations.includes(visualization._id));
+    if (project.dashboards != null) {
+      dashboards = DashboardStore.getState().filter(dashboard => project.dashboards.includes(dashboard._id));
     }
 
     return {
-      visualizations,
+      dashboards,
       project,
       simulation,
       sessionToken,
@@ -91,7 +91,7 @@ class Visualizations extends Component {
 
   componentDidMount() {
     AppDispatcher.dispatch({
-      type: 'visualizations/start-load',
+      type: 'dashboards/start-load',
       token: this.state.sessionToken
     });
 
@@ -105,11 +105,11 @@ class Visualizations extends Component {
     this.setState({ newModal: false });
 
     if (data) {
-      // add project to visualization
+      // add project to dashboard
       data.project = this.state.project._id;
 
       AppDispatcher.dispatch({
-        type: 'visualizations/start-add',
+        type: 'dashboards/start-add',
         data: data,
         token: this.state.sessionToken
       });
@@ -132,7 +132,7 @@ class Visualizations extends Component {
     }
 
     AppDispatcher.dispatch({
-      type: 'visualizations/start-remove',
+      type: 'dashboards/start-remove',
       data: this.state.modalData,
       token: this.state.sessionToken
     });
@@ -143,7 +143,7 @@ class Visualizations extends Component {
 
     if (data) {
       AppDispatcher.dispatch({
-        type: 'visualizations/start-edit',
+        type: 'dashboards/start-edit',
         data: data,
         token: this.state.sessionToken
       });
@@ -157,7 +157,7 @@ class Visualizations extends Component {
       data.project = this.state.project._id;
 
       AppDispatcher.dispatch({
-        type: 'visualizations/start-add',
+        type: 'dashboards/start-add',
         data,
         token: this.state.sessionToken
       });
@@ -172,20 +172,20 @@ class Visualizations extends Component {
     }
   }
 
-  exportVisualization(index) {
+  exportDashboard(index) {
     // filter properties
-    let visualization = Object.assign({}, this.state.visualizations[index]);
-    delete visualization._id;
-    delete visualization.project;
-    delete visualization.user;
+    let dashboard = Object.assign({}, this.state.dashboards[index]);
+    delete dashboard._id;
+    delete dashboard.project;
+    delete dashboard.user;
 
-    visualization.widgets.forEach(widget => {
+    dashboard.widgets.forEach(widget => {
       delete widget.simulator;
     });
 
     // show save dialog
-    const blob = new Blob([JSON.stringify(visualization, null, 2)], { type: 'application/json' });
-    FileSaver.saveAs(blob, 'visualization - ' + visualization.name + '.json');
+    const blob = new Blob([JSON.stringify(dashboard, null, 2)], { type: 'application/json' });
+    FileSaver.saveAs(blob, 'dashboard - ' + dashboard.name + '.json');
   }
 
   onModalKeyPress = (event) => {
@@ -205,31 +205,31 @@ class Visualizations extends Component {
       <div className='section'>
         <h1>{this.state.project.name}</h1>
 
-        <CustomTable data={this.state.visualizations}>
-          <TableColumn title='Name' dataKey='name' link='/visualizations/' linkKey='_id' />
+        <CustomTable data={this.state.dashboards}>
+          <TableColumn title='Name' dataKey='name' link='/dashboards/' linkKey='_id' />
           <TableColumn
             width='100'
             editButton
             deleteButton
             exportButton
-            onEdit={(index) => this.setState({ editModal: true, modalData: this.state.visualizations[index] })}
-            onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.visualizations[index] })}
-            onExport={index => this.exportVisualization(index)}
+            onEdit={(index) => this.setState({ editModal: true, modalData: this.state.dashboards[index] })}
+            onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.dashboards[index] })}
+            onExport={index => this.exportDashboard(index)}
           />
         </CustomTable>
 
-        <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" /> Visualization</Button>
+        <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" /> Dashboard</Button>
         <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
 
         <NewVisualzationDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
-        <EditVisualizationDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} visualization={this.state.modalData} />
-        <ImportVisualizationDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} simulation={this.state.simulation} />
+        <EditDashboardDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} dashboard={this.state.modalData} />
+        <ImportDashboardDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} simulation={this.state.simulation} />
 
-        <DeleteDialog title="visualization" name={this.state.modalData.name} show={this.state.deleteModal} onClose={this.closeDeleteModal} />
+        <DeleteDialog title="dashboard" name={this.state.modalData.name} show={this.state.deleteModal} onClose={this.closeDeleteModal} />
       </div>
     );
   }
 }
 
 let fluxContainerConverter = require('../common/FluxContainerConverter');
-export default Container.create(fluxContainerConverter.convert(Visualizations), {withProps: true});
+export default Container.create(fluxContainerConverter.convert(Dashboards), {withProps: true});

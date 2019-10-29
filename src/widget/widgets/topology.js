@@ -86,7 +86,7 @@ class WidgetTopology extends React.Component {
     this.Viewer = null;
 
     this.state = {
-      visualizationState: 'initial'
+      dashboardState: 'initial'
     };
   }
 
@@ -108,13 +108,13 @@ class WidgetTopology extends React.Component {
   componentWillReceiveProps(nextProps) {
     const file = nextProps.files.find(file => file._id === nextProps.widget.file);
     // Ensure model is requested only once or a different was selected
-    if (this.props.widget.file !== nextProps.widget.file || (this.state.visualizationState === 'initial' && file)) {
-      this.setState({'visualizationState': 'loading' });
+    if (this.props.widget.file !== nextProps.widget.file || (this.state.dashboardState === 'initial' && file)) {
+      this.setState({'dashboardState': 'loading' });
       if (file) {
         fetch(new Request('/' + config.publicPathBase + file.path))
         .then( response => {
           if (response.status === 200) {
-            this.setState({'visualizationState': 'ready' });
+            this.setState({'dashboardState': 'ready' });
             return response.text().then( contents => {
               if (this.svgElem) {
                 let cimsvgInstance = new cimsvg(this.svgElem.current);
@@ -135,7 +135,7 @@ class WidgetTopology extends React.Component {
         .catch(error => {
           console.error(error);
           this.setState({
-            'visualizationState': 'show_message',
+            'dashboardState': 'show_message',
             'message': 'Topology could not be loaded.'});
         });
       }
@@ -143,7 +143,7 @@ class WidgetTopology extends React.Component {
       // No file has been selected
       if (!nextProps.widget.file) {
         this.setState({
-          'visualizationState': 'show_message',
+          'dashboardState': 'show_message',
           'message': 'Select a topology model first.'});
       }
     }
@@ -152,7 +152,7 @@ class WidgetTopology extends React.Component {
   render() {
     var markup = null;
 
-    switch(this.state.visualizationState) {
+    switch(this.state.dashboardState) {
       case 'loading':
         markup = <div style={spinnerContainerStyle}><div className="loader" /></div>; break;
       case 'show_message':

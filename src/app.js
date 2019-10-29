@@ -43,7 +43,7 @@ import HeaderMenu from './common/header-menu';
 //import Projects from './project/projects';
 //import Project from './project/project';
 import Simulators from './simulator/simulators';
-import Visualization from './visualization/visualization';
+import Dashboard from './dashboard/dashboard';
 //import Simulations from './simulation/simulations';
 //import Simulation from './simulation/simulation';
 import Scenarios from './scenario/scenarios';
@@ -145,7 +145,7 @@ class App extends React.Component {
               <div className={`app-content app-content-margin-left`}>
                 <Route exact path="/" component={Home} />
                 <Route path="/home" component={Home} />
-                <Route path="/visualizations/:visualization" component={Visualization} />
+                <Route path="/dashboards/:dashboard" component={Dashboard} />
                 <Route exact path="/scenarios" component={Scenarios} />
                 <Route path="/scenarios/:scenario" component={Scenario} />
                 <Route path="/simulationModel/:simulationModel" component={SimulationModel} />

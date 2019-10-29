@@ -1,5 +1,5 @@
 /**
- * File: visualization.js
+ * File: dashboard.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 02.03.2017
  *
@@ -36,7 +36,7 @@ import EditWidget from '../widget/edit-widget';
 import Grid from './grid';
 
 import UserStore from '../user/user-store';
-import VisualizationStore from './visualization-store';
+import DashboardStore from './dashboard-store';
 import ProjectStore from '../project/project-store';
 import SimulationStore from '../simulation/simulation-store';
 import SimulationModelStore from '../simulationmodel/simulation-model-store';
@@ -47,9 +47,9 @@ import NotificationsFactory from '../common/data-managers/notifications-factory'
 
 import 'react-contexify/dist/ReactContexify.min.css';
 
-class Visualization extends React.Component {
+class Dashboard extends React.Component {
   static getStores() {
-    return [ VisualizationStore, ProjectStore, SimulationStore, SimulationModelStore, FileStore, UserStore ];
+    return [ DashboardStore, ProjectStore, SimulationStore, SimulationModelStore, FileStore, UserStore ];
   }
 
   static calculateState(prevState, props) {
@@ -64,12 +64,12 @@ class Visualization extends React.Component {
 
     return {
       sessionToken: UserStore.getState().token,
-      visualizations: VisualizationStore.getState(),
+      dashboards: DashboardStore.getState(),
       projects: ProjectStore.getState(),
       simulations: SimulationStore.getState(),
       files: FileStore.getState(),
 
-      visualization: prevState.visualization || {},
+      dashboard: prevState.dashboard || {},
       project: prevState.project || null,
       simulation: prevState.simulation || null,
       simulationModels,
@@ -92,7 +92,7 @@ class Visualization extends React.Component {
     //document.addEventListener('keydown', this.handleKeydown.bind(this));
 
     AppDispatcher.dispatch({
-      type: 'visualizations/start-load',
+      type: 'dashboards/start-load',
       token
     });
   }
@@ -102,14 +102,14 @@ class Visualization extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.state.visualization._id !== this.props.match.params.visualization) {
-      this.reloadVisualization();
+    if (this.state.dashboard._id !== this.props.match.params.dashboard) {
+      this.reloadDashboard();
     }
 
     // load depending project
     if (this.state.project == null && this.state.projects) {
       this.state.projects.forEach((project) => {
-        if (project._id === this.state.visualization.project) {
+        if (project._id === this.state.dashboard.project) {
           this.setState({ project: project, simulation: null });
 
           const token = localStorage.getItem('token');
@@ -161,25 +161,25 @@ class Visualization extends React.Component {
     return Object.keys(widgets).map( (key) => widgets[key]);
   }
 
-  reloadVisualization() {
-    // select visualization by param id
-    this.state.visualizations.forEach((tempVisualization) => {
-      if (tempVisualization._id === this.props.match.params.visualization) {
+  reloadDashboard() {
+    // select dashboard by param id
+    this.state.dashboards.forEach((tempDashboard) => {
+      if (tempDashboard._id === this.props.match.params.dashboard) {
 
         // convert widgets list to a dictionary
-        var visualization = Object.assign({}, tempVisualization, {
-            widgets: tempVisualization.widgets ? this.transformToWidgetsDict(tempVisualization.widgets) : {}
+        var dashboard = Object.assign({}, tempDashboard, {
+            widgets: tempDashboard.widgets ? this.transformToWidgetsDict(tempDashboard.widgets) : {}
         });
 
-        this.computeHeightWithWidgets(visualization.widgets);
+        this.computeHeightWithWidgets(dashboard.widgets);
 
-        this.setState({ visualization: visualization, project: null });
+        this.setState({ dashboard: dashboard, project: null });
 
         const token = localStorage.getItem('token');
 
         AppDispatcher.dispatch({
           type: 'projects/start-load',
-          data: visualization.project,
+          data: dashboard.project,
           token
         });
       }
@@ -187,9 +187,9 @@ class Visualization extends React.Component {
   }
 
   snapToGrid(value) {
-    if (this.state.visualization.grid === 1) return value;
+    if (this.state.dashboard.grid === 1) return value;
 
-    return Math.round(value / this.state.visualization.grid) * this.state.visualization.grid;
+    return Math.round(value / this.state.dashboard.grid) * this.state.dashboard.grid;
   }
 
   handleDrop(item, position) {
@@ -210,17 +210,17 @@ class Visualization extends React.Component {
     // create new widget
     widget = WidgetFactory.createWidgetOfType(item.name, position, defaultSimulationModel);
 
-    var new_widgets = this.state.visualization.widgets;
+    var new_widgets = this.state.dashboard.widgets;
     var new_key = Object.keys(new_widgets).length;
 
     new_widgets[new_key] = widget;
 
-    var visualization = Object.assign({}, this.state.visualization, {
+    var dashboard = Object.assign({}, this.state.dashboard, {
       widgets: new_widgets
     });
 
     this.increaseHeightWithWidget(widget);
-    this.setState({ visualization: visualization });
+    this.setState({ dashboard: dashboard });
   }
 
   widgetStatusChange(updated_widget, key) {
@@ -231,17 +231,17 @@ class Visualization extends React.Component {
   widgetChange(updated_widget, key, callback = null) {
     var widgets_update = {};
     widgets_update[key] =  updated_widget;
-    var new_widgets = Object.assign({}, this.state.visualization.widgets, widgets_update);
+    var new_widgets = Object.assign({}, this.state.dashboard.widgets, widgets_update);
 
-    var visualization = Object.assign({}, this.state.visualization, {
+    var dashboard = Object.assign({}, this.state.dashboard, {
       widgets: new_widgets
     });
 
     // Check if the height needs to be increased, the section may have shrunk if not
     if (!this.increaseHeightWithWidget(updated_widget)) {
-      this.computeHeightWithWidgets(visualization.widgets);
+      this.computeHeightWithWidgets(dashboard.widgets);
     }
-    this.setState({ visualization: visualization }, callback);
+    this.setState({ dashboard: dashboard }, callback);
   }
 
   /*
@@ -279,7 +279,7 @@ class Visualization extends React.Component {
   }
 
   editWidget(e, data) {
-    this.setState({ editModal: true, modalData: this.state.visualization.widgets[data.key], modalIndex: data.key });
+    this.setState({ editModal: true, modalData: this.state.dashboard.widgets[data.key], modalIndex: data.key });
   }
 
   closeEdit(data) {
@@ -288,24 +288,24 @@ class Visualization extends React.Component {
       var widgets_update = {};
       widgets_update[this.state.modalIndex] = data;
 
-      var new_widgets = Object.assign({}, this.state.visualization.widgets, widgets_update);
+      var new_widgets = Object.assign({}, this.state.dashboard.widgets, widgets_update);
 
-      var visualization = Object.assign({}, this.state.visualization, {
+      var dashboard = Object.assign({}, this.state.dashboard, {
         widgets: new_widgets
       });
 
-      this.setState({ editModal: false, visualization: visualization });
+      this.setState({ editModal: false, dashboard: dashboard });
     } else {
       this.setState({ editModal: false });
     }
   }
 
   deleteWidget(e, data) {
-    delete this.state.visualization.widgets[data.key];
-    var visualization = Object.assign({}, this.state.visualization, {
-        widgets: this.state.visualization.widgets
+    delete this.state.dashboard.widgets[data.key];
+    var dashboard = Object.assign({}, this.state.dashboard, {
+        widgets: this.state.dashboard.widgets
       });
-    this.setState({ visualization: visualization });
+    this.setState({ dashboard: dashboard });
   }
 
   stopEditing() {
@@ -315,36 +315,36 @@ class Visualization extends React.Component {
 
   saveChanges() {
     // Transform to a list
-    var visualization = Object.assign({}, this.state.visualization, {
-        widgets: this.transformToWidgetsList(this.state.visualization.widgets)
+    var dashboard = Object.assign({}, this.state.dashboard, {
+        widgets: this.transformToWidgetsList(this.state.dashboard.widgets)
       });
 
       const token = localStorage.getItem('token');
 
     AppDispatcher.dispatch({
-      type: 'visualizations/start-edit',
-      data: visualization,
+      type: 'dashboards/start-edit',
+      data: dashboard,
       token
     });
   }
 
   discardChanges() {
-    this.setState({ editing: false, visualization: {} });
+    this.setState({ editing: false, dashboard: {} });
 
-    this.reloadVisualization();
+    this.reloadDashboard();
   }
 
   moveWidget(e, data, applyDirection) {
-    var widget = this.state.visualization.widgets[data.key];
+    var widget = this.state.dashboard.widgets[data.key];
     var updated_widgets = {};
     updated_widgets[data.key] = applyDirection(widget);
-    var new_widgets = Object.assign({}, this.state.visualization.widgets, updated_widgets);
+    var new_widgets = Object.assign({}, this.state.dashboard.widgets, updated_widgets);
 
-    var visualization = Object.assign({}, this.state.visualization, {
+    var dashboard = Object.assign({}, this.state.dashboard, {
       widgets: new_widgets
     });
 
-    this.setState({ visualization: visualization });
+    this.setState({ dashboard: dashboard });
   }
 
   moveAbove(widget) {
@@ -380,39 +380,39 @@ class Visualization extends React.Component {
       value = 1;
     }
 
-    let visualization = Object.assign({}, this.state.visualization, {
+    let dashboard = Object.assign({}, this.state.dashboard, {
       grid: value
     });
 
-    this.setState({ visualization });
+    this.setState({ dashboard });
   }
 
   lockWidget(data) {
     // lock the widget
-    let widget = this.state.visualization.widgets[data.key];
+    let widget = this.state.dashboard.widgets[data.key];
     widget.locked = true;
 
-    // update visualization
+    // update dashboard
     let widgets = {};
     widgets[data.key] = widget;
-    widgets = Object.assign({}, this.state.visualization.widgets, widgets);
+    widgets = Object.assign({}, this.state.dashboard.widgets, widgets);
 
-    const visualization = Object.assign({}, this.state.visualization, { widgets });
-    this.setState({ visualization });
+    const dashboard = Object.assign({}, this.state.dashboard, { widgets });
+    this.setState({ dashboard });
   }
 
   unlockWidget(data) {
     // lock the widget
-    let widget = this.state.visualization.widgets[data.key];
+    let widget = this.state.dashboard.widgets[data.key];
     widget.locked = false;
 
-    // update visualization
+    // update dashboard
     let widgets = {};
     widgets[data.key] = widget;
-    widgets = Object.assign({}, this.state.visualization.widgets, widgets);
+    widgets = Object.assign({}, this.state.dashboard.widgets, widgets);
 
-    const visualization = Object.assign({}, this.state.visualization, { widgets });
-    this.setState({ visualization });
+    const dashboard = Object.assign({}, this.state.dashboard, { widgets });
+    this.setState({ dashboard });
   }
 
   pauseData = () => {
@@ -424,7 +424,7 @@ class Visualization extends React.Component {
   }
 
   render() {
-    const current_widgets = this.state.visualization.widgets;
+    const current_widgets = this.state.dashboard.widgets;
 
     let boxClasses = classNames('section', 'box', { 'fullscreen-container': this.props.isFullscreen });
 
@@ -437,8 +437,8 @@ class Visualization extends React.Component {
       buttons.push({ click: () => this.discardChanges(), icon: 'ban', text: 'Cancel' });
 
       gridControl = <div key={editingControls.length}>
-                      <span>Grid: {this.state.visualization.grid > 1 ? this.state.visualization.grid : 'Disabled'}</span>
-                      <Slider value={this.state.visualization.grid} style={{ width: '80px' }} step={5} onChange={value => this.setGrid(value)} />
+                      <span>Grid: {this.state.dashboard.grid > 1 ? this.state.dashboard.grid : 'Disabled'}</span>
+                      <Slider value={this.state.dashboard.grid} style={{ width: '80px' }} step={5} onChange={value => this.setGrid(value)} />
                     </div>
     }
 
@@ -464,7 +464,7 @@ class Visualization extends React.Component {
       <div className={boxClasses} >
         <div className='section-header box-header'>
           <div className="section-title">
-            <span>{this.state.visualization.name}</span>
+            <span>{this.state.dashboard.name}</span>
           </div>
 
           <div className="section-buttons-group-right">
@@ -511,20 +511,20 @@ class Visualization extends React.Component {
                 onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)}
                 editing={this.state.editing}
                 index={widget_key}
-                grid={this.state.visualization.grid}
+                grid={this.state.dashboard.grid}
                 paused={this.state.paused}
               />
             ))}
 
-            <Grid size={this.state.visualization.grid} disabled={this.state.visualization.grid === 1 || !this.state.editing} />
+            <Grid size={this.state.dashboard.grid} disabled={this.state.dashboard.grid === 1 || !this.state.editing} />
           </Dropzone>
 
           {current_widgets != null &&
             Object.keys(current_widgets).map(widget_key => {
               const data = { key: widget_key };
 
-              const locked = this.state.visualization.widgets[widget_key].locked;
-              const disabledMove = locked || this.state.visualization.widgets[widget_key].type === 'Box';
+              const locked = this.state.dashboard.widgets[widget_key].locked;
+              const disabledMove = locked || this.state.dashboard.widgets[widget_key].type === 'Box';
 
               return <ContextMenu style={{zIndex: 100}} id={'widgetMenu'+ widget_key} key={widget_key}>
                 <Item disabled={locked} onClick={e => this.editWidget(e, data)}>Edit</Item>
@@ -548,4 +548,4 @@ class Visualization extends React.Component {
 }
 
 let fluxContainerConverter = require('../common/FluxContainerConverter');
-export default Fullscreenable()(Container.create(fluxContainerConverter.convert(Visualization), { withProps: true }));
+export default Fullscreenable()(Container.create(fluxContainerConverter.convert(Dashboard), { withProps: true }));

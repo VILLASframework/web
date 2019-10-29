@@ -68,6 +68,7 @@ class ArrayStore extends ReduceStore {
   reduce(state, action) {
     switch (action.type) {
       case this.type + '/start-load':
+
         if (Array.isArray(action.data)) {
           action.data.forEach((id) => {
             this.dataManager.load(id, action.token);

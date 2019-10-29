@@ -68,7 +68,7 @@ class Home extends React.Component {
         </p>
         {/*
           <p>
-            This instance is hosting <Link to="/projects" title="Projects">{this.getCounts('projects')} projects</Link> consisting of <Link to="/simulators" title="Simulators">{this.getCounts('simulators')} simulators</Link>, {this.getCounts('visualizations')} visualizations and <Link to="/simulations" title="Simulations">{this.getCounts('simulations')} simulations</Link>.
+            This instance is hosting <Link to="/projects" title="Projects">{this.getCounts('projects')} projects</Link> consisting of <Link to="/simulators" title="Simulators">{this.getCounts('simulators')} simulators</Link>, {this.getCounts('dashboards')} dashboards and <Link to="/simulations" title="Simulations">{this.getCounts('simulations')} simulations</Link>.
             A total of <Link to="/users" title="Users">{this.getCounts('users')} users</Link> are registered.<br />
           </p>
         */}

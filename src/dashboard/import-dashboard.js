@@ -24,7 +24,7 @@ import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
 import Dialog from '../common/dialogs/dialog';
 
-class ImportVisualizationDialog extends React.Component {
+class ImportDashboardDialog extends React.Component {
   valid = false;
   imported = false;
 
@@ -69,14 +69,14 @@ class ImportVisualizationDialog extends React.Component {
 
     reader.onload = function(event) {
       // read simulator
-      const visualization = JSON.parse(event.target.result);
+      const dashboard = JSON.parse(event.target.result);
 
       let defaultSimulator = "";
       if (self.props.simulation.models != null) {
         defaultSimulator = self.props.simulation.models[0].simulator;
       }
 
-      visualization.widgets.forEach(widget => {
+      dashboard.widgets.forEach(widget => {
         switch (widget.type) {
           case 'Value':
           case 'Plot':
@@ -93,7 +93,7 @@ class ImportVisualizationDialog extends React.Component {
 
       self.imported = true;
       self.valid = true;
-      self.setState({ name: visualization.name, widgets: visualization.widgets, grid: visualization.grid });
+      self.setState({ name: dashboard.name, widgets: dashboard.widgets, grid: dashboard.grid });
     };
 
     reader.readAsText(file);
@@ -115,10 +115,10 @@ class ImportVisualizationDialog extends React.Component {
 
   render() {
     return (
-      <Dialog show={this.props.show} title="Import Visualization" buttonTitle="Import" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog show={this.props.show} title="Import Dashboard" buttonTitle="Import" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
           <FormGroup controlId="file">
-            <FormLabel>Visualization File</FormLabel>
+            <FormLabel>Dashboard File</FormLabel>
             <FormControl type="file" onChange={(e) => this.loadFile(e.target.files)} />
           </FormGroup>
 
@@ -133,4 +133,4 @@ class ImportVisualizationDialog extends React.Component {
   }
 }
 
-export default ImportVisualizationDialog;
+export default ImportDashboardDialog;
