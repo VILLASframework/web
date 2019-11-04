@@ -21,15 +21,15 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { ContextMenuProvider } from 'react-contexify';
-import { Rnd } from 'react-rnd';
-import classNames from 'classnames';
 
 import AppDispatcher from '../common/app-dispatcher';
 import UserStore from '../user/user-store';
 import SimulatorDataStore from '../simulator/simulator-data-store';
 import SimulationModelStore from '../simulationmodel/simulation-model-store';
 import FileStore from '../file/file-store';
+
+import EditableWidgetContainer from './editable-widget-container';
+import WidgetContainer from './widget-container';
 
 import WidgetCustomAction from './widgets/custom-action';
 import WidgetAction from './widgets/action';
@@ -56,8 +56,6 @@ class Widget extends React.Component {
   }
 
   static calculateState(prevState, props) {
-    const sessionToken = UserStore.getState().token;
-
     let simulatorData = {};
 
     if (props.paused) {
@@ -68,101 +66,32 @@ class Widget extends React.Component {
       simulatorData = SimulatorDataStore.getState();
     }
 
-    if (prevState) {
-      return {
-        sessionToken,
-        simulatorData,
-        files: FileStore.getState(),
-        sequence: prevState.sequence + 1,
+    return {
+      simulatorData,
+      files: FileStore.getState(),
+      simulationModels: SimulationModelStore.getState(),
 
-        simulationModels: SimulationModelStore.getState()
-      };
-    } else {
-      return {
-        sessionToken,
-        simulatorData,
-        files: FileStore.getState(),
-        sequence: 0,
+      sequence: prevState != null ? prevState.sequence + 1 : 0,
 
-        simulationModels: SimulationModelStore.getState()
-      };
-    }
-  }
-
-  constructor(props) {
-    super(props);
-
-    // Reference to the context menu element
-    this.contextMenuTriggerViaDraggable = null;
+      sessionToken: UserStore.getState().token
+    };
   }
 
   componentWillMount() {
-    // If loading for the first time
-    if (this.state.sessionToken) {
-      AppDispatcher.dispatch({
-        type: 'files/start-load',
-        token: this.state.sessionToken
-      });
-
-      AppDispatcher.dispatch({
-        type: 'simulationModels/start-load',
-        token: this.state.sessionToken
-      });
-    }
-  }
-
-  snapToGrid(value) {
-    if (this.props.grid === 1)
-      return value;
-
-    return Math.round(value / this.props.grid) * this.props.grid;
-  }
-
-  drag(event, data) {
-    const x = this.snapToGrid(data.x);
-    const y = this.snapToGrid(data.y);
-
-    if (x !== data.x || y !== data.y) {
-      this.rnd.updatePosition({ x, y });
-    }
-  }
-
-  dragStop(event, data) {
-    // update widget
-    let widget = this.props.data;
-    widget.x = this.snapToGrid(data.x);
-    widget.y = this.snapToGrid(data.y);
-
-    this.props.onWidgetChange(widget, this.props.index);
-  }
-
-  resizeStop(direction, delta, event) {
-    // update widget
-    let widget = Object.assign({}, this.props.data);
-
-    // resize depends on direction
-    if (direction === 'left' || direction === 'topLeft' || direction === 'bottomLeft') {
-      widget.x -= delta.width;
+    if (this.state.sessionToken == null) {
+      return;
     }
 
-    if (direction === 'top' || direction === 'topLeft' || direction === 'topRight') {
-      widget.y -= delta.height;
-    }
+    AppDispatcher.dispatch({
+      type: 'files/start-load',
+      token: this.state.sessionToken
+    });
 
-    widget.width += delta.width;
-    widget.height += delta.height;
+    AppDispatcher.dispatch({
+      type: 'simulationModels/start-load',
+      token: this.state.sessionToken
+    });
 
-    this.props.onWidgetChange(widget, this.props.index);
-  }
-
-  borderWasClicked(e) {
-    // check if it was triggered by the right button
-    if (e.button === 2) {
-      // launch the context menu using the reference
-      if(this.contextMenuTriggerViaDraggable) {
-          this.contextMenuTriggerViaDraggable.handleContextClick(e);
-      }
-    }
   }
 
   inputDataChanged(widget, data) {
@@ -184,16 +113,7 @@ class Widget extends React.Component {
     });
   }
 
-  render() {
-    // configure grid
-    const grid = [this.props.grid, this.props.grid];
-
-    // get widget element
-    const widget = this.props.data;
-    let borderedWidget = false;
-    let element = null;
-    let zIndex = Number(widget.z);
-
+  createWidget(widget) {
     let simulationModel = null;
 
     for (let model of this.state.simulationModels) {
@@ -204,93 +124,56 @@ class Widget extends React.Component {
       simulationModel = model;
     }
 
-    // dummy is passed to widgets to keep updating them while in edit mode
     if (widget.type === 'CustomAction') {
-      element = <WidgetCustomAction widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
+      return <WidgetCustomAction widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
     } else if (widget.type === 'Action') {
-      element = <WidgetAction widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
+      return <WidgetAction widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel}/>
     } else if (widget.type === 'Lamp') {
-      element = <WidgetLamp widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
+      return <WidgetLamp widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
     } else if (widget.type === 'Value') {
-      element = <WidgetValue widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
+      return <WidgetValue widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
     } else if (widget.type === 'Plot') {
-      element = <WidgetPlot widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} paused={this.props.paused} />
+      return <WidgetPlot widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} paused={this.props.paused} />
     } else if (widget.type === 'Table') {
-      element = <WidgetTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
+      return <WidgetTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
     } else if (widget.type === 'Label') {
-      element = <WidgetLabel widget={widget} />
+      return <WidgetLabel widget={widget} />
     } else if (widget.type === 'PlotTable') {
-      element = <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index)} paused={this.props.paused} />
+      return <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index)} paused={this.props.paused} />
     } else if (widget.type === 'Image') {
-      element = <WidgetImage widget={widget} files={this.state.files} token={this.state.sessionToken} />
+      return <WidgetImage widget={widget} files={this.state.files} token={this.state.sessionToken} />
     } else if (widget.type === 'Button') {
-      element = <WidgetButton widget={widget} editing={this.props.editing} simulationModel={simulationModel} onInputChanged={(value) => this.inputDataChanged(widget, value)} />
-    } else if (widget.type === 'Input') {
-      element = <WidgetInput widget={widget} editing={this.props.editing} simulationModel={simulationModel} onInputChanged={(value) => this.inputDataChanged(widget, value)} />
+      return <WidgetButton widget={widget} editing={this.props.editing} simulationModel={simulationModel} onInputChanged={(value) => this.inputDataChanged(widget, value)} />
+    } else if (widget.type === 'NumberInput') {
+      return <WidgetInput widget={widget} editing={this.props.editing} simulationModel={simulationModel} onInputChanged={(value) => this.inputDataChanged(widget, value)} />
     } else if (widget.type === 'Slider') {
-      element = <WidgetSlider widget={widget} editing={this.props.editing} simulationModel={simulationModel} onInputChanged={(value) => this.inputDataChanged(widget, value)} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } />
+      return <WidgetSlider widget={widget} editing={this.props.editing} simulationModel={simulationModel} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } onInputChanged={value => this.inputDataChanged(widget, value)} />
     } else if (widget.type === 'Gauge') {
-      element = <WidgetGauge widget={widget} data={this.state.simulatorData} editing={this.props.editing} simulationModel={simulationModel} />
+      return <WidgetGauge widget={widget} data={this.state.simulatorData} editing={this.props.editing} simulationModel={simulationModel} />
     } else if (widget.type === 'Box') {
-      element = <WidgetBox widget={widget} editing={this.props.editing} />
+      return <WidgetBox widget={widget} editing={this.props.editing} />
     } else if (widget.type === 'HTML') {
-      element = <WidgetHTML widget={widget} editing={this.props.editing} />
+      return <WidgetHTML widget={widget} editing={this.props.editing} />
     } else if (widget.type === 'Topology') {
-      element = <WidgetTopology widget={widget} files={this.state.files} />
+      return <WidgetTopology widget={widget} files={this.state.files} />
     }
 
-    if (widget.type === 'Box')
-      zIndex = 0;
+    return null;
+  }
 
-    const widgetClasses = classNames({
-      'widget': !this.props.editing,
-      'editing-widget': this.props.editing,
-      'border': borderedWidget,
-      'unselectable': false,
-      'locked': widget.locked && this.props.editing
-    });
+
+  render() {
+    const element = this.createWidget(this.props.data);
 
     if (this.props.editing) {
-      const resizing = { bottom: !widget.locked, bottomLeft: !widget.locked, bottomRight: !widget.locked, left: !widget.locked, right: !widget.locked, top: !widget.locked, topLeft: !widget.locked, topRight: !widget.locked};
-
-      return (
-        <Rnd
-          ref={c => { this.rnd = c; }}
-          default={{ x: Number(widget.x), y: Number(widget.y), width: widget.width, height: widget.height }}
-          minWidth={widget.minWidth}
-          minHeight={widget.minHeight}
-          lockAspectRatio={Boolean(widget.lockAspect)}
-          bounds={'parent'}
-          className={ widgetClasses }
-          onResizeStart={(event, direction, ref) => this.borderWasClicked(event)}
-          onResizeStop={(event, direction, ref, delta) => this.resizeStop(direction, delta, event)}
-          onDrag={(event, data) => this.drag(event, data)}
-          onDragStop={(event, data) => this.dragStop(event, data)}
-          dragGrid={grid}
-          resizeGrid={grid}
-          z={zIndex}
-          enableResizing={resizing}
-          disableDragging={widget.locked}
-        >
-          <ContextMenuProvider className={'full'} id={'widgetMenu' + this.props.index}>
-            {element}
-          </ContextMenuProvider>
-        </Rnd>
-      );
-    } else {
-      return (
-        <div
-          className={ widgetClasses }
-          style={{
-            width: Number(widget.width), height: Number(widget.height),
-            left: Number(widget.x), top: Number(widget.y),
-            zIndex: zIndex,
-            position: 'absolute'
-          }}>
-          {element}
-        </div>
-      );
+      return <EditableWidgetContainer widget={this.props.data} grid={this.props.grid} index={this.props.index}>
+        {element}
+      </EditableWidgetContainer>;
     }
+
+    return <WidgetContainer widget={this.props.data}>
+      {element}
+    </WidgetContainer>;
   }
 }
 
