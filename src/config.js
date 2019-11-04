@@ -1,9 +1,9 @@
 
 const config = {
     publicPathBase: 'public/',
-    instance: 'frontend of the Global RT-SuperLab Demonstration',
+    instance: 'VILLASweb',
     admin: {
-      name: 'Steffen Vogel',
+      name: 'Institute for Automation of Complex Power Systems, RWTH Aachen University, Germany',
       mail: 'stvogel@eonerc.rwth-aachen.de'
     }
 }

@@ -1,7 +1,7 @@
 /**
- * File: router.js
+ * File: edit-widget-aspect-control.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
+ * Date: 29.07.2017
  *
  * This file is part of VILLASweb.
  *
@@ -20,24 +20,30 @@
  ******************************************************************************/
 
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { FormGroup, FormCheck } from 'react-bootstrap';
 
-import App from './app';
-import Login from './user/login';
-import Logout from './user/logout';
+class EditWidgetAspectControl extends React.Component {
+  constructor(props) {
+    super(props);
 
-class Root extends React.Component {
+    this.state = {
+      widget: {
+        lockAspect: true
+      }
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ widget: nextProps.widget });
+  }
+
   render() {
     return (
-      <BrowserRouter>
-        <Switch>
-          <Route path='/login' component={Login} />
-          <Route path='/logout' component={Logout} />
-          <Route path='/' component={App} />
-        </Switch>
-      </BrowserRouter>
+      <FormGroup>
+        <FormCheck id="lockAspect" checked={this.state.widget.lockAspect} onChange={e => this.props.handleChange(e)}>Lock Aspect</FormCheck>
+      </FormGroup>
     );
   }
 }
 
-export default Root;
+export default EditWidgetAspectControl;

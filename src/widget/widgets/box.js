@@ -1,7 +1,8 @@
 /**
- * File: router.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
+ * File: box.js
+ * Author: Ricardo Hernandez-Montoya <rhernandez@gridhound.de>
+ * Date: 25.04.2017
+ * Copyright: 2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * This file is part of VILLASweb.
  *
@@ -19,25 +20,29 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import React, { Component } from 'react';
 
-import App from './app';
-import Login from './user/login';
-import Logout from './user/logout';
+import EditWidgetColorControl from '../edit-widget-color-control';
 
-class Root extends React.Component {
+class WidgetBox extends Component {
   render() {
+
+    let colors = EditWidgetColorControl.ColorPalette;
+
+    let colorStyle = {
+      borderColor: colors[this.props.widget.border_color],
+      backgroundColor: colors[this.props.widget.background_color],
+      opacity: this.props.widget.background_color_opacity
+    }
+
     return (
-      <BrowserRouter>
-        <Switch>
-          <Route path='/login' component={Login} />
-          <Route path='/logout' component={Logout} />
-          <Route path='/' component={App} />
-        </Switch>
-      </BrowserRouter>
+      <div className="box-widget full">
+        <div className="border" style={colorStyle}>
+          {  }
+        </div>
+      </div>
     );
   }
 }
 
-export default Root;
+export default WidgetBox;

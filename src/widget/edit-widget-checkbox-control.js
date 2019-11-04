@@ -1,7 +1,7 @@
 /**
- * File: router.js
+ * File: edit-widget-checkbox-control.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
+ * Date: 19.08.2017
  *
  * This file is part of VILLASweb.
  *
@@ -20,24 +20,26 @@
  ******************************************************************************/
 
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { FormGroup, FormCheck } from 'react-bootstrap';
 
-import App from './app';
-import Login from './user/login';
-import Logout from './user/logout';
+class EditWidgetCheckboxControl extends React.Component {
+  constructor(props) {
+    super(props);
 
-class Root extends React.Component {
+    this.state = {
+      widget: {}
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ widget: nextProps.widget });
+  }
+
   render() {
-    return (
-      <BrowserRouter>
-        <Switch>
-          <Route path='/login' component={Login} />
-          <Route path='/logout' component={Logout} />
-          <Route path='/' component={App} />
-        </Switch>
-      </BrowserRouter>
-    );
+    return <FormGroup>
+      <FormCheck id={this.props.controlId} checked={this.state.widget[this.props.controlId] || ''} onChange={e => this.props.handleChange(e)}>{this.props.text}</FormCheck>
+    </FormGroup>;
   }
 }
 
-export default Root;
+export default EditWidgetCheckboxControl;

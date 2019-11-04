@@ -1,7 +1,7 @@
 /**
- * File: router.js
+ * File: table-column.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
+ * Date: 06.03.2017
  *
  * This file is part of VILLASweb.
  *
@@ -19,25 +19,36 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import React, { Component } from 'react';
 
-import App from './app';
-import Login from './user/login';
-import Logout from './user/logout';
+class TableColumn extends Component {
+  static defaultProps = {
+    title: '',
+    modifier: null,
+    width: null,
+    editButton: false,
+    deleteButton: false,
+    exportButton: false,
+    link: '/',
+    linkKey: '',
+    dataIndex: false,
+    inlineEditable: false,
+    clickable: false,
+    labelKey: null,
+    checkbox: false,
+    checkboxKey: '',
+    labelStyle: null,
+    labelModifier: null
 
-class Root extends React.Component {
+  };
+
   render() {
     return (
-      <BrowserRouter>
-        <Switch>
-          <Route path='/login' component={Login} />
-          <Route path='/logout' component={Logout} />
-          <Route path='/' component={App} />
-        </Switch>
-      </BrowserRouter>
+      <th width={this.props.width}>
+        {this.props.title}
+      </th>
     );
   }
 }
 
-export default Root;
+export default TableColumn;

@@ -1,5 +1,5 @@
 /**
- * File: router.js
+ * File: header.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
  * Date: 02.03.2017
  *
@@ -20,24 +20,29 @@
  ******************************************************************************/
 
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Col, Button } from 'react-bootstrap';
+import { Hidden } from 'react-grid-system'
+import Icon from './icon';
 
-import App from './app';
-import Login from './user/login';
-import Logout from './user/logout';
-
-class Root extends React.Component {
+class Header extends React.Component {
   render() {
     return (
-      <BrowserRouter>
-        <Switch>
-          <Route path='/login' component={Login} />
-          <Route path='/logout' component={Logout} />
-          <Route path='/' component={App} />
-        </Switch>
-      </BrowserRouter>
+      <header className="app-header">
+        <Col xs={{span: 10}} sm={{span: 8, offset: 2}}>
+          <h1>VILLASweb</h1>
+        </Col>
+        <Hidden sm md lg xl>
+          <Col xs={2} style={{ paddingLeft: 'auto', paddingRight: 0 }}>
+            {this.props.showMenuButton &&
+              <Button variant="link" onClick={this.props.onMenuButton} style={{ float: 'right', marginRight: '10px' }}>
+                <Icon size="3x" icon="bars" className="menu-icon" />
+              </Button>
+            }
+          </Col>
+        </Hidden>
+      </header>
     );
   }
 }
 
-export default Root;
+export default Header;

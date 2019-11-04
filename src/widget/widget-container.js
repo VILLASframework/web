@@ -1,7 +1,7 @@
 /**
- * File: router.js
+ * File: widget-container.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
+ * Date: 31.05.2018
  *
  * This file is part of VILLASweb.
  *
@@ -20,24 +20,28 @@
  ******************************************************************************/
 
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-import App from './app';
-import Login from './user/login';
-import Logout from './user/logout';
-
-class Root extends React.Component {
+class WidgetContainer extends React.Component {
   render() {
-    return (
-      <BrowserRouter>
-        <Switch>
-          <Route path='/login' component={Login} />
-          <Route path='/logout' component={Logout} />
-          <Route path='/' component={App} />
-        </Switch>
-      </BrowserRouter>
-    );
+    const containerStyle = {
+      width: Number(this.props.widget.width),
+      height: Number(this.props.widget.height),
+      left: Number(this.props.widget.x),
+      top: Number(this.props.widget.y),
+      zIndex: Number(this.props.widget.z),
+      position: 'absolute'
+    };
+
+    return <div className='widget' style={containerStyle}>
+      {this.props.children}
+    </div>;
   }
 }
 
-export default Root;
+WidgetContainer.propTypes = {
+  widget: PropTypes.object.isRequired,
+  children: PropTypes.node, //TODO is .node correct here? Was .children before leading to compile error
+};
+
+export default WidgetContainer

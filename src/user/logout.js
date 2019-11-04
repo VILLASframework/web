@@ -1,7 +1,7 @@
 /**
- * File: router.js
+ * File: logout.js
  * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
+ * Date: 15.03.2017
  *
  * This file is part of VILLASweb.
  *
@@ -20,24 +20,25 @@
  ******************************************************************************/
 
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
-import App from './app';
-import Login from './user/login';
-import Logout from './user/logout';
+import AppDispatcher from '../common/app-dispatcher';
 
-class Root extends React.Component {
+class Logout extends React.Component {
+  componentWillMount() {
+    AppDispatcher.dispatch({
+      type: 'users/logout'
+    });
+
+    // discard login token
+    localStorage.setItem('token', '');
+  }
+
   render() {
     return (
-      <BrowserRouter>
-        <Switch>
-          <Route path='/login' component={Login} />
-          <Route path='/logout' component={Logout} />
-          <Route path='/' component={App} />
-        </Switch>
-      </BrowserRouter>
+      <Redirect to="/login" />
     );
   }
 }
 
-export default Root;
+export default Logout;
