@@ -1,0 +1,433 @@
+/**
+ * File: widgets.css
+ * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
+ * Date: 02.03.2017
+ *
+ * This file is part of VILLASweb.
+ *
+ * VILLASweb is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * VILLASweb is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
+
+.widget {
+
+}
+
+.border {
+    border: 1px solid lightgray;
+}
+
+.editing-widget {
+
+}
+
+.editing-widget:hover {
+    background-color: #fff;
+}
+
+.locked {
+    cursor: not-allowed !important;
+}
+
+/* Firefox-specific rules */
+@-moz-document url-prefix() {
+    .editing-widget:not(.border):hover {
+        outline-offset: -10px;
+    }
+}
+
+.editing-widget:not(.border):hover {
+    outline: 1px solid lightgray;
+}
+
+/* Reset Bootstrap styles to "disable" while editing */
+div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input[disabled], .form-control[disabled], .checkbox.disabled label {
+  cursor: inherit;
+  pointer-events: none;
+}
+
+.editing-widget .btn-default.active {
+    background-color: #abcfd8;
+    border-color: #ccc;
+}
+
+.btn-default[disabled]:hover {
+    background-color: #fff;
+    border-color: #ccc;
+}
+
+.btn-default.active[disabled]:hover {
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+ /* End reset */
+
+ /* Match Bootstrap's them to VILLAS */
+.widget .btn-default.active {
+    background-color: #abcfd8;
+}
+
+.widget .btn-default.active:hover, .widget .btn-default.active:hover {
+    background-color: #89b3bd;
+}
+
+.widget .btn-default:hover {
+    background-color: #abcfd8;
+}
+/* End match */
+
+/* Begin edit menu: Colors */
+.color-control input[type="radio"] {
+    display: none;
+}
+
+.color-control .radio-inline.checked {
+    border-color: #000 !important;
+}
+
+.color-control .radio-inline {
+    height: 24px;
+    flex: 1 1 auto;
+    border: 2px solid;
+    /* Reset bootstrap padding */
+    padding-left: 0px;
+}
+
+.color-control .radio-inline + .radio-inline {
+    /* Reset bootstrap margin */
+    margin-left: 0px;
+}
+
+.color-control .radio-inline:hover {
+    border-color: #444 !important;
+}
+
+.color-control div[class*="colors-column-"] {
+    display: flex;
+    padding: 2px 20px;
+}
+
+/* End edit menu: Colors */
+
+/* PlotTable widget */
+.plot-table-widget, .plot-widget, .value-widget, .image-widget, .label-widget {
+    width: 100%;
+    height: 100%;
+    padding: 3px 6px;
+}
+
+.plot-table-widget {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+}
+
+.plot-table-widget .content {
+  -webkit-flex: 1 0 auto;
+  flex: 1 0 auto;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+}
+
+.table-plot-row {
+  -webkit-flex: 1 0 auto;
+  flex: 1 0 auto;
+  display: -webkit-flex;
+  display: flex;
+}
+
+.plot-table-widget .widget-table {
+  -webkit-flex: 1 0 auto;
+  flex: 1 0 auto;
+  flex-basis: 90px;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.plot-table-widget small {
+    text-align: center;
+}
+
+.plot-table-widget .checkbox label {
+    height: 100%;
+    width: 100%;
+    padding: 6px 12px;
+    overflow-x: hidden;
+}
+
+.plot-table-widget .btn {
+    padding: 0px;
+}
+
+.plot-table-widget input[type="checkbox"] {
+    display: none;
+}
+/* End PlotTable Widget */
+
+/* Plot Widget */
+.plot-widget {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+}
+/* End Plot Widget */
+
+/* Plots */
+/* The plot container, in order to avoid 100% height/width */
+.widget-plot {
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  flex: 1 1 auto;
+  margin-bottom: 5px;
+}
+
+.plot-legend {
+  display: -webkit-flex;
+  display: flex;
+  flex-basis: 20px; /* Enough to allocate one row */
+  max-height: 40px; /* Allocate up to two rows */
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.signal-legend {
+    float: left;
+    list-style-type: none;
+    font-size: 1.2em;
+    padding-left: 10px;
+    padding-right: 5px;
+    vertical-align: middle;
+}
+
+li.signal-legend::before {
+    content: '■';
+}
+
+.signal-legend span {
+    font-size: 0.8em;
+}
+
+.signal-legend-name {
+    margin-left: 5px;
+    font-weight: 700;
+    color: black;
+}
+
+span.signal-unit {
+    color: grey;
+    font-style: italic;
+    font-weight: 50%;
+}
+
+span.signal-unit::before {
+    content: '[';
+    font-style: normal;
+}
+
+span.signal-unit::after {
+    content: ']';
+    font-style: normal;
+}
+
+/* End Plots */
+
+.single-value-widget {
+    padding: 0;
+    margin: 0;
+
+    width: 100%;
+    height: 100%;
+    display: flex;
+
+    word-wrap: break-word;
+}
+
+.single-value-widget > * {
+    width: 50%;
+    float: left;
+    margin: 5px;
+    font-size: 1vw;
+}
+
+/* Button widget styling */
+
+/* End button widget styling */
+
+.full {
+    width: 100%;
+    height: 100%;
+}
+
+/* Number input widget */ 
+div[class*="-widget"] label {
+    cursor: inherit;
+}
+
+.number-input-widget {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.number-input-widget .form-horizontal .form-group {
+    margin: 0px;
+}
+/* End number input widget */ 
+
+/* Begin Slider widget */
+.slider-widget {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.slider-widget label {
+    flex: 0 0 auto;
+    text-align: center;
+}
+
+.slider-widget span {
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.slider-widget.horizontal .slider {
+    flex: 1 1 auto;
+}
+
+.slider-widget.horizontal span {
+    flex: 0 0 50pt;
+}
+
+.slider-widget.horizontal label {
+    padding-right: 10px;
+}
+
+.slider-widget.vertical {
+    flex-direction: column;
+}
+
+.slider-widget.vertical span {
+    padding-top: 10px;
+}
+
+.slider-widget.vertical label {
+    padding-bottom: 10px;
+}
+
+/* Begin Slider customization */
+.rc-slider-track {
+    background-color: #6EA2B0;
+}
+
+.rc-slider-handle, .rc-slider-handle:hover {
+    border-color: #6EA2B0;
+}
+
+.rc-slider-disabled {
+    background-color: inherit;
+}
+
+.rc-slider-disabled .rc-slider-handle {
+    cursor: inherit;
+}
+
+.rc-slider-disabled .rc-slider-handle:hover {
+    border-color:#ccc;
+}
+/* End Slider customization */
+
+/* End slider widget */
+
+/* Gauge widget */
+.gauge-widget {
+    width: 100%;
+    height: 100%;
+}
+
+.gauge-widget canvas {
+    width: 100%;
+    height: 87%;
+}
+
+.gauge-name {
+    height: 10%;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+}
+
+.gauge-unit {
+    position: absolute;
+    width: 100%;
+    font-size: 1.0em;
+    bottom: 25%;
+    text-align: center;
+}
+
+.gauge-value {
+    position: absolute;
+    width: 100%;
+    font-weight: bold;
+    font-size: 18px;
+    bottom: 10%;
+    text-align: center;
+}
+/* End gauge widget */
+
+/* Begin label widget */
+.label-widget  {
+    padding: 0;
+}
+
+.label-widget h4 {
+    padding: 0;
+    margin: 0;
+
+    word-wrap: break-word;
+}
+/* End label widget */
+
+/* Begin table widget */
+.table-widget table {
+    background-color: #fff;
+}
+
+.table-widget td, .table-widget th {
+    text-align: left;
+}
+
+.table-widget td {
+    padding: 2px 8px !important;
+}
+
+/* End table widget*/
+
+/* Begin box widget */
+.box-widget .border {
+    width: 100%;
+    height: 100%;
+    border: 2px solid;
+}
+/* End box widget */
+
+.plot-table-widget .widget-plot {
+  -webkit-flex: 1 0 auto;
+  flex: 1 0 auto;
+}
