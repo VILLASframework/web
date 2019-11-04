@@ -16,7 +16,7 @@ stages:
   - prepare
   - build
   - test
-  - deploy
+#  - deploy
   
 prepare:
   stage: prepare
@@ -51,16 +51,16 @@ test_job:
   tags:
     - docker
 
-deploy:docker:
-  stage: deploy
-  script:
-    - docker build -t ${DOCKER_IMAGE} -f packaging/docker/Dockerfile .
-    - docker tag villas/web:${DOCKER_TAG} villas/web:latest
-    - docker push villas/web:${DOCKER_TAG}
-    - docker push villas/web:latest
-  tags:
-    - shell
-    - linux
-  only:
-    refs:
-      - master
+#deploy:docker:
+#  stage: deploy
+#  script:
+#    - docker build -t ${DOCKER_IMAGE} -f packaging/docker/Dockerfile .
+#    - docker tag villas/web:${DOCKER_TAG} villas/web:latest
+#    - docker push villas/web:${DOCKER_TAG}
+#    - docker push villas/web:latest
+#  tags:
+#    - shell
+#    - linux
+#  only:
+#    refs:
+#      - master
