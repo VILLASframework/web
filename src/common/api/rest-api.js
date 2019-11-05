@@ -73,6 +73,7 @@ class RestAPI {
   }
 
   post(url, body, token) {
+    console.log(url);
     return new Promise(function (resolve, reject) {
       var req = request.post(url).send(body).timeout({ response: 5000 }); // Simple response start timeout (3s)
 

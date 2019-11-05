@@ -52,7 +52,7 @@ class RestDataManager {
     return object;
   }
 
-  load(id, token = null) {
+  load(id, token = null,param = null) {
     if (id != null) {
       // load single object
       RestAPI.get(this.makeURL(this.url + '/' + id), token).then(response => {
@@ -96,54 +96,102 @@ class RestDataManager {
     }
   }
 
-  add(object, token = null) {
+  add(object, token = null, param = null) {
     var obj = {};
     obj[this.type] = this.filterKeys(object);
 
-    RestAPI.post(this.makeURL(this.url), obj, token).then(response => {
-      AppDispatcher.dispatch({
-        type: this.type + 's/added',
-        data: response[this.type]
+    if (param === null) {
+      RestAPI.post(this.makeURL(this.url), obj, token).then(response => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/added',
+          data: response[this.type]
+        });
+      }).catch(error => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/add-error',
+          error: error
+        });
       });
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: this.type + 's/add-error',
-        error: error
+    }
+    else{
+      console.log("else was called in add");
+      RestAPI.post(this.makeURL(this.url) + "?" + param, obj, token).then(response => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/added',
+          data: response[this.type]
+        });
+      }).catch(error => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/add-error',
+          error: error
+        });
       });
-    });
+    }
   }
 
-  remove(object, token = null) {
-    RestAPI.delete(this.makeURL(this.url + '/' + object.id), token).then(response => {
-      AppDispatcher.dispatch({
-        type: this.type + 's/removed',
-        data: response[this.type],
-        original: object
+  remove(object, token = null, param = null) {
+    if (param === null) {
+      RestAPI.delete(this.makeURL(this.url + '/' + object.id), token).then(response => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/removed',
+          data: response[this.type],
+          original: object
+        });
+      }).catch(error => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/remove-error',
+          error: error
+        });
       });
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: this.type + 's/remove-error',
-        error: error
+    }
+    else{
+      RestAPI.delete(this.makeURL(this.url + '/' + object.id + '?' + param), token).then(response => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/removed',
+          data: response[this.type],
+          original: object
+        });
+      }).catch(error => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/remove-error',
+          error: error
+        });
       });
-    });
+    }
   }
 
-  update(object, token = null) {
+  update(object, token = null, param = null) {
     var obj = {};
     obj[this.type] = this.filterKeys(object);
 
-    RestAPI.put(this.makeURL(this.url + '/' + object.id), obj, token).then(response => {
-      AppDispatcher.dispatch({
-        type: this.type + 's/edited',
-        data: response[this.type]
+    if(param === null) {
+      RestAPI.put(this.makeURL(this.url + '/' + object.id), obj, token).then(response => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/edited',
+          data: response[this.type]
+        });
+      }).catch(error => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/edit-error',
+          error: error
+        });
       });
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: this.type + 's/edit-error',
-        error: error
+    }
+    else{
+      RestAPI.put(this.makeURL(this.url + '/' + object.id + '?' + param), obj, token).then(response => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/edited',
+          data: response[this.type]
+        });
+      }).catch(error => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/edit-error',
+          error: error
+        });
       });
-    });
-  }
+    }
+    }
+
 };
 
 export default RestDataManager;
