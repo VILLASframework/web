@@ -80,7 +80,7 @@ class Simulation extends React.Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     AppDispatcher.dispatch({
       type: 'simulations/start-load',
       token: this.state.sessionToken

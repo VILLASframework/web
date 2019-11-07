@@ -80,7 +80,7 @@ class Scenario extends React.Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     AppDispatcher.dispatch({
       type: 'scenarios/start-load',
       token: this.state.sessionToken

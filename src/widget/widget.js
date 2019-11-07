@@ -77,7 +77,7 @@ class Widget extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.state.sessionToken == null) {
       return;
     }

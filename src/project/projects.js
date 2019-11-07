@@ -54,7 +54,7 @@ class Projects extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     AppDispatcher.dispatch({
       type: 'projects/start-load',
       token: this.state.sessionToken

@@ -120,7 +120,7 @@ class Dashboard extends React.Component {
   }
 
 
-  componentWillMount() {
+  componentDidMount() {
     //document.addEventListener('keydown', this.handleKeydown.bind(this));
 
     if (this.state.dashboard.has('id') === false) {
