@@ -53,9 +53,53 @@ class RestDataManager {
   }
 
   load(id, token = null,param = null) {
+    if (param === null) {
+      if (id != null) {
+        // load single object
+        RestAPI.get(this.makeURL(this.url + '/' + id), token).then(response => {
+          const data = this.filterKeys(response[this.type]);
+
+          AppDispatcher.dispatch({
+            type: this.type + 's/loaded',
+            data: data
+          });
+
+          if (this.onLoad != null) {
+            this.onLoad(data);
+          }
+        }).catch(error => {
+          AppDispatcher.dispatch({
+            type: this.type + 's/load-error',
+            error: error
+          });
+        });
+      } else {
+        // load all objects
+        RestAPI.get(this.makeURL(this.url), token).then(response => {
+          const data = response[this.type + 's'].map(element => {
+            return this.filterKeys(element);
+          });
+
+          AppDispatcher.dispatch({
+            type: this.type + 's/loaded',
+            data: data
+          });
+
+          if (this.onLoad != null) {
+            this.onLoad(data);
+          }
+        }).catch(error => {
+          AppDispatcher.dispatch({
+            type: this.type + 's/load-error',
+            error: error
+          });
+        });
+      }
+    }
+  else{
     if (id != null) {
       // load single object
-      RestAPI.get(this.makeURL(this.url + '/' + id), token).then(response => {
+      RestAPI.get(this.makeURL(this.url + '/' + id + '/' + param), token).then(response => {
         const data = this.filterKeys(response[this.type]);
 
         AppDispatcher.dispatch({
@@ -74,7 +118,7 @@ class RestDataManager {
       });
     } else {
       // load all objects
-      RestAPI.get(this.makeURL(this.url), token).then(response => {
+      RestAPI.get(this.makeURL(this.url) + '/' + param, token).then(response => {
         const data = response[this.type + 's'].map(element => {
           return this.filterKeys(element);
         });
@@ -94,6 +138,8 @@ class RestDataManager {
         });
       });
     }
+
+  }
   }
 
   add(object, token = null, param = null) {
@@ -115,7 +161,7 @@ class RestDataManager {
     }
     else{
       console.log("else was called in add");
-      RestAPI.post(this.makeURL(this.url) + "?" + param, obj, token).then(response => {
+      RestAPI.post(this.makeURL(this.url) + "/" + param, obj, token).then(response => {
         AppDispatcher.dispatch({
           type: this.type + 's/added',
           data: response[this.type]
@@ -145,7 +191,7 @@ class RestDataManager {
       });
     }
     else{
-      RestAPI.delete(this.makeURL(this.url + '/' + object.id + '?' + param), token).then(response => {
+      RestAPI.delete(this.makeURL(this.url + '/' + object.id + '/' + param), token).then(response => {
         AppDispatcher.dispatch({
           type: this.type + 's/removed',
           data: response[this.type],
@@ -163,6 +209,7 @@ class RestDataManager {
   update(object, token = null, param = null) {
     var obj = {};
     obj[this.type] = this.filterKeys(object);
+    console.log("wir haben den rdm erreicht!");
 
     if(param === null) {
       RestAPI.put(this.makeURL(this.url + '/' + object.id), obj, token).then(response => {
@@ -178,7 +225,8 @@ class RestDataManager {
       });
     }
     else{
-      RestAPI.put(this.makeURL(this.url + '/' + object.id + '?' + param), obj, token).then(response => {
+      console.log("here we have: " + this.url);
+      RestAPI.put(this.makeURL(this.url + '/' + object.id + '/' + param), obj, token).then(response => {
         AppDispatcher.dispatch({
           type: this.type + 's/edited',
           data: response[this.type]
