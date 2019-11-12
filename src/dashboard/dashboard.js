@@ -42,6 +42,8 @@ import SimulationModelStore from '../simulationmodel/simulation-model-store';
 import FileStore from '../file/file-store';
 import AppDispatcher from '../common/app-dispatcher';
 
+import FluxContainerConverter from "../common/FluxContainerConverter";
+
 import 'react-contexify/dist/ReactContexify.min.css';
 
 class Dashboard extends React.Component {
@@ -419,5 +421,4 @@ class Dashboard extends React.Component {
   }
 }
 
-let fluxContainerConverter = require('../common/FluxContainerConverter');
-export default Fullscreenable()(Container.create(fluxContainerConverter.convert(Dashboard), { withProps: true }));
+export default Fullscreenable()(Container.create(FluxContainerConverter.convert(Dashboard), { withProps: true }));

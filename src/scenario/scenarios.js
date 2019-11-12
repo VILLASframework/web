@@ -37,6 +37,8 @@ import ImportScenarioDialog from './import-scenario';
 
 import DeleteDialog from '../common/dialogs/delete-dialog';
 
+import FluxContainerConverter from "../common/FluxContainerConverter";
+
 class Scenarios extends Component {
   static getStores() {
     return [ ScenarioStore, UserStore ];
@@ -208,5 +210,4 @@ class Scenarios extends Component {
   }
 }
 
-let fluxContainerConverter = require('../common/FluxContainerConverter');
-export default Container.create(fluxContainerConverter.convert(Scenarios));
+export default Container.create(FluxContainerConverter.convert(Scenarios));

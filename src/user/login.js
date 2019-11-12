@@ -33,6 +33,8 @@ import NotificationsDataManager from '../common/data-managers/notifications-data
 import AppDispatcher from '../common/app-dispatcher';
 import UserStore from './user-store';
 
+import FluxContainerConverter from "../common/FluxContainerConverter";
+
 class Login extends Component {
   static getStores() {
     return [ UserStore ];
@@ -97,5 +99,4 @@ class Login extends Component {
   }
 }
 
-let fluxContainerConverter = require('../common/FluxContainerConverter');
-export default Container.create(fluxContainerConverter.convert(Login));
+export default Container.create(FluxContainerConverter.convert(Login));

@@ -35,6 +35,8 @@ import EditUserDialog from './edit-user';
 
 import DeleteDialog from '../common/dialogs/delete-dialog';
 
+import FluxContainerConverter from "../common/FluxContainerConverter";
+
 class Users extends Component {
   static getStores() {
     return [ UserStore, UsersStore ];
@@ -94,7 +96,7 @@ class Users extends Component {
 
     if (data) {
       if(data.password === data.confirmpassword){
-      
+
       AppDispatcher.dispatch({
         type: 'users/start-edit',
         data: data,
@@ -152,5 +154,4 @@ class Users extends Component {
   }
 }
 
-let fluxContainerConverter = require('../common/FluxContainerConverter');
-export default Container.create(fluxContainerConverter.convert(Users));
+export default Container.create(FluxContainerConverter.convert(Users));

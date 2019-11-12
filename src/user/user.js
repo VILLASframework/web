@@ -31,6 +31,8 @@ import UsersStore from './users-store';
 import Icon from '../common/icon';
 import EditOwnUserDialog from './edit-own-user'
 
+import FluxContainerConverter from "../common/FluxContainerConverter";
+
 
 class User extends Component {
   static getStores() {
@@ -42,7 +44,7 @@ class User extends Component {
 
     let sessionToken = UserStore.getState().token;
     let user = UserStore.getState().currentUser;
-  
+
 
     if(user === null) {
       AppDispatcher.dispatch({
@@ -75,7 +77,7 @@ class User extends Component {
 
     if (data) {
       if(data.password === data.confirmpassword){
-      
+
       AppDispatcher.dispatch({
         type: 'users/start-own-edit',
         data: data,
@@ -91,7 +93,7 @@ class User extends Component {
       });
     }
     }
-    
+
   }
 
 
@@ -125,7 +127,7 @@ class User extends Component {
             <Col xs={3}> {this.state.user.role} </Col>
           </Row>
 
-          
+
           <Button onClick={() => this.setState({ editModal: true })}><Icon icon='edit' /> Edit</Button>
 
           <EditOwnUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />
@@ -137,8 +139,4 @@ class User extends Component {
   }
 }
 
-
-
-
-let fluxContainerConverter = require('../common/FluxContainerConverter');
-export default Container.create(fluxContainerConverter.convert(User));
+export default Container.create(FluxContainerConverter.convert(User));
