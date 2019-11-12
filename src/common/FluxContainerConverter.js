@@ -1,7 +1,7 @@
 /// FluxContainerConverter.js
 /// This is an ugly workaround found here https://github.com/facebook/flux/issues/351 to make Flux Containers work with ES6
 
-module.exports = {
+export default {
   convert: function(containerClass) {
     const tmp = containerClass;
     containerClass = function(...args) {

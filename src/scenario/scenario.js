@@ -39,6 +39,8 @@ import ImportSimulationModelDialog from '../simulationmodel/import-simulation-mo
 import SimulatorAction from '../simulator/simulator-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
 
+import FluxContainerConverter from "../common/FluxContainerConverter";
+
 class Scenario extends React.Component {
   static getStores() {
     return [ ScenarioStore, SimulatorStore, SimulationModelStore, UserStore ];
@@ -293,5 +295,4 @@ class Scenario extends React.Component {
   }
 }
 
-let fluxContainerConverter = require('../common/FluxContainerConverter');
-export default Container.create(fluxContainerConverter.convert(Scenario), { withProps: true });
+export default Container.create(FluxContainerConverter.convert(Scenario), { withProps: true });

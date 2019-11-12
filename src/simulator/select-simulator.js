@@ -26,6 +26,8 @@ import _ from 'lodash';
 
 import SimulatorStore from './simulator-store';
 
+import FluxContainerConverter from "../common/FluxContainerConverter";
+
 class SelectSimulator extends React.Component {
     static getStores() {
         return [ SimulatorStore ];
@@ -85,5 +87,4 @@ class SelectSimulator extends React.Component {
     }
 }
 
-let fluxContainerConverter = require('../common/FluxContainerConverter');
-export default Container.create(fluxContainerConverter.convert(SelectSimulator));
+export default Container.create(FluxContainerConverter.convert(SelectSimulator));

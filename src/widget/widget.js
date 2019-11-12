@@ -48,6 +48,8 @@ import WidgetBox from './widgets/box';
 import WidgetHTML from './widgets/html';
 import WidgetTopology from './widgets/topology';
 
+import FluxContainerConverter from "../common/FluxContainerConverter";
+
 import '../styles/widgets.css';
 
 class Widget extends React.Component {
@@ -177,5 +179,4 @@ class Widget extends React.Component {
   }
 }
 
-let fluxContainerConverter = require('../common/FluxContainerConverter');
-export default Container.create(fluxContainerConverter.convert(Widget), { withProps: true });
+export default Container.create(FluxContainerConverter.convert(Widget), { withProps: true });

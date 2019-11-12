@@ -52,6 +52,8 @@ import SimulationModel from './simulationmodel/simulation-model';
 import Users from './user/users';
 import User from './user/user';
 
+import FluxContainerConverter from "./common/FluxContainerConverter";
+
 import './styles/app.css';
 
 class App extends React.Component {
@@ -169,6 +171,5 @@ class App extends React.Component {
 //<Route exact path="/simulations" component={Simulations} />
 //<Route path="/simulations/:simulation" component={Simulation} />
 
-let fluxContainerConverter = require('./common/FluxContainerConverter');
-export default Container.create(fluxContainerConverter.convert(App));
+export default Container.create(FluxContainerConverter.convert(App));
 //DragDropContext(HTML5Backend)(Container.create(App));
