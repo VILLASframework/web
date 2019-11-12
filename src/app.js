@@ -51,6 +51,7 @@ import Scenario from './scenario/scenario';
 import SimulationModel from './simulationmodel/simulation-model';
 import Users from './user/users';
 import User from './user/user';
+import ExDashboard from './dashboard/exdashboard';
 
 import './styles/app.css';
 
@@ -152,6 +153,7 @@ class App extends React.Component {
                 <Route path="/simulators" component={Simulators} />
                 <Route path="/user" component={User} />
                 <Route path="/users" component={Users} />
+                <Route path="/exdashboard" component={ExDashboard} />
               </div>
             </div>
 

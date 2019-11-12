@@ -52,11 +52,57 @@ class RestDataManager {
     return object;
   }
 
+  sendRequest(form, id, token, param, object = null, obj = null) {
+    switch (form) {
+      case 'load':
+        if (param === null) {
+          if (id != null) {
+            // load single object
+            return RestAPI.get(this.makeURL(this.url + '/' + id), token);
+          } else {
+            // load all objects
+            return RestAPI.get(this.makeURL(this.url), token);
+          }
+        }
+        else {
+          if (id != null) {
+            // load single object
+            return RestAPI.get(this.makeURL(this.url + '/' + id + '?' + param), token)
+          } else {
+            // load all objects
+            return RestAPI.get(this.makeURL(this.url) + '?' + param, token)
+          }
+        }        
+      case 'add':
+        if (param === null) {
+          return RestAPI.post(this.makeURL(this.url), obj, token);
+        } else {
+          return RestAPI.post(this.makeURL(this.url) + "?" + param, obj, token);
+        }
+      case 'remove':
+        if (param === null) {
+          return RestAPI.delete(this.makeURL(this.url + '/' + object.id), token)
+        }
+        else {
+          return RestAPI.delete(this.makeURL(this.url + '/' + object.id + '?' + param))
+        }
+      case 'update':
+        if (param === null) {
+          return RestAPI.put(this.makeURL(this.url + '/' + object.id), obj, token);
+        }
+        else {
+          return RestAPI.put(this.makeURL(this.url + '/' + object.id + '?' + param), obj, token);
+        }
+      default:
+        console.log("something went wrong");
+        break;
+    }
+  }
+
   load(id, token = null,param = null) {
-    if (param === null) {
       if (id != null) {
         // load single object
-        RestAPI.get(this.makeURL(this.url + '/' + id), token).then(response => {
+        this.sendRequest('load',id,token,param).then(response => {
           const data = this.filterKeys(response[this.type]);
 
           AppDispatcher.dispatch({
@@ -75,7 +121,7 @@ class RestDataManager {
         });
       } else {
         // load all objects
-        RestAPI.get(this.makeURL(this.url), token).then(response => {
+        this.sendRequest('load',id,token,param).then(response => {
           const data = response[this.type + 's'].map(element => {
             return this.filterKeys(element);
           });
@@ -96,58 +142,13 @@ class RestDataManager {
         });
       }
     }
-  else{
-    if (id != null) {
-      // load single object
-      RestAPI.get(this.makeURL(this.url + '/' + id + '/' + param), token).then(response => {
-        const data = this.filterKeys(response[this.type]);
-
-        AppDispatcher.dispatch({
-          type: this.type + 's/loaded',
-          data: data
-        });
-
-        if (this.onLoad != null) {
-          this.onLoad(data);
-        }
-      }).catch(error => {
-        AppDispatcher.dispatch({
-          type: this.type + 's/load-error',
-          error: error
-        });
-      });
-    } else {
-      // load all objects
-      RestAPI.get(this.makeURL(this.url) + '/' + param, token).then(response => {
-        const data = response[this.type + 's'].map(element => {
-          return this.filterKeys(element);
-        });
-
-        AppDispatcher.dispatch({
-          type: this.type + 's/loaded',
-          data: data
-        });
-
-        if (this.onLoad != null) {
-          this.onLoad(data);
-        }
-      }).catch(error => {
-        AppDispatcher.dispatch({
-          type: this.type + 's/load-error',
-          error: error
-        });
-      });
-    }
-
-  }
-  }
+  
 
   add(object, token = null, param = null) {
     var obj = {};
     obj[this.type] = this.filterKeys(object);
 
-    if (param === null) {
-      RestAPI.post(this.makeURL(this.url), obj, token).then(response => {
+      this.sendRequest('add',null,token,param,null,obj).then(response => {
         AppDispatcher.dispatch({
           type: this.type + 's/added',
           data: response[this.type]
@@ -158,26 +159,10 @@ class RestDataManager {
           error: error
         });
       });
-    }
-    else{
-      console.log("else was called in add");
-      RestAPI.post(this.makeURL(this.url) + "/" + param, obj, token).then(response => {
-        AppDispatcher.dispatch({
-          type: this.type + 's/added',
-          data: response[this.type]
-        });
-      }).catch(error => {
-        AppDispatcher.dispatch({
-          type: this.type + 's/add-error',
-          error: error
-        });
-      });
-    }
   }
 
   remove(object, token = null, param = null) {
-    if (param === null) {
-      RestAPI.delete(this.makeURL(this.url + '/' + object.id), token).then(response => {
+      this.sendRequest('remove',null,token,param,object).then(response => {
         AppDispatcher.dispatch({
           type: this.type + 's/removed',
           data: response[this.type],
@@ -190,29 +175,12 @@ class RestDataManager {
         });
       });
     }
-    else{
-      RestAPI.delete(this.makeURL(this.url + '/' + object.id + '/' + param), token).then(response => {
-        AppDispatcher.dispatch({
-          type: this.type + 's/removed',
-          data: response[this.type],
-          original: object
-        });
-      }).catch(error => {
-        AppDispatcher.dispatch({
-          type: this.type + 's/remove-error',
-          error: error
-        });
-      });
-    }
-  }
-
+    
   update(object, token = null, param = null) {
     var obj = {};
     obj[this.type] = this.filterKeys(object);
-    console.log("wir haben den rdm erreicht!");
 
-    if(param === null) {
-      RestAPI.put(this.makeURL(this.url + '/' + object.id), obj, token).then(response => {
+      this.sendRequest('update',null,token,param,object,obj).then(response => {
         AppDispatcher.dispatch({
           type: this.type + 's/edited',
           data: response[this.type]
@@ -224,21 +192,8 @@ class RestDataManager {
         });
       });
     }
-    else{
-      console.log("here we have: " + this.url);
-      RestAPI.put(this.makeURL(this.url + '/' + object.id + '/' + param), obj, token).then(response => {
-        AppDispatcher.dispatch({
-          type: this.type + 's/edited',
-          data: response[this.type]
-        });
-      }).catch(error => {
-        AppDispatcher.dispatch({
-          type: this.type + 's/edit-error',
-          error: error
-        });
-      });
-    }
-    }
+    
+    
 
 };
 

@@ -155,11 +155,6 @@ class ArrayStore extends ReduceStore {
       case this.type + '/edit-error':
           return state;
 
-      case 'exdashboard/querytest' :
-        console.log("querytest wurde aufgerufen");
-        this.dataManager.update(action.data, action.token,action.param);
-        return state;
-
       default:
         return state;
     }
