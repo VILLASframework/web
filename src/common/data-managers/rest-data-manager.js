@@ -52,57 +52,42 @@ class RestDataManager {
     return object;
   }
 
-  sendRequest(form, id, token, param, object = null, obj = null) {
-    switch (form) {
-      case 'load':
-        if (param === null) {
-          if (id != null) {
-            // load single object
-            return RestAPI.get(this.makeURL(this.url + '/' + id), token);
-          } else {
-            // load all objects
-            return RestAPI.get(this.makeURL(this.url), token);
+  requestURL(form, id, param, object = null){
+    switch(form){
+      case 'load/add':
+        if (param === null){
+          if(id != null){
+            return this.url + '/' + id;
+          }
+          else {
+            return this.makeURL(this.url);
           }
         }
-        else {
-          if (id != null) {
-            // load single object
-            return RestAPI.get(this.makeURL(this.url + '/' + id + '?' + param), token)
-          } else {
-            // load all objects
-            return RestAPI.get(this.makeURL(this.url) + '?' + param, token)
+        else{
+          if(id != null){
+            return this.url + '/' + id + '?' + param;
           }
-        }        
-      case 'add':
-        if (param === null) {
-          return RestAPI.post(this.makeURL(this.url), obj, token);
-        } else {
-          return RestAPI.post(this.makeURL(this.url) + "?" + param, obj, token);
+          else {
+            return this.makeURL(this.url) + '?' + param
+          }
         }
-      case 'remove':
-        if (param === null) {
-          return RestAPI.delete(this.makeURL(this.url + '/' + object.id), token)
+      case 'remove/update':
+        if(param === null){
+          return this.makeURL(this.url + '/' + object.id);
         }
-        else {
-          return RestAPI.delete(this.makeURL(this.url + '/' + object.id + '?' + param))
+        else{
+          return this.makeURL(this.url + '/' + object.id + '?' + param);
         }
-      case 'update':
-        if (param === null) {
-          return RestAPI.put(this.makeURL(this.url + '/' + object.id), obj, token);
-        }
-        else {
-          return RestAPI.put(this.makeURL(this.url + '/' + object.id + '?' + param), obj, token);
-        }
-      default:
-        console.log("something went wrong");
-        break;
+        default:
+            console.log("something went wrong");
+            break;
     }
   }
 
   load(id, token = null,param = null) {
       if (id != null) {
         // load single object
-        this.sendRequest('load',id,token,param).then(response => {
+        RestAPI.get(this.requestURL('load/add',id,param), token).then(response => {
           const data = this.filterKeys(response[this.type]);
 
           AppDispatcher.dispatch({
@@ -121,7 +106,7 @@ class RestDataManager {
         });
       } else {
         // load all objects
-        this.sendRequest('load',id,token,param).then(response => {
+        RestAPI.get(this.requestURL('load/add',id,param), token).then(response => {
           const data = response[this.type + 's'].map(element => {
             return this.filterKeys(element);
           });
@@ -148,7 +133,7 @@ class RestDataManager {
     var obj = {};
     obj[this.type] = this.filterKeys(object);
 
-      this.sendRequest('add',null,token,param,null,obj).then(response => {
+    RestAPI.post(this.requestURL('load/add',null,param), obj, token).then(response => {
         AppDispatcher.dispatch({
           type: this.type + 's/added',
           data: response[this.type]
@@ -162,7 +147,7 @@ class RestDataManager {
   }
 
   remove(object, token = null, param = null) {
-      this.sendRequest('remove',null,token,param,object).then(response => {
+    RestAPI.delete(this.requestURL('remove/update',null,param,object), token).then(response => {
         AppDispatcher.dispatch({
           type: this.type + 's/removed',
           data: response[this.type],
@@ -180,7 +165,7 @@ class RestDataManager {
     var obj = {};
     obj[this.type] = this.filterKeys(object);
 
-      this.sendRequest('update',null,token,param,object,obj).then(response => {
+    RestAPI.put(this.requestURL('remove/update',null,param,object), obj, token).then(response => {
         AppDispatcher.dispatch({
           type: this.type + 's/edited',
           data: response[this.type]
