@@ -57,7 +57,7 @@ class RestDataManager {
       case 'load/add':
         if (param === null){
           if(id != null){
-            return this.url + '/' + id;
+            return this.makeURL(this.url + '/' + id);
           }
           else {
             return this.makeURL(this.url);
@@ -65,10 +65,10 @@ class RestDataManager {
         }
         else{
           if(id != null){
-            return this.url + '/' + id + '?' + param;
+            return this.makeURL(this.url + '/' + id + '?' + param);
           }
           else {
-            return this.makeURL(this.url) + '?' + param
+            return this.makeURL(this.url + '?' + param);
           }
         }
       case 'remove/update':
@@ -127,7 +127,7 @@ class RestDataManager {
         });
       }
     }
-  
+
 
   add(object, token = null, param = null) {
     var obj = {};
@@ -160,7 +160,7 @@ class RestDataManager {
         });
       });
     }
-    
+
   update(object, token = null, param = null) {
     var obj = {};
     obj[this.type] = this.filterKeys(object);
@@ -177,8 +177,8 @@ class RestDataManager {
         });
       });
     }
-    
-    
+
+
 
 };
 
