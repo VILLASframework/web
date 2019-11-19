@@ -121,8 +121,8 @@ class EditUserDialog extends React.Component {
             <FormControl type="text" placeholder="Enter e-mail" value={this.state.mail} onChange={(e) => this.handleChange(e)} />
           </FormGroup>
           <FormGroup  as={Col} controlId="oldPassword">
-            <FormLabel>Old Password</FormLabel>
-            <FormControl type="password" placeholder="Enter current password" value={this.state.oldPassword} onChange={(e) => this.handleChange(e)} />
+            <FormLabel>Admin Password</FormLabel>
+            <FormControl type="password" placeholder="Enter admin password" value={this.state.oldPassword} onChange={(e) => this.handleChange(e)} />
           </FormGroup>
           <FormGroup as={Col} controlId="password">
             <FormLabel>Password</FormLabel>

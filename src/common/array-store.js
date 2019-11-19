@@ -71,10 +71,10 @@ class ArrayStore extends ReduceStore {
 
         if (Array.isArray(action.data)) {
           action.data.forEach((id) => {
-            this.dataManager.load(id, action.token);
+            this.dataManager.load(id, action.token,action.param);
           });
         } else {
-          this.dataManager.load(action.data, action.token);
+          this.dataManager.load(action.data, action.token,action.param);
         }
         return state;
 
@@ -99,7 +99,7 @@ class ArrayStore extends ReduceStore {
         return super.reduce(state, action);
   
       case this.type + '/start-add':
-        this.dataManager.add(action.data, action.token);
+        this.dataManager.add(action.data, action.token,action.param);
         return state;
 
       case this.type + '/added':
@@ -111,7 +111,7 @@ class ArrayStore extends ReduceStore {
 
 
       case this.type + '/start-remove':
-        this.dataManager.remove(action.data, action.token);
+        this.dataManager.remove(action.data, action.token,action.param);
         return state;
 
       case this.type + '/removed':
@@ -133,11 +133,11 @@ class ArrayStore extends ReduceStore {
         return super.reduce(state, action);
   
       case this.type + '/start-edit':
-        this.dataManager.update(action.data, action.token);
+        this.dataManager.update(action.data, action.token,action.param);
         return state;
 
       case this.type + '/start-own-edit':
-        this.dataManager.update(action.data, action.token);
+        this.dataManager.update(action.data, action.token,action.param);
         return state;
 
       case this.type + '/edited':

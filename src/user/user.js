@@ -73,7 +73,6 @@ class User extends Component {
 
   closeEditModal(data) {
     this.setState({ editModal: false });
-    console.log(data);
 
     if (data) {
       if(data.password === data.confirmpassword){

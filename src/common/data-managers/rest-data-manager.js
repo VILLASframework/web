@@ -52,98 +52,134 @@ class RestDataManager {
     return object;
   }
 
-  load(id, token = null) {
-    if (id != null) {
-      // load single object
-      RestAPI.get(this.makeURL(this.url + '/' + id), token).then(response => {
-        const data = this.filterKeys(response[this.type]);
-
-        AppDispatcher.dispatch({
-          type: this.type + 's/loaded',
-          data: data
-        });
-
-        if (this.onLoad != null) {
-          this.onLoad(data);
+  requestURL(form, id, param, object = null){
+    switch(form){
+      case 'load/add':
+        if (param === null){
+          if(id != null){
+            return this.url + '/' + id;
+          }
+          else {
+            return this.makeURL(this.url);
+          }
         }
+        else{
+          if(id != null){
+            return this.url + '/' + id + '?' + param;
+          }
+          else {
+            return this.makeURL(this.url) + '?' + param
+          }
+        }
+      case 'remove/update':
+        if(param === null){
+          return this.makeURL(this.url + '/' + object.id);
+        }
+        else{
+          return this.makeURL(this.url + '/' + object.id + '?' + param);
+        }
+        default:
+            console.log("something went wrong");
+            break;
+    }
+  }
+
+  load(id, token = null,param = null) {
+      if (id != null) {
+        // load single object
+        RestAPI.get(this.requestURL('load/add',id,param), token).then(response => {
+          const data = this.filterKeys(response[this.type]);
+
+          AppDispatcher.dispatch({
+            type: this.type + 's/loaded',
+            data: data
+          });
+
+          if (this.onLoad != null) {
+            this.onLoad(data);
+          }
+        }).catch(error => {
+          AppDispatcher.dispatch({
+            type: this.type + 's/load-error',
+            error: error
+          });
+        });
+      } else {
+        // load all objects
+        RestAPI.get(this.requestURL('load/add',id,param), token).then(response => {
+          const data = response[this.type + 's'].map(element => {
+            return this.filterKeys(element);
+          });
+
+          AppDispatcher.dispatch({
+            type: this.type + 's/loaded',
+            data: data
+          });
+
+          if (this.onLoad != null) {
+            this.onLoad(data);
+          }
+        }).catch(error => {
+          AppDispatcher.dispatch({
+            type: this.type + 's/load-error',
+            error: error
+          });
+        });
+      }
+    }
+  
+
+  add(object, token = null, param = null) {
+    var obj = {};
+    obj[this.type] = this.filterKeys(object);
+
+    RestAPI.post(this.requestURL('load/add',null,param), obj, token).then(response => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/added',
+          data: response[this.type]
+        });
       }).catch(error => {
         AppDispatcher.dispatch({
-          type: this.type + 's/load-error',
+          type: this.type + 's/add-error',
           error: error
         });
       });
-    } else {
-      // load all objects
-      RestAPI.get(this.makeURL(this.url), token).then(response => {
-        const data = response[this.type + 's'].map(element => {
-          return this.filterKeys(element);
-        });
+  }
 
+  remove(object, token = null, param = null) {
+    RestAPI.delete(this.requestURL('remove/update',null,param,object), token).then(response => {
         AppDispatcher.dispatch({
-          type: this.type + 's/loaded',
-          data: data
+          type: this.type + 's/removed',
+          data: response[this.type],
+          original: object
         });
-
-        if (this.onLoad != null) {
-          this.onLoad(data);
-        }
       }).catch(error => {
         AppDispatcher.dispatch({
-          type: this.type + 's/load-error',
+          type: this.type + 's/remove-error',
           error: error
         });
       });
     }
-  }
-
-  add(object, token = null) {
+    
+  update(object, token = null, param = null) {
     var obj = {};
     obj[this.type] = this.filterKeys(object);
 
-    RestAPI.post(this.makeURL(this.url), obj, token).then(response => {
-      AppDispatcher.dispatch({
-        type: this.type + 's/added',
-        data: response[this.type]
+    RestAPI.put(this.requestURL('remove/update',null,param,object), obj, token).then(response => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/edited',
+          data: response[this.type]
+        });
+      }).catch(error => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/edit-error',
+          error: error
+        });
       });
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: this.type + 's/add-error',
-        error: error
-      });
-    });
-  }
+    }
+    
+    
 
-  remove(object, token = null) {
-    RestAPI.delete(this.makeURL(this.url + '/' + object.id), token).then(response => {
-      AppDispatcher.dispatch({
-        type: this.type + 's/removed',
-        data: response[this.type],
-        original: object
-      });
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: this.type + 's/remove-error',
-        error: error
-      });
-    });
-  }
-
-  update(object, token = null) {
-    var obj = {};
-    obj[this.type] = this.filterKeys(object);
-
-    RestAPI.put(this.makeURL(this.url + '/' + object.id), obj, token).then(response => {
-      AppDispatcher.dispatch({
-        type: this.type + 's/edited',
-        data: response[this.type]
-      });
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: this.type + 's/edit-error',
-        error: error
-      });
-    });
-  }
 };
 
 export default RestDataManager;
