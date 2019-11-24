@@ -57,7 +57,8 @@ class RestDataManager {
       case 'load/add':
         if (param === null){
           if(id != null){
-            return this.url + '/' + id;
+            console.log("id != 0");
+            return this.makeURL(this.url + '/' + id);
           }
           else {
             return this.makeURL(this.url);
@@ -65,10 +66,10 @@ class RestDataManager {
         }
         else{
           if(id != null){
-            return this.url + '/' + id + '?' + param;
+            return this.makeURL(this.url + '/' + id + '?' + param);
           }
           else {
-            return this.makeURL(this.url) + '?' + param
+            return this.makeURL(this.url + '?' + param)
           }
         }
       case 'remove/update':
@@ -86,10 +87,11 @@ class RestDataManager {
 
   load(id, token = null,param = null) {
       if (id != null) {
+        console.log("rdm load was called");
         // load single object
         RestAPI.get(this.requestURL('load/add',id,param), token).then(response => {
           const data = this.filterKeys(response[this.type]);
-
+      
           AppDispatcher.dispatch({
             type: this.type + 's/loaded',
             data: data

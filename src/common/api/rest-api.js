@@ -54,6 +54,7 @@ function isNetworkError(err) {
 
 class RestAPI {
   get(url, token) {
+    console.log(url);
     return new Promise(function (resolve, reject) {
       var req = request.get(url);
 

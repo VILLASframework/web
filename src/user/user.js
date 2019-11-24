@@ -53,7 +53,7 @@ class User extends Component {
 
       user = {};
     }
-
+    console.log(user);
     console.log("extracted user 2: " + user.username);
 
     return {

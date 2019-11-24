@@ -68,7 +68,6 @@ class ArrayStore extends ReduceStore {
   reduce(state, action) {
     switch (action.type) {
       case this.type + '/start-load':
-
         if (Array.isArray(action.data)) {
           action.data.forEach((id) => {
             this.dataManager.load(id, action.token,action.param);
@@ -80,8 +79,14 @@ class ArrayStore extends ReduceStore {
 
       case this.type + '/loaded':
         if (Array.isArray(action.data)) {
+          console.log(" loaded Array: ");
+          console.log(action.data);
+          console.log(state);
           return this.updateElements(state, action.data);
         } else {
+          console.log("loaded single object: ");
+          console.log([action.data]);
+          console.log(state);
           return this.updateElements(state, [action.data]);
         }
 

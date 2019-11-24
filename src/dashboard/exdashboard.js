@@ -4,7 +4,9 @@ import DashboardStore from './dashboard-store';
 import AppDispatcher from '../common/app-dispatcher';
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
-import UserStore from '../user/user-store'
+import UserStore from '../user/user-store';
+import { Button } from 'react-bootstrap';
+import Icon from '../common/icon';
 
 
 
@@ -40,20 +42,37 @@ class ExDashboard extends Component {
     });
   }
   
+  loadDash(){
+    console.log('bis hierhin gekommen');
+    AppDispatcher.dispatch({
+      type: 'dashboards/start-load',
+      token: this.state.tokenState,
+      param: 'scenarioID=1'
+    });
+  }
 
 
 
   render() {
+    const buttonStyle = {
+      marginLeft: '10px'
+    };
 
     return (
+      
       <div className='section'>
+      
         <h1>Dashboards</h1>
 
         <Table data={this.state.dashboards}>
           <TableColumn title='Name' dataKey='name' link='/exdashboard/' linkKey='id' />
-          <TableColumn title='Grid' dataKey='grid' link='/exdashboard/' linkKey='id' />
+          <TableColumn title='Grid' dataKey='grid' link='/edashboard/' linkKey='id' />
           <TableColumn title='ScenarioID' dataKey='scenarioID' link='/exdashboard/' linkKey='id' />
         </Table>
+
+        <div style={{ float: 'right' }}>
+          <Button onClick={() => this.loadDash} style={buttonStyle}><Icon icon="plus" /> Add</Button>
+        </div>
       </div>
     );
   }

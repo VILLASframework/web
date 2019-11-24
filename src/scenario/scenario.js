@@ -57,6 +57,7 @@ class Scenario extends React.Component {
       });
 
       scenario = {};
+      console.log(scenario);
     }
 
     // load models

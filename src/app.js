@@ -146,6 +146,7 @@ class App extends React.Component {
               <div className={`app-content app-content-margin-left`}>
                 <Route exact path="/" component={Home} />
                 <Route path="/home" component={Home} />
+                <Route path="/exdashboard/:dashboard" component={Dashboard} />
                 <Route path="/dashboards/:dashboard" component={Dashboard} />
                 <Route exact path="/scenarios" component={Scenarios} />
                 <Route path="/scenarios/:scenario" component={Scenario} />

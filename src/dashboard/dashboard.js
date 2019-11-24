@@ -27,7 +27,7 @@ import { Map } from 'immutable'
 
 //import Icon from '../common/icon';
 import Widget from '../widget/widget';
-import EditWidget from '../widget/edit-widget';
+//import EditWidget from '../widget/edit-widget';
 
 import WidgetContextMenu from './widget-context-menu';
 import WidgetToolbox from './widget-toolbox';
@@ -40,6 +40,7 @@ import ProjectStore from '../project/project-store';
 import SimulationStore from '../simulation/simulation-store';
 import SimulationModelStore from '../simulationmodel/simulation-model-store';
 import FileStore from '../file/file-store';
+import WidgetStore from '../widget/widget-store';
 import AppDispatcher from '../common/app-dispatcher';
 
 import 'react-contexify/dist/ReactContexify.min.css';
@@ -48,53 +49,100 @@ class Dashboard extends React.Component {
 
   static lastWidgetKey = 0;
   static getStores() {
-    return [ DashboardStore, ProjectStore, SimulationStore, SimulationModelStore, FileStore, UserStore ];
+    return [ DashboardStore, ProjectStore, SimulationStore, SimulationModelStore, FileStore, UserStore, WidgetStore ];
   }
 
   static calculateState(prevState, props) {
     if (prevState == null) {
       prevState = {};
     }
-
+    const sessionToken = UserStore.getState().token;
     let dashboard = Map();
-    let rawDashboard = DashboardStore.getState().find(v => v._id === props.match.params.dashboard);
-
+    console.log("dashboard calculate state was called: " + props.match.params.dashboard);
+    let dashboards = DashboardStore.getState()
+    let rawDashboard =  dashboards[props.match.params.dashboard - 1];
+    
+   
+    let str = JSON.stringify(rawDashboard, null, 4);
+    console.log(str);
     if (rawDashboard != null) {
       dashboard = Map(rawDashboard);
+      console.log("dashboard: " + dashboard);
 
-      // convert widgets list to a dictionary to be able to reference widgets
-      const widgets = {};
+      // convert widgets list to a dictionary to be able to reference widgets 
+      //let widgets = {};
 
-      for (let widget of dashboard.get('widgets')) {
-        widgets[this.getNewWidgetKey()] = widget;
+      let rawWidgets = WidgetStore.getState();
+      
+      if(rawWidgets.length === 0){
+        AppDispatcher.dispatch({
+          type: 'widgets/start-load',
+          token: sessionToken,
+          param: 'dashboardID=1'
+        });
       }
 
-      dashboard = dashboard.set('widgets', widgets);
+    
+      console.log("here are the widgets: ");
+      console.log(rawWidgets);
+        
+      dashboard = dashboard.set('widgets', rawWidgets);
 
-      // this.computeHeightWithWidgets(widgets);
+      
+     /* for(let widget of dashboard.get('widgets')){
+        console.log("load files got called")
+        console.log(widget);
+        AppDispatcher.dispatch({
+          type: 'files/start-load',
+          token: sessionToken,
+          param: 'objectID=' + widget.id + '&objectType=widget'
+        });
+      }
+     */
+      let widgets = {};
 
-      // this.setState({ dashboard: selectedDashboards, project: null });
+      for (let widget of dashboard.get('widgets')) {
+        widgets[this.lastWidgetKey] = widget;
+        this.lastWidgetKey++;
+      }
+      //ist das überhaupt nötiG??
+     /* if (this.state.dashboard.has('id') === false) {
+        AppDispatcher.dispatch({
+          type: 'dashboards/start-load',
+          data: this.props.match.params.dashboard,
+          token: this.state.sessionToken
+        });
+      }
+      
+      
+    //  this.computeHeightWithWidgets(widgets);
 
-      // AppDispatcher.dispatch({
-      //     type: 'projects/start-load',
-      //     data: selectedDashboard.get('project'),
-      //     token: this.state.sessionToken
-      // });
+      let selectedDashboards = dashboard; 
 
+    /* this.setState({ dashboard: selectedDashboards, project: null });
+
+       AppDispatcher.dispatch({
+           type: 'projects/start-load',
+           data: selectedDashboards.get('project'),
+           token: this.state.sessionToken
+       });
+*/
     }
+    
 
     let simulationModels = [];
-    if (prevState.simulation != null) {
-      simulationModels = SimulationModelStore.getState().filter(m => prevState.simulation.models.includes(m._id));
-    }
+    //if (prevState.simulation != null) {
+    //  simulationModels = SimulationModelStore.getState().filter(m => prevState.simulation.models.includes(m._id));
+    //}
 
     return {
+      rawDashboard,
       dashboard,
 
-      sessionToken: UserStore.getState().token,
-      projects: ProjectStore.getState(),
-      simulations: SimulationStore.getState(),
-      files: FileStore.getState(),
+      sessionToken: sessionToken,
+      projects: null, //ProjectStore.getState(),
+      simulations: null, //SimulationStore.getState(),
+      files: null, //FileStore.getState(),
 
       project: prevState.project || null,
       simulation: prevState.simulation || null,
@@ -102,7 +150,7 @@ class Dashboard extends React.Component {
       editing: prevState.editing || false,
       paused: prevState.paused || false,
 
-      editModal: prevState.editModal || false,
+      //editModal: prevState.editModal || false,
       modalData: prevState.modalData || null,
       modalIndex: prevState.modalIndex || null,
 
@@ -119,10 +167,10 @@ class Dashboard extends React.Component {
     return widgetKey;
   }
 
-
-  componentWillMount() {
+//!!!won't work anymore
+ /* componentDidMount() {
     //document.addEventListener('keydown', this.handleKeydown.bind(this));
-
+    console.log("problem in componentdidmount");
     if (this.state.dashboard.has('id') === false) {
       AppDispatcher.dispatch({
         type: 'dashboards/start-load',
@@ -137,7 +185,7 @@ class Dashboard extends React.Component {
       //document.removeEventListener('keydown', this.handleKeydown.bind(this));
   }
 
-  componentDidUpdate() {
+  /*componentDidUpdate() {
     if (this.state.dashboard._id !== this.props.match.params.dashboard) {
       this.reloadDashboard();
     }
@@ -167,7 +215,7 @@ class Dashboard extends React.Component {
         }
       });
     }
-  }
+  }*
 
   /*handleKeydown(e) {
     switch (e.key) {
@@ -183,8 +231,9 @@ class Dashboard extends React.Component {
         break;
       default:
     }
-  }*/
-
+  }
+  
+  }
   /*
   * Adapt the area's height with the position of the new widget.
   * Return true if the height increased, otherwise false.
@@ -210,6 +259,7 @@ class Dashboard extends React.Component {
   }
 
   reloadDashboard() {
+    console.log("Error: reloadDashboard was called");
     // select dashboard by param id
     this.state.dashboards.forEach((tempDashboard) => {
       if (tempDashboard._id === this.props.match.params.dashboard) {
@@ -287,9 +337,9 @@ class Dashboard extends React.Component {
   }
 
 
-  editWidget = (widget, index) => {
-    this.setState({ editModal: true, modalData: widget, modalIndex: index });
-  }
+  //editWidget = (widget, index) => {
+  //  this.setState({ editModal: true, modalData: widget, modalIndex: index });
+  //}
 
 
   closeEdit = data => {
@@ -378,7 +428,6 @@ class Dashboard extends React.Component {
           editing={this.state.editing}
           fullscreen={this.props.isFullscreen}
           paused={this.state.paused}
-          onEdit={this.startEditing}
           onSave={this.saveEditing}
           onCancel={this.cancelEditing}
           onFullscreen={this.props.toggleFullscreen}
@@ -413,7 +462,7 @@ class Dashboard extends React.Component {
           <WidgetContextMenu key={widgetKey} index={widgetKey} widget={widgets[widgetKey]} onEdit={this.editWidget} onDelete={this.deleteWidget} onChange={this.widgetChange} />
         ))}
 
-        <EditWidget sessionToken={this.state.sessionToken} show={this.state.editModal} onClose={this.closeEdit} widget={this.state.modalData} simulationModels={this.state.simulationModels} files={this.state.files} />
+        
       </div>
     </div>;
   }
@@ -421,3 +470,5 @@ class Dashboard extends React.Component {
 
 let fluxContainerConverter = require('../common/FluxContainerConverter');
 export default Fullscreenable()(Container.create(fluxContainerConverter.convert(Dashboard), { withProps: true }));
+//<EditWidget sessionToken={this.state.sessionToken} show={this.state.editModal} onClose={this.closeEdit} widget={this.state.modalData} simulationModels={this.state.simulationModels} files={this.state.files} />
+//onEdit={this.startEditing}
