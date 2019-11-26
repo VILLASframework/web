@@ -82,6 +82,16 @@ class Dashboard extends React.Component {
         });
       }
 
+      let files = FileStore.getState();
+
+      if(files.length === 0){
+        AppDispatcher.dispatch({
+          type: 'files/start-load',
+          token: sessionToken,
+          param: 'objectID=1&objectType=widget'
+        });
+      }
+
     
       console.log("here are the widgets: ");
       console.log(rawWidgets);
@@ -160,7 +170,7 @@ class Dashboard extends React.Component {
       sessionToken: sessionToken,
       projects: null, //ProjectStore.getState(),
       simulations: null, //SimulationStore.getState(),
-      files: null, //FileStore.getState(),
+      files: FileStore.getState(),
 
       project: prevState.project || null,
       simulation: prevState.simulation || null,

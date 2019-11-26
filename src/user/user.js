@@ -71,11 +71,12 @@ class User extends Component {
     let tokenState = UserStore.getState().token;
     setTimeout(function() { 
       AppDispatcher.dispatch({
-        type: 'users/start-load',
-        data: UserStore.getState().userid,
+        type: 'users/logged-in',
+        user: this.state.user,
+        userid: this.state.user.id,
         token: tokenState
       });
-  }.bind(this), 1000)
+  }.bind(this), 0.00001)
     
   }
 
