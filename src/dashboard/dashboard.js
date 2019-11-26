@@ -61,24 +61,24 @@ class Dashboard extends React.Component {
     console.log("dashboard calculate state was called: " + props.match.params.dashboard);
     let dashboards = DashboardStore.getState()
     let rawDashboard =  dashboards[props.match.params.dashboard - 1];
-    
-   
+
+
     let str = JSON.stringify(rawDashboard, null, 4);
     console.log(str);
     if (rawDashboard != null) {
       dashboard = Map(rawDashboard);
       console.log("dashboard: " + dashboard);
 
-      // convert widgets list to a dictionary to be able to reference widgets 
+      // convert widgets list to a dictionary to be able to reference widgets
       //let widgets = {};
 
       let rawWidgets = WidgetStore.getState();
-      
+
       if(rawWidgets.length === 0){
         AppDispatcher.dispatch({
           type: 'widgets/start-load',
           token: sessionToken,
-          param: 'dashboardID=1'
+          param: '?dashboardID=1'
         });
       }
 
@@ -92,14 +92,14 @@ class Dashboard extends React.Component {
         });
       }
 
-    
+
       console.log("here are the widgets: ");
       console.log(rawWidgets);
-        
+
       dashboard = dashboard.set('widgets', rawWidgets);
       console.log("")
 
-      
+
      /* for(let widget of dashboard.get('widgets')){
         console.log("load files got called")
         console.log(widget);
@@ -110,9 +110,9 @@ class Dashboard extends React.Component {
         });
       }
      */
-      
-     
-      
+
+
+
       //ist das überhaupt nötiG??
      /* if (this.state.dashboard.has('id') === false) {
         AppDispatcher.dispatch({
@@ -122,14 +122,14 @@ class Dashboard extends React.Component {
         });
       }
       */
-     
 
-      
+
+
       /*if(Object.keys(widgets).length !== 0 ){
       this.computeHeightWithWidgets(widgets);
       }
 
-      let selectedDashboards = dashboard; 
+      let selectedDashboards = dashboard;
 
     /* this.setState({ dashboard: selectedDashboards, project: null });
 
@@ -151,10 +151,10 @@ class Dashboard extends React.Component {
       console.log("!! the widget key: "+ widgetKey);
       let thisWidget = widgets[widgetKey];
       let thisWidgetHeight = thisWidget.y + thisWidget.height;
-  
+
       return thisWidgetHeight > maxHeightSoFar? thisWidgetHeight : maxHeightSoFar;
       }, 0);
-      
+
       console.log("now the object keys: ");
       console.log(Object.keys(widgets));
     let simulationModels = [];
@@ -208,7 +208,7 @@ class Dashboard extends React.Component {
     }
 
   }
-  
+
 
   componentWillUnmount() {
       //document.removeEventListener('keydown', this.handleKeydown.bind(this));
@@ -261,7 +261,7 @@ class Dashboard extends React.Component {
       default:
     }
   }
-  
+
   }
   /*
   * Adapt the area's height with the position of the new widget.
@@ -494,7 +494,7 @@ class Dashboard extends React.Component {
           <WidgetContextMenu key={widgetKey} index={parseInt(widgetKey,10)} widget={widgets[widgetKey]} onEdit={this.editWidget} onDelete={this.deleteWidget} onChange={this.widgetChange} />
         ))}
 
-        
+
       </div>
     </div>;
   }

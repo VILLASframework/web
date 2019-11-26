@@ -27,6 +27,7 @@ import _ from 'lodash';
 
 import ScenarioStore from './scenario-store';
 import SimulatorStore from '../simulator/simulator-store';
+import DashboardStore from '../dashboard/dashboard-store';
 import SimulationModelStore from '../simulationmodel/simulation-model-store';
 import UserStore from '../user/user-store';
 import AppDispatcher from '../common/app-dispatcher';
@@ -35,75 +36,83 @@ import Icon from '../common/icon';
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
 import ImportSimulationModelDialog from '../simulationmodel/import-simulation-model';
+import ImportDashboardDialog from "../dashboard/import-dashboard";
+import NewDashboardDialog from "../dashboard/new-dashboard";
 
 import SimulatorAction from '../simulator/simulator-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
 
 class Scenario extends React.Component {
   static getStores() {
-    return [ ScenarioStore, SimulatorStore, SimulationModelStore, UserStore ];
+    return [ ScenarioStore, SimulationModelStore, DashboardStore, SimulatorStore];
   }
 
   static calculateState(prevState, props) {
     // get selected scenario
     const sessionToken = UserStore.getState().token;
 
-    let scenario = ScenarioStore.getState().find(s => s.id === props.match.params.scenario);
+    const scenario = ScenarioStore.getState().find(s => s.id === parseInt(props.match.params.scenario, 10));
     if (scenario == null) {
       AppDispatcher.dispatch({
         type: 'scenarios/start-load',
         data: props.match.params.scenario,
         token: sessionToken
       });
-
-      scenario = {};
-      console.log(scenario);
     }
 
-    // load models
-    let simulationModels = [];
-    if (scenario.simulationModels != null) {
-      simulationModels = SimulationModelStore.getState().filter(m => m != null && scenario.simulationModels.includes(m.id));
-    }
+    // obtain all dashboards of a scenario
+    let dashboards = DashboardStore.getState().filter(dashb => dashb.scenarioID === parseInt(props.match.params.scenario, 10));
+
+    // obtain all simulation models of a scenario
+    let simulationmodels = SimulationModelStore.getState().filter(simmodel => simmodel.scenarioID === parseInt(props.match.params.scenario, 10));
 
     return {
-      simulationModels,
       scenario,
-
-      //simulators: SimulatorStore.getState(),
       sessionToken,
+      simulationModels: simulationmodels,
+      dashboards: dashboards,
+      simulators: SimulatorStore.getState(),
 
-      deleteModal: false,
-      importModal: false,
-      modalData: {},
+      deleteSimulationModelModal: false,
+      importSimulationModelModal: false,
+      modalSimulationModelData: {},
+      selectedSimulationModels: [],
 
-      selectedSimulationModels: []
+      newDashboardModal: false,
+      deleteDashboardModal: false,
+      importDashboardModal: false,
+      modalDashboardData: {},
     }
   }
 
   componentWillMount() {
+
+    //load selected scenario
     AppDispatcher.dispatch({
       type: 'scenarios/start-load',
+      data: this.state.scenario.id,
       token: this.state.sessionToken
     });
 
+    // load simulation models for selected scenario
     AppDispatcher.dispatch({
       type: 'simulationModels/start-load',
-      token: this.state.sessionToken
+      token: this.state.sessionToken,
+      param: '?scenarioID='+this.state.scenario.id,
     });
 
+    // load dashboards of selected scenario
+    AppDispatcher.dispatch({
+      type: 'dashboards/start-load',
+      token: this.state.sessionToken,
+      param: '?scenarioID='+this.state.scenario.id,
+    });
+
+    // load simulators to enable that simulation models work with them
     AppDispatcher.dispatch({
       type: 'simulators/start-load',
-      token: this.state.sessionToken
+      token: this.state.sessionToken,
     });
-
-    //TODO users
-
-    //TODO dashboards
-
-
-
-
   }
 
   addSimulationModel = () => {
@@ -132,8 +141,8 @@ class Scenario extends React.Component {
     });
   }
 
-  closeDeleteModal = confirmDelete => {
-    this.setState({ deleteModal: false });
+  closeDeleteSimulationModelModal = confirmDelete => {
+    this.setState({ deleteSimulationModelModal: false });
 
     if (confirmDelete === false) {
       return;
@@ -141,21 +150,19 @@ class Scenario extends React.Component {
 
     AppDispatcher.dispatch({
       type: 'simulationModels/start-remove',
-      data: this.state.modalData,
+      data: this.state.modalSimulationModelData,
       token: this.state.sessionToken
     });
   }
 
   importSimulationModel = simulationModel => {
-    this.setState({ importModal: false });
+    this.setState({ importSimulationModelModal: false });
 
     if (simulationModel == null) {
       return;
     }
 
     simulationModel.scenario = this.state.scenario.id;
-
-    console.log(simulationModel);
 
     AppDispatcher.dispatch({
       type: 'simulationModels/start-add',
@@ -172,6 +179,47 @@ class Scenario extends React.Component {
     });
   }
 
+  closeNewDashboardModal(data) {
+    this.setState({ newDashboardModal : false });
+
+    if (data) {
+      AppDispatcher.dispatch({
+        type: 'dashboards/start-add',
+        data,
+        token: this.state.sessionToken,
+        userid: this.state.sessionUserID
+      });
+    }
+  }
+
+  closeDeleteDashboardModal(confirmDelete){
+    this.setState({ deleteDashboardModal: false });
+
+    if (confirmDelete === false) {
+      return;
+    }
+
+    AppDispatcher.dispatch({
+      type: 'dashboards/start-remove',
+      data: this.state.modalDashboardData,
+      token: this.state.sessionToken,
+      userid: this.state.sessionUserID
+    });
+  }
+
+  closeImportDashboardModal(data) {
+    this.setState({ importDashboardModal: false });
+
+    if (data) {
+      AppDispatcher.dispatch({
+        type: 'dashboards/start-add',
+        data,
+        token: this.state.sessionToken,
+        userid: this.state.sessionUserID
+      });
+    }
+  }
+
   getSimulatorName(simulatorId) {
     for (let simulator of this.state.simulators) {
       if (simulator.id === simulatorId) {
@@ -184,12 +232,24 @@ class Scenario extends React.Component {
     // filter properties
     const model = Object.assign({}, this.state.simulationModels[index]);
 
-    delete model.simulator;
-    delete model.scenario;
+    //delete model.simulator;
+    //delete model.scenario;
+    // TODO get elements recursively
 
     // show save dialog
     const blob = new Blob([JSON.stringify(model, null, 2)], { type: 'application/json' });
     FileSaver.saveAs(blob, 'simulation model - ' + model.name + '.json');
+  }
+
+  exportDashboard(index) {
+    // filter properties
+    const dashboard = Object.assign({}, this.state.dashboards[index]);
+
+    // TODO get elements recursively
+
+    // show save dialog
+    const blob = new Blob([JSON.stringify(dashboard, null, 2)], { type: 'application/json' });
+    FileSaver.saveAs(blob, 'dashboard - ' + dashboard.name + '.json');
   }
 
   onSimulationModelChecked(index, event) {
@@ -250,20 +310,22 @@ class Scenario extends React.Component {
     };
 
     return <div className='section'>
-      <h1>{this.state.simulation.name}</h1>
+      <h1>{this.state.scenario.name}</h1>
 
+      {/*Simulation Model table*/}
+      <h2>Simulation Models</h2>
       <Table data={this.state.simulationModels}>
         <TableColumn checkbox onChecked={(index, event) => this.onSimulationModelChecked(index, event)} width='30' />
-        <TableColumn title='Name' dataKey='name' link='/simulationModel/' linkKey='_id' />
-        <TableColumn title='Simulator' dataKey='simulator' modifier={(simulator) => this.getSimulatorName(simulator)} />
-        <TableColumn title='Output' dataKey='outputLength' width='100' />
-        <TableColumn title='Input' dataKey='inputLength' width='100' />
+        <TableColumn title='Name' dataKey='name' link='/simulationModel/' linkKey='id' />
+        <TableColumn title='Simulator' dataKey='simulatorID' modifier={(simulatorID) => this.getSimulatorName(simulatorID)} />
+        <TableColumn title='Outputs' dataKey='outputLength' width='100' />
+        <TableColumn title='Inputs' dataKey='inputLength' width='100' />
         <TableColumn
           title=''
-          width='70'
+          width='200'
           deleteButton
           exportButton
-          onDelete={(index) => this.setState({ deleteModal: true, modalData: this.state.simulationModels[index], modalIndex: index })}
+          onDelete={(index) => this.setState({ deleteSimulationModelModal: true, modalSimulationModelData: this.state.simulationModels[index], modalSimulationModelIndex: index })}
           onExport={index => this.exportModel(index)}
         />
       </Table>
@@ -282,14 +344,43 @@ class Scenario extends React.Component {
 
       <div style={{ float: 'right' }}>
         <Button onClick={this.addSimulationModel} style={buttonStyle}><Icon icon="plus" /> Simulation Model</Button>
-        <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
+        <Button onClick={() => this.setState({ importSimulationModelModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
       </div>
 
       <div style={{ clear: 'both' }} />
 
-      <ImportSimulationModelDialog show={this.state.importModal} onClose={this.importSimulationModel} simulators={this.state.simulators} />
+      <ImportSimulationModelDialog show={this.state.importSimulationModelModal} onClose={this.importSimulationModel} simulators={this.state.simulators} />
 
-      <DeleteDialog title="simulation model" name={this.state.modalData.name} show={this.state.deleteModal} onClose={this.closeDeleteModal} />
+      <DeleteDialog title="simulation model" name={this.state.modalSimulationModelData.name} show={this.state.deleteSimulationModelModal} onClose={this.closeDeleteSimulationModelModal} />
+
+      {/*Dashboard table*/}
+      <h2>Dashboards</h2>
+      <Table data={this.state.dashboards}>
+        <TableColumn title='Name' dataKey='name' link='/dashboards/' linkKey='id' />
+        <TableColumn title='Grid' dataKey='grid' />
+        <TableColumn
+          title=''
+          width='200'
+          deleteButton
+          exportButton
+          onDelete={(index) => this.setState({ deleteDashboardModal: true, modalDashboardData: this.state.dashboards[index], modalDashboardIndex: index })}
+          onExport={index => this.exportDashboard(index)}
+        />
+      </Table>
+
+      <div style={{ float: 'right' }}>
+        <Button onClick={() => this.setState({ newDashboardModal: true })} style={buttonStyle}><Icon icon="plus" /> Dashboard</Button>
+        <Button onClick={() => this.setState({ importDashboardModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
+      </div>
+
+      <div style={{ clear: 'both' }} />
+
+      <NewDashboardDialog show={this.state.newDashboardModal} onClose={data => this.closeNewDashboardModal(data)}/>
+      <ImportDashboardDialog show={this.state.importDashboardModal} onClose={data => this.closeImportDashboardModal(data)}  />
+
+      <DeleteDialog title="dashboard" name={this.state.modalDashboardData.name} show={this.state.deleteDashboardModal} onClose={(e) => this.closeDeleteDashboardModal(e)}/>
+
+
     </div>;
   }
 }

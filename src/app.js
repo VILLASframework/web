@@ -51,7 +51,6 @@ import Scenario from './scenario/scenario';
 import SimulationModel from './simulationmodel/simulation-model';
 import Users from './user/users';
 import User from './user/user';
-import ExDashboard from './dashboard/exdashboard';
 
 import './styles/app.css';
 
@@ -146,7 +145,6 @@ class App extends React.Component {
               <div className={`app-content app-content-margin-left`}>
                 <Route exact path="/" component={Home} />
                 <Route path="/home" component={Home} />
-                <Route path="/exdashboard/:dashboard" component={Dashboard} />
                 <Route path="/dashboards/:dashboard" component={Dashboard} />
                 <Route exact path="/scenarios" component={Scenarios} />
                 <Route path="/scenarios/:scenario" component={Scenario} />
@@ -154,7 +152,6 @@ class App extends React.Component {
                 <Route path="/simulators" component={Simulators} />
                 <Route path="/user" component={User} />
                 <Route path="/users" component={Users} />
-                <Route path="/exdashboard" component={ExDashboard} />
               </div>
             </div>
 

@@ -178,8 +178,8 @@ class Scenarios extends Component {
 
         <Table data={this.state.scenarios}>
           <TableColumn title='Name' dataKey='name' link='/scenarios/' linkKey='id' />
-          <TableColumn title='ID' dataKey='id' link='/scenarios/' linkKey='id' />
-          <TableColumn title='Running' dataKey='running' link='/scenarios/' linkKey='id' />
+          <TableColumn title='ID' dataKey='id' />
+          <TableColumn title='Running' dataKey='running' />
           <TableColumn
             width='200'
             editButton
