@@ -22,6 +22,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
+import Icon from "../common/icon";
 
 class DashboardButtonGroup extends React.Component {
   render() {
@@ -38,17 +39,20 @@ class DashboardButtonGroup extends React.Component {
 
     if (this.props.editing) {
       buttons.push(
-        <Button key={key++} bsStyle="info" onClick={this.props.onSave} style={buttonStyle}>
+        <Button key={key++} onClick={this.props.onSave} style={buttonStyle}>
+          <Icon icon="info" />
           <span class="glyphicon glyphicon-floppy-disk"></span> Save
         </Button>,
-        <Button key={key++} bsStyle="info" onClick={this.props.onCancel} style={buttonStyle}>
+        <Button key={key++} onClick={this.props.onCancel} style={buttonStyle}>
+          <Icon icon="info" />
           <span class="glyphicon glyphicon-remove" ></span> Cancel
         </Button>
       );
     } else {
       if (this.props.fullscreen !== true) {
         buttons.push(
-          <Button key={key++} bsStyle="info" onClick={this.props.onFullscreen} style={buttonStyle}>
+          <Button key={key++} onClick={this.props.onFullscreen} style={buttonStyle}>
+            <Icon icon="info" />
             <span className="glyphicon glyphicon-resize-full"></span> Fullscreen
           </Button>
         );
@@ -56,20 +60,23 @@ class DashboardButtonGroup extends React.Component {
 
       if (this.props.paused) {
         buttons.push(
-          <Button key={key++} bsStyle="info" onClick={this.props.onUnpause} style={buttonStyle}>
+          <Button key={key++} onClick={this.props.onUnpause} style={buttonStyle}>
+            <Icon icon="info" />
             <span className="glyphicon glyphicon-play"></span> Live
           </Button>
         );
       } else {
         buttons.push(
-          <Button key={key++} bsStyle="info" onClick={this.props.onPause} style={buttonStyle}>
+          <Button key={key++} onClick={this.props.onPause} style={buttonStyle}>
+            <Icon icon="info" />
             <span className="glyphicon glyphicon-pause"></span> Pause
           </Button>
         );
       }
 
       buttons.push(
-        <Button key={key++} bsStyle="info" onClick={this.props.onEdit} style={buttonStyle}>
+        <Button key={key++} onClick={this.props.onEdit} style={buttonStyle}>
+          <Icon icon="info" />
           <span className="glyphicon glyphicon-pencil"></span> Pause
         </Button>
       );
