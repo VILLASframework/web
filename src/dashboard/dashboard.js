@@ -88,7 +88,7 @@ class Dashboard extends React.Component {
         AppDispatcher.dispatch({
           type: 'files/start-load',
           token: sessionToken,
-          param: 'objectID=1&objectType=widget'
+          param: '?objectID=1&objectType=widget'
         });
       }
 
@@ -106,7 +106,7 @@ class Dashboard extends React.Component {
         AppDispatcher.dispatch({
           type: 'files/start-load',
           token: sessionToken,
-          param: 'objectID=' + widget.id + '&objectType=widget'
+          param: '?objectID=' + widget.id + '&objectType=widget'
         });
       }
      */
