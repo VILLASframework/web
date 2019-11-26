@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Button, DropdownButton, DropdownItem } from 'react-bootstrap';
+import { Button, ButtonToolbar, DropdownButton, DropdownItem } from 'react-bootstrap';
 
 class SimulatorAction extends React.Component {
     constructor(props) {
@@ -38,7 +38,7 @@ class SimulatorAction extends React.Component {
             }
         }
     }
-    
+
     setAction = id => {
         // search action
         for (let action of this.props.actions) {
@@ -56,11 +56,13 @@ class SimulatorAction extends React.Component {
         ));
 
         return <div>
+          <ButtonToolbar>
             <DropdownButton title={this.state.selectedAction != null ? this.state.selectedAction.title : ''} id="action-dropdown" onSelect={this.setAction}>
-                {actionList}
+              {actionList}
             </DropdownButton>
-
             <Button style={{ marginLeft: '5px' }} disabled={this.props.runDisabled} onClick={() => this.props.runAction(this.state.selectedAction)}>Run</Button>
+          </ButtonToolbar>
+
         </div>;
     }
 }
