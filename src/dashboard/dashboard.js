@@ -87,6 +87,7 @@ class Dashboard extends React.Component {
       console.log(rawWidgets);
         
       dashboard = dashboard.set('widgets', rawWidgets);
+      console.log("")
 
       
      /* for(let widget of dashboard.get('widgets')){
@@ -99,12 +100,9 @@ class Dashboard extends React.Component {
         });
       }
      */
-      let widgets = {};
-
-      for (let widget of dashboard.get('widgets')) {
-        widgets[this.lastWidgetKey] = widget;
-        this.lastWidgetKey++;
-      }
+      
+     
+      
       //ist das überhaupt nötiG??
      /* if (this.state.dashboard.has('id') === false) {
         AppDispatcher.dispatch({
@@ -113,9 +111,13 @@ class Dashboard extends React.Component {
           token: this.state.sessionToken
         });
       }
+      */
+     
+
       
-      
-    //  this.computeHeightWithWidgets(widgets);
+      /*if(Object.keys(widgets).length !== 0 ){
+      this.computeHeightWithWidgets(widgets);
+      }
 
       let selectedDashboards = dashboard; 
 
@@ -128,8 +130,23 @@ class Dashboard extends React.Component {
        });
 */
     }
-    
+    let widgets = {};
 
+      for (let widget of dashboard.get('widgets')) {
+        widgets[Dashboard.lastWidgetKey] = widget;
+        console.log(" the last widgetKey: " + Dashboard.lastWidgetKey);
+        Dashboard.lastWidgetKey++;
+      }
+      let maxHeight = Object.keys(widgets).reduce( (maxHeightSoFar, widgetKey) => {
+      console.log("!! the widget key: "+ widgetKey);
+      let thisWidget = widgets[widgetKey];
+      let thisWidgetHeight = thisWidget.y + thisWidget.height;
+  
+      return thisWidgetHeight > maxHeightSoFar? thisWidgetHeight : maxHeightSoFar;
+      }, 0);
+      
+      console.log("now the object keys: ");
+      console.log(Object.keys(widgets));
     let simulationModels = [];
     //if (prevState.simulation != null) {
     //  simulationModels = SimulationModelStore.getState().filter(m => prevState.simulation.models.includes(m._id));
@@ -138,6 +155,7 @@ class Dashboard extends React.Component {
     return {
       rawDashboard,
       dashboard,
+      widgets,
 
       sessionToken: sessionToken,
       projects: null, //ProjectStore.getState(),
@@ -154,8 +172,8 @@ class Dashboard extends React.Component {
       modalData: prevState.modalData || null,
       modalIndex: prevState.modalIndex || null,
 
-      maxWidgetHeight: prevState.maxWidgetHeight  || 0,
-      dropZoneHeight: prevState.dropZoneHeight  || 0,
+      maxWidgetHeight: maxHeight,
+      dropZoneHeight: maxHeight +80,
     };
 
   }
@@ -180,6 +198,7 @@ class Dashboard extends React.Component {
     }
 
   }
+  
 
   componentWillUnmount() {
       //document.removeEventListener('keydown', this.handleKeydown.bind(this));
@@ -321,7 +340,7 @@ class Dashboard extends React.Component {
   /*
   * Set the initial height state based on the existing widgets
   */
-  computeHeightWithWidgets(widgets) {
+   computeHeightWithWidgets(widgets) {
     // Compute max height from widgets
     let maxHeight = Object.keys(widgets).reduce( (maxHeightSoFar, widgetKey) => {
       let thisWidget = widgets[widgetKey];
@@ -414,7 +433,10 @@ class Dashboard extends React.Component {
 
   render() {
     const widgets = this.state.dashboard.get('widgets');
+    console.log("the widgets in render: ");
+    console.log(widgets);
     const grid = this.state.dashboard.get('grid');
+    console.log("the grid in render: "+ grid);
 
     const boxClasses = classNames('section', 'box', { 'fullscreen-padding': this.props.isFullscreen });
 
@@ -459,7 +481,7 @@ class Dashboard extends React.Component {
 
         {/* TODO: Create only one context menu for all widgets */}
         {widgets != null && Object.keys(widgets).map(widgetKey => (
-          <WidgetContextMenu key={widgetKey} index={widgetKey} widget={widgets[widgetKey]} onEdit={this.editWidget} onDelete={this.deleteWidget} onChange={this.widgetChange} />
+          <WidgetContextMenu key={widgetKey} index={parseInt(widgetKey,10)} widget={widgets[widgetKey]} onEdit={this.editWidget} onDelete={this.deleteWidget} onChange={this.widgetChange} />
         ))}
 
         

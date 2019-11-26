@@ -38,7 +38,7 @@ class User extends Component {
   }
 
   static calculateState(prevState, props) {
-    //prevState = prevState || {};
+    prevState = prevState || {};
 
     let sessionToken = UserStore.getState().token;
     let user = UserStore.getState().currentUser;
@@ -67,6 +67,18 @@ class User extends Component {
     };
   }
 
+  update(){
+    let tokenState = UserStore.getState().token;
+    setTimeout(function() { 
+      AppDispatcher.dispatch({
+        type: 'users/start-load',
+        data: UserStore.getState().userid,
+        token: tokenState
+      });
+  }.bind(this), 1000)
+    
+  }
+
 
 
   closeEditModal(data) {
@@ -91,6 +103,7 @@ class User extends Component {
       });
     }
     }
+    this.update();
     
   }
 

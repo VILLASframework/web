@@ -21,7 +21,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { contextMenu, Item, Separator } from 'react-contexify';
+import { Menu, Item, Separator } from 'react-contexify';
 
 class WidgetContextMenu extends React.Component {
   editWidget = event => {
@@ -93,7 +93,7 @@ class WidgetContextMenu extends React.Component {
   render() {
     const isLocked = this.props.widget.locked;
 
-    return <contextMenu id={'widgetMenu'+ this.props.index}>
+    return <Menu id={'widgetMenu'+ this.props.index}>
       <Item disabled={isLocked} onClick={this.editWidget}>Edit</Item>
       <Item disabled={isLocked} onClick={this.deleteWidget}>Delete</Item>
 
@@ -108,7 +108,7 @@ class WidgetContextMenu extends React.Component {
 
       <Item disabled={isLocked} onClick={this.lockWidget}>Lock</Item>
       <Item disabled={isLocked === false} onClick={this.unlockWidget}>Unlock</Item>
-    </contextMenu>;
+    </Menu>;
   }
 }
 

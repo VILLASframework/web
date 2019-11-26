@@ -67,7 +67,7 @@ WidgetArea.propTypes = {
   editing: PropTypes.bool,
   grid: PropTypes.number,
   defaultSimulationModel: PropTypes.string,
-  widgets: PropTypes.object,
+  widgets: PropTypes.array,
   onWidgetAdded: PropTypes.func
 };
 

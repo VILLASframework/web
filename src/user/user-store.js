@@ -63,6 +63,9 @@ class UserStore extends ReduceStore {
       //  // save logged-in user
         return Object.assign({}, state, { currentUser: action.user});
 
+      case 'users/reload-current-user':
+        return state;
+        
       case 'users/current-user-error':
         // discard user token
         return Object.assign({}, state, { currentUser: null, token: null });
