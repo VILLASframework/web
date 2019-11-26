@@ -35,7 +35,6 @@ class SidebarMenu extends React.Component {
           <li><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
           <li><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
           <li><NavLink to="/simulators" activeClassName="active" title="Simulators">Simulators</NavLink></li>
-          <li><NavLink to="/exdashboard" activeClassName="active" title="Example Dashboard">Example Dashboard</NavLink></li>
           { this.props.currentRole === 'Admin' ?
               <li><NavLink to="/users" activeClassName="active" title="User Management">User Management</NavLink></li> : ''
           }
