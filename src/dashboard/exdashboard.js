@@ -18,7 +18,7 @@ class ExDashboard extends Component {
   static getStores() {
     return [ DashboardStore ];
   }
-  
+
   static calculateState(prevState, props) {
     prevState = prevState || {};
 
@@ -31,23 +31,23 @@ class ExDashboard extends Component {
       dashboards,
       tokenState
     }
-    
+
   }
-  
+
   componentDidMount() {
     AppDispatcher.dispatch({
       type: 'dashboards/start-load',
       token: this.state.tokenState,
-      param: 'scenarioID=1'
+      param: '?scenarioID=1'
     });
   }
-  
+
   loadDash(){
     console.log('bis hierhin gekommen');
     AppDispatcher.dispatch({
       type: 'dashboards/start-load',
       token: this.state.tokenState,
-      param: 'scenarioID=1'
+      param: '?scenarioID=1'
     });
   }
 
@@ -59,9 +59,9 @@ class ExDashboard extends Component {
     };
 
     return (
-      
+
       <div className='section'>
-      
+
         <h1>Dashboards</h1>
 
         <Table data={this.state.dashboards}>
