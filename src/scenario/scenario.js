@@ -30,7 +30,6 @@ import SimulatorStore from '../simulator/simulator-store';
 import DashboardStore from '../dashboard/dashboard-store';
 import SimulationModelStore from '../simulationmodel/simulation-model-store';
 import UserStore from '../user/user-store';
-import UsersStore from '../user/users-store';
 import AppDispatcher from '../common/app-dispatcher';
 
 import Icon from '../common/icon';
@@ -45,7 +44,7 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 
 class Scenario extends React.Component {
   static getStores() {
-    return [ ScenarioStore, SimulationModelStore, UsersStore, DashboardStore, SimulatorStore];
+    return [ ScenarioStore, SimulationModelStore, DashboardStore, SimulatorStore];
   }
 
   static calculateState(prevState, props) {
@@ -61,12 +60,17 @@ class Scenario extends React.Component {
       });
     }
 
+    // obtain all dashboards of a scenario
+    let dashboards = DashboardStore.getState().filter(dashb => dashb.scenarioID === parseInt(props.match.params.scenario, 10));
+
+    // obtain all simulation models of a scenario
+    let simulationmodels = SimulationModelStore.getState().filter(simmodel => simmodel.scenarioID === parseInt(props.match.params.scenario, 10));
+
     return {
       scenario,
       sessionToken,
-      simulationModels: SimulationModelStore.getState(),
-      users: UsersStore.getState(),
-      dashboards: DashboardStore.getState(),
+      simulationModels: simulationmodels,
+      dashboards: dashboards,
       simulators: SimulatorStore.getState(),
 
       deleteSimulationModelModal: false,
@@ -95,14 +99,6 @@ class Scenario extends React.Component {
       type: 'simulationModels/start-load',
       token: this.state.sessionToken,
       param: '?scenarioID='+this.state.scenario.id,
-    });
-
-    // load users of selected scenario
-    AppDispatcher.dispatch({
-      type: 'scenarios/start-load',
-      token: this.state.sessionToken,
-      data: this.state.scenario.id,
-      param: '/users'
     });
 
     // load dashboards of selected scenario
@@ -321,9 +317,9 @@ class Scenario extends React.Component {
       <Table data={this.state.simulationModels}>
         <TableColumn checkbox onChecked={(index, event) => this.onSimulationModelChecked(index, event)} width='30' />
         <TableColumn title='Name' dataKey='name' link='/simulationModel/' linkKey='id' />
-        <TableColumn title='Simulator' dataKey='simulator' modifier={(simulator) => this.getSimulatorName(simulator)} />
-        <TableColumn title='Output' dataKey='outputLength' width='100' />
-        <TableColumn title='Input' dataKey='inputLength' width='100' />
+        <TableColumn title='Simulator' dataKey='simulatorID' modifier={(simulatorID) => this.getSimulatorName(simulatorID)} />
+        <TableColumn title='Outputs' dataKey='outputLength' width='100' />
+        <TableColumn title='Inputs' dataKey='inputLength' width='100' />
         <TableColumn
           title=''
           width='200'
@@ -360,7 +356,7 @@ class Scenario extends React.Component {
       {/*Dashboard table*/}
       <h2>Dashboards</h2>
       <Table data={this.state.dashboards}>
-        <TableColumn title='Name' dataKey='name' link='/dashboard/' linkKey='id' />
+        <TableColumn title='Name' dataKey='name' link='/dashboards/' linkKey='id' />
         <TableColumn title='Grid' dataKey='grid' />
         <TableColumn
           title=''
@@ -383,14 +379,6 @@ class Scenario extends React.Component {
       <ImportDashboardDialog show={this.state.importDashboardModal} onClose={data => this.closeImportDashboardModal(data)}  />
 
       <DeleteDialog title="dashboard" name={this.state.modalDashboardData.name} show={this.state.deleteDashboardModal} onClose={(e) => this.closeDeleteDashboardModal(e)}/>
-
-      {/*Users table*/}
-      <h2>Users</h2>
-      <Table data={this.state.users}>
-        <TableColumn title='Username' dataKey='username' />
-        <TableColumn title='ID' dataKey='id' />
-        <TableColumn title='E-Mail' dataKey='mail' />
-      </Table>
 
 
     </div>;
