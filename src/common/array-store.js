@@ -79,30 +79,30 @@ class ArrayStore extends ReduceStore {
 
       case this.type + '/loaded':
         if (Array.isArray(action.data)) {
-          console.log(" loaded Array: ");
-          console.log(action.data);
-          console.log(state);
+          console.log("####### loaded array of type " + this.type);
+          //console.log(action.data);
+          //console.log(state);
           return this.updateElements(state, action.data);
         } else {
-          console.log("loaded single object: ");
-          console.log([action.data]);
-          console.log(state);
+          console.log("####### loaded single object of type " + this.type);
+          //console.log([action.data]);
+          //console.log(state);
           return this.updateElements(state, [action.data]);
         }
 
       case this.type + '/load-error':
         if (action.error && !action.error.handled && action.error.response) {
-        
+
           const USER_LOAD_ERROR_NOTIFICATION = {
             title: 'Failed to load',
             message: action.error.response.body.message,
             level: 'error'
           };
           NotificationsDataManager.addNotification(USER_LOAD_ERROR_NOTIFICATION);
-  
+
         }
         return super.reduce(state, action);
-  
+
       case this.type + '/start-add':
         this.dataManager.add(action.data, action.token,action.param);
         return state;
@@ -111,7 +111,7 @@ class ArrayStore extends ReduceStore {
         return this.updateElements(state, [action.data]);
 
       case this.type + '/add-error':
-        
+
          return state;
 
 
@@ -133,10 +133,10 @@ class ArrayStore extends ReduceStore {
             level: 'error'
           };
           NotificationsDataManager.addNotification(USER_REMOVE_ERROR_NOTIFICATION);
-  
+
         }
         return super.reduce(state, action);
-  
+
       case this.type + '/start-edit':
         this.dataManager.update(action.data, action.token,action.param);
         return state;

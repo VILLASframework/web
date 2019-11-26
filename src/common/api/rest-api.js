@@ -37,7 +37,7 @@ const REQUEST_TIMEOUT_NOTIFICATION = {
           level: 'error'
         };
 
-// Check if the error was due to network failure, timeouts, etc. 
+// Check if the error was due to network failure, timeouts, etc.
 // Can be used for the rest of requests
 function isNetworkError(err) {
   let result = false;
@@ -45,7 +45,7 @@ function isNetworkError(err) {
   // If not status nor response fields, it is a network error. TODO: Handle timeouts
   if (err.status == null || err.response == null) {
     result = true;
-    
+
     let notification = err.timeout? REQUEST_TIMEOUT_NOTIFICATION : SERVER_NOT_REACHABLE_NOTIFICATION;
     NotificationsDataManager.addNotification(notification);
   }
@@ -54,7 +54,6 @@ function isNetworkError(err) {
 
 class RestAPI {
   get(url, token) {
-    console.log(url);
     return new Promise(function (resolve, reject) {
       var req = request.get(url);
 
@@ -74,14 +73,13 @@ class RestAPI {
   }
 
   post(url, body, token) {
-    console.log(url);
     return new Promise(function (resolve, reject) {
       var req = request.post(url).send(body).timeout({ response: 5000 }); // Simple response start timeout (3s)
 
       if (token != null) {
         req.set('Authorization', "Bearer " + token);
       }
-      
+
       req.end(function (error, res) {
         if (res == null || res.status !== 200) {
 
