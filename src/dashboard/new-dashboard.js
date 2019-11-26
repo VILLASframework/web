@@ -24,7 +24,7 @@ import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
 import Dialog from '../common/dialogs/dialog';
 
-class NewVisualzationDialog extends React.Component {
+class NewDashboardDialog extends React.Component {
   valid: false;
 
   constructor(props) {
@@ -84,4 +84,4 @@ class NewVisualzationDialog extends React.Component {
   }
 }
 
-export default NewVisualzationDialog;
+export default NewDashboardDialog;
