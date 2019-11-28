@@ -24,7 +24,7 @@ import { Container } from 'flux/utils';
 import { Button, Col, Form, FormLabel } from 'react-bootstrap';
 
 import SimulationModelStore from './simulation-model-store';
-import UserStore from '../user/user-store';
+import LoginStore from '../user/login-store';
 import AppDispatcher from '../common/app-dispatcher';
 
 import SelectSimulator from '../simulator/select-simulator';
@@ -35,7 +35,7 @@ import ParametersEditor from '../common/parameters-editor';
 
 class SimulationModel extends React.Component {
     static getStores() {
-        return [ SimulationModelStore, UserStore ];
+        return [ SimulationModelStore, LoginStore ];
     }
 
     static calculateState(prevState, props) {
@@ -43,7 +43,7 @@ class SimulationModel extends React.Component {
 
         return {
             simulationModel: simulationModel || {},
-            sessionToken: UserStore.getState().token
+            sessionToken: LoginStore.getState().token
         };
     }
 

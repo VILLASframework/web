@@ -23,7 +23,7 @@ import React from 'react';
 import { Container } from 'flux/utils';
 
 import AppDispatcher from '../common/app-dispatcher';
-import UserStore from '../user/user-store';
+import LoginStore from '../user/login-store';
 import SimulatorDataStore from '../simulator/simulator-data-store';
 import SimulationModelStore from '../simulationmodel/simulation-model-store';
 import FileStore from '../file/file-store';
@@ -52,7 +52,7 @@ import '../styles/widgets.css';
 
 class Widget extends React.Component {
   static getStores() {
-    return [ SimulatorDataStore, SimulationModelStore, FileStore, UserStore ];
+    return [ SimulatorDataStore, SimulationModelStore, FileStore, LoginStore ];
   }
 
   static calculateState(prevState, props) {
@@ -73,7 +73,7 @@ class Widget extends React.Component {
 
       sequence: prevState != null ? prevState.sequence + 1 : 0,
 
-      sessionToken: UserStore.getState().token
+      sessionToken: LoginStore.getState().token
     };
   }
 

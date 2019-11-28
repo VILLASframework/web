@@ -25,17 +25,15 @@ import AppDispatcher from '../common/app-dispatcher';
 import UsersDataManager from './users-data-manager';
 import SimulatorDataDataManager from '../simulator/simulator-data-data-manager';
 
-class UserStore extends ReduceStore {
+class LoginStore extends ReduceStore {
   constructor() {
     super(AppDispatcher);
   }
 
   getInitialState() {
     return {
-      users: [],
       currentUser: null,
       token: null,
-      userid: 0,
       loginMessage: null
     };
   }
@@ -49,27 +47,30 @@ class UserStore extends ReduceStore {
       case 'users/logout':
         // disconnect from all simulators
         SimulatorDataDataManager.closeAll();
+        //remove token and current user from local storage
+        localStorage.clear();
 
         // delete user and token
         return Object.assign({}, state, { token: null, currentUser: null });
 
       case 'users/logged-in':
         // // request logged-in user data
-     
-        UsersDataManager.getCurrentUser(action.token, action.userid);
-
-        return Object.assign({}, state, { token: action.token, userid: action.userid});
+        UsersDataManager.getCurrentUser(action.token, action.currentUser.id);
+        return Object.assign({}, state, { token: action.token, currentUser: action.currentUser});
 
       case 'users/current-user':
       //  // save logged-in user
-        return Object.assign({}, state, { currentUser: action.user});
+        return Object.assign({}, state, { currentUser: action.currentUser});
+
+      case 'users/start-edit-own-user':
+        // update the current user
+        UsersDataManager.updateCurrentUser(action.token, action.data);
+        return Object.assign({}, state, { token: action.token, currentUser: action.data});
 
       case 'users/reload-current-user':
+        UsersDataManager.getCurrentUser(action.token, action.currentUser.id);
+        return  Object.assign({}, state, { token: action.token, currentUser: action.currentUser});
 
-          UsersDataManager.getCurrentUser(action.token, action.userid);
-
-        return  Object.assign({}, state, { token: action.token, userid: action.userid});
-        
       case 'users/current-user-error':
         // discard user token
         return Object.assign({}, state, { currentUser: null, token: null });
@@ -88,4 +89,4 @@ class UserStore extends ReduceStore {
   }
 }
 
-export default new UserStore();
+export default new LoginStore();

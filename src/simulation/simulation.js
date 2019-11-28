@@ -28,7 +28,7 @@ import _ from 'lodash';
 import SimulationStore from './simulation-store';
 import SimulatorStore from '../simulator/simulator-store';
 import SimulationModelStore from '../simulationmodel/simulation-model-store';
-import UserStore from '../user/user-store';
+import LoginStore from '../user/login-store';
 import AppDispatcher from '../common/app-dispatcher';
 
 import Icon from '../common/icon';
@@ -41,12 +41,12 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 
 class Simulation extends React.Component {
   static getStores() {
-    return [ SimulationStore, SimulatorStore, SimulationModelStore, UserStore ];
+    return [ SimulationStore, SimulatorStore, SimulationModelStore, LoginStore ];
   }
 
   static calculateState(prevState, props) {
     // get selected simulation
-    const sessionToken = UserStore.getState().token;
+    const sessionToken = LoginStore.getState().token;
 
     let simulation = SimulationStore.getState().find(s => s._id === props.match.params.simulation);
     if (simulation == null) {

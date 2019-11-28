@@ -26,7 +26,7 @@ import FileSaver from 'file-saver';
 
 import AppDispatcher from '../common/app-dispatcher';
 import ScenarioStore from './scenario-store';
-import UserStore from '../user/user-store';
+import LoginStore from '../user/login-store';
 
 import Icon from '../common/icon';
 import Table from '../common/table';
@@ -39,12 +39,12 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 
 class Scenarios extends Component {
   static getStores() {
-    return [ ScenarioStore, UserStore ];
+    return [ ScenarioStore, LoginStore ];
   }
 
   static calculateState() {
     const scenarios = ScenarioStore.getState();
-    const sessionToken = UserStore.getState().token;
+    const sessionToken = LoginStore.getState().token;
     console.log(scenarios);
 
     return {

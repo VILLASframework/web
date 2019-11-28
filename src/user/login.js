@@ -31,19 +31,18 @@ import Footer from '../common/footer';
 import NotificationsDataManager from '../common/data-managers/notifications-data-manager';
 
 import AppDispatcher from '../common/app-dispatcher';
-import UserStore from './user-store';
+import LoginStore from './login-store';
 
 class Login extends Component {
   static getStores() {
-    return [ UserStore ];
+    return [ LoginStore ];
   }
 
   static calculateState() {
     return {
-      currentUser: UserStore.getState().currentUser,
-      token: UserStore.getState().token,
-      loginMessage: UserStore.getState().loginMessage,
-      userid: UserStore.getState().userid
+      currentUser: LoginStore.getState().currentUser,
+      token: LoginStore.getState().token,
+      loginMessage: LoginStore.getState().loginMessage,
     };
   }
 
@@ -55,13 +54,13 @@ class Login extends Component {
     // if token stored locally, request user
     if (nextState.token == null) {
       const token = localStorage.getItem('token');
-      const userid = localStorage.getItem('userid');
+      const currentUser = localStorage.getItem('currentUser');
 
       if (token != null && token !== '' && nextState.currentUser == null) {
         AppDispatcher.dispatch({
           type: 'users/logged-in',
           token: token,
-          userid: userid
+          currentUser: currentUser
         });
       }
     } else {
@@ -69,7 +68,7 @@ class Login extends Component {
       if (nextState.currentUser != null) {
         // save login in local storage
         localStorage.setItem('token', nextState.token);
-        localStorage.setItem('userid', nextState.userid);
+        localStorage.setItem('currentUser', JSON.stringify(nextState.currentUser));
       }
     }
   }

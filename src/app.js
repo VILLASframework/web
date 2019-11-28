@@ -31,7 +31,7 @@ import { Hidden } from 'react-grid-system'
 import AppDispatcher from './common/app-dispatcher';
 import ScenarioStore from './scenario/scenario-store';
 import SimulatorStore from './simulator/simulator-store';
-import UserStore from './user/user-store';
+import LoginStore from './user/login-store';
 import NotificationsDataManager from './common/data-managers/notifications-data-manager';
 
 import Home from './common/home';
@@ -40,12 +40,8 @@ import Footer from './common/footer';
 import SidebarMenu from './common/menu-sidebar';
 import HeaderMenu from './common/header-menu';
 
-//import Projects from './project/projects';
-//import Project from './project/project';
 import Simulators from './simulator/simulators';
 import Dashboard from './dashboard/dashboard';
-//import Simulations from './simulation/simulations';
-//import Simulation from './simulation/simulation';
 import Scenarios from './scenario/scenarios';
 import Scenario from './scenario/scenario';
 import SimulationModel from './simulationmodel/simulation-model';
@@ -57,19 +53,16 @@ import './styles/app.css';
 class App extends React.Component {
 
   static getStores() {
-    return [ SimulatorStore, UserStore, ScenarioStore];
+    return [ SimulatorStore, LoginStore, ScenarioStore];
   }
 
   static calculateState(prevState) {
-    let currentUser = UserStore.getState().currentUser;
 
     return {
       simulators: SimulatorStore.getState(),
       scenarios: ScenarioStore.getState(),
-      currentRole: currentUser ? currentUser.role : '',
-      currentUsername: currentUser ? currentUser.username: '',
-      currentUserID: UserStore.getState().userid,
-      token: UserStore.getState().token,
+      currentUser: LoginStore.getState().currentUser,
+      token: LoginStore.getState().token,
 
       showSidebarMenu: false,
     };
@@ -77,17 +70,13 @@ class App extends React.Component {
 
   componentWillMount() {
     // if token stored locally, request user
-    const token = localStorage.getItem('token');
-    const userid = localStorage.getItem('userid');
-
+    let token = localStorage.getItem("token");
+    let currentUser = JSON.parse(localStorage.getItem("currentUser"));
     if (token != null && token !== '') {
-      // save token so we dont logout
-      this.setState({ token });
-
       AppDispatcher.dispatch({
         type: 'users/logged-in',
         token: token,
-        userid: userid
+        currentUser: currentUser
       });
     }
   }
@@ -128,7 +117,7 @@ class App extends React.Component {
           */}
           <Hidden sm md lg xl>
             <Col style={{ width: this.state.showSidebarMenu ? '280px' : '0px' }} className="sidenav">
-                <HeaderMenu onClose={this.hideSidebarMenu} currentRole={this.state.currentRole} />
+                <HeaderMenu onClose={this.hideSidebarMenu} currentRole={this.state.currentUser.role} />
             </Col>
           </Hidden>
 
@@ -139,7 +128,7 @@ class App extends React.Component {
 
             <div className={`app-body app-body-spacing`} >
               <Col xs={false}>
-                <SidebarMenu currentRole={this.state.currentRole} />
+                <SidebarMenu currentRole={this.state.currentUser.role} />
               </Col>
 
               <div className={`app-content app-content-margin-left`}>

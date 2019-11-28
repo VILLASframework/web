@@ -34,7 +34,7 @@ import WidgetToolbox from './widget-toolbox';
 import WidgetArea from './widget-area';
 import DashboardButtonGroup from './dashboard-button-group';
 
-import UserStore from '../user/user-store';
+import LoginStore from '../user/login-store';
 import DashboardStore from './dashboard-store';
 import ProjectStore from '../project/project-store';
 import SimulationStore from '../simulation/simulation-store';
@@ -49,14 +49,14 @@ class Dashboard extends React.Component {
 
   static lastWidgetKey = 0;
   static getStores() {
-    return [ DashboardStore, ProjectStore, SimulationStore, SimulationModelStore, FileStore, UserStore, WidgetStore ];
+    return [ DashboardStore, ProjectStore, SimulationStore, SimulationModelStore, FileStore, LoginStore, WidgetStore ];
   }
 
   static calculateState(prevState, props) {
     if (prevState == null) {
       prevState = {};
     }
-    const sessionToken = UserStore.getState().token;
+    const sessionToken = LoginStore.getState().token;
     let dashboard = Map();
     console.log("dashboard calculate state was called: " + props.match.params.dashboard);
     let dashboards = DashboardStore.getState()

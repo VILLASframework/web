@@ -24,19 +24,19 @@ import { Container } from 'flux/utils';
 import { FormGroup, FormControl, FormLabel, Button, ProgressBar, Col } from 'react-bootstrap';
 
 import FileStore from './file-store';
-import UserStore from '../user/user-store';
+import LoginStore from '../user/login-store';
 
 import AppDispatcher from '../common/app-dispatcher';
 
 class SelectFile extends React.Component {
     static getStores() {
-        return [ FileStore, UserStore ];
+        return [ FileStore, LoginStore ];
     }
 
     static calculateState() {
         return {
             files: FileStore.getState(),
-            sessionToken: UserStore.getState().token,
+            sessionToken: LoginStore.getState().token,
             selectedFile: '',
             uploadFile: null,
             uploadProgress: 0

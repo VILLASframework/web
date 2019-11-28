@@ -22,42 +22,5 @@
 
 import ScenariosDataManager from './scenarios-data-manager';
 import ArrayStore from '../common/array-store';
-//import UsersDataManager from "../user/users-data-manager";
-//import SimulatorDataDataManager from "../simulator/simulator-data-data-manager";
-//import AppDispatcher from "../common/app-dispatcher";
 
 export default new ArrayStore('scenarios', ScenariosDataManager);
-
-
-// class ScenariosStore extends ReduceStore {
-//   constructor() {
-//     super('scenarios', ScenariosDataManager);
-//   }
-//
-//   getInitialState() {
-//     return {
-//       scenarios: [],
-//
-//     };
-//   }
-//
-//   reduce(state, action) {
-//     switch (action.type) {
-//       case 'scenarios/load-models':
-//         // request simulation model data of scenario
-//         ScenariosDataManager.getSimulationModels(action.token, action.scenarioID);
-//
-//         return Object.assign({}, state, { token: action.token, simulationmodels: action.simulationmodels});
-//
-//       case 'scenarios/load-dashboards':
-//         // request dashboard data of scenario
-//         ScenariosDataManager.getDashboards(action.token, action.scenarioID);
-//
-//         return Object.assign({}, state, { token: action.token, dashboards: action.dashboards});
-//       default:
-//         return state;
-//     }
-//   }
-// }
-//
-// export default new ScenariosStore();

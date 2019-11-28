@@ -79,14 +79,8 @@ class ArrayStore extends ReduceStore {
 
       case this.type + '/loaded':
         if (Array.isArray(action.data)) {
-          console.log("####### loaded array of type " + this.type);
-          //console.log(action.data);
-          //console.log(state);
           return this.updateElements(state, action.data);
         } else {
-          console.log("####### loaded single object of type " + this.type);
-          //console.log([action.data]);
-          //console.log(state);
           return this.updateElements(state, [action.data]);
         }
 
@@ -141,21 +135,8 @@ class ArrayStore extends ReduceStore {
         this.dataManager.update(action.data, action.token,action.param);
         return state;
 
-      case this.type + '/start-own-edit':
-        this.dataManager.update(action.data, action.token,action.param);
-        return state;
-
       case this.type + '/edited':
         return this.updateElements(state, [action.data]);
-
-      case this.type + '/confirm-pw-doesnt-match':
-          const USER_PW_ERROR_NOTIFICATION = {
-            title: 'The new password does not match',
-            message: 'Try again',
-            level: 'error'
-          };
-          NotificationsDataManager.addNotification(USER_PW_ERROR_NOTIFICATION);
-        return state;
 
       case this.type + '/edit-error':
           return state;

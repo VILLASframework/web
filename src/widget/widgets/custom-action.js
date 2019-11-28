@@ -23,7 +23,7 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import Icon from '../../common/icon';
-import UserStore from '../../user/user-store';
+import LoginStore from '../../user/login-store';
 import SimulatorStore from '../../simulator/simulator-store';
 import AppDispatcher from '../../common/app-dispatcher';
 
@@ -46,7 +46,7 @@ class WidgetCustomAction extends Component {
 
     this.setState({
       simulator: SimulatorStore.getState().find(s => s._id === props.simulationModel.simulator),
-      sessionToken: UserStore.getState().token
+      sessionToken: LoginStore.getState().token
     });
   }
 

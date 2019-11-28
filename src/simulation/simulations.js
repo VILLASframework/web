@@ -26,7 +26,7 @@ import FileSaver from 'file-saver';
 
 import AppDispatcher from '../common/app-dispatcher';
 import SimulationStore from './simulation-store';
-import UserStore from '../user/user-store';
+import LoginStore from '../user/login-store';
 import SimulatorStore from '../simulator/simulator-store';
 import SimulationModelStore from '../simulationmodel/simulation-model-store';
 
@@ -42,7 +42,7 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 
 class Simulations extends Component {
   static getStores() {
-    return [ SimulationStore, UserStore, SimulatorStore, SimulationModelStore ];
+    return [ SimulationStore, LoginStore, SimulatorStore, SimulationModelStore ];
   }
 
   static calculateState() {
@@ -50,7 +50,7 @@ class Simulations extends Component {
     const simulationModels = SimulationModelStore.getState();
     const simulators = SimulatorStore.getState();
 
-    const sessionToken = UserStore.getState().token;
+    const sessionToken = LoginStore.getState().token;
 
     return {
       simulations,

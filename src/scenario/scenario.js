@@ -29,7 +29,7 @@ import ScenarioStore from './scenario-store';
 import SimulatorStore from '../simulator/simulator-store';
 import DashboardStore from '../dashboard/dashboard-store';
 import SimulationModelStore from '../simulationmodel/simulation-model-store';
-import UserStore from '../user/user-store';
+import LoginStore from '../user/login-store';
 import AppDispatcher from '../common/app-dispatcher';
 
 import Icon from '../common/icon';
@@ -44,12 +44,12 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 
 class Scenario extends React.Component {
   static getStores() {
-    return [ ScenarioStore, SimulationModelStore, DashboardStore, SimulatorStore];
+    return [ ScenarioStore, SimulationModelStore, DashboardStore, SimulatorStore, LoginStore];
   }
 
   static calculateState(prevState, props) {
     // get selected scenario
-    const sessionToken = UserStore.getState().token;
+    const sessionToken = LoginStore.getState().token;
 
     const scenario = ScenarioStore.getState().find(s => s.id === parseInt(props.match.params.scenario, 10));
     if (scenario == null) {
@@ -187,7 +187,6 @@ class Scenario extends React.Component {
         type: 'dashboards/start-add',
         data,
         token: this.state.sessionToken,
-        userid: this.state.sessionUserID
       });
     }
   }
@@ -203,7 +202,6 @@ class Scenario extends React.Component {
       type: 'dashboards/start-remove',
       data: this.state.modalDashboardData,
       token: this.state.sessionToken,
-      userid: this.state.sessionUserID
     });
   }
 
@@ -215,7 +213,6 @@ class Scenario extends React.Component {
         type: 'dashboards/start-add',
         data,
         token: this.state.sessionToken,
-        userid: this.state.sessionUserID
       });
     }
   }

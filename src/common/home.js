@@ -26,18 +26,15 @@ import React from 'react';
 //import RestAPI from '../api/rest-api';
 
 import config from '../config';
-import UserStore from "../user/user-store";
+import LoginStore from "../user/login-store";
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    let currentUser = UserStore.getState().currentUser;
 
     this.state = {
-      currentRole: currentUser ? currentUser.role : '',
-      currentUsername: currentUser ? currentUser.username: '',
-      currentUserID: currentUser ? currentUser.id: 0,
-      token: UserStore.getState().token
+      currentUser: LoginStore.getState().currentUser,
+      token: LoginStore.getState().token
     };
   }
 
@@ -64,7 +61,7 @@ class Home extends React.Component {
           VILLASweb is a frontend for distributed real-time simulation hosted by <a href={"mailto:" + config.admin.mail}>{config.admin.name}</a>.
         </p>
         <p>
-        You are logged in as user <b>{this.state.currentUsername}</b> with <b>ID {this.state.currentUserID}</b> and role <b>{this.state.currentRole}</b>.
+        You are logged in as user <b>{this.state.currentUser.username}</b> with <b>ID {this.state.currentUser.id}</b> and role <b>{this.state.currentUser.role}</b>.
         </p>
         {/*
           <p>

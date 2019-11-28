@@ -24,7 +24,7 @@ import { Container } from 'flux/utils';
 import { Button } from 'react-bootstrap';
 
 import AppDispatcher from '../common/app-dispatcher';
-import UserStore from './user-store';
+import LoginStore from './login-store';
 import UsersStore from './users-store';
 
 import Icon from '../common/icon';
@@ -34,15 +34,16 @@ import NewUserDialog from './new-user';
 import EditUserDialog from './edit-user';
 
 import DeleteDialog from '../common/dialogs/delete-dialog';
+import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
 
 class Users extends Component {
   static getStores() {
-    return [ UserStore, UsersStore ];
+    return [ LoginStore, UsersStore ];
   }
 
   static calculateState(prevState, props) {
 
-    let tokenState = UserStore.getState().token;
+    let tokenState = LoginStore.getState().token;
 
     // If there is a token available and this method was called as a result of loading users
     if (!prevState && tokenState) {
@@ -93,22 +94,21 @@ class Users extends Component {
     this.setState({ editModal: false });
 
     if (data) {
-      if(data.password === data.confirmpassword){
-      
-      AppDispatcher.dispatch({
-        type: 'users/start-edit',
-        data: data,
-        token: this.state.token
-      });
-    }
+      if(data.password === data.confirmpassword) {
 
-    else{
-      AppDispatcher.dispatch({
-        type: 'users/confirm-pw-doesnt-match',
-        data: data,
-        token: this.state.token
-      });
-    }
+        AppDispatcher.dispatch({
+          type: 'users/start-edit',
+          data: data,
+          token: this.state.token
+        });
+      } else{
+        const USER_UPDATE_ERROR_NOTIFICATION = {
+          title: 'Update Error ',
+          message: 'New password not correctly confirmed',
+          level: 'error'
+        };
+        NotificationsDataManager.addNotification(USER_UPDATE_ERROR_NOTIFICATION)
+      }
     }
   }
 
