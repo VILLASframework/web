@@ -45,7 +45,6 @@ class Scenarios extends Component {
   static calculateState() {
     const scenarios = ScenarioStore.getState();
     const sessionToken = LoginStore.getState().token;
-    console.log(scenarios);
 
     return {
       scenarios,

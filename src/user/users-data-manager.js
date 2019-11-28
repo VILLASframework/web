@@ -44,7 +44,6 @@ class UsersDataManager extends RestDataManager {
   }
 
   getCurrentUser(token, id) {
-    console.log("getCurrentUser: ", id);
     RestAPI.get(this.makeURL('/users/' + id), token).then(response => {
       AppDispatcher.dispatch({
         type: 'users/current-user',
@@ -59,7 +58,6 @@ class UsersDataManager extends RestDataManager {
   }
 
   updateCurrentUser(token, userUpdate){
-    console.log("UpdateCurrentUser", userUpdate.user.id);
     RestAPI.put(this.makeURL('/users/' + userUpdate.user.id), userUpdate, token).then( response => {
       AppDispatcher.dispatch({
         type: 'users/current-user',

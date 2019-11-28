@@ -83,15 +83,15 @@ class App extends React.Component {
 
   componentDidMount() {
     // load all simulators and scenarios to fetch data
-    AppDispatcher.dispatch({
-      type: 'simulators/start-load',
-      token: this.state.token
-    });
-
-    AppDispatcher.dispatch({
-      type: 'scenarios/start-load',
-      token: this.state.token
-    });
+    // AppDispatcher.dispatch({
+    //   type: 'simulators/start-load',
+    //   token: this.state.token
+    // });
+    //
+    // AppDispatcher.dispatch({
+    //   type: 'scenarios/start-load',
+    //   token: this.state.token
+    // });
 
     NotificationsDataManager.setSystem(this.refs.notificationSystem);
   }
