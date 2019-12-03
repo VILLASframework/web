@@ -84,12 +84,14 @@ class Widget extends React.Component {
 
     AppDispatcher.dispatch({
       type: 'files/start-load',
-      token: this.state.sessionToken
+      token: this.state.sessionToken,
+      param: '?objectID=1&objectType=widget'
     });
 
     AppDispatcher.dispatch({
       type: 'simulationModels/start-load',
-      token: this.state.sessionToken
+      token: this.state.sessionToken,
+      param: '?scenarioID=1'
     });
 
   }
@@ -116,6 +118,8 @@ class Widget extends React.Component {
   createWidget(widget) {
     let simulationModel = null;
 
+    console.log("createwidget was called");
+    console.log(" the widget type is: " + widget.type);
     for (let model of this.state.simulationModels) {
       if (model._id !== widget.simulationModel) {
         continue;
@@ -123,7 +127,7 @@ class Widget extends React.Component {
 
       simulationModel = model;
     }
-
+    //all types are lowercase!!! at least slider is
     if (widget.type === 'CustomAction') {
       return <WidgetCustomAction widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
     } else if (widget.type === 'Action') {
@@ -147,6 +151,7 @@ class Widget extends React.Component {
     } else if (widget.type === 'NumberInput') {
       return <WidgetInput widget={widget} editing={this.props.editing} simulationModel={simulationModel} onInputChanged={(value) => this.inputDataChanged(widget, value)} />
     } else if (widget.type === 'Slider') {
+      console.log("inside slider: simulationModel: " + simulationModel);
       return <WidgetSlider widget={widget} editing={this.props.editing} simulationModel={simulationModel} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } onInputChanged={value => this.inputDataChanged(widget, value)} />
     } else if (widget.type === 'Gauge') {
       return <WidgetGauge widget={widget} data={this.state.simulatorData} editing={this.props.editing} simulationModel={simulationModel} />
@@ -160,9 +165,10 @@ class Widget extends React.Component {
 
     return null;
   }
-
+  rn 
 
   render() {
+    console.log("!!!render Widget was called");
     const element = this.createWidget(this.props.data);
 
     if (this.props.editing) {

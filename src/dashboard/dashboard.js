@@ -57,6 +57,7 @@ class Dashboard extends React.Component {
       prevState = {};
     }
     const sessionToken = LoginStore.getState().token;
+
     let dashboard = Map();
     console.log("dashboard calculate state was called: " + props.match.params.dashboard);
     let dashboards = DashboardStore.getState()
@@ -82,7 +83,7 @@ class Dashboard extends React.Component {
         });
       }
 
-      let files = FileStore.getState();
+      /*let files = FileStore.getState();
 
       if(files.length === 0){
         AppDispatcher.dispatch({
@@ -90,7 +91,7 @@ class Dashboard extends React.Component {
           token: sessionToken,
           param: '?objectID=1&objectType=widget'
         });
-      }
+      }*/
 
 
       console.log("here are the widgets: ");
@@ -141,7 +142,7 @@ class Dashboard extends React.Component {
 */
     }
     let widgets = {};
-
+    
       for (let widget of dashboard.get('widgets')) {
         widgets[Dashboard.lastWidgetKey] = widget;
         console.log(" the last widgetKey: " + Dashboard.lastWidgetKey);
@@ -170,10 +171,10 @@ class Dashboard extends React.Component {
       sessionToken: sessionToken,
       projects: null, //ProjectStore.getState(),
       simulations: null, //SimulationStore.getState(),
-      files: FileStore.getState(),
+      files: null,
 
-      project: prevState.project || null,
-      simulation: prevState.simulation || null,
+      project:  null,
+      simulation:  null,
       simulationModels,
       editing: prevState.editing || false,
       paused: prevState.paused || false,
@@ -196,19 +197,20 @@ class Dashboard extends React.Component {
   }
 
 //!!!won't work anymore
- /* componentDidMount() {
+  componentWillMount() {
     //document.addEventListener('keydown', this.handleKeydown.bind(this));
     console.log("problem in componentdidmount");
     if (this.state.dashboard.has('id') === false) {
       AppDispatcher.dispatch({
         type: 'dashboards/start-load',
-        data: this.props.match.params.dashboard,
-        token: this.state.sessionToken
+        token: this.state.sessionToken,
+        param: '?scenarioID=1',
       });
+  
     }
 
   }
-
+/*
 
   componentWillUnmount() {
       //document.removeEventListener('keydown', this.handleKeydown.bind(this));

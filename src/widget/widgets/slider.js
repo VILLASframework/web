@@ -39,19 +39,22 @@ class WidgetSlider extends Component {
     super(props);
 
     this.state = {
-        unit: ''
+        unit: 'bla',
+        
     };
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log("componentwillreceiveprops calle, next props: ");
+    console.log(nextProps);
     if (nextProps.simulationModel == null) {
       return;
     }
 
     // Update value
-    if (nextProps.widget.default_value && this.state.value === undefined) {
+    if (nextProps.widget.customProperties.default_value && this.state.value === undefined) {
       this.setState({
-        value: nextProps.widget.default_value,
+        value: nextProps.widget.customProperties.default_value,
       });
     }
 
@@ -63,7 +66,7 @@ class WidgetSlider extends Component {
     }
 
     // Check if the orientation changed, update the size if it did
-    if (this.props.widget.orientation !== nextProps.widget.orientation) {
+    if (this.props.widget.customProperties.orientation !== nextProps.widget.customProperties.orientation) {
       let baseWidget = nextProps.widget;
 
       // Exchange dimensions and constraints
@@ -94,11 +97,15 @@ class WidgetSlider extends Component {
   }
 
   render() {
-    let isVertical = this.props.widget.orientation === WidgetSlider.OrientationTypes.VERTICAL.value;
+    console.log("render of slider was called");
+    console.log(this.props.widget);
+    console.log("the maxRange is : " + this.props.widget.customProperties.rangeMax);
+    let isVertical = this.props.widget.customProperties.orientation === WidgetSlider.OrientationTypes.VERTICAL.value;
+    console.log("this state has the value: " + this.state.value);
 
     let fields = {
       name: this.props.widget.name,
-      control: <Slider min={ this.props.widget.rangeMin } max={ this.props.widget.rangeMax } step={ this.props.widget.step } value={ this.state.value } disabled={ this.props.editing } vertical={ isVertical } onChange={ (v) => this.valueIsChanging(v) } onAfterChange={ (v) => this.valueChanged(v) }/>,
+      control: <Slider min={ this.props.widget.customProperties.rangeMin } max={ this.props.widget.customProperties.rangeMax } step={ this.props.widget.customProperties.step } value={ this.state.value } disabled={ this.props.editing } vertical={ isVertical } onChange={ (v) => this.valueIsChanging(v) } onAfterChange={ (v) => this.valueChanged(v) }/>,
       value: <span>{ format('.3s')(Number.parseFloat(this.state.value)) }</span>,
       unit: <span className="signal-unit">{ this.state.unit }</span>
     }
@@ -111,7 +118,7 @@ class WidgetSlider extends Component {
                   });
 
     return (
-      this.props.widget.orientation === WidgetSlider.OrientationTypes.HORIZONTAL.value? (
+       !isVertical? (
         <div className={widgetClasses}>
           <label>{ fields.name }</label>
           <div className='slider'>{ fields.control }</div>

@@ -33,7 +33,7 @@ class WidgetGauge extends Component {
     this.state = {
       value: 0,
       minValue: null,
-      maxValue: null
+      maxValue: null 
     };
   }
 
