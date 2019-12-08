@@ -88,6 +88,7 @@ class EditableWidgetContainer extends React.Component {
 
   render() {
     const widget = this.props.widget;
+    console.log("editable-widget-container was called");
 
     const resizing = {
       bottom: !widget.locked,

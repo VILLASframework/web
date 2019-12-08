@@ -45,8 +45,6 @@ class WidgetSlider extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log("componentwillreceiveprops calle, next props: ");
-    console.log(nextProps);
     if (nextProps.simulationModel == null) {
       return;
     }
@@ -97,12 +95,7 @@ class WidgetSlider extends Component {
   }
 
   render() {
-    console.log("render of slider was called");
-    console.log(this.props.widget);
-    console.log("the maxRange is : " + this.props.widget.customProperties.rangeMax);
     let isVertical = this.props.widget.customProperties.orientation === WidgetSlider.OrientationTypes.VERTICAL.value;
-    console.log("this state has the value: " + this.state.value);
-
     let fields = {
       name: this.props.widget.name,
       control: <Slider min={ this.props.widget.customProperties.rangeMin } max={ this.props.widget.customProperties.rangeMax } step={ this.props.widget.customProperties.step } value={ this.state.value } disabled={ this.props.editing } vertical={ isVertical } onChange={ (v) => this.valueIsChanging(v) } onAfterChange={ (v) => this.valueChanged(v) }/>,

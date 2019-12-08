@@ -26,6 +26,7 @@ import Icon from "../common/icon";
 
 class DashboardButtonGroup extends React.Component {
   render() {
+    console.log("DashboardButtonGroup was called");
     const buttonStyle = {
       marginLeft: '8px'
     };

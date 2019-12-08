@@ -27,7 +27,7 @@ import { Map } from 'immutable'
 
 //import Icon from '../common/icon';
 import Widget from '../widget/widget';
-//import EditWidget from '../widget/edit-widget';
+import EditWidget from '../widget/edit-widget';
 
 import WidgetContextMenu from './widget-context-menu';
 import WidgetToolbox from './widget-toolbox';
@@ -59,13 +59,11 @@ class Dashboard extends React.Component {
     const sessionToken = LoginStore.getState().token;
 
     let dashboard = Map();
-    console.log("dashboard calculate state was called: " + props.match.params.dashboard);
     let dashboards = DashboardStore.getState()
     let rawDashboard =  dashboards[props.match.params.dashboard - 1];
 
 
-    let str = JSON.stringify(rawDashboard, null, 4);
-    console.log(str);
+    
     if (rawDashboard != null) {
       dashboard = Map(rawDashboard);
       console.log("dashboard: " + dashboard);
@@ -83,23 +81,7 @@ class Dashboard extends React.Component {
         });
       }
 
-      /*let files = FileStore.getState();
-
-      if(files.length === 0){
-        AppDispatcher.dispatch({
-          type: 'files/start-load',
-          token: sessionToken,
-          param: '?objectID=1&objectType=widget'
-        });
-      }*/
-
-
-      console.log("here are the widgets: ");
-      console.log(rawWidgets);
-
       dashboard = dashboard.set('widgets', rawWidgets);
-      console.log("")
-
 
      /* for(let widget of dashboard.get('widgets')){
         console.log("load files got called")
@@ -141,23 +123,21 @@ class Dashboard extends React.Component {
        });
 */
     }
+    
     let widgets = {};
     
       for (let widget of dashboard.get('widgets')) {
         widgets[Dashboard.lastWidgetKey] = widget;
-        console.log(" the last widgetKey: " + Dashboard.lastWidgetKey);
         Dashboard.lastWidgetKey++;
       }
       let maxHeight = Object.keys(widgets).reduce( (maxHeightSoFar, widgetKey) => {
-      console.log("!! the widget key: "+ widgetKey);
       let thisWidget = widgets[widgetKey];
       let thisWidgetHeight = thisWidget.y + thisWidget.height;
 
       return thisWidgetHeight > maxHeightSoFar? thisWidgetHeight : maxHeightSoFar;
       }, 0);
 
-      console.log("now the object keys: ");
-      console.log(Object.keys(widgets));
+    
     let simulationModels = [];
     //if (prevState.simulation != null) {
     //  simulationModels = SimulationModelStore.getState().filter(m => prevState.simulation.models.includes(m._id));
@@ -166,7 +146,7 @@ class Dashboard extends React.Component {
     return {
       rawDashboard,
       dashboard,
-      widgets,
+   
 
       sessionToken: sessionToken,
       projects: null, //ProjectStore.getState(),
@@ -179,7 +159,7 @@ class Dashboard extends React.Component {
       editing: prevState.editing || false,
       paused: prevState.paused || false,
 
-      //editModal: prevState.editModal || false,
+      editModal: prevState.editModal || false,
       modalData: prevState.modalData || null,
       modalIndex: prevState.modalIndex || null,
 
@@ -199,7 +179,6 @@ class Dashboard extends React.Component {
 //!!!won't work anymore
   componentWillMount() {
     //document.addEventListener('keydown', this.handleKeydown.bind(this));
-    console.log("problem in componentdidmount");
     if (this.state.dashboard.has('id') === false) {
       AppDispatcher.dispatch({
         type: 'dashboards/start-load',
@@ -368,9 +347,9 @@ class Dashboard extends React.Component {
   }
 
 
-  //editWidget = (widget, index) => {
-  //  this.setState({ editModal: true, modalData: widget, modalIndex: index });
-  //}
+  editWidget = (widget, index) => {
+    this.setState({ editModal: true, modalData: widget, modalIndex: index });
+  }
 
 
   closeEdit = data => {
@@ -445,11 +424,7 @@ class Dashboard extends React.Component {
 
   render() {
     const widgets = this.state.dashboard.get('widgets');
-    console.log("the widgets in render: ");
-    console.log(widgets);
     const grid = this.state.dashboard.get('grid');
-    console.log("the grid in render: "+ grid);
-
     const boxClasses = classNames('section', 'box', { 'fullscreen-padding': this.props.isFullscreen });
 
     return <div className={boxClasses} >
@@ -495,6 +470,7 @@ class Dashboard extends React.Component {
         {widgets != null && Object.keys(widgets).map(widgetKey => (
           <WidgetContextMenu key={widgetKey} index={parseInt(widgetKey,10)} widget={widgets[widgetKey]} onEdit={this.editWidget} onDelete={this.deleteWidget} onChange={this.widgetChange} />
         ))}
+        <EditWidget sessionToken={this.state.sessionToken} show={this.state.editModal} onClose={this.closeEdit} widget={this.state.modalData} simulationModels={this.state.simulationModels} files={this.state.files} />
 
 
       </div>
@@ -504,5 +480,3 @@ class Dashboard extends React.Component {
 
 let fluxContainerConverter = require('../common/FluxContainerConverter');
 export default Fullscreenable()(Container.create(fluxContainerConverter.convert(Dashboard), { withProps: true }));
-//<EditWidget sessionToken={this.state.sessionToken} show={this.state.editModal} onClose={this.closeEdit} widget={this.state.modalData} simulationModels={this.state.simulationModels} files={this.state.files} />
-//onEdit={this.startEditing}
