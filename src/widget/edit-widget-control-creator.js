@@ -38,13 +38,13 @@ import EditWidgetMinMaxControl from './edit-widget-min-max-control';
 import EditWidgetHTMLContent from './edit-widget-html-content';
 import EditWidgetParametersControl from './edit-widget-parameters-control';
 
-export default function createControls(widgetType = null, widget = null, sessionToken = null, files = null, validateForm, simulationModels, handleChange) {
+export default function CreateControls(widgetType = null, widget = null, sessionToken = null, files = null, validateForm, simulationModels, handleChange) {
     // Use a list to concatenate the controls according to the widget type
-    var dialogControls = [];
+    var DialogControls = [];
 
     switch(widgetType) {
         case 'CustomAction':
-            dialogControls.push(
+            DialogControls.push(
               <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} validate={id => validateForm(id)} handleChange={e => handleChange(e)} />,
               <EditWidgetTextControl key={1} widget={widget} controlId={'icon'} label={'Icon'} placeholder={'Enter an awesome font icon name'} validate={id => validateForm(id)} handleChange={e => handleChange(e)} />,
               <EditWidgetSimulationControl key={2} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
@@ -52,7 +52,7 @@ export default function createControls(widgetType = null, widget = null, session
             )
             break;
         case 'Action':
-            dialogControls.push(
+            DialogControls.push(
               <EditWidgetSimulationControl key={0} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />
             )
             break;
@@ -60,7 +60,7 @@ export default function createControls(widgetType = null, widget = null, session
             let valueBoundOnChange = (e) => {
                 handleChange([e, {target: {id: 'signal', value: 0}}]);
             }
-            dialogControls.push(
+            DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} validate={id => validateForm(id)} handleChange={e => handleChange(e)} />,
                 <EditWidgetSimulationControl key={1} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => valueBoundOnChange(e)} />,
                 <EditWidgetSignalControl key={2} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
@@ -72,7 +72,7 @@ export default function createControls(widgetType = null, widget = null, session
               let lampBoundOnChange = (e) => {
                   handleChange([e, {target: {id: 'signal', value: 0}}]);
               }
-              dialogControls.push(
+              DialogControls.push(
                 <EditWidgetSimulationControl key={0} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => lampBoundOnChange(e)} />,
                 <EditWidgetSignalControl key={1} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetTextControl key={2} widget={widget} controlId={'threshold'} label={'Threshold'} placeholder={'0.5'} validate={id => validateForm(id)} handleChange={e => handleChange(e)} />,
@@ -84,7 +84,7 @@ export default function createControls(widgetType = null, widget = null, session
             let plotBoundOnChange = (e) => {
                 handleChange([e, {target: {id: 'signals', value: []}}]);
             }
-            dialogControls.push(
+            DialogControls.push(
                 <EditWidgetTimeControl key={0} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetSimulationControl key={1} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => plotBoundOnChange(e)} />,
                 <EditWidgetSignalsControl key={2} controlId={'signals'} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
@@ -93,7 +93,7 @@ export default function createControls(widgetType = null, widget = null, session
             );
             break;
         case 'Table':
-            dialogControls.push(
+            DialogControls.push(
                 <EditWidgetSimulationControl key={0} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={1} widget={widget} controlId={'showUnit'} text="Show unit" handleChange={e => handleChange(e)} />
             );
@@ -101,7 +101,7 @@ export default function createControls(widgetType = null, widget = null, session
         case 'Image':
             // Restrict to only image file types (MIME)
             let imageControlFiles = files == null? [] : files.filter(file => file.type.includes('image'));
-            dialogControls.push(
+            DialogControls.push(
                 <EditImageWidgetControl key={0} sessionToken={sessionToken} widget={widget} files={imageControlFiles} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetAspectControl key={1} widget={widget} handleChange={e => handleChange(e)} />
             );
@@ -110,7 +110,7 @@ export default function createControls(widgetType = null, widget = null, session
             let gaugeBoundOnChange = (e) => {
                 handleChange([e, {target: {id: 'signal', value: ''}}]);
             }
-            dialogControls.push(
+            DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} validate={id => validateForm(id)} handleChange={e => handleChange(e)} />,
                 <EditWidgetSimulationControl key={1} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => gaugeBoundOnChange(e) } />,
                 <EditWidgetSignalControl key={2} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
@@ -123,7 +123,7 @@ export default function createControls(widgetType = null, widget = null, session
             let plotTableBoundOnChange = (e) => {
                 handleChange([e, {target: {id: 'preselectedSignals', value: []}}]);
             }
-            dialogControls.push(
+            DialogControls.push(
                 <EditWidgetSimulationControl key={0} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => plotTableBoundOnChange(e)} />,
                 <EditWidgetSignalsControl key={1} controlId={'preselectedSignals'} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetTextControl key={2} controlId={'ylabel'} label={'Y-Axis'} placeholder={'Enter a name for the Y-axis'} widget={widget} handleChange={(e) => handleChange(e)} />,
@@ -132,7 +132,7 @@ export default function createControls(widgetType = null, widget = null, session
             );
             break;
         case 'Slider':
-            dialogControls.push(
+            DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} validate={id => validateForm(id)} />,
                 <EditWidgetOrientation key={1} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetSimulationControl key={2} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
@@ -148,7 +148,7 @@ export default function createControls(widgetType = null, widget = null, session
             let buttonBoundOnChange = (e) => {
               handleChange([e, {target: {id: 'signal', value: 0}}]);
             }
-            dialogControls.push(
+            DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} validate={id => validateForm(id)} />,
                 <EditWidgetSimulationControl key={1} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => buttonBoundOnChange(e)} />,
                 <EditWidgetSignalControl key={2} widget={widget} controlId={'signal'} input validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />,
@@ -158,27 +158,27 @@ export default function createControls(widgetType = null, widget = null, session
             );
             break;
         case 'Box':
-            dialogControls.push(
+            DialogControls.push(
                 <EditWidgetColorControl key={0} widget={widget} controlId={'border_color'} label={'Border color'} validate={(id) => validateForm(id)} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetColorControl key={1} widget={widget} controlId={'background_color'} label={'Background color'} handleChange={e => handleChange(e)} />
             );
             break;
         case 'Label':
-            dialogControls.push(
+            DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} validate={id => validateForm(id)} />,
                 <EditWidgetTextSizeControl key={1} widget={widget} handleChange={e => handleChange(e)} />,
                 <EditWidgetColorControl key={2} widget={widget} controlId={'fontColor'} label={'Text color'} handleChange={e => handleChange(e)} />
             );
             break;
         case 'HTML':
-            dialogControls.push(
+            DialogControls.push(
                 <EditWidgetHTMLContent key={0} widget={widget} placeholder='HTML Code' controlId='content' handleChange={e => handleChange(e)} />
             );
             break;
         case 'Topology':
             // Restrict to only xml files (MIME)
             let topologyControlFiles = files == null? [] : files.filter( file => file.type.includes('xml'));
-            dialogControls.push(
+            DialogControls.push(
                 <EditImageWidgetControl key={0} sessionToken={sessionToken} widget={widget} files={topologyControlFiles} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />
             );
             break;
@@ -187,7 +187,7 @@ export default function createControls(widgetType = null, widget = null, session
             let inputBoundOnChange = (e) => {
               handleChange([e, {target: {id: 'signal', value: 0}}]);
             }
-            dialogControls.push(
+            DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} validate={id => validateForm(id)} handleChange={e => handleChange(e)} />,
                 <EditWidgetSimulationControl key={1} widget={widget} validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => inputBoundOnChange(e)} />,
                 <EditWidgetSignalControl key={2} widget={widget} controlId={'signal'} input validate={(id) => validateForm(id)} simulationModels={simulationModels} handleChange={(e) => handleChange(e)} />
@@ -198,5 +198,5 @@ export default function createControls(widgetType = null, widget = null, session
             console.log('Non-valid widget type: ' + widgetType);
         }
 
-    return dialogControls;
+    return DialogControls;
 }

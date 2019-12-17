@@ -19,7 +19,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
+import React, {Component} from 'react';
 import { Container } from 'flux/utils';
 import Fullscreenable from 'react-fullscreenable';
 import classNames from 'classnames';
@@ -45,8 +45,8 @@ import AppDispatcher from '../common/app-dispatcher';
 
 import 'react-contexify/dist/ReactContexify.min.css';
 
-class Dashboard extends React.Component {
-
+class Dashboard extends Component {
+  
   static lastWidgetKey = 0;
   static getStores() {
     return [ DashboardStore, ProjectStore, SimulationStore, SimulationModelStore, FileStore, LoginStore, WidgetStore ];
@@ -66,7 +66,6 @@ class Dashboard extends React.Component {
     
     if (rawDashboard != null) {
       dashboard = Map(rawDashboard);
-      console.log("dashboard: " + dashboard);
 
       // convert widgets list to a dictionary to be able to reference widgets
       //let widgets = {};
@@ -159,9 +158,9 @@ class Dashboard extends React.Component {
       editing: prevState.editing || false,
       paused: prevState.paused || false,
 
-      editModal: prevState.editModal || false,
-      modalData: prevState.modalData || null,
-      modalIndex: prevState.modalIndex || null,
+      editModal:  false,
+      modalData:  null,
+      modalIndex:  null,
 
       maxWidgetHeight: maxHeight,
       dropZoneHeight: maxHeight +80,
@@ -269,7 +268,6 @@ class Dashboard extends React.Component {
   }
 
   reloadDashboard() {
-    console.log("Error: reloadDashboard was called");
     // select dashboard by param id
     this.state.dashboards.forEach((tempDashboard) => {
       if (tempDashboard._id === this.props.match.params.dashboard) {
@@ -294,7 +292,7 @@ class Dashboard extends React.Component {
     });
   }
 
-  handleDrop = widget => {
+  handleDrop(widget) {
     const widgets = this.state.dashboard.get('widgets') || [];
 
     const widgetKey = this.getNewWidgetKey();
@@ -347,12 +345,13 @@ class Dashboard extends React.Component {
   }
 
 
-  editWidget = (widget, index) => {
+  editWidget(widget, index){
+    console.log("dashboard editWidget was called widget: " + widget +" index: " + index);
     this.setState({ editModal: true, modalData: widget, modalIndex: index });
-  }
+  };
 
 
-  closeEdit = data => {
+  closeEdit(data){
     if (data == null) {
       this.setState({ editModal: false });
 
@@ -368,21 +367,27 @@ class Dashboard extends React.Component {
   };
 
 
-  deleteWidget = (widget, index) => {
-    const widgets = this.state.dashboard.get('widgets');
+  deleteWidget(widget, index) {
+    /*const widgets = this.state.dashboard.get('widgets');
     delete widgets[index];
 
     const dashboard = this.state.dashboard.set('widgets');
 
-    this.setState({ dashboard });
+    this.setState({ dashboard });*/
+    console.log("delete Widget in dashboard was called");
+    AppDispatcher.dispatch({
+      type: 'widgets/start-remove',
+      data: widget,
+      token: this.state.sessionToken
+    });
   };
 
 
-  startEditing = () => {
+  startEditing(){
     this.setState({ editing: true });
   };
 
-  saveEditing = () => {
+  saveEditing() {
     // Provide the callback so it can be called when state change is applied
     // TODO: Check if callback is needed
     this.setState({ editing: false }, this.saveChanges );
@@ -401,23 +406,23 @@ class Dashboard extends React.Component {
     });
   }
 
-  cancelEditing = () => {
+  cancelEditing() {
     this.setState({ editing: false, dasboard: {} });
 
     this.reloadDashboard();
   };
 
-  setGrid = value => {
+  setGrid(value) {
     const dashboard = this.state.dashboard.set('grid', value);
 
     this.setState({ dashboard });
   };
 
-  pauseData = () => {
+  pauseData(){
     this.setState({ paused: true });
   };
 
-  unpauseData = () => {
+  unpauseData() {
     this.setState({ paused: false });
   };
 
@@ -463,13 +468,21 @@ class Dashboard extends React.Component {
               grid={grid}
               paused={this.state.paused}
             />
+            
           ))}
         </WidgetArea>
 
         {/* TODO: Create only one context menu for all widgets */}
         {widgets != null && Object.keys(widgets).map(widgetKey => (
-          <WidgetContextMenu key={widgetKey} index={parseInt(widgetKey,10)} widget={widgets[widgetKey]} onEdit={this.editWidget} onDelete={this.deleteWidget} onChange={this.widgetChange} />
+          <WidgetContextMenu 
+            key={widgetKey} 
+            index={parseInt(widgetKey,10)} 
+            widget={widgets[widgetKey]} 
+            onEdit={this.editWidget.bind(this)}
+            onDelete={this.deleteWidget.bind(this)} 
+            onChange={this.widgetChange} />
         ))}
+        
         <EditWidget sessionToken={this.state.sessionToken} show={this.state.editModal} onClose={this.closeEdit} widget={this.state.modalData} simulationModels={this.state.simulationModels} files={this.state.files} />
 
 

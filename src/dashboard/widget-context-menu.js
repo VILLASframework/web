@@ -21,7 +21,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Menu, Item, Separator } from 'react-contexify';
+import { Menu, Item, Separator, MenuProvider } from 'react-contexify';
 
 class WidgetContextMenu extends React.Component {
   editWidget = event => {
@@ -32,6 +32,7 @@ class WidgetContextMenu extends React.Component {
 
   deleteWidget = event => {
     if (this.props.onDelete != null) {
+      console.log("deleteWIget in wcm was called");
       this.props.onDelete(this.props.widget, this.props.index);
     }
   };
@@ -91,9 +92,10 @@ class WidgetContextMenu extends React.Component {
   };
 
   render() {
+   
     const isLocked = this.props.widget.locked;
-
-    return <Menu id={'widgetMenu'+ this.props.index}>
+    const ContextMenu = () => (
+      <Menu id={'widgetMenu'+ this.props.index}>
       <Item disabled={isLocked} onClick={this.editWidget}>Edit</Item>
       <Item disabled={isLocked} onClick={this.deleteWidget}>Delete</Item>
 
@@ -108,14 +110,22 @@ class WidgetContextMenu extends React.Component {
 
       <Item disabled={isLocked} onClick={this.lockWidget}>Lock</Item>
       <Item disabled={isLocked === false} onClick={this.unlockWidget}>Unlock</Item>
-    </Menu>;
+      </Menu>
+  );
+
+    return <div>
+    <MenuProvider id={'widgetMenu'+ this.props.index} style={{ border: '1px solid purple', display: 'inline-block' }}>
+        {"Widget " + this.props.widget.name}
+    </MenuProvider>
+    <ContextMenu />
+    </div>
   }
 }
 
 WidgetContextMenu.propTypes = {
   index: PropTypes.number.isRequired,
   widget: PropTypes.object.isRequired,
-  onEdit: PropTypes.func,
+  onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func,
   onChange: PropTypes.func
 };

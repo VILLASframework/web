@@ -42,7 +42,7 @@ class EditWidgetSimulationControl extends Component {
     return (
         <FormGroup controlId="simulationModel">
             <FormLabel>Simulation Model</FormLabel>
-            <FormControl componentClass="select" placeholder="Select simulation model" value={this.state.widget.simulationModel || '' } onChange={(e) => this.props.handleChange(e)}>
+            <FormControl className="select" placeholder="Select simulation model" value={this.state.widget.simulationModel || '' } onChange={(e) => this.props.handleChange(e)}>
             {
               this.props.simulationModels.length === 0 ? (
               <option disabled value style={{ display: 'none' }}> No simulation models available. </option>

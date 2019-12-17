@@ -38,7 +38,7 @@ class EditWidgetTextControl extends Component {
 
   render() {
     return (
-        <FormGroup controlId={this.props.controlId} validationState={this.props.validate ? this.props.validate(this.props.controlId) : null}>
+        <FormGroup controlId={this.props.controlId} valid={this.props.validate ? this.props.validate(this.props.controlId) : null}>
           <FormLabel>{this.props.label}</FormLabel>
           <FormControl type="text" placeholder={this.props.placeholder} value={this.state.widget[this.props.controlId] || ''} onChange={e => this.props.handleChange(e)} />
           <FormControl.Feedback />

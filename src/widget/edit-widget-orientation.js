@@ -48,7 +48,7 @@ class EditWidgetOrientation extends Component {
     return (
         <FormGroup controlId="orientation">
           <Row>
-            <Col componentClass={FormLabel} sm={2}>
+            <Col className={FormLabel} sm={2}>
               Orientation
             </Col>
             <Col sm={10}>

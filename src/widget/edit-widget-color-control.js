@@ -53,14 +53,14 @@ class EditWidgetColorControl extends Component {
   }
 
   render() {
-
+    console.log("edit widgetcolorcontrol was called");
     return (
-      <FormGroup bsClass="color-control">
+      <FormGroup bsclass="color-control">
         <Row>
-          <Col componentClass={FormLabel} style={{whiteSpace: 'nowrap' }} sm={2}>
+          <Col className={FormLabel} style={{whiteSpace: 'nowrap' }} sm={2}>
             { this.props.label }
           </Col>
-          <Col sm={10} bsClass='colors-column'>
+          <Col sm={10} bsclass='colors-column'>
           {
             EditWidgetColorControl.ColorPalette.map( (color, idx ) => {
                 let colorStyle = {

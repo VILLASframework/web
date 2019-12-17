@@ -24,10 +24,11 @@ import React from 'react';
 
 import Dialog from '../common/dialogs/dialog';
 
-import createControls from './edit-widget-control-creator';
+import CreateControls from './edit-widget-control-creator';
 
 class EditWidgetDialog extends React.Component {
   valid = true;
+  
 
   constructor(props) {
     super(props);
@@ -121,9 +122,10 @@ class EditWidgetDialog extends React.Component {
   }
 
   render() {
+    console.log("####edit widget render was called");
     let controls = null;
     if (this.props.widget) {
-      controls = createControls(
+      controls = CreateControls(
             this.props.widget.type,
             this.state.temporal,
             this.props.sessionToken,
