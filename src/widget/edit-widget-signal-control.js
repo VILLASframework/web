@@ -54,7 +54,7 @@ class EditWidgetSignalControl extends Component {
     return (
         <FormGroup controlId="signal">
           <FormLabel>Signal</FormLabel>
-          <FormControl className="select" placeholder="Select signal" value={this.state.widget.signal} onChange={(e) => this.props.handleChange(e)}>
+          <FormControl as="select" placeholder="Select signal" value={this.state.widget.signal} onChange={(e) => this.props.handleChange(e)}>
             {
               signalsToRender.length === 0 ? (
                 <option disabled value style={{ display: 'none' }}>No signals available.</option>

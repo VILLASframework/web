@@ -23,7 +23,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Rnd } from 'react-rnd';
-import { contextMenu } from 'react-contexify';
+import { Menu } from 'react-contexify';
 
 class EditableWidgetContainer extends React.Component {
   constructor(props) {
@@ -122,13 +122,13 @@ class EditableWidgetContainer extends React.Component {
       onDragStop={this.dragStop}
       dragGrid={gridArray}
       resizeGrid={gridArray}
-      zIndex={widget.z}
+      zindex={widget.z}
       enableResizing={resizing}
       disableDragging={widget.locked}
     >
-      <contextMenu id={'widgetMenu' + this.props.index}>
+      <Menu id={'widgetMenu' + this.props.index}>
         {this.props.children}
-      </contextMenu>
+      </Menu>
     </Rnd>;
   }
 }

@@ -29,7 +29,7 @@ class WidgetContainer extends React.Component {
       height: Number(this.props.widget.height),
       left: Number(this.props.widget.x),
       top: Number(this.props.widget.y),
-      zIndex: Number(this.props.widget.z),
+      zindex: Number(this.props.widget.z),
       position: 'absolute'
     };
 

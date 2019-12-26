@@ -25,6 +25,8 @@ import EditWidgetColorControl from '../edit-widget-color-control';
 
 class WidgetLabel extends Component {
   render() {
+    console.log("here is the label; ");
+    console.log(this.props.widget);
     const style = {
       fontSize: this.props.widget.customProperties.textSize + 'px',
       color: EditWidgetColorControl.ColorPalette[this.props.widget.customProperties.fontColor]

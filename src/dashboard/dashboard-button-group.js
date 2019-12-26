@@ -41,11 +41,11 @@ class DashboardButtonGroup extends React.Component {
       buttons.push(
         <Button key={key++} onClick={this.props.onSave} style={buttonStyle}>
           <Icon icon="info" />
-          <span class="glyphicon glyphicon-floppy-disk"></span> Save
+          <span className="glyphicon glyphicon-floppy-disk"></span> Save
         </Button>,
         <Button key={key++} onClick={this.props.onCancel} style={buttonStyle}>
           <Icon icon="info" />
-          <span class="glyphicon glyphicon-remove" ></span> Cancel
+          <span className="glyphicon glyphicon-remove" ></span> Cancel
         </Button>
       );
     } else {
@@ -77,7 +77,7 @@ class DashboardButtonGroup extends React.Component {
       buttons.push(
         <Button key={key++} onClick={this.props.onEdit} style={buttonStyle}>
           <Icon icon="info" />
-          <span className="glyphicon glyphicon-pencil"></span> Pause
+          <span className="glyphicon glyphicon-pencil"></span> Edit
         </Button>
       );
     }

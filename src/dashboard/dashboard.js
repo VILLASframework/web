@@ -188,13 +188,13 @@ class Dashboard extends Component {
     }
 
   }
-/*
 
+/*
   componentWillUnmount() {
       //document.removeEventListener('keydown', this.handleKeydown.bind(this));
   }
 
-  /*componentDidUpdate() {
+  componentDidUpdate() {
     if (this.state.dashboard._id !== this.props.match.params.dashboard) {
       this.reloadDashboard();
     }
@@ -224,9 +224,9 @@ class Dashboard extends Component {
         }
       });
     }
-  }*
+  } */
 
-  /*handleKeydown(e) {
+  handleKeydown(e) {
     switch (e.key) {
       case ' ':
       case 'p':
@@ -242,7 +242,7 @@ class Dashboard extends Component {
     }
   }
 
-  }
+  
   /*
   * Adapt the area's height with the position of the new widget.
   * Return true if the height increased, otherwise false.
@@ -293,16 +293,25 @@ class Dashboard extends Component {
   }
 
   handleDrop(widget) {
-    const widgets = this.state.dashboard.get('widgets') || [];
 
-    const widgetKey = this.getNewWidgetKey();
+    widget.dashboardID = this.state.dashboard.id;
+
+    AppDispatcher.dispatch({
+      type: 'widgets/start-add',
+      token: this.state.sessionToken,
+      data: widget
+    });
+    /*let widgets = []; 
+    widgets = this.state.dashboard.get('widgets');
+
+    const widgetKey = Dashboard.getNewWidgetKey();
     widgets[widgetKey] = widget;
 
-    const dashboard = this.state.dashboard.set('widgets');
+    const dashboard = this.state.dashboard.set('widgets',widgets);
 
     // this.increaseHeightWithWidget(widget);
 
-    this.setState({ dashboard });
+    this.setState({ dashboard });*/
   };
 
 
@@ -311,7 +320,7 @@ class Dashboard extends Component {
     this.widgetChange(updated_widget, key, this.saveChanges);
   }
 
-  widgetChange = (widget, index, callback = null) => {
+  widgetChange(widget, index, callback = null){
     const widgets = this.state.dashboard.get('widgets');
     widgets[index] = widget;
 
@@ -352,18 +361,21 @@ class Dashboard extends Component {
 
 
   closeEdit(data){
+    console.log("dashboard close edit was called: ");
+    console.log(data);
     if (data == null) {
       this.setState({ editModal: false });
 
       return;
     }
 
-    const widgets = this.state.dashboard.get('widgets');
-    widgets[this.state.modalIndex] = data;
+    AppDispatcher.dispatch({
+      type: 'widgets/start-edit',
+      token: this.state.sessionToken,
+      data: data
+    });
 
-    const dashboard = this.state.dashboard.set('widgets', widgets);
-
-    this.setState({ editModal: false, dashboard });
+    this.setState({ editModal: false });
   };
 
 
@@ -390,7 +402,7 @@ class Dashboard extends Component {
   saveEditing() {
     // Provide the callback so it can be called when state change is applied
     // TODO: Check if callback is needed
-    this.setState({ editing: false }, this.saveChanges );
+    this.setState({ editing: false });
   };
 
   saveChanges() {
@@ -407,9 +419,8 @@ class Dashboard extends Component {
   }
 
   cancelEditing() {
-    this.setState({ editing: false, dasboard: {} });
+    this.setState({ editing: false });
 
-    this.reloadDashboard();
   };
 
   setGrid(value) {
@@ -440,29 +451,30 @@ class Dashboard extends Component {
 
         <DashboardButtonGroup
           editing={this.state.editing}
+          onEdit={this.startEditing.bind(this)}
           fullscreen={this.props.isFullscreen}
           paused={this.state.paused}
-          onSave={this.saveEditing}
-          onCancel={this.cancelEditing}
+          onSave={this.saveEditing.bind(this)}
+          onCancel={this.cancelEditing.bind(this)}
           onFullscreen={this.props.toggleFullscreen}
-          onPause={this.pauseData}
-          onUnpause={this.unpauseData}
+          onPause={this.pauseData.bind(this)}
+          onUnpause={this.unpauseData.bind(this)}
         />
       </div>
 
       <div className="box box-content" onContextMenu={ (e) => e.preventDefault() }>
         {this.state.editing &&
-        <WidgetToolbox grid={grid} onGridChange={this.setGrid} widgets={widgets} />
+        <WidgetToolbox grid={grid} onGridChange={this.setGrid.bind(this)} widgets={widgets} />
         }
 
-        <WidgetArea widgets={widgets} editing={this.state.editing} grid={grid} onWidgetAdded={this.handleDrop}>
+        <WidgetArea widgets={widgets} editing={this.state.editing} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
           {widgets != null && Object.keys(widgets).map(widgetKey => (
             <Widget
               key={widgetKey}
               data={widgets[widgetKey]}
               simulation={this.state.simulation}
-              onWidgetChange={(w, k) => this.widgetChange(w, k)}
-              onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)}
+              onWidgetChange={this.widgetChange.bind(this)}
+              onWidgetStatusChange={this.widgetStatusChange.bind(this)}
               editing={this.state.editing}
               index={widgetKey}
               grid={grid}
@@ -480,16 +492,20 @@ class Dashboard extends Component {
             widget={widgets[widgetKey]} 
             onEdit={this.editWidget.bind(this)}
             onDelete={this.deleteWidget.bind(this)} 
-            onChange={this.widgetChange} />
+            onChange={this.widgetChange.bind(this)} />
         ))}
         
-        <EditWidget sessionToken={this.state.sessionToken} show={this.state.editModal} onClose={this.closeEdit} widget={this.state.modalData} simulationModels={this.state.simulationModels} files={this.state.files} />
+        <EditWidget sessionToken={this.state.sessionToken} show={this.state.editModal} onClose={this.closeEdit.bind(this)} widget={this.state.modalData} simulationModels={this.state.simulationModels} files={this.state.files} />
 
 
       </div>
     </div>;
   }
 }
+/*
+onWidgetChange={(w, k) => this.widgetChange(w, k)}
+onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)}
+*/
 
 let fluxContainerConverter = require('../common/FluxContainerConverter');
 export default Fullscreenable()(Container.create(fluxContainerConverter.convert(Dashboard), { withProps: true }));

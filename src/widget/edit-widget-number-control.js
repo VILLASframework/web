@@ -40,7 +40,7 @@ class EditWidgetNumberControl extends Component {
     return (
         <FormGroup controlId={this.props.controlId}>
           <FormLabel>{this.props.label}</FormLabel>
-          <FormControl type="number" step="any" defaultValue={this.props.defaultValue} value={this.state.widget[this.props.controlId] || 0} onChange={e => this.props.handleChange(e)} />
+          <FormControl type="number" step="any" value={this.state.widget[this.props.controlId] || 0} onChange={e => this.props.handleChange(e)} />
         </FormGroup>
     );
   }
