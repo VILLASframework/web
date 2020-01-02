@@ -66,7 +66,7 @@ class WidgetGauge extends Component {
     }
 
     // check if value has changed
-    const signal = nextProps.data[simulator].output.values[nextProps.widget.signal];
+    const signal = nextProps.data[simulator].output.values[nextProps.widget.customProperties.signal];
     // Take just 3 decimal positions
     // Note: Favor this method over Number.toFixed(n) in order to avoid a type conversion, since it returns a String
     if (signal != null) {
@@ -95,9 +95,9 @@ class WidgetGauge extends Component {
           this.gauge.maxValue = maxValue;
         }
 
-        if (nextProps.widget.valueUseMinMax) {
-          if (this.state.minValue > nextProps.widget.valueMin) {
-            minValue = nextProps.widget.valueMin;
+        if (nextProps.widget.customProperties.valueUseMinMax) {
+          if (this.state.minValue > nextProps.widget.customProperties.valueMin) {
+            minValue = nextProps.widget.customProperties.valueMin;
 
             this.setState({ minValue });
             this.gauge.setMinValue(minValue);
@@ -105,8 +105,8 @@ class WidgetGauge extends Component {
             updateLabels = true;
           }
 
-          if (this.state.maxValue < nextProps.widget.valueMax) {
-            maxValue = nextProps.widget.valueMax;
+          if (this.state.maxValue < nextProps.widget.customProperties.valueMax) {
+            maxValue = nextProps.widget.customProperties.valueMax;
 
             this.setState({ maxValue });
             this.gauge.maxValue = maxValue;
@@ -153,7 +153,7 @@ class WidgetGauge extends Component {
     }
 
     // calculate zones
-    let zones = this.props.widget.colorZones ? this.props.widget.zones : null;
+    let zones = this.props.widget.customProperties.colorZones ? this.props.widget.customProperties.zones : null;
     if (zones != null) {
       // adapt range 0-100 to actual min-max
       const step = (maxValue - minValue) / 100;
@@ -197,7 +197,7 @@ class WidgetGauge extends Component {
     let signalType = null;
 
     if (this.props.simulationModel != null) {
-      signalType = (this.props.simulationModel != null && this.props.simulationModel.outputLength > 0 && this.props.widget.signal < this.props.simulationModel.outputLength) ? this.props.simulationModel.outputMapping[this.props.widget.signal].type : '';
+      signalType = (this.props.simulationModel != null && this.props.simulationModel.outputLength > 0 && this.props.widget.customProperties.signal < this.props.simulationModel.outputLength) ? this.props.simulationModel.outputMapping[this.props.widget.customProperties.signal].type : '';
     }
 
     return (

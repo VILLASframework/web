@@ -83,7 +83,7 @@ class WidgetTable extends Component {
       <TableColumn key={2} title="Value" dataKey="value" modifier={format('.4s')} />
     ];
 
-    if (this.props.widget.showUnit)
+    if (this.props.widget.customProperties.showUnit)
       columns.push(<TableColumn key={3} title="Unit" dataKey="unit" />)
 
     return (

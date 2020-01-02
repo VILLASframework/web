@@ -38,6 +38,7 @@ class EditWidgetDialog extends React.Component {
         name: '',
         simulationModel: '',
         signal: 0
+      
       }
     };
   }
@@ -68,7 +69,8 @@ class EditWidgetDialog extends React.Component {
   }
 
   handleChange(e) {
-    if (e.constructor === Array) {
+  /*is this needed? 
+     if (e.constructor === Array) {
       // Every property in the array will be updated
       console.log("####its an array!");
       let changes = e.reduce( (changesObject, event) => {
@@ -80,7 +82,8 @@ class EditWidgetDialog extends React.Component {
       }, {});
 
       this.setState({ temporal: Object.assign({}, this.state.temporal, changes ) });
-    } else {
+  */
+        if(e.target.type !== 'text'){
         let changeObject = {};
         if (e.target.id === 'lockAspect') {
           changeObject[e.target.id] = e.target.checked;
@@ -100,12 +103,15 @@ class EditWidgetDialog extends React.Component {
           changeObject[e.target.id] = e.target.checked;
         } else if (e.target.type === 'number') {
           changeObject[e.target.id] = Number(e.target.value);
-        } else {
+        } 
+        else {
           changeObject[e.target.id] = e.target.value;
         }
+
         console.log("this.state.temporal is: ");
         console.log(this.state.temporal);
         console.log("the event target id: " + e.target.id);
+        console.log("this state target type is: " + e.target.type);
         console.log("the value is: " + e.target.value)
         console.log("change Object is: ");
         console.log(changeObject);
@@ -113,11 +119,19 @@ class EditWidgetDialog extends React.Component {
         let finalChange = this.state.temporal;
         
         finalChange.customProperties[e.target.id] = changeObject[e.target.id];
-      
-        
-
         this.setState({ temporal: finalChange});
-    }
+      }
+      else{
+        if(this.state.temporal[e.target.id]){
+          let finalChange = this.state.temporal;
+        
+          finalChange[e.target.id] = e.target.value;
+          this.setState({ temporal: finalChange});
+          
+        }
+      }
+    
+    
   }
 
   resetState() {

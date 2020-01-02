@@ -106,9 +106,9 @@ class WidgetTopology extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const file = nextProps.files.find(file => file._id === nextProps.widget.file);
+    const file = nextProps.files.find(file => file._id === nextProps.widget.customProperties.file);
     // Ensure model is requested only once or a different was selected
-    if (this.props.widget.file !== nextProps.widget.file || (this.state.dashboardState === 'initial' && file)) {
+    if (this.props.widget.customProperties.file !== nextProps.widget.customProperties.file || (this.state.dashboardState === 'initial' && file)) {
       this.setState({'dashboardState': 'loading' });
       if (file) {
         fetch(new Request('/' + config.publicPathBase + file.path))
@@ -141,7 +141,7 @@ class WidgetTopology extends React.Component {
       }
     } else {
       // No file has been selected
-      if (!nextProps.widget.file) {
+      if (!nextProps.widget.customProperties.file) {
         this.setState({
           'dashboardState': 'show_message',
           'message': 'Select a topology model first.'});

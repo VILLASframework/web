@@ -293,8 +293,8 @@ class Dashboard extends Component {
   }
 
   handleDrop(widget) {
-
-    widget.dashboardID = this.state.dashboard.id;
+    widget.dashboardID = this.state.dashboard.get('id');
+    console.log(widget);
 
     AppDispatcher.dispatch({
       type: 'widgets/start-add',
@@ -473,8 +473,8 @@ class Dashboard extends Component {
               key={widgetKey}
               data={widgets[widgetKey]}
               simulation={this.state.simulation}
-              onWidgetChange={this.widgetChange.bind(this)}
-              onWidgetStatusChange={this.widgetStatusChange.bind(this)}
+              onWidgetChange={this.widgetChange}
+              onWidgetStatusChange={this.widgetStatusChange}
               editing={this.state.editing}
               index={widgetKey}
               grid={grid}

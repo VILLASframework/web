@@ -34,20 +34,20 @@ class WidgetButton extends Component {
   }
 
   onPress(e) {
-    if (!this.props.widget.toggle) {
+    if (!this.props.widget.customProperties.toggle) {
       this.setState({ pressed: true });
-      this.valueChanged(this.props.widget.on_value);
+      this.valueChanged(this.props.widget.customProperties.on_value);
     }
   }
 
   onRelease(e) {
     let nextState = false;
-    if (this.props.widget.toggle) {
+    if (this.props.widget.customProperties.toggle) {
       nextState = !this.state.pressed;
     }
 
     this.setState({ pressed: nextState });
-    this.valueChanged(nextState ? this.props.widget.on_value : this.props.widget.off_value);
+    this.valueChanged(nextState ? this.props.widget.customProperties.on_value : this.props.widget.customProperties.off_value);
   }
 
   valueChanged(newValue) {

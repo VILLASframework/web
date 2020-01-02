@@ -57,9 +57,9 @@ class WidgetSlider extends Component {
     }
 
     // Update unit
-    if (nextProps.widget.simulationModel && nextProps.simulationModel.inputMapping && this.state.unit !== nextProps.simulationModel.inputMapping[nextProps.widget.signal].type) {
+    if (nextProps.widget.customProperties.simulationModel && nextProps.simulationModel.inputMapping && this.state.unit !== nextProps.simulationModel.inputMapping[nextProps.widget.customProperties.signal].type) {
       this.setState({
-        unit: nextProps.simulationModel.inputMapping[nextProps.widget.signal].type
+        unit: nextProps.simulationModel.inputMapping[nextProps.widget.customProperties.signal].type
       });
     }
 
@@ -73,8 +73,8 @@ class WidgetSlider extends Component {
         height: baseWidget.width,
         minWidth: baseWidget.minHeight,
         minHeight: baseWidget.minWidth,
-        maxWidth: baseWidget.maxHeight,
-        maxHeight: baseWidget.maxWidth
+        maxWidth: baseWidget.customProperties.maxHeight,
+        maxHeight: baseWidget.customProperties.maxWidth
       });
 
       nextProps.onWidgetChange(newWidget);
@@ -122,7 +122,7 @@ class WidgetSlider extends Component {
           <label>{ fields.name }</label>
           { fields.control }
           { fields.value }
-          { this.props.widget.showUnit && fields.unit }
+          { this.props.widget.customProperties.showUnit && fields.unit }
         </div>
       )
     );

@@ -54,7 +54,7 @@ class WidgetCustomAction extends Component {
     AppDispatcher.dispatch({
       type: 'simulators/start-action',
       simulator: this.state.simulator,
-      data: this.props.widget.actions,
+      data: this.props.widget.customProperties.actions,
       token: this.state.sessionToken
     });
   }
@@ -62,7 +62,7 @@ class WidgetCustomAction extends Component {
   render() {
     return <div className="widget-custom-action full">
       <Button className="full" disabled={this.state.simulator === null} onClick={(e) => this.onClick()}>
-        <Icon icon={this.props.widget.icon} /> <span dangerouslySetInnerHTML={{ __html: this.props.widget.name }} />
+        <Icon icon={this.props.widget.customProperties.icon} /> <span dangerouslySetInnerHTML={{ __html: this.props.widget.name }} />
       </Button>
     </div>;
   }

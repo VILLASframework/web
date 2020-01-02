@@ -40,16 +40,16 @@ class WidgetInput extends Component {
     }
 
     // Update value
-    if (nextProps.widget.default_value && this.state.value === undefined) {
+    if (nextProps.widget.customProperties.default_value && this.state.value === undefined) {
       this.setState({
-        value: nextProps.widget.default_value
+        value: nextProps.widget.customProperties.default_value
       });
     }
 
     // Update unit
-    if (nextProps.widget.simulationModel && nextProps.simulationModel.inputMapping && this.state.unit !== nextProps.simulationModel.inputMapping[nextProps.widget.signal].type) {
+    if (nextProps.widget.customProperties.simulationModel && nextProps.simulationModel.inputMapping && this.state.unit !== nextProps.simulationModel.inputMapping[nextProps.widget.customProperties.signal].type) {
       this.setState({
-        unit: nextProps.simulationModel.inputMapping[nextProps.widget.signal].type
+        unit: nextProps.simulationModel.inputMapping[nextProps.widget.customProperties.signal].type
       });
     }
   }
@@ -75,7 +75,7 @@ class WidgetInput extends Component {
       <div className="number-input-widget full">
           <Form componentClass="fieldset" horizontal>
               <FormGroup>
-                  <Col componentClass={FormLabel} xs={3}>
+                  <Col as={FormLabel} xs={3}>
                     {this.props.widget.name}
                   </Col>
                   <Col xs={9}>

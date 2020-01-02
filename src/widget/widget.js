@@ -81,7 +81,7 @@ class Widget extends React.Component {
     if (this.state.sessionToken == null) {
       return;
     }
-
+    console.log('widget componentwillmount called');
     AppDispatcher.dispatch({
       type: 'files/start-load',
       token: this.state.sessionToken,

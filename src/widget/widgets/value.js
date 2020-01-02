@@ -46,10 +46,11 @@ class WidgetValue extends Component {
       return;
     }
 
-    const unit = nextProps.simulationModel.outputMapping[nextProps.widget.signal].type;
+    //const unit = nextProps.simulationModel.outputMapping[nextProps.widget.customProperties.signal].type;
+    const unit = 42;
 
     // check if value has changed
-    const signal = nextProps.data[simulator].output.values[nextProps.widget.signal];
+    const signal = nextProps.data[simulator].output.values[nextProps.widget.customProperties.signal];
     if (signal != null && this.state.value !== signal[signal.length - 1].y) {
       this.setState({ value: signal[signal.length - 1].y, unit });
     }
@@ -59,10 +60,10 @@ class WidgetValue extends Component {
     var value_to_render = Number(this.state.value);
     return (
       <div className="single-value-widget">
-        <strong style={{ fontSize: this.props.widget.textSize + 'px' }}>{this.props.widget.name}</strong>
-        <span style={{ fontSize: this.props.widget.textSize + 'px' }}>{Number.isNaN(value_to_render) ? NaN : format('.3s')(value_to_render)}</span>
-        {this.props.widget.showUnit &&
-          <span style={{ fontSize: this.props.widget.textSize + 'px' }}>[{this.state.unit}]</span>
+        <strong style={{ fontSize: this.props.widget.customProperties.textSize + 'px' }}>{this.props.widget.name}</strong>
+        <span style={{ fontSize: this.props.widget.customProperties.textSize + 'px' }}>{Number.isNaN(value_to_render) ? NaN : format('.3s')(value_to_render)}</span>
+        {this.props.widget.customProperties.showUnit &&
+          <span style={{ fontSize: this.props.widget.customProperties.textSize + 'px' }}>[{this.state.unit}]</span>
         }
       </div>
     );

@@ -48,7 +48,7 @@ class WidgetLamp extends Component {
     }
 
     // check if value has changed
-    const signal = nextProps.data[simulator].output.values[nextProps.widget.signal];
+    const signal = nextProps.data[simulator].output.values[nextProps.widget.customProperties.signal];
     if (signal != null && this.state.value !== signal[signal.length - 1].y) {
       this.setState({ value: signal[signal.length - 1].y });
     }
@@ -58,10 +58,10 @@ class WidgetLamp extends Component {
     let colors = EditWidgetColorControl.ColorPalette;
     let color;
 
-    if (Number(this.state.value) > Number(this.props.widget.threshold))
-      color = colors[this.props.widget.on_color];
+    if (Number(this.state.value) > Number(this.props.widget.customProperties.threshold))
+      color = colors[this.props.widget.customProperties.on_color];
     else
-      color = colors[this.props.widget.off_color];
+      color = colors[this.props.widget.customProperties.off_color];
 
     let style = {
       backgroundColor: color,
