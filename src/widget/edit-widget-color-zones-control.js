@@ -33,7 +33,9 @@ class EditWidgetColorZonesControl extends React.Component {
 
     this.state = {
       widget: {
+        customProperties:{
         zones: []
+        }
       },
       selectedZones: []
     };
@@ -46,7 +48,7 @@ class EditWidgetColorZonesControl extends React.Component {
   addZone = () => {
     // add row
     const widget = this.state.widget;
-    widget.zones.push({ strokeStyle: 'ffffff', min: 0, max: 100 });
+    widget.customProperties.zones.push({ strokeStyle: 'ffffff', min: 0, max: 100 });
 
     this.setState({ widget });
 
@@ -58,7 +60,7 @@ class EditWidgetColorZonesControl extends React.Component {
     const widget = this.state.widget;
 
     this.state.selectedZones.forEach(row => {
-      widget.zones.splice(row, 1);
+      widget.customProperties.zones.splice(row, 1);
     });
 
     this.setState({ selectedZones: [], widget });
@@ -71,11 +73,11 @@ class EditWidgetColorZonesControl extends React.Component {
     const widget = this.state.widget;
 
     if (column === 1) {
-      widget.zones[row].strokeStyle = event.target.value;
+      widget.customProperties.zones[row].strokeStyle = event.target.value;
     } else if (column === 2) {
-      widget.zones[row].min = event.target.value;
+      widget.customProperties.zones[row].min = event.target.value;
     } else if (column === 3) {
-      widget.zones[row].max = event.target.value;
+      widget.customProperties.zones[row].max = event.target.value;
     }
 
     this.setState({ widget });
@@ -88,7 +90,7 @@ class EditWidgetColorZonesControl extends React.Component {
     const event = {
       target: {
         id: 'zones',
-        value: widget.zones
+        value: widget.customProperties.zones
       }
     };
 
@@ -117,15 +119,15 @@ class EditWidgetColorZonesControl extends React.Component {
     return <FormGroup>
       <FormLabel>Color zones</FormLabel>
 
-      <Table data={this.state.widget.zones}>
+      <Table data={this.state.widget.customProperties.zones}>
         <TableColumn width="20" checkbox onChecked={this.checkedCell} />
         <TableColumn title="Color" dataKey="strokeStyle" inlineEditable onInlineChange={this.changeCell}  />
         <TableColumn title="Minimum" dataKey="min" inlineEditable onInlineChange={this.changeCell} />
         <TableColumn title="Maximum" dataKey="max" inlineEditable onInlineChange={this.changeCell} />
       </Table>
 
-      <Button onClick={this.addZone} disabled={!this.props.widget.colorZones}><Icon icon="plus" /> Add</Button>
-      <Button onClick={this.removeZones} disabled={!this.props.widget.colorZones}><Icon icon="minus" /> Remove</Button>
+      <Button onClick={this.addZone} disabled={!this.props.widget.customProperties.colorZones}><Icon icon="plus" /> Add</Button>
+      <Button onClick={this.removeZones} disabled={!this.props.widget.customProperties.colorZones}><Icon icon="minus" /> Remove</Button>
     </FormGroup>;
   }
 }

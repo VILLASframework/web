@@ -30,7 +30,9 @@ class EditImageWidgetControl extends React.Component {
 
     this.state = {
       widget: {
+        customProperties:{
         file: ''
+        }
       },
       fileList: null,
       progress: 0
@@ -73,7 +75,7 @@ class EditImageWidgetControl extends React.Component {
     return <div>
       <FormGroup controlId="file">
         <FormLabel>Image</FormLabel>
-        <FormControl componentClass="select" value={this.state.widget.file} onChange={(e) => this.props.handleChange(e)}>
+        <FormControl componentClass="select" value={this.state.widget.customProperties.file} onChange={(e) => this.props.handleChange(e)}>
           {this.props.files.length === 0 ? (
             <option disabled value style={{ display: 'none' }}>No images found, please upload one first.</option>
           ) : (

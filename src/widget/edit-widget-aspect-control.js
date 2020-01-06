@@ -28,7 +28,9 @@ class EditWidgetAspectControl extends React.Component {
 
     this.state = {
       widget: {
-        lockAspect: true
+        customProperties:{
+        isLocked: true
+        }
       }
     };
   }
@@ -40,7 +42,7 @@ class EditWidgetAspectControl extends React.Component {
   render() {
     return (
       <FormGroup>
-        <FormCheck id="lockAspect" checked={this.state.widget.lockAspect} onChange={e => this.props.handleChange(e)}>Lock Aspect</FormCheck>
+        <FormCheck id="lockAspect" checked={this.state.widget.customProperties.isLocked} onChange={e => this.props.handleChange(e)}>Lock Aspect</FormCheck>
       </FormGroup>
     );
   }

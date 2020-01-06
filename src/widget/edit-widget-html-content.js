@@ -44,7 +44,7 @@ class EditWidgetHTMLContent extends React.Component {
   render() {
     return <FormGroup controlId={this.props.controlId}>
       <FormLabel>HTML Content</FormLabel>
-      <FormControl onKeyPress={this.handleKeyIgnore} componentClass="textarea" style={{ height: 200 }} placeholder={this.props.placeholder} value={this.state.widget[this.props.controlId] || ''} onChange={e => this.props.handleChange(e)} />
+      <FormControl onKeyPress={this.handleKeyIgnore} componentClass="textarea" style={{ height: 200 }} placeholder={this.props.placeholder} value={this.state.widget[this.props.controlId] || this.state.widget.customProperties[this.props.controlId] || ''} onChange={e => this.props.handleChange(e)} />
     </FormGroup>;
   }
 }

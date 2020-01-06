@@ -119,10 +119,7 @@ class WidgetSlider extends Component {
         </div>
       ) : (
         <div className={widgetClasses}>
-          <label>{ fields.name }</label>
-          { fields.control }
-          { fields.value }
-          { this.props.widget.customProperties.showUnit && fields.unit }
+          <Slider vertical min={ this.props.widget.customProperties.rangeMin } max={ this.props.widget.customProperties.rangeMax } step={ this.props.widget.customProperties.step } value={ this.state.value } disabled={ this.props.editing } onChange={ (v) => this.valueIsChanging(v) } onAfterChange={ (v) => this.valueChanged(v) }/>,
         </div>
       )
     );
@@ -130,3 +127,17 @@ class WidgetSlider extends Component {
 }
 
 export default WidgetSlider;
+/*!isVertical? (
+  <div className={widgetClasses}>
+    <label>{ fields.name }</label>
+    <div className='slider'>{ fields.control }</div>
+    <span>{ fields.value }</span>
+  </div>
+) : (
+  <div className={widgetClasses}>
+    <label>{ fields.name }</label>
+    { fields.control }
+    { fields.value }
+    { this.props.widget.customProperties.showUnit && fields.unit }
+  </div>
+)*/

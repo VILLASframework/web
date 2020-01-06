@@ -34,6 +34,7 @@ class WidgetButton extends Component {
   }
 
   onPress(e) {
+    console.log("button was pressed!");
     if (!this.props.widget.customProperties.toggle) {
       this.setState({ pressed: true });
       this.valueChanged(this.props.widget.customProperties.on_value);
@@ -41,6 +42,7 @@ class WidgetButton extends Component {
   }
 
   onRelease(e) {
+    console.log("button was released!");
     let nextState = false;
     if (this.props.widget.customProperties.toggle) {
       nextState = !this.state.pressed;

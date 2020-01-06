@@ -43,7 +43,9 @@ class EditWidgetColorControl extends Component {
     super(props);
 
     this.state = {
-      widget: {}
+      widget: {
+        customProperties:{}
+      }
     };
   }
 
@@ -57,7 +59,7 @@ class EditWidgetColorControl extends Component {
     return (
       <FormGroup bsclass="color-control">
         <Row>
-          <Col className={FormLabel} style={{whiteSpace: 'nowrap' }} sm={2}>
+          <Col className={FormLabel} style={{whiteSpace: 'nowrap' }} sm={3}>
             { this.props.label }
           </Col>
           <Col sm={10} bsclass='colors-column'>
@@ -69,7 +71,7 @@ class EditWidgetColorControl extends Component {
                 };
 
                 let checkedClass = classNames({
-                  'checked': idx === this.state.widget[this.props.controlId]
+                  'checked': idx === this.state.widget[this.props.controlId] || this.state.widget.customProperties[this.props.controlId]
                 });
 
                 return (<FormCheck type='radio' key={idx} name={this.props.controlId} style={colorStyle} className={checkedClass} value={idx} inline onChange={(e) => this.props.handleChange({target: { id: this.props.controlId, value: idx}})} />)

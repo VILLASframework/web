@@ -27,7 +27,11 @@ class EditWidgetCheckboxControl extends React.Component {
     super(props);
 
     this.state = {
-      widget: {}
+      widget: {
+        customProperties:{
+
+        }
+      }
     };
   }
 
@@ -37,7 +41,7 @@ class EditWidgetCheckboxControl extends React.Component {
 
   render() {
     return <FormGroup>
-      <FormCheck id={this.props.controlId} checked={this.state.widget[this.props.controlId] || ''} onChange={e => this.props.handleChange(e)}>{this.props.text}</FormCheck>
+      <FormCheck id={this.props.controlId} label={this.props.controlId} checked={this.state.widget[this.props.controlId] || this.state.widget.customProperties[this.props.controlId] || ''} onChange={e => this.props.handleChange(e)}></FormCheck>
     </FormGroup>;
   }
 }
