@@ -26,14 +26,13 @@ class EditWidgetMinMaxControl extends React.Component {
   constructor(props) {
     super(props);
 
-    const widget = {};
-    widget[props.controlID + "UseMinMax"] = false;
-    widget[props.controlId + "Min"] = 0;
-    widget[props.controlId + "Max"] = 100;
-
     this.state = {
-      widget
-    };
+      widget: {
+        customProperties:{
+
+        }
+      }
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -45,16 +44,16 @@ class EditWidgetMinMaxControl extends React.Component {
     console.log(this.state.widget);
     return <FormGroup>
       <FormLabel>{this.props.label}</FormLabel>
-      <FormCheck id={this.props.controlId + "UseMinMax"} checked={this.state.widget[this.props.controlId + "UseMinMax"] || ''} onChange={e => this.props.handleChange(e)}></FormCheck>
+      <FormCheck id={this.props.controlId + "UseMinMax"} label= {"UseMinMax"} checked={this.state.widget.customProperties[this.props.controlId + "UseMinMax"] || ''} onChange={e => this.props.handleChange(e)}></FormCheck>
 
       <Table>
         <tbody>
           <tr>
             <td>
-              Min: <FormControl type="number" step="any" id={this.props.controlId + "Min"} disabled={!this.state.widget[this.props.controlId + "UseMinMax"]} placeholder="Minimum value" value={this.state.widget[this.props.controlId + 'Min']} onChange={e => this.props.handleChange(e)} />
+              Min: <FormControl type="number" step="any" id={this.props.controlId + "Min"} disabled={!this.state.widget.customProperties[this.props.controlId + "UseMinMax"]} placeholder="Minimum value" value={this.state.widget.customProperties[this.props.controlId + 'Min']} onChange={e => this.props.handleChange(e)} />
             </td>
             <td>
-              Max: <FormControl type="number" step="any" id={this.props.controlId + "Max"} disabled={!this.state.widget[this.props.controlId + "UseMinMax"]} placeholder="Maximum value" value={this.state.widget[this.props.controlId + 'Max']} onChange={e => this.props.handleChange(e)} />
+              Max: <FormControl type="number" step="any" id={this.props.controlId + "Max"} disabled={!this.state.widget.customProperties[this.props.controlId + "UseMinMax"]} placeholder="Maximum value" value={this.state.widget.customProperties[this.props.controlId + 'Max']} onChange={e => this.props.handleChange(e)} />
             </td>
           </tr>
         </tbody>

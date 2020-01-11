@@ -85,7 +85,7 @@ class Scenario extends React.Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
 
     //load selected scenario
     AppDispatcher.dispatch({

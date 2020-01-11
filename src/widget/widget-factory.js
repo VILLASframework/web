@@ -162,6 +162,11 @@ class WidgetFactory {
                 widget.customProperties.orientation = WidgetSlider.OrientationTypes.HORIZONTAL.value; // Assign default orientation
                 widget.customProperties.simulationModel = defaultSimulationModel;
                 widget.customProperties.signal = 0;
+                widget.customProperties.rangeMin = 0;
+                widget.customProperties.rangeMax = 200;
+                widget.customProperties.rangeUseMinMax = true;
+                widget.customProperties.showUnit = true
+
                 break;
             case 'Gauge':
                 widget.customProperties.simulationModel = defaultSimulationModel;

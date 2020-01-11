@@ -60,11 +60,11 @@ class EditOwnUserDialog extends React.Component {
     this.setState({ [e.target.id]: e.target.value });
 
     // check all controls
-    var username = true;
-    var mail = true;
-    var pw = true;
-    var oldPassword = true;
-    var confirmpassword = true;
+    let username = true;
+    let mail = true;
+    let pw = true;
+    let oldPassword = true;
+    let confirmpassword = true;
 
     if (this.state.username === '') {
       username = false;

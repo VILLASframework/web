@@ -56,7 +56,7 @@ class User extends Component {
     //this.setState({currentUser: data});
     let updatedData = {};
 
-
+    if(data){
     if (data.username !== ''){
       updatedData["id"] = data.id;
       updatedData["username"] = data.username;
@@ -96,6 +96,7 @@ class User extends Component {
       };
       NotificationsDataManager.addNotification(USER_UPDATE_WARNING_NOTIFICATION);
     }
+  }
   }
 
 
