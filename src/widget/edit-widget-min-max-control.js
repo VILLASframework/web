@@ -40,8 +40,6 @@ class EditWidgetMinMaxControl extends React.Component {
   }
 
   render() {
-    console.log("in minmax control, widget: ");
-    console.log(this.state.widget);
     return <FormGroup>
       <FormLabel>{this.props.label}</FormLabel>
       <FormCheck id={this.props.controlId + "UseMinMax"} label= {"UseMinMax"} checked={this.state.widget.customProperties[this.props.controlId + "UseMinMax"] || ''} onChange={e => this.props.handleChange(e)}></FormCheck>

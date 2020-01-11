@@ -52,6 +52,7 @@ const dropzoneTarget = {
 };
 
 function collect(connect, monitor) {
+
   return {
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver(),

@@ -55,7 +55,6 @@ class EditWidgetColorControl extends Component {
   }
 
   render() {
-    console.log("edit widgetcolorcontrol was called");
     return (
       <FormGroup bsclass="color-control">
         <Row>

@@ -56,6 +56,7 @@ class Widget extends React.Component {
   }
 
   static calculateState(prevState, props) {
+
     let simulatorData = {};
 
     if (props.paused) {
@@ -81,7 +82,6 @@ class Widget extends React.Component {
     if (this.state.sessionToken == null) {
       return;
     }
-    console.log('widget componentwillmount called');
     AppDispatcher.dispatch({
       type: 'files/start-load',
       token: this.state.sessionToken,
@@ -125,7 +125,7 @@ class Widget extends React.Component {
 
       simulationModel = model;
     }
-    //all types are lowercase!!! at least slider is
+    
     if (widget.type === 'CustomAction') {
       return <WidgetCustomAction widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
     } else if (widget.type === 'Action') {
@@ -168,7 +168,7 @@ class Widget extends React.Component {
     const element = this.createWidget(this.props.data);
 
     if (this.props.editing) {
-      return <EditableWidgetContainer widget={this.props.data} grid={this.props.grid} index={parseInt(this.props.index,10)}>
+      return <EditableWidgetContainer widget={this.props.data} grid={this.props.grid} index={this.props.index}>
         {element}
       </EditableWidgetContainer>;
     }

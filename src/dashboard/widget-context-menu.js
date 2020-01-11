@@ -22,6 +22,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu, Item, Separator, MenuProvider } from 'react-contexify';
+import Widget from '../widget/widget';
 
 class WidgetContextMenu extends React.Component {
   editWidget = event => {
@@ -92,7 +93,6 @@ class WidgetContextMenu extends React.Component {
   };
 
   render() {
-   
     const isLocked = this.props.widget.locked;
     const ContextMenu = () => (
       <Menu id={'widgetMenu'+ this.props.index}>
@@ -115,7 +115,16 @@ class WidgetContextMenu extends React.Component {
 
     return <div>
     <MenuProvider id={'widgetMenu'+ this.props.index} style={{ border: '1px solid purple', display: 'inline-block' }}>
-        {"Widget " + this.props.widget.name}
+    <Widget
+              data={this.props.widget}
+              simulation={this.props.simulation}
+              onWidgetChange={this.props.onWidgetChange}
+              onWidgetStatusChange={this.props.onWidgetStatusChange}
+              editing={this.props.editing}
+              index={this.props.index}
+              grid={this.props.grid}
+              paused={this.props.paused}
+            />
     </MenuProvider>
     <ContextMenu />
     </div>

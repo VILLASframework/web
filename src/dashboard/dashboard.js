@@ -57,14 +57,14 @@ class Dashboard extends Component {
       prevState = {};
     }
     const sessionToken = LoginStore.getState().token;
-
+    let maxHeight = null;
     let dashboard = Map();
     let dashboards = DashboardStore.getState()
     let rawDashboard =  dashboards[props.match.params.dashboard - 1];
 
 
     
-    if (rawDashboard != null) {
+    if (rawDashboard) {
       dashboard = Map(rawDashboard);
 
       // convert widgets list to a dictionary to be able to reference widgets
@@ -95,7 +95,7 @@ class Dashboard extends Component {
 
 
 
-      //ist das überhaupt nötiG??
+     
      /* if (this.state.dashboard.has('id') === false) {
         AppDispatcher.dispatch({
           type: 'dashboards/start-load',
@@ -121,7 +121,7 @@ class Dashboard extends Component {
            token: this.state.sessionToken
        });
 */
-    }
+    
     
     let widgets = {};
     
@@ -129,13 +129,14 @@ class Dashboard extends Component {
         widgets[Dashboard.lastWidgetKey] = widget;
         Dashboard.lastWidgetKey++;
       }
-      let maxHeight = Object.keys(widgets).reduce( (maxHeightSoFar, widgetKey) => {
+       maxHeight = Object.keys(widgets).reduce( (maxHeightSoFar, widgetKey) => {
       let thisWidget = widgets[widgetKey];
       let thisWidgetHeight = thisWidget.y + thisWidget.height;
 
       return thisWidgetHeight > maxHeightSoFar? thisWidgetHeight : maxHeightSoFar;
       }, 0);
 
+    }
     
     let simulationModels = [];
     //if (prevState.simulation != null) {
@@ -162,8 +163,8 @@ class Dashboard extends Component {
       modalData:  null,
       modalIndex:  null,
 
-      maxWidgetHeight: maxHeight,
-      dropZoneHeight: maxHeight +80,
+      maxWidgetHeight: maxHeight || null,
+      dropZoneHeight: maxHeight +80 || null,
     };
 
   }
@@ -176,7 +177,7 @@ class Dashboard extends Component {
   }
 
 //!!!won't work anymore
-  componentWillMount() {
+  componentDidMount() {
     //document.addEventListener('keydown', this.handleKeydown.bind(this));
     if (this.state.dashboard.has('id') === false) {
       AppDispatcher.dispatch({
@@ -355,7 +356,6 @@ class Dashboard extends Component {
 
 
   editWidget(widget, index){
-    console.log("dashboard editWidget was called widget: " + widget +" index: " + index);
     this.setState({ editModal: true, modalData: widget, modalIndex: index });
   };
 
@@ -442,7 +442,7 @@ class Dashboard extends Component {
     const widgets = this.state.dashboard.get('widgets');
     const grid = this.state.dashboard.get('grid');
     const boxClasses = classNames('section', 'box', { 'fullscreen-padding': this.props.isFullscreen });
-
+    let draggable = this.state.editing;
     return <div className={boxClasses} >
       <div className='section-header box-header'>
         <div className="section-title">
@@ -466,8 +466,30 @@ class Dashboard extends Component {
         {this.state.editing &&
         <WidgetToolbox grid={grid} onGridChange={this.setGrid.bind(this)} widgets={widgets} />
         }
-
+        {!draggable?(
         <WidgetArea widgets={widgets} editing={this.state.editing} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
+          {widgets != null && Object.keys(widgets).map(widgetKey => (
+            <WidgetContextMenu 
+            key={widgetKey} 
+            index={parseInt(widgetKey,10)} 
+            widget={widgets[widgetKey]} 
+            onEdit={this.editWidget.bind(this)}
+            onDelete={this.deleteWidget.bind(this)} 
+            onChange={this.widgetChange.bind(this)} 
+
+            simulation={this.state.simulation}
+            onWidgetChange={this.widgetChange.bind(this)}
+            onWidgetStatusChange={this.widgetStatusChange.bind(this)}
+            editing={this.state.editing}
+            grid={grid}
+            paused={this.state.paused}
+            />
+            
+            
+          ))}
+        </WidgetArea>
+        ) : (
+          <WidgetArea widgets={widgets} editing={this.state.editing} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
           {widgets != null && Object.keys(widgets).map(widgetKey => (
             <Widget
               key={widgetKey}
@@ -476,7 +498,7 @@ class Dashboard extends Component {
               onWidgetChange={this.widgetChange}
               onWidgetStatusChange={this.widgetStatusChange}
               editing={this.state.editing}
-              index={widgetKey}
+              index={parseInt(widgetKey,10)}
               grid={grid}
               paused={this.state.paused}
             />
@@ -484,17 +506,8 @@ class Dashboard extends Component {
           ))}
         </WidgetArea>
 
-        {/* TODO: Create only one context menu for all widgets */}
-        {widgets != null && Object.keys(widgets).map(widgetKey => (
-          <WidgetContextMenu 
-            key={widgetKey} 
-            index={parseInt(widgetKey,10)} 
-            widget={widgets[widgetKey]} 
-            onEdit={this.editWidget.bind(this)}
-            onDelete={this.deleteWidget.bind(this)} 
-            onChange={this.widgetChange.bind(this)} />
-        ))}
-        
+        )}
+
         <EditWidget sessionToken={this.state.sessionToken} show={this.state.editModal} onClose={this.closeEdit.bind(this)} widget={this.state.modalData} simulationModels={this.state.simulationModels} files={this.state.files} />
 
 

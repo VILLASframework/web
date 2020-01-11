@@ -28,7 +28,7 @@ import { Menu } from 'react-contexify';
 class EditableWidgetContainer extends React.Component {
   constructor(props) {
     super(props);
-
+  
     this.rnd = null;
   }
 
@@ -88,7 +88,6 @@ class EditableWidgetContainer extends React.Component {
 
   render() {
     const widget = this.props.widget;
-    console.log("editable-widget-container was called");
 
     const resizing = {
       bottom: !widget.locked,

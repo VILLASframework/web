@@ -95,6 +95,7 @@ class WidgetSlider extends Component {
   }
 
   render() {
+
     let isVertical = this.props.widget.customProperties.orientation === WidgetSlider.OrientationTypes.VERTICAL.value;
     let fields = {
       name: this.props.widget.name,

@@ -69,7 +69,7 @@ class EditWidgetDialog extends React.Component {
   }
 
   handleChange(e) {
-  /*is this needed? 
+
      if (e.constructor === Array) {
       // Every property in the array will be updated
       console.log("####its an array!");
@@ -82,7 +82,8 @@ class EditWidgetDialog extends React.Component {
       }, {});
 
       this.setState({ temporal: Object.assign({}, this.state.temporal, changes ) });
-  */
+    }
+  
         if(e.target.type !== 'text'){
         let changeObject = {};
         if (e.target.id === 'lockAspect') {
@@ -103,7 +104,8 @@ class EditWidgetDialog extends React.Component {
           changeObject[e.target.id] = e.target.checked;
         } else if (e.target.type === 'number') {
           changeObject[e.target.id] = Number(e.target.value);
-        } 
+        }
+  
         else {
           changeObject[e.target.id] = e.target.value;
         }
@@ -148,14 +150,13 @@ class EditWidgetDialog extends React.Component {
     }
 
     //this.valid = name;
-    this.valid = true;
+    this.valid = name;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
   }
 
   render() {
-    console.log("####edit widget render was called");
     let controls = null;
     if (this.props.widget) {
       controls = CreateControls(

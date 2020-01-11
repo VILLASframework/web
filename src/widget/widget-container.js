@@ -24,6 +24,7 @@ import PropTypes from 'prop-types';
 
 class WidgetContainer extends React.Component {
   render() {
+    
     const containerStyle = {
       width: Number(this.props.widget.width),
       height: Number(this.props.widget.height),
