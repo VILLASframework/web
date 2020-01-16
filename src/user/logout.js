@@ -25,7 +25,7 @@ import { Redirect } from 'react-router-dom';
 import AppDispatcher from '../common/app-dispatcher';
 
 class Logout extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     AppDispatcher.dispatch({
       type: 'users/logout'
     });

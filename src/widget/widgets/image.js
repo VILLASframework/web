@@ -25,14 +25,15 @@ import AppDispatcher from '../../common/app-dispatcher';
 import config from '../../config';
 
 class WidgetImage extends React.Component {
-  componentWillReceiveProps(nextProps) {
+
+  componentDidMount() {
     // Query the image referenced by the widget
-    let widgetFile = nextProps.widget.customProperties.file;
-    if (widgetFile && !nextProps.files.find(file => file._id === widgetFile)) {
+    let widgetFile = this.props.widget.customProperties.file;
+    if (widgetFile && !this.props.files.find(file => file.id === widgetFile)) {
       AppDispatcher.dispatch({
         type: 'files/start-load',
         data: widgetFile,
-        token: nextProps.token
+        token: this.props.token
       });
     }
   }

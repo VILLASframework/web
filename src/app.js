@@ -68,7 +68,9 @@ class App extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
+    NotificationsDataManager.setSystem(this.refs.notificationSystem);
+
     // if token stored locally, request user
     let token = localStorage.getItem("token");
     let currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -79,9 +81,7 @@ class App extends React.Component {
         currentUser: currentUser
       });
     }
-  }
 
-  componentDidMount() {
     // load all simulators and scenarios to fetch data
     // AppDispatcher.dispatch({
     //   type: 'simulators/start-load',
@@ -93,7 +93,7 @@ class App extends React.Component {
     //   token: this.state.token
     // });
 
-    NotificationsDataManager.setSystem(this.refs.notificationSystem);
+
   }
 
   showSidebarMenu = () => {

@@ -33,8 +33,10 @@ class EditWidgetTimeControl extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ widget: nextProps.widget });
+  static getDerivedStateFromProps(props, state){
+    return{
+      widget: props.widget
+    };
   }
 
   render() {

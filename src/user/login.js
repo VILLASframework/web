@@ -50,13 +50,14 @@ class Login extends Component {
     NotificationsDataManager.setSystem(this.refs.notificationSystem);
   }
 
-  componentWillUpdate(nextProps, nextState) {
+  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
+
     // if token stored locally, request user
-    if (nextState.token == null) {
+    if (this.state.token == null) {
       const token = localStorage.getItem('token');
       const currentUser = localStorage.getItem('currentUser');
 
-      if (token != null && token !== '' && nextState.currentUser == null) {
+      if (token != null && token !== '' && this.state.currentUser == null) {
         AppDispatcher.dispatch({
           type: 'users/logged-in',
           token: token,
@@ -65,12 +66,13 @@ class Login extends Component {
       }
     } else {
       // check if logged in
-      if (nextState.currentUser != null) {
+      if (this.state.currentUser != null) {
         // save login in local storage
-        localStorage.setItem('token', nextState.token);
-        localStorage.setItem('currentUser', JSON.stringify(nextState.currentUser));
+        localStorage.setItem('token', this.state.token);
+        localStorage.setItem('currentUser', JSON.stringify(this.state.currentUser));
       }
     }
+
   }
 
   render() {

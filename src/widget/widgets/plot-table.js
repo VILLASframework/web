@@ -36,25 +36,25 @@ class WidgetPlotTable extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.simulationModel == null) {
+  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
+    if (this.props.simulationModel == null) {
       return;
     }
 
     // Update internal selected signals state with props (different array objects)
-    if (this.props.widget.customProperties.signals !== nextProps.widget.customProperties.signals) {
-      this.setState( {signals: nextProps.widget.customProperties.signals});
+    if (prevProps.widget.customProperties.signals !== this.props.widget.customProperties.signals) {
+      this.setState( {signals: this.props.widget.customProperties.signals});
     }
 
     // Identify if there was a change in the preselected signals
-    if (JSON.stringify(nextProps.widget.customProperties.preselectedSignals) !== JSON.stringify(this.props.widget.customProperties.preselectedSignals) || this.state.preselectedSignals.length === 0) {
+    if (JSON.stringify(prevProps.widget.customProperties.preselectedSignals) !== JSON.stringify(this.props.widget.customProperties.preselectedSignals)
+      || this.state.preselectedSignals.length === 0) {
       // Update the currently selected signals by intersecting with the preselected signalsWidget
       // Do the same with the plot values
-      var intersection = this.computeIntersection(nextProps.widget.customProperties.preselectedSignals, nextProps.widget.customProperties.signals);
+      var intersection = this.computeIntersection(this.props.widget.customProperties.preselectedSignals, this.props.widget.customProperties.signals);
       this.setState({ signals: intersection });
 
-      this.updatePreselectedSignalsState(nextProps);
-      return;
+      this.updatePreselectedSignalsState(this.props);
     }
   }
 
@@ -63,14 +63,14 @@ class WidgetPlotTable extends Component {
     return preselectedSignals.filter( s => selectedSignals.includes(s));
   }
 
-  updatePreselectedSignalsState(nextProps) {
+  updatePreselectedSignalsState(props) {
     // Create checkboxes using the signal indices from simulation model
-    if(nextProps.simulationModel.outputMapping){
-    const preselectedSignals = nextProps.simulationModel.outputMapping.reduce(
+    if(props.simulationModel.outputMapping){
+    const preselectedSignals = props.simulationModel.outputMapping.reduce(
       // Loop through simulation model signals
       (accum, model_signal, signal_index) => {
         // Append them if they belong to the current selected type
-        if (nextProps.widget.customProperties.preselectedSignals.indexOf(signal_index) > -1) {
+        if (props.widget.customProperties.preselectedSignals.indexOf(signal_index) > -1) {
             accum.push(
               {
                 index: signal_index,
@@ -81,7 +81,7 @@ class WidgetPlotTable extends Component {
           }
           return accum;
         }, []);
-      
+
     this.setState({ preselectedSignals });
       }
   }

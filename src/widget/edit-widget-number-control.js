@@ -33,9 +33,10 @@ class EditWidgetNumberControl extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-      // Update state's widget with props
-    this.setState({ widget: nextProps.widget });
+  static getDerivedStateFromProps(props, state){
+    return{
+      widget: props.widget
+    };
   }
 
   render() {
