@@ -33,7 +33,6 @@ class WidgetContextMenu extends React.Component {
 
   deleteWidget = event => {
     if (this.props.onDelete != null) {
-      console.log("deleteWIget in wcm was called");
       this.props.onDelete(this.props.widget, this.props.index);
     }
   };

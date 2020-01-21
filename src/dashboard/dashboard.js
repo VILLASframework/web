@@ -322,17 +322,14 @@ class Dashboard extends Component {
   }
 
   widgetChange(widget, index, callback = null){
-    const widgets = this.state.dashboard.get('widgets');
-    widgets[index] = widget;
+    console.log("widget change was called (dashboard)");
 
-    const dashboard = this.state.dashboard.set('widgets');
-
-    // Check if the height needs to be increased, the section may have shrunk if not
-    if (!this.increaseHeightWithWidget(widget)) {
-      this.computeHeightWithWidgets(dashboard.widgets);
-    }
-
-    this.setState({ dashboard }, callback);
+    AppDispatcher.dispatch({
+      type: 'widgets/start-edit',
+      token: this.state.sessionToken,
+      data: widget
+    });
+    
   }
 
 
@@ -495,8 +492,8 @@ class Dashboard extends Component {
               key={widgetKey}
               data={widgets[widgetKey]}
               simulation={this.state.simulation}
-              onWidgetChange={this.widgetChange}
-              onWidgetStatusChange={this.widgetStatusChange}
+              onWidgetChange={this.widgetChange.bind(this)}
+              onWidgetStatusChange={this.widgetStatusChange.bind(this)}
               editing={this.state.editing}
               index={parseInt(widgetKey,10)}
               grid={grid}
@@ -518,6 +515,18 @@ class Dashboard extends Component {
 /*
 onWidgetChange={(w, k) => this.widgetChange(w, k)}
 onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)}
+
+const widgets = this.state.dashboard.get('widgets');
+    widgets[index] = widget;
+
+    const dashboard = this.state.dashboard.set('widgets');
+
+    // Check if the height needs to be increased, the section may have shrunk if not
+    if (!this.increaseHeightWithWidget(widget)) {
+      this.computeHeightWithWidgets(dashboard.widgets);
+    }
+
+    this.setState({ dashboard }, callback);
 */
 
 let fluxContainerConverter = require('../common/FluxContainerConverter');

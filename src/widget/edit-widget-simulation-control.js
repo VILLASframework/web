@@ -28,9 +28,6 @@ class EditWidgetSimulationControl extends Component {
 
     this.state = {
       widget: {
-        customProperties: {
-          simulationModel: ''
-        }
       }
     };
   }

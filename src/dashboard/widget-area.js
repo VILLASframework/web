@@ -48,7 +48,7 @@ class WidgetArea extends React.Component {
   }
 
   render() {
-    const maxHeight = Object.values(this.props.widgets).reduce((currentHeight, widget) => {
+        const maxHeight = Object.values(this.props.widgets).reduce((currentHeight, widget) => {
       const absolutHeight = widget.y + widget.height;
 
       return absolutHeight > currentHeight ? absolutHeight : currentHeight;
@@ -67,7 +67,7 @@ WidgetArea.propTypes = {
   editing: PropTypes.bool,
   grid: PropTypes.number,
   defaultSimulationModel: PropTypes.string,
-  widgets: PropTypes.array,
+  //widgets: PropTypes.array,
   onWidgetAdded: PropTypes.func
 };
 

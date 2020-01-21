@@ -168,7 +168,7 @@ class Widget extends React.Component {
     const element = this.createWidget(this.props.data);
 
     if (this.props.editing) {
-      return <EditableWidgetContainer widget={this.props.data} grid={this.props.grid} index={this.props.index}>
+      return <EditableWidgetContainer widget={this.props.data} grid={this.props.grid} index={this.props.index} onWidgetChange={this.props.onWidgetChange}>
         {element}
       </EditableWidgetContainer>;
     }
