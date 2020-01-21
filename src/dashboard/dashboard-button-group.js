@@ -40,20 +40,17 @@ class DashboardButtonGroup extends React.Component {
     if (this.props.editing) {
       buttons.push(
         <Button key={key++} onClick={this.props.onSave} style={buttonStyle}>
-          <Icon icon="info" />
-          <span className="glyphicon glyphicon-floppy-disk"></span> Save
+          <Icon icon="save" /> Save
         </Button>,
         <Button key={key++} onClick={this.props.onCancel} style={buttonStyle}>
-          <Icon icon="info" />
-          <span className="glyphicon glyphicon-remove" ></span> Cancel
+          <Icon icon="times" /> Cancel
         </Button>
       );
     } else {
       if (this.props.fullscreen !== true) {
         buttons.push(
           <Button key={key++} onClick={this.props.onFullscreen} style={buttonStyle}>
-            <Icon icon="info" />
-            <span className="glyphicon glyphicon-resize-full"></span> Fullscreen
+            <Icon icon="expand" /> Fullscreen
           </Button>
         );
       }
@@ -61,23 +58,20 @@ class DashboardButtonGroup extends React.Component {
       if (this.props.paused) {
         buttons.push(
           <Button key={key++} onClick={this.props.onUnpause} style={buttonStyle}>
-            <Icon icon="info" />
-            <span className="glyphicon glyphicon-play"></span> Live
+            <Icon icon="play" /> Live
           </Button>
         );
       } else {
         buttons.push(
           <Button key={key++} onClick={this.props.onPause} style={buttonStyle}>
-            <Icon icon="info" />
-            <span className="glyphicon glyphicon-pause"></span> Pause
+            <Icon icon="pause" /> Pause
           </Button>
         );
       }
 
       buttons.push(
         <Button key={key++} onClick={this.props.onEdit} style={buttonStyle}>
-          <Icon icon="info" />
-          <span className="glyphicon glyphicon-pencil"></span> Edit
+          <Icon icon="pen" /> Edit
         </Button>
       );
     }
