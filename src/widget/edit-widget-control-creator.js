@@ -38,7 +38,7 @@ import EditWidgetMinMaxControl from './edit-widget-min-max-control';
 import EditWidgetHTMLContent from './edit-widget-html-content';
 import EditWidgetParametersControl from './edit-widget-parameters-control';
 
-export default function CreateControls(widgetType = null, widget = null, sessionToken = null, files = null, validateForm, simulationModels = null, handleChange) {
+export default function CreateControls(widgetType = null, widget = null, sessionToken = null, files = null, validateForm, simulationModels, handleChange) {
     // Use a list to concatenate the controls according to the widget type
     var DialogControls = [];
 

@@ -60,7 +60,7 @@ class EditWidgetOrientation extends Component {
                   let name = WidgetSlider.OrientationTypes[type].name;
 
                   return (
-                    <FormCheck inline label={name} id={value} type='radio' title='orientation' checked={ value === this.state.widget.customProperties.orientation } onChange={(e) => this.handleOrientationChange(value)}>
+                    <FormCheck inline label={name} key={value} id={value} type='radio' title='orientation' checked={ value === this.state.widget.customProperties.orientation } onChange={(e) => this.handleOrientationChange(value)}>
                     </FormCheck>)
                 })
               }

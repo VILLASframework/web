@@ -28,18 +28,20 @@ class EditWidgetSimulationControl extends Component {
 
     this.state = {
       widget: {
+        customProperties: {
+          simulationModel: ''
+        }
+
       }
     };
   }
 
-  componentDidUpdate(nextProps) {
+  componentWillReceiveProps(nextProps) {
       // Update state's widget with props
     this.setState({ widget: nextProps.widget });
   }
 
   render() {
-    console.log("editwidgetsimulationcontrol was called");
-    console.log(this.state.widget);
     return (
         <FormGroup controlId="simulationModel">
             <FormLabel>Simulation Model</FormLabel>

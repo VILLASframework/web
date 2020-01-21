@@ -46,8 +46,6 @@ class EditWidgetDialog extends React.Component {
   
 
   onClose(canceled) {
-    console.log("in editWidget. the temporal state: ");
-    console.log(this.state.temporal);
     if (canceled === false) {
       if (this.valid) {
         this.props.onClose(this.state.temporal);
@@ -72,11 +70,8 @@ class EditWidgetDialog extends React.Component {
 
      if (e.constructor === Array) {
       // Every property in the array will be updated
-      console.log("####its an array!");
       let changes = e.reduce( (changesObject, event) => {
         changesObject[event.target.id] = event.target.value;
-        console.log("hier ist changes object: ");
-        console.log(changesObject);
 
         return changesObject;
       }, {});
@@ -110,13 +105,6 @@ class EditWidgetDialog extends React.Component {
           changeObject[e.target.id] = e.target.value;
         }
 
-        console.log("this.state.temporal is: ");
-        console.log(this.state.temporal);
-        console.log("the event target id: " + e.target.id);
-        console.log("this state target type is: " + e.target.type);
-        console.log("the value is: " + e.target.value)
-        console.log("change Object is: ");
-        console.log(changeObject);
 
         let finalChange = this.state.temporal;
         

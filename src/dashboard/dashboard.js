@@ -322,13 +322,13 @@ class Dashboard extends Component {
   }
 
   widgetChange(widget, index, callback = null){
-    console.log("widget change was called (dashboard)");
+   
 
     AppDispatcher.dispatch({
       type: 'widgets/start-edit',
       token: this.state.sessionToken,
       data: widget
-    });
+    }); 
     
   }
 
@@ -358,8 +358,7 @@ class Dashboard extends Component {
 
 
   closeEdit(data){
-    console.log("dashboard close edit was called: ");
-    console.log(data);
+    
     if (data == null) {
       this.setState({ editModal: false });
 
@@ -383,7 +382,6 @@ class Dashboard extends Component {
     const dashboard = this.state.dashboard.set('widgets');
 
     this.setState({ dashboard });*/
-    console.log("delete Widget in dashboard was called");
     AppDispatcher.dispatch({
       type: 'widgets/start-remove',
       data: widget,

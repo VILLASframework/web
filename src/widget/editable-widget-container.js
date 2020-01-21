@@ -23,7 +23,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Rnd } from 'react-rnd';
-import { Menu } from 'react-contexify';
 
 class EditableWidgetContainer extends React.Component {
   constructor(props) {
