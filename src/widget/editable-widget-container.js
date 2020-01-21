@@ -65,7 +65,8 @@ class EditableWidgetContainer extends React.Component {
     }
   };
 
-  resizeStop = (direction, delta, ref, event) => {
+  resizeStop = (event, direction, ref,delta, position) => {
+    
     const widget = this.props.widget;
 
     // resize depends on direction

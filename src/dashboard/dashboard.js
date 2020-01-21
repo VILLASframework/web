@@ -162,6 +162,7 @@ class Dashboard extends Component {
       editModal:  false,
       modalData:  null,
       modalIndex:  null,
+      widgetChangeData: [],
 
       maxWidgetHeight: maxHeight || null,
       dropZoneHeight: maxHeight +80 || null,
@@ -323,12 +324,10 @@ class Dashboard extends Component {
 
   widgetChange(widget, index, callback = null){
    
+    let tempChanges = this.state.widgetChangeData;
+    tempChanges.push(widget);
 
-    AppDispatcher.dispatch({
-      type: 'widgets/start-edit',
-      token: this.state.sessionToken,
-      data: widget
-    }); 
+    this.setState({ widgetChangeData: tempChanges})
     
   }
 
@@ -397,6 +396,13 @@ class Dashboard extends Component {
   saveEditing() {
     // Provide the callback so it can be called when state change is applied
     // TODO: Check if callback is needed
+    this.state.widgetChangeData.forEach( widget => {
+      AppDispatcher.dispatch({
+        type: 'widgets/start-edit',
+        token: this.state.sessionToken,
+        data: widget
+      }); 
+    });
     this.setState({ editing: false });
   };
 
@@ -414,7 +420,7 @@ class Dashboard extends Component {
   }
 
   cancelEditing() {
-    this.setState({ editing: false });
+    this.setState({ editing: false, widgetChangeData: [] });
 
   };
 
