@@ -82,11 +82,12 @@ class Widget extends React.Component {
     if (this.state.sessionToken == null) {
       return;
     }
-    AppDispatcher.dispatch({
+
+    /*AppDispatcher.dispatch({
       type: 'files/start-load',
       token: this.state.sessionToken,
       param: '?objectID=1&objectType=widget'
-    });
+    });*/
 
     AppDispatcher.dispatch({
       type: 'simulationModels/start-load',

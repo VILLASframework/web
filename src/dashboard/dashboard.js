@@ -62,7 +62,7 @@ class Dashboard extends Component {
     let dashboards = DashboardStore.getState()
     let rawDashboard =  dashboards[props.match.params.dashboard - 1];
 
-
+    
     
     if (rawDashboard) {
       dashboard = Map(rawDashboard);
@@ -163,6 +163,7 @@ class Dashboard extends Component {
       modalData:  null,
       modalIndex:  null,
       widgetChangeData: [],
+      widgetAddData:[],
 
       maxWidgetHeight: maxHeight || null,
       dropZoneHeight: maxHeight +80 || null,
@@ -303,6 +304,11 @@ class Dashboard extends Component {
       token: this.state.sessionToken,
       data: widget
     });
+
+    let tempChanges = this.state.widgetAddData;
+    tempChanges.push(widget);
+
+    this.setState({ widgetAddData: tempChanges})
     /*let widgets = []; 
     widgets = this.state.dashboard.get('widgets');
 
@@ -396,6 +402,8 @@ class Dashboard extends Component {
   saveEditing() {
     // Provide the callback so it can be called when state change is applied
     // TODO: Check if callback is needed
+
+    
     this.state.widgetChangeData.forEach( widget => {
       AppDispatcher.dispatch({
         type: 'widgets/start-edit',
@@ -420,7 +428,21 @@ class Dashboard extends Component {
   }
 
   cancelEditing() {
-    this.setState({ editing: false, widgetChangeData: [] });
+    console.log("cancelEditing the add data: ");
+    console.log(this.state.widgetAddData);
+    this.state.widgetAddData.forEach( widget => {
+      AppDispatcher.dispatch({
+        type: 'widgets/start-remove',
+        data: widget,
+        token: this.state.sessionToken
+      });
+    });
+    AppDispatcher.dispatch({
+      type: 'widgets/start-load',
+      token: this.state.sessionToken,
+      param: '?dashboardID=1'
+    });
+    this.setState({ editing: false, widgetChangeData: [], widgetAddData: [] });
 
   };
 
