@@ -113,12 +113,12 @@ class EditUserDialog extends React.Component {
         <form>
           <FormGroup as={Col} controlId="username">
             <FormLabel>Username</FormLabel>
-            <FormControl type="text" placeholder="Enter username" value={this.state.username} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder={this.props.user.username} value={this.state.username} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup as={Col} controlId="mail">
             <FormLabel>E-mail</FormLabel>
-            <FormControl type="text" placeholder="Enter e-mail" value={this.state.mail} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder={this.props.user.mail} value={this.state.mail} onChange={(e) => this.handleChange(e)} />
           </FormGroup>
           <FormGroup  as={Col} controlId="oldPassword">
             <FormLabel>Admin Password</FormLabel>

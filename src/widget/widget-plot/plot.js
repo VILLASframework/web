@@ -77,26 +77,26 @@ class Plot extends React.Component {
     this.removeInterval();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.time !== this.props.time) {
+  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
+    if (prevProps.time !== this.props.time) {
       this.createInterval();
     }
 
     let labelMargin = 0;
-    if (nextProps.yLabel !== '') {
+    if (this.props.yLabel !== '') {
       labelMargin = 30;
     }
 
     // check if data is invalid
-    if (nextProps.data == null || nextProps.data.length === 0 || nextProps.data[0].length === 0) {
+    if (this.props.data == null || this.props.data.length === 0 || this.props.data[0].length === 0) {
       // create empty plot axes
-      const xScale = scaleTime().domain([Date.now() -  nextProps.time * 1000, Date.now()]).range([0, nextProps.width - leftMargin - labelMargin - rightMargin]);
+      const xScale = scaleTime().domain([Date.now() -  this.props.time * 1000, Date.now()]).range([0, this.props.width - leftMargin - labelMargin - rightMargin]);
       let yScale;
 
-      if (nextProps.yUseMinMax) {
-        yScale = scaleLinear().domain([nextProps.yMin, nextProps.yMax]).range([nextProps.height + topMargin - bottomMargin, topMargin]);
+      if (this.props.yUseMinMax) {
+        yScale = scaleLinear().domain([this.props.yMin, this.props.yMax]).range([this.props.height + topMargin - bottomMargin, topMargin]);
       } else {
-        yScale = scaleLinear().domain([0, 10]).range([nextProps.height + topMargin - bottomMargin, topMargin]);
+        yScale = scaleLinear().domain([0, 10]).range([this.props.height + topMargin - bottomMargin, topMargin]);
       }
 
       const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(timeFormat("%M:%S"));
@@ -106,17 +106,20 @@ class Plot extends React.Component {
       return;
     }
 
-    // only show data in requested time
-    let data = nextProps.data;
+    // check if requested time frame has changed
+    if(this.props.time !== prevProps.time) {
+      // only show data in requested time
+      let data = this.props.data;
 
-    const firstTimestamp = data[0][data[0].length - 1].x - (nextProps.time + 1) * 1000;
-    if (data[0][0].x < firstTimestamp) {
-      // only show data in range (+100 ms)
-      const index = data[0].findIndex(value => value.x >= firstTimestamp - 100);
-      data = data.map(values => values.slice(index));
+      const firstTimestamp = data[0][data[0].length - 1].x - (this.props.time + 1) * 1000;
+      if (data[0][0].x < firstTimestamp) {
+        // only show data in range (+100 ms)
+        const index = data[0].findIndex(value => value.x >= firstTimestamp - 100);
+        data = data.map(values => values.slice(index));
+      }
+
+      this.setState({data, labelMargin});
     }
-
-    this.setState({ data, labelMargin });
   }
 
   createInterval() {

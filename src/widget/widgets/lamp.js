@@ -33,35 +33,38 @@ class WidgetLamp extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.simulationModel == null) {
-      this.setState({ value: '' });
-      return;
+  static getDerivedStateFromProps(props, state){
+    if (props.simulationModel == null) {
+      return{ value: ''};
     }
 
-    const simulator = nextProps.simulationModel.simulator;
+    const simulator = props.simulationModel.simulator;
 
     // update value
-    if (nextProps.data == null || nextProps.data[simulator] == null || nextProps.data[simulator].output == null || nextProps.data[simulator].output.values == null) {
-      this.setState({ value: '' });
-      return;
+    if (props.data == null
+      || props.data[simulator] == null
+      || props.data[simulator].output == null
+      || props.data[simulator].output.values == null) {
+      return{value:''};
     }
 
     // check if value has changed
-    const signal = nextProps.data[simulator].output.values[nextProps.widget.signal];
-    if (signal != null && this.state.value !== signal[signal.length - 1].y) {
-      this.setState({ value: signal[signal.length - 1].y });
+    const signal = props.data[simulator].output.values[props.widget.customProperties.signal];
+    if (signal != null && state.value !== signal[signal.length - 1].y) {
+      return { value: signal[signal.length - 1].y };
     }
+
+    return null;
   }
 
   render() {
     let colors = EditWidgetColorControl.ColorPalette;
     let color;
 
-    if (Number(this.state.value) > Number(this.props.widget.threshold))
-      color = colors[this.props.widget.on_color];
+    if (Number(this.state.value) > Number(this.props.widget.customProperties.threshold))
+      color = colors[this.props.widget.customProperties.on_color];
     else
-      color = colors[this.props.widget.off_color];
+      color = colors[this.props.widget.customProperties.off_color];
 
     let style = {
       backgroundColor: color,

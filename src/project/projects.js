@@ -25,7 +25,7 @@ import { Button } from 'react-bootstrap';
 
 import AppDispatcher from '../common/app-dispatcher';
 import ProjectStore from './project-store';
-import UserStore from '../user/user-store';
+import LoginStore from '../user/login-store';
 import SimulationStore from '../simulation/simulation-store';
 
 import Icon from '../common/icon';
@@ -38,14 +38,14 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 
 class Projects extends React.Component {
   static getStores() {
-    return [ ProjectStore, SimulationStore, UserStore ];
+    return [ ProjectStore, SimulationStore, LoginStore ];
   }
 
   static calculateState() {
     return {
       projects: ProjectStore.getState(),
       simulations: SimulationStore.getState(),
-      sessionToken: UserStore.getState().token,
+      sessionToken: LoginStore.getState().token,
 
       newModal: false,
       editModal: false,

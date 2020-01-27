@@ -34,24 +34,25 @@ class WidgetInput extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.simulationModel == null) {
-      return;
+  static getDerivedStateFromProps(props, state){
+    if (props.simulationModel == null) {
+      return null;
     }
 
+    let returnState = null;
     // Update value
-    if (nextProps.widget.default_value && this.state.value === undefined) {
-      this.setState({
-        value: nextProps.widget.default_value
-      });
+    if (props.widget.customProperties.default_value && this.state.value === undefined) {
+      returnState["value"] = props.widget.customProperties.default_value;
     }
 
     // Update unit
-    if (nextProps.widget.simulationModel && nextProps.simulationModel.inputMapping && this.state.unit !== nextProps.simulationModel.inputMapping[nextProps.widget.signal].type) {
-      this.setState({
-        unit: nextProps.simulationModel.inputMapping[nextProps.widget.signal].type
-      });
+    if (props.widget.customProperties.simulationModel
+      && props.simulationModel.inputMapping
+      && state.unit !== props.simulationModel.inputMapping[props.widget.customProperties.signal].type) {
+      returnState["unit"] = props.simulationModel.inputMapping[props.widget.customProperties.signal].type;
     }
+
+    return returnState;
   }
 
   valueIsChanging(newValue) {
@@ -75,7 +76,7 @@ class WidgetInput extends Component {
       <div className="number-input-widget full">
           <Form componentClass="fieldset" horizontal>
               <FormGroup>
-                  <Col componentClass={FormLabel} xs={3}>
+                  <Col as={FormLabel} xs={3}>
                     {this.props.widget.name}
                   </Col>
                   <Col xs={9}>

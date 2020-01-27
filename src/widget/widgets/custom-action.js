@@ -23,7 +23,7 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import Icon from '../../common/icon';
-import UserStore from '../../user/user-store';
+import LoginStore from '../../user/login-store';
 import SimulatorStore from '../../simulator/simulator-store';
 import AppDispatcher from '../../common/app-dispatcher';
 
@@ -37,24 +37,24 @@ class WidgetCustomAction extends Component {
   }
 
   static getStores() {
-    return [ SimulatorStore ];
+    return [ SimulatorStore, LoginStore ];
   }
 
-  componentWillReceiveProps(props) {
+  static getDerivedStateFromProps(props, state){
     if (props.simulationModel === null)
-      return;
+      return null; //no change
 
-    this.setState({
+    return{
       simulator: SimulatorStore.getState().find(s => s._id === props.simulationModel.simulator),
-      sessionToken: UserStore.getState().token
-    });
+      sessionToken: LoginStore.getState().token
+    };
   }
 
   onClick() {
     AppDispatcher.dispatch({
       type: 'simulators/start-action',
       simulator: this.state.simulator,
-      data: this.props.widget.actions,
+      data: this.props.widget.customProperties.actions,
       token: this.state.sessionToken
     });
   }
@@ -62,7 +62,7 @@ class WidgetCustomAction extends Component {
   render() {
     return <div className="widget-custom-action full">
       <Button className="full" disabled={this.state.simulator === null} onClick={(e) => this.onClick()}>
-        <Icon icon={this.props.widget.icon} /> <span dangerouslySetInnerHTML={{ __html: this.props.widget.name }} />
+        <Icon icon={this.props.widget.customProperties.icon} /> <span dangerouslySetInnerHTML={{ __html: this.props.widget.name }} />
       </Button>
     </div>;
   }

@@ -52,6 +52,7 @@ const dropzoneTarget = {
 };
 
 function collect(connect, monitor) {
+
   return {
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver(),
@@ -61,6 +62,7 @@ function collect(connect, monitor) {
 
 class Dropzone extends React.Component {
   render() {
+
     var toolboxClass = classNames({
       'box-content': true,
       'toolbox-dropzone': true,

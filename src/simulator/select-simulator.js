@@ -40,21 +40,23 @@ class SelectSimulator extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.value === this.state.selectedSimulator) {
-            return;
-        }
+    static getDerivedStateFromProps(props, state){
+      if (props.value === state.selectedSimulator) {
+        return null; // no change
+      }
 
-        let selectedSimulator = nextProps.value;
-        if (selectedSimulator == null) {
-            if (this.state.simulators.length > 0) {
-                selectedSimulator = this.state.simulators[0].id;
-            } else {
-                selectedSimulator = '';
-            }
+      let selectedSimulator = props.value;
+      if (selectedSimulator == null) {
+        if (state.simulators.length > 0) {
+          selectedSimulator = state.simulators[0].id;
+        } else {
+          selectedSimulator = '';
         }
+      }
 
-        this.setState({ selectedSimulator });
+      return {
+        selectedSimulator
+      };
     }
 
     handleChange = event => {
@@ -66,7 +68,7 @@ class SelectSimulator extends React.Component {
 
             this.props.onChange(simulator);
         }
-    }
+    };
 
     render() {
         const simulatorOptions = this.state.simulators.map(s =>

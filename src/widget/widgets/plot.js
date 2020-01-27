@@ -34,24 +34,28 @@ class WidgetPlot extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.simulationModel == null) {
-      this.setState({ data: [], legend: [] });
-      return;
+
+  static getDerivedStateFromProps(props, state){
+
+    if (props.simulationModel == null) {
+      return{
+        data: [],
+        legend: [],
+      };
     }
 
-    const simulator = nextProps.simulationModel.simulator;
+    const simulator = props.simulationModel.simulator;
 
     // Proceed if a simulation with models and a simulator are available
-    if (simulator && nextProps.data[simulator] != null && nextProps.data[simulator] != null && nextProps.data[simulator].output != null && nextProps.data[simulator].output.values != null) {
-      const chosenSignals = nextProps.widget.signals;
+    if (simulator && props.data[simulator] != null && props.data[simulator] != null && props.data[simulator].output != null && props.data[simulator].output.values != null) {
+      const chosenSignals = props.widget.customProperties.signals;
 
-      const data = nextProps.data[simulator].output.values.filter((values, index) => (
-        nextProps.widget.signals.findIndex(value => value === index) !== -1
+      const data = props.data[simulator].output.values.filter((values, index) => (
+        props.widget.customProperties.signals.findIndex(value => value === index) !== -1
       ));
 
       // Query the signals that will be displayed in the legend
-      const legend = nextProps.simulationModel.outputMapping.reduce( (accum, model_signal, signal_index) => {
+      const legend = props.simulationModel.outputMapping.reduce( (accum, model_signal, signal_index) => {
         if (chosenSignals.includes(signal_index)) {
           accum.push({ index: signal_index, name: model_signal.name, type: model_signal.type });
         }
@@ -59,10 +63,17 @@ class WidgetPlot extends React.Component {
         return accum;
       }, []);
 
-      this.setState({ data, legend });
+      return{
+        data: data,
+        legend: legend,
+      };
     } else {
-      this.setState({ data: [], legend: [] });
+      return{
+        data: [],
+        legend: [],
+      };
     }
+
   }
 
   render() {
@@ -72,12 +83,12 @@ class WidgetPlot extends React.Component {
           data={this.state.data}
           height={this.props.widget.height - 55}
           width={this.props.widget.width - 20}
-          time={this.props.widget.time}
-          yMin={this.props.widget.yMin}
-          yMax={this.props.widget.yMax}
-          yUseMinMax={this.props.widget.yUseMinMax}
+          time={this.props.widget.customProperties.time}
+          yMin={this.props.widget.customProperties.yMin}
+          yMax={this.props.widget.customProperties.yMax}
+          yUseMinMax={this.props.widget.customProperties.yUseMinMax}
           paused={this.props.paused}
-          yLabel={this.props.widget.ylabel}
+          yLabel={this.props.widget.customProperties.ylabel}
         />
       </div>
       <PlotLegend signals={this.state.legend} />

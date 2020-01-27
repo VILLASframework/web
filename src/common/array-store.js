@@ -68,7 +68,6 @@ class ArrayStore extends ReduceStore {
   reduce(state, action) {
     switch (action.type) {
       case this.type + '/start-load':
-
         if (Array.isArray(action.data)) {
           action.data.forEach((id) => {
             this.dataManager.load(id, action.token,action.param);
@@ -87,17 +86,17 @@ class ArrayStore extends ReduceStore {
 
       case this.type + '/load-error':
         if (action.error && !action.error.handled && action.error.response) {
-        
+
           const USER_LOAD_ERROR_NOTIFICATION = {
             title: 'Failed to load',
             message: action.error.response.body.message,
             level: 'error'
           };
           NotificationsDataManager.addNotification(USER_LOAD_ERROR_NOTIFICATION);
-  
+
         }
         return super.reduce(state, action);
-  
+
       case this.type + '/start-add':
         this.dataManager.add(action.data, action.token,action.param);
         return state;
@@ -106,7 +105,7 @@ class ArrayStore extends ReduceStore {
         return this.updateElements(state, [action.data]);
 
       case this.type + '/add-error':
-        
+
          return state;
 
 
@@ -128,29 +127,16 @@ class ArrayStore extends ReduceStore {
             level: 'error'
           };
           NotificationsDataManager.addNotification(USER_REMOVE_ERROR_NOTIFICATION);
-  
+
         }
         return super.reduce(state, action);
-  
-      case this.type + '/start-edit':
-        this.dataManager.update(action.data, action.token,action.param);
-        return state;
 
-      case this.type + '/start-own-edit':
+      case this.type + '/start-edit':
         this.dataManager.update(action.data, action.token,action.param);
         return state;
 
       case this.type + '/edited':
         return this.updateElements(state, [action.data]);
-
-      case this.type + '/confirm-pw-doesnt-match':
-          const USER_PW_ERROR_NOTIFICATION = {
-            title: 'The new password does not match',
-            message: 'Try again',
-            level: 'error'
-          };
-          NotificationsDataManager.addNotification(USER_PW_ERROR_NOTIFICATION);
-        return state;
 
       case this.type + '/edit-error':
           return state;

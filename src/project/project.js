@@ -26,7 +26,7 @@ import FileSaver from 'file-saver';
 
 import AppDispatcher from '../common/app-dispatcher';
 import ProjectStore from './project-store';
-import UserStore from '../user/user-store';
+import LoginStore from '../user/login-store';
 import DashboardStore from '../dashboard/dashboard-store';
 import SimulationStore from '../simulation/simulation-store';
 
@@ -41,14 +41,14 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 
 class Dashboards extends Component {
   static getStores() {
-    return [ ProjectStore, DashboardStore, UserStore, SimulationStore ];
+    return [ ProjectStore, DashboardStore, LoginStore, SimulationStore ];
   }
 
   static calculateState(prevState, props) {
     prevState = prevState || {};
 
     // load project
-    const sessionToken = UserStore.getState().token;
+    const sessionToken = LoginStore.getState().token;
 
     let project = ProjectStore.getState().find(project => project._id === props.match.params.project);
     if (project == null) {

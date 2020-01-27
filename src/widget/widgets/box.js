@@ -30,9 +30,9 @@ class WidgetBox extends Component {
     let colors = EditWidgetColorControl.ColorPalette;
 
     let colorStyle = {
-      borderColor: colors[this.props.widget.border_color],
-      backgroundColor: colors[this.props.widget.background_color],
-      opacity: this.props.widget.background_color_opacity
+      borderColor: colors[this.props.widget.customProperties.border_color],
+      backgroundColor: colors[this.props.widget.customProperties.background_color],
+      opacity: this.props.widget.customProperties.background_color_opacity
     }
 
     return (

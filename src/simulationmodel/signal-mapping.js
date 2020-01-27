@@ -41,12 +41,15 @@ class SignalMapping extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.length === this.state.length && nextProps.signals === this.state.signals) {
-            return;
-        }
+    static getDerivedStateFromProps(props, state){
+      if (props.length === state.length && props.signals === state.signals) {
+        return null
+      }
 
-        this.setState({ length: nextProps.length, signals: nextProps.signals });
+      return{
+        length: props.length,
+        signals: props.signals
+      };
     }
 
     validateLength(){

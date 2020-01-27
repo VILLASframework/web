@@ -24,75 +24,79 @@ import { Container } from 'flux/utils';
 import {Button, Col, Row} from 'react-bootstrap';
 
 import AppDispatcher from '../common/app-dispatcher';
-import UserStore from './user-store';
+import LoginStore from './login-store';
 import UsersStore from './users-store';
 
 
 import Icon from '../common/icon';
 import EditOwnUserDialog from './edit-own-user'
-
-import FluxContainerConverter from "../common/FluxContainerConverter";
+import NotificationsDataManager from "../common/data-managers/notifications-data-manager"
 
 
 class User extends Component {
   static getStores() {
-    return [ UserStore, UsersStore ];
+    return [ LoginStore, UsersStore ];
   }
 
   static calculateState(prevState, props) {
-    //prevState = prevState || {};
+    prevState = prevState || {};
 
-    let sessionToken = UserStore.getState().token;
-    let user = UserStore.getState().currentUser;
-
-
-    if(user === null) {
-      AppDispatcher.dispatch({
-        type: 'users/start-load',
-        data: UserStore.getState().userid,
-        token: sessionToken
-      });
-
-      user = {};
-    }
-
-    console.log("extracted user 2: " + user.username);
+    let user = LoginStore.getState().currentUser;
 
     return {
-      user,
-
-      token: sessionToken,
-      newModal: false,
+      currentUser: user,
+      token: LoginStore.getState().token,
       editModal: false,
-      update: false,
-      modalData: {}
     };
   }
 
-
-
   closeEditModal(data) {
+
     this.setState({ editModal: false });
+    //this.setState({currentUser: data});
+    let updatedData = {};
 
-    if (data) {
-      if(data.password === data.confirmpassword){
+    if(data){
+    if (data.username !== ''){
+      updatedData["id"] = data.id;
+      updatedData["username"] = data.username;
+    }
+    if (data.mail !== ''){
+      updatedData["id"] = data.id;
+      updatedData["mail"] = data.mail;
+    }
+    if (data.password !== '' && data.oldPassword !== '' && data.password === data.confirmpassword ){
+      updatedData["id"] = data.id;
+      updatedData["password"] = data.password;
+      updatedData["oldPassword"] = data.oldPassword;
+    } else if (data.password !== '' && data.password !== data.confirmpassword) {
+      const USER_UPDATE_ERROR_NOTIFICATION = {
+        title: 'Update Error ',
+        message: 'New password not correctly confirmed',
+        level: 'error'
+      };
+      NotificationsDataManager.addNotification(USER_UPDATE_ERROR_NOTIFICATION);
+      return
+    }
+
+    if (updatedData !== {}) {
+      let requestData = {};
+      requestData["user"] = updatedData;
 
       AppDispatcher.dispatch({
-        type: 'users/start-own-edit',
-        data: data,
+        type: 'users/start-edit-own-user',
+        data: requestData,
         token: this.state.token
       });
+    } else {
+      const USER_UPDATE_WARNING_NOTIFICATION = {
+        title: 'Update Warning ',
+        message: 'No update requested, no input data',
+        level: 'warning'
+      };
+      NotificationsDataManager.addNotification(USER_UPDATE_WARNING_NOTIFICATION);
     }
-
-    else{
-      AppDispatcher.dispatch({
-        type: 'users/confirm-pw-doesnt-match',
-        data: data,
-        token: this.state.token
-      });
-    }
-    }
-
+  }
   }
 
 
@@ -112,24 +116,24 @@ class User extends Component {
         <form>
           <Row>
             <Col xs={3}>Username: </Col>
-            <Col xs={3}> {this.state.user.username} </Col>
+            <Col xs={3}> {this.state.currentUser.username} </Col>
           </Row>
 
 
           <Row as={Col} >
             <Col xs={3}>E-mail: </Col>
-            <Col xs={3}> {this.state.user.mail} </Col>
+            <Col xs={3}> {this.state.currentUser.mail} </Col>
           </Row>
 
           <Row as={Col} >
             <Col xs={3}>Role: </Col>
-            <Col xs={3}> {this.state.user.role} </Col>
+            <Col xs={3}> {this.state.currentUser.role} </Col>
           </Row>
 
 
           <Button onClick={() => this.setState({ editModal: true })}><Icon icon='edit' /> Edit</Button>
 
-          <EditOwnUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />
+          <EditOwnUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.currentUser} />
 
         </form>
 
@@ -138,4 +142,8 @@ class User extends Component {
   }
 }
 
-export default Container.create(FluxContainerConverter.convert(User));
+
+
+
+let fluxContainerConverter = require('../common/FluxContainerConverter');
+export default Container.create(fluxContainerConverter.convert(User));

@@ -21,7 +21,8 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { contextMenu, Item, Separator } from 'react-contexify';
+import { Menu, Item, Separator, MenuProvider } from 'react-contexify';
+import Widget from '../widget/widget';
 
 class WidgetContextMenu extends React.Component {
   editWidget = event => {
@@ -92,8 +93,8 @@ class WidgetContextMenu extends React.Component {
 
   render() {
     const isLocked = this.props.widget.locked;
-
-    return <contextMenu id={'widgetMenu'+ this.props.index}>
+    const ContextMenu = () => (
+      <Menu id={'widgetMenu'+ this.props.index}>
       <Item disabled={isLocked} onClick={this.editWidget}>Edit</Item>
       <Item disabled={isLocked} onClick={this.deleteWidget}>Delete</Item>
 
@@ -108,14 +109,31 @@ class WidgetContextMenu extends React.Component {
 
       <Item disabled={isLocked} onClick={this.lockWidget}>Lock</Item>
       <Item disabled={isLocked === false} onClick={this.unlockWidget}>Unlock</Item>
-    </contextMenu>;
+      </Menu>
+  );
+
+    return <div>
+    <MenuProvider id={'widgetMenu'+ this.props.index} style={{ border: '1px solid purple', display: 'inline-block' }}>
+    <Widget
+              data={this.props.widget}
+              simulation={this.props.simulation}
+              onWidgetChange={this.props.onWidgetChange}
+              onWidgetStatusChange={this.props.onWidgetStatusChange}
+              editing={this.props.editing}
+              index={this.props.index}
+              grid={this.props.grid}
+              paused={this.props.paused}
+            />
+    </MenuProvider>
+    <ContextMenu />
+    </div>
   }
 }
 
 WidgetContextMenu.propTypes = {
   index: PropTypes.number.isRequired,
   widget: PropTypes.object.isRequired,
-  onEdit: PropTypes.func,
+  onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func,
   onChange: PropTypes.func
 };

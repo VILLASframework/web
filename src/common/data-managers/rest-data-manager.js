@@ -65,10 +65,10 @@ class RestDataManager {
         }
         else{
           if(id != null){
-            return this.makeURL(this.url + '/' + id + '?' + param);
+            return this.makeURL(this.url + '/' + id + param);
           }
           else {
-            return this.makeURL(this.url + '?' + param);
+            return this.makeURL(this.url + param)
           }
         }
       case 'remove/update':
@@ -76,7 +76,7 @@ class RestDataManager {
           return this.makeURL(this.url + '/' + object.id);
         }
         else{
-          return this.makeURL(this.url + '/' + object.id + '?' + param);
+          return this.makeURL(this.url + '/' + object.id + param);
         }
         default:
             console.log("something went wrong");

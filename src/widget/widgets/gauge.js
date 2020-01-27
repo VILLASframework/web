@@ -22,6 +22,7 @@
 
 import React, { Component } from 'react';
 import { Gauge } from 'gaugeJS';
+//import {update} from "immutable";
 
 class WidgetGauge extends Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class WidgetGauge extends Component {
     this.state = {
       value: 0,
       minValue: null,
-      maxValue: null
+      maxValue: null,
     };
   }
 
@@ -47,99 +48,122 @@ class WidgetGauge extends Component {
     //this.updateLabels(this.state.minValue, this.state.maxValue);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.simulationModel == null) {
-      this.setState({ value: 0 });
-      return;
+  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
+    if(prevState.minValue !== this.state.minValue){
+      this.gauge.setMinValue(this.state.minValue);
+    }
+    if(prevState.maxValue !== this.state.maxValue){
+      this.gauge.maxValue = this.state.maxValue
     }
 
-    const simulator = nextProps.simulationModel.simulator;
+    // update gauge's value
+    if(prevState.value !== this.state.value){
+      this.gauge.set(this.state.value)
+    }
+
+    // update labels
+    if(prevState.minValue !== this.state.minValue || prevState.maxValue !== this.state.maxValue){
+      this.updateLabels(this.state.minValue, this.state.maxValue)
+    }
+
+  }
+
+  static getDerivedStateFromProps(props, state){
+    if (props.simulationModel == null) {
+      return{value:0};
+    }
+
+    const simulator = props.simulationModel.simulator;
 
     // update value
-    if (nextProps.data == null || nextProps.data[simulator] == null
-      || nextProps.data[simulator].output == null
-      || nextProps.data[simulator].output.values == null
-      || nextProps.data[simulator].output.values.length === 0
-      || nextProps.data[simulator].output.values[0].length === 0) {
-      this.setState({ value: 0 });
-      return;
+    if (props.data == null
+      || props.data[simulator] == null
+      || props.data[simulator].output == null
+      || props.data[simulator].output.values == null
+      || props.data[simulator].output.values.length === 0
+      || props.data[simulator].output.values[0].length === 0) {
+      return{value:0};
     }
 
+    // memorize if min or max value is updated
+    let updateValue = false;
+    let updateMinValue = false;
+    let updateMaxValue = false;
+
     // check if value has changed
-    const signal = nextProps.data[simulator].output.values[nextProps.widget.signal];
+    const signal = props.data[simulator].output.values[props.widget.customProperties.signal];
     // Take just 3 decimal positions
     // Note: Favor this method over Number.toFixed(n) in order to avoid a type conversion, since it returns a String
     if (signal != null) {
       const value = Math.round(signal[signal.length - 1].y * 1e3) / 1e3;
-      if (this.state.value !== value && value != null) {
-        this.setState({ value });
+      let minValue = null;
+      let maxValue = null;
+      if (state.value !== value && value != null) {
+        //value has changed
+        updateValue = true;
 
         // update min-max if needed
         let updateLabels = false;
-        let minValue = this.state.minValue;
-        let maxValue = this.state.maxValue;
+
+        minValue = state.minValue;
+        maxValue = state.maxValue;
 
         if (minValue == null) {
           minValue = value - 0.5;
           updateLabels = true;
-
-          this.setState({ minValue });
-          this.gauge.setMinValue(minValue);
+          updateMinValue = true;
         }
 
         if (maxValue == null) {
           maxValue = value + 0.5;
           updateLabels = true;
-
-          this.setState({ maxValue });
-          this.gauge.maxValue = maxValue;
+          updateMaxValue = true;
         }
 
-        if (nextProps.widget.valueUseMinMax) {
-          if (this.state.minValue > nextProps.widget.valueMin) {
-            minValue = nextProps.widget.valueMin;
-
-            this.setState({ minValue });
-            this.gauge.setMinValue(minValue);
-
+        if (props.widget.customProperties.valueUseMinMax) {
+          if (state.minValue > props.widget.customProperties.valueMin) {
+            minValue = props.widget.customProperties.valueMin;
+            updateMinValue = true;
             updateLabels = true;
           }
 
-          if (this.state.maxValue < nextProps.widget.valueMax) {
-            maxValue = nextProps.widget.valueMax;
-
-            this.setState({ maxValue });
-            this.gauge.maxValue = maxValue;
-
+          if (state.maxValue < props.widget.customProperties.valueMax) {
+            maxValue = props.widget.customProperties.valueMax;
+            updateMaxValue = true;
             updateLabels = true;
           }
         }
 
         if (updateLabels === false) {
           // check if min/max changed
-          if (minValue > this.gauge.minValue) {
-            minValue = this.gauge.minValue;
-            updateLabels = true;
-
-            this.setState({ minValue });
+          if (minValue > state.gauge.minValue) {
+            minValue = state.gauge.minValue;
+            updateMinValue = true;
           }
 
-          if (maxValue < this.gauge.maxValue) {
-            maxValue = this.gauge.maxValue;
-            updateLabels = true;
-
-            this.setState({ maxValue });
+          if (maxValue < state.gauge.maxValue) {
+            maxValue = state.gauge.maxValue;
+            updateMaxValue = true;
           }
         }
-
-        if (updateLabels) {
-          this.updateLabels(minValue, maxValue);
-        }
-
-        // update gauge's value
-        this.gauge.set(value);
       }
-    }
+
+      // prepare returned state
+      let returnState = null;
+      if(updateValue === true){
+        returnState["value"] = value;
+      }
+      if(updateMinValue === true){
+        returnState["minValue"] = minValue;
+      }
+      if(updateMaxValue === true){
+        returnState["maxValue"] = maxValue;
+      }
+
+      return returnState
+    } // if there is a signal
+
+
   }
 
   updateLabels(minValue, maxValue, force) {
@@ -153,7 +177,7 @@ class WidgetGauge extends Component {
     }
 
     // calculate zones
-    let zones = this.props.widget.colorZones ? this.props.widget.zones : null;
+    let zones = this.props.widget.customProperties.colorZones ? this.props.widget.customProperties.zones : null;
     if (zones != null) {
       // adapt range 0-100 to actual min-max
       const step = (maxValue - minValue) / 100;
@@ -197,7 +221,7 @@ class WidgetGauge extends Component {
     let signalType = null;
 
     if (this.props.simulationModel != null) {
-      signalType = (this.props.simulationModel != null && this.props.simulationModel.outputLength > 0 && this.props.widget.signal < this.props.simulationModel.outputLength) ? this.props.simulationModel.outputMapping[this.props.widget.signal].type : '';
+      signalType = (this.props.simulationModel != null && this.props.simulationModel.outputLength > 0 && this.props.widget.customProperties.signal < this.props.simulationModel.outputLength) ? this.props.simulationModel.outputMapping[this.props.widget.customProperties.signal].type : '';
     }
 
     return (

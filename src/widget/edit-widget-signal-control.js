@@ -33,9 +33,10 @@ class EditWidgetSignalControl extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-      // Update state's widget with props
-    this.setState({ widget: nextProps.widget });
+  static getDerivedStateFromProps(props, state){
+    return {
+      widget: props.widget
+    };
   }
 
   render() {
@@ -54,7 +55,7 @@ class EditWidgetSignalControl extends Component {
     return (
         <FormGroup controlId="signal">
           <FormLabel>Signal</FormLabel>
-          <FormControl componentClass="select" placeholder="Select signal" value={this.state.widget.signal} onChange={(e) => this.props.handleChange(e)}>
+          <FormControl as="select" placeholder="Select signal" value={this.state.widget.signal} onChange={(e) => this.props.handleChange(e)}>
             {
               signalsToRender.length === 0 ? (
                 <option disabled value style={{ display: 'none' }}>No signals available.</option>

@@ -36,25 +36,25 @@ class WidgetPlotTable extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.simulationModel == null) {
+  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
+    if (this.props.simulationModel == null) {
       return;
     }
 
     // Update internal selected signals state with props (different array objects)
-    if (this.props.widget.signals !== nextProps.widget.signals) {
-      this.setState( {signals: nextProps.widget.signals});
+    if (prevProps.widget.customProperties.signals !== this.props.widget.customProperties.signals) {
+      this.setState( {signals: this.props.widget.customProperties.signals});
     }
 
     // Identify if there was a change in the preselected signals
-    if (JSON.stringify(nextProps.widget.preselectedSignals) !== JSON.stringify(this.props.widget.preselectedSignals) || this.state.preselectedSignals.length === 0) {
-      // Update the currently selected signals by intersecting with the preselected signals
+    if (JSON.stringify(prevProps.widget.customProperties.preselectedSignals) !== JSON.stringify(this.props.widget.customProperties.preselectedSignals)
+      || this.state.preselectedSignals.length === 0) {
+      // Update the currently selected signals by intersecting with the preselected signalsWidget
       // Do the same with the plot values
-      var intersection = this.computeIntersection(nextProps.widget.preselectedSignals, nextProps.widget.signals);
+      var intersection = this.computeIntersection(this.props.widget.customProperties.preselectedSignals, this.props.widget.customProperties.signals);
       this.setState({ signals: intersection });
 
-      this.updatePreselectedSignalsState(nextProps);
-      return;
+      this.updatePreselectedSignalsState(this.props);
     }
   }
 
@@ -63,13 +63,14 @@ class WidgetPlotTable extends Component {
     return preselectedSignals.filter( s => selectedSignals.includes(s));
   }
 
-  updatePreselectedSignalsState(nextProps) {
+  updatePreselectedSignalsState(props) {
     // Create checkboxes using the signal indices from simulation model
-    const preselectedSignals = nextProps.simulationModel.outputMapping.reduce(
+    if(props.simulationModel.outputMapping){
+    const preselectedSignals = props.simulationModel.outputMapping.reduce(
       // Loop through simulation model signals
       (accum, model_signal, signal_index) => {
         // Append them if they belong to the current selected type
-        if (nextProps.widget.preselectedSignals.indexOf(signal_index) > -1) {
+        if (props.widget.customProperties.preselectedSignals.indexOf(signal_index) > -1) {
             accum.push(
               {
                 index: signal_index,
@@ -82,6 +83,7 @@ class WidgetPlotTable extends Component {
         }, []);
 
     this.setState({ preselectedSignals });
+      }
   }
 
   updateSignalSelection(signal_index, checked) {
@@ -105,7 +107,7 @@ class WidgetPlotTable extends Component {
 
     if (this.props.data[simulator] != null && this.props.data[simulator].output != null && this.props.data[simulator].output.values != null) {
       simulatorData = this.props.data[simulator].output.values.filter((values, index) => (
-        this.props.widget.signals.findIndex(value => value === index) !== -1
+        this.props.widget.customProperties.signals.findIndex(value => value === index) !== -1
       ));
     }
 
@@ -150,14 +152,14 @@ class WidgetPlotTable extends Component {
             <div className="widget-plot">
               <Plot
                 data={simulatorData}
-                time={this.props.widget.time}
+                time={this.props.widget.customProperties.time}
                 width={this.props.widget.width - 100}
                 height={this.props.widget.height - 55}
-                yMin={this.props.widget.yMin}
-                yMax={this.props.widget.yMax}
-                yUseMinMax={this.props.widget.yUseMinMax}
+                yMin={this.props.widget.customProperties.yMin}
+                yMax={this.props.widget.customProperties.yMax}
+                yUseMinMax={this.props.widget.customProperties.yUseMinMax}
                 paused={this.props.paused}
-                yLabel={this.props.widget.ylabel}
+                yLabel={this.props.widget.customProperties.ylabel}
               />
             </div>
           </div>

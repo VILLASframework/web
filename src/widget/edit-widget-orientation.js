@@ -29,13 +29,16 @@ class EditWidgetOrientation extends Component {
     super(props);
 
     this.state = {
-      widget: {}
+      widget: {
+        customProperties:{}
+      }
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-      // Update state's widget with props
-    this.setState({ widget: nextProps.widget });
+  static getDerivedStateFromProps(props, state){
+    return {
+      widget: props.widget
+    };
   }
 
   handleOrientationChange(orientation) {
@@ -48,7 +51,7 @@ class EditWidgetOrientation extends Component {
     return (
         <FormGroup controlId="orientation">
           <Row>
-            <Col componentClass={FormLabel} sm={2}>
+            <Col className={FormLabel} sm={3}>
               Orientation
             </Col>
             <Col sm={10}>
@@ -58,8 +61,7 @@ class EditWidgetOrientation extends Component {
                   let name = WidgetSlider.OrientationTypes[type].name;
 
                   return (
-                    <FormCheck inline key={value} type='radio' name='orientation' checked={ value === this.state.widget.orientation } onChange={(e) => this.handleOrientationChange(value)}>
-                      { name }
+                    <FormCheck inline label={name} key={value} id={value} type='radio' title='orientation' checked={ value === this.state.widget.customProperties.orientation } onChange={(e) => this.handleOrientationChange(value)}>
                     </FormCheck>)
                 })
               }

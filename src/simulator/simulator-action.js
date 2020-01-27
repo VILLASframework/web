@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Button, DropdownButton, DropdownItem } from 'react-bootstrap';
+import { Button, ButtonToolbar, DropdownButton, DropdownItem } from 'react-bootstrap';
 
 class SimulatorAction extends React.Component {
     constructor(props) {
@@ -31,14 +31,17 @@ class SimulatorAction extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (this.state.selectedAction == null) {
-            if (nextProps.actions != null && nextProps.actions.length > 0) {
-                this.setState({ selectedAction: nextProps.actions[0] });
-            }
+    static getDerivedStateFromProps(props, state){
+      if (state.selectedAction == null) {
+        if (props.actions != null && props.actions.length > 0) {
+          return{
+            selectedAction: props.actions[0]
+          };
         }
+      }
+      return null
     }
-    
+
     setAction = id => {
         // search action
         for (let action of this.props.actions) {
@@ -46,7 +49,7 @@ class SimulatorAction extends React.Component {
                 this.setState({ selectedAction: action });
             }
         }
-    }
+    };
 
     render() {
         const actionList = this.props.actions.map(action => (
@@ -56,11 +59,13 @@ class SimulatorAction extends React.Component {
         ));
 
         return <div>
+          <ButtonToolbar>
             <DropdownButton title={this.state.selectedAction != null ? this.state.selectedAction.title : ''} id="action-dropdown" onSelect={this.setAction}>
-                {actionList}
+              {actionList}
             </DropdownButton>
-
             <Button style={{ marginLeft: '5px' }} disabled={this.props.runDisabled} onClick={() => this.props.runAction(this.state.selectedAction)}>Run</Button>
+          </ButtonToolbar>
+
         </div>;
     }
 }

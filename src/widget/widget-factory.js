@@ -35,13 +35,14 @@ class WidgetFactory {
             x: position.x,
             y: position.y,
             z: position.z,
-            locked: false
+            locked: false,
+            customProperties: {}
         };
 
         // set type specific properties
         switch(type) {
             case 'CustomAction':
-                widget.actions = [
+                widget.customProperties.actions = [
                   {
                     action: 'stop'
                   },
@@ -56,51 +57,51 @@ class WidgetFactory {
                   }
                 ];
                 widget.name = 'Action';
-                widget.icon = 'star';
+                widget.customProperties.icon = 'star';
                 widget.width = 100;
                 widget.height = 50;
-                widget.simulationModel = defaultSimulationModel;
+                widget.customProperties.simulationModel = defaultSimulationModel;
                 break;
             case 'Action':
-                widget.simulationModel = defaultSimulationModel;
+                widget.customProperties.simulationModel = defaultSimulationModel;
                 break;
             case 'Lamp':
-                widget.simulationModel = defaultSimulationModel;
-                widget.signal = 0;
+                widget.customProperties.simulationModel = defaultSimulationModel;
+                widget.customProperties.signal = 0;
                 widget.minWidth = 5;
                 widget.minHeight = 5;
                 widget.width = 20;
                 widget.height = 20;
-                widget.on_color = 6;
-                widget.off_color = 8;
-                widget.threshold = 0.5;
+                widget.customProperties.on_color = 6;
+                widget.customProperties.off_color = 8;
+                widget.customProperties.threshold = 0.5;
                 break;
             case 'Value':
-                widget.simulationModel = defaultSimulationModel;
-                widget.signal = 0;
+                widget.customProperties.simulationModel = defaultSimulationModel;
+                widget.customProperties.signal = 0;
                 widget.minWidth = 70;
                 widget.minHeight = 20;
                 widget.width = 120;
                 widget.height = 30;
-                widget.textSize = 16;
+                widget.customProperties.textSize = 16;
                 widget.name = 'Value';
-                widget.showUnit = false;
+                widget.customProperties.showUnit = false;
                 break;
             case 'Plot':
-                widget.simulationModel = defaultSimulationModel;
-                widget.signals = [ 0 ];
-                widget.ylabel = '';
-                widget.time = 60;
+                widget.customProperties.simulationModel = defaultSimulationModel;
+                widget.customProperties.signals = [ 0 ];
+                widget.customProperties.ylabel = '';
+                widget.customProperties.time = 60;
                 widget.minWidth = 400;
                 widget.minHeight = 200;
                 widget.width = 400;
                 widget.height = 200;
-                widget.yMin = 0;
-                widget.yMax = 10;
-                widget.yUseMinMax = false;
+                widget.customProperties.yMin = 0;
+                widget.customProperties.yMax = 10;
+                widget.customProperties.yUseMinMax = false;
                 break;
             case 'Table':
-                widget.simulationModel = defaultSimulationModel;
+                widget.customProperties.simulationModel = defaultSimulationModel;
                 widget.minWidth = 200;
                 widget.width = 300;
                 widget.height = 200;
@@ -111,80 +112,85 @@ class WidgetFactory {
                 widget.width = 100;
                 widget.height = 35;
                 widget.name = 'Label';
-                widget.textSize = 32;
-                widget.fontColor = 0;
+                widget.customProperties.textSize = 32;
+                widget.customProperties.fontColor = 0;
                 break;
             case 'PlotTable':
-                widget.simulationModel = defaultSimulationModel;
-                widget.preselectedSignals = [];
-                widget.signals = []; // initialize selected signals
-                widget.ylabel = '';
+                widget.customProperties.simulationModel = defaultSimulationModel;
+                widget.customProperties.preselectedSignals = [];
+                widget.customProperties.signals = []; // initialize selected signals
+                widget.customProperties.ylabel = '';
                 widget.minWidth = 200;
                 widget.minHeight = 100;
                 widget.width = 600;
                 widget.height = 300;
-                widget.time = 60;
-                widget.yMin = 0;
-                widget.yMax = 10;
-                widget.yUseMinMax = false;
+                widget.customProperties.time = 60;
+                widget.customProperties.yMin = 0;
+                widget.customProperties.yMax = 10;
+                widget.customProperties.yUseMinMax = false;
                 break;
             case 'Image':
                 widget.minWidth = 20;
                 widget.minHeight = 20;
                 widget.width = 200;
                 widget.height = 200;
-                widget.lockAspect = true;
+                widget.customProperties.lockAspect = true;
                 break;
             case 'Button':
                 widget.minWidth = 100;
                 widget.minHeight = 50;
                 widget.width = 100;
                 widget.height = 100;
-                widget.background_color = 1;
-                widget.font_color = 0;
-                widget.simulationModel = defaultSimulationModel;
-                widget.signal = 0;
+                widget.customProperties.background_color = 1;
+                widget.customProperties.font_color = 0;
+                widget.customProperties.simulationModel = defaultSimulationModel;
+                widget.customProperties.signal = 0;
                 break;
             case 'Input':
                 widget.minWidth = 200;
                 widget.minHeight = 50;
                 widget.width = 200;
                 widget.height = 50;
-                widget.simulationModel = defaultSimulationModel;
-                widget.signal = 0;
+                widget.customProperties.simulationModel = defaultSimulationModel;
+                widget.customProperties.signal = 0;
                 break;
             case 'Slider':
                 widget.minWidth = 380;
                 widget.minHeight = 30;
                 widget.width = 400;
                 widget.height = 50;
-                widget.orientation = WidgetSlider.OrientationTypes.HORIZONTAL.value; // Assign default orientation
-                widget.simulationModel = defaultSimulationModel;
-                widget.signal = 0;
+                widget.customProperties.orientation = WidgetSlider.OrientationTypes.HORIZONTAL.value; // Assign default orientation
+                widget.customProperties.simulationModel = defaultSimulationModel;
+                widget.customProperties.signal = 0;
+                widget.customProperties.rangeMin = 0;
+                widget.customProperties.rangeMax = 200;
+                widget.customProperties.rangeUseMinMax = true;
+                widget.customProperties.showUnit = true
+
                 break;
             case 'Gauge':
-                widget.simulationModel = defaultSimulationModel;
-                widget.signal = 0;
+                widget.customProperties.simulationModel = defaultSimulationModel;
+                widget.customProperties.signal = 0;
                 widget.minWidth = 100;
                 widget.minHeight = 150;
                 widget.width = 150;
                 widget.height = 150;
-                widget.colorZones = false;
-                widget.zones = [];
-                widget.valueMin = 0;
-                widget.valueMax = 1;
-                widget.valueUseMinMax = false;
+                widget.customProperties.colorZones = false;
+                widget.customProperties.zones = [];
+                widget.customProperties.valueMin = 0;
+                widget.customProperties.valueMax = 1;
+                widget.customProperties.valueUseMinMax = false;
                 break;
             case 'Box':
                 widget.minWidth = 50;
                 widget.minHeight = 50;
                 widget.width = 100;
                 widget.height = 100;
-                widget.border_color = 0;
+                widget.customProperties.border_color = 0;
                 widget.z = 0;
                 break;
             case 'HTML':
-                widget.content = '<i>Hello World</i>';
+                widget.customProperties.content = '<i>Hello World</i>';
                 break;
             case 'Topology':
                 widget.width = 600;

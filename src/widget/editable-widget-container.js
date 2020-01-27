@@ -23,12 +23,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Rnd } from 'react-rnd';
-import { contextMenu } from 'react-contexify';
 
 class EditableWidgetContainer extends React.Component {
   constructor(props) {
     super(props);
-
+  
     this.rnd = null;
   }
 
@@ -66,7 +65,8 @@ class EditableWidgetContainer extends React.Component {
     }
   };
 
-  resizeStop = (direction, delta, ref, event) => {
+  resizeStop = (event, direction, ref,delta, position) => {
+    
     const widget = this.props.widget;
 
     // resize depends on direction
@@ -90,21 +90,21 @@ class EditableWidgetContainer extends React.Component {
     const widget = this.props.widget;
 
     const resizing = {
-      bottom: !widget.locked,
-      bottomLeft: !widget.locked,
-      bottomRight: !widget.locked,
-      left: !widget.locked,
-      right: !widget.locked,
-      top: !widget.locked,
-      topLeft: !widget.locked,
-      topRight: !widget.locked
+      bottom: !widget.isLocked,
+      bottomLeft: !widget.isLocked,
+      bottomRight: !widget.isLocked,
+      left: !widget.isLocked,
+      right: !widget.idLocked,
+      top: !widget.isLocked,
+      topLeft: !widget.isLocked,
+      topRight: !widget.isLocked
     };
 
     const gridArray = [ this.props.grid, this.props.grid ];
 
     const widgetClasses = classNames({
       'editing-widget': true,
-      'locked': widget.locked
+      'locked': widget.isLocked
     });
 
     return <Rnd
@@ -112,7 +112,7 @@ class EditableWidgetContainer extends React.Component {
       default={{ x: Number(widget.x), y: Number(widget.y), width: widget.width, height: widget.height }}
       minWidth={widget.minWidth}
       minHeight={widget.minHeight}
-      lockAspectRatio={Boolean(widget.lockAspect)}
+      lockAspectRatio={Boolean(widget.isLocked)}
       bounds={'parent'}
       className={widgetClasses}
       onResizeStart={this.borderWasClicked}
@@ -121,13 +121,13 @@ class EditableWidgetContainer extends React.Component {
       onDragStop={this.dragStop}
       dragGrid={gridArray}
       resizeGrid={gridArray}
-      zIndex={widget.z}
+      zindex={widget.z}
       enableResizing={resizing}
-      disableDragging={widget.locked}
+      disableDragging={widget.isLocked}
     >
-      <contextMenu id={'widgetMenu' + this.props.index}>
+      
         {this.props.children}
-      </contextMenu>
+      
     </Rnd>;
   }
 }

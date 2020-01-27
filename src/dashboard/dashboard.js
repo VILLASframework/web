@@ -19,7 +19,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
+import React, {Component} from 'react';
 import { Container } from 'flux/utils';
 import Fullscreenable from 'react-fullscreenable';
 import classNames from 'classnames';
@@ -34,82 +34,139 @@ import WidgetToolbox from './widget-toolbox';
 import WidgetArea from './widget-area';
 import DashboardButtonGroup from './dashboard-button-group';
 
-import UserStore from '../user/user-store';
+import LoginStore from '../user/login-store';
 import DashboardStore from './dashboard-store';
 import ProjectStore from '../project/project-store';
 import SimulationStore from '../simulation/simulation-store';
 import SimulationModelStore from '../simulationmodel/simulation-model-store';
 import FileStore from '../file/file-store';
+import WidgetStore from '../widget/widget-store';
 import AppDispatcher from '../common/app-dispatcher';
-
-import FluxContainerConverter from "../common/FluxContainerConverter";
 
 import 'react-contexify/dist/ReactContexify.min.css';
 
-class Dashboard extends React.Component {
+class Dashboard extends Component {
 
   static lastWidgetKey = 0;
   static getStores() {
-    return [ DashboardStore, ProjectStore, SimulationStore, SimulationModelStore, FileStore, UserStore ];
+    return [ DashboardStore, ProjectStore, SimulationStore, SimulationModelStore, FileStore, LoginStore, WidgetStore ];
   }
 
   static calculateState(prevState, props) {
     if (prevState == null) {
       prevState = {};
     }
-
+    const sessionToken = LoginStore.getState().token;
+    let maxHeight = null;
     let dashboard = Map();
-    let rawDashboard = DashboardStore.getState().find(v => v._id === props.match.params.dashboard);
+    let dashboards = DashboardStore.getState()
+    let rawDashboard =  dashboards[props.match.params.dashboard - 1];
 
-    if (rawDashboard != null) {
+
+
+    if (rawDashboard) {
       dashboard = Map(rawDashboard);
 
       // convert widgets list to a dictionary to be able to reference widgets
-      const widgets = {};
+      //let widgets = {};
 
-      for (let widget of dashboard.get('widgets')) {
-        widgets[this.getNewWidgetKey()] = widget;
+      let rawWidgets = WidgetStore.getState();
+
+      if(rawWidgets.length === 0){
+        AppDispatcher.dispatch({
+          type: 'widgets/start-load',
+          token: sessionToken,
+          param: '?dashboardID=1'
+        });
       }
 
-      dashboard = dashboard.set('widgets', widgets);
+      dashboard = dashboard.set('widgets', rawWidgets);
 
-      // this.computeHeightWithWidgets(widgets);
+     /* for(let widget of dashboard.get('widgets')){
+        console.log("load files got called")
+        console.log(widget);
+        AppDispatcher.dispatch({
+          type: 'files/start-load',
+          token: sessionToken,
+          param: '?objectID=' + widget.id + '&objectType=widget'
+        });
+      }
+     */
 
-      // this.setState({ dashboard: selectedDashboards, project: null });
 
-      // AppDispatcher.dispatch({
-      //     type: 'projects/start-load',
-      //     data: selectedDashboard.get('project'),
-      //     token: this.state.sessionToken
-      // });
+
+
+     /* if (this.state.dashboard.has('id') === false) {
+        AppDispatcher.dispatch({
+          type: 'dashboards/start-load',
+          data: this.props.match.params.dashboard,
+          token: this.state.sessionToken
+        });
+      }
+      */
+
+
+
+      /*if(Object.keys(widgets).length !== 0 ){
+      this.computeHeightWithWidgets(widgets);
+      }
+
+      let selectedDashboards = dashboard;
+
+    /* this.setState({ dashboard: selectedDashboards, project: null });
+
+       AppDispatcher.dispatch({
+           type: 'projects/start-load',
+           data: selectedDashboards.get('project'),
+           token: this.state.sessionToken
+       });
+*/
+
+
+    let widgets = {};
+
+      for (let widget of dashboard.get('widgets')) {
+        widgets[Dashboard.lastWidgetKey] = widget;
+        Dashboard.lastWidgetKey++;
+      }
+       maxHeight = Object.keys(widgets).reduce( (maxHeightSoFar, widgetKey) => {
+      let thisWidget = widgets[widgetKey];
+      let thisWidgetHeight = thisWidget.y + thisWidget.height;
+
+      return thisWidgetHeight > maxHeightSoFar? thisWidgetHeight : maxHeightSoFar;
+      }, 0);
 
     }
 
     let simulationModels = [];
-    if (prevState.simulation != null) {
-      simulationModels = SimulationModelStore.getState().filter(m => prevState.simulation.models.includes(m._id));
-    }
+    //if (prevState.simulation != null) {
+    //  simulationModels = SimulationModelStore.getState().filter(m => prevState.simulation.models.includes(m._id));
+    //}
 
     return {
+      rawDashboard,
       dashboard,
 
-      sessionToken: UserStore.getState().token,
-      projects: ProjectStore.getState(),
-      simulations: SimulationStore.getState(),
-      files: FileStore.getState(),
 
-      project: prevState.project || null,
-      simulation: prevState.simulation || null,
+      sessionToken: sessionToken,
+      projects: null, //ProjectStore.getState(),
+      simulations: null, //SimulationStore.getState(),
+      files: null,
+
+      project:  null,
+      simulation:  null,
       simulationModels,
       editing: prevState.editing || false,
       paused: prevState.paused || false,
 
-      editModal: prevState.editModal || false,
-      modalData: prevState.modalData || null,
-      modalIndex: prevState.modalIndex || null,
+      editModal:  false,
+      modalData:  null,
+      modalIndex:  null,
+      widgetChangeData: [],
+      widgetAddData:[],
 
-      maxWidgetHeight: prevState.maxWidgetHeight  || 0,
-      dropZoneHeight: prevState.dropZoneHeight  || 0,
+      maxWidgetHeight: maxHeight || null,
+      dropZoneHeight: maxHeight +80 || null,
     };
 
   }
@@ -121,20 +178,21 @@ class Dashboard extends React.Component {
     return widgetKey;
   }
 
-
+//!!!won't work anymore
   componentDidMount() {
     //document.addEventListener('keydown', this.handleKeydown.bind(this));
-
     if (this.state.dashboard.has('id') === false) {
       AppDispatcher.dispatch({
         type: 'dashboards/start-load',
-        data: this.props.match.params.dashboard,
-        token: this.state.sessionToken
+        token: this.state.sessionToken,
+        param: '?scenarioID=1',
       });
+
     }
 
   }
 
+/*
   componentWillUnmount() {
       //document.removeEventListener('keydown', this.handleKeydown.bind(this));
   }
@@ -169,9 +227,9 @@ class Dashboard extends React.Component {
         }
       });
     }
-  }
+  } */
 
-  /*handleKeydown(e) {
+  handleKeydown(e) {
     switch (e.key) {
       case ' ':
       case 'p':
@@ -185,7 +243,8 @@ class Dashboard extends React.Component {
         break;
       default:
     }
-  }*/
+  }
+
 
   /*
   * Adapt the area's height with the position of the new widget.
@@ -236,17 +295,31 @@ class Dashboard extends React.Component {
     });
   }
 
-  handleDrop = widget => {
-    const widgets = this.state.dashboard.get('widgets') || [];
+  handleDrop(widget) {
+    widget.dashboardID = this.state.dashboard.get('id');
+    console.log(widget);
 
-    const widgetKey = this.getNewWidgetKey();
+    AppDispatcher.dispatch({
+      type: 'widgets/start-add',
+      token: this.state.sessionToken,
+      data: widget
+    });
+
+    let tempChanges = this.state.widgetAddData;
+    tempChanges.push(widget);
+
+    this.setState({ widgetAddData: tempChanges})
+    /*let widgets = [];
+    widgets = this.state.dashboard.get('widgets');
+
+    const widgetKey = Dashboard.getNewWidgetKey();
     widgets[widgetKey] = widget;
 
-    const dashboard = this.state.dashboard.set('widgets');
+    const dashboard = this.state.dashboard.set('widgets',widgets);
 
     // this.increaseHeightWithWidget(widget);
 
-    this.setState({ dashboard });
+    this.setState({ dashboard });*/
   };
 
 
@@ -255,25 +328,20 @@ class Dashboard extends React.Component {
     this.widgetChange(updated_widget, key, this.saveChanges);
   }
 
-  widgetChange = (widget, index, callback = null) => {
-    const widgets = this.state.dashboard.get('widgets');
-    widgets[index] = widget;
+  widgetChange(widget, index, callback = null){
 
-    const dashboard = this.state.dashboard.set('widgets');
+    let tempChanges = this.state.widgetChangeData;
+    tempChanges.push(widget);
 
-    // Check if the height needs to be increased, the section may have shrunk if not
-    if (!this.increaseHeightWithWidget(widget)) {
-      this.computeHeightWithWidgets(dashboard.widgets);
-    }
+    this.setState({ widgetChangeData: tempChanges})
 
-    this.setState({ dashboard }, callback);
   }
 
 
   /*
   * Set the initial height state based on the existing widgets
   */
-  computeHeightWithWidgets(widgets) {
+   computeHeightWithWidgets(widgets) {
     // Compute max height from widgets
     let maxHeight = Object.keys(widgets).reduce( (maxHeightSoFar, widgetKey) => {
       let thisWidget = widgets[widgetKey];
@@ -289,45 +357,61 @@ class Dashboard extends React.Component {
   }
 
 
-  editWidget = (widget, index) => {
+  editWidget(widget, index){
     this.setState({ editModal: true, modalData: widget, modalIndex: index });
-  }
+  };
 
 
-  closeEdit = data => {
+  closeEdit(data){
+
     if (data == null) {
       this.setState({ editModal: false });
 
       return;
     }
 
-    const widgets = this.state.dashboard.get('widgets');
-    widgets[this.state.modalIndex] = data;
+    AppDispatcher.dispatch({
+      type: 'widgets/start-edit',
+      token: this.state.sessionToken,
+      data: data
+    });
 
-    const dashboard = this.state.dashboard.set('widgets', widgets);
-
-    this.setState({ editModal: false, dashboard });
+    this.setState({ editModal: false });
   };
 
 
-  deleteWidget = (widget, index) => {
-    const widgets = this.state.dashboard.get('widgets');
+  deleteWidget(widget, index) {
+    /*const widgets = this.state.dashboard.get('widgets');
     delete widgets[index];
 
     const dashboard = this.state.dashboard.set('widgets');
 
-    this.setState({ dashboard });
+    this.setState({ dashboard });*/
+    AppDispatcher.dispatch({
+      type: 'widgets/start-remove',
+      data: widget,
+      token: this.state.sessionToken
+    });
   };
 
 
-  startEditing = () => {
+  startEditing(){
     this.setState({ editing: true });
   };
 
-  saveEditing = () => {
+  saveEditing() {
     // Provide the callback so it can be called when state change is applied
     // TODO: Check if callback is needed
-    this.setState({ editing: false }, this.saveChanges );
+
+
+    this.state.widgetChangeData.forEach( widget => {
+      AppDispatcher.dispatch({
+        type: 'widgets/start-edit',
+        token: this.state.sessionToken,
+        data: widget
+      });
+    });
+    this.setState({ editing: false });
   };
 
   saveChanges() {
@@ -343,23 +427,36 @@ class Dashboard extends React.Component {
     });
   }
 
-  cancelEditing = () => {
-    this.setState({ editing: false, dasboard: {} });
+  cancelEditing() {
+    console.log("cancelEditing the add data: ");
+    console.log(this.state.widgetAddData);
+    this.state.widgetAddData.forEach( widget => {
+      AppDispatcher.dispatch({
+        type: 'widgets/start-remove',
+        data: widget,
+        token: this.state.sessionToken
+      });
+    });
+    AppDispatcher.dispatch({
+      type: 'widgets/start-load',
+      token: this.state.sessionToken,
+      param: '?dashboardID=1'
+    });
+    this.setState({ editing: false, widgetChangeData: [], widgetAddData: [] });
 
-    this.reloadDashboard();
   };
 
-  setGrid = value => {
+  setGrid(value) {
     const dashboard = this.state.dashboard.set('grid', value);
 
     this.setState({ dashboard });
   };
 
-  pauseData = () => {
+  pauseData(){
     this.setState({ paused: true });
   };
 
-  unpauseData = () => {
+  unpauseData() {
     this.setState({ paused: false });
   };
 
@@ -367,9 +464,8 @@ class Dashboard extends React.Component {
   render() {
     const widgets = this.state.dashboard.get('widgets');
     const grid = this.state.dashboard.get('grid');
-
     const boxClasses = classNames('section', 'box', { 'fullscreen-padding': this.props.isFullscreen });
-
+    let draggable = this.state.editing;
     return <div className={boxClasses} >
       <div className='section-header box-header'>
         <div className="section-title">
@@ -378,47 +474,86 @@ class Dashboard extends React.Component {
 
         <DashboardButtonGroup
           editing={this.state.editing}
+          onEdit={this.startEditing.bind(this)}
           fullscreen={this.props.isFullscreen}
           paused={this.state.paused}
-          onEdit={this.startEditing}
-          onSave={this.saveEditing}
-          onCancel={this.cancelEditing}
+          onSave={this.saveEditing.bind(this)}
+          onCancel={this.cancelEditing.bind(this)}
           onFullscreen={this.props.toggleFullscreen}
-          onPause={this.pauseData}
-          onUnpause={this.unpauseData}
+          onPause={this.pauseData.bind(this)}
+          onUnpause={this.unpauseData.bind(this)}
         />
       </div>
 
       <div className="box box-content" onContextMenu={ (e) => e.preventDefault() }>
         {this.state.editing &&
-        <WidgetToolbox grid={grid} onGridChange={this.setGrid} widgets={widgets} />
+        <WidgetToolbox grid={grid} onGridChange={this.setGrid.bind(this)} widgets={widgets} />
         }
+        {!draggable?(
+        <WidgetArea widgets={widgets} editing={this.state.editing} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
+          {widgets != null && Object.keys(widgets).map(widgetKey => (
+            <WidgetContextMenu
+            key={widgetKey}
+            index={parseInt(widgetKey,10)}
+            widget={widgets[widgetKey]}
+            onEdit={this.editWidget.bind(this)}
+            onDelete={this.deleteWidget.bind(this)}
+            onChange={this.widgetChange.bind(this)}
 
-        <WidgetArea widgets={widgets} editing={this.state.editing} grid={grid} onWidgetAdded={this.handleDrop}>
+            simulation={this.state.simulation}
+            onWidgetChange={this.widgetChange.bind(this)}
+            onWidgetStatusChange={this.widgetStatusChange.bind(this)}
+            editing={this.state.editing}
+            grid={grid}
+            paused={this.state.paused}
+            />
+
+
+          ))}
+        </WidgetArea>
+        ) : (
+          <WidgetArea widgets={widgets} editing={this.state.editing} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
           {widgets != null && Object.keys(widgets).map(widgetKey => (
             <Widget
               key={widgetKey}
               data={widgets[widgetKey]}
               simulation={this.state.simulation}
-              onWidgetChange={(w, k) => this.widgetChange(w, k)}
-              onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)}
+              onWidgetChange={this.widgetChange.bind(this)}
+              onWidgetStatusChange={this.widgetStatusChange.bind(this)}
               editing={this.state.editing}
-              index={widgetKey}
+              index={parseInt(widgetKey,10)}
               grid={grid}
               paused={this.state.paused}
             />
+
           ))}
         </WidgetArea>
 
-        {/* TODO: Create only one context menu for all widgets */}
-        {widgets != null && Object.keys(widgets).map(widgetKey => (
-          <WidgetContextMenu key={widgetKey} index={widgetKey} widget={widgets[widgetKey]} onEdit={this.editWidget} onDelete={this.deleteWidget} onChange={this.widgetChange} />
-        ))}
+        )}
 
-        <EditWidget sessionToken={this.state.sessionToken} show={this.state.editModal} onClose={this.closeEdit} widget={this.state.modalData} simulationModels={this.state.simulationModels} files={this.state.files} />
+        <EditWidget sessionToken={this.state.sessionToken} show={this.state.editModal} onClose={this.closeEdit.bind(this)} widget={this.state.modalData} simulationModels={this.state.simulationModels} files={this.state.files} />
+
+
       </div>
     </div>;
   }
 }
+/*
+onWidgetChange={(w, k) => this.widgetChange(w, k)}
+onWidgetStatusChange={(w, k) => this.widgetStatusChange(w, k)}
 
-export default Fullscreenable()(Container.create(FluxContainerConverter.convert(Dashboard), { withProps: true }));
+const widgets = this.state.dashboard.get('widgets');
+    widgets[index] = widget;
+
+    const dashboard = this.state.dashboard.set('widgets');
+
+    // Check if the height needs to be increased, the section may have shrunk if not
+    if (!this.increaseHeightWithWidget(widget)) {
+      this.computeHeightWithWidgets(dashboard.widgets);
+    }
+
+    this.setState({ dashboard }, callback);
+*/
+
+let fluxContainerConverter = require('../common/FluxContainerConverter');
+export default Fullscreenable()(Container.create(fluxContainerConverter.convert(Dashboard), { withProps: true }));

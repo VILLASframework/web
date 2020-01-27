@@ -23,7 +23,7 @@ import React from 'react';
 import {FormGroup, FormControl, FormLabel, Col} from 'react-bootstrap';
 
 import Dialog from '../common/dialogs/dialog';
-import UserStore from './user-store';
+//import LoginStore from './login-store';
 
 
 class EditOwnUserDialog extends React.Component {
@@ -34,17 +34,15 @@ class EditOwnUserDialog extends React.Component {
 
     this.state = {
       username: '',
-      mail: '',
-      role: '',
       id: '',
+      mail: '',
       password: '',
       oldPassword: '',
-      active: '',
       confirmpassword: ''
     }
   }
 
-  
+
 
   onClose(canceled) {
     if (canceled === false) {
@@ -56,25 +54,21 @@ class EditOwnUserDialog extends React.Component {
     }
   }
 
-  
+
 
   handleChange(e) {
-    let user = UserStore.getState().currentUser;
     this.setState({ [e.target.id]: e.target.value });
 
     // check all controls
-    var username = true;
-    var role = true;
-    var mail = true;
-    var pw = true;
-    var active = true;
-    var oldPassword = true;
-    var confirmpassword = true;
+    let username = true;
+    let mail = true;
+    let pw = true;
+    let oldPassword = true;
+    let confirmpassword = true;
 
     if (this.state.username === '') {
       username = false;
     }
-
 
     if(this.state.mail === ''){
       mail = false;
@@ -82,10 +76,6 @@ class EditOwnUserDialog extends React.Component {
 
     if(this.state.password === ''){
       pw = false;
-    }
-
-    if(this.state.active === ''){
-      active = false;
     }
 
     if(this.state.oldPassword === ''){
@@ -96,23 +86,26 @@ class EditOwnUserDialog extends React.Component {
       confirmpassword = false;
     }
 
-    
-    this.setState({
-      role: user.role,
-      id: user.id
-    });
 
-    // form is valid if any of the fields contain somethig
-    this.valid = username || role || active || oldPassword || mail || pw || confirmpassword;
+    /*this.setState({
+      role: user.role,
+      id: user.id,
+      active: user.active
+    });*/
+
+    // form is valid if the following condition is met
+    this.valid = username || mail || (oldPassword &&  pw && confirmpassword);
 
   }
 
   resetState() {
     this.setState({
-      //username: this.props.user.username,
-      //mail: this.props.user.mail,
-      role: this.props.user.role,
-      id: this.props.user.id
+      username: '',
+      mail: '',
+      oldPassword: '',
+      confirmpassword: '',
+      password: '',
+      id: this.props.user.id,
     });
   }
 
@@ -122,12 +115,12 @@ class EditOwnUserDialog extends React.Component {
         <form>
           <FormGroup as={Col} controlId="username">
             <FormLabel>Username</FormLabel>
-            <FormControl type="text" placeholder="Enter username" value={this.state.username} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder={this.props.user.username} value={this.state.username} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup as={Col} controlId="mail">
             <FormLabel>E-mail</FormLabel>
-            <FormControl type="text" placeholder="Enter e-mail" value={this.state.mail} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder={this.props.user.mail} value={this.state.mail} onChange={(e) => this.handleChange(e)} />
           </FormGroup>
           <FormGroup  as={Col} controlId="oldPassword">
             <FormLabel>Old Password</FormLabel>

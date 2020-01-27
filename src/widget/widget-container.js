@@ -24,12 +24,13 @@ import PropTypes from 'prop-types';
 
 class WidgetContainer extends React.Component {
   render() {
+    
     const containerStyle = {
       width: Number(this.props.widget.width),
       height: Number(this.props.widget.height),
       left: Number(this.props.widget.x),
       top: Number(this.props.widget.y),
-      zIndex: Number(this.props.widget.z),
+      zindex: Number(this.props.widget.z),
       position: 'absolute'
     };
 

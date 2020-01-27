@@ -27,7 +27,7 @@ import _ from 'lodash';
 
 import AppDispatcher from '../common/app-dispatcher';
 import SimulatorStore from './simulator-store';
-import UserStore from '../user/user-store';
+import LoginStore from '../user/login-store';
 
 import Icon from '../common/icon';
 import Table from '../common/table';
@@ -43,7 +43,7 @@ import FluxContainerConverter from "../common/FluxContainerConverter";
 
 class Simulators extends Component {
   static getStores() {
-    return [ UserStore, SimulatorStore ];
+    return [ LoginStore, SimulatorStore ];
   }
 
   static statePrio(state) {
@@ -80,8 +80,7 @@ class Simulators extends Component {
     });
 
     return {
-      sessionToken: UserStore.getState().token,
-      sessionUserID: UserStore.getState().userid,
+      sessionToken: LoginStore.getState().token,
       simulators,
       modalSimulator: {},
       deleteModal: false,
@@ -94,7 +93,6 @@ class Simulators extends Component {
     AppDispatcher.dispatch({
       type: 'simulators/start-load',
       token: this.state.sessionToken,
-      userid: this.state.sessionUserID
     });
 
     // Start timer for periodic refresh
@@ -114,7 +112,6 @@ class Simulators extends Component {
       AppDispatcher.dispatch({
         type: 'simulators/start-load',
         token: this.state.sessionToken,
-        userid: this.state.sessionUserID
       });
     }
   }
@@ -128,7 +125,6 @@ class Simulators extends Component {
         type: 'simulators/start-add',
         data,
         token: this.state.sessionToken,
-        userid: this.state.sessionUserID
       });
     }
   }
@@ -148,7 +144,6 @@ class Simulators extends Component {
         type: 'simulators/start-edit',
         data: simulator,
         token: this.state.sessionToken,
-        userid: this.state.sessionUserID
       });
     }
   }
@@ -164,7 +159,6 @@ class Simulators extends Component {
       type: 'simulators/start-remove',
       data: this.state.modalSimulator,
       token: this.state.sessionToken,
-      userid: this.state.sessionUserID
     });
   }
 
@@ -186,7 +180,6 @@ class Simulators extends Component {
         type: 'simulators/start-add',
         data,
         token: this.state.sessionToken,
-        userid: this.state.sessionUserID
       });
     }
   }
@@ -223,7 +216,6 @@ class Simulators extends Component {
         simulator: this.state.simulators[index],
         data: action.data,
         token: this.state.sessionToken,
-        userid: this.state.sessionUserID
       });
     }
   }

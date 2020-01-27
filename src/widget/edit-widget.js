@@ -24,10 +24,11 @@ import React from 'react';
 
 import Dialog from '../common/dialogs/dialog';
 
-import createControls from './edit-widget-control-creator';
+import CreateControls from './edit-widget-control-creator';
 
 class EditWidgetDialog extends React.Component {
   valid = true;
+  
 
   constructor(props) {
     super(props);
@@ -37,9 +38,12 @@ class EditWidgetDialog extends React.Component {
         name: '',
         simulationModel: '',
         signal: 0
+      
       }
     };
   }
+
+  
 
   onClose(canceled) {
     if (canceled === false) {
@@ -63,7 +67,8 @@ class EditWidgetDialog extends React.Component {
   }
 
   handleChange(e) {
-    if (e.constructor === Array) {
+
+     if (e.constructor === Array) {
       // Every property in the array will be updated
       let changes = e.reduce( (changesObject, event) => {
         changesObject[event.target.id] = event.target.value;
@@ -72,7 +77,9 @@ class EditWidgetDialog extends React.Component {
       }, {});
 
       this.setState({ temporal: Object.assign({}, this.state.temporal, changes ) });
-    } else {
+    }
+  
+        if(e.target.type !== 'text'){
         let changeObject = {};
         if (e.target.id === 'lockAspect') {
           changeObject[e.target.id] = e.target.checked;
@@ -92,12 +99,29 @@ class EditWidgetDialog extends React.Component {
           changeObject[e.target.id] = e.target.checked;
         } else if (e.target.type === 'number') {
           changeObject[e.target.id] = Number(e.target.value);
-        } else {
+        }
+  
+        else {
           changeObject[e.target.id] = e.target.value;
         }
 
-        this.setState({ temporal: Object.assign({}, this.state.temporal, changeObject ) });
-    }
+
+        let finalChange = this.state.temporal;
+        
+        finalChange.customProperties[e.target.id] = changeObject[e.target.id];
+        this.setState({ temporal: finalChange});
+      }
+      else{
+        if(this.state.temporal[e.target.id]){
+          let finalChange = this.state.temporal;
+        
+          finalChange[e.target.id] = e.target.value;
+          this.setState({ temporal: finalChange});
+          
+        }
+      }
+    
+    
   }
 
   resetState() {
@@ -114,7 +138,7 @@ class EditWidgetDialog extends React.Component {
     }
 
     //this.valid = name;
-    this.valid = true;
+    this.valid = name;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
@@ -123,7 +147,7 @@ class EditWidgetDialog extends React.Component {
   render() {
     let controls = null;
     if (this.props.widget) {
-      controls = createControls(
+      controls = CreateControls(
             this.props.widget.type,
             this.state.temporal,
             this.props.sessionToken,

@@ -26,7 +26,7 @@ import FileSaver from 'file-saver';
 
 import AppDispatcher from '../common/app-dispatcher';
 import ScenarioStore from './scenario-store';
-import UserStore from '../user/user-store';
+import LoginStore from '../user/login-store';
 
 import Icon from '../common/icon';
 import Table from '../common/table';
@@ -41,13 +41,12 @@ import FluxContainerConverter from "../common/FluxContainerConverter";
 
 class Scenarios extends Component {
   static getStores() {
-    return [ ScenarioStore, UserStore ];
+    return [ ScenarioStore, LoginStore ];
   }
 
   static calculateState() {
     const scenarios = ScenarioStore.getState();
-    const sessionToken = UserStore.getState().token;
-    console.log(scenarios);
+    const sessionToken = LoginStore.getState().token;
 
     return {
       scenarios,
@@ -180,8 +179,8 @@ class Scenarios extends Component {
 
         <Table data={this.state.scenarios}>
           <TableColumn title='Name' dataKey='name' link='/scenarios/' linkKey='id' />
-          <TableColumn title='ID' dataKey='id' link='/scenarios/' linkKey='id' />
-          <TableColumn title='Running' dataKey='running' link='/scenarios/' linkKey='id' />
+          <TableColumn title='ID' dataKey='id' />
+          <TableColumn title='Running' dataKey='running' />
           <TableColumn
             width='200'
             editButton

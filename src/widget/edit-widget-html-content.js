@@ -36,15 +36,16 @@ class EditWidgetHTMLContent extends React.Component {
   event.stopPropagation();
   }
 
-  componentWillReceiveProps(nextProps) {
-    // Update state's widget with props
-    this.setState({ widget: nextProps.widget });
+  static getDerivedStateFromProps(props, state){
+    return {
+      widget: props.widget
+    };
   }
 
   render() {
     return <FormGroup controlId={this.props.controlId}>
       <FormLabel>HTML Content</FormLabel>
-      <FormControl onKeyPress={this.handleKeyIgnore} componentClass="textarea" style={{ height: 200 }} placeholder={this.props.placeholder} value={this.state.widget[this.props.controlId] || ''} onChange={e => this.props.handleChange(e)} />
+      <FormControl onKeyPress={this.handleKeyIgnore} componentClass="textarea" style={{ height: 200 }} placeholder={this.props.placeholder} value={this.state.widget[this.props.controlId] || this.state.widget.customProperties[this.props.controlId] || ''} onChange={e => this.props.handleChange(e)} />
     </FormGroup>;
   }
 }

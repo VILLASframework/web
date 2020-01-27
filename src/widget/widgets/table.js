@@ -36,45 +36,55 @@ class WidgetTable extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.simulationModel == null) {
-      this.setState({ rows: [], sequence: null });
-      return;
+
+  static getDerivedStateFromProps(props, state){
+    if (props.simulationModel == null) {
+      return{
+        rows: [],
+        sequence: null,
+      };
     }
 
-    const simulator = nextProps.simulationModel.simulator;
+    const simulator = props.simulationModel.simulator;
 
     // check data
-    if (nextProps.data == null
-      || nextProps.data[simulator] == null
-      || nextProps.data[simulator].output == null
-      || nextProps.data[simulator].output.values.length === 0
-      || nextProps.data[simulator].output.values[0].length === 0) {
+    if (props.data == null
+      || props.data[simulator] == null
+      || props.data[simulator].output == null
+      || props.data[simulator].output.values.length === 0
+      || props.data[simulator].output.values[0].length === 0) {
 
       // clear values
-      this.setState({ rows: [], sequence: null, showUnit: false });
-      return;
+      return{
+        rows: [],
+        sequence: null,
+        showUnit: false,
+      };
     }
 
     // check if new data, otherwise skip
-    /*if (this.state.sequence >= nextProps.data[simulator.node][simulator.simulator].sequence) {
+    /*if (state.sequence >= props.data[simulator.node][simulator.simulator].sequence) {
       return;
     }*/
 
     // get rows
     const rows = [];
 
-    nextProps.data[simulator].output.values.forEach((signal, index) => {
-      if (index < nextProps.simulationModel.outputMapping.length) {
+    props.data[simulator].output.values.forEach((signal, index) => {
+      if (index < props.simulationModel.outputMapping.length) {
         rows.push({
-          name: nextProps.simulationModel.outputMapping[index].name,
-          unit: nextProps.simulationModel.outputMapping[index].type,
+          name: props.simulationModel.outputMapping[index].name,
+          unit: props.simulationModel.outputMapping[index].type,
           value: signal[signal.length - 1].y
         });
       }
     });
 
-    this.setState({ showUnit: nextProps.showUnit, rows: rows, sequence: nextProps.data[simulator].output.sequence });
+    return {
+      showUnit: props.showUnit,
+      rows: rows,
+      sequence: props.data[simulator].output.sequence
+    };
   }
 
   render() {
@@ -83,7 +93,7 @@ class WidgetTable extends Component {
       <TableColumn key={2} title="Value" dataKey="value" modifier={format('.4s')} />
     ];
 
-    if (this.props.widget.showUnit)
+    if (this.props.widget.customProperties.showUnit)
       columns.push(<TableColumn key={3} title="Unit" dataKey="unit" />)
 
     return (

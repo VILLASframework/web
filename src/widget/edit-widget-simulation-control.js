@@ -28,21 +28,25 @@ class EditWidgetSimulationControl extends Component {
 
     this.state = {
       widget: {
-        simulationModel: ''
+        customProperties: {
+          simulationModel: ''
+        }
+
       }
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-      // Update state's widget with props
-    this.setState({ widget: nextProps.widget });
+  static getDerivedStateFromProps(props, state){
+    return{
+      widget: props.widget
+    };
   }
 
   render() {
     return (
         <FormGroup controlId="simulationModel">
             <FormLabel>Simulation Model</FormLabel>
-            <FormControl componentClass="select" placeholder="Select simulation model" value={this.state.widget.simulationModel || '' } onChange={(e) => this.props.handleChange(e)}>
+            <FormControl as="select" placeholder="Select simulation model" value={this.state.widget.simulationModel || '' } onChange={(e) => this.props.handleChange(e)}>
             {
               this.props.simulationModels.length === 0 ? (
               <option disabled value style={{ display: 'none' }}> No simulation models available. </option>

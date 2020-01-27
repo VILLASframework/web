@@ -31,21 +31,20 @@ import Footer from '../common/footer';
 import NotificationsDataManager from '../common/data-managers/notifications-data-manager';
 
 import AppDispatcher from '../common/app-dispatcher';
-import UserStore from './user-store';
+import LoginStore from './login-store';
 
 import FluxContainerConverter from "../common/FluxContainerConverter";
 
 class Login extends Component {
   static getStores() {
-    return [ UserStore ];
+    return [ LoginStore ];
   }
 
   static calculateState() {
     return {
-      currentUser: UserStore.getState().currentUser,
-      token: UserStore.getState().token,
-      loginMessage: UserStore.getState().loginMessage,
-      userid: UserStore.getState().userid
+      currentUser: LoginStore.getState().currentUser,
+      token: LoginStore.getState().token,
+      loginMessage: LoginStore.getState().loginMessage,
     };
   }
 
@@ -53,27 +52,29 @@ class Login extends Component {
     NotificationsDataManager.setSystem(this.refs.notificationSystem);
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    // if token stored locally, request user
-    if (nextState.token == null) {
-      const token = localStorage.getItem('token');
-      const userid = localStorage.getItem('userid');
+  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
 
-      if (token != null && token !== '' && nextState.currentUser == null) {
+    // if token stored locally, request user
+    if (this.state.token == null) {
+      const token = localStorage.getItem('token');
+      const currentUser = localStorage.getItem('currentUser');
+
+      if (token != null && token !== '' && this.state.currentUser == null) {
         AppDispatcher.dispatch({
           type: 'users/logged-in',
           token: token,
-          userid: userid
+          currentUser: currentUser
         });
       }
     } else {
       // check if logged in
-      if (nextState.currentUser != null) {
+      if (this.state.currentUser != null) {
         // save login in local storage
-        localStorage.setItem('token', nextState.token);
-        localStorage.setItem('userid', nextState.userid);
+        localStorage.setItem('token', this.state.token);
+        localStorage.setItem('currentUser', JSON.stringify(this.state.currentUser));
       }
     }
+
   }
 
   render() {

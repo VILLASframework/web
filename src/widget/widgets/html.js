@@ -23,7 +23,7 @@ import React from 'react';
 
 class WidgetHTML extends React.Component {
   render() {
-    return <div dangerouslySetInnerHTML={{__html: this.props.widget.content }} />
+    return <div dangerouslySetInnerHTML={{__html: this.props.widget.customProperties.content }} />
   }
 }
 

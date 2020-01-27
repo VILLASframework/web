@@ -33,8 +33,7 @@ class UsersDataManager extends RestDataManager {
       AppDispatcher.dispatch({
         type: 'users/logged-in',
         token: response.token,
-        user: response.user,
-        userid: response.user.id
+        currentUser: response.user,
       });
     }).catch(error => {
       AppDispatcher.dispatch({
@@ -48,7 +47,21 @@ class UsersDataManager extends RestDataManager {
     RestAPI.get(this.makeURL('/users/' + id), token).then(response => {
       AppDispatcher.dispatch({
         type: 'users/current-user',
-        user: response.user
+        currentUser: response.user
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'users/current-user-error',
+        error: error
+      });
+    });
+  }
+
+  updateCurrentUser(token, userUpdate){
+    RestAPI.put(this.makeURL('/users/' + userUpdate.user.id), userUpdate, token).then( response => {
+      AppDispatcher.dispatch({
+        type: 'users/current-user',
+        currentUser: response.user
       });
     }).catch(error => {
       AppDispatcher.dispatch({

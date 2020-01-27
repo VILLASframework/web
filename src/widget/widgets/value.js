@@ -32,37 +32,41 @@ class WidgetValue extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.simulationModel == null) {
-      this.setState({ value: '' });
-      return;
+  static getDerivedStateFromProps(props, state){
+    if (props.simulationModel == null) {
+      return{ value: '' };
     }
 
-    const simulator = nextProps.simulationModel.simulator;
+    const simulator = props.simulationModel.simulator;
 
     // update value
-    if (nextProps.data == null || nextProps.data[simulator] == null || nextProps.data[simulator].output == null || nextProps.data[simulator].output.values == null) {
-      this.setState({ value: '' });
-      return;
+    if (props.data == null || props.data[simulator] == null || props.data[simulator].output == null || props.data[simulator].output.values == null) {
+      return{ value: '' };
     }
 
-    const unit = nextProps.simulationModel.outputMapping[nextProps.widget.signal].type;
+    // TODO fixme  (unit)
+    //const unit = props.simulationModel.outputMapping[props.widget.customProperties.signal].type;
+    const unit = 42;
 
     // check if value has changed
-    const signal = nextProps.data[simulator].output.values[nextProps.widget.signal];
-    if (signal != null && this.state.value !== signal[signal.length - 1].y) {
-      this.setState({ value: signal[signal.length - 1].y, unit });
+    const signal = props.data[simulator].output.values[props.widget.customProperties.signal];
+    if (signal != null && state.value !== signal[signal.length - 1].y) {
+      return {
+        value: signal[signal.length - 1].y,
+        unit: unit,
+      };
     }
+
   }
 
   render() {
     var value_to_render = Number(this.state.value);
     return (
       <div className="single-value-widget">
-        <strong style={{ fontSize: this.props.widget.textSize + 'px' }}>{this.props.widget.name}</strong>
-        <span style={{ fontSize: this.props.widget.textSize + 'px' }}>{Number.isNaN(value_to_render) ? NaN : format('.3s')(value_to_render)}</span>
-        {this.props.widget.showUnit &&
-          <span style={{ fontSize: this.props.widget.textSize + 'px' }}>[{this.state.unit}]</span>
+        <strong style={{ fontSize: this.props.widget.customProperties.textSize + 'px' }}>{this.props.widget.name}</strong>
+        <span style={{ fontSize: this.props.widget.customProperties.textSize + 'px' }}>{Number.isNaN(value_to_render) ? NaN : format('.3s')(value_to_render)}</span>
+        {this.props.widget.customProperties.showUnit &&
+          <span style={{ fontSize: this.props.widget.customProperties.textSize + 'px' }}>[{this.state.unit}]</span>
         }
       </div>
     );

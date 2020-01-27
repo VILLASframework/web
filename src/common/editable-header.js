@@ -36,8 +36,10 @@ class EditableHeader extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({ title: nextProps.title });
+    static getDerivedStateFromProps(props, state){
+      return {
+        title: props.title
+      };
     }
 
     edit = () => {

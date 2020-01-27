@@ -23,7 +23,7 @@ import React from 'react';
 import { Container } from 'flux/utils';
 
 import AppDispatcher from '../common/app-dispatcher';
-import UserStore from '../user/user-store';
+import LoginStore from '../user/login-store';
 import SimulatorDataStore from '../simulator/simulator-data-store';
 import SimulationModelStore from '../simulationmodel/simulation-model-store';
 import FileStore from '../file/file-store';
@@ -54,10 +54,11 @@ import '../styles/widgets.css';
 
 class Widget extends React.Component {
   static getStores() {
-    return [ SimulatorDataStore, SimulationModelStore, FileStore, UserStore ];
+    return [ SimulatorDataStore, SimulationModelStore, FileStore, LoginStore ];
   }
 
   static calculateState(prevState, props) {
+
     let simulatorData = {};
 
     if (props.paused) {
@@ -75,7 +76,7 @@ class Widget extends React.Component {
 
       sequence: prevState != null ? prevState.sequence + 1 : 0,
 
-      sessionToken: UserStore.getState().token
+      sessionToken: LoginStore.getState().token
     };
   }
 
@@ -84,14 +85,16 @@ class Widget extends React.Component {
       return;
     }
 
-    AppDispatcher.dispatch({
+    /*AppDispatcher.dispatch({
       type: 'files/start-load',
-      token: this.state.sessionToken
-    });
+      token: this.state.sessionToken,
+      param: '?objectID=1&objectType=widget'
+    });*/
 
     AppDispatcher.dispatch({
       type: 'simulationModels/start-load',
-      token: this.state.sessionToken
+      token: this.state.sessionToken,
+      param: '?scenarioID=1'
     });
 
   }
@@ -162,13 +165,13 @@ class Widget extends React.Component {
 
     return null;
   }
-
+  rn
 
   render() {
     const element = this.createWidget(this.props.data);
 
     if (this.props.editing) {
-      return <EditableWidgetContainer widget={this.props.data} grid={this.props.grid} index={this.props.index}>
+      return <EditableWidgetContainer widget={this.props.data} grid={this.props.grid} index={this.props.index} onWidgetChange={this.props.onWidgetChange}>
         {element}
       </EditableWidgetContainer>;
     }
