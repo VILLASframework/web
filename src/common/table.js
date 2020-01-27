@@ -32,7 +32,7 @@ class CustomTable extends Component {
     this.activeInput = null;
 
     this.state = {
-      rows: this.getRows(props),
+      rows: CustomTable.getRows(props),
       editCell: [ -1, -1 ]
     };
   }
@@ -45,7 +45,7 @@ class CustomTable extends Component {
     this.setState({ editCell: [ column, row ]});  // x, y
   }
 
-  addCell(data, index, child) {
+  static addCell(data, index, child) {
     // add data to cell
     let content = null;
 
@@ -112,7 +112,7 @@ class CustomTable extends Component {
     }
 
     if (child.props.checkbox) {
-      const checkboxKey = this.props.checkboxKey;
+      const checkboxKey = child.props.checkboxKey;
 
       cell.push(<FormCheck className="table-control-checkbox" inline checked={checkboxKey ? data[checkboxKey] : null} onChange={e => child.props.onChecked(index, e)} />);
     }
@@ -122,12 +122,12 @@ class CustomTable extends Component {
     }
 
     return cell;
-  }
+  } // addCell
 
-  componentWillReceiveProps(nextProps) {
-    const rows = this.getRows(nextProps);
+  static getDerivedStateFromProps(props, state){
+    const rows = CustomTable.getRows(props);
 
-    this.setState({ rows });
+    return { rows };
   }
 
   componentDidUpdate() {
@@ -147,7 +147,7 @@ class CustomTable extends Component {
     this.setState({ editCell: [ -1, -1 ] });
   }
 
-  getRows(props) {
+  static getRows(props) {
     if (props.data == null) {
       return [];
     }
@@ -156,13 +156,13 @@ class CustomTable extends Component {
       // check if multiple columns
       if (Array.isArray(props.children) === false) {
         // table only has a single column
-        return [ this.addCell(data, index, props.children) ];
+        return [ CustomTable.addCell(data, index, props.children) ];
       }
 
       const row = [];
 
       for (let child of props.children) {
-        row.push(this.addCell(data, index, child));
+        row.push(CustomTable.addCell(data, index, child));
       }
 
       return row;

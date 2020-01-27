@@ -31,12 +31,15 @@ class SimulatorAction extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (this.state.selectedAction == null) {
-            if (nextProps.actions != null && nextProps.actions.length > 0) {
-                this.setState({ selectedAction: nextProps.actions[0] });
-            }
+    static getDerivedStateFromProps(props, state){
+      if (state.selectedAction == null) {
+        if (props.actions != null && props.actions.length > 0) {
+          return{
+            selectedAction: props.actions[0]
+          };
         }
+      }
+      return null
     }
 
     setAction = id => {
@@ -46,7 +49,7 @@ class SimulatorAction extends React.Component {
                 this.setState({ selectedAction: action });
             }
         }
-    }
+    };
 
     render() {
         const actionList = this.props.actions.map(action => (

@@ -28,12 +28,12 @@ import { cimsvg } from 'libcimsvg';
 // Do not show Pintura's grid
 const pinturaGridStyle = {
   display: 'none'
-}
+};
 
 // Avoid another color in the frontend
 const pinturaBackingStyle = {
   fill: 'transparent'
-}
+};
 
 // Center spinner
 const spinnerContainerStyle = {
@@ -42,16 +42,16 @@ const spinnerContainerStyle = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center'
-}
+};
 
 // Topology failed message
 const msgContainerStyle = Object.assign({
   backgroundColor: '#ececec'
-},spinnerContainerStyle)
+},spinnerContainerStyle);
 
 const msgStyle = {
   fontWeight: 'bold'
-}
+};
 
 // Initialize functions
 function attachComponentEvents() {
@@ -105,10 +105,12 @@ class WidgetTopology extends React.Component {
     detachComponentEvents();
   }
 
-  componentWillReceiveProps(nextProps) {
-    const file = nextProps.files.find(file => file._id === nextProps.widget.customProperties.file);
+  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
+    const file = this.props.files.find(file => file._id === this.props.widget.customProperties.file);
     // Ensure model is requested only once or a different was selected
-    if (this.props.widget.customProperties.file !== nextProps.widget.customProperties.file || (this.state.dashboardState === 'initial' && file)) {
+    if (prevProps.widget.customProperties.file !== this.props.widget.customProperties.file
+      || (prevState.dashboardState === 'initial' && file)) {
+
       this.setState({'dashboardState': 'loading' });
       if (file) {
         fetch(new Request('/' + config.publicPathBase + file.path))
@@ -141,7 +143,7 @@ class WidgetTopology extends React.Component {
       }
     } else {
       // No file has been selected
-      if (!nextProps.widget.customProperties.file) {
+      if (!this.props.widget.customProperties.file) {
         this.setState({
           'dashboardState': 'show_message',
           'message': 'Select a topology model first.'});

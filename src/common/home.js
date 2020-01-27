@@ -45,12 +45,6 @@ class Home extends React.Component {
       return '?';
   }
 
-  componentWillMount() {
-    //RestAPI.get('/api/v1/counts').then(response => {
-    //  this.setState({ counts: response });
-    //});
-  }
-
   render() {
     return (
       <div className="home-container">

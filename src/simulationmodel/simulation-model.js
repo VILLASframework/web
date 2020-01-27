@@ -47,7 +47,7 @@ class SimulationModel extends React.Component {
         };
     }
 
-    componentWillMount() {
+    componentDidMount() {
         AppDispatcher.dispatch({
             type: 'simulationModels/start-load',
             data: this.props.match.params.simulationModel,

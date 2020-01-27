@@ -37,17 +37,17 @@ class WidgetCustomAction extends Component {
   }
 
   static getStores() {
-    return [ SimulatorStore ];
+    return [ SimulatorStore, LoginStore ];
   }
 
-  componentWillReceiveProps(props) {
+  static getDerivedStateFromProps(props, state){
     if (props.simulationModel === null)
-      return;
+      return null; //no change
 
-    this.setState({
+    return{
       simulator: SimulatorStore.getState().find(s => s._id === props.simulationModel.simulator),
       sessionToken: LoginStore.getState().token
-    });
+    };
   }
 
   onClick() {

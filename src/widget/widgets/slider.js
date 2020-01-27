@@ -40,32 +40,42 @@ class WidgetSlider extends Component {
 
     this.state = {
         unit: 'bla',
-        
+
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.simulationModel == null) {
-      return;
+  static getDerivedStateFromProps(props, state){
+    if (props.simulationModel == null) {
+      return null;
     }
 
+    let returnState = {};
+
     // Update value
-    if (nextProps.widget.customProperties.default_value && this.state.value === undefined) {
-      this.setState({
-        value: nextProps.widget.customProperties.default_value,
-      });
+    if (props.widget.customProperties.default_value && state.value === undefined) {
+      returnState["value"] = props.widget.customProperties.default_value;
     }
 
     // Update unit
-    if (nextProps.widget.customProperties.simulationModel && nextProps.simulationModel.inputMapping && this.state.unit !== nextProps.simulationModel.inputMapping[nextProps.widget.customProperties.signal].type) {
-      this.setState({
-        unit: nextProps.simulationModel.inputMapping[nextProps.widget.customProperties.signal].type
-      });
+    if (props.widget.customProperties.simulationModel
+      && props.simulationModel.inputMapping &&
+      state.unit !== props.simulationModel.inputMapping[props.widget.customProperties.signal].type) {
+      returnState["unit"] = props.simulationModel.inputMapping[props.widget.customProperties.signal].type;
     }
 
+    if (returnState !== {}){
+      return returnState;
+    }
+    else{
+      return null;
+    }
+
+  }
+
+  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
     // Check if the orientation changed, update the size if it did
-    if (this.props.widget.customProperties.orientation !== nextProps.widget.customProperties.orientation) {
-      let baseWidget = nextProps.widget;
+    if (this.props.widget.customProperties.orientation !== prevProps.widget.customProperties.orientation) {
+      let baseWidget = this.props.widget;
 
       // Exchange dimensions and constraints
       let newWidget = Object.assign({}, baseWidget, {
@@ -77,8 +87,9 @@ class WidgetSlider extends Component {
         maxHeight: baseWidget.customProperties.maxWidth
       });
 
-      nextProps.onWidgetChange(newWidget);
+      this.props.onWidgetChange(newWidget);
     }
+
   }
 
   valueIsChanging(newValue) {

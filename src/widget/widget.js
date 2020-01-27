@@ -78,7 +78,7 @@ class Widget extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.state.sessionToken == null) {
       return;
     }
@@ -126,7 +126,7 @@ class Widget extends React.Component {
 
       simulationModel = model;
     }
-    
+
     if (widget.type === 'CustomAction') {
       return <WidgetCustomAction widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
     } else if (widget.type === 'Action') {
@@ -163,7 +163,7 @@ class Widget extends React.Component {
 
     return null;
   }
-  rn 
+  rn
 
   render() {
     const element = this.createWidget(this.props.data);

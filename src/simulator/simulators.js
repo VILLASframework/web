@@ -87,7 +87,7 @@ class Simulators extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     AppDispatcher.dispatch({
       type: 'simulators/start-load',
       token: this.state.sessionToken,
