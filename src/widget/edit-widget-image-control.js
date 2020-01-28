@@ -77,7 +77,7 @@ class EditImageWidgetControl extends React.Component {
     return <div>
       <FormGroup controlId="file">
         <FormLabel>Image</FormLabel>
-        <FormControl componentClass="select" value={this.state.widget.customProperties.file} onChange={(e) => this.props.handleChange(e)}>
+        <FormControl className="select" value={this.state.widget.customProperties.file} onChange={(e) => this.props.handleChange(e)}>
           {this.props.files.length === 0 ? (
             <option disabled value style={{ display: 'none' }}>No images found, please upload one first.</option>
           ) : (
@@ -96,8 +96,8 @@ class EditImageWidgetControl extends React.Component {
         <FormControl type="file" onChange={(e) => this.setState({ fileList: e.target.files }) } />
       </FormGroup>
 
-      <ProgressBar striped active now={this.state.progress} label={`${this.state.progress}%`} />
-      <Button bsSize="small" onClick={this.startFileUpload}>Upload</Button>
+      <ProgressBar striped active={'true'} now={this.state.progress} label={`${this.state.progress}%`} />
+      <Button size='sm' onClick={this.startFileUpload}>Upload</Button>
     </div>;
   }
 }

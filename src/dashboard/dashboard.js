@@ -54,6 +54,7 @@ class Dashboard extends Component {
     if (prevState == null) {
       prevState = {};
     }
+
     const sessionToken = LoginStore.getState().token;
 
     let dashboard = DashboardStore.getState().find(d => d.id === parseInt(props.match.params.dashboard, 10));
@@ -96,7 +97,7 @@ class Dashboard extends Component {
       modalData:  null,
       modalIndex:  null,
       widgetChangeData: [],
-      widgetAddData:[],
+      widgetAddData:prevState.widgetAddData || [],
 
       maxWidgetHeight: maxHeight || null,
       dropZoneHeight: maxHeight +80 || null,
@@ -167,6 +168,10 @@ class Dashboard extends Component {
 
   handleDrop(widget) {
     widget.dashboardID = this.state.dashboard.id;
+    let tempChanges = this.state.widgetAddData;
+    tempChanges.push(widget);
+
+    this.setState({ widgetAddData: tempChanges})
 
     AppDispatcher.dispatch({
       type: 'widgets/start-add',
@@ -174,10 +179,7 @@ class Dashboard extends Component {
       data: widget
     });
 
-    let tempChanges = this.state.widgetAddData;
-    tempChanges.push(widget);
 
-    this.setState({ widgetAddData: tempChanges})
     /*let widgets = [];
     widgets = this.state.dashboard.get('widgets');
 
@@ -297,15 +299,17 @@ class Dashboard extends Component {
   }
 
   cancelEditing() {
-    console.log("cancelEditing the add data: ");
-    console.log(this.state.widgetAddData);
+    //raw widget has no id -> cannot be deleted in its original form
+    /*
     this.state.widgetAddData.forEach( widget => {
       AppDispatcher.dispatch({
         type: 'widgets/start-remove',
         data: widget,
         token: this.state.sessionToken
       });
-    });
+    }); */
+
+
     AppDispatcher.dispatch({
       type: 'widgets/start-load',
       token: this.state.sessionToken,

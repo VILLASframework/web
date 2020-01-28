@@ -44,7 +44,7 @@ class EditWidgetColorControl extends Component {
 
     this.state = {
       widget: {
-        customProperties:{}
+        
       }
     };
   }

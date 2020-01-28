@@ -28,22 +28,23 @@ import CreateControls from './edit-widget-control-creator';
 
 class EditWidgetDialog extends React.Component {
   valid = true;
-  
+
 
   constructor(props) {
     super(props);
 
     this.state = {
-      temporal: {
-        name: '',
-        simulationModel: '',
-        signal: 0
-      
-      }
+      temporal: {},
     };
   }
 
-  
+  static getDerivedStateFromProps(props, state){
+    return {
+      temporal: props.widget
+    };
+  }
+
+
 
   onClose(canceled) {
     if (canceled === false) {
@@ -67,7 +68,7 @@ class EditWidgetDialog extends React.Component {
   }
 
   handleChange(e) {
-
+  // TODO: check what we really need in this function. Can we reduce its complexity?
      if (e.constructor === Array) {
       // Every property in the array will be updated
       let changes = e.reduce( (changesObject, event) => {
@@ -78,7 +79,7 @@ class EditWidgetDialog extends React.Component {
 
       this.setState({ temporal: Object.assign({}, this.state.temporal, changes ) });
     }
-  
+
         if(e.target.type !== 'text'){
         let changeObject = {};
         if (e.target.id === 'lockAspect') {
@@ -100,28 +101,25 @@ class EditWidgetDialog extends React.Component {
         } else if (e.target.type === 'number') {
           changeObject[e.target.id] = Number(e.target.value);
         }
-  
+
         else {
           changeObject[e.target.id] = e.target.value;
         }
 
 
         let finalChange = this.state.temporal;
-        
+
         finalChange.customProperties[e.target.id] = changeObject[e.target.id];
         this.setState({ temporal: finalChange});
       }
       else{
         if(this.state.temporal[e.target.id]){
           let finalChange = this.state.temporal;
-        
+
           finalChange[e.target.id] = e.target.value;
           this.setState({ temporal: finalChange});
-          
         }
       }
-    
-    
   }
 
   resetState() {
