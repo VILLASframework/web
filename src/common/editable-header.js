@@ -87,8 +87,8 @@ class EditableHeader extends React.Component {
                     <FormControl type='text' bsSize='large' value={this.state.title} onChange={this.onChange} style={editStyle} autoFocus />
                 </form>
 
-                <Button bsStyle="link" onClick={this.save}><Icon icon='check' style={iconStyle} /></Button>
-                <Button bsStyle="link" onClick={this.cancel}><Icon icon='times' style={iconStyle} /></Button>
+                <Button onClick={this.save}><Icon icon='check' style={iconStyle} /></Button>
+                <Button onClick={this.cancel}><Icon icon='times' style={iconStyle} /></Button>
             </div>;
         }
 
@@ -97,7 +97,7 @@ class EditableHeader extends React.Component {
                 {this.state.title}
             </h1>
 
-            <Button bsStyle="link" onClick={this.edit}><Icon icon='edit' style={iconStyle} /></Button>
+            <Button onClick={this.edit}><Icon icon='edit' style={iconStyle} /></Button>
         </div>;
     }
 }

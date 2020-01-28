@@ -32,6 +32,10 @@ import SelectFile from '../file/select-file';
 import SignalMapping from './signal-mapping';
 import EditableHeader from '../common/editable-header';
 import ParametersEditor from '../common/parameters-editor';
+import SimulatorStore from "../simulator/simulator-store";
+import SignalStore from "./signal-store";
+import FileStore from "../file/file-store"
+
 
 class SimulationModel extends React.Component {
     static getStores() {
@@ -39,20 +43,60 @@ class SimulationModel extends React.Component {
     }
 
     static calculateState(prevState, props) {
-        const simulationModel = SimulationModelStore.getState().find(m => m.id === props.match.params.simulationModel);
+
+      // get selected simulation model
+      const sessionToken = LoginStore.getState().token;
+
+      let simulationModel = SimulationModelStore.getState().find(m => m.id === parseInt(props.match.params.simulationModel, 10));
+      if (simulationModel == null) {
+        AppDispatcher.dispatch({
+          type: 'simulationModels/start-load',
+          data: props.match.params.simulationModel,
+          token: sessionToken
+        });
+      }
+
+      // signals and files of simulation model
+      let signals = SignalStore.getState().find(sig => sig.simulationModelID === parseInt(props.match.params.simulationModel, 10));
+      let files = FileStore.getState().find(f => f.simulationModelID === parseInt(props.match.params.simulationModel, 10));
 
         return {
-            simulationModel: simulationModel || {},
-            sessionToken: LoginStore.getState().token
+          simulationModel,
+          signals,
+          files,
+          sessionToken,
+          simulators: SimulatorStore.getState()
+
         };
     }
 
     componentDidMount() {
-        AppDispatcher.dispatch({
-            type: 'simulationModels/start-load',
-            data: this.props.match.params.simulationModel,
-            token: this.state.sessionToken
-        });
+      //load selected simulationModel
+      AppDispatcher.dispatch({
+        type: 'simulationModels/start-load',
+        data: this.state.simulationModel.id,
+        token: this.state.sessionToken
+      });
+
+      // load signals for selected simulation model
+      AppDispatcher.dispatch({
+        type: 'signals/start-load',
+        token: this.state.sessionToken,
+        param: 'TODO',
+      });
+
+      // load files for selected simulation model
+      AppDispatcher.dispatch({
+        type: 'files/start-load',
+        token: this.state.sessionToken,
+        param: 'TODO',
+      });
+
+      // load simulators
+      AppDispatcher.dispatch({
+        type: 'simulators/start-load',
+        token: this.state.sessionToken,
+      });
     }
 
     submitForm = event => {
@@ -140,9 +184,9 @@ class SimulationModel extends React.Component {
                     <SelectFile disabled type='configuration' name='Configuration' onChange={this.handleConfigurationChange} value={this.state.simulationModel.configuration} />
 
                     <div>
-                        <Col componentClass={FormLabel} sm={3} md={2}>
+                        <FormLabel sm={3} md={2}>
                             Start Parameters
-                        </Col>
+                        </FormLabel>
 
                         <Col sm={9} md={10}>
                             <ParametersEditor content={this.state.simulationModel.startParameters} onChange={this.handleStartParametersChange} />
@@ -162,7 +206,7 @@ class SimulationModel extends React.Component {
                 <div style={{ clear: 'both' }}></div>
 
                 <Button onClick={this.discardChanges} style={buttonStyle}>Cancel</Button>
-                <Button bsStyle='primary' onClick={this.saveChanges} style={buttonStyle}>Save</Button>
+                <Button onClick={this.saveChanges} style={buttonStyle}>Save</Button>
             </Form>
         </div>;
     }

@@ -118,30 +118,30 @@ class SelectFile extends React.Component {
 
       return <div>
           <FormGroup>
-              <Col componentClass={FormLabel} sm={3} md={2}>
+              <FormLabel sm={3} md={2}>
                   {this.props.name}
-              </Col>
+              </FormLabel>
 
               <Col sm={9} md={10}>
-                  <FormControl disabled={this.props.disabled} componentClass='select' placeholder='Select file' onChange={this.handleChange}>
+                  <FormControl disabled={this.props.disabled} placeholder='Select file' onChange={this.handleChange}>
                       {fileOptions}
                   </FormControl>
               </Col>
           </FormGroup>
 
           <FormGroup>
-              <Col sm={9} md={10} smOffset={3} mdOffset={2}>
+              <Col sm={{span: 9, offset: 3}} md={{span: 10, offset: 2}} >
                   <FormControl disabled={this.props.disabled} type='file' onChange={this.selectUploadFile} />
               </Col>
           </FormGroup>
 
           <FormGroup>
-              <Col sm={9} md={10} smOffset={3} mdOffset={2}>
-                  <Button disabled={this.props.disabled} bsSize='small' onClick={this.startFileUpload}>
+              <Col sm={{span: 9, offset: 3}} md={{span: 10, offset : 2}}>
+                  <Button disabled={this.props.disabled} onClick={this.startFileUpload}>
                       Upload file
                   </Button>
 
-                  <ProgressBar striped active now={this.state.uploadProgress} label={this.state.uploadProgress + '%'} style={progressBarStyle} />
+                  <ProgressBar striped animated now={this.state.uploadProgress} label={this.state.uploadProgress + '%'} style={progressBarStyle} />
               </Col>
           </FormGroup>
       </div>;

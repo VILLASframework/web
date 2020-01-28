@@ -69,18 +69,20 @@ class SelectSimulator extends React.Component {
     };
 
     render() {
+
         const simulatorOptions = this.state.simulators.map(s =>
-            <option key={s._id} value={s._id}>{_.get(s, 'properties.name') || _.get(s, 'rawProperties.name') || s.uuid}</option>
+            <option key={s.id} value={s.id}>{_.get(s, 'properties.name') || _.get(s, 'rawProperties.name') || s.uuid}</option>
         );
+        console.log("simulator options: ", simulatorOptions);
 
         return <FormGroup>
-            <Col componentClass={FormLabel} sm={3} md={2}>
+            <FormLabel sm={3} md={2}>
                 Simulator
-            </Col>
+            </FormLabel>
 
             <Col sm={9} md={10}>
-                <FormControl componentClass='select' placeholder='Select simulator' value={this.state.selectedSimulator} onChange={this.handleChange}>
-                    {simulatorOptions}
+                <FormControl as="select" placeholder='Select simulator' value={this.state.selectedSimulator} onChange={(e) => this.handleChange(e)}>
+                  {simulatorOptions}
                 </FormControl>
             </Col>
         </FormGroup>;

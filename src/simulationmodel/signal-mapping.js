@@ -100,7 +100,7 @@ class SignalMapping extends React.Component {
 
     render() {
         return <div>
-            <FormGroup validationState={this.validateLength()}>
+            <FormGroup validated={this.validateLength()}>
                 <FormLabel>{this.props.name} Length</FormLabel>
                 <FormControl name='length' type='number' placeholder='Enter length' defaultValue={this.state.length} min='1' onBlur={this.handleLengthChange} />
                 <FormControl.Feedback />
