@@ -43,6 +43,12 @@ class EditWidgetDialog extends React.Component {
     };
   }
 
+  static getDerivedStateFromProps(props, state){
+    return {
+      temporal: props.widget
+    };
+  }
+
   
 
   onClose(canceled) {
