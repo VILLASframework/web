@@ -116,7 +116,6 @@ class WidgetContextMenu extends React.Component {
     <MenuProvider id={'widgetMenu'+ this.props.index} style={{ border: '1px solid purple', display: 'inline-block' }}>
     <Widget
               data={this.props.widget}
-              simulation={this.props.simulation}
               onWidgetChange={this.props.onWidgetChange}
               onWidgetStatusChange={this.props.onWidgetStatusChange}
               editing={this.props.editing}
