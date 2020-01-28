@@ -28,8 +28,6 @@ import LoginStore from '../user/login-store';
 
 import AppDispatcher from '../common/app-dispatcher';
 
-import FluxContainerConverter from "../common/FluxContainerConverter";
-
 class SelectFile extends React.Component {
   static getStores() {
       return [ FileStore, LoginStore ];
@@ -150,4 +148,5 @@ class SelectFile extends React.Component {
   }
 }
 
-export default Container.create(FluxContainerConverter.convert(SelectFile));
+let fluxContainerConverter = require('../common/FluxContainerConverter');
+export default Container.create(fluxContainerConverter.convert(SelectFile));

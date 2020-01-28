@@ -39,8 +39,6 @@ import ImportSimulatorDialog from './import-simulator';
 import SimulatorAction from './simulator-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
 
-import FluxContainerConverter from "../common/FluxContainerConverter";
-
 class Simulators extends Component {
   static getStores() {
     return [ LoginStore, SimulatorStore ];
@@ -324,4 +322,5 @@ class Simulators extends Component {
   }
 }
 
-export default Container.create(FluxContainerConverter.convert(Simulators));
+let fluxContainerConverter = require('../common/FluxContainerConverter');
+export default Container.create(fluxContainerConverter.convert(Simulators));

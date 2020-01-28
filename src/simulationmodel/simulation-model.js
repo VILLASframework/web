@@ -33,8 +33,6 @@ import SignalMapping from './signal-mapping';
 import EditableHeader from '../common/editable-header';
 import ParametersEditor from '../common/parameters-editor';
 
-import FluxContainerConverter from "../common/FluxContainerConverter";
-
 class SimulationModel extends React.Component {
     static getStores() {
         return [ SimulationModelStore, LoginStore ];
@@ -170,4 +168,5 @@ class SimulationModel extends React.Component {
     }
 }
 
-export default Container.create(FluxContainerConverter.convert(SimulationModel), { withProps: true });
+let fluxContainerConverter = require('../common/FluxContainerConverter');
+export default Container.create(fluxContainerConverter.convert(SimulationModel), { withProps: true });
