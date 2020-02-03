@@ -112,7 +112,7 @@ class SignalMapping extends React.Component {
                 <Table data={this.props.signals}>
                     <TableColumn title='ID' width='60' dataIndex />
                     <TableColumn title='Name' dataKey='name' inlineEditable onInlineChange={this.handleMappingChange} />
-                    <TableColumn title='Type' dataKey='type' inlineEditable onInlineChange={this.handleMappingChange} />
+                    <TableColumn title='Unit' dataKey='unit' inlineEditable onInlineChange={this.handleMappingChange} />
                 </Table>
             </FormGroup>
         </div>;

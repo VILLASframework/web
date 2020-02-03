@@ -68,7 +68,7 @@ class EditableHeader extends React.Component {
         };
 
         const iconStyle = {
-            float: 'left',
+            float: 'right',
 
             marginLeft: '10px',
             marginTop: '25px',
@@ -84,7 +84,7 @@ class EditableHeader extends React.Component {
 
             return <div>
                 <form style={wrapperStyle}>
-                    <FormControl type='text' bsSize='large' value={this.state.title} onChange={this.onChange} style={editStyle} autoFocus />
+                    <FormControl type='text' size='large' value={this.state.title} onChange={this.onChange} style={editStyle} autoFocus />
                 </form>
 
                 <Button onClick={this.save}><Icon icon='check' style={iconStyle} /></Button>

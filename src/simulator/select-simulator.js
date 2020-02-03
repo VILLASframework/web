@@ -80,11 +80,11 @@ class SelectSimulator extends React.Component {
                 Simulator
             </FormLabel>
 
-            <Col sm={9} md={10}>
+            <FormGroup as={Col} sm={9} md={10}>
                 <FormControl as="select" placeholder='Select simulator' value={this.state.selectedSimulator} onChange={(e) => this.handleChange(e)}>
                   {simulatorOptions}
                 </FormControl>
-            </Col>
+            </FormGroup>
         </FormGroup>;
     }
 }

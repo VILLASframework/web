@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button, Col, Form, FormLabel } from 'react-bootstrap';
+import { Button, Col, Form, FormLabel, FormGroup } from 'react-bootstrap';
 
 import SimulationModelStore from './simulation-model-store';
 import LoginStore from '../user/login-store';
@@ -57,15 +57,22 @@ class SimulationModel extends React.Component {
       }
 
       // signals and files of simulation model
-      let signals = SignalStore.getState().find(sig => sig.simulationModelID === parseInt(props.match.params.simulationModel, 10));
+      // TODO add direction of signals to find operation
+      let inputSignals = SignalStore.getState().find(sig => sig.simulationModelID === parseInt(props.match.params.simulationModel, 10));
+      let outputSignals = SignalStore.getState().find(sig => sig.simulationModelID === parseInt(props.match.params.simulationModel, 10));
+
+
       let files = FileStore.getState().find(f => f.simulationModelID === parseInt(props.match.params.simulationModel, 10));
+
 
         return {
           simulationModel,
-          signals,
+          inputSignals,
+          outputSignals,
           files,
           sessionToken,
-          simulators: SimulatorStore.getState()
+          simulators: SimulatorStore.getState(),
+          selectedFile: null,
 
         };
     }
@@ -78,18 +85,25 @@ class SimulationModel extends React.Component {
         token: this.state.sessionToken
       });
 
-      // load signals for selected simulation model
+      // load input signals for selected simulation model
       AppDispatcher.dispatch({
         type: 'signals/start-load',
         token: this.state.sessionToken,
-        param: 'TODO',
+        param: '?direction=in&modelID=' + this.state.simulationModel.id,
+      });
+
+      // load output signals for selected simulation model
+      AppDispatcher.dispatch({
+        type: 'signals/start-load',
+        token: this.state.sessionToken,
+        param: '?direction=out&modelID=' + this.state.simulationModel.id,
       });
 
       // load files for selected simulation model
       AppDispatcher.dispatch({
         type: 'files/start-load',
         token: this.state.sessionToken,
-        param: 'TODO',
+        param: '?objectType=model&objectID=' + this.state.simulationModel.id,
       });
 
       // load simulators
@@ -171,17 +185,30 @@ class SimulationModel extends React.Component {
         const buttonStyle = {
             marginRight: '10px'
         };
+        console.log("OutputSignals: ", this.state.outputSignals);
+        let outputSignals = null;
+        if  (this.state.outputSignals != null){
+          outputSignals = Object.keys(this.state.outputSignals).map(key => {return this.state.outputSignals[key]});
+          console.log("OutputSignals Array", outputSignals);
+        }
+        let inputSignals = null;
+        console.log("InputSignals: ", this.state.inputSignals);
+        if  (this.state.inputSignals != null){
+          inputSignals = Object.keys(this.state.inputSignals).map(key => {return this.state.inputSignals[key]});
+          console.log("InputSignals Array", inputSignals);
+        }
+
 
         return <div className='section'>
             <EditableHeader title={this.state.simulationModel.name} onChange={this.handleTitleChange} />
 
-            <Form horizontal onSubmit={this.submitForm}>
-                <Col xs={12} sm={12}>
+            <Form onSubmit={this.submitForm}>
+                <FormGroup as={Col} xs={12} sm={12}>
                     <SelectSimulator onChange={this.handleSimulatorChange} value={this.state.simulationModel.simulator} />
 
-                    <SelectFile disabled type='model' name='Model' onChange={this.handleModelChange} value={this.state.simulationModel.model} />
+                    <SelectFile type='model' name='Model' onChange={this.handleModelChange} value={this.state.selectedFile} />
 
-                    <SelectFile disabled type='configuration' name='Configuration' onChange={this.handleConfigurationChange} value={this.state.simulationModel.configuration} />
+                    <SelectFile type='configuration' name='Configuration' onChange={this.handleConfigurationChange} value={this.state.simulationModel.configuration} />
 
                     <div>
                         <FormLabel sm={3} md={2}>
@@ -193,14 +220,14 @@ class SimulationModel extends React.Component {
                         </Col>
                     </div>
 
+                </FormGroup>
+
+                <Col xs={12} sm={6}>
+                    <SignalMapping name='Output' length={this.state.simulationModel.outputLength} signals={outputSignals} onChange={this.handleOutputMappingChange} />
                 </Col>
 
                 <Col xs={12} sm={6}>
-                    <SignalMapping name='Output' length={this.state.simulationModel.outputLength} signals={this.state.simulationModel.outputMapping} onChange={this.handleOutputMappingChange} />
-                </Col>
-
-                <Col xs={12} sm={6}>
-                    <SignalMapping name='Input' length={this.state.simulationModel.inputLength} signals={this.state.simulationModel.inputMapping} onChange={this.handleInputMappingChange} />
+                    <SignalMapping name='Input' length={this.state.simulationModel.inputLength} signals={inputSignals} onChange={this.handleInputMappingChange} />
                 </Col>
 
                 <div style={{ clear: 'both' }}></div>

@@ -43,12 +43,12 @@ class SelectFile extends React.Component {
       };
   }
 
-  componentDidMount() {
+  /*componentDidMount() {
       AppDispatcher.dispatch({
           type: 'files/start-load',
           token: this.state.sessionToken
       });
-  }
+  }*/
 
   static getDerivedStateFromProps(props, state){
     if (props.value === state.selectedSimulator) {
@@ -107,10 +107,19 @@ class SelectFile extends React.Component {
   };
 
   render() {
-      const fileOptions = this.state.files.map(f =>
-          <option key={f._id} value={f._id}>{f.name}</option>
-      );
 
+    console.log("Files: ", this.state.files);
+
+    let fileOptions;
+    if (this.state.files.length > 0){
+      fileOptions = this.state.files.map(f =>
+        <option key={f.id} value={f.id}>{f.name}</option>
+      );
+    } else {
+      fileOptions = <option >No files for this simulation model</option>
+    }
+
+    console.log("FileOptions: ", fileOptions);
       const progressBarStyle = {
           marginLeft: '100px',
           marginTop: '-25px'
@@ -122,27 +131,24 @@ class SelectFile extends React.Component {
                   {this.props.name}
               </FormLabel>
 
-              <Col sm={9} md={10}>
-                  <FormControl disabled={this.props.disabled} placeholder='Select file' onChange={this.handleChange}>
+              <FormGroup as={Col} sm={9} md={10}>
+                  <FormControl as="select" disabled={this.props.disabled} placeholder='Select file' onChange={(e) => this.handleChange(e)}>
                       {fileOptions}
                   </FormControl>
-              </Col>
+              </FormGroup>
           </FormGroup>
 
-          <FormGroup>
-              <Col sm={{span: 9, offset: 3}} md={{span: 10, offset: 2}} >
+          <FormGroup as={Col} sm={{span: 9, offset: 3}} md={{span: 10, offset: 2}} >
                   <FormControl disabled={this.props.disabled} type='file' onChange={this.selectUploadFile} />
-              </Col>
           </FormGroup>
 
-          <FormGroup>
-              <Col sm={{span: 9, offset: 3}} md={{span: 10, offset : 2}}>
+          <FormGroup as={Col} sm={{span: 9, offset: 3}} md={{span: 10, offset : 2}}>
                   <Button disabled={this.props.disabled} onClick={this.startFileUpload}>
                       Upload file
                   </Button>
-
+          </FormGroup>
+          <FormGroup as={Col} sm={{span: 9, offset: 3}} md={{span: 10, offset : 2}}>
                   <ProgressBar striped animated now={this.state.uploadProgress} label={this.state.uploadProgress + '%'} style={progressBarStyle} />
-              </Col>
           </FormGroup>
       </div>;
   }
