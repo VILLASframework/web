@@ -36,7 +36,7 @@ class ImportSimulationModelDialog extends React.Component {
     };
   }
 
-  onClose = canceled => {
+  onClose(canceled){
     if (canceled) {
       this.props.onClose();
 
@@ -88,7 +88,7 @@ class ImportSimulationModelDialog extends React.Component {
 
   render() {
     return (
-      <Dialog show={this.props.show} title="Import Simulation Model" buttonTitle="Import" onClose={this.onClose} onReset={this.resetState} valid={this.imported}>
+      <Dialog show={this.props.show} title="Import Simulation Model" buttonTitle="Import" onClose={(c) => this.onClose(c)} onReset={this.resetState} valid={this.imported}>
         <form>
           <FormGroup controlId='file'>
             <FormLabel>Simulation Model File</FormLabel>
@@ -97,7 +97,7 @@ class ImportSimulationModelDialog extends React.Component {
 
           <FormGroup controlId='simulator'>
             <FormLabel>Simulator</FormLabel>
-            <FormControl disabled={this.imported === false} componentClass='select' placeholder='Select simulator' value={this.state.model.simulator} onChange={this.handleSimulatorChange}>
+            <FormControl disabled={this.imported === false} as='select' placeholder='Select simulator' value={this.state.model.simulator} onChange={this.handleSimulatorChange}>
               {this.props.simulators.map(simulator => (
                 <option key={simulator.id} value={simulator.id}>{_.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name')}</option>
               ))}
