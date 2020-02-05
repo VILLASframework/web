@@ -132,9 +132,6 @@ class Simulators extends Component {
 
     if (data) {
       let simulator = this.state.simulators[this.state.modalIndex];
-      console.log("modalIndex: " + this.state.modalIndex);
-      console.log("Simulator Host:" + simulator.host);
-      console.log("Simulator at index 1: " + this.state.simulators[1].host)
       simulator.properties = data;
       this.setState({ simulator });
 
