@@ -27,13 +27,12 @@ import SimulationModelStore from './simulation-model-store';
 import LoginStore from '../user/login-store';
 import AppDispatcher from '../common/app-dispatcher';
 
-import SelectSimulator from '../simulator/select-simulator';
 import SelectFile from '../file/select-file';
-import SignalMapping from './signal-mapping';
+import EditSignalMapping from '../signal/edit-signal-mapping';
 import EditableHeader from '../common/editable-header';
 import ParametersEditor from '../common/parameters-editor';
 import SimulatorStore from "../simulator/simulator-store";
-import SignalStore from "./signal-store";
+import SignalStore from "../signal/signal-store";
 import FileStore from "../file/file-store"
 
 
@@ -204,7 +203,6 @@ class SimulationModel extends React.Component {
 
             <Form onSubmit={this.submitForm}>
                 <FormGroup as={Col} xs={12} sm={12}>
-                    <SelectSimulator onChange={this.handleSimulatorChange} value={this.state.simulationModel.simulator} />
 
                     <SelectFile type='model' name='Model' onChange={this.handleModelChange} value={this.state.selectedFile} />
 
@@ -223,11 +221,11 @@ class SimulationModel extends React.Component {
                 </FormGroup>
 
                 <Col xs={12} sm={6}>
-                    <SignalMapping name='Output' length={this.state.simulationModel.outputLength} signals={outputSignals} onChange={this.handleOutputMappingChange} />
+                    <EditSignalMapping name='Output' length={this.state.simulationModel.outputLength} signals={outputSignals} onChange={this.handleOutputMappingChange} />
                 </Col>
 
                 <Col xs={12} sm={6}>
-                    <SignalMapping name='Input' length={this.state.simulationModel.inputLength} signals={inputSignals} onChange={this.handleInputMappingChange} />
+                    <EditSignalMapping name='Input' length={this.state.simulationModel.inputLength} signals={inputSignals} onChange={this.handleInputMappingChange} />
                 </Col>
 
                 <div style={{ clear: 'both' }}></div>

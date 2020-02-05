@@ -1,7 +1,4 @@
 /**
- * File: signalMapping.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 10.08.2018
  *
  * This file is part of VILLASweb.
  *
@@ -27,7 +24,7 @@ import validator from 'validator';
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
 
-class SignalMapping extends React.Component {
+class EditSignalMapping extends React.Component {
     constructor(props) {
         super(props);
 
@@ -119,7 +116,7 @@ class SignalMapping extends React.Component {
     }
 }
 
-SignalMapping.propTypes = {
+EditSignalMapping.propTypes = {
     name: PropTypes.string,
     length: PropTypes.number,
     signals: PropTypes.arrayOf(
@@ -131,4 +128,4 @@ SignalMapping.propTypes = {
     onChange: PropTypes.func
 };
 
-export default SignalMapping;
+export default EditSignalMapping;
