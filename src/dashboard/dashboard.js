@@ -34,8 +34,6 @@ import DashboardButtonGroup from './dashboard-button-group';
 
 import LoginStore from '../user/login-store';
 import DashboardStore from './dashboard-store';
-import ProjectStore from '../project/project-store';
-import SimulationStore from '../simulation/simulation-store';
 import SimulationModelStore from '../simulationmodel/simulation-model-store';
 import FileStore from '../file/file-store';
 import WidgetStore from '../widget/widget-store';
@@ -47,7 +45,7 @@ class Dashboard extends Component {
 
   static lastWidgetKey = 0;
   static getStores() {
-    return [ DashboardStore, ProjectStore, SimulationStore, SimulationModelStore, FileStore, LoginStore, WidgetStore ];
+    return [ DashboardStore, SimulationModelStore, FileStore, LoginStore, WidgetStore ];
   }
 
   static calculateState(prevState, props) {
