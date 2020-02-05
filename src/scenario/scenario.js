@@ -41,6 +41,7 @@ import NewDashboardDialog from "../dashboard/new-dashboard";
 
 import SimulatorAction from '../simulator/simulator-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
+import EditSimulationModelDialog from "../simulationmodel/edit-simulation-model";
 
 class Scenario extends React.Component {
   static getStores() {
@@ -75,6 +76,7 @@ class Scenario extends React.Component {
 
       deleteSimulationModelModal: false,
       importSimulationModelModal: false,
+      editSimulationModelModal: false,
       modalSimulationModelData: {},
       selectedSimulationModels: [],
 
@@ -115,15 +117,11 @@ class Scenario extends React.Component {
     });
   }
 
-  addSimulationModel = () => {
+  addSimulationModel(){
     const simulationModel = {
-      scenario: this.state.scenario.id,
+      scenarioID: this.state.scenario.id,
       name: 'New Simulation Model',
-      simulator: this.state.simulators.length > 0 ? this.state.simulators[0].id : null,
-      outputLength: 1,
-      outputMapping: [{ name: 'Signal', type: 'Type' }],
-      inputLength: 1,
-      inputMapping: [{ name: 'Signal', type: 'Type' }]
+      simulatorID: this.state.simulators.length > 0 ? this.state.simulators[0].id : null,
     };
 
     AppDispatcher.dispatch({
@@ -141,7 +139,19 @@ class Scenario extends React.Component {
     });
   }
 
-  closeDeleteSimulationModelModal = confirmDelete => {
+  closeEditSimulationModelModal(data){
+    this.setState({ editSimulationModelModal : false });
+
+    if (data) {
+      AppDispatcher.dispatch({
+        type: 'simulationModels/start-edit',
+        data: data,
+        token: this.state.sessionToken,
+      });
+    }
+  }
+
+  closeDeleteSimulationModelModal(confirmDelete) {
     this.setState({ deleteSimulationModelModal: false });
 
     if (confirmDelete === false) {
@@ -155,7 +165,7 @@ class Scenario extends React.Component {
     });
   }
 
-  importSimulationModel = simulationModel => {
+  importSimulationModel(simulationModel){
     this.setState({ importSimulationModelModal: false });
 
     if (simulationModel == null) {
@@ -313,15 +323,27 @@ class Scenario extends React.Component {
       <h2>Simulation Models</h2>
       <Table data={this.state.simulationModels}>
         <TableColumn checkbox onChecked={(index, event) => this.onSimulationModelChecked(index, event)} width='30' />
-        <TableColumn title='Name' dataKey='name' link='/simulationModel/' linkKey='id' />
-        <TableColumn title='Simulator' dataKey='simulatorID' modifier={(simulatorID) => this.getSimulatorName(simulatorID)} />
-        <TableColumn title='Outputs' dataKey='outputLength' width='100' />
-        <TableColumn title='Inputs' dataKey='inputLength' width='100' />
+        <TableColumn title='Name' dataKey='name' />
         <TableColumn
-          title=''
+          title='# Outputs'
+          dataKey='outputLength'
+          editButton
+          onEdit={index => this.setState({ editSimulationModelModal: true, modalSimulationModelData: this.state.simulationModels[index], modalIndex: index })}
+        />
+        <TableColumn
+          title='# Inputs'
+          dataKey='inputLength'
+          editButton
+          onEdit={index => this.setState({ editSimulationModelModal: true, modalSimulationModelData: this.state.simulationModels[index], modalIndex: index })}
+        />
+        <TableColumn title='Simulator' dataKey='simulatorID' modifier={(simulatorID) => this.getSimulatorName(simulatorID)} />
+        <TableColumn
+          title='Edit/ Delete/ Export'
           width='200'
+          editButton
           deleteButton
           exportButton
+          onEdit={index => this.setState({ editSimulationModelModal: true, modalSimulationModelData: this.state.simulationModels[index], modalIndex: index })}
           onDelete={(index) => this.setState({ deleteSimulationModelModal: true, modalSimulationModelData: this.state.simulationModels[index], modalSimulationModelIndex: index })}
           onExport={index => this.exportModel(index)}
         />
@@ -340,15 +362,15 @@ class Scenario extends React.Component {
       </div>
 
       <div style={{ float: 'right' }}>
-        <Button onClick={this.addSimulationModel} style={buttonStyle}><Icon icon="plus" /> Simulation Model</Button>
+        <Button onClick={() => this.addSimulationModel()} style={buttonStyle}><Icon icon="plus" /> Simulation Model</Button>
         <Button onClick={() => this.setState({ importSimulationModelModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
       </div>
 
       <div style={{ clear: 'both' }} />
 
-      <ImportSimulationModelDialog show={this.state.importSimulationModelModal} onClose={this.importSimulationModel} simulators={this.state.simulators} />
-
-      <DeleteDialog title="simulation model" name={this.state.modalSimulationModelData.name} show={this.state.deleteSimulationModelModal} onClose={this.closeDeleteSimulationModelModal} />
+      <EditSimulationModelDialog show={this.state.editSimulationModelModal} onClose={data => this.closeEditSimulationModelModal(data)} simulationModel={this.state.modalSimulationModelData} simulators={this.state.simulators} />
+      <ImportSimulationModelDialog show={this.state.importSimulationModelModal} onClose={data => this.importSimulationModel(data)} simulators={this.state.simulators} />
+      <DeleteDialog title="simulation model" name={this.state.modalSimulationModelData.name} show={this.state.deleteSimulationModelModal} onClose={(c) => this.closeDeleteSimulationModelModal(c)} />
 
       {/*Dashboard table*/}
       <h2>Dashboards</h2>
