@@ -72,7 +72,7 @@ class SelectFile extends React.Component {
 
       // send file to callback
       if (this.props.onChange != null) {
-          const file = this.state.files.find(f => f._id === event.target.value);
+          const file = this.state.files.find(f => f.id === event.target.value);
 
           this.props.onChange(file);
       }
@@ -108,8 +108,6 @@ class SelectFile extends React.Component {
 
   render() {
 
-    console.log("Files: ", this.state.files);
-
     let fileOptions;
     if (this.state.files.length > 0){
       fileOptions = this.state.files.map(f =>
@@ -119,7 +117,6 @@ class SelectFile extends React.Component {
       fileOptions = <option >No files for this simulation model</option>
     }
 
-    console.log("FileOptions: ", fileOptions);
       const progressBarStyle = {
           marginLeft: '100px',
           marginTop: '-25px'
