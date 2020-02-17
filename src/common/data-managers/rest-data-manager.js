@@ -92,7 +92,8 @@ class RestDataManager {
 
           AppDispatcher.dispatch({
             type: this.type + 's/loaded',
-            data: data
+            data: data,
+            token: token
           });
 
           if (this.onLoad != null) {
@@ -113,7 +114,8 @@ class RestDataManager {
 
           AppDispatcher.dispatch({
             type: this.type + 's/loaded',
-            data: data
+            data: data,
+            token: token,
           });
 
           if (this.onLoad != null) {

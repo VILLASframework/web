@@ -21,6 +21,7 @@
 
 import RestDataManager from '../common/data-managers/rest-data-manager';
 import AppDispatcher from '../common/app-dispatcher';
+import RestAPI from "../common/api/rest-api";
 
 class SimulationModelDataManager extends RestDataManager {
   constructor() {
@@ -44,6 +45,28 @@ class SimulationModelDataManager extends RestDataManager {
       outputLength: parseInt(model.outputLength, 10),
       id: model.simulator
     });
+  }
+
+  loadSignals(token, models){
+
+    for (let model of models) {
+      // request in signals
+      RestAPI.get(this.makeURL('/signals?direction=in&modelID=' + model.id), token).then(response => {
+        AppDispatcher.dispatch({
+          type: 'signals/loaded',
+          data: response.signals
+        });
+      });
+
+      // request out signals
+      RestAPI.get(this.makeURL('/signals?direction=out&modelID=' + model.id), token).then(response => {
+        AppDispatcher.dispatch({
+          type: 'signals/loaded',
+          data: response.signals
+        });
+      });
+
+    }
   }
 }
 

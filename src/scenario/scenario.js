@@ -30,6 +30,7 @@ import SimulatorStore from '../simulator/simulator-store';
 import DashboardStore from '../dashboard/dashboard-store';
 import SimulationModelStore from '../simulationmodel/simulation-model-store';
 import LoginStore from '../user/login-store';
+import SignalStore from '../signal/signal-store'
 import AppDispatcher from '../common/app-dispatcher';
 
 import Icon from '../common/icon';
@@ -42,10 +43,11 @@ import NewDashboardDialog from "../dashboard/new-dashboard";
 import SimulatorAction from '../simulator/simulator-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
 import EditSimulationModelDialog from "../simulationmodel/edit-simulation-model";
+import EditSignalMapping from "../signal/edit-signal-mapping";
 
 class Scenario extends React.Component {
   static getStores() {
-    return [ ScenarioStore, SimulationModelStore, DashboardStore, SimulatorStore, LoginStore];
+    return [ ScenarioStore, SimulationModelStore, DashboardStore, SimulatorStore, LoginStore, SignalStore];
   }
 
   static calculateState(prevState, props) {
@@ -65,13 +67,17 @@ class Scenario extends React.Component {
     let dashboards = DashboardStore.getState().filter(dashb => dashb.scenarioID === parseInt(props.match.params.scenario, 10));
 
     // obtain all simulation models of a scenario
-    let simulationmodels = SimulationModelStore.getState().filter(simmodel => simmodel.scenarioID === parseInt(props.match.params.scenario, 10));
+    let simulationModels = SimulationModelStore.getState().filter(simmodel => simmodel.scenarioID === parseInt(props.match.params.scenario, 10));
+
+    let signals = SignalStore.getState();
+
 
     return {
       scenario,
       sessionToken,
-      simulationModels: simulationmodels,
-      dashboards: dashboards,
+      simulationModels,
+      dashboards,
+      signals,
       simulators: SimulatorStore.getState(),
 
       deleteSimulationModelModal: false,
@@ -79,6 +85,10 @@ class Scenario extends React.Component {
       editSimulationModelModal: false,
       modalSimulationModelData: {},
       selectedSimulationModels: [],
+      modalSimulationModelIndex: 0,
+
+      editInputSignalsModal: false,
+      editOutputSignalsModal: false,
 
       newDashboardModal: false,
       deleteDashboardModal: false,
@@ -115,6 +125,8 @@ class Scenario extends React.Component {
       type: 'simulators/start-load',
       token: this.state.sessionToken,
     });
+
+
   }
 
   addSimulationModel(){
@@ -149,6 +161,27 @@ class Scenario extends React.Component {
         token: this.state.sessionToken,
       });
     }
+  }
+
+  closeEditOutputSignalsModal(data){
+    this.setState({ editOutputSignalsModal : false });
+    //data is an array of signals
+
+    if (data){
+      //TODO: dispatch changes to signals
+      //TODO: Check if new signal is added
+    }
+
+  }
+
+  closeEditInputSignalsModal(data){
+    this.setState({ editInputSignalsModal : false });
+    //data is an array of signals
+    if(data){
+      //TODO: dispatch changes to signals
+      //TODO: Check if new signal is added
+    }
+
   }
 
   closeDeleteSimulationModelModal(confirmDelete) {
@@ -316,6 +349,9 @@ class Scenario extends React.Component {
       marginLeft: '10px'
     };
 
+    console.log("simulationmodel modal data: ", this.state.modalSimulationModelData)
+    console.log("simulation models: ", this.state.simulationModels)
+
     return <div className='section'>
       <h1>{this.state.scenario.name}</h1>
 
@@ -328,13 +364,13 @@ class Scenario extends React.Component {
           title='# Outputs'
           dataKey='outputLength'
           editButton
-          onEdit={index => this.setState({ editSimulationModelModal: true, modalSimulationModelData: this.state.simulationModels[index], modalIndex: index })}
+          onEdit={index => this.setState({ editOutputSignalsModal: true, modalSimulationModelData: this.state.simulationModels[index], modalSimulationModelIndex: index })}
         />
         <TableColumn
           title='# Inputs'
           dataKey='inputLength'
           editButton
-          onEdit={index => this.setState({ editSimulationModelModal: true, modalSimulationModelData: this.state.simulationModels[index], modalIndex: index })}
+          onEdit={index => this.setState({ editInputSignalsModal: true, modalSimulationModelData: this.state.simulationModels[index], modalSimulationModelIndex: index })}
         />
         <TableColumn title='Simulator' dataKey='simulatorID' modifier={(simulatorID) => this.getSimulatorName(simulatorID)} />
         <TableColumn
@@ -343,7 +379,7 @@ class Scenario extends React.Component {
           editButton
           deleteButton
           exportButton
-          onEdit={index => this.setState({ editSimulationModelModal: true, modalSimulationModelData: this.state.simulationModels[index], modalIndex: index })}
+          onEdit={index => this.setState({ editSimulationModelModal: true, modalSimulationModelData: this.state.simulationModels[index], modalSimulationModelIndex: index })}
           onDelete={(index) => this.setState({ deleteSimulationModelModal: true, modalSimulationModelData: this.state.simulationModels[index], modalSimulationModelIndex: index })}
           onExport={index => this.exportModel(index)}
         />
@@ -371,6 +407,9 @@ class Scenario extends React.Component {
       <EditSimulationModelDialog show={this.state.editSimulationModelModal} onClose={data => this.closeEditSimulationModelModal(data)} simulationModel={this.state.modalSimulationModelData} simulators={this.state.simulators} />
       <ImportSimulationModelDialog show={this.state.importSimulationModelModal} onClose={data => this.importSimulationModel(data)} simulators={this.state.simulators} />
       <DeleteDialog title="simulation model" name={this.state.modalSimulationModelData.name} show={this.state.deleteSimulationModelModal} onClose={(c) => this.closeDeleteSimulationModelModal(c)} />
+
+      <EditSignalMapping show={this.state.editOutputSignalsModal} onClose={data => this.closeEditOutputSignalsModal(data)} direction="Output" signals={this.state.signals} simulationModelID={this.state.modalSimulationModelData.id} />
+      <EditSignalMapping show={this.state.editInputSignalsModal} onClose={data => this.closeEditInputSignalsModal(data)} direction="Input" signals={this.state.signals} simulationModelID={this.state.modalSimulationModelData.id}/>
 
       {/*Dashboard table*/}
       <h2>Dashboards</h2>

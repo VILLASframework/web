@@ -70,6 +70,7 @@ class SimulationModel extends React.Component {
           outputSignals,
           files,
           sessionToken,
+          signals: SignalStore.getState(),
           simulators: SimulatorStore.getState(),
           selectedFile: null,
 
@@ -85,25 +86,25 @@ class SimulationModel extends React.Component {
       });
 
       // load input signals for selected simulation model
-      AppDispatcher.dispatch({
-        type: 'signals/start-load',
-        token: this.state.sessionToken,
-        param: '?direction=in&modelID=' + this.state.simulationModel.id,
-      });
-
-      // load output signals for selected simulation model
-      AppDispatcher.dispatch({
-        type: 'signals/start-load',
-        token: this.state.sessionToken,
-        param: '?direction=out&modelID=' + this.state.simulationModel.id,
-      });
+      // AppDispatcher.dispatch({
+      //   type: 'signals/start-load',
+      //   token: this.state.sessionToken,
+      //   param: '?direction=in&modelID=' + this.state.simulationModel.id,
+      // });
+      //
+      // // load output signals for selected simulation model
+      // AppDispatcher.dispatch({
+      //   type: 'signals/start-load',
+      //   token: this.state.sessionToken,
+      //   param: '?direction=out&modelID=' + this.state.simulationModel.id,
+      // });
 
       // load files for selected simulation model
-      AppDispatcher.dispatch({
-        type: 'files/start-load',
-        token: this.state.sessionToken,
-        param: '?objectType=model&objectID=' + this.state.simulationModel.id,
-      });
+      // AppDispatcher.dispatch({
+      //   type: 'files/start-load',
+      //   token: this.state.sessionToken,
+      //   param: '?objectType=model&objectID=' + this.state.simulationModel.id,
+      // });
 
       // load simulators
       AppDispatcher.dispatch({
@@ -197,6 +198,7 @@ class SimulationModel extends React.Component {
           console.log("InputSignals Array", inputSignals);
         }
 
+        console.log("All SIGNALS: ", this.state.signals);
 
         return <div className='section'>
             <EditableHeader title={this.state.simulationModel.name} onChange={this.handleTitleChange} />
@@ -221,11 +223,11 @@ class SimulationModel extends React.Component {
                 </FormGroup>
 
                 <Col xs={12} sm={6}>
-                    <EditSignalMapping name='Output' length={this.state.simulationModel.outputLength} signals={outputSignals} onChange={this.handleOutputMappingChange} />
+                    <EditSignalMapping name='Output' length={this.state.simulationModel.outputLength} signals={this.state.outputSignals} onChange={this.handleOutputMappingChange} />
                 </Col>
 
                 <Col xs={12} sm={6}>
-                    <EditSignalMapping name='Input' length={this.state.simulationModel.inputLength} signals={inputSignals} onChange={this.handleInputMappingChange} />
+                    <EditSignalMapping name='Input' length={this.state.simulationModel.inputLength} signals={this.state.inputSignals} onChange={this.handleInputMappingChange} />
                 </Col>
 
                 <div style={{ clear: 'both' }}></div>

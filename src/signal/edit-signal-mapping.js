@@ -18,102 +18,114 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormGroup, FormControl, FormLabel, FormText } from 'react-bootstrap';
-import validator from 'validator';
+import { FormGroup, FormLabel, FormText } from 'react-bootstrap';
 
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
+import Dialog from "../common/dialogs/dialog";
+
+import SignalStore from "./signal-store"
+import LoginStore from "../user/login-store";
 
 class EditSignalMapping extends React.Component {
-    constructor(props) {
-        super(props);
 
-        var length = props.length;
-        if (length === undefined)
-          length = 1;
+  static getStores() {
+    return [ SignalStore, LoginStore];
+  }
 
-        this.state = {
-            length: length,
-            signals: props.signals
-        };
-    }
+  constructor(props) {
+      super(props);
 
-    static getDerivedStateFromProps(props, state){
-      if (props.length === state.length && props.signals === state.signals) {
-        return null
+      let dir = "";
+      if ( this.props.direction === "Output"){
+        dir = "out";
+      } else if ( this.props.direction === "Input" ){
+        dir = "in";
       }
 
-      return{
-        length: props.length,
-        signals: props.signals
+      this.state = {
+        sessionToken: LoginStore.getState().token,
+        dir
       };
+  }
+
+  componentDidMount(): void {
+
+  }
+
+  onClose(canceled) {
+      if (canceled === false) {
+        if (this.valid) {
+          // TODO
+          let data = null;
+
+          //forward modified simulation model to callback function
+          this.props.onClose(data)
+        }
+      } else {
+        this.props.onClose();
+      }
     }
 
-    validateLength(){
-        const valid = validator.isInt(this.state.length + '', { min: 1, max: 100 });
 
-        return valid ? 'success' : 'error';
-    }
+  handleMappingChange = (event, row, column) => {
+      const signals = this.state.signals;
 
-    handleLengthChange = event => {
-        const length = event.target.value;
+      //const length = this.state.length;
 
-        // update signals to represent length
-        const signals = this.state.signals;
+      if (column === 1) { // Name change
+          signals[row].name = event.target.value;
+      } else if (column === 2) { // unit change
+          signals[row].unit = event.target.value;
+      } else if (column === 0) { //index change
+          signals[row].index = event.target.value;
+      }
 
-        if (this.state.length < length) {
-            while (signals.length < length) {
-                signals.push({ name: 'Signal', type: 'Type' });
-            }
-        } else {
-            signals.splice(length, signals.length - length);
-        }
+      //this.setState({ length, signals });
+      //TODO dispatch changes by calling API
 
-        // save updated state
-        this.setState({ length, signals });
+      /*if (this.props.onChange != null) {
+          this.props.onChange(this.state.length, signals);
+      }
+      */
+  }
 
-        if (this.props.onChange != null) {
-            this.props.onChange(length, signals);
-        }
-    }
+  resetState() {
+    //this.setState({});
+  }
 
-    handleMappingChange = (event, row, column) => {
-        const signals = this.state.signals;
+  render() {
 
-        const length = this.state.length;
+      // filter all signals by Simulation Model ID and direction
+      let signals = this.props.signals.filter((sig) => {
+        return (sig.simulationModelID === this.props.simulationModelID) && (sig.direction === this.state.dir);
+      });
 
-        if (column === 1) {
-            signals[row].name = event.target.value;
-        } else if (column === 2) {
-            signals[row].type = event.target.value;
-        }
+      return(
 
-        this.setState({ length, signals });
+        <Dialog show={this.props.show} title="Edit Signal Mapping" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
 
-        if (this.props.onChange != null) {
-            this.props.onChange(this.state.length, signals);
-        }
-    }
-
-    render() {
-        return <div>
+          {/*
             <FormGroup validated={this.validateLength()}>
-                <FormLabel>{this.props.name} Length</FormLabel>
-                <FormControl name='length' type='number' placeholder='Enter length' defaultValue={this.state.length} min='1' onBlur={this.handleLengthChange} />
-                <FormControl.Feedback />
+              <FormLabel>{this.props.name} Length</FormLabel>
+              <FormControl name='length' type='number' placeholder='Enter length' defaultValue={this.state.length}
+                           min='1' onBlur={this.handleLengthChange}/>
+              <FormControl.Feedback/>
             </FormGroup>
+          */}
 
-            <FormGroup>
-                <FormLabel>{this.props.name} Mapping</FormLabel>
-                <FormText>Click <i>name</i> or <i>type</i> cell to edit</FormText>
-                <Table data={this.props.signals}>
-                    <TableColumn title='ID' width='60' dataIndex />
-                    <TableColumn title='Name' dataKey='name' inlineEditable onInlineChange={this.handleMappingChange} />
-                    <TableColumn title='Unit' dataKey='unit' inlineEditable onInlineChange={this.handleMappingChange} />
-                </Table>
-            </FormGroup>
-        </div>;
-    }
+          <FormGroup>
+              <FormLabel>{this.props.direction} Mapping</FormLabel>
+              <FormText>Click <i>name</i> or <i>type</i> cell to edit</FormText>
+              <Table data={signals}>
+                  <TableColumn title='Index' dataKey='index' inlineEditable onInlineChange={this.handleMappingChange()} />
+                  <TableColumn title='Name' dataKey='name' inlineEditable onInlineChange={this.handleMappingChange} />
+                  <TableColumn title='Unit' dataKey='unit' inlineEditable onInlineChange={this.handleMappingChange} />
+              </Table>
+          </FormGroup>
+        </Dialog>
+  );
+  }
 }
 
 EditSignalMapping.propTypes = {
@@ -122,7 +134,11 @@ EditSignalMapping.propTypes = {
     signals: PropTypes.arrayOf(
         PropTypes.shape({
             name: PropTypes.string.isRequired,
-            type: PropTypes.string.isRequired
+            unit: PropTypes.string.isRequired,
+            direction: PropTypes.string.isRequired,
+            simulationModelID: PropTypes.number.isRequired,
+            index: PropTypes.number.isRequired
+
         })
     ),
     onChange: PropTypes.func

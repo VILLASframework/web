@@ -22,4 +22,25 @@
 import ArrayStore from '../common/array-store';
 import SimulationModelsDataManager from './simulation-models-data-manager';
 
-export default new ArrayStore('simulationModels', SimulationModelsDataManager);
+class SimulationModelStore extends ArrayStore {
+
+  constructor() {
+    super('simulationModels', SimulationModelsDataManager);
+  }
+
+  reduce(state, action) {
+    switch (action.type) {
+
+      case 'simulationModels/loaded':
+
+        SimulationModelsDataManager.loadSignals(action.token, action.data);
+        return super.reduce(state, action);
+
+      default:
+        return super.reduce(state, action);
+
+    }
+  }
+}
+
+export default new SimulationModelStore();
