@@ -18,5 +18,27 @@
  ******************************************************************************/
 
 import RestDataManager from '../common/data-managers/rest-data-manager';
+import RestAPI from "../common/api/rest-api";
+import AppDispatcher from "../common/app-dispatcher";
 
-export default new RestDataManager('signal', '/signals');
+class SignalsDataManager extends RestDataManager{
+
+  constructor() {
+    super('signal', '/signals');
+  }
+
+  reloadSimulationModel(token, data){
+    // request in signals
+    console.log("Reloading simulation model due to signal add/remove")
+    RestAPI.get(this.makeURL('/models/' + data.simulationModelID), token).then(response => {
+      AppDispatcher.dispatch({
+        type: 'simulationModels/edited',
+        data: response.simulationModel
+      });
+    });
+
+  }
+
+}
+
+export default new SignalsDataManager()

@@ -20,4 +20,26 @@
 import ArrayStore from '../common/array-store';
 import SignalsDataManager from './signals-data-manager'
 
-export default new ArrayStore('signals', SignalsDataManager);
+class SignalStore extends  ArrayStore{
+  constructor() {
+    super('signals', SignalsDataManager);
+  }
+
+  reduce(state, action) {
+    switch (action.type) {
+      case 'signals/added':
+        SignalsDataManager.reloadSimulationModel(action.token, action.data);
+        return super.reduce(state, action);
+      case 'signals/removed':
+        SignalsDataManager.reloadSimulationModel(action.token, action.data);
+        return super.reduce(state, action);
+
+      default:
+        return super.reduce(state, action);
+    }
+  }
+
+
+}
+
+export default new SignalStore();

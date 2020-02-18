@@ -18,19 +18,20 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormGroup, FormLabel, FormText } from 'react-bootstrap';
+import {Button, FormGroup, FormLabel, FormText} from 'react-bootstrap';
 
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
 import Dialog from "../common/dialogs/dialog";
 
 import SignalStore from "./signal-store"
-import LoginStore from "../user/login-store";
+import Icon from "../common/icon";
 
 class EditSignalMapping extends React.Component {
+  valid = false;
 
   static getStores() {
-    return [ SignalStore, LoginStore];
+    return [ SignalStore];
   }
 
   constructor(props) {
@@ -44,84 +45,120 @@ class EditSignalMapping extends React.Component {
       }
 
       this.state = {
-        sessionToken: LoginStore.getState().token,
-        dir
+        dir,
+        signals: [],
       };
   }
 
-  componentDidMount(): void {
+  static getDerivedStateFromProps(props, state){
 
+    // filter all signals by Simulation Model ID and direction
+    let signals = props.signals.filter((sig) => {
+      return (sig.simulationModelID === props.simulationModelID) && (sig.direction === state.dir);
+    });
+
+    return {
+      signals: signals
+    };
   }
+
 
   onClose(canceled) {
       if (canceled === false) {
         if (this.valid) {
-          // TODO
-          let data = null;
+          let data = this.state.signals;
 
-          //forward modified simulation model to callback function
-          this.props.onClose(data)
+          //forward modified signals back to callback function
+          this.props.onCloseEdit(data, this.state.dir)
         }
       } else {
-        this.props.onClose();
+        this.props.onCloseEdit(null, this.state.dir);
       }
     }
+
+  onDelete(e){
+    console.log("On signal delete");
+  }
 
 
   handleMappingChange = (event, row, column) => {
       const signals = this.state.signals;
 
-      //const length = this.state.length;
-
       if (column === 1) { // Name change
-          signals[row].name = event.target.value;
+          if (event.target.value !== '') {
+            signals[row].name = event.target.value;
+            this.setState({signals: signals});
+            this.valid = true;
+          }
       } else if (column === 2) { // unit change
-          signals[row].unit = event.target.value;
+          if (event.target.value !== '') {
+            signals[row].unit = event.target.value;
+            this.setState({signals: signals});
+            this.valid = true;
+          }
       } else if (column === 0) { //index change
-          signals[row].index = event.target.value;
-      }
 
-      //this.setState({ length, signals });
-      //TODO dispatch changes by calling API
-
-      /*if (this.props.onChange != null) {
-          this.props.onChange(this.state.length, signals);
+            signals[row].index = parseInt(event.target.value, 10);
+            this.setState({signals: signals});
+            this.valid = true;
       }
-      */
-  }
+  };
+
+  handleDelete = (index) => {
+
+    let data = this.state.signals[index]
+    this.props.onDelete(data);
+
+  };
+
+  handleAdd = () => {
+    console.log("add signal");
+
+    let newSignal = {
+      simulationModelID: this.props.simulationModelID,
+      direction: this.state.dir,
+      name: "PlaceholderName",
+      unit: "PlaceholderUnit",
+      index: 999
+    };
+
+    this.props.onAdd(newSignal)
+
+  };
 
   resetState() {
-    //this.setState({});
-  }
+      this.valid=false;
 
-  render() {
-
-      // filter all signals by Simulation Model ID and direction
       let signals = this.props.signals.filter((sig) => {
         return (sig.simulationModelID === this.props.simulationModelID) && (sig.direction === this.state.dir);
       });
 
+      this.setState({signals: signals})
+  }
+
+  render() {
+
+      const buttonStyle = {
+        marginLeft: '10px'
+      };
+
       return(
 
-        <Dialog show={this.props.show} title="Edit Signal Mapping" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
-
-          {/*
-            <FormGroup validated={this.validateLength()}>
-              <FormLabel>{this.props.name} Length</FormLabel>
-              <FormControl name='length' type='number' placeholder='Enter length' defaultValue={this.state.length}
-                           min='1' onBlur={this.handleLengthChange}/>
-              <FormControl.Feedback/>
-            </FormGroup>
-          */}
+        <Dialog show={this.props.show} title="Edit Signal Mapping" buttonTitle="Save Edits" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
 
           <FormGroup>
               <FormLabel>{this.props.direction} Mapping</FormLabel>
-              <FormText>Click <i>name</i> or <i>type</i> cell to edit</FormText>
-              <Table data={signals}>
-                  <TableColumn title='Index' dataKey='index' inlineEditable onInlineChange={this.handleMappingChange()} />
-                  <TableColumn title='Name' dataKey='name' inlineEditable onInlineChange={this.handleMappingChange} />
-                  <TableColumn title='Unit' dataKey='unit' inlineEditable onInlineChange={this.handleMappingChange} />
+              <FormText>Click <i>Index</i>, <i>Name</i> or <i>Unit</i> cell to edit</FormText>
+              <Table data={this.state.signals}>
+                  <TableColumn title='Index' dataKey='index' inlineEditable onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
+                  <TableColumn title='Name' dataKey='name' inlineEditable onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
+                  <TableColumn title='Unit' dataKey='unit' inlineEditable onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
+                  <TableColumn title='Remove' deleteButton onDelete={(index) => this.handleDelete(index)} />
               </Table>
+
+              <div style={{ float: 'right' }}>
+                <Button onClick={() => this.handleAdd()} style={buttonStyle}><Icon icon="plus" /> Signal</Button>
+              </div>
           </FormGroup>
         </Dialog>
   );

@@ -138,7 +138,8 @@ class RestDataManager {
     RestAPI.post(this.requestURL('load/add',null,param), obj, token).then(response => {
         AppDispatcher.dispatch({
           type: this.type + 's/added',
-          data: response[this.type]
+          data: response[this.type],
+          token: token
         });
       }).catch(error => {
         AppDispatcher.dispatch({
@@ -153,7 +154,8 @@ class RestDataManager {
         AppDispatcher.dispatch({
           type: this.type + 's/removed',
           data: response[this.type],
-          original: object
+          original: object,
+          token: token
         });
       }).catch(error => {
         AppDispatcher.dispatch({

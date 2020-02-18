@@ -206,7 +206,7 @@ class CustomTable extends Component {
 
                     return (<td key={cellIndex} tabIndex={tabIndex} onClick={ evtHdls.onCellClick } onFocus={ evtHdls.onCellFocus } onBlur={ evtHdls.onCellBlur }>
                       {(this.state.editCell[0] === cellIndex && this.state.editCell[1] === rowIndex ) ? (
-                        <FormControl type="text" value={cell} onChange={(event) => children[cellIndex].props.onInlineChange(event, rowIndex, cellIndex)} inputRef={ref => { this.activeInput = ref; }} />
+                        <FormControl as='input' type="text" value={cell} onChange={(event) => children[cellIndex].props.onInlineChange(event, rowIndex, cellIndex)} ref={ref => { this.activeInput = ref; }} />
                       ) : (
                         <span>
                           {cell.map((element, elementIndex) => (
