@@ -21,7 +21,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { FormGroup, FormControl, FormLabel, Button, ProgressBar, Col } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel, Button, Col } from 'react-bootstrap';
 
 import FileStore from './file-store';
 import LoginStore from '../user/login-store';
@@ -105,19 +105,19 @@ class SelectFile extends React.Component {
 
   render() {
 
-    let fileOptions;
-    if (this.state.files.length > 0){
-      fileOptions = this.state.files.map(f =>
-        <option key={f.id} value={f.id}>{f.name}</option>
-      );
-    } else {
-      fileOptions = <option >No files for this simulation model</option>
-    }
+      let fileOptions;
+      if (this.state.files.length > 0){
+        fileOptions = this.state.files.map(f =>
+          <option key={f.id} value={f.id}>{f.name}</option>
+        );
+      } else {
+        fileOptions = <option >No files for this simulation model</option>
+      }
 
-      const progressBarStyle = {
+      /*const progressBarStyle = {
           marginLeft: '100px',
           marginTop: '-25px'
-      };
+      };*/
 
       return <div>
           <FormGroup>
