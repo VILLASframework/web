@@ -68,6 +68,18 @@ class SimulationModelDataManager extends RestDataManager {
 
     }
   }
+
+  loadFiles(token, models){
+    for (let model of models) {
+      // request files of simulation model
+      RestAPI.get(this.makeURL('/files?objectType=model&objectID=' + model.id), token).then(response => {
+        AppDispatcher.dispatch({
+          type: 'files/loaded',
+          data: response.files
+        });
+      });
+    }
+  }
 }
 
 export default new SimulationModelDataManager();

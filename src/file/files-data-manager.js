@@ -28,8 +28,8 @@ class FilesDataManager extends RestDataManager {
     super('file', '/files');
   }
 
-  upload(file, token = null, progressCallback = null, finishedCallback = null) {
-    RestAPI.upload(this.makeURL('/upload'), file, token, progressCallback).then(response => {
+  upload(file, token = null, progressCallback = null, finishedCallback = null, objectType, objectID) {
+    RestAPI.upload(this.makeURL(this.url), file, token, progressCallback, objectType, objectID).then(response => {
 
       AppDispatcher.dispatch({
         type: 'files/uploaded',
@@ -38,12 +38,13 @@ class FilesDataManager extends RestDataManager {
       // Trigger a files reload
       AppDispatcher.dispatch({
         type: 'files/start-load',
-        token
+        param: '?objectType=' + objectType + '&objectID=' + objectID,
+        token: token
       });
 
-      if (finishedCallback) {
+      /*if (finishedCallback) {
         finishedCallback();
-      }
+      }*/
     }).catch(error => {
       AppDispatcher.dispatch({
         type: 'files/upload-error',

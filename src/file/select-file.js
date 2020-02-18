@@ -27,15 +27,24 @@ import FileStore from './file-store';
 import LoginStore from '../user/login-store';
 
 import AppDispatcher from '../common/app-dispatcher';
+import Icon from "../common/icon";
 
 class SelectFile extends React.Component {
   static getStores() {
       return [ FileStore, LoginStore ];
   }
 
-  static calculateState() {
+
+  static calculateState(prevState, props) {
+
+    let files = FileStore.getState().filter((file) => {
+      return (file.simulationModelID === props.objectID)
+    });
+
+    console.log("props.objectID=", props.objectID)
+
       return {
-          files: FileStore.getState(),
+          files: files,
           sessionToken: LoginStore.getState().token,
           selectedFile: '',
           uploadFile: null,
@@ -51,59 +60,47 @@ class SelectFile extends React.Component {
   }*/
 
   static getDerivedStateFromProps(props, state){
-    if (props.value === state.selectedSimulator) {
-      return null;
-    }
 
-    let selectedSimulator = props.value;
-    if (selectedSimulator == null) {
-      if (state.simulators.length > 0) {
-        selectedSimulator = state.simulators[0]._id;
-      } else {
-        selectedSimulator = '';
-      }
-    }
 
-    return {selectedSimulator};
   }
 
-  handleChange = event => {
-      this.setState({ selectedFile: event.target.value });
+  handleChange(event) {
 
-      // send file to callback
+      // send file ID to callback
       if (this.props.onChange != null) {
-          const file = this.state.files.find(f => f.id === event.target.value);
-
-          this.props.onChange(file);
+          this.props.onChange(event.target.value);
       }
   };
 
-  selectUploadFile = event => {
+  selectUploadFile(event) {
       this.setState({ uploadFile: event.target.files[0] });
   };
 
-  startFileUpload = () => {
+  startFileUpload(){
       // upload file
       const formData = new FormData();
-      formData.append(0, this.state.uploadFile);
+      formData.append("file", this.state.uploadFile);
 
       AppDispatcher.dispatch({
           type: 'files/start-upload',
           data: formData,
           token: this.state.sessionToken,
-          progressCallback: this.updateUploadProgress,
-          finishedCallback: this.clearProgress
+          //progressCallback: this.updateUploadProgress,
+          //finishedCallback: this.clearProgress,
+          objectType: this.props.type,
+          objectID: this.props.objectID,
       });
   };
 
-  updateUploadProgress = event => {
+  updateUploadProgress = (event) => {// TODO: this callback does not work properly (access to setState)
       this.setState({ uploadProgress: parseInt(event.percent.toFixed(), 10) });
   };
 
-  clearProgress = () => {
-      // select uploaded file
-      const selectedFile = this.state.files[this.state.files.length - 1]._id;
-      this.setState({ selectedFile, uploadProgress: 0 });
+  clearProgress = () => { // TODO this callback does not work properly (access to setState)
+      if (this.props.onChange != null) {
+        this.props.onChange(this.state.files[this.state.files.length - 1].id);
+      }
+      this.setState({ uploadProgress: 0 });
   };
 
   render() {
@@ -129,27 +126,29 @@ class SelectFile extends React.Component {
               </FormLabel>
 
               <FormGroup as={Col} sm={9} md={10}>
-                  <FormControl as="select" disabled={this.props.disabled} placeholder='Select file' onChange={(e) => this.handleChange(e)}>
+                  <FormControl as="select" disabled={this.props.disabled} placeholder='Select file' onChange={(event) => this.handleChange(event)}>
                       {fileOptions}
                   </FormControl>
               </FormGroup>
           </FormGroup>
 
           <FormGroup as={Col} sm={{span: 9, offset: 3}} md={{span: 10, offset: 2}} >
-                  <FormControl disabled={this.props.disabled} type='file' onChange={this.selectUploadFile} />
+                  <FormControl disabled={this.props.disabled} type='file' onChange={(event) => this.selectUploadFile(event)} />
           </FormGroup>
 
           <FormGroup as={Col} sm={{span: 9, offset: 3}} md={{span: 10, offset : 2}}>
-                  <Button disabled={this.props.disabled} onClick={this.startFileUpload}>
-                      Upload file
+                  <Button disabled={this.props.disabled} onClick={() => this.startFileUpload()}>
+                    <Icon icon="plus" /> File
                   </Button>
           </FormGroup>
-          <FormGroup as={Col} sm={{span: 9, offset: 3}} md={{span: 10, offset : 2}}>
-                  <ProgressBar striped animated now={this.state.uploadProgress} label={this.state.uploadProgress + '%'} style={progressBarStyle} />
-          </FormGroup>
+        {/*<FormGroup as={Col} sm={{span: 9, offset: 3}} md={{span: 10, offset: 2}}>
+          <ProgressBar striped animated now={this.state.uploadProgress} label={this.state.uploadProgress + '%'}
+                       style={progressBarStyle}/>
+        </FormGroup>
+        */}
       </div>;
   }
 }
 
 let fluxContainerConverter = require('../common/FluxContainerConverter');
-export default Container.create(fluxContainerConverter.convert(SelectFile));
+export default Container.create(fluxContainerConverter.convert(SelectFile), { withProps: true });

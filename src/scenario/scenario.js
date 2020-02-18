@@ -44,10 +44,11 @@ import SimulatorAction from '../simulator/simulator-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
 import EditSimulationModelDialog from "../simulationmodel/edit-simulation-model";
 import EditSignalMapping from "../signal/edit-signal-mapping";
+import FileStore from "../file/file-store"
 
 class Scenario extends React.Component {
   static getStores() {
-    return [ ScenarioStore, SimulationModelStore, DashboardStore, SimulatorStore, LoginStore, SignalStore];
+    return [ ScenarioStore, SimulationModelStore, DashboardStore, SimulatorStore, LoginStore, SignalStore, FileStore];
   }
 
   static calculateState(prevState, props) {
@@ -70,6 +71,7 @@ class Scenario extends React.Component {
     let simulationModels = SimulationModelStore.getState().filter(simmodel => simmodel.scenarioID === parseInt(props.match.params.scenario, 10));
 
     let signals = SignalStore.getState();
+    let files = FileStore.getState();
 
 
     return {
@@ -78,6 +80,7 @@ class Scenario extends React.Component {
       simulationModels,
       dashboards,
       signals,
+      files,
       simulators: SimulatorStore.getState(),
 
       deleteSimulationModelModal: false,
@@ -129,14 +132,9 @@ class Scenario extends React.Component {
 
   }
 
-  static getDerivedStateFromProps(props, state){
-
-    let simulationModels = SimulationModelStore.getState().filter(simmodel => simmodel.scenarioID === parseInt(props.match.params.scenario, 10));
-
-    return {
-      simulationModels: simulationModels
-    };
-  }
+  /* ##############################################
+  * Simulation Model modification methods
+  ############################################## */
 
   addSimulationModel(){
     const simulationModel = {
@@ -171,54 +169,6 @@ class Scenario extends React.Component {
         token: this.state.sessionToken,
       });
     }
-  }
-
-  closeDeleteSignalModal(data){
-      // data contains the signal to be deleted
-      if (data){
-
-        AppDispatcher.dispatch({
-          type: 'signals/start-remove',
-          data: data,
-          token: this.state.sessionToken
-        });
-
-      }
-  }
-
-  closeNewSignalModal(data){
-      //data contains the new signal incl. simulationModelID and direction
-      if (data) {
-        AppDispatcher.dispatch({
-          type: 'signals/start-add',
-          data: data,
-          token: this.state.sessionToken
-        });
-      }
-  }
-
-  closeEditSignalsModal(data, direction){
-
-    if( direction === "in") {
-      this.setState({editInputSignalsModal: false});
-    } else if( direction === "out"){
-      this.setState({editOutputSignalsModal: false});
-    } else {
-      return; // no valid direction
-    }
-
-    if (data){
-      //data is an array of signals
-      for (let sig of data) {
-        //dispatch changes to signals
-        AppDispatcher.dispatch({
-          type: 'signals/start-edit',
-          data: sig,
-          token: this.state.sessionToken,
-        });
-      }
-    }
-
   }
 
   closeDeleteSimulationModelModal(confirmDelete) {
@@ -259,74 +209,13 @@ class Scenario extends React.Component {
     });
   }
 
-  closeNewDashboardModal(data) {
-    this.setState({ newDashboardModal : false });
-
-    if (data) {
-      AppDispatcher.dispatch({
-        type: 'dashboards/start-add',
-        data,
-        token: this.state.sessionToken,
-      });
-    }
-  }
-
-  closeDeleteDashboardModal(confirmDelete){
-    this.setState({ deleteDashboardModal: false });
-
-    if (confirmDelete === false) {
-      return;
-    }
-
-    AppDispatcher.dispatch({
-      type: 'dashboards/start-remove',
-      data: this.state.modalDashboardData,
-      token: this.state.sessionToken,
-    });
-  }
-
-  closeImportDashboardModal(data) {
-    this.setState({ importDashboardModal: false });
-
-    if (data) {
-      AppDispatcher.dispatch({
-        type: 'dashboards/start-add',
-        data,
-        token: this.state.sessionToken,
-      });
-    }
-  }
-
-  getSimulatorName(simulatorId) {
-    for (let simulator of this.state.simulators) {
-      if (simulator.id === simulatorId) {
-        return _.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name') ||  simulator.uuid;
-      }
-    }
-  }
-
   exportModel(index) {
     // filter properties
     const model = Object.assign({}, this.state.simulationModels[index]);
 
-    //delete model.simulator;
-    //delete model.scenario;
-    // TODO get elements recursively
-
     // show save dialog
     const blob = new Blob([JSON.stringify(model, null, 2)], { type: 'application/json' });
     FileSaver.saveAs(blob, 'simulation model - ' + model.name + '.json');
-  }
-
-  exportDashboard(index) {
-    // filter properties
-    const dashboard = Object.assign({}, this.state.dashboards[index]);
-
-    // TODO get elements recursively
-
-    // show save dialog
-    const blob = new Blob([JSON.stringify(dashboard, null, 2)], { type: 'application/json' });
-    FileSaver.saveAs(blob, 'dashboard - ' + dashboard.name + '.json');
   }
 
   onSimulationModelChecked(index, event) {
@@ -379,9 +268,139 @@ class Scenario extends React.Component {
         token: this.state.sessionToken
       });
     }
+  };
+
+  getSimulatorName(simulatorId) {
+    for (let simulator of this.state.simulators) {
+      if (simulator.id === simulatorId) {
+        return _.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name') ||  simulator.uuid;
+      }
+    }
   }
 
+  /* ##############################################
+  * Dashboard modification methods
+  ############################################## */
+
+  closeNewDashboardModal(data) {
+    this.setState({ newDashboardModal : false });
+
+    if (data) {
+      AppDispatcher.dispatch({
+        type: 'dashboards/start-add',
+        data,
+        token: this.state.sessionToken,
+      });
+    }
+  }
+
+  closeDeleteDashboardModal(confirmDelete){
+    this.setState({ deleteDashboardModal: false });
+
+    if (confirmDelete === false) {
+      return;
+    }
+
+    AppDispatcher.dispatch({
+      type: 'dashboards/start-remove',
+      data: this.state.modalDashboardData,
+      token: this.state.sessionToken,
+    });
+  }
+
+  closeImportDashboardModal(data) {
+    this.setState({ importDashboardModal: false });
+
+    if (data) {
+      AppDispatcher.dispatch({
+        type: 'dashboards/start-add',
+        data,
+        token: this.state.sessionToken,
+      });
+    }
+  }
+
+  exportDashboard(index) {
+    // filter properties
+    const dashboard = Object.assign({}, this.state.dashboards[index]);
+
+    // TODO get elements recursively
+
+    // show save dialog
+    const blob = new Blob([JSON.stringify(dashboard, null, 2)], { type: 'application/json' });
+    FileSaver.saveAs(blob, 'dashboard - ' + dashboard.name + '.json');
+  }
+
+  /* ##############################################
+  * Signal modification methods
+  ############################################## */
+
+  closeDeleteSignalModal(data){
+    // data contains the signal to be deleted
+    if (data){
+
+      AppDispatcher.dispatch({
+        type: 'signals/start-remove',
+        data: data,
+        token: this.state.sessionToken
+      });
+
+    }
+  }
+
+  closeNewSignalModal(data){
+    //data contains the new signal incl. simulationModelID and direction
+    if (data) {
+      AppDispatcher.dispatch({
+        type: 'signals/start-add',
+        data: data,
+        token: this.state.sessionToken
+      });
+    }
+  }
+
+  closeEditSignalsModal(data, direction){
+
+    if( direction === "in") {
+      this.setState({editInputSignalsModal: false});
+    } else if( direction === "out"){
+      this.setState({editOutputSignalsModal: false});
+    } else {
+      return; // no valid direction
+    }
+
+    if (data){
+      //data is an array of signals
+      for (let sig of data) {
+        //dispatch changes to signals
+        AppDispatcher.dispatch({
+          type: 'signals/start-edit',
+          data: sig,
+          token: this.state.sessionToken,
+        });
+      }
+    }
+
+  }
+
+  /* ##############################################
+  * File modification methods
+  ############################################## */
+
+  getFileName(id){
+    for (let file of this.state.files) {
+      if (file.id === id) {
+        return file.name;
+      }
+    }
+  }
+
+  /* ##############################################
+  * Render method
+  ############################################## */
+
   render() {
+
     const buttonStyle = {
       marginLeft: '10px'
     };
@@ -394,6 +413,7 @@ class Scenario extends React.Component {
       <Table data={this.state.simulationModels}>
         <TableColumn checkbox onChecked={(index, event) => this.onSimulationModelChecked(index, event)} width='30' />
         <TableColumn title='Name' dataKey='name' />
+        <TableColumn title='Selected model file' dataKey='selectedModelFileID' modifier={(selectedModelFileID) => this.getFileName(selectedModelFileID)}/>
         <TableColumn
           title='# Output Signals'
           dataKey='outputLength'

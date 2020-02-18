@@ -34,6 +34,7 @@ class SimulationModelStore extends ArrayStore {
       case 'simulationModels/loaded':
 
         SimulationModelsDataManager.loadSignals(action.token, action.data);
+        SimulationModelsDataManager.loadFiles(action.token, action.data);
         return super.reduce(state, action);
 
       default:

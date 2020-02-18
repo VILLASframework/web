@@ -129,9 +129,9 @@ class RestAPI {
     });
   }
 
-  upload(url, data, token, progressCallback) {
+  upload(url, data, token, progressCallback, objectType, objectID) {
     return new Promise(function (resolve, reject) {
-      const req = request.post(url).send(data).on('progress', progressCallback);
+      const req = request.post(url + "?objectType=" + objectType + "&objectID=" + objectID).send(data); //.on('progress', progressCallback);
 
       if (token != null) {
         req.set('Authorization', "Bearer " + token);

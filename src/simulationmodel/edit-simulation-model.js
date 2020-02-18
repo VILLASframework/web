@@ -21,7 +21,7 @@ import _ from 'lodash';
 
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
-//import SelectFile from "../file/select-file";
+import SelectFile from "../file/select-file";
 
 class EditSimulationModelDialog extends React.Component {
     valid = false;
@@ -35,6 +35,7 @@ class EditSimulationModelDialog extends React.Component {
             simulatorID: '',
             configuration: null,
             startParameters: {},
+            selectedModelFileID:0
 
         };
     }
@@ -45,18 +46,18 @@ class EditSimulationModelDialog extends React.Component {
             if (this.valid) {
                 let data = this.props.simulationModel;
                 if (this.state.name !== '' && this.props.simulationModel.name !== this.state.name) {
-                    console.log("name update");
                     data.name = this.state.name;
                 }
                 if (this.state.simulatorID !== '' && this.props.simulationModel.simulatorID !== parseInt(this.state.simulatorID)) {
-                    console.log("SimulatorID update");
                     data.simulatorID = parseInt(this.state.simulatorID, 10);
                 }
                 if(this.state.startParameters !==  {} && this.props.simulationModel.startParameters !== this.state.startParameters){
-                    console.log("Start Parameters update");
                     data.startParameters = this.state.startParameters;
                 }
-                // TODO selectedFile and configuration?!
+                if (parseInt(this.state.selectedModelFileID, 10) !== 0 &&
+                  this.props.simulationModel.selectedModelFileID !== parseInt(this.state.selectedModelFileID)) {
+                  data.selectedModelFileID = parseInt(this.state.selectedModelFileID, 10);
+                }
 
                 //forward modified simulation model to callback function
                 this.props.onClose(data)
@@ -68,19 +69,33 @@ class EditSimulationModelDialog extends React.Component {
 
     handleChange(e) {
         this.setState({ [e.target.id]: e.target.value });
-
-        // input is valid if at least one element has changed from its initial value
-        this.valid = this.state.name !== '' || this.state.simulatorID !== ''|| this.state.startParameters !== {} || this.state.selectedFile != null || this.state.configuration != null;
+        this.valid = this.isValid()
     }
 
     handleParameterChange(data) {
       if (data) {
-        console.log("Start parameter change")
         this.setState({startParameters: data});
       }
 
+
+      this.valid = this.isValid()
+    }
+
+    handleSelectedModelFileChange(newFileID){
+      console.log("Model file change to: ", newFileID);
+      this.setState({selectedModelFileID: newFileID})
+
+      this.valid = this.isValid()
+    }
+
+    isValid() {
       // input is valid if at least one element has changed from its initial value
-      this.valid = this.state.name !== '' || this.state.simulatorID !== ''|| this.state.startParameters !== {} || this.state.selectedFile != null || this.state.configuration != null;
+      return this.state.name !== ''
+        || this.state.simulatorID !== ''
+        || this.state.startParameters !== {}
+        || this.state.selectedFile != null
+        || this.state.configuration != null
+        || this.state.selectedModelFileID !== 0;
     }
 
     resetState() {
@@ -108,11 +123,13 @@ class EditSimulationModelDialog extends React.Component {
                       </FormControl>
                     </FormGroup>
 
-                      {/*
-                        <SelectFile type='model' name='Model' onChange={(e) => this.handleChange(e)}
-                                    value={this.state.selectedFile}/>
-                        < SelectFile type='configuration' name='Configuration' onChange={(e) => this.handleChange(e)} value={this.state.configuration} />
-                      */}
+
+                    <SelectFile type='model' name='Simulation Model File' onChange={(e) => this.handleSelectedModelFileChange(e)} value={this.state.selectedModelFileID} objectID={this.props.simulationModel.id}/>
+
+
+                  {/*<SelectFile type='configuration' name='Configuration' onChange={(e) => this.handleChange(e)} value={this.state.configuration} />*/}
+
+
 
 
 
