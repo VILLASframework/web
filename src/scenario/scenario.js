@@ -143,6 +143,7 @@ class Scenario extends React.Component {
       scenarioID: this.state.scenario.id,
       name: 'New Simulation Model',
       simulatorID: this.state.simulators.length > 0 ? this.state.simulators[0].id : null,
+      startParameters: {},
     };
 
     AppDispatcher.dispatch({
@@ -209,8 +210,6 @@ class Scenario extends React.Component {
     if (data){
       //data is an array of signals
       for (let sig of data) {
-        //TODO: Check if new signal is added by checking id set to -1?
-
         //dispatch changes to signals
         AppDispatcher.dispatch({
           type: 'signals/start-edit',
