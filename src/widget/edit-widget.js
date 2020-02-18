@@ -58,7 +58,7 @@ class EditWidgetDialog extends React.Component {
 
   assignAspectRatio(changeObject, fileId) {
     // get aspect ratio of file
-    const file = this.props.files.find(element => element._id === fileId);
+    const file = this.props.files.find(element => element.id === fileId);
 
     // scale width to match aspect
     const aspectRatio = file.dimensions.width / file.dimensions.height;

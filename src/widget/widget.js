@@ -89,10 +89,12 @@ class Widget extends React.Component {
       param: '?objectID=1&objectType=widget'
     });*/
 
+    // TODO no not load simulation models here, since they are loaded via the scenario, pass them as props
+
     AppDispatcher.dispatch({
       type: 'simulationModels/start-load',
       token: this.state.sessionToken,
-      param: '?scenarioID=1'
+      param: '?scenarioID=1' // TODO do not hardcode scenarioID!
     });
 
   }
@@ -101,7 +103,7 @@ class Widget extends React.Component {
     let simulationModel = null;
 
     for (let model of this.state.simulationModels) {
-      if (model._id !== widget.simulationModel) {
+      if (model.id !== widget.simulationModel) {
         continue;
       }
 
@@ -120,7 +122,7 @@ class Widget extends React.Component {
     let simulationModel = null;
 
     for (let model of this.state.simulationModels) {
-      if (model._id !== widget.simulationModel) {
+      if (model.id !== widget.simulationModel) {
         continue;
       }
 
