@@ -45,6 +45,8 @@ class WidgetSlider extends Component {
   }
 
   static getDerivedStateFromProps(props, state){
+    let returnState = {};
+
     if(props.widget.signalIDs.length === 0){
 
       // set value to default
@@ -55,8 +57,6 @@ class WidgetSlider extends Component {
       }
 
     }
-
-    let returnState = {};
 
     // Update value
     if (props.widget.customProperties.default_value && state.value === undefined) {
