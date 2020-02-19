@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-
+// TODO remove this file (not used!)
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormControl, Button } from 'react-bootstrap';

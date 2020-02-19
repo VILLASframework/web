@@ -44,7 +44,6 @@ import Simulators from './simulator/simulators';
 import Dashboard from './dashboard/dashboard';
 import Scenarios from './scenario/scenarios';
 import Scenario from './scenario/scenario';
-import SimulationModel from './simulationmodel/simulation-model';
 import Users from './user/users';
 import User from './user/user';
 
@@ -137,7 +136,6 @@ class App extends React.Component {
                 <Route path="/dashboards/:dashboard" component={Dashboard} />
                 <Route exact path="/scenarios" component={Scenarios} />
                 <Route path="/scenarios/:scenario" component={Scenario} />
-                <Route path="/simulationModel/:simulationModel" component={SimulationModel} />
                 <Route path="/simulators" component={Simulators} />
                 <Route path="/user" component={User} />
                 <Route path="/users" component={Users} />
