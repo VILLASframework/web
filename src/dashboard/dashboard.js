@@ -25,11 +25,10 @@ import Fullscreenable from 'react-fullscreenable';
 import classNames from 'classnames';
 
 import Widget from '../widget/widget';
-import EditWidget from '../widget/edit-widget';
-
-import WidgetContextMenu from './widget-context-menu';
-import WidgetToolbox from './widget-toolbox';
-import WidgetArea from './widget-area';
+import EditWidget from '../widget/edit-widget/edit-widget';
+import WidgetContextMenu from '../widget/widget-context-menu';
+import WidgetToolbox from '../widget/widget-toolbox';
+import WidgetArea from '../widget/widget-area';
 import DashboardButtonGroup from './dashboard-button-group';
 
 import LoginStore from '../user/login-store';

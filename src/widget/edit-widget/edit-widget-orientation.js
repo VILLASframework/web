@@ -22,7 +22,7 @@
 import React, { Component } from 'react';
 import { FormGroup, Col, Row, FormCheck, FormLabel } from 'react-bootstrap';
 
-import WidgetSlider from './widgets/slider';
+import WidgetSlider from '../widgets/slider';
 
 class EditWidgetOrientation extends Component {
   constructor(props) {

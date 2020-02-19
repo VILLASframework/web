@@ -22,7 +22,7 @@
 import React from 'react';
 //import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
-import Dialog from '../common/dialogs/dialog';
+import Dialog from '../../common/dialogs/dialog';
 
 import CreateControls from './edit-widget-control-creator';
 

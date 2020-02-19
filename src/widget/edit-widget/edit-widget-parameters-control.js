@@ -21,7 +21,7 @@
 
 import React, { Component } from 'react';
 import { FormGroup, FormLabel } from 'react-bootstrap';
-import ParametersEditor from '../common/parameters-editor';
+import ParametersEditor from '../../common/parameters-editor';
 
 class EditWidgetParametersControl extends Component {
   constructor(props) {

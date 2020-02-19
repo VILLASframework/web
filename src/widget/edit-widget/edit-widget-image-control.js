@@ -22,7 +22,7 @@
 import React from 'react';
 import { FormGroup, FormControl, FormLabel, Button, ProgressBar } from 'react-bootstrap';
 
-import AppDispatcher from '../common/app-dispatcher';
+import AppDispatcher from '../../common/app-dispatcher';
 
 class EditImageWidgetControl extends React.Component {
   constructor(props) {

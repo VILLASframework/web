@@ -22,7 +22,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu, Item, Separator, MenuProvider } from 'react-contexify';
-import Widget from '../widget/widget';
+import Widget from './widget';
 
 class WidgetContextMenu extends React.Component {
   editWidget = event => {

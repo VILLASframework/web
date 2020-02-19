@@ -21,7 +21,7 @@
 
 import React, { Component } from 'react';
 
-import EditWidgetColorControl from '../edit-widget-color-control';
+import EditWidgetColorControl from '../edit-widget/edit-widget-color-control';
 
 class WidgetLabel extends Component {
   render() {

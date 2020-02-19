@@ -23,9 +23,9 @@ import React from 'react';
 import { FormGroup, FormLabel, Button } from 'react-bootstrap';
 
 
-import Icon from '../common/icon';
-import Table from '../common/table';
-import TableColumn from '../common/table-column';
+import Icon from '../../common/icon';
+import Table from '../../common/table';
+import TableColumn from '../../common/table-column';
 
 class EditWidgetColorZonesControl extends React.Component {
   constructor(props) {
