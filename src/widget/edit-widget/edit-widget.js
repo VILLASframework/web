@@ -69,7 +69,7 @@ class EditWidgetDialog extends React.Component {
 
   handleChange(e) {
   // TODO: check what we really need in this function. Can we reduce its complexity?
-     if (e.constructor === Array) {
+    if (e.constructor === Array) {
       // Every property in the array will be updated
       let changes = e.reduce( (changesObject, event) => {
         changesObject[event.target.id] = event.target.value;
@@ -80,46 +80,42 @@ class EditWidgetDialog extends React.Component {
       this.setState({ temporal: Object.assign({}, this.state.temporal, changes ) });
     }
 
-        if(e.target.type !== 'text'){
-        let changeObject = {};
-        if (e.target.id === 'lockAspect') {
-          changeObject[e.target.id] = e.target.checked;
+    if(e.target.type !== 'text'){
+      let changeObject = {};
+      if (e.target.id === 'lockAspect') {
+        changeObject[e.target.id] = e.target.checked;
 
-          // correct image aspect if turned on
-          if (e.target.checked) {
-            changeObject = this.assignAspectRatio(changeObject, this.state.temporal.file);
-          }
-        } else if (e.target.id === 'file') {
-          changeObject[e.target.id] = e.target.value;
-
-          // get file and update size (if it's an image)
-          if ('lockAspect' in this.state.temporal && this.state.temporal.lockAspect) {
-            changeObject = this.assignAspectRatio(changeObject, e.target.value);
-          }
-        } else if (e.target.type === 'checkbox') {
-          changeObject[e.target.id] = e.target.checked;
-        } else if (e.target.type === 'number') {
-          changeObject[e.target.id] = Number(e.target.value);
+        // correct image aspect if turned on
+        if (e.target.checked) {
+          changeObject = this.assignAspectRatio(changeObject, this.state.temporal.file);
         }
+      } else if (e.target.id === 'file') {
+        changeObject[e.target.id] = e.target.value;
 
-        else {
-          changeObject[e.target.id] = e.target.value;
+        // get file and update size (if it's an image)
+        if ('lockAspect' in this.state.temporal && this.state.temporal.lockAspect) {
+          changeObject = this.assignAspectRatio(changeObject, e.target.value);
         }
+      } else if (e.target.type === 'checkbox') {
+        changeObject[e.target.id] = e.target.checked;
+      } else if (e.target.type === 'number') {
+        changeObject[e.target.id] = Number(e.target.value);
+      } else {
+        changeObject[e.target.id] = e.target.value;
+      }
 
+      let finalChange = this.state.temporal;
 
+      finalChange.customProperties[e.target.id] = changeObject[e.target.id];
+      this.setState({ temporal: finalChange});
+    } else {
+      if(this.state.temporal[e.target.id]){
         let finalChange = this.state.temporal;
 
-        finalChange.customProperties[e.target.id] = changeObject[e.target.id];
+        finalChange[e.target.id] = e.target.value;
         this.setState({ temporal: finalChange});
       }
-      else{
-        if(this.state.temporal[e.target.id]){
-          let finalChange = this.state.temporal;
-
-          finalChange[e.target.id] = e.target.value;
-          this.setState({ temporal: finalChange});
-        }
-      }
+    }
   }
 
   resetState() {
@@ -151,7 +147,7 @@ class EditWidgetDialog extends React.Component {
             this.props.sessionToken,
             this.props.files,
             (id) => this.validateForm(id),
-            this.props.simulationModels,
+            this.props.signals,
             (e) => this.handleChange(e));
     }
 

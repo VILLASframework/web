@@ -34,11 +34,13 @@ class WidgetLamp extends Component {
   }
 
   static getDerivedStateFromProps(props, state){
-    if (props.simulationModel == null) {
+    if(props.widget.signalIDs.length === 0){
       return{ value: ''};
     }
 
-    const simulator = props.simulationModel.simulator;
+    const simulator = props.simulatorIDs[0];
+    let signalID = props.widget.signalIDs[0];
+    let widgetSignal = props.signals.find(sig => sig.id === signalID);
 
     // update value
     if (props.data == null
@@ -49,9 +51,9 @@ class WidgetLamp extends Component {
     }
 
     // check if value has changed
-    const signal = props.data[simulator].output.values[props.widget.customProperties.signal];
-    if (signal != null && state.value !== signal[signal.length - 1].y) {
-      return { value: signal[signal.length - 1].y };
+    const signalData = props.data[simulator].output.values[widgetSignal.index];
+    if (signalData != null && state.value !== signalData[signalData.length - 1].y) {
+      return { value: signalData[signalData.length - 1].y };
     }
 
     return null;

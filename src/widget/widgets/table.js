@@ -38,14 +38,24 @@ class WidgetTable extends Component {
 
 
   static getDerivedStateFromProps(props, state){
-    if (props.simulationModel == null) {
+
+    if(props.widget.signalIDs.length === 0){
       return{
         rows: [],
         sequence: null,
       };
     }
 
-    const simulator = props.simulationModel.simulator;
+
+    const simulator = props.simulatorIDs[0];
+    let widgetSignals = props.signals.find(sig => {
+      for (let id of props.widget.signalIDs){
+        if (id === sig.id){
+          return true;
+        }
+      }
+      return false;
+    });
 
     // check data
     if (props.data == null
@@ -62,19 +72,17 @@ class WidgetTable extends Component {
       };
     }
 
-    // check if new data, otherwise skip
-    /*if (state.sequence >= props.data[simulator.node][simulator.simulator].sequence) {
-      return;
-    }*/
-
     // get rows
     const rows = [];
 
     props.data[simulator].output.values.forEach((signal, index) => {
-      if (index < props.simulationModel.outputMapping.length) {
+      let s = widgetSignals.find( sig => sig.index === index);
+      // if the signal is used by the widget
+      if (s !== undefined) {
+        // push data of the signal
         rows.push({
-          name: props.simulationModel.outputMapping[index].name,
-          unit: props.simulationModel.outputMapping[index].type,
+          name: s.name,
+          unit: s.unit,
           value: signal[signal.length - 1].y
         });
       }

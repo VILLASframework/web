@@ -27,6 +27,7 @@ import LoginStore from '../user/login-store';
 import SimulatorDataStore from '../simulator/simulator-data-store';
 import SimulationModelStore from '../simulationmodel/simulation-model-store';
 import FileStore from '../file/file-store';
+import SignalStore from '../signal/signal-store'
 
 import EditableWidgetContainer from './editable-widget-container';
 import WidgetContainer from './widget-container';
@@ -52,7 +53,7 @@ import '../styles/widgets.css';
 
 class Widget extends React.Component {
   static getStores() {
-    return [ SimulatorDataStore, SimulationModelStore, FileStore, LoginStore ];
+    return [ SimulatorDataStore, SimulationModelStore, FileStore, LoginStore, SignalStore];
   }
 
   static calculateState(prevState, props) {
@@ -67,10 +68,25 @@ class Widget extends React.Component {
       simulatorData = SimulatorDataStore.getState();
     }
 
+    // Get the simulator IDs and signal indexes for all signals of the widget
+    let simulationModels = SimulationModelStore.getState();
+    // TODO make sure that the signals are only the signals that belong to the scenario at hand
+    let signals = SignalStore.getState();
+    let simulatorIDs = [];
+    if ( props.data.signalIDs.length > 0){
+      for (let i in props.data.signalIDs.length){
+        let signal = signals.find(s => s.id === props.data.signalIDs[i]);
+        let model = simulationModels.find(m => m.id === signal.simulationModelID);
+        simulatorIDs[i] = model.simulatorID;
+      }
+    }
+
+
     return {
       simulatorData,
+      signals: signals,
+      simulatorIDs: simulatorIDs,
       files: FileStore.getState(),
-      simulationModels: SimulationModelStore.getState(),
 
       sequence: prevState != null ? prevState.sequence + 1 : 0,
 
@@ -90,71 +106,53 @@ class Widget extends React.Component {
     });*/
 
     // TODO no not load simulation models here, since they are loaded via the scenario, pass them as props
-
+    /*
     AppDispatcher.dispatch({
       type: 'simulationModels/start-load',
       token: this.state.sessionToken,
       param: '?scenarioID=1' // TODO do not hardcode scenarioID!
     });
-
+    */
   }
 
   inputDataChanged(widget, data) {
-    let simulationModel = null;
-
-    for (let model of this.state.simulationModels) {
-      if (model.id !== widget.simulationModel) {
-        continue;
-      }
-
-      simulationModel = model;
-    }
-
+    // The following assumes that a widget modifies/ uses exactly one signal
     AppDispatcher.dispatch({
       type: 'simulatorData/inputChanged',
-      simulator: simulationModel.simulator,
-      signal: widget.signal,
+      simulator: this.state.simulatorIDs[0],
+      signal: this.state.signals[0].index,
       data
     });
   }
 
   createWidget(widget) {
-    let simulationModel = null;
-
-    for (let model of this.state.simulationModels) {
-      if (model.id !== widget.simulationModel) {
-        continue;
-      }
-
-      simulationModel = model;
-    }
 
     if (widget.type === 'CustomAction') {
-      return <WidgetCustomAction widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
+      return <WidgetCustomAction widget={widget} data={this.state.simulatorData} dummy={this.state.sequence}  signals={this.state.signals} simulatorIDs={this.state.simulatorIDs} />
     } else if (widget.type === 'Action') {
-      return <WidgetAction widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel}/>
+      return <WidgetAction widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} />
     } else if (widget.type === 'Lamp') {
-      return <WidgetLamp widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
+      return <WidgetLamp widget={widget} data={this.state.simulatorData} dummy={this.state.sequence}  signals={this.state.signals} simulatorIDs={this.state.simulatorIDs} />
     } else if (widget.type === 'Value') {
-      return <WidgetValue widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
+      return <WidgetValue widget={widget} data={this.state.simulatorData} dummy={this.state.sequence}  signals={this.state.signals} simulatorIDs={this.state.simulatorIDs} />
     } else if (widget.type === 'Plot') {
-      return <WidgetPlot widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} paused={this.props.paused} />
+      return <WidgetPlot widget={widget} data={this.state.simulatorData} dummy={this.state.sequence}  paused={this.props.paused} />
     } else if (widget.type === 'Table') {
-      return <WidgetTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} />
+      return <WidgetTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} signals={this.state.signals} simulatorIDs={this.state.simulatorIDs}  />
     } else if (widget.type === 'Label') {
       return <WidgetLabel widget={widget} />
     } else if (widget.type === 'PlotTable') {
-      return <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} simulationModel={simulationModel} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index)} paused={this.props.paused} />
+      return <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index)} paused={this.props.paused} />
     } else if (widget.type === 'Image') {
       return <WidgetImage widget={widget} files={this.state.files} token={this.state.sessionToken} />
     } else if (widget.type === 'Button') {
-      return <WidgetButton widget={widget} editing={this.props.editing} simulationModel={simulationModel} onInputChanged={(value) => this.inputDataChanged(widget, value)} />
+      return <WidgetButton widget={widget} editing={this.props.editing}  onInputChanged={(value) => this.inputDataChanged(widget, value)} signals={this.state.signals} />
     } else if (widget.type === 'NumberInput') {
-      return <WidgetInput widget={widget} editing={this.props.editing} simulationModel={simulationModel} onInputChanged={(value) => this.inputDataChanged(widget, value)} />
+      return <WidgetInput widget={widget} editing={this.props.editing}  onInputChanged={(value) => this.inputDataChanged(widget, value)} />
     } else if (widget.type === 'Slider') {
-      return <WidgetSlider widget={widget} editing={this.props.editing} simulationModel={simulationModel} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } onInputChanged={value => this.inputDataChanged(widget, value)} />
+      return <WidgetSlider widget={widget} editing={this.props.editing}  onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } onInputChanged={value => this.inputDataChanged(widget, value)} signals={this.state.signals}/>
     } else if (widget.type === 'Gauge') {
-      return <WidgetGauge widget={widget} data={this.state.simulatorData} editing={this.props.editing} simulationModel={simulationModel} />
+      return <WidgetGauge widget={widget} data={this.state.simulatorData} editing={this.props.editing} signals={this.state.signals} simulatorIDs={this.state.simulatorIDs}  />
     } else if (widget.type === 'Box') {
       return <WidgetBox widget={widget} editing={this.props.editing} />
     } else if (widget.type === 'HTML') {

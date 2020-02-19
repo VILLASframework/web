@@ -40,7 +40,7 @@ class WidgetArea extends React.Component {
     position.x = this.snapToGrid(position.x);
     position.y = this.snapToGrid(position.y);
 
-    const widget = WidgetFactory.createWidgetOfType(item.name, position, this.props.defaultSimulationModel);
+    const widget = WidgetFactory.createWidgetOfType(item.name, position);
 
     if (this.props.onWidgetAdded != null) {
       this.props.onWidgetAdded(widget);
@@ -66,7 +66,6 @@ WidgetArea.propTypes = {
   children: PropTypes.node, //TODO is .node correct here? Was .children before leading to compile error
   editing: PropTypes.bool,
   grid: PropTypes.number,
-  defaultSimulationModel: PropTypes.string,
   //widgets: PropTypes.array,
   onWidgetAdded: PropTypes.func
 };

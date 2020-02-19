@@ -27,9 +27,7 @@ class EditWidgetSignalControl extends Component {
     super(props);
 
     this.state = {
-      widget: {
-        simulationModel: ''
-      }
+      widget: {}
     };
   }
 
@@ -40,28 +38,17 @@ class EditWidgetSignalControl extends Component {
   }
 
   render() {
-    const simulationModel = this.props.simulationModels.find(m => m._id === this.state.widget.simulationModel);
-
-    let signalsToRender = [];
-
-    if (simulationModel != null) {
-      if (this.props.input) {
-        signalsToRender = simulationModel ? simulationModel.inputMapping : [];
-      } else {
-        signalsToRender = simulationModel ? simulationModel.outputMapping : [];
-      }
-    }
 
     return (
         <FormGroup controlId="signal">
           <FormLabel>Signal</FormLabel>
-          <FormControl as="select" placeholder="Select signal" value={this.state.widget.signal} onChange={(e) => this.props.handleChange(e)}>
+          <FormControl as="select" placeholder="Select signal" value={this.props.widget.signalIDs[0]} onChange={(e) => this.props.handleChange(e)}>
             {
-              signalsToRender.length === 0 ? (
+              this.props.signals.length === 0 ? (
                 <option disabled value style={{ display: 'none' }}>No signals available.</option>
               ) : (
-                signalsToRender.map((signal, index) => (
-                  <option key={index} value={index}>{signal.name}</option>
+                this.props.signals.map((signal, index) => (
+                  <option key={index} value={signal.id}>{signal.name}</option>
                 ))
               )
             }

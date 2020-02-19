@@ -25,7 +25,7 @@ import WidgetSlider from './widgets/slider';
 
 class WidgetFactory {
 
-    static createWidgetOfType(type, position, defaultSimulationModel = null) {
+    static createWidgetOfType(type, position) {
 
         let widget = {
             name: 'Name',
@@ -36,7 +36,8 @@ class WidgetFactory {
             y: position.y,
             z: position.z,
             locked: false,
-            customProperties: {}
+            customProperties: {},
+            signalIDs: [],
         };
 
         // set type specific properties
@@ -60,14 +61,10 @@ class WidgetFactory {
                 widget.customProperties.icon = 'star';
                 widget.width = 100;
                 widget.height = 50;
-                widget.customProperties.simulationModel = defaultSimulationModel;
                 break;
             case 'Action':
-                widget.customProperties.simulationModel = defaultSimulationModel;
                 break;
             case 'Lamp':
-                widget.customProperties.simulationModel = defaultSimulationModel;
-                widget.customProperties.signal = 0;
                 widget.minWidth = 5;
                 widget.minHeight = 5;
                 widget.width = 20;
@@ -77,8 +74,6 @@ class WidgetFactory {
                 widget.customProperties.threshold = 0.5;
                 break;
             case 'Value':
-                widget.customProperties.simulationModel = defaultSimulationModel;
-                widget.customProperties.signal = 0;
                 widget.minWidth = 70;
                 widget.minHeight = 20;
                 widget.width = 120;
@@ -88,8 +83,6 @@ class WidgetFactory {
                 widget.customProperties.showUnit = false;
                 break;
             case 'Plot':
-                widget.customProperties.simulationModel = defaultSimulationModel;
-                widget.customProperties.signals = [ 0 ];
                 widget.customProperties.ylabel = '';
                 widget.customProperties.time = 60;
                 widget.minWidth = 400;
@@ -101,7 +94,6 @@ class WidgetFactory {
                 widget.customProperties.yUseMinMax = false;
                 break;
             case 'Table':
-                widget.customProperties.simulationModel = defaultSimulationModel;
                 widget.minWidth = 200;
                 widget.width = 300;
                 widget.height = 200;
@@ -116,9 +108,6 @@ class WidgetFactory {
                 widget.customProperties.fontColor = 0;
                 break;
             case 'PlotTable':
-                widget.customProperties.simulationModel = defaultSimulationModel;
-                widget.customProperties.preselectedSignals = [];
-                widget.customProperties.signals = []; // initialize selected signals
                 widget.customProperties.ylabel = '';
                 widget.minWidth = 200;
                 widget.minHeight = 100;
@@ -143,16 +132,12 @@ class WidgetFactory {
                 widget.height = 100;
                 widget.customProperties.background_color = 1;
                 widget.customProperties.font_color = 0;
-                widget.customProperties.simulationModel = defaultSimulationModel;
-                widget.customProperties.signal = 0;
                 break;
             case 'Input':
                 widget.minWidth = 200;
                 widget.minHeight = 50;
                 widget.width = 200;
                 widget.height = 50;
-                widget.customProperties.simulationModel = defaultSimulationModel;
-                widget.customProperties.signal = 0;
                 break;
             case 'Slider':
                 widget.minWidth = 380;
@@ -160,17 +145,13 @@ class WidgetFactory {
                 widget.width = 400;
                 widget.height = 50;
                 widget.customProperties.orientation = WidgetSlider.OrientationTypes.HORIZONTAL.value; // Assign default orientation
-                widget.customProperties.simulationModel = defaultSimulationModel;
-                widget.customProperties.signal = 0;
                 widget.customProperties.rangeMin = 0;
                 widget.customProperties.rangeMax = 200;
                 widget.customProperties.rangeUseMinMax = true;
-                widget.customProperties.showUnit = true
+                widget.customProperties.showUnit = true;
 
                 break;
             case 'Gauge':
-                widget.customProperties.simulationModel = defaultSimulationModel;
-                widget.customProperties.signal = 0;
                 widget.minWidth = 100;
                 widget.minHeight = 150;
                 widget.width = 150;

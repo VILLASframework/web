@@ -41,11 +41,12 @@ class WidgetCustomAction extends Component {
   }
 
   static getDerivedStateFromProps(props, state){
-    if (props.simulationModel === null)
-      return null; //no change
+    if(props.widget.signalIDs.length === 0){
+      return null;
+    }
 
     return{
-      simulator: SimulatorStore.getState().find(s => s._id === props.simulationModel.simulator),
+      simulator: SimulatorStore.getState().find(s => s.id === props.simulatorIDs[0]),
       sessionToken: LoginStore.getState().token
     };
   }

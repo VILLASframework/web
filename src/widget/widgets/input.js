@@ -35,24 +35,31 @@ class WidgetInput extends Component {
   }
 
   static getDerivedStateFromProps(props, state){
-    if (props.simulationModel == null) {
+
+    if(props.widget.signalIDs.length === 0){
       return null;
     }
 
-    let returnState = null;
+    let returnState = {};
+
     // Update value
     if (props.widget.customProperties.default_value && this.state.value === undefined) {
       returnState["value"] = props.widget.customProperties.default_value;
     }
 
-    // Update unit
-    if (props.widget.customProperties.simulationModel
-      && props.simulationModel.inputMapping
-      && state.unit !== props.simulationModel.inputMapping[props.widget.customProperties.signal].type) {
-      returnState["unit"] = props.simulationModel.inputMapping[props.widget.customProperties.signal].type;
+    // Update unit (assuming there is exactly one signal for this widget)
+    let signalID = props.widget.signalIDs[0];
+    let signal = props.signals.find(sig => sig.id === signalID);
+    if(signal !== undefined){
+      returnState["unit"] = signal.unit;
     }
 
-    return returnState;
+    if (returnState !== {}){
+      return returnState;
+    }
+    else{
+      return null;
+    }
   }
 
   valueIsChanging(newValue) {

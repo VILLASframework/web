@@ -33,26 +33,33 @@ class WidgetValue extends Component {
   }
 
   static getDerivedStateFromProps(props, state){
-    if (props.simulationModel == null) {
-      return{ value: '' };
+    if(props.widget.signalIDs.length === 0){
+      return null;
     }
 
-    const simulator = props.simulationModel.simulator;
+    const simulator = props.simulatorIDs[0];
 
     // update value
-    if (props.data == null || props.data[simulator] == null || props.data[simulator].output == null || props.data[simulator].output.values == null) {
+    if (props.data == null
+      || props.data[simulator] == null
+      || props.data[simulator].output == null
+      || props.data[simulator].output.values == null) {
       return{ value: '' };
     }
 
-    // TODO fixme  (unit)
-    //const unit = props.simulationModel.outputMapping[props.widget.customProperties.signal].type;
-    const unit = 42;
+    // Update unit (assuming there is exactly one signal for this widget)
+    let unit = '';
+    let signalID = props.widget.signalIDs[0];
+    let signal = props.signals.find(sig => sig.id === signalID);
+    if(signal !== undefined){
+      unit = signal.unit;
+    }
 
     // check if value has changed
-    const signal = props.data[simulator].output.values[props.widget.customProperties.signal];
-    if (signal != null && state.value !== signal[signal.length - 1].y) {
+    const signalData = props.data[simulator].output.values[signal.index];
+    if (signalData != null && state.value !== signalData[signalData.length - 1].y) {
       return {
-        value: signal[signal.length - 1].y,
+        value: signalData[signalData.length - 1].y,
         unit: unit,
       };
     }

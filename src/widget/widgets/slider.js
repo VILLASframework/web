@@ -39,14 +39,21 @@ class WidgetSlider extends Component {
     super(props);
 
     this.state = {
-        unit: 'bla',
+        unit: '',
 
     };
   }
 
   static getDerivedStateFromProps(props, state){
-    if (props.simulationModel == null) {
-      return null;
+    if(props.widget.signalIDs.length === 0){
+
+      // set value to default
+      if (props.widget.customProperties.default_value && state.value === undefined) {
+        returnState["value"] = props.widget.customProperties.default_value;
+      } else { // if no default available
+        return null;
+      }
+
     }
 
     let returnState = {};
@@ -56,11 +63,11 @@ class WidgetSlider extends Component {
       returnState["value"] = props.widget.customProperties.default_value;
     }
 
-    // Update unit
-    if (props.widget.customProperties.simulationModel
-      && props.simulationModel.inputMapping &&
-      state.unit !== props.simulationModel.inputMapping[props.widget.customProperties.signal].type) {
-      returnState["unit"] = props.simulationModel.inputMapping[props.widget.customProperties.signal].type;
+    // Update unit (assuming there is exactly one signal for this widget)
+    let signalID = props.widget.signalIDs[0];
+    let signal = props.signals.find(sig => sig.id === signalID);
+    if(signal !== undefined){
+      returnState["unit"] = signal.unit;
     }
 
     if (returnState !== {}){

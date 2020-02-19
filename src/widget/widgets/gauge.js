@@ -33,6 +33,7 @@ class WidgetGauge extends Component {
 
     this.state = {
       value: 0,
+      unit: '',
       minValue: null,
       maxValue: null,
     };
@@ -69,11 +70,21 @@ class WidgetGauge extends Component {
   }
 
   static getDerivedStateFromProps(props, state){
-    if (props.simulationModel == null) {
-      return{value:0};
+
+    if(props.widget.signalIDs.length === 0){
+      return null;
     }
 
-    const simulator = props.simulationModel.simulator;
+    let returnState = {}
+
+    // Update unit (assuming there is exactly one signal for this widget)
+    let signalID = props.widget.signalIDs[0];
+    let widgetSignal = props.signals.find(sig => sig.id === signalID);
+    if(widgetSignal !== undefined){
+      returnState["unit"] = widgetSignal.unit;
+    }
+
+    const simulator = props.simulatorIDs[0];
 
     // update value
     if (props.data == null
@@ -82,7 +93,7 @@ class WidgetGauge extends Component {
       || props.data[simulator].output.values == null
       || props.data[simulator].output.values.length === 0
       || props.data[simulator].output.values[0].length === 0) {
-      return{value:0};
+     returnState["value"] = 0;
     }
 
     // memorize if min or max value is updated
@@ -91,11 +102,11 @@ class WidgetGauge extends Component {
     let updateMaxValue = false;
 
     // check if value has changed
-    const signal = props.data[simulator].output.values[props.widget.customProperties.signal];
+    const signalData = props.data[simulator].output.values[widgetSignal.index];
     // Take just 3 decimal positions
     // Note: Favor this method over Number.toFixed(n) in order to avoid a type conversion, since it returns a String
-    if (signal != null) {
-      const value = Math.round(signal[signal.length - 1].y * 1e3) / 1e3;
+    if (signalData != null) {
+      const value = Math.round(signalData[signalData.length - 1].y * 1e3) / 1e3;
       let minValue = null;
       let maxValue = null;
       if (state.value !== value && value != null) {
@@ -149,7 +160,6 @@ class WidgetGauge extends Component {
       }
 
       // prepare returned state
-      let returnState = null;
       if(updateValue === true){
         returnState["value"] = value;
       }
@@ -160,8 +170,13 @@ class WidgetGauge extends Component {
         returnState["maxValue"] = maxValue;
       }
 
-      return returnState
-    } // if there is a signal
+      if (returnState !== {}){
+        return returnState;
+      }
+      else{
+        return null;
+      }
+    } // if there is signal data
 
 
   }
@@ -218,17 +233,12 @@ class WidgetGauge extends Component {
 
   render() {
     const componentClass = this.props.editing ? "gauge-widget editing" : "gauge-widget";
-    let signalType = null;
-
-    if (this.props.simulationModel != null) {
-      signalType = (this.props.simulationModel != null && this.props.simulationModel.outputLength > 0 && this.props.widget.customProperties.signal < this.props.simulationModel.outputLength) ? this.props.simulationModel.outputMapping[this.props.widget.customProperties.signal].type : '';
-    }
 
     return (
       <div className={componentClass}>
           <div className="gauge-name">{this.props.widget.name}</div>
           <canvas ref={node => this.gaugeCanvas = node} />
-          <div className="gauge-unit">{signalType}</div>
+          <div className="gauge-unit">{this.state.unit}</div>
           <div className="gauge-value">{this.state.value}</div>
       </div>
     );

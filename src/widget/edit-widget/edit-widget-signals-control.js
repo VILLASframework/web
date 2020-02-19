@@ -27,9 +27,7 @@ class EditWidgetSignalsControl extends Component {
     super(props);
 
     this.state = {
-      widget: {
-        simulator: {}
-      }
+      widget: { }
     };
   }
 
@@ -39,40 +37,31 @@ class EditWidgetSignalsControl extends Component {
     };
   }
 
-  handleSignalChange(checked, index) {
-    var signals = this.state.widget[this.props.controlId];
+  handleSignalChange(checked, signalID) {
+    var signals = this.state.widget.signalIDs;
     var new_signals;
 
     if (checked) {
       // add signal
-      new_signals = signals.concat(index);
+      new_signals = signals.concat(signalID);
     } else {
       // remove signal
-      new_signals = signals.filter( (idx) => idx !== index );
+      new_signals = signals.filter( (id) => id !== signalID );
     }
 
     this.props.handleChange({ target: { id: this.props.controlId, value: new_signals } });
   }
 
   render() {
-    const simulationModel = this.props.simulationModels.find(m => m._id === this.state.widget.simulationModel);
-
-    let signalsToRender = [];
-
-    if (simulationModel != null) {
-      // If simulation model update the signals to render
-      signalsToRender = simulationModel ? simulationModel.outputMapping : [];
-    }
-
     return (
         <FormGroup>
           <FormLabel>Signals</FormLabel>
           {
-            signalsToRender.length === 0 || !this.state.widget.hasOwnProperty(this.props.controlId)? (
+            this.props.signals === 0 || !this.state.widget.hasOwnProperty(this.props.controlId)? (
               <FormLabel>No signals available</FormLabel>
             ) : (
-              signalsToRender.map((signal, index) => (
-                <FormCheck key={index} checked={this.state.widget[this.props.controlId].indexOf(index) !== -1} onChange={(e) => this.handleSignalChange(e.target.checked, index)}>{signal.name}</FormCheck>
+              this.props.signals.map((signal, index) => (
+                <FormCheck key={signal.id} checked={this.state.widget.signalIDs.indexOf(signal.id) !== -1} onChange={(e) => this.handleSignalChange(e.target.checked, signal.id)}>{signal.name}</FormCheck>
                 ))
             )
           }
