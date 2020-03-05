@@ -63,12 +63,29 @@ class Home extends React.Component {
             A total of <Link to="/users" title="Users">{this.getCounts('users')} users</Link> are registered.<br />
           </p>
         */}
+        <h3>Terminology of VILLASweb</h3>
+        <ul>
+          <li>Infrastructure Component: A component of research infrastructure
+            <ul>
+              <li>Category: for example simulator, gateway, amplifier, database, etc.</li>
+              <li>Type: for example RTDS, OpalRT, VILLASnode, Cassandra</li>
+            </ul>
+          </li>
+          <li>Component Configuration
+            <ul>
+              <li>Input signals: Signals that can be modified in VILLASweb</li>
+              <li>Output signals: Signals that can be visualized on dashboards of VILLASweb</li>
+              <li>Parameters: Further configuration parameters of the infrastructure component</li>
+            </ul>
+          </li>
+          <li>Dashboards: Can be used to visualize ongoing experiments as well as to interact with them in real-time</li>
+          <li>Scenario: A collection of component configurations and dashboards for a specific experiment</li>
+        </ul>
+
         <h3>Credits</h3>
         <p>VILLASweb is developed by the <a href="http://acs.eonerc.rwth-aachen.de">Institute for Automation of Complex Power Systems</a> at the <a href="https;//www.rwth-aachen.de">RWTH Aachen University</a>.</p>
         <ul>
-          <li><a href="mailto:mgrigull@eonerc.rwth-aachen.de">Markus Grigull</a></li>
           <li><a href="mailto:stvogel@eonerc.rwth-aachen.de">Steffen Vogel</a></li>
-          <li><a href="mailto:mstevic@eonerc.rwth-aachen.de">Marija Stevic</a></li>
           <li><a href="mailto:sonja.happ@eonerc.rwth-aachen.de">Sonja Happ</a></li>
         </ul>
         <h3>Links</h3>
