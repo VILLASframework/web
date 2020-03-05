@@ -68,7 +68,7 @@ class EditSimulatorDialog extends React.Component {
 
   render() {
     return (
-      <Dialog show={this.props.show} title="Edit Simulator" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog show={this.props.show} title="Edit Infrastructure Component" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
           <FormGroup controlId="name">
             <FormLabel column={false}>Name</FormLabel>

@@ -82,7 +82,7 @@ class EditSimulationModelDialog extends React.Component {
     }
 
     handleSelectedModelFileChange(newFileID){
-      console.log("Model file change to: ", newFileID);
+      console.log("Config file change to: ", newFileID);
       this.setState({selectedModelFileID: newFileID})
 
       this.valid = this.isValid()
@@ -108,7 +108,7 @@ class EditSimulationModelDialog extends React.Component {
         );
 
         return (
-            <Dialog show={this.props.show} title="Edit Simulation Model" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+            <Dialog show={this.props.show} title="Edit Component Configuration" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
                 <form>
                     <FormGroup controlId="name">
                         <FormLabel column={false}>Name</FormLabel>
@@ -118,13 +118,13 @@ class EditSimulationModelDialog extends React.Component {
 
                     <FormGroup controlId="simulatorID">
                       <FormLabel column={false}> Simulator </FormLabel>
-                      <FormControl as="select" placeholder='Select simulator' value={this.state.simulatorID} onChange={(e) => this.handleChange(e)}>
+                      <FormControl as="select" placeholder='Select infrastructure component' value={this.state.simulatorID} onChange={(e) => this.handleChange(e)}>
                         {simulatorOptions}
                       </FormControl>
                     </FormGroup>
 
 
-                    <SelectFile type='model' name='Simulation Model File' onChange={(e) => this.handleSelectedModelFileChange(e)} value={this.state.selectedModelFileID} objectID={this.props.simulationModel.id}/>
+                    <SelectFile type='model' name='Configuration File' onChange={(e) => this.handleSelectedModelFileChange(e)} value={this.state.selectedModelFileID} objectID={this.props.simulationModel.id}/>
 
 
                   {/*<SelectFile type='configuration' name='Configuration' onChange={(e) => this.handleChange(e)} value={this.state.configuration} />*/}

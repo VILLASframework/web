@@ -408,12 +408,12 @@ class Scenario extends React.Component {
     return <div className='section'>
       <h1>{this.state.scenario.name}</h1>
 
-      {/*Simulation Model table*/}
-      <h2>Simulation Models</h2>
+      {/*Component Configurations table*/}
+      <h2>Component Configurations</h2>
       <Table data={this.state.simulationModels}>
         <TableColumn checkbox onChecked={(index, event) => this.onSimulationModelChecked(index, event)} width='30' />
         <TableColumn title='Name' dataKey='name' />
-        <TableColumn title='Selected model file' dataKey='selectedModelFileID' modifier={(selectedModelFileID) => this.getFileName(selectedModelFileID)}/>
+        <TableColumn title='Selected configuration file' dataKey='selectedModelFileID' modifier={(selectedModelFileID) => this.getFileName(selectedModelFileID)}/>
         <TableColumn
           title='# Output Signals'
           dataKey='outputLength'
@@ -426,7 +426,7 @@ class Scenario extends React.Component {
           editButton
           onEdit={index => this.setState({ editInputSignalsModal: true, modalSimulationModelData: this.state.simulationModels[index], modalSimulationModelIndex: index })}
         />
-        <TableColumn title='Simulator' dataKey='simulatorID' modifier={(simulatorID) => this.getSimulatorName(simulatorID)} />
+        <TableColumn title='Infrastructure Component' dataKey='simulatorID' modifier={(simulatorID) => this.getSimulatorName(simulatorID)} />
         <TableColumn
           title='Edit/ Delete/ Export'
           width='200'
@@ -460,7 +460,7 @@ class Scenario extends React.Component {
 
       <EditSimulationModelDialog show={this.state.editSimulationModelModal} onClose={data => this.closeEditSimulationModelModal(data)} simulationModel={this.state.modalSimulationModelData} simulators={this.state.simulators} />
       <ImportSimulationModelDialog show={this.state.importSimulationModelModal} onClose={data => this.importSimulationModel(data)} simulators={this.state.simulators} />
-      <DeleteDialog title="simulation model" name={this.state.modalSimulationModelData.name} show={this.state.deleteSimulationModelModal} onClose={(c) => this.closeDeleteSimulationModelModal(c)} />
+      <DeleteDialog title="component configuration" name={this.state.modalSimulationModelData.name} show={this.state.deleteSimulationModelModal} onClose={(c) => this.closeDeleteSimulationModelModal(c)} />
 
       <EditSignalMapping
         show={this.state.editOutputSignalsModal}

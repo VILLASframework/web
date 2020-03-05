@@ -272,7 +272,7 @@ class Simulators extends Component {
 
     return (
       <div className='section'>
-        <h1>Simulators</h1>
+        <h1>Infrastructure Components</h1>
 
         <Table data={this.state.simulators}>
           <TableColumn checkbox onChecked={(index, event) => this.onSimulatorChecked(index, event)} width='30' />
@@ -303,7 +303,7 @@ class Simulators extends Component {
         </div>
 
         <div style={{ float: 'right' }}>
-          <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" /> Simulator</Button>
+          <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" /> Infrastructure Component</Button>
           <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
         </div>
 
