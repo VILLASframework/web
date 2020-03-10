@@ -6,7 +6,7 @@ This is VILLASweb, the website displaying and processing simulation data in the 
 
 The frontend connects to __two__ backends: _VILLASweb-backend_ and _VILLASnode_.
 
-VILLASnode provides actual simulation data via websockets. VILLASweb-backend provides any other data like user acounts, simulation configuration etc.
+VILLASnode provides actual simulation data via websockets. VILLASweb-backend provides any other data like user accounts, infrastructure components and configurations, dashboards etc.
 
 For more information on the backends see their repositories.
 
@@ -17,6 +17,10 @@ The frontend is build upon [ReactJS](https://facebook.github.io/react/) and [Flu
 React is responsible for rendering the UI and Flux for handling the data and communication with the backends. For more information also have a look at REACT.md
 
 Additional libraries are used, for a complete list see package.json.
+
+## Data model
+
+![Datamodel](src/img/datamodel.png)
 
 ## Quick start
 
@@ -33,7 +37,7 @@ The default user and password are configured in the `config.js` file of the _bac
 
 ## Copyright
 
-2017, Institute for Automation of Complex Power Systems, EONERC  
+2020, Institute for Automation of Complex Power Systems, EONERC  
 
 ## License
 
@@ -66,6 +70,7 @@ For other licensing options please consult [Prof. Antonello Monti](mailto:amonti
 [![EONERC ACS Logo](doc/pictures/eonerc_logo.png)](http://www.acs.eonerc.rwth-aachen.de)
 
  - Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ - Sonja Happ <sonja.happ@eonerc.rwth-aachen.de>
 
 [Institute for Automation of Complex Power Systems (ACS)](http://www.acs.eonerc.rwth-aachen.de)  
 [EON Energy Research Center (EONERC)](http://www.eonerc.rwth-aachen.de)  

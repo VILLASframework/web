@@ -63,24 +63,39 @@ class Home extends React.Component {
             A total of <Link to="/users" title="Users">{this.getCounts('users')} users</Link> are registered.<br />
           </p>
         */}
-        <h3>Terminology of VILLASweb</h3>
-        <ul>
-          <li>Infrastructure Component: A component of research infrastructure
-            <ul>
-              <li>Category: for example simulator, gateway, amplifier, database, etc.</li>
-              <li>Type: for example RTDS, OpalRT, VILLASnode, Cassandra</li>
-            </ul>
-          </li>
-          <li>Component Configuration
-            <ul>
-              <li>Input signals: Signals that can be modified in VILLASweb</li>
-              <li>Output signals: Signals that can be visualized on dashboards of VILLASweb</li>
-              <li>Parameters: Further configuration parameters of the infrastructure component</li>
-            </ul>
-          </li>
-          <li>Dashboards: Can be used to visualize ongoing experiments as well as to interact with them in real-time</li>
-          <li>Scenario: A collection of component configurations and dashboards for a specific experiment</li>
-        </ul>
+
+        <h3>Data Model</h3>
+        <img height={400} src={require('../img/datamodel.png')} alt="Datamodel VILLASweb" />
+
+        <h3>Terminology </h3>
+
+        <h5>Infrastructure Component</h5>
+          <ul>
+            <li>A component of research infrastructure</li>
+            <li>Category: for example simulator, gateway, amplifier, database, etc.</li>
+            <li>Type: for example RTDS, OpalRT, VILLASnode, Cassandra</li>
+          </ul>
+
+        <h5>Component Configuration</h5>
+          <ul>
+            <li>Input signals: Signals that can be modified in VILLASweb</li>
+            <li>Output signals: Signals that can be visualized on dashboards of VILLASweb</li>
+            <li>Parameters: Further configuration parameters of the infrastructure component</li>
+          </ul>
+
+        <h5>Dashboard</h5>
+          <ul>
+            <li>Visualize ongoing experiments in real-time</li>
+            <li>Interact with ongoing experiments in real-time</li>
+          </ul>
+
+        <h5>Scenario</h5>
+          <ul>
+            <li>A collection of component configurations and dashboards for a specific experiment</li>
+            <li>Users can have access to multiple scenarios</li>
+          </ul>
+
+
 
         <h3>Credits</h3>
         <p>VILLASweb is developed by the <a href="http://acs.eonerc.rwth-aachen.de">Institute for Automation of Complex Power Systems</a> at the <a href="https;//www.rwth-aachen.de">RWTH Aachen University</a>.</p>
