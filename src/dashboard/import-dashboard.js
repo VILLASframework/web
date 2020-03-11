@@ -67,7 +67,7 @@ class ImportDashboardDialog extends React.Component {
       // read IC
       const dashboard = JSON.parse(event.target.result);
 
-      let defaultIC = "";
+      /*let defaultIC = "";
       if (self.props.simulation.models != null) {
         defaultIC = self.props.simulation.models[0].icID;
       }
@@ -85,6 +85,8 @@ class ImportDashboardDialog extends React.Component {
             break;
         }
       });
+
+      */
 
       self.imported = true;
       self.valid = true;
