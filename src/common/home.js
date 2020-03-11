@@ -21,10 +21,6 @@
 
 import React from 'react';
 
-//import { Link } from 'react-router-dom';
-
-//import RestAPI from '../api/rest-api';
-
 import config from '../config';
 import LoginStore from "../user/login-store";
 
@@ -57,12 +53,6 @@ class Home extends React.Component {
         <p>
         You are logged in as user <b>{this.state.currentUser.username}</b> with <b>ID {this.state.currentUser.id}</b> and role <b>{this.state.currentUser.role}</b>.
         </p>
-        {/*
-          <p>
-            This instance is hosting <Link to="/projects" title="Projects">{this.getCounts('projects')} projects</Link> consisting of <Link to="/simulators" title="Simulators">{this.getCounts('simulators')} simulators</Link>, {this.getCounts('dashboards')} dashboards and <Link to="/simulations" title="Simulations">{this.getCounts('simulations')} simulations</Link>.
-            A total of <Link to="/users" title="Users">{this.getCounts('users')} users</Link> are registered.<br />
-          </p>
-        */}
 
         <h3>Data Model</h3>
         <img height={400} src={require('../img/datamodel.png')} alt="Datamodel VILLASweb" />
