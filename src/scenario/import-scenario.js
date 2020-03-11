@@ -55,14 +55,14 @@ class ImportScenarioDialog extends React.Component {
   }
 
   handleChange(e, index) {
-    if (e.target.id === 'simulator') {
+    /*if (e.target.id === 'icID') {
       const models = this.state.models;
-      models[index].simulator = JSON.parse(e.target.value);
+      models[index].icID = JSON.parse(e.target.value);
 
       this.setState({ models });
 
       return;
-    }
+    }*/
 
     this.setState({ [e.target.id]: e.target.value });
 
@@ -96,13 +96,6 @@ class ImportScenarioDialog extends React.Component {
     reader.onload = onloadEvent => {
       const scenario = JSON.parse(onloadEvent.target.result);
 
-      // scenario.simulationModels.forEach(model => {
-      //     model.simulator = {
-      //         node: self.props.nodes[0]._id,
-      //         simulator: 0
-      //     };
-      // });
-
       self.imported = true;
       self.valid = true;
       self.setState({ name: scenario.name, models: scenario.simulationModels, startParameters: scenario.startParameters, running: scenario.running });
@@ -131,18 +124,6 @@ class ImportScenarioDialog extends React.Component {
           <ParametersEditor content={this.state.startParameters} onChange={this.handleStartParametersChange} disabled={this.imported === false} />
         </FormGroup>
 
-        {/* {this.state.models.map((model, index) => (
-                    <FormGroup controlId="simulator" key={index}>
-                        <FormLabel>{model.name} - Simulator</FormLabel>
-                        <FormControl componentClass="select" placeholder="Select simulator" value={JSON.stringify({ node: model.simulator.node, simulator: model.simulator.simulator})} onChange={(e) => this.handleChange(e, index)}>
-                            {this.props.nodes.map(node => (
-                                node.simulators.map((simulator, index) => (
-                                    <option key={node._id + index} value={JSON.stringify({ node: node._id, simulator: index })}>{node.name}/{simulator.name}</option>
-                                ))
-                            ))}
-                        </FormControl>
-                    </FormGroup>
-                ))} */}
       </form>
     </Dialog>;
   }

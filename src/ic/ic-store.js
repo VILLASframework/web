@@ -1,8 +1,4 @@
 /**
- * File: simulator-store.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 03.03.2018
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -22,57 +18,57 @@
 import _ from 'lodash';
 
 import ArrayStore from '../common/array-store';
-import SimulatorsDataManager from './simulators-data-manager';
-import SimulatorDataDataManager from './simulator-data-data-manager';
+import ICsDataManager from './ics-data-manager';
+import ICDataDataManager from './ic-data-data-manager';
 
-class SimulatorStore extends ArrayStore {
+class InfrastructureComponentStore extends ArrayStore {
   constructor() {
-    super('simulators', SimulatorsDataManager);
+    super('ic', ICsDataManager);
   }
 
   reduce(state, action) {
     switch(action.type) {
-      case 'simulators/loaded':
-        // connect to each simulator
-        for (let simulator of action.data) {
-          const endpoint = _.get(simulator, 'properties.endpoint') || _.get(simulator, 'rawProperties.endpoint');
+      case 'ic/loaded':
+        // connect to each infrastructure component
+        for (let ic of action.data) {
+          const endpoint = _.get(ic, 'properties.endpoint') || _.get(ic, 'rawProperties.endpoint');
 
           if (endpoint != null && endpoint !== '') {
-            SimulatorDataDataManager.open(endpoint, simulator.id);
+            ICDataDataManager.open(endpoint, ic.id);
           } else {
-            // console.warn('Endpoint not found for simulator at ' + endpoint);
-            // console.log(simulator);
+            // console.warn('Endpoint not found for IC at ' + endpoint);
+            // console.log(ic);
           }
         }
 
         return super.reduce(state, action);
 
-      case 'simulators/edited':
-        // connect to each simulator
-        const simulator = action.data;
-        const endpoint = _.get(simulator, 'properties.endpoint') || _.get(simulator, 'rawProperties.endpoint');
+      case 'ic/edited':
+        // connect to each infrastructure component
+        const ic = action.data;
+        const endpoint = _.get(ic, 'properties.endpoint') || _.get(ic, 'rawProperties.endpoint');
 
         if (endpoint != null && endpoint !== '') {
-          console.log("Updating simulatorid " + simulator.id);
-          SimulatorDataDataManager.update(endpoint, simulator.id);
+          console.log("Updating IC id " + ic.id);
+          ICDataDataManager.update(endpoint, ic.id);
         }
 
         return super.reduce(state, action);
 
-      case 'simulators/fetched':
+      case 'ic/fetched':
         return this.updateElements(state, [action.data]);
 
-      case 'simulators/fetch-error':
+      case 'ic/fetch-error':
         return state;
 
-      case 'simulators/start-action':
+      case 'ic/start-action':
         if (!Array.isArray(action.data))
           action.data = [ action.data ]
 
-        SimulatorsDataManager.doActions(action.simulator, action.data, action.token);
+        ICsDataManager.doActions(action.ic, action.data, action.token);
         return state;
 
-      case 'simulators/action-error':
+      case 'ic/action-error':
         console.log(action.error);
         return state;
 
@@ -82,4 +78,4 @@ class SimulatorStore extends ArrayStore {
   }
 }
 
-export default new SimulatorStore();
+export default new InfrastructureComponentStore();

@@ -1,8 +1,4 @@
 /**
- * File: simulators.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -26,22 +22,22 @@ import FileSaver from 'file-saver';
 import _ from 'lodash';
 
 import AppDispatcher from '../common/app-dispatcher';
-import SimulatorStore from './simulator-store';
+import InfrastructureComponentStore from './ic-store';
 import LoginStore from '../user/login-store';
 
 import Icon from '../common/icon';
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
-import NewSimulatorDialog from './new-simulator';
-import EditSimulatorDialog from './edit-simulator';
-import ImportSimulatorDialog from './import-simulator';
+import NewICDialog from './new-ic';
+import EditICDialog from './edit-ic';
+import ImportICDialog from './import-ic';
 
-import SimulatorAction from './simulator-action';
+import ICAction from './ic-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
 
-class Simulators extends Component {
+class InfrastructureComponents extends Component {
   static getStores() {
-    return [ LoginStore, SimulatorStore ];
+    return [ LoginStore, InfrastructureComponentStore ];
   }
 
   static statePrio(state) {
@@ -65,9 +61,9 @@ class Simulators extends Component {
   }
 
   static calculateState() {
-    const simulators = SimulatorStore.getState().sort((a, b) => {
+    const ics = InfrastructureComponentStore.getState().sort((a, b) => {
       if (a.state !== b.state) {
-          return Simulators.statePrio(a.state) > Simulators.statePrio(b.state);
+          return InfrastructureComponents.statePrio(a.state) > InfrastructureComponents.statePrio(b.state);
       }
       else if (a.name !== b.name) {
         return a.name < b.name;
@@ -79,17 +75,17 @@ class Simulators extends Component {
 
     return {
       sessionToken: LoginStore.getState().token,
-      simulators,
-      modalSimulator: {},
+      ics: ics,
+      modalIC: {},
       deleteModal: false,
 
-      selectedSimulators: []
+      selectedICs: []
     };
   }
 
   componentDidMount() {
     AppDispatcher.dispatch({
-      type: 'simulators/start-load',
+      type: 'ic/start-load',
       token: this.state.sessionToken,
     });
 
@@ -108,7 +104,7 @@ class Simulators extends Component {
     }
     else {
       AppDispatcher.dispatch({
-        type: 'simulators/start-load',
+        type: 'ic/start-load',
         token: this.state.sessionToken,
       });
     }
@@ -120,7 +116,7 @@ class Simulators extends Component {
 
     if (data) {
       AppDispatcher.dispatch({
-        type: 'simulators/start-add',
+        type: 'ic/start-add',
         data,
         token: this.state.sessionToken,
       });
@@ -131,13 +127,13 @@ class Simulators extends Component {
     this.setState({ editModal : false });
 
     if (data) {
-      let simulator = this.state.simulators[this.state.modalIndex];
-      simulator.properties = data;
-      this.setState({ simulator });
+      let ic = this.state.ics[this.state.modalIndex];
+      ic.properties = data;
+      this.setState({ ic: ic });
 
       AppDispatcher.dispatch({
-        type: 'simulators/start-edit',
-        data: simulator,
+        type: 'ic/start-edit',
+        data: ic,
         token: this.state.sessionToken,
       });
     }
@@ -151,20 +147,20 @@ class Simulators extends Component {
     }
 
     AppDispatcher.dispatch({
-      type: 'simulators/start-remove',
-      data: this.state.modalSimulator,
+      type: 'ic/start-remove',
+      data: this.state.modalIC,
       token: this.state.sessionToken,
     });
   }
 
-  exportSimulator(index) {
+  exportIC(index) {
     // filter properties
-    let simulator = Object.assign({}, this.state.simulators[index]);
-    delete simulator.id;
+    let ic = Object.assign({}, this.state.ics[index]);
+    delete ic.id;
 
     // show save dialog
-    const blob = new Blob([JSON.stringify(simulator, null, 2)], { type: 'application/json' });
-    FileSaver.saveAs(blob, 'simulator - ' + (_.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name') || 'undefined') + '.json');
+    const blob = new Blob([JSON.stringify(ic, null, 2)], { type: 'application/json' });
+    FileSaver.saveAs(blob, 'ic - ' + (_.get(ic, 'properties.name') || _.get(ic, 'rawProperties.name') || 'undefined') + '.json');
   }
 
   closeImportModal(data) {
@@ -172,25 +168,25 @@ class Simulators extends Component {
 
     if (data) {
       AppDispatcher.dispatch({
-        type: 'simulators/start-add',
+        type: 'ic/start-add',
         data,
         token: this.state.sessionToken,
       });
     }
   }
 
-  onSimulatorChecked(index, event) {
-    const selectedSimulators = Object.assign([], this.state.selectedSimulators);
-    for (let key in selectedSimulators) {
-      if (selectedSimulators[key] === index) {
+  onICChecked(index, event) {
+    const selectedICs = Object.assign([], this.state.selectedICs);
+    for (let key in selectedICs) {
+      if (selectedICs[key] === index) {
         // update existing entry
         if (event.target.checked) {
           return;
         }
 
-        selectedSimulators.splice(key, 1);
+        selectedICs.splice(key, 1);
 
-        this.setState({ selectedSimulators });
+        this.setState({ selectedICs: selectedICs });
         return;
       }
     }
@@ -200,34 +196,34 @@ class Simulators extends Component {
       return;
     }
 
-    selectedSimulators.push(index);
-    this.setState({ selectedSimulators });
+    selectedICs.push(index);
+    this.setState({ selectedICs: selectedICs });
   }
 
   runAction = action => {
-    for (let index of this.state.selectedSimulators) {
+    for (let index of this.state.selectedICs) {
       AppDispatcher.dispatch({
-        type: 'simulators/start-action',
-        simulator: this.state.simulators[index],
+        type: 'ic/start-action',
+        ic: this.state.ics[index],
         data: action.data,
         token: this.state.sessionToken,
       });
     }
   }
 
-  static isSimulatorOutdated(simulator) {
-    if (!simulator.stateUpdatedAt)
+  static isICOutdated(component) {
+    if (!component.stateUpdatedAt)
       return true;
 
     const fiveMinutes = 5 * 60 * 1000;
 
-    return Date.now() - new Date(simulator.stateUpdatedAt) > fiveMinutes;
+    return Date.now() - new Date(component.stateUpdatedAt) > fiveMinutes;
   }
 
-  static stateLabelStyle(state, simulator){
+  static stateLabelStyle(state, component){
     var style = [ 'label' ];
 
-    if (Simulators.isSimulatorOutdated(simulator) && state !== 'shutdown') {
+    if (InfrastructureComponents.isICOutdated(component) && state !== 'shutdown') {
       style.push('label-outdated');
     }
 
@@ -274,30 +270,30 @@ class Simulators extends Component {
       <div className='section'>
         <h1>Infrastructure Components</h1>
 
-        <Table data={this.state.simulators}>
-          <TableColumn checkbox onChecked={(index, event) => this.onSimulatorChecked(index, event)} width='30' />
+        <Table data={this.state.ics}>
+          <TableColumn checkbox onChecked={(index, event) => this.onICChecked(index, event)} width='30' />
           <TableColumn title='Name' dataKeys={['properties.name', 'rawProperties.name']} />
-          <TableColumn title='State' labelKey='state' tooltipKey='error' labelModifier={Simulators.stateLabelModifier} labelStyle={Simulators.stateLabelStyle} />
+          <TableColumn title='State' labelKey='state' tooltipKey='error' labelModifier={InfrastructureComponents.stateLabelModifier} labelStyle={InfrastructureComponents.stateLabelStyle} />
           <TableColumn title='Category' dataKeys={['properties.category', 'rawProperties.category']} />
           <TableColumn title='Type' dataKeys={['properties.type', 'rawProperties.type']} />
           <TableColumn title='Location' dataKeys={['properties.location', 'rawProperties.location']} />
           {/* <TableColumn title='Realm' dataKeys={['properties.realm', 'rawProperties.realm']} /> */}
           <TableColumn title='Host' dataKey='host' />
-          <TableColumn title='Last Update' dataKey='stateUpdatedAt' modifier={Simulators.stateUpdateModifier} />
+          <TableColumn title='Last Update' dataKey='stateUpdatedAt' modifier={InfrastructureComponents.stateUpdateModifier} />
           <TableColumn
             width='200'
             editButton
             exportButton
             deleteButton
-            onEdit={index => this.setState({ editModal: true, modalSimulator: this.state.simulators[index], modalIndex: index })}
-            onExport={index => this.exportSimulator(index)}
-            onDelete={index => this.setState({ deleteModal: true, modalSimulator: this.state.simulators[index], modalIndex: index })}
+            onEdit={index => this.setState({ editModal: true, modalIC: this.state.ics[index], modalIndex: index })}
+            onExport={index => this.exportIC(index)}
+            onDelete={index => this.setState({ deleteModal: true, modalIC: this.state.ics[index], modalIndex: index })}
           />
         </Table>
 
         <div style={{ float: 'left' }}>
-          <SimulatorAction
-            runDisabled={this.state.selectedSimulators.length === 0}
+          <ICAction
+            runDisabled={this.state.selectedICs.length === 0}
             runAction={this.runAction}
             actions={[ { id: '0', title: 'Reset', data: { action: 'reset' } }, { id: '1', title: 'Shutdown', data: { action: 'shutdown' } } ]}/>
         </div>
@@ -309,15 +305,15 @@ class Simulators extends Component {
 
         <div style={{ clear: 'both' }} />
 
-        <NewSimulatorDialog show={this.state.newModal} onClose={data => this.closeNewModal(data)} />
-        <EditSimulatorDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} simulator={this.state.modalSimulator} />
-        <ImportSimulatorDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} />
+        <NewICDialog show={this.state.newModal} onClose={data => this.closeNewModal(data)} />
+        <EditICDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} ic={this.state.modalIC} />
+        <ImportICDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} />
 
-        <DeleteDialog title="simulator" name={_.get(this.state.modalSimulator, 'properties.name') || _.get(this.state.modalSimulator, 'rawProperties.name') || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
+        <DeleteDialog title="infrastructure-component" name={_.get(this.state.modalIC, 'properties.name') || _.get(this.state.modalIC, 'rawProperties.name') || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
       </div>
     );
   }
 }
 
 let fluxContainerConverter = require('../common/FluxContainerConverter');
-export default Container.create(fluxContainerConverter.convert(Simulators));
+export default Container.create(fluxContainerConverter.convert(InfrastructureComponents));

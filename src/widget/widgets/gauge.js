@@ -84,15 +84,15 @@ class WidgetGauge extends Component {
       returnState["unit"] = widgetSignal.unit;
     }
 
-    const simulator = props.simulatorIDs[0];
+    const ICid = props.icIDs[0];
 
     // update value
     if (props.data == null
-      || props.data[simulator] == null
-      || props.data[simulator].output == null
-      || props.data[simulator].output.values == null
-      || props.data[simulator].output.values.length === 0
-      || props.data[simulator].output.values[0].length === 0) {
+      || props.data[ICid] == null
+      || props.data[ICid].output == null
+      || props.data[ICid].output.values == null
+      || props.data[ICid].output.values.length === 0
+      || props.data[ICid].output.values[0].length === 0) {
      returnState["value"] = 0;
     }
 
@@ -102,7 +102,7 @@ class WidgetGauge extends Component {
     let updateMaxValue = false;
 
     // check if value has changed
-    const signalData = props.data[simulator].output.values[widgetSignal.index];
+    const signalData = props.data[ICid].output.values[widgetSignal.index];
     // Take just 3 decimal positions
     // Note: Favor this method over Number.toFixed(n) in order to avoid a type conversion, since it returns a String
     if (signalData != null) {

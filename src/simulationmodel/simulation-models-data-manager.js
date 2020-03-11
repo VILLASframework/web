@@ -1,8 +1,4 @@
 /**
- * File: simulation-models-data-manager.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 20.04.2018
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -40,10 +36,10 @@ class SimulationModelDataManager extends RestDataManager {
 
   loadModelData(model) {
     AppDispatcher.dispatch({
-      type: 'simulatorData/prepare',
+      type: 'icData/prepare',
       inputLength: parseInt(model.inputLength, 10),
       outputLength: parseInt(model.outputLength, 10),
-      id: model.simulator
+      id: model.icID
     });
   }
 

@@ -44,13 +44,13 @@ class WidgetPlot extends React.Component {
       };
     }
 
-    const simulator = props.simulationModel.simulator;
+    const ic = props.simulationModel.icID;
 
-    // Proceed if a simulation with models and a simulator are available
-    if (simulator && props.data[simulator] != null && props.data[simulator] != null && props.data[simulator].output != null && props.data[simulator].output.values != null) {
+    // Proceed if a simulation with models and a IC are available
+    if (ic && props.data[ic] != null && props.data[ic] != null && props.data[ic].output != null && props.data[ic].output.values != null) {
       const chosenSignals = props.widget.customProperties.signals;
 
-      const data = props.data[simulator].output.values.filter((values, index) => (
+      const data = props.data[ic].output.values.filter((values, index) => (
         props.widget.customProperties.signals.findIndex(value => value === index) !== -1
       ));
 

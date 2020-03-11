@@ -37,13 +37,14 @@ class WidgetValue extends Component {
       return null;
     }
 
-    const simulator = props.simulatorIDs[0];
+    // TODO does the following line make sense?
+    const ICid = props.icIDs[0];
 
     // update value
     if (props.data == null
-      || props.data[simulator] == null
-      || props.data[simulator].output == null
-      || props.data[simulator].output.values == null) {
+      || props.data[ICid] == null
+      || props.data[ICid].output == null
+      || props.data[ICid].output.values == null) {
       return{ value: '' };
     }
 
@@ -56,7 +57,7 @@ class WidgetValue extends Component {
     }
 
     // check if value has changed
-    const signalData = props.data[simulator].output.values[signal.index];
+    const signalData = props.data[ICid].output.values[signal.index];
     if (signalData != null && state.value !== signalData[signalData.length - 1].y) {
       return {
         value: signalData[signalData.length - 1].y,

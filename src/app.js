@@ -1,8 +1,4 @@
 /**
- * File: app.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -30,7 +26,7 @@ import { Hidden } from 'react-grid-system'
 
 import AppDispatcher from './common/app-dispatcher';
 import ScenarioStore from './scenario/scenario-store';
-import SimulatorStore from './simulator/simulator-store';
+import ICStore from './ic/ic-store';
 import LoginStore from './user/login-store';
 import NotificationsDataManager from './common/data-managers/notifications-data-manager';
 
@@ -40,7 +36,7 @@ import Footer from './common/footer';
 import SidebarMenu from './common/menu-sidebar';
 import HeaderMenu from './common/header-menu';
 
-import Simulators from './simulator/simulators';
+import InfrastructureComponents from './ic/ics';
 import Dashboard from './dashboard/dashboard';
 import Scenarios from './scenario/scenarios';
 import Scenario from './scenario/scenario';
@@ -52,13 +48,13 @@ import './styles/app.css';
 class App extends React.Component {
 
   static getStores() {
-    return [ SimulatorStore, LoginStore, ScenarioStore];
+    return [ ICStore, LoginStore, ScenarioStore];
   }
 
   static calculateState(prevState) {
 
     return {
-      simulators: SimulatorStore.getState(),
+      ics: ICStore.getState(),
       scenarios: ScenarioStore.getState(),
       currentUser: LoginStore.getState().currentUser,
       token: LoginStore.getState().token,
@@ -80,19 +76,6 @@ class App extends React.Component {
         currentUser: currentUser
       });
     }
-
-    // load all simulators and scenarios to fetch data
-    // AppDispatcher.dispatch({
-    //   type: 'simulators/start-load',
-    //   token: this.state.token
-    // });
-    //
-    // AppDispatcher.dispatch({
-    //   type: 'scenarios/start-load',
-    //   token: this.state.token
-    // });
-
-
   }
 
   showSidebarMenu = () => {
@@ -136,7 +119,7 @@ class App extends React.Component {
                 <Route path="/dashboards/:dashboard" component={Dashboard} />
                 <Route exact path="/scenarios" component={Scenarios} />
                 <Route path="/scenarios/:scenario" component={Scenario} />
-                <Route path="/simulators" component={Simulators} />
+                <Route path="/infrastructure" component={InfrastructureComponents} />
                 <Route path="/user" component={User} />
                 <Route path="/users" component={Users} />
               </div>
@@ -149,12 +132,6 @@ class App extends React.Component {
     )
   }
 }
-
-// Removed routes
-//<Route exact path="/projects" component={Projects} />
-//<Route path="/projects/:project" component={Project} />
-//<Route exact path="/simulations" component={Simulations} />
-//<Route path="/simulations/:simulation" component={Simulation} />
 
 let fluxContainerConverter = require('./common/FluxContainerConverter');
 export default Container.create(fluxContainerConverter.convert(App));

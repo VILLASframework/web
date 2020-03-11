@@ -68,7 +68,7 @@ class ImportSimulationModelDialog extends React.Component {
     reader.onload = event => {
       const model = JSON.parse(event.target.result);
 
-      model.simulator = this.props.simulators.length > 0 ? this.props.simulators[0]._id : null;
+      model.icID = this.props.ics.length > 0 ? this.props.ics[0]._id : null;
 
       self.imported = true;
 
@@ -78,10 +78,10 @@ class ImportSimulationModelDialog extends React.Component {
     reader.readAsText(file);
   }
 
-  handleSimulatorChange = event => {
+  handleICChange = event => {
     const model = this.state.model;
 
-    model.simulator = event.target.value;
+    model.icID = event.target.value;
 
     this.setState({ model });
   }
@@ -95,11 +95,11 @@ class ImportSimulationModelDialog extends React.Component {
             <FormControl type='file' onChange={this.loadFile} />
           </FormGroup>
 
-          <FormGroup controlId='simulator'>
+          <FormGroup controlId='IC'>
             <FormLabel>Infrastructure Component</FormLabel>
-            <FormControl disabled={this.imported === false} as='select' placeholder='Select infrastructure component' value={this.state.model.simulator} onChange={this.handleSimulatorChange}>
-              {this.props.simulators.map(simulator => (
-                <option key={simulator.id} value={simulator.id}>{_.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name')}</option>
+            <FormControl disabled={this.imported === false} as='select' placeholder='Select infrastructure component' value={this.state.model.icID} onChange={this.handleICChange}>
+              {this.props.ics.map(ic => (
+                <option key={ic.id} value={ic.id}>{_.get(ic, 'properties.name') || _.get(ic, 'rawProperties.name')}</option>
               ))}
             </FormControl>
           </FormGroup>

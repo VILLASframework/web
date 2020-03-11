@@ -1,8 +1,4 @@
 /**
- * File: scenario.js
- * Author: Sonja Happ <sonja.happ@eonerc.rwth-aachen.de>
- * Date: 20.08.2019
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -26,7 +22,7 @@ import FileSaver from 'file-saver';
 import _ from 'lodash';
 
 import ScenarioStore from './scenario-store';
-import SimulatorStore from '../simulator/simulator-store';
+import ICStore from '../ic/ic-store';
 import DashboardStore from '../dashboard/dashboard-store';
 import SimulationModelStore from '../simulationmodel/simulation-model-store';
 import LoginStore from '../user/login-store';
@@ -40,7 +36,7 @@ import ImportSimulationModelDialog from '../simulationmodel/import-simulation-mo
 import ImportDashboardDialog from "../dashboard/import-dashboard";
 import NewDashboardDialog from "../dashboard/new-dashboard";
 
-import SimulatorAction from '../simulator/simulator-action';
+import ICAction from '../ic/ic-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
 import EditSimulationModelDialog from "../simulationmodel/edit-simulation-model";
 import EditSignalMapping from "../signal/edit-signal-mapping";
@@ -48,7 +44,7 @@ import FileStore from "../file/file-store"
 
 class Scenario extends React.Component {
   static getStores() {
-    return [ ScenarioStore, SimulationModelStore, DashboardStore, SimulatorStore, LoginStore, SignalStore, FileStore];
+    return [ ScenarioStore, SimulationModelStore, DashboardStore, ICStore, LoginStore, SignalStore, FileStore];
   }
 
   static calculateState(prevState, props) {
@@ -81,7 +77,7 @@ class Scenario extends React.Component {
       dashboards,
       signals,
       files,
-      simulators: SimulatorStore.getState(),
+      ics: ICStore.getState(),
 
       deleteSimulationModelModal: false,
       importSimulationModelModal: false,
@@ -123,9 +119,9 @@ class Scenario extends React.Component {
       param: '?scenarioID='+this.state.scenario.id,
     });
 
-    // load simulators to enable that simulation models work with them
+    // load ICs to enable that simulation models work with them
     AppDispatcher.dispatch({
-      type: 'simulators/start-load',
+      type: 'ic/start-load',
       token: this.state.sessionToken,
     });
 
@@ -140,7 +136,7 @@ class Scenario extends React.Component {
     const simulationModel = {
       scenarioID: this.state.scenario.id,
       name: 'New Simulation Model',
-      simulatorID: this.state.simulators.length > 0 ? this.state.simulators[0].id : null,
+      icID: this.state.ics.length > 0 ? this.state.ics[0].id : null,
       startParameters: {},
     };
 
@@ -245,15 +241,15 @@ class Scenario extends React.Component {
 
   runAction = action => {
     for (let index of this.state.selectedSimulationModels) {
-      // get simulator for model
-      let simulator = null;
-      for (let sim of this.state.simulators) {
-        if (sim._id === this.state.simulationModels[index].simulator) {
-          simulator = sim;
+      // get IC for model
+      let ic = null;
+      for (let component of this.state.ics) {
+        if (component._id === this.state.simulationModels[index].icID) {
+          ic = component;
         }
       }
 
-      if (simulator == null) {
+      if (ic == null) {
         continue;
       }
 
@@ -262,18 +258,18 @@ class Scenario extends React.Component {
       }
 
       AppDispatcher.dispatch({
-        type: 'simulators/start-action',
-        simulator,
+        type: 'ic/start-action',
+        ic: ic,
         data: action.data,
         token: this.state.sessionToken
       });
     }
   };
 
-  getSimulatorName(simulatorId) {
-    for (let simulator of this.state.simulators) {
-      if (simulator.id === simulatorId) {
-        return _.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name') ||  simulator.uuid;
+  getICName(icID) {
+    for (let ic of this.state.ics) {
+      if (ic.id === icID) {
+        return _.get(ic, 'properties.name') || _.get(ic, 'rawProperties.name') ||  ic.uuid;
       }
     }
   }
@@ -426,7 +422,7 @@ class Scenario extends React.Component {
           editButton
           onEdit={index => this.setState({ editInputSignalsModal: true, modalSimulationModelData: this.state.simulationModels[index], modalSimulationModelIndex: index })}
         />
-        <TableColumn title='Infrastructure Component' dataKey='simulatorID' modifier={(simulatorID) => this.getSimulatorName(simulatorID)} />
+        <TableColumn title='Infrastructure Component' dataKey='icID' modifier={(icID) => this.getICName(icID)} />
         <TableColumn
           title='Edit/ Delete/ Export'
           width='200'
@@ -440,7 +436,7 @@ class Scenario extends React.Component {
       </Table>
 
       <div style={{ float: 'left' }}>
-        <SimulatorAction
+        <ICAction
           runDisabled={this.state.selectedSimulationModels.length === 0}
           runAction={this.runAction}
           actions={[
@@ -458,8 +454,8 @@ class Scenario extends React.Component {
 
       <div style={{ clear: 'both' }} />
 
-      <EditSimulationModelDialog show={this.state.editSimulationModelModal} onClose={data => this.closeEditSimulationModelModal(data)} simulationModel={this.state.modalSimulationModelData} simulators={this.state.simulators} />
-      <ImportSimulationModelDialog show={this.state.importSimulationModelModal} onClose={data => this.importSimulationModel(data)} simulators={this.state.simulators} />
+      <EditSimulationModelDialog show={this.state.editSimulationModelModal} onClose={data => this.closeEditSimulationModelModal(data)} simulationModel={this.state.modalSimulationModelData} ics={this.state.ics} />
+      <ImportSimulationModelDialog show={this.state.importSimulationModelModal} onClose={data => this.importSimulationModel(data)} ics={this.state.ics} />
       <DeleteDialog title="component configuration" name={this.state.modalSimulationModelData.name} show={this.state.deleteSimulationModelModal} onClose={(c) => this.closeDeleteSimulationModelModal(c)} />
 
       <EditSignalMapping

@@ -102,11 +102,11 @@ class WidgetPlotTable extends Component {
       return <div />;
     }
 
-    const simulator = this.props.simulationModel.simulator;
-    let simulatorData = [];
+    const ic = this.props.simulationModel.icID;
+    let icData = [];
 
-    if (this.props.data[simulator] != null && this.props.data[simulator].output != null && this.props.data[simulator].output.values != null) {
-      simulatorData = this.props.data[simulator].output.values.filter((values, index) => (
+    if (this.props.data[ic] != null && this.props.data[ic].output != null && this.props.data[ic].output.values != null) {
+      icData = this.props.data[ic].output.values.filter((values, index) => (
         this.props.widget.customProperties.signals.findIndex(value => value === index) !== -1
       ));
     }
@@ -151,7 +151,7 @@ class WidgetPlotTable extends Component {
 
             <div className="widget-plot">
               <Plot
-                data={simulatorData}
+                data={icData}
                 time={this.props.widget.customProperties.time}
                 width={this.props.widget.width - 100}
                 height={this.props.widget.height - 55}

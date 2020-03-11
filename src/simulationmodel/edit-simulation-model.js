@@ -32,7 +32,7 @@ class EditSimulationModelDialog extends React.Component {
         this.state = {
             selectedFile: null,
             name: '',
-            simulatorID: '',
+            icID: '',
             configuration: null,
             startParameters: {},
             selectedModelFileID:0
@@ -48,8 +48,8 @@ class EditSimulationModelDialog extends React.Component {
                 if (this.state.name !== '' && this.props.simulationModel.name !== this.state.name) {
                     data.name = this.state.name;
                 }
-                if (this.state.simulatorID !== '' && this.props.simulationModel.simulatorID !== parseInt(this.state.simulatorID)) {
-                    data.simulatorID = parseInt(this.state.simulatorID, 10);
+                if (this.state.icID !== '' && this.props.simulationModel.icID !== parseInt(this.state.icID)) {
+                    data.icID = parseInt(this.state.icID, 10);
                 }
                 if(this.state.startParameters !==  {} && this.props.simulationModel.startParameters !== this.state.startParameters){
                     data.startParameters = this.state.startParameters;
@@ -91,7 +91,7 @@ class EditSimulationModelDialog extends React.Component {
     isValid() {
       // input is valid if at least one element has changed from its initial value
       return this.state.name !== ''
-        || this.state.simulatorID !== ''
+        || this.state.icID !== ''
         || this.state.startParameters !== {}
         || this.state.selectedFile != null
         || this.state.configuration != null
@@ -103,7 +103,7 @@ class EditSimulationModelDialog extends React.Component {
     }
 
     render() {
-        const simulatorOptions = this.props.simulators.map(s =>
+        const ICOptions = this.props.ics.map(s =>
             <option key={s.id} value={s.id}>{_.get(s, 'properties.name') || _.get(s, 'rawProperties.name') || s.uuid}</option>
         );
 
@@ -116,10 +116,10 @@ class EditSimulationModelDialog extends React.Component {
                         <FormControl.Feedback />
                     </FormGroup>
 
-                    <FormGroup controlId="simulatorID">
-                      <FormLabel column={false}> Simulator </FormLabel>
-                      <FormControl as="select" placeholder='Select infrastructure component' value={this.state.simulatorID} onChange={(e) => this.handleChange(e)}>
-                        {simulatorOptions}
+                    <FormGroup controlId="icID">
+                      <FormLabel column={false}> Infrastructure Component </FormLabel>
+                      <FormControl as="select" placeholder='Select infrastructure component' value={this.state.icID} onChange={(e) => this.handleChange(e)}>
+                        {ICOptions}
                       </FormControl>
                     </FormGroup>
 

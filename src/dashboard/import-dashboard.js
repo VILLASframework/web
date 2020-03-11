@@ -1,8 +1,4 @@
 /**
- * File: import-simulator.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 04.04.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -68,12 +64,12 @@ class ImportDashboardDialog extends React.Component {
     var self = this;
 
     reader.onload = function(event) {
-      // read simulator
+      // read IC
       const dashboard = JSON.parse(event.target.result);
 
-      let defaultSimulator = "";
+      let defaultIC = "";
       if (self.props.simulation.models != null) {
-        defaultSimulator = self.props.simulation.models[0].simulator;
+        defaultIC = self.props.simulation.models[0].icID;
       }
 
       dashboard.widgets.forEach(widget => {
@@ -83,7 +79,6 @@ class ImportDashboardDialog extends React.Component {
           case 'Table':
           case 'PlotTable':
           case 'Gauge':
-            widget.simulator = defaultSimulator;
             break;
 
           default:
