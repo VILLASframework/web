@@ -107,7 +107,7 @@ class Home extends React.Component {
         <ul>
           <li><a href="http://fein-aachen.org/projects/villas-framework/">Project Page</a></li>
           <li><a href="https://villas.fein-aachen.org/doc/web.html">Documentation</a></li>
-          <li><a href="https://git.rwth-aachen.de/VILLASframework/VILLASweb">Source Code</a></li>
+          <li><a href="https://git.rwth-aachen.de/acs/public/villas/web">Source Code</a></li>
         </ul>
         <h3>Funding</h3>
         <p>The development of <a href="http://fein-aachen.org/projects/villas-framework/">VILLASframework</a> projects have received funding from</p>
