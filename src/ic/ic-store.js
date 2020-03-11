@@ -23,16 +23,15 @@ import ICDataDataManager from './ic-data-data-manager';
 
 class InfrastructureComponentStore extends ArrayStore {
   constructor() {
-    super('ic', ICsDataManager);
+    super('ics', ICsDataManager);
   }
 
   reduce(state, action) {
     switch(action.type) {
-      case 'ic/loaded':
+      case 'ics/loaded':
         // connect to each infrastructure component
         for (let ic of action.data) {
           const endpoint = _.get(ic, 'properties.endpoint') || _.get(ic, 'rawProperties.endpoint');
-
           if (endpoint != null && endpoint !== '') {
             ICDataDataManager.open(endpoint, ic.id);
           } else {
@@ -43,32 +42,31 @@ class InfrastructureComponentStore extends ArrayStore {
 
         return super.reduce(state, action);
 
-      case 'ic/edited':
+      case 'ics/edited':
         // connect to each infrastructure component
         const ic = action.data;
         const endpoint = _.get(ic, 'properties.endpoint') || _.get(ic, 'rawProperties.endpoint');
 
         if (endpoint != null && endpoint !== '') {
-          console.log("Updating IC id " + ic.id);
           ICDataDataManager.update(endpoint, ic.id);
         }
 
         return super.reduce(state, action);
 
-      case 'ic/fetched':
+      case 'ics/fetched':
         return this.updateElements(state, [action.data]);
 
-      case 'ic/fetch-error':
+      case 'ics/fetch-error':
         return state;
 
-      case 'ic/start-action':
+      case 'ics/start-action':
         if (!Array.isArray(action.data))
           action.data = [ action.data ]
 
         ICsDataManager.doActions(action.ic, action.data, action.token);
         return state;
 
-      case 'ic/action-error':
+      case 'ics/action-error':
         console.log(action.error);
         return state;
 

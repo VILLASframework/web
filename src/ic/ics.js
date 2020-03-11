@@ -85,7 +85,7 @@ class InfrastructureComponents extends Component {
 
   componentDidMount() {
     AppDispatcher.dispatch({
-      type: 'ic/start-load',
+      type: 'ics/start-load',
       token: this.state.sessionToken,
     });
 
@@ -104,7 +104,7 @@ class InfrastructureComponents extends Component {
     }
     else {
       AppDispatcher.dispatch({
-        type: 'ic/start-load',
+        type: 'ics/start-load',
         token: this.state.sessionToken,
       });
     }
@@ -116,7 +116,7 @@ class InfrastructureComponents extends Component {
 
     if (data) {
       AppDispatcher.dispatch({
-        type: 'ic/start-add',
+        type: 'ics/start-add',
         data,
         token: this.state.sessionToken,
       });
@@ -132,7 +132,7 @@ class InfrastructureComponents extends Component {
       this.setState({ ic: ic });
 
       AppDispatcher.dispatch({
-        type: 'ic/start-edit',
+        type: 'ics/start-edit',
         data: ic,
         token: this.state.sessionToken,
       });
@@ -147,7 +147,7 @@ class InfrastructureComponents extends Component {
     }
 
     AppDispatcher.dispatch({
-      type: 'ic/start-remove',
+      type: 'ics/start-remove',
       data: this.state.modalIC,
       token: this.state.sessionToken,
     });
@@ -168,7 +168,7 @@ class InfrastructureComponents extends Component {
 
     if (data) {
       AppDispatcher.dispatch({
-        type: 'ic/start-add',
+        type: 'ics/start-add',
         data,
         token: this.state.sessionToken,
       });
@@ -203,7 +203,7 @@ class InfrastructureComponents extends Component {
   runAction = action => {
     for (let index of this.state.selectedICs) {
       AppDispatcher.dispatch({
-        type: 'ic/start-action',
+        type: 'ics/start-action',
         ic: this.state.ics[index],
         data: action.data,
         token: this.state.sessionToken,

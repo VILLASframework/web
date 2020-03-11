@@ -48,7 +48,7 @@ class WidgetCustomAction extends Component {
 
   onClick() {
     AppDispatcher.dispatch({
-      type: 'ic/start-action',
+      type: 'ics/start-action',
       ic: this.state.ic,
       data: this.props.widget.customProperties.actions,
       token: this.state.sessionToken

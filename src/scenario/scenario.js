@@ -121,7 +121,7 @@ class Scenario extends React.Component {
 
     // load ICs to enable that simulation models work with them
     AppDispatcher.dispatch({
-      type: 'ic/start-load',
+      type: 'ics/start-load',
       token: this.state.sessionToken,
     });
 
@@ -258,7 +258,7 @@ class Scenario extends React.Component {
       }
 
       AppDispatcher.dispatch({
-        type: 'ic/start-action',
+        type: 'ics/start-action',
         ic: ic,
         data: action.data,
         token: this.state.sessionToken

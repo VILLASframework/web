@@ -28,12 +28,12 @@ class IcsDataManager extends RestDataManager {
         // TODO: Make only infrastructure component id dependent
         RestAPI.post(this.makeURL(this.url + '/' + ic.id), action, token).then(response => {
             AppDispatcher.dispatch({
-                type: 'ic/action-started',
+                type: 'ics/action-started',
                 data: response
             });
         }).catch(error => {
             AppDispatcher.dispatch({
-                type: 'ic/action-error',
+                type: 'ics/action-error',
                 error
             });
         });
