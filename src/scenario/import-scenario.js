@@ -35,7 +35,7 @@ class ImportScenarioDialog extends React.Component {
     this.state = {
       name: '',
       running: '',
-      simulationModels: [],
+      configs: [],
       startParameters: {}
     };
   }
@@ -56,10 +56,10 @@ class ImportScenarioDialog extends React.Component {
 
   handleChange(e, index) {
     /*if (e.target.id === 'icID') {
-      const models = this.state.models;
-      models[index].icID = JSON.parse(e.target.value);
+      const configs = this.state.configs;
+      configs[index].icID = JSON.parse(e.target.value);
 
-      this.setState({ models });
+      this.setState({ configs: configs });
 
       return;
     }*/
@@ -77,7 +77,7 @@ class ImportScenarioDialog extends React.Component {
   }
 
   resetState = () => {
-    this.setState({ name: '', models: [], startParameters: {} });
+    this.setState({ name: '', configs: [], startParameters: {} });
 
     this.imported = false;
   }
@@ -98,7 +98,7 @@ class ImportScenarioDialog extends React.Component {
 
       self.imported = true;
       self.valid = true;
-      self.setState({ name: scenario.name, models: scenario.simulationModels, startParameters: scenario.startParameters, running: scenario.running });
+      self.setState({ name: scenario.name, configs: scenario.configs, startParameters: scenario.startParameters, running: scenario.running });
     };
 
     reader.readAsText(file);

@@ -52,9 +52,9 @@ class EditSignalMapping extends React.Component {
 
   static getDerivedStateFromProps(props, state){
 
-    // filter all signals by Simulation Model ID and direction
+    // filter all signals by configID and direction
     let signals = props.signals.filter((sig) => {
-      return (sig.simulationModelID === props.simulationModelID) && (sig.direction === state.dir);
+      return (sig.configID === props.configID) && (sig.direction === state.dir);
     });
 
     return {
@@ -115,7 +115,7 @@ class EditSignalMapping extends React.Component {
     console.log("add signal");
 
     let newSignal = {
-      simulationModelID: this.props.simulationModelID,
+      configID: this.props.configID,
       direction: this.state.dir,
       name: "PlaceholderName",
       unit: "PlaceholderUnit",
@@ -130,7 +130,7 @@ class EditSignalMapping extends React.Component {
       this.valid=false;
 
       let signals = this.props.signals.filter((sig) => {
-        return (sig.simulationModelID === this.props.simulationModelID) && (sig.direction === this.state.dir);
+        return (sig.configID === this.props.configID) && (sig.direction === this.state.dir);
       });
 
       this.setState({signals: signals})
@@ -173,7 +173,7 @@ EditSignalMapping.propTypes = {
             name: PropTypes.string.isRequired,
             unit: PropTypes.string.isRequired,
             direction: PropTypes.string.isRequired,
-            simulationModelID: PropTypes.number.isRequired,
+            configID: PropTypes.number.isRequired,
             index: PropTypes.number.isRequired
 
         })

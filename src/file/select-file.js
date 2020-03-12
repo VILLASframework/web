@@ -38,7 +38,7 @@ class SelectFile extends React.Component {
   static calculateState(prevState, props) {
 
     let files = FileStore.getState().filter((file) => {
-      return (file.simulationModelID === props.objectID)
+      return (file.configID === props.objectID)
     });
 
     console.log("props.objectID=", props.objectID)
@@ -111,7 +111,7 @@ class SelectFile extends React.Component {
           <option key={f.id} value={f.id}>{f.name}</option>
         );
       } else {
-        fileOptions = <option >No files for this simulation model</option>
+        fileOptions = <option >No files for this component config</option>
       }
 
       /*const progressBarStyle = {

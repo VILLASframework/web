@@ -25,7 +25,7 @@ import { Container } from 'flux/utils';
 import AppDispatcher from '../common/app-dispatcher';
 import LoginStore from '../user/login-store';
 import ICDataStore from '../ic/ic-data-store';
-import SimulationModelStore from '../simulationmodel/simulation-model-store';
+import ConfigsStore from '../componentconfig/config-store';
 import FileStore from '../file/file-store';
 import SignalStore from '../signal/signal-store'
 
@@ -53,7 +53,7 @@ import '../styles/widgets.css';
 
 class Widget extends React.Component {
   static getStores() {
-    return [ ICDataStore, SimulationModelStore, FileStore, LoginStore, SignalStore];
+    return [ ICDataStore, ConfigsStore, FileStore, LoginStore, SignalStore];
   }
 
   static calculateState(prevState, props) {
@@ -69,15 +69,15 @@ class Widget extends React.Component {
     }
 
     // Get the IC IDs and signal indexes for all signals of the widget
-    let simulationModels = SimulationModelStore.getState();
+    let configs = ConfigsStore.getState();
     // TODO make sure that the signals are only the signals that belong to the scenario at hand
     let signals = SignalStore.getState();
     let icIDs = [];
     if ( props.data.signalIDs.length > 0){
       for (let i in props.data.signalIDs.length){
         let signal = signals.find(s => s.id === props.data.signalIDs[i]);
-        let model = simulationModels.find(m => m.id === signal.simulationModelID);
-        icIDs[i] = model.icID;
+        let config = configs.find(m => m.id === signal.configID);
+        icIDs[i] = config.icID;
       }
     }
 
@@ -105,10 +105,10 @@ class Widget extends React.Component {
       param: '?objectID=1&objectType=widget'
     });*/
 
-    // TODO no not load simulation models here, since they are loaded via the scenario, pass them as props
+    // TODO no not load component congfigs here, since they are loaded via the scenario, pass them as props
     /*
     AppDispatcher.dispatch({
-      type: 'simulationModels/start-load',
+      type: 'configs/start-load',
       token: this.state.sessionToken,
       param: '?scenarioID=1' // TODO do not hardcode scenarioID!
     });

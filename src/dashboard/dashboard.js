@@ -33,7 +33,6 @@ import DashboardButtonGroup from './dashboard-button-group';
 
 import LoginStore from '../user/login-store';
 import DashboardStore from './dashboard-store';
-//import SimulationModelStore from '../simulationmodel/simulation-model-store';
 import SignalStore from '../signal/signal-store'
 import FileStore from '../file/file-store';
 import WidgetStore from '../widget/widget-store';
@@ -75,11 +74,6 @@ class Dashboard extends Component {
 
       return thisWidgetHeight > maxHeightSoFar? thisWidgetHeight : maxHeightSoFar;
     }, 0);
-
-    //let simulationModels = [];
-    //if (prevState.simulation != null) {
-    //  simulationModels = SimulationModelStore.getState().filter(m => prevState.simulation.models.includes(m._id));
-    //}
 
     // TODO filter signals to the ones belonging to the scenario at hand!
     let signals = SignalStore.getState();

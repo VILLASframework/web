@@ -18,10 +18,10 @@
 class NotificationsFactory {
 
   // This is an example
-    static get NO_SIM_MODEL_AVAILABLE() {
+    static get EXAMPLE_NOTIFICATION() {
         return {
-            title: 'No simulation model available',
-            message: 'Consider defining a simulation model in the simulators section.',
+            title: 'Example notification',
+            message: 'Write something here that describes what happend.',
             level: 'warning'
         };
     }

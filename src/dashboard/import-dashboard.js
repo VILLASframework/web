@@ -68,8 +68,8 @@ class ImportDashboardDialog extends React.Component {
       const dashboard = JSON.parse(event.target.result);
 
       /*let defaultIC = "";
-      if (self.props.simulation.models != null) {
-        defaultIC = self.props.simulation.models[0].icID;
+      if (self.props.configs != null) {
+        defaultIC = self.props.configs[0].icID;
       }
 
       dashboard.widgets.forEach(widget => {

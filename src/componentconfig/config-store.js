@@ -1,8 +1,4 @@
 /**
- * File: simulation-model-store.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 20.04.2018
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -20,21 +16,21 @@
  ******************************************************************************/
 
 import ArrayStore from '../common/array-store';
-import SimulationModelsDataManager from './simulation-models-data-manager';
+import ConfigsDataManager from './configs-data-manager';
 
-class SimulationModelStore extends ArrayStore {
+class ConfigStore extends ArrayStore {
 
   constructor() {
-    super('simulationModels', SimulationModelsDataManager);
+    super('configs', ConfigsDataManager);
   }
 
   reduce(state, action) {
     switch (action.type) {
 
-      case 'simulationModels/loaded':
+      case 'configs/loaded':
 
-        SimulationModelsDataManager.loadSignals(action.token, action.data);
-        SimulationModelsDataManager.loadFiles(action.token, action.data);
+        ConfigsDataManager.loadSignals(action.token, action.data);
+        ConfigsDataManager.loadFiles(action.token, action.data);
         return super.reduce(state, action);
 
       default:
@@ -44,4 +40,4 @@ class SimulationModelStore extends ArrayStore {
   }
 }
 
-export default new SimulationModelStore();
+export default new ConfigStore();
