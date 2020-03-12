@@ -1,8 +1,4 @@
 /**
- * File: edit-widget-signals-control.js
- * Author: Ricardo Hernandez-Montoya <rhernandez@gridhound.de>
- * Date: 03.04.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -27,29 +23,24 @@ class EditWidgetSignalsControl extends Component {
     super(props);
 
     this.state = {
-      widget: { }
-    };
-  }
-
-  static getDerivedStateFromProps(props, state){
-    return {
-      widget: props.widget
+      widget: props.widget,
+      checkedSignals: props.widget[props.controlId]
     };
   }
 
   handleSignalChange(checked, signalID) {
-    var signals = this.state.widget.signalIDs;
-    var new_signals;
+    let new_signals = this.state.checkedSignals;
 
     if (checked) {
       // add signal
-      new_signals = signals.concat(signalID);
+      new_signals = new_signals.concat(signalID);
     } else {
       // remove signal
-      new_signals = signals.filter( (id) => id !== signalID );
+      new_signals = new_signals.filter( (id) => id !== signalID );
     }
 
-    this.props.handleChange({ target: { id: this.props.controlId, value: new_signals } });
+    this.setState({checkedSignals: new_signals})
+    this.props.handleChange({ target: { id: this.props.controlId, value: new_signals, type:'checkbox' } });
   }
 
   render() {
@@ -61,7 +52,14 @@ class EditWidgetSignalsControl extends Component {
               <FormLabel>No signals available</FormLabel>
             ) : (
               this.props.signals.map((signal, index) => (
-                <FormCheck key={signal.id} checked={this.state.widget.signalIDs.indexOf(signal.id) !== -1} onChange={(e) => this.handleSignalChange(e.target.checked, signal.id)}>{signal.name}</FormCheck>
+                <FormCheck
+                  type={'checkbox'}
+                  label={signal.name}
+                  id={signal.id}
+                  key={signal.id}
+                  checked={this.state.checkedSignals.find(id => id === signal.id) !== undefined}
+                  onChange={(e) => this.handleSignalChange(e.target.checked, signal.id)}>
+                </FormCheck>
                 ))
             )
           }

@@ -1,8 +1,4 @@
 /**
- * File: edit-widget.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 08.03.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -81,7 +77,8 @@ class EditWidgetDialog extends React.Component {
     }
 
     if(e.target.type !== 'text'){
-      let changeObject = {};
+      console.log("edit-widget: e.target.type is not text: ", e.target.type);
+      let changeObject = this.state.temporal;
       if (e.target.id === 'lockAspect') {
         changeObject[e.target.id] = e.target.checked;
 
@@ -97,22 +94,25 @@ class EditWidgetDialog extends React.Component {
           changeObject = this.assignAspectRatio(changeObject, e.target.value);
         }
       } else if (e.target.type === 'checkbox') {
-        changeObject[e.target.id] = e.target.checked;
+        changeObject[e.target.id] = e.target.value;
       } else if (e.target.type === 'number') {
         changeObject[e.target.id] = Number(e.target.value);
       } else {
         changeObject[e.target.id] = e.target.value;
       }
 
-      let finalChange = this.state.temporal;
+      this.setState({ temporal: changeObject});
 
-      finalChange.customProperties[e.target.id] = changeObject[e.target.id];
-      this.setState({ temporal: finalChange});
     } else {
+      console.log("edit-widget: type text");
       if(this.state.temporal[e.target.id]){
+
+        console.log("edit-widget: type: " , e.target.type, " target.id", e.target.id, "target.value", e.target.value)
         let finalChange = this.state.temporal;
 
         finalChange[e.target.id] = e.target.value;
+
+        console.log("edit-widget: finalChange", finalChange);
         this.setState({ temporal: finalChange});
       }
     }
@@ -133,12 +133,12 @@ class EditWidgetDialog extends React.Component {
 
     //this.valid = name;
     this.valid = name;
-
     // return state to control
     if (target === 'name') return name ? "success" : "error";
   }
 
   render() {
+
     let controls = null;
     if (this.props.widget) {
       controls = CreateControls(
