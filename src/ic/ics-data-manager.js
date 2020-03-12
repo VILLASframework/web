@@ -1,8 +1,4 @@
 /**
- * File: simulator-data-manager.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 03.03.2018
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -23,25 +19,25 @@ import RestDataManager from '../common/data-managers/rest-data-manager';
 import RestAPI from '../common/api/rest-api';
 import AppDispatcher from '../common/app-dispatcher';
 
-class SimulatorsDataManager extends RestDataManager {
+class IcsDataManager extends RestDataManager {
     constructor() {
-        super('simulator', '/simulators');
+        super('ic', '/ic');
     }
 
-    doActions(simulator, action, token = null) {
-        // TODO: Make only simulator id dependent
-        RestAPI.post(this.makeURL(this.url + '/' + simulator.id), action, token).then(response => {
+    doActions(ic, action, token = null) {
+        // TODO: Make only infrastructure component id dependent
+        RestAPI.post(this.makeURL(this.url + '/' + ic.id), action, token).then(response => {
             AppDispatcher.dispatch({
-                type: 'simulators/action-started',
+                type: 'ics/action-started',
                 data: response
             });
         }).catch(error => {
             AppDispatcher.dispatch({
-                type: 'simulators/action-error',
+                type: 'ics/action-error',
                 error
             });
         });
     }
 }
 
-export default new SimulatorsDataManager();
+export default new IcsDataManager();

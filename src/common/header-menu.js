@@ -1,8 +1,4 @@
 /**
- * File: header-menu.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 17.08.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -31,9 +27,8 @@ export default class HeaderMenu extends React.Component {
 
       <ul>
         <li><NavLink to="/home" activeClassName="active" title="Home" onClick={this.props.onClose}>Home</NavLink></li>
-        <li><NavLink to="/projects" activeClassName="active" title="Projects" onClick={this.props.onClose}>Projects</NavLink></li>
-        <li><NavLink to="/simulations" activeClassName="active" title="Simulations" onClick={this.props.onClose}>Simulations</NavLink></li>
-        <li><NavLink to="/simulators" activeClassName="active" title="Simulators" onClick={this.props.onClose}>Simulators</NavLink></li>
+        <li><NavLink to="/scenario" activeClassName="active" title="Scenarios" onClick={this.props.onClose}>Scenarios</NavLink></li>
+        <li><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure Components" onClick={this.props.onClose}>Infrastructure Components</NavLink></li>
         { this.props.currentRole === 'Admin' ?
             <li><NavLink to="/users" activeClassName="active" title="User Management" onClick={this.props.onClose}>User Management</NavLink></li> : ''
         }

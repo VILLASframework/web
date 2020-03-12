@@ -47,7 +47,7 @@ class WidgetTable extends Component {
     }
 
 
-    const simulator = props.simulatorIDs[0];
+    const ICid = props.icIDs[0];
     let widgetSignals = props.signals.find(sig => {
       for (let id of props.widget.signalIDs){
         if (id === sig.id){
@@ -59,10 +59,10 @@ class WidgetTable extends Component {
 
     // check data
     if (props.data == null
-      || props.data[simulator] == null
-      || props.data[simulator].output == null
-      || props.data[simulator].output.values.length === 0
-      || props.data[simulator].output.values[0].length === 0) {
+      || props.data[ICid] == null
+      || props.data[ICid].output == null
+      || props.data[ICid].output.values.length === 0
+      || props.data[ICid].output.values[0].length === 0) {
 
       // clear values
       return{
@@ -75,7 +75,7 @@ class WidgetTable extends Component {
     // get rows
     const rows = [];
 
-    props.data[simulator].output.values.forEach((signal, index) => {
+    props.data[ICid].output.values.forEach((signal, index) => {
       let s = widgetSignals.find( sig => sig.index === index);
       // if the signal is used by the widget
       if (s !== undefined) {
@@ -91,7 +91,7 @@ class WidgetTable extends Component {
     return {
       showUnit: props.showUnit,
       rows: rows,
-      sequence: props.data[simulator].output.sequence
+      sequence: props.data[ICid].output.sequence
     };
   }
 

@@ -1,8 +1,4 @@
 /**
- * File: plot.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 08.03.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -37,27 +33,27 @@ class WidgetPlot extends React.Component {
 
   static getDerivedStateFromProps(props, state){
 
-    if (props.simulationModel == null) {
+    if (props.config == null) {
       return{
         data: [],
         legend: [],
       };
     }
 
-    const simulator = props.simulationModel.simulator;
+    const ic = props.config.icID;
 
-    // Proceed if a simulation with models and a simulator are available
-    if (simulator && props.data[simulator] != null && props.data[simulator] != null && props.data[simulator].output != null && props.data[simulator].output.values != null) {
+    // Proceed if a config and a IC are available
+    if (ic && props.data[ic] != null && props.data[ic] != null && props.data[ic].output != null && props.data[ic].output.values != null) {
       const chosenSignals = props.widget.customProperties.signals;
 
-      const data = props.data[simulator].output.values.filter((values, index) => (
+      const data = props.data[ic].output.values.filter((values, index) => (
         props.widget.customProperties.signals.findIndex(value => value === index) !== -1
       ));
 
       // Query the signals that will be displayed in the legend
-      const legend = props.simulationModel.outputMapping.reduce( (accum, model_signal, signal_index) => {
+      const legend = props.config.outputMapping.reduce( (accum, signal, signal_index) => {
         if (chosenSignals.includes(signal_index)) {
-          accum.push({ index: signal_index, name: model_signal.name, type: model_signal.type });
+          accum.push({ index: signal_index, name: signal.name, type: signal.type });
         }
 
         return accum;

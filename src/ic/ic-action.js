@@ -1,8 +1,4 @@
 /**
- * File: simulator-actionm.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 12.04.2018
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -22,7 +18,7 @@
 import React from 'react';
 import { Button, ButtonToolbar, DropdownButton, DropdownItem } from 'react-bootstrap';
 
-class SimulatorAction extends React.Component {
+class ICAction extends React.Component {
     constructor(props) {
         super(props);
 
@@ -70,4 +66,4 @@ class SimulatorAction extends React.Component {
     }
 }
 
-export default SimulatorAction;
+export default ICAction;

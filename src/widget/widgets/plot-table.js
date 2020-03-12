@@ -37,7 +37,7 @@ class WidgetPlotTable extends Component {
   }
 
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-    if (this.props.simulationModel == null) {
+    if (this.props.config == null) {
       return;
     }
 
@@ -64,18 +64,18 @@ class WidgetPlotTable extends Component {
   }
 
   updatePreselectedSignalsState(props) {
-    // Create checkboxes using the signal indices from simulation model
-    if(props.simulationModel.outputMapping){
-    const preselectedSignals = props.simulationModel.outputMapping.reduce(
-      // Loop through simulation model signals
-      (accum, model_signal, signal_index) => {
+    // Create checkboxes using the signal indices from component config
+    if(props.config.outputMapping){
+    const preselectedSignals = props.config.outputMapping.reduce(
+      // Loop through component config signals
+      (accum, signal, signal_index) => {
         // Append them if they belong to the current selected type
         if (props.widget.customProperties.preselectedSignals.indexOf(signal_index) > -1) {
             accum.push(
               {
                 index: signal_index,
-                name: model_signal.name,
-                type: model_signal.type
+                name: signal.name,
+                type: signal.type
               }
             )
           }
@@ -98,21 +98,21 @@ class WidgetPlotTable extends Component {
     let checkBoxes = [];
 
     // Data passed to plot
-    if (this.props.simulationModel == null) {
+    if (this.props.config == null) {
       return <div />;
     }
 
-    const simulator = this.props.simulationModel.simulator;
-    let simulatorData = [];
+    const ic = this.props.config.icID;
+    let icData = [];
 
-    if (this.props.data[simulator] != null && this.props.data[simulator].output != null && this.props.data[simulator].output.values != null) {
-      simulatorData = this.props.data[simulator].output.values.filter((values, index) => (
+    if (this.props.data[ic] != null && this.props.data[ic].output != null && this.props.data[ic].output.values != null) {
+      icData = this.props.data[ic].output.values.filter((values, index) => (
         this.props.widget.customProperties.signals.findIndex(value => value === index) !== -1
       ));
     }
 
     if (this.state.preselectedSignals && this.state.preselectedSignals.length > 0) {
-      // Create checkboxes using the signal indices from simulation model
+      // Create checkboxes using the signal indices from component config
       checkBoxes = this.state.preselectedSignals.map( (signal) => {
         var checked = this.state.signals.indexOf(signal.index) > -1;
         var chkBxClasses = classNames({
@@ -151,7 +151,7 @@ class WidgetPlotTable extends Component {
 
             <div className="widget-plot">
               <Plot
-                data={simulatorData}
+                data={icData}
                 time={this.props.widget.customProperties.time}
                 width={this.props.widget.width - 100}
                 height={this.props.widget.height - 55}

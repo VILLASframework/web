@@ -1,8 +1,4 @@
 /**
- * File: simulation-models-data-manager.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 20.04.2018
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -23,35 +19,35 @@ import RestDataManager from '../common/data-managers/rest-data-manager';
 import AppDispatcher from '../common/app-dispatcher';
 import RestAPI from "../common/api/rest-api";
 
-class SimulationModelDataManager extends RestDataManager {
+class ConfigDataManager extends RestDataManager {
   constructor() {
-    super('simulationModel', '/models');
+    super('config', '/configs');
 
-    this.onLoad = this.onModelsLoad;
+    this.onLoad = this.onConfigsLoad;
   }
 
-  onModelsLoad(data) {
+  onConfigsLoad(data) {
     if (!Array.isArray(data))
       data = [ data ];
 
-    for (let model of data)
-      this.loadModelData(model);
+    for (let config of data)
+      this.loadICData(config);
   }
 
-  loadModelData(model) {
+  loadICData(config) {
     AppDispatcher.dispatch({
-      type: 'simulatorData/prepare',
-      inputLength: parseInt(model.inputLength, 10),
-      outputLength: parseInt(model.outputLength, 10),
-      id: model.simulator
+      type: 'icData/prepare',
+      inputLength: parseInt(config.inputLength, 10),
+      outputLength: parseInt(config.outputLength, 10),
+      id: config.icID
     });
   }
 
-  loadSignals(token, models){
+  loadSignals(token, configs){
 
-    for (let model of models) {
+    for (let config of configs) {
       // request in signals
-      RestAPI.get(this.makeURL('/signals?direction=in&modelID=' + model.id), token).then(response => {
+      RestAPI.get(this.makeURL('/signals?direction=in&configID=' + config.id), token).then(response => {
         AppDispatcher.dispatch({
           type: 'signals/loaded',
           data: response.signals
@@ -59,7 +55,7 @@ class SimulationModelDataManager extends RestDataManager {
       });
 
       // request out signals
-      RestAPI.get(this.makeURL('/signals?direction=out&modelID=' + model.id), token).then(response => {
+      RestAPI.get(this.makeURL('/signals?direction=out&configID=' + config.id), token).then(response => {
         AppDispatcher.dispatch({
           type: 'signals/loaded',
           data: response.signals
@@ -69,10 +65,10 @@ class SimulationModelDataManager extends RestDataManager {
     }
   }
 
-  loadFiles(token, models){
-    for (let model of models) {
-      // request files of simulation model
-      RestAPI.get(this.makeURL('/files?objectType=model&objectID=' + model.id), token).then(response => {
+  loadFiles(token, configs){
+    for (let config of configs) {
+      // request files of config
+      RestAPI.get(this.makeURL('/files?objectType=config&objectID=' + config.id), token).then(response => {
         AppDispatcher.dispatch({
           type: 'files/loaded',
           data: response.files
@@ -82,4 +78,4 @@ class SimulationModelDataManager extends RestDataManager {
   }
 }
 
-export default new SimulationModelDataManager();
+export default new ConfigDataManager();

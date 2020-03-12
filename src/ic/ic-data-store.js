@@ -1,8 +1,4 @@
 /**
- * File: simulator-data-store.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 03.03.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -22,11 +18,11 @@
 import { ReduceStore } from 'flux/utils';
 
 import AppDispatcher from '../common/app-dispatcher';
-import SimulatorDataDataManager from './simulator-data-data-manager';
+import ICDataDataManager from './ic-data-data-manager';
 
 const MAX_VALUES = 10000;
 
-class SimulationDataStore extends ReduceStore {
+class ICDataStore extends ReduceStore {
   constructor() {
     super(AppDispatcher);
   }
@@ -37,14 +33,14 @@ class SimulationDataStore extends ReduceStore {
 
   reduce(state, action) {
     switch (action.type) {
-      case 'simulatorData/opened':
-        // create entry for simulator
+      case 'icData/opened':
+        // create entry for infrastructure component
         if (state[action.id] === undefined)
             state[action.id] = {};
 
         return state;
 
-      case 'simulatorData/prepare':
+      case 'icData/prepare':
         state[action.id] = {
           output: {
             sequence: -1,
@@ -64,8 +60,8 @@ class SimulationDataStore extends ReduceStore {
         this.__emitChange();
         return state;
 
-      case 'simulatorData/data-changed':
-        // get index for simulator id
+      case 'icData/data-changed':
+        // get index for IC id
         if (state[action.id] == null) {
           return state;
         }
@@ -80,7 +76,7 @@ class SimulationDataStore extends ReduceStore {
         for (let j = 0; j < action.data.length; j++) {
           let smp = action.data[j];
 
-          // add data to simulator
+          // add data to infrastructure component
           for (let i = 0; i < smp.length; i++) {
             while (state[action.id].output.values.length < i + 1) {
               state[action.id].output.values.push([]);
@@ -105,17 +101,17 @@ class SimulationDataStore extends ReduceStore {
 
         return state;
 
-      case 'simulatorData/inputChanged':
-        if (state[action.simulator] == null || state[action.simulator].input == null) {
+      case 'icData/inputChanged':
+        if (state[action.ic] == null || state[action.ic].input == null) {
           return state;
         }
 
         // update message properties
-        state[action.simulator].input.timestamp = Date.now();
-        state[action.simulator].input.sequence++;
-        state[action.simulator].input.values[action.signal] = action.data;
+        state[action.ic].input.timestamp = Date.now();
+        state[action.ic].input.sequence++;
+        state[action.ic].input.values[action.signal] = action.data;
 
-        SimulatorDataDataManager.send(state[action.simulator].input, action.simulator);
+        ICDataDataManager.send(state[action.ic].input, action.ic);
 
         return state;
 
@@ -125,4 +121,4 @@ class SimulationDataStore extends ReduceStore {
   }
 }
 
-export default new SimulationDataStore();
+export default new ICDataStore();

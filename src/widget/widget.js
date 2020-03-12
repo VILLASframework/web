@@ -24,8 +24,8 @@ import { Container } from 'flux/utils';
 
 import AppDispatcher from '../common/app-dispatcher';
 import LoginStore from '../user/login-store';
-import SimulatorDataStore from '../simulator/simulator-data-store';
-import SimulationModelStore from '../simulationmodel/simulation-model-store';
+import ICDataStore from '../ic/ic-data-store';
+import ConfigsStore from '../componentconfig/config-store';
 import FileStore from '../file/file-store';
 import SignalStore from '../signal/signal-store'
 
@@ -53,39 +53,39 @@ import '../styles/widgets.css';
 
 class Widget extends React.Component {
   static getStores() {
-    return [ SimulatorDataStore, SimulationModelStore, FileStore, LoginStore, SignalStore];
+    return [ ICDataStore, ConfigsStore, FileStore, LoginStore, SignalStore];
   }
 
   static calculateState(prevState, props) {
 
-    let simulatorData = {};
+    let icData = {};
 
     if (props.paused) {
-      if (prevState && prevState.simulatorData) {
-        simulatorData = JSON.parse(JSON.stringify(prevState.simulatorData));
+      if (prevState && prevState.icData) {
+        icData = JSON.parse(JSON.stringify(prevState.icData));
       }
     } else {
-      simulatorData = SimulatorDataStore.getState();
+      icData = ICDataStore.getState();
     }
 
-    // Get the simulator IDs and signal indexes for all signals of the widget
-    let simulationModels = SimulationModelStore.getState();
+    // Get the IC IDs and signal indexes for all signals of the widget
+    let configs = ConfigsStore.getState();
     // TODO make sure that the signals are only the signals that belong to the scenario at hand
     let signals = SignalStore.getState();
-    let simulatorIDs = [];
+    let icIDs = [];
     if ( props.data.signalIDs.length > 0){
       for (let i in props.data.signalIDs.length){
         let signal = signals.find(s => s.id === props.data.signalIDs[i]);
-        let model = simulationModels.find(m => m.id === signal.simulationModelID);
-        simulatorIDs[i] = model.simulatorID;
+        let config = configs.find(m => m.id === signal.configID);
+        icIDs[i] = config.icID;
       }
     }
 
 
     return {
-      simulatorData,
+      icData: icData,
       signals: signals,
-      simulatorIDs: simulatorIDs,
+      icIDs: icIDs,
       files: FileStore.getState(),
 
       sequence: prevState != null ? prevState.sequence + 1 : 0,
@@ -105,10 +105,10 @@ class Widget extends React.Component {
       param: '?objectID=1&objectType=widget'
     });*/
 
-    // TODO no not load simulation models here, since they are loaded via the scenario, pass them as props
+    // TODO no not load component congfigs here, since they are loaded via the scenario, pass them as props
     /*
     AppDispatcher.dispatch({
-      type: 'simulationModels/start-load',
+      type: 'configs/start-load',
       token: this.state.sessionToken,
       param: '?scenarioID=1' // TODO do not hardcode scenarioID!
     });
@@ -118,8 +118,8 @@ class Widget extends React.Component {
   inputDataChanged(widget, data) {
     // The following assumes that a widget modifies/ uses exactly one signal
     AppDispatcher.dispatch({
-      type: 'simulatorData/inputChanged',
-      simulator: this.state.simulatorIDs[0],
+      type: 'icData/inputChanged',
+      ic: this.state.icIDs[0],
       signal: this.state.signals[0].index,
       data
     });
@@ -128,21 +128,21 @@ class Widget extends React.Component {
   createWidget(widget) {
 
     if (widget.type === 'CustomAction') {
-      return <WidgetCustomAction widget={widget} data={this.state.simulatorData} dummy={this.state.sequence}  signals={this.state.signals} simulatorIDs={this.state.simulatorIDs} />
+      return <WidgetCustomAction widget={widget} data={this.state.icData} dummy={this.state.sequence}  signals={this.state.signals} icIDs={this.state.icIDs} />
     } else if (widget.type === 'Action') {
-      return <WidgetAction widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} />
+      return <WidgetAction widget={widget} data={this.state.icData} dummy={this.state.sequence} />
     } else if (widget.type === 'Lamp') {
-      return <WidgetLamp widget={widget} data={this.state.simulatorData} dummy={this.state.sequence}  signals={this.state.signals} simulatorIDs={this.state.simulatorIDs} />
+      return <WidgetLamp widget={widget} data={this.state.icData} dummy={this.state.sequence}  signals={this.state.signals} icIDs={this.state.icIDs} />
     } else if (widget.type === 'Value') {
-      return <WidgetValue widget={widget} data={this.state.simulatorData} dummy={this.state.sequence}  signals={this.state.signals} simulatorIDs={this.state.simulatorIDs} />
+      return <WidgetValue widget={widget} data={this.state.icData} dummy={this.state.sequence}  signals={this.state.signals} icIDs={this.state.icIDs} />
     } else if (widget.type === 'Plot') {
-      return <WidgetPlot widget={widget} data={this.state.simulatorData} dummy={this.state.sequence}  paused={this.props.paused} />
+      return <WidgetPlot widget={widget} data={this.state.icData} dummy={this.state.sequence}  paused={this.props.paused} />
     } else if (widget.type === 'Table') {
-      return <WidgetTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} signals={this.state.signals} simulatorIDs={this.state.simulatorIDs}  />
+      return <WidgetTable widget={widget} data={this.state.icData} dummy={this.state.sequence} signals={this.state.signals} icIDs={this.state.icIDs}  />
     } else if (widget.type === 'Label') {
       return <WidgetLabel widget={widget} />
     } else if (widget.type === 'PlotTable') {
-      return <WidgetPlotTable widget={widget} data={this.state.simulatorData} dummy={this.state.sequence} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index)} paused={this.props.paused} />
+      return <WidgetPlotTable widget={widget} data={this.state.icData} dummy={this.state.sequence} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index)} paused={this.props.paused} />
     } else if (widget.type === 'Image') {
       return <WidgetImage widget={widget} files={this.state.files} token={this.state.sessionToken} />
     } else if (widget.type === 'Button') {
@@ -152,7 +152,7 @@ class Widget extends React.Component {
     } else if (widget.type === 'Slider') {
       return <WidgetSlider widget={widget} editing={this.props.editing}  onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } onInputChanged={value => this.inputDataChanged(widget, value)} signals={this.state.signals}/>
     } else if (widget.type === 'Gauge') {
-      return <WidgetGauge widget={widget} data={this.state.simulatorData} editing={this.props.editing} signals={this.state.signals} simulatorIDs={this.state.simulatorIDs}  />
+      return <WidgetGauge widget={widget} data={this.state.icData} editing={this.props.editing} signals={this.state.signals} icIDs={this.state.icIDs}  />
     } else if (widget.type === 'Box') {
       return <WidgetBox widget={widget} editing={this.props.editing} />
     } else if (widget.type === 'HTML') {

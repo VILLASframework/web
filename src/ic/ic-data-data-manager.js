@@ -1,8 +1,4 @@
 /**
- * File: simulator-data-data-manager.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 03.03.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -25,7 +21,7 @@ import AppDispatcher from '../common/app-dispatcher';
 const OFFSET_TYPE = 2;
 const OFFSET_VERSION = 4;
 
-class SimulatorDataDataManager {
+class IcDataDataManager {
   constructor() {
     this._sockets = {};
   }
@@ -71,7 +67,7 @@ class SimulatorDataDataManager {
 
   onOpen(event, identifier, firstOpen) {
     AppDispatcher.dispatch({
-      type: 'simulatorData/opened',
+      type: 'icData/opened',
       id: identifier,
       firstOpen: firstOpen
     });
@@ -79,7 +75,7 @@ class SimulatorDataDataManager {
 
   onClose(event, identifier) {
     AppDispatcher.dispatch({
-      type: 'simulatorData/closed',
+      type: 'icData/closed',
       id: identifier,
       notification: (event.code !== 4000)
     });
@@ -93,7 +89,7 @@ class SimulatorDataDataManager {
 
     if (msgs.length > 0) {
       AppDispatcher.dispatch({
-        type: 'simulatorData/data-changed',
+        type: 'icData/data-changed',
         data: msgs,
         id: identifier
       });
@@ -165,4 +161,4 @@ class SimulatorDataDataManager {
   }
 }
 
-export default new SimulatorDataDataManager();
+export default new IcDataDataManager();

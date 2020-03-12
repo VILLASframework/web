@@ -1,8 +1,4 @@
 /**
- * File: user-store.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 15.03.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -23,7 +19,7 @@ import { ReduceStore } from 'flux/utils';
 
 import AppDispatcher from '../common/app-dispatcher';
 import UsersDataManager from './users-data-manager';
-import SimulatorDataDataManager from '../simulator/simulator-data-data-manager';
+import ICDataDataManager from '../ic/ic-data-data-manager';
 
 class LoginStore extends ReduceStore {
   constructor() {
@@ -45,8 +41,8 @@ class LoginStore extends ReduceStore {
         return Object.assign({}, state, { loginMessage: null });
 
       case 'users/logout':
-        // disconnect from all simulators
-        SimulatorDataDataManager.closeAll();
+        // disconnect from all infrastructure components
+        ICDataDataManager.closeAll();
         //remove token and current user from local storage
         localStorage.clear();
 

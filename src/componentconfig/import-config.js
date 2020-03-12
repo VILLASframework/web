@@ -1,8 +1,4 @@
 /**
- * File: import-simulation-model.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 03.09.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -25,14 +21,14 @@ import _ from 'lodash';
 
 import Dialog from '../common/dialogs/dialog';
 
-class ImportSimulationModelDialog extends React.Component {
+class ImportConfigDialog extends React.Component {
   imported = false;
 
   constructor(props) {
     super(props);
 
     this.state = {
-      model: {}
+      config: {}
     };
   }
 
@@ -43,12 +39,12 @@ class ImportSimulationModelDialog extends React.Component {
       return;
     }
 
-    this.props.onClose(this.state.model);
+    this.props.onClose(this.state.config);
   }
 
   resetState = () => {
     this.setState({
-      model: {}
+      config: {}
     });
 
     this.imported = false;
@@ -66,24 +62,24 @@ class ImportSimulationModelDialog extends React.Component {
     const self = this;
 
     reader.onload = event => {
-      const model = JSON.parse(event.target.result);
+      const config = JSON.parse(event.target.result);
 
-      model.simulator = this.props.simulators.length > 0 ? this.props.simulators[0]._id : null;
+      config.icID = this.props.ics.length > 0 ? this.props.ics[0]._id : null;
 
       self.imported = true;
 
-      this.setState({ model });
+      this.setState({ config: config });
     };
 
     reader.readAsText(file);
   }
 
-  handleSimulatorChange = event => {
-    const model = this.state.model;
+  handleICChange = event => {
+    const config = this.state.config;
 
-    model.simulator = event.target.value;
+    config.icID = event.target.value;
 
-    this.setState({ model });
+    this.setState({ config: config });
   }
 
   render() {
@@ -95,11 +91,11 @@ class ImportSimulationModelDialog extends React.Component {
             <FormControl type='file' onChange={this.loadFile} />
           </FormGroup>
 
-          <FormGroup controlId='simulator'>
+          <FormGroup controlId='IC'>
             <FormLabel>Infrastructure Component</FormLabel>
-            <FormControl disabled={this.imported === false} as='select' placeholder='Select infrastructure component' value={this.state.model.simulator} onChange={this.handleSimulatorChange}>
-              {this.props.simulators.map(simulator => (
-                <option key={simulator.id} value={simulator.id}>{_.get(simulator, 'properties.name') || _.get(simulator, 'rawProperties.name')}</option>
+            <FormControl disabled={this.imported === false} as='select' placeholder='Select infrastructure component' value={this.state.config.icID} onChange={this.handleICChange}>
+              {this.props.ics.map(ic => (
+                <option key={ic.id} value={ic.id}>{_.get(ic, 'properties.name') || _.get(ic, 'rawProperties.name')}</option>
               ))}
             </FormControl>
           </FormGroup>
@@ -109,4 +105,4 @@ class ImportSimulationModelDialog extends React.Component {
   }
 }
 
-export default ImportSimulationModelDialog;
+export default ImportConfigDialog;

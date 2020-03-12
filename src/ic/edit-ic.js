@@ -1,5 +1,4 @@
 /**
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -23,7 +22,7 @@ import _ from 'lodash';
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
 
-class EditSimulatorDialog extends React.Component {
+class EditICDialog extends React.Component {
   valid = true;
 
   constructor(props) {
@@ -38,13 +37,13 @@ class EditSimulatorDialog extends React.Component {
   onClose(canceled) {
     if (canceled === false) {
       if (this.valid) {
-        let data = this.props.simulator.properties;
+        let data = this.props.ic.properties;
 
-        if (this.state.name != null && this.state.name !== "" && this.state.name !== _.get(this.props.simulator, 'rawProperties.name')) {
+        if (this.state.name != null && this.state.name !== "" && this.state.name !== _.get(this.props.ic, 'rawProperties.name')) {
           data.name = this.state.name;
         }
 
-        if (this.state.endpoint != null && this.state.endpoint !== "" && this.state.endpoint !== "http://" && this.state.endpoint !== _.get(this.props.simulator, 'rawProperties.endpoint')) {
+        if (this.state.endpoint != null && this.state.endpoint !== "" && this.state.endpoint !== "http://" && this.state.endpoint !== _.get(this.props.ic, 'rawProperties.endpoint')) {
           data.endpoint = this.state.endpoint;
         }
 
@@ -61,8 +60,8 @@ class EditSimulatorDialog extends React.Component {
 
   resetState() {
     this.setState({
-      name: _.get(this.props.simulator, 'properties.name') || _.get(this.props.simulator, 'rawProperties.name'),
-      endpoint: _.get(this.props.simulator, 'properties.endpoint') || _.get(this.props.simulator, 'rawProperties.endpoint')
+      name: _.get(this.props.ic, 'properties.name') || _.get(this.props.ic, 'rawProperties.name'),
+      endpoint: _.get(this.props.ic, 'properties.endpoint') || _.get(this.props.ic, 'rawProperties.endpoint')
     });
   }
 
@@ -72,17 +71,17 @@ class EditSimulatorDialog extends React.Component {
         <form>
           <FormGroup controlId="name">
             <FormLabel column={false}>Name</FormLabel>
-            <FormControl type="text" placeholder={_.get(this.props.simulator, 'properties.name')} value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder={_.get(this.props.ic, 'properties.name')} value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="endpoint">
             <FormLabel column={false}>Endpoint</FormLabel>
-            <FormControl type="text" placeholder={_.get(this.props.simulator, 'properties.endpoint')} value={this.state.endpoint || 'http://' } onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder={_.get(this.props.ic, 'properties.endpoint')} value={this.state.endpoint || 'http://' } onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId='properties'>
             <FormLabel column={false}>Properties</FormLabel>
-            <ParametersEditor content={_.merge({}, _.get(this.props.simulator, 'rawProperties'), _.get(this.props.simulator, 'properties'))} disabled={true} />
+            <ParametersEditor content={_.merge({}, _.get(this.props.ic, 'rawProperties'), _.get(this.props.ic, 'properties'))} disabled={true} />
           </FormGroup>
         </form>
       </Dialog>
@@ -90,4 +89,4 @@ class EditSimulatorDialog extends React.Component {
   }
 }
 
-export default EditSimulatorDialog;
+export default EditICDialog;

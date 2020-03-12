@@ -1,6 +1,4 @@
 /**
- * File: signal-store.js
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -28,10 +26,10 @@ class SignalStore extends  ArrayStore{
   reduce(state, action) {
     switch (action.type) {
       case 'signals/added':
-        SignalsDataManager.reloadSimulationModel(action.token, action.data);
+        SignalsDataManager.reloadConfig(action.token, action.data);
         return super.reduce(state, action);
       case 'signals/removed':
-        SignalsDataManager.reloadSimulationModel(action.token, action.data);
+        SignalsDataManager.reloadConfig(action.token, action.data);
         return super.reduce(state, action);
 
       default:

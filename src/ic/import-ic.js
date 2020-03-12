@@ -1,8 +1,4 @@
 /**
- * File: new-simulator.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -21,11 +17,13 @@
 
 import React from 'react';
 import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import _ from 'lodash';
 
 import Dialog from '../common/dialogs/dialog';
 
-class NewSimulatorDialog extends React.Component {
+class ImportICDialog extends React.Component {
   valid = false;
+  imported = false;
 
   constructor(props) {
     super(props);
@@ -63,7 +61,32 @@ class NewSimulatorDialog extends React.Component {
   }
 
   resetState() {
-    this.setState({ name: '', endpoint: 'http://', uuid: this.uuidv4()});
+    this.setState({ name: '', endpoint: 'http://', uuid: '' });
+  }
+
+  loadFile(fileList) {
+    // get file
+    const file = fileList[0];
+    if (!file.type.match('application/json')) {
+      return;
+    }
+
+    // create file reader
+    const reader = new FileReader();
+    const self = this;
+
+    reader.onload = function(event) {
+      // read component
+      const ic = JSON.parse(event.target.result);
+      self.imported = true;
+      self.setState({
+        name: _.get(ic, 'properties.name') || _.get(ic, 'rawProperties.name'),
+        endpoint: _.get(ic, 'properties.endpoint') || _.get(ic, 'rawProperties.endpoint'),
+        uuid: ic.uuid
+      });
+    };
+
+    reader.readAsText(file);
   }
 
   validateForm(target) {
@@ -79,25 +102,22 @@ class NewSimulatorDialog extends React.Component {
       uuid = false;
     }
 
-    this.valid = name && uuid;
+    this.valid = name || uuid;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
     if (target === 'uuid') return uuid ? "success" : "error";
   }
 
-  uuidv4() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      // eslint-disable-next-line
-      var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-  }
-
   render() {
     return (
-      <Dialog show={this.props.show} title="New Infrastructure Component" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog show={this.props.show} title="Import Infrastructure Component" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
+          <FormGroup controlId="file">
+            <FormLabel>Infrastructure Component File</FormLabel>
+            <FormControl type="file" onChange={(e) => this.loadFile(e.target.files)} />
+          </FormGroup>
+
           <FormGroup controlId="name" validationState={this.validateForm('name')}>
             <FormLabel>Name</FormLabel>
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
@@ -119,4 +139,4 @@ class NewSimulatorDialog extends React.Component {
   }
 }
 
-export default NewSimulatorDialog;
+export default ImportICDialog;

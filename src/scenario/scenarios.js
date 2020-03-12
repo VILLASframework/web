@@ -158,7 +158,7 @@ class Scenarios extends Component {
     let scenario = Object.assign({}, this.state.scenarios[index]);
     delete scenario.id;
 
-    // TODO request missing scenario parameters (Dashboards and Simulation Modles) recursively for export
+    // TODO request missing scenario parameters (Dashboards and component configs) recursively for export
 
     // show save dialog
     const blob = new Blob([JSON.stringify(scenario, null, 2)], { type: 'application/json' });

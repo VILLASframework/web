@@ -1,8 +1,4 @@
 /**
- * File: scenarios-data-manager.js
- * Author: Sonja Happ <sonja.happ@eonerc.rwth-aachen.de>
- * Date: 20.08.2019
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -25,18 +21,18 @@ import AppDispatcher from "../common/app-dispatcher";
 
 class ScenariosDataManager extends RestDataManager {
   constructor() {
-    super('scenario', '/scenarios', ['id', 'name', 'running', 'simulationModelIDs', 'userIDs', 'dashboardIDs', 'startParameters' ]);
+    super('scenario', '/scenarios');
   }
 
-  getSimulationModels(token, id) {
-    RestAPI.get(this.makeURL('/scenarios/' + id + '/models'), token).then(response => {
+  getComponentConfigs(token, id) {
+    RestAPI.get(this.makeURL('/scenarios/' + id + '/configs'), token).then(response => {
       AppDispatcher.dispatch({
-        type: 'scenarios/simulationmodels',
-        simulationmodels: response.models
+        type: 'scenarios/configs',
+        configs: response.configs
       });
     }).catch(error => {
       AppDispatcher.dispatch({
-        type: 'scenarios/simulationmodels-error',
+        type: 'scenarios/configs-error',
         error: error
       });
     });

@@ -38,20 +38,20 @@ class WidgetLamp extends Component {
       return{ value: ''};
     }
 
-    const simulator = props.simulatorIDs[0];
+    const ic = props.icIDs[0];
     let signalID = props.widget.signalIDs[0];
     let widgetSignal = props.signals.find(sig => sig.id === signalID);
 
     // update value
     if (props.data == null
-      || props.data[simulator] == null
-      || props.data[simulator].output == null
-      || props.data[simulator].output.values == null) {
+      || props.data[ic] == null
+      || props.data[ic].output == null
+      || props.data[ic].output.values == null) {
       return{value:''};
     }
 
     // check if value has changed
-    const signalData = props.data[simulator].output.values[widgetSignal.index];
+    const signalData = props.data[ic].output.values[widgetSignal.index];
     if (signalData != null && state.value !== signalData[signalData.length - 1].y) {
       return { value: signalData[signalData.length - 1].y };
     }

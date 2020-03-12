@@ -1,6 +1,4 @@
 /**
- * File: signals-data-manager.js
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -27,13 +25,13 @@ class SignalsDataManager extends RestDataManager{
     super('signal', '/signals');
   }
 
-  reloadSimulationModel(token, data){
+  reloadConfig(token, data){
     // request in signals
-    console.log("Reloading simulation model due to signal add/remove")
-    RestAPI.get(this.makeURL('/models/' + data.simulationModelID), token).then(response => {
+    console.log("Reloading component config due to signal add/remove")
+    RestAPI.get(this.makeURL('/configs/' + data.configID), token).then(response => {
       AppDispatcher.dispatch({
-        type: 'simulationModels/edited',
-        data: response.simulationModel
+        type: 'configs/edited',
+        data: response.config
       });
     });
 

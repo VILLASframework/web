@@ -1,9 +1,4 @@
 /**
- * File: action.js
- * Author: Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
- * Date: 21.11.2018
- * Copyright: 2018, Institute for Automation of Complex Power Systems, EONERC
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -24,7 +19,7 @@ import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import Icon from '../../common/icon';
 import LoginStore from '../../user/login-store';
-import SimulatorStore from '../../simulator/simulator-store';
+import ICStore from '../../ic/ic-store';
 import AppDispatcher from '../../common/app-dispatcher';
 
 class WidgetCustomAction extends Component {
@@ -32,12 +27,12 @@ class WidgetCustomAction extends Component {
     super(props);
 
     this.state = {
-      simulator: null
+      ic: null
     };
   }
 
   static getStores() {
-    return [ SimulatorStore, LoginStore ];
+    return [ ICStore, LoginStore ];
   }
 
   static getDerivedStateFromProps(props, state){
@@ -46,15 +41,15 @@ class WidgetCustomAction extends Component {
     }
 
     return{
-      simulator: SimulatorStore.getState().find(s => s.id === props.simulatorIDs[0]),
+      ic: ICStore.getState().find(s => s.id === props.icIDs[0]),
       sessionToken: LoginStore.getState().token
     };
   }
 
   onClick() {
     AppDispatcher.dispatch({
-      type: 'simulators/start-action',
-      simulator: this.state.simulator,
+      type: 'ics/start-action',
+      ic: this.state.ic,
       data: this.props.widget.customProperties.actions,
       token: this.state.sessionToken
     });
@@ -62,7 +57,7 @@ class WidgetCustomAction extends Component {
 
   render() {
     return <div className="widget-custom-action full">
-      <Button className="full" disabled={this.state.simulator === null} onClick={(e) => this.onClick()}>
+      <Button className="full" disabled={this.state.ic === null} onClick={(e) => this.onClick()}>
         <Icon icon={this.props.widget.customProperties.icon} /> <span dangerouslySetInnerHTML={{ __html: this.props.widget.name }} />
       </Button>
     </div>;
