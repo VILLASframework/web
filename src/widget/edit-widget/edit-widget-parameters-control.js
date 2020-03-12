@@ -49,7 +49,7 @@ class EditWidgetParametersControl extends Component {
 
   render() {
     return (
-        <FormGroup controlId={this.props.controlId} validationState={this.props.validate ? this.props.validate(this.props.controlId) : null}>
+        <FormGroup controlId={this.props.controlId}>
           <FormLabel>{this.props.label}</FormLabel>
           <ParametersEditor content={this.state.widget[this.props.controlId] || {}} onChange={(v)=> this.handleChange(v)} />
         </FormGroup>

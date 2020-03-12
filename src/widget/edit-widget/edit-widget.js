@@ -44,7 +44,7 @@ class EditWidgetDialog extends React.Component {
 
   onClose(canceled) {
     if (canceled === false) {
-      if (this.valid) {
+      if (this.validChanges()) {
         this.props.onClose(this.state.temporal);
       }
     } else {
@@ -104,17 +104,17 @@ class EditWidgetDialog extends React.Component {
       this.setState({ temporal: changeObject});
 
     } else {
-      console.log("edit-widget: type text");
-      if(this.state.temporal[e.target.id]){
-
-        console.log("edit-widget: type: " , e.target.type, " target.id", e.target.id, "target.value", e.target.value)
+        console.log("edit-widget: text type");
+        let parts = e.target.id.split('.');
         let finalChange = this.state.temporal;
-
-        finalChange[e.target.id] = e.target.value;
-
-        console.log("edit-widget: finalChange", finalChange);
-        this.setState({ temporal: finalChange});
-      }
+        if (parts.length === 1 && this.state.temporal[e.target.id]) {
+          // not a customProperty
+          finalChange[e.target.id] = e.target.value;
+        } else if (parts.length === 2){
+          // a customProperty is changed
+          finalChange[parts[0]][parts[1]] = e.target.value;
+        }
+        this.setState({temporal: finalChange});
     }
   }
 
@@ -123,18 +123,16 @@ class EditWidgetDialog extends React.Component {
     this.setState({ temporal: widget_data });
   }
 
-  validateForm(target) {
-    // check all controls
+  validChanges() {
+    // check that widget has a name
     var name = true;
 
     if (this.state.name === '') {
       name = false;
     }
 
-    //this.valid = name;
     this.valid = name;
-    // return state to control
-    if (target === 'name') return name ? "success" : "error";
+    return name;
   }
 
   render() {
@@ -146,7 +144,6 @@ class EditWidgetDialog extends React.Component {
             this.state.temporal,
             this.props.sessionToken,
             this.props.files,
-            (id) => this.validateForm(id),
             this.props.signals,
             (e) => this.handleChange(e));
     }

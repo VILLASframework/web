@@ -26,22 +26,47 @@ class EditWidgetTextControl extends Component {
   constructor(props) {
     super(props);
 
+    let value = "";
+    let parts = props.controlId.split('.');
+    if (parts.length === 1) {
+      // not a customProperty
+      value=props.widget[props.controlId]
+    } else if(parts.length === 2){
+      // a custom property
+      value=props.widget[parts[0]][parts[1]]
+    } else {
+      value="controlID contains too many dots"
+    }
+
     this.state = {
-      widget: {}
+      value: value
     };
   }
 
   static getDerivedStateFromProps(props, state){
+
+    let value = "";
+    let parts = props.controlId.split('.');
+    if (parts.length === 1) {
+      // not a customProperty
+      value=props.widget[props.controlId]
+    } else if(parts.length === 2){
+      // a custom property
+      value=props.widget[parts[0]][parts[1]]
+    } else {
+      value="controlID contains too many dots"
+    }
+
     return {
-      widget: props.widget
-    };
+      value: value
+    }
   }
 
   render() {
     return (
-        <FormGroup controlId={this.props.controlId} valid={this.props.validate ? this.props.validate(this.props.controlId) : null}>
+        <FormGroup controlId={this.props.controlId}>
           <FormLabel>{this.props.label}</FormLabel>
-          <FormControl type="text" placeholder={this.props.placeholder} value={this.state.widget[this.props.controlId] || ''} onChange={e => this.props.handleChange(e)} />
+          <FormControl type="text" placeholder={this.props.placeholder} value={this.state.value} onChange={e => this.props.handleChange(e)} />
           <FormControl.Feedback />
         </FormGroup>
     );
