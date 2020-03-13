@@ -78,12 +78,26 @@ class Dashboard extends Component {
     // TODO filter signals to the ones belonging to the scenario at hand!
     let signals = SignalStore.getState();
 
+    // get files of all widgets
+    let allFiles = FileStore.getState();
+    let files = [];
+    let file, widget;
+    for (file of allFiles){
+      for (widget of widgets){
+        if (file.widgetID === widget.id){
+          files.push(file);
+        }
+      }
+    }
+
+
+
     return {
       dashboard,
       widgets,
       signals,
       sessionToken: sessionToken,
-      files: null,
+      files: files,
 
       editing: prevState.editing || false,
       paused: prevState.paused || false,
