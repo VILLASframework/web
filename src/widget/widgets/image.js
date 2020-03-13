@@ -29,7 +29,7 @@ class WidgetImage extends React.Component {
   componentDidMount() {
     // Query the image referenced by the widget
     let widgetFile = this.props.widget.customProperties.file;
-    if (widgetFile && !this.props.files.find(file => file.id === widgetFile)) {
+    if (widgetFile !== -1 && !this.props.files.find(file => file.id === widgetFile)) {
       AppDispatcher.dispatch({
         type: 'files/start-load',
         data: widgetFile,
@@ -39,7 +39,7 @@ class WidgetImage extends React.Component {
   }
 
   render() {
-    const file = this.props.files.find(file => file._id === this.props.widget.customProperties.file);
+    const file = this.props.files.find(file => file.id === this.props.widget.customProperties.file);
 
     return (
       <div className="full">
