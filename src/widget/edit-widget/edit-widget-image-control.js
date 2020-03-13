@@ -82,7 +82,7 @@ class EditImageWidgetControl extends React.Component {
             <option disabled value style={{ display: 'none' }}>No images found, please upload one first.</option>
           ) : (
             this.props.files.reduce((entries, file, index) => {
-              entries.push(<option key={++index} value={file._id}>{file.name}</option>);
+              entries.push(<option key={++index} value={file.id}>{file.name}</option>);
               return entries;
             }, [
               <option key={0} value=''>Please select one image</option>
