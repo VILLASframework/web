@@ -33,7 +33,7 @@ class EditWidgetColorControl extends Component {
     let colorCount = 0;
     const colors = [];
     const colorScale = scaleOrdinal(schemeCategory10);
-    while (colorCount < 20) { colors.push(colorScale(colorCount)); colorCount++; }
+    while (colorCount < 10) { colors.push(colorScale(colorCount)); colorCount++; }
     colors.unshift('#000', '#FFF'); // include black and white
 
     return colors;

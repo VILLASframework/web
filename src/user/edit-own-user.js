@@ -87,12 +87,6 @@ class EditOwnUserDialog extends React.Component {
     }
 
 
-    /*this.setState({
-      role: user.role,
-      id: user.id,
-      active: user.active
-    });*/
-
     // form is valid if the following condition is met
     this.valid = username || mail || (oldPassword &&  pw && confirmpassword);
 

@@ -64,22 +64,18 @@ class EditWidgetDialog extends React.Component {
   }
 
   handleChange(e) {
-  // TODO: check what we really need in this function. Can we reduce its complexity?
-    if (e.constructor === Array) {
-      // Every property in the array will be updated
-      let changes = e.reduce( (changesObject, event) => {
-        changesObject[event.target.id] = event.target.value;
+    
+    // TODO: check what we really need in this function. Can we reduce its complexity?
+    let parts = e.target.id.split('.');
+        let changeObject = this.state.temporal;
+        let customProperty = true;
+        if (parts.length === 1 && this.state.temporal[e.target.id]) {
+          // not a customProperty
+          customProperty = false;
+        } 
 
-        return changesObject;
-      }, {});
-
-      this.setState({ temporal: Object.assign({}, this.state.temporal, changes ) });
-    }
-
-    if(e.target.type !== 'text'){
-      console.log("edit-widget: e.target.type is not text: ", e.target.type);
-      let changeObject = this.state.temporal;
       if (e.target.id === 'lockAspect') {
+        //not a customProperty
         changeObject[e.target.id] = e.target.checked;
 
         // correct image aspect if turned on
@@ -87,39 +83,27 @@ class EditWidgetDialog extends React.Component {
           changeObject = this.assignAspectRatio(changeObject, this.state.temporal.file);
         }
       } else if (e.target.id === 'file') {
-        changeObject[e.target.id] = e.target.value;
+        //not a customProperty
+        changeObject.customProperties[e.target.id] = e.target.value;
 
         // get file and update size (if it's an image)
         if ('lockAspect' in this.state.temporal && this.state.temporal.lockAspect) {
           changeObject = this.assignAspectRatio(changeObject, e.target.value);
         }
       } else if (e.target.type === 'checkbox') {
-        changeObject[e.target.id] = e.target.value;
+        customProperty ? changeObject.customProperties[e.target.id] = e.target.value : changeObject[e.target.id] = e.target.value;
       } else if (e.target.type === 'number') {
-        changeObject[e.target.id] = Number(e.target.value);
+        customProperty ?  changeObject.customProperties[e.target.id] = Number(e.target.value) : changeObject[e.target.id] = Number(e.target.value);
       } else {
-        changeObject[e.target.id] = e.target.value;
+        customProperty ? changeObject.customProperties[e.target.id] = e.target.value : changeObject[e.target.id] = e.target.value ;
       }
-
+      this.validChanges();
       this.setState({ temporal: changeObject});
 
-    } else {
-        console.log("edit-widget: text type");
-        let parts = e.target.id.split('.');
-        let finalChange = this.state.temporal;
-        if (parts.length === 1 && this.state.temporal[e.target.id]) {
-          // not a customProperty
-          finalChange[e.target.id] = e.target.value;
-        } else if (parts.length === 2){
-          // a customProperty is changed
-          finalChange[parts[0]][parts[1]] = e.target.value;
-        }
-        this.setState({temporal: finalChange});
-    }
   }
 
   resetState() {
-    var widget_data = Object.assign({}, this.props.widget);
+    let widget_data = Object.assign({}, this.props.widget);
     this.setState({ temporal: widget_data });
   }
 
@@ -127,7 +111,7 @@ class EditWidgetDialog extends React.Component {
     // check that widget has a name
     var name = true;
 
-    if (this.state.name === '') {
+    if (this.state.temporal[name] === '') {
       name = false;
     }
 
