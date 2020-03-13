@@ -118,12 +118,13 @@ class WidgetFactory {
                 widget.customProperties.yMax = 10;
                 widget.customProperties.yUseMinMax = false;
                 break;
-            case 'Image':
+          case 'Image':
                 widget.minWidth = 20;
                 widget.minHeight = 20;
                 widget.width = 200;
                 widget.height = 200;
                 widget.customProperties.lockAspect = true;
+                widget.customProperties.file = 1; // ID of image file, -1 means non selected
                 break;
             case 'Button':
                 widget.minWidth = 100;
