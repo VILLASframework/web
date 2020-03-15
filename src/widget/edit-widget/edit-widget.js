@@ -90,10 +90,14 @@ class EditWidgetDialog extends React.Component {
         if ('lockAspect' in this.state.temporal && this.state.temporal.lockAspect) {
           changeObject = this.assignAspectRatio(changeObject, e.target.value);
         }
-      } else if (e.target.type === 'checkbox') {
-        customProperty ? changeObject.customProperties[e.target.id] = e.target.value : changeObject[e.target.id] = e.target.value;
       } else if (e.target.type === 'number') {
         customProperty ?  changeObject.customProperties[e.target.id] = Number(e.target.value) : changeObject[e.target.id] = Number(e.target.value);
+      } else if(e.target.id === 'name'){
+        if(changeObject[e.target.id] != null){
+          changeObject[e.target.id] = e.target.value;
+        } else{
+          changeObject[e.target.id] = 'default';
+        }
       } else {
         customProperty ? changeObject.customProperties[e.target.id] = e.target.value : changeObject[e.target.id] = e.target.value ;
       }
