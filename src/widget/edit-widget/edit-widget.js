@@ -64,45 +64,45 @@ class EditWidgetDialog extends React.Component {
   }
 
   handleChange(e) {
-    
+
     // TODO: check what we really need in this function. Can we reduce its complexity?
     let parts = e.target.id.split('.');
-        let changeObject = this.state.temporal;
-        let customProperty = true;
-        if (parts.length === 1 && this.state.temporal[e.target.id]) {
-          // not a customProperty
-          customProperty = false;
-        } 
+    let changeObject = this.state.temporal;
+    let customProperty = true;
+    if (parts.length === 1 && this.state.temporal[e.target.id]) {
+      // not a customProperty
+      customProperty = false;
+    }
 
-      if (e.target.id === 'lockAspect') {
-        //not a customProperty
-        changeObject[e.target.id] = e.target.checked;
+    if (e.target.id === 'lockAspect') {
+      //not a customProperty
+      changeObject[e.target.id] = e.target.checked;
 
-        // correct image aspect if turned on
-        if (e.target.checked) {
-          changeObject = this.assignAspectRatio(changeObject, this.state.temporal.file);
-        }
-      } else if (e.target.id === 'file') {
-        //not a customProperty
-        changeObject.customProperties[e.target.id] = e.target.value;
-
-        // get file and update size (if it's an image)
-        if ('lockAspect' in this.state.temporal && this.state.temporal.lockAspect) {
-          changeObject = this.assignAspectRatio(changeObject, e.target.value);
-        }
-      } else if (e.target.type === 'number') {
-        customProperty ?  changeObject.customProperties[e.target.id] = Number(e.target.value) : changeObject[e.target.id] = Number(e.target.value);
-      } else if(e.target.id === 'name'){
-        if(changeObject[e.target.id] != null){
-          changeObject[e.target.id] = e.target.value;
-        } else{
-          changeObject[e.target.id] = 'default';
-        }
-      } else {
-        customProperty ? changeObject.customProperties[e.target.id] = e.target.value : changeObject[e.target.id] = e.target.value ;
+      // correct image aspect if turned on
+      if (e.target.checked) {
+        changeObject = this.assignAspectRatio(changeObject, this.state.temporal.file);
       }
-      this.validChanges();
-      this.setState({ temporal: changeObject});
+    } else if (e.target.id === 'file') {
+      //not a customProperty
+      changeObject.customProperties[e.target.id] = e.target.value;
+
+      // get file and update size (if it's an image)
+      if ('lockAspect' in this.state.temporal && this.state.temporal.lockAspect) {
+        changeObject = this.assignAspectRatio(changeObject, e.target.value);
+      }
+    } else if (e.target.type === 'number') {
+      customProperty ?  changeObject.customProperties[e.target.id] = Number(e.target.value) : changeObject[e.target.id] = Number(e.target.value);
+    } else if(e.target.id === 'name'){
+      if(changeObject[e.target.id] != null){
+        changeObject[e.target.id] = e.target.value;
+      } else{
+        changeObject[e.target.id] = 'default';
+      }
+    } else {
+      customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value ;
+    }
+    this.validChanges();
+    this.setState({ temporal: changeObject});
 
   }
 
