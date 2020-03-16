@@ -114,7 +114,7 @@ class Dashboard extends Component {
 
   }
 
-
+  
   static getNewWidgetKey() {
     const widgetKey = this.lastWidgetKey;
     this.lastWidgetKey++;
@@ -282,7 +282,11 @@ class Dashboard extends Component {
   saveEditing() {
     // Provide the callback so it can be called when state change is applied
     // TODO: Check if callback is needed
-
+    AppDispatcher.dispatch({
+      type: 'dashboards/start-edit',
+      data: this.state.dashboard,
+      token: this.state.sessionToken
+    });
 
     this.state.widgetChangeData.forEach( widget => {
       AppDispatcher.dispatch({
@@ -317,7 +321,11 @@ class Dashboard extends Component {
         token: this.state.sessionToken
       });
     }); */
-
+    AppDispatcher.dispatch({
+      type: 'dashboards/start-load',
+      data: this.props.match.params.dashboard,
+      token: this.state.sessionToken
+    });
 
     AppDispatcher.dispatch({
       type: 'widgets/start-load',
@@ -329,9 +337,11 @@ class Dashboard extends Component {
   };
 
   setGrid(value) {
-    const dashboard = this.state.dashboard.set('grid', value);
-
+    
+    let dashboard = this.state.dashboard;
+    dashboard.grid = value;
     this.setState({ dashboard });
+    this.forceUpdate();
   };
 
   pauseData(){
