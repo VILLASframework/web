@@ -65,7 +65,8 @@ class Plot extends React.Component {
       xAxis,
       yAxis,
       labelMargin,
-      identifier: uniqueIdentifier++
+      identifier: uniqueIdentifier++,
+      stopTime: null,
     };
   }
 
@@ -86,20 +87,30 @@ class Plot extends React.Component {
     // check if data is invalid
     if (props.data == null || props.data.length === 0 || props.data[0].length === 0) {
       // create empty plot axes
-      const xScale = scaleTime().domain([Date.now() -  props.time * 1000, Date.now()]).range([0, props.width - leftMargin - labelMargin - rightMargin]);
+      let xScale;
       let yScale;
+      let stopTime;
+
+      if(!props.paused){
+        xScale = scaleTime().domain([Date.now() -  props.time * 1000, Date.now()]).range([0, props.width - leftMargin - labelMargin - rightMargin]);
+        stopTime = Date.now();
+      }else{
+        stopTime = state.stopTime;
+        xScale = scaleLinear().domain([state.stopTime -  props.time * 1000, state.stopTime]).range([0, props.width - leftMargin - labelMargin - rightMargin]);
+      }
 
       if (props.yUseMinMax) {
         yScale = scaleLinear().domain([props.yMin, props.yMax]).range([props.height + topMargin - bottomMargin, topMargin]);
       } else {
         yScale = scaleLinear().domain([0, 10]).range([props.height + topMargin - bottomMargin, topMargin]);
       }
-
+      
       const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(timeFormat("%M:%S"));
       const yAxis = axisLeft().scale(yScale).ticks(5).tickFormat(format(".3s"));
 
 
       return{
+        stopTime: stopTime,
         data: null,
         xAxis,
         yAxis,
