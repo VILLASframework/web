@@ -37,12 +37,21 @@ class EditWidgetSignalControl extends Component {
     };
   }
 
+  handleSignalChange(e){
+
+    let newSignal = [];
+    newSignal.push(e.target.value);
+
+    this.props.handleChange({ target: { id: this.props.controlId, value: newSignal } });
+
+  }
+
   render() {
 
     return (
         <FormGroup controlId="signal">
           <FormLabel>Signal</FormLabel>
-          <FormControl as="select" placeholder="Select signal" value={this.props.widget.signalIDs[0]} onChange={(e) => this.props.handleChange(e)}>
+          <FormControl as="select" placeholder="Select signal" value={this.props.widget.signalIDs[0]} onChange={(e) => this.handleSignalChange(e)}>
             {
               this.props.signals.length === 0 ? (
                 <option disabled value style={{ display: 'none' }}>No signals available.</option>

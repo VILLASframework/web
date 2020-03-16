@@ -47,20 +47,20 @@ export default function CreateControls(widgetType = null, widget = null, session
             break;
         case 'Action':
             DialogControls.push(
-              <EditWidgetSignalControl key={0} widget={widget} signals={signals} handleChange={(e) => handleChange(e)} />,
+              <EditWidgetSignalControl key={0} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} />,
             );
             break;
         case 'Value':
             DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
-                <EditWidgetSignalControl key={1} widget={widget} signals={signals} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetSignalControl key={1} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetTextSizeControl key={2} widget={widget} handleChange={e => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={3} widget={widget} controlId={'customProperties.showUnit'} text="Show unit" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Lamp':
               DialogControls.push(
-                <EditWidgetSignalControl key={0} widget={widget} signals={signals} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetSignalControl key={0} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetTextControl key={1} widget={widget} controlId={'customProperties.threshold'} label={'Threshold'} placeholder={'0.5'} handleChange={e => handleChange(e)} />,
                 <EditWidgetColorControl key={2} widget={widget} controlId={'customProperties.on_color'} label={'Color On'} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetColorControl key={3} widget={widget} controlId={'customProperties.off_color'} label={'Color Off'} handleChange={(e) => handleChange(e)} />,
@@ -91,7 +91,7 @@ export default function CreateControls(widgetType = null, widget = null, session
         case 'Gauge':
             DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
-                <EditWidgetSignalControl key={1} widget={widget} signals={signals} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetSignalControl key={1} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={2} widget={widget} controlId="customProperties.colorZones" text="Show color zones" handleChange={e => handleChange(e)} />,
                 <EditWidgetColorZonesControl key={3} widget={widget} handleChange={e => handleChange(e)} />,
                 <EditWidgetMinMaxControl key={4} widget={widget} controlId="customProperties.value" handleChange={e => handleChange(e)} />
@@ -109,7 +109,7 @@ export default function CreateControls(widgetType = null, widget = null, session
             DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
                 <EditWidgetOrientation key={1} widget={widget} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetSignalControl key={2} widget={widget} input signals={signals} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetSignalControl key={2} widget={widget} controlId={'signalIDs'} input signals={signals} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={3} widget={widget} controlId={'customProperties.continous_update'} text={'Continous Update'} input handleChange={(e) => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={4} widget={widget} controlId={'customProperties.showUnit'} text="Show unit" handleChange={e => handleChange(e)} />,
                 <EditWidgetMinMaxControl key={5} widget={widget} controlId={'customProperties.range'} handleChange={e => handleChange(e)} />,
@@ -120,7 +120,7 @@ export default function CreateControls(widgetType = null, widget = null, session
         case 'Button':
             DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
-                <EditWidgetSignalControl key={1} widget={widget} input signals={signals} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetSignalControl key={1} widget={widget} controlId={'signalIDs'} input signals={signals} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={2} widget={widget} controlId={'customProperties.toggle'} text="Toggle" handleChange={e => handleChange(e)} />,
                 <EditWidgetNumberControl key={3} widget={widget} controlId={'customProperties.on_value'} label={'On Value'} defaultValue={1} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetNumberControl key={4} widget={widget} controlId={'customProperties.off_value'} label={'Off Value'} defaultValue={0} handleChange={(e) => handleChange(e)} />
@@ -155,7 +155,7 @@ export default function CreateControls(widgetType = null, widget = null, session
         case 'Input':
             DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
-                <EditWidgetSignalControl key={2} widget={widget} input  signals={signals} handleChange={(e) => handleChange(e)} />
+                <EditWidgetSignalControl key={2} widget={widget} controlId={'signalIDs'} input  signals={signals} handleChange={(e) => handleChange(e)} />
             );
             break;
 
