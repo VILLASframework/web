@@ -27,11 +27,7 @@ class EditWidgetAspectControl extends React.Component {
     super(props);
 
     this.state = {
-      widget: {
-        customProperties:{
-        isLocked: true
-        }
-      }
+      widget: {}
     };
   }
 
@@ -42,9 +38,21 @@ class EditWidgetAspectControl extends React.Component {
   }
 
   render() {
+    let parts = this.props.controlId.split('.');
+    let isCustomProperty = true;
+    if (parts.length === 1){
+      isCustomProperty = false;
+    }
+
     return (
       <FormGroup>
-        <FormCheck id="lockAspect" checked={this.state.widget.customProperties.isLocked} onChange={e => this.props.handleChange(e)}>Lock Aspect</FormCheck>
+        <FormCheck
+          type='checkbox'
+          id={this.props.controlId}
+          checked={isCustomProperty ?  this.state.widget[parts[0]][parts[1]] : this.state.widget[this.props.controlId]}
+          label={"Lock Aspect Ratio"}
+          onChange={e => this.props.handleChange(e)}>
+        </FormCheck>
       </FormGroup>
     );
   }
