@@ -20,7 +20,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, FormLabel, Button, ProgressBar } from 'react-bootstrap';
+import {FormGroup, FormControl, FormLabel, Button, ProgressBar} from 'react-bootstrap';
 
 import AppDispatcher from '../../common/app-dispatcher';
 
@@ -29,11 +29,7 @@ class EditImageWidgetControl extends React.Component {
     super(props);
 
     this.state = {
-      widget: {
-        customProperties:{
-        file: ''
-        }
-      },
+      widget: { },
       fileList: null,
       progress: 0
     };
@@ -61,7 +57,9 @@ class EditImageWidgetControl extends React.Component {
       data: formData,
       token: this.props.sessionToken,
       progressCallback: this.uploadProgress,
-      finishedCallback: this.clearProgress
+      finishedCallback: this.clearProgress,
+      objectType: "widget",
+      objectID: this.props.widget.id,
     });
   }
 
@@ -73,20 +71,35 @@ class EditImageWidgetControl extends React.Component {
     this.setState({ progress: 0 });
   }
 
+  handleFileChange(e){
+    console.log("Changing image: ", this.props.controlId, "to", e.target.value)
+    this.props.handleChange({ target: { id: this.props.controlId, value: e.target.value } });
+  }
+
   render() {
+
+    let parts = this.props.controlId.split('.');
+    let isCustomProperty = true;
+    if(parts.length === 1){
+      isCustomProperty = false;
+    }
+
+    console.log("edit image: files: ", this.props.files, "widget", this.state.widget, "upload file list:", this.state.fileList);
+
     return <div>
       <FormGroup controlId="file">
         <FormLabel>Image</FormLabel>
-        <FormControl className="select" value={this.state.widget.customProperties.file} onChange={(e) => this.props.handleChange(e)}>
+        <FormControl
+          as="select"
+          placeholder="Select image file"
+          value={isCustomProperty ? this.state.widget[parts[0]][parts[1]] : this.state.widget[this.props.controlId]}
+          onChange={(e) => this.handleFileChange(e)}>
           {this.props.files.length === 0 ? (
             <option disabled value style={{ display: 'none' }}>No images found, please upload one first.</option>
           ) : (
-            this.props.files.reduce((entries, file, index) => {
-              entries.push(<option key={++index} value={file.id}>{file.name}</option>);
-              return entries;
-            }, [
-              <option key={0} value=''>Please select one image</option>
-            ])
+            this.props.files.map((file, index) => (
+              <option key={index+1} value={file.id}>{file.name}</option>
+            ))
           )}
         </FormControl>
       </FormGroup>

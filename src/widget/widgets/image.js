@@ -22,7 +22,6 @@
 import React from 'react';
 
 import AppDispatcher from '../../common/app-dispatcher';
-import config from '../../config';
 
 class WidgetImage extends React.Component {
 
@@ -40,13 +39,27 @@ class WidgetImage extends React.Component {
 
   render() {
     const file = this.props.files.find(file => file.id === this.props.widget.customProperties.file);
+    let fileHasData = false;
+    let fileData, objectURL;
+    if (file){
+      fileHasData = file.hasOwnProperty("data");
+      if (fileHasData){
+        //console.log("File data: ", file.data);
+
+        fileData = new Blob([file.data],  {type: file.type});
+        objectURL = window.URL.createObjectURL(fileData);
+        console.log("Image created new file", fileData, "and objectID", objectURL)
+      }
+    }
+
+    console.log("Image: has data:", fileHasData);
 
     return (
       <div className="full">
         {file ? (
-          <img className="full" alt={file.name} src={'/' + config.publicPathBase + file.path} onDragStart={e => e.preventDefault()} />
+          <img className="full" alt={file.name} src={fileHasData ? objectURL : ''} onDragStart={e => e.preventDefault()} />
         ) : (
-          <img className="full" alt="questionmark" src={'/' + config.publicPathBase + 'missing-image.png'} onDragStart={e => e.preventDefault()} />
+          <img className="full" alt="No file selected." />
         )}
       </div>
     );

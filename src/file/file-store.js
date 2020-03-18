@@ -27,6 +27,21 @@ class FileStore extends ArrayStore {
     super('files', FilesDataManager);
   }
 
+  saveFile(state, action){
+
+    // save file data file
+    let fileID = parseInt(action.data.id)
+    console.log("Received file", action);
+    for (let f of state){
+      if (f.id === fileID){
+        f["data"] = action.data.data;
+        f.type = action.data.type;
+        console.log("Saving file data to file id", fileID);
+      }
+    }
+
+  }
+
   reduce(state, action) {
     switch (action.type) {
       case 'files/start-upload':
@@ -46,6 +61,7 @@ class FileStore extends ArrayStore {
         } else {
           // in this case a file is contained in the response (no JSON)
           // TODO we have to extract and process the file here (=save it somewhere?)
+          this.saveFile(state, action)
           return super.reduce(state, action)
         }
 
