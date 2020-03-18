@@ -88,7 +88,13 @@ class RestDataManager {
       if (id != null) {
         // load single object
         RestAPI.get(this.requestURL('load/add',id,param), token).then(response => {
-          const data = this.filterKeys(response[this.type]);
+          let data;
+          if (response.hasOwnProperty(this.type)) {
+            data = this.filterKeys(response[this.type]);
+          }else{
+            // loaded file
+              data = response;
+          }
 
           AppDispatcher.dispatch({
             type: this.type + 's/loaded',

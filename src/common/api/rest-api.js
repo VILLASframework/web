@@ -66,7 +66,16 @@ class RestAPI {
         if (res == null || res.status !== 200) {
           reject(error);
         } else {
-          resolve(JSON.parse(res.text));
+          if (res.type ==="application/json"){
+            resolve(JSON.parse(res.text));
+          } else {
+            // if received data is not JSON it is a File
+            //create file name:
+            let parts = url.split("/");
+            console.log("res.text has type: ", typeof res.text);
+            resolve({data: res.text, type: res.type, id: parts[parts.length-1]})
+          }
+
         }
       });
     });
