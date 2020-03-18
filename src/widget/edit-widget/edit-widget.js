@@ -80,10 +80,9 @@ class EditWidgetDialog extends React.Component {
 
       // correct image aspect if turned on
       if (e.target.checked) {
-        changeObject = this.assignAspectRatio(changeObject, this.state.temporal.file);
+        changeObject = this.assignAspectRatio(changeObject, this.state.temporal.customProperties.file);
       }
-    } else if (e.target.id === 'file') {
-      //not a customProperty
+    } else if (e.target.id.includes('file')) {
 
       customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value;
 
