@@ -71,7 +71,7 @@ export default function CreateControls(widgetType = null, widget = null, session
                 <EditWidgetTimeControl key={0} widget={widget} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetSignalsControl key={1} widget={widget} controlId={'signalIDs'}  signals={signals} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetTextControl key={2} widget={widget} controlId={'customProperties.ylabel'} label={'Y-Axis name'} placeholder={'Enter a name for the y-axis'}  handleChange={(e) => handleChange(e)} />,
-                <EditWidgetMinMaxControl key={3} widget={widget} controlId="y" handleChange={e => handleChange(e)} />
+                <EditWidgetMinMaxControl key={3} widget={widget} controlId="customProperties.y" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Table':
@@ -82,9 +82,9 @@ export default function CreateControls(widgetType = null, widget = null, session
             break;
         case 'Image':
             // Restrict to only image file types (MIME)
-            let imageControlFiles = files == null? [] : files.filter(file => file.type.includes('image'));
+            //let imageControlFiles = files == null? [] : files.filter(file => file.type.includes('image'));
             DialogControls.push(
-                <EditImageWidgetControl key={0} widget={widget} sessionToken={sessionToken} files={imageControlFiles} handleChange={(e) => handleChange(e)} />,
+                <EditImageWidgetControl key={0} widget={widget} controlId={"customProperties.file"} sessionToken={sessionToken} files={files} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetAspectControl key={1} widget={widget} controlId={"customProperties.lockAspect"} handleChange={e => handleChange(e)} />
             );
             break;
@@ -102,7 +102,7 @@ export default function CreateControls(widgetType = null, widget = null, session
                 <EditWidgetSignalsControl key={0} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetTextControl key={1} widget={widget} controlId={'customProperties.ylabel'} label={'Y-Axis'} placeholder={'Enter a name for the Y-axis'} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetTimeControl key={2} widget={widget} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetMinMaxControl key={3} widget={widget} controlId="y" handleChange={e => handleChange(e)} />
+                <EditWidgetMinMaxControl key={3} widget={widget} controlId="customProperties.y" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Slider':
@@ -146,9 +146,9 @@ export default function CreateControls(widgetType = null, widget = null, session
             break;
         case 'Topology':
             // Restrict to only xml files (MIME)
-            let topologyControlFiles = files == null? [] : files.filter( file => file.type.includes('xml'));
+            //let topologyControlFiles = files == null? [] : files.filter( file => file.type.includes('xml'));
             DialogControls.push(
-                <EditImageWidgetControl key={0} widget={widget} sessionToken={sessionToken}  files={topologyControlFiles} handleChange={(e) => handleChange(e)} />
+                <EditImageWidgetControl key={0} widget={widget} controlId={"customProperties.file"} sessionToken={sessionToken}  files={files} handleChange={(e) => handleChange(e)} />
             );
             break;
 

@@ -69,14 +69,14 @@ class EditWidgetDialog extends React.Component {
     let parts = e.target.id.split('.');
     let changeObject = this.state.temporal;
     let customProperty = true;
-    if (parts.length === 1 && this.state.temporal[e.target.id]) {
+    if (parts.length === 1) {
       // not a customProperty
       customProperty = false;
     }
 
     if (e.target.id === 'lockAspect') {
       //not a customProperty
-      changeObject[e.target.id] = e.target.checked;
+      customProperty ? changeObject[parts[0]][parts[1]] = e.target.checked : changeObject[e.target.id] = e.target.checked;
 
       // correct image aspect if turned on
       if (e.target.checked) {
@@ -84,19 +84,21 @@ class EditWidgetDialog extends React.Component {
       }
     } else if (e.target.id === 'file') {
       //not a customProperty
-      changeObject.customProperties[e.target.id] = e.target.value;
+
+      customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value;
 
       // get file and update size (if it's an image)
       if ('lockAspect' in this.state.temporal && this.state.temporal.lockAspect) {
+        // TODO this if condition requires changes to work!!!
         changeObject = this.assignAspectRatio(changeObject, e.target.value);
       }
     } else if (e.target.type === 'number') {
-      customProperty ?  changeObject.customProperties[e.target.id] = Number(e.target.value) : changeObject[e.target.id] = Number(e.target.value);
+      customProperty ?  changeObject[parts[0]][parts[1]] = Number(e.target.value) : changeObject[e.target.id] = Number(e.target.value);
     } else if(e.target.id === 'name'){
-      if(changeObject[e.target.id] != null){
-        changeObject[e.target.id] = e.target.value;
+      if(customProperty ? (changeObject[parts[0]][parts[1]] != null) : (changeObject[e.target.id] != null)){
+        customProperty ? changeObject[parts[0]][parts[1]]= e.target.value : changeObject[e.target.id] = e.target.value;
       } else{
-        changeObject[e.target.id] = 'default';
+        customProperty ? changeObject[parts[0]][parts[1]]= 'default' : changeObject[e.target.id] = 'default';
       }
     } else {
       customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value ;
