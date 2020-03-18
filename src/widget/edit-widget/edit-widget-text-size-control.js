@@ -29,7 +29,7 @@ class EditWidgetTextSizeControl extends React.Component {
     return (
       <FormGroup controlId="textSize">
         <FormLabel>Text size</FormLabel>
-        <FormControl as="select" value={this.props.widget.textSize} onChange={e => this.props.handleChange(e)}>
+        <FormControl as="select" value={this.props.widget.customProperties.textSize} onChange={e => this.props.handleChange(e)}>
           {sizes.map((size, index) => (
             <option key={index} value={size}>{size}</option>
           ))}

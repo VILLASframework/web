@@ -73,25 +73,28 @@ class EditWidgetDialog extends React.Component {
       // not a customProperty
       customProperty = false;
     }
-
+    if(parts.length === 1 && customProperty){
+      parts.push(parts[0]);
+    }
+    
     if (e.target.id === 'lockAspect') {
       //not a customProperty
       changeObject[e.target.id] = e.target.checked;
 
       // correct image aspect if turned on
       if (e.target.checked) {
-        changeObject = this.assignAspectRatio(changeObject, this.state.temporal.file);
+        changeObject = this.assignAspectRatio(changeObject, this.state.temporal.customProperties.file);
       }
-    } else if (e.target.id === 'file') {
-      //not a customProperty
-      changeObject.customProperties[e.target.id] = e.target.value;
+    } else if (parts[1] === 'file') {
+      //customProperty
+      changeObject.customProperties.parts[1] = e.target.value;
 
       // get file and update size (if it's an image)
       if ('lockAspect' in this.state.temporal && this.state.temporal.lockAspect) {
         changeObject = this.assignAspectRatio(changeObject, e.target.value);
       }
     } else if (e.target.type === 'number') {
-      customProperty ?  changeObject.customProperties[e.target.id] = Number(e.target.value) : changeObject[e.target.id] = Number(e.target.value);
+      customProperty ?  changeObject.customProperties.parts[1] = Number(e.target.value) : changeObject[e.target.id] = Number(e.target.value);
     } else if(e.target.id === 'name'){
       if(changeObject[e.target.id] != null){
         changeObject[e.target.id] = e.target.value;
@@ -99,7 +102,7 @@ class EditWidgetDialog extends React.Component {
         changeObject[e.target.id] = 'default';
       }
     } else {
-      customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value ;
+      customProperty ? changeObject.customProperties[parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value ;
     }
     this.validChanges();
     this.setState({ temporal: changeObject});
