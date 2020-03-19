@@ -46,8 +46,8 @@ deploy:docker:
   before_script:
     - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
   script:
-    - docker build -t ${DOCKER_IMAGE} .
-    - docker push ${DOCKER_IMAGE}
+    - docker build -t ${DOCKER_IMAGE}:${CI_COMMIT_SHORT_SHA} .
+    - docker push ${DOCKER_IMAGE}:${CI_COMMIT_SHORT_SHA}
   tags:
     - shell
     - linux
