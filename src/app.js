@@ -66,7 +66,6 @@ class App extends React.Component {
   componentDidMount() {
     NotificationsDataManager.setSystem(this.refs.notificationSystem);
 
-
     // if token stored locally, request user
     let token = localStorage.getItem("token");
     let currentUser = JSON.parse(localStorage.getItem("currentUser"));

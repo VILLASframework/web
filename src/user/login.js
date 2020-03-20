@@ -55,7 +55,7 @@ class Login extends Component {
     // if token stored locally, request user
     if (this.state.token == null) {
       const token = localStorage.getItem('token');
-      const currentUser = localStorage.getItem('currentUser');
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
       if (token != null && token !== '' && currentUser != null && this.state.currentUser == null) {
         AppDispatcher.dispatch({
