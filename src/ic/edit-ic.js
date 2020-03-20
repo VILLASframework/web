@@ -30,22 +30,37 @@ class EditICDialog extends React.Component {
 
     this.state = {
       name: '',
-      endpoint: ''
+      host: '',
+      type: '',
+      category: '',
+      properties: {},
     };
   }
 
   onClose(canceled) {
     if (canceled === false) {
       if (this.valid) {
-        let data = this.props.ic.properties;
+        let data = this.props.ic;
 
-        if (this.state.name != null && this.state.name !== "" && this.state.name !== _.get(this.props.ic, 'rawProperties.name')) {
+        if (this.state.name != null && this.state.name !== "" && this.state.name !== this.props.ic.name) {
           data.name = this.state.name;
         }
 
-        if (this.state.endpoint != null && this.state.endpoint !== "" && this.state.endpoint !== "http://" && this.state.endpoint !== _.get(this.props.ic, 'rawProperties.endpoint')) {
-          data.endpoint = this.state.endpoint;
+        if (this.state.host != null && this.state.host !== "" && this.state.host !== "http://" && this.state.host !== this.props.ic.host) {
+          data.host = this.state.host;
         }
+
+        if (this.state.type != null && this.state.type !== "" && this.state.type !== this.props.ic.type) {
+          data.type = this.state.type;
+        }
+
+        if (this.state.category != null && this.state.category !== "" && this.state.category !== this.props.ic.category) {
+          data.category = this.state.category;
+        }
+        if (this.state.properties !== {}) {
+          data.properties = this.state.properties
+        }
+
 
         this.props.onClose(data);
       }
@@ -60,8 +75,11 @@ class EditICDialog extends React.Component {
 
   resetState() {
     this.setState({
-      name: _.get(this.props.ic, 'properties.name') || _.get(this.props.ic, 'rawProperties.name'),
-      endpoint: _.get(this.props.ic, 'properties.endpoint') || _.get(this.props.ic, 'rawProperties.endpoint')
+      name: this.props.ic.name,
+      host: this.props.ic.host,
+      type: this.props.ic.type,
+      category: this.props.ic.category,
+      properties: _.merge({}, _.get(this.props.ic, 'rawProperties'), _.get(this.props.ic, 'properties'))
     });
   }
 
@@ -71,17 +89,27 @@ class EditICDialog extends React.Component {
         <form>
           <FormGroup controlId="name">
             <FormLabel column={false}>Name</FormLabel>
-            <FormControl type="text" placeholder={_.get(this.props.ic, 'properties.name')} value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder={this.props.ic.name} value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="endpoint">
-            <FormLabel column={false}>Endpoint</FormLabel>
-            <FormControl type="text" placeholder={_.get(this.props.ic, 'properties.endpoint')} value={this.state.endpoint || 'http://' } onChange={(e) => this.handleChange(e)} />
+          <FormGroup controlId="host">
+            <FormLabel column={false}>Host</FormLabel>
+            <FormControl type="text" placeholder={this.props.ic.host} value={this.state.host || 'http://' } onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="category">
+            <FormLabel column={false}>Category (e.g. Simulator, Gateway, ...)</FormLabel>
+            <FormControl type="text" placeholder={this.props.ic.category} value={this.state.category} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="type">
+            <FormLabel column={false}>Type (e.g. RTDS, VILLASnode, ...)</FormLabel>
+            <FormControl type="text" placeholder={this.props.ic.type} value={this.state.type} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId='properties'>
             <FormLabel column={false}>Properties</FormLabel>
-            <ParametersEditor content={_.merge({}, _.get(this.props.ic, 'rawProperties'), _.get(this.props.ic, 'properties'))} disabled={true} />
+            <ParametersEditor content={this.state.properties} disabled={false} />
           </FormGroup>
         </form>
       </Dialog>

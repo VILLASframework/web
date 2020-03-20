@@ -123,9 +123,9 @@ class ImportICDialog extends React.Component {
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="endpoint">
+          <FormGroup controlId="host">
             <FormLabel>Endpoint</FormLabel>
-            <FormControl type="text" placeholder="Enter endpoint" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder="Enter host" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="uuid" validationState={this.validateForm('uuid')}>

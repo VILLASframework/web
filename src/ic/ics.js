@@ -127,13 +127,13 @@ class InfrastructureComponents extends Component {
     this.setState({ editModal : false });
 
     if (data) {
-      let ic = this.state.ics[this.state.modalIndex];
-      ic.properties = data;
-      this.setState({ ic: ic });
+      //let ic = this.state.ics[this.state.modalIndex];
+      //ic = data;
+      //this.setState({ ic: ic });
 
       AppDispatcher.dispatch({
         type: 'ics/start-edit',
-        data: ic,
+        data: data,
         token: this.state.sessionToken,
       });
     }
@@ -272,10 +272,10 @@ class InfrastructureComponents extends Component {
 
         <Table data={this.state.ics}>
           <TableColumn checkbox onChecked={(index, event) => this.onICChecked(index, event)} width='30' />
-          <TableColumn title='Name' dataKeys={['properties.name', 'rawProperties.name']} />
+          <TableColumn title='Name' dataKeys={['name', 'rawProperties.name']} />
           <TableColumn title='State' labelKey='state' tooltipKey='error' labelModifier={InfrastructureComponents.stateLabelModifier} labelStyle={InfrastructureComponents.stateLabelStyle} />
-          <TableColumn title='Category' dataKeys={['properties.category', 'rawProperties.category']} />
-          <TableColumn title='Type' dataKeys={['properties.type', 'rawProperties.type']} />
+          <TableColumn title='Category' dataKeys={['category', 'rawProperties.category']} />
+          <TableColumn title='Type' dataKeys={['type', 'rawProperties.type']} />
           <TableColumn title='Location' dataKeys={['properties.location', 'rawProperties.location']} />
           {/* <TableColumn title='Realm' dataKeys={['properties.realm', 'rawProperties.realm']} /> */}
           <TableColumn title='Host' dataKey='host' />
