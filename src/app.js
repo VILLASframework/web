@@ -66,10 +66,11 @@ class App extends React.Component {
   componentDidMount() {
     NotificationsDataManager.setSystem(this.refs.notificationSystem);
 
+
     // if token stored locally, request user
     let token = localStorage.getItem("token");
     let currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    if (token != null && token !== '') {
+    if (token != null && token !== '' && currentUser != null) {
       AppDispatcher.dispatch({
         type: 'users/logged-in',
         token: token,
