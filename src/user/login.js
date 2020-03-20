@@ -57,7 +57,7 @@ class Login extends Component {
       const token = localStorage.getItem('token');
       const currentUser = localStorage.getItem('currentUser');
 
-      if (token != null && token !== '' && this.state.currentUser == null) {
+      if (token != null && token !== '' && currentUser != null && this.state.currentUser == null) {
         AppDispatcher.dispatch({
           type: 'users/logged-in',
           token: token,
