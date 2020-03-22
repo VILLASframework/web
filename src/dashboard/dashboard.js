@@ -245,6 +245,13 @@ class Dashboard extends Component {
   closeEdit(data){
 
     if (data == null) {
+  
+      AppDispatcher.dispatch({
+        type: 'widgets/start-load',
+        token: this.state.sessionToken,
+        param: '?dashboardID=1'
+      });
+      
       this.setState({ editModal: false });
 
       return;
@@ -321,11 +328,6 @@ class Dashboard extends Component {
         token: this.state.sessionToken
       });
     }); */
-    AppDispatcher.dispatch({
-      type: 'dashboards/start-load',
-      data: this.props.match.params.dashboard,
-      token: this.state.sessionToken
-    });
 
     AppDispatcher.dispatch({
       type: 'widgets/start-load',
