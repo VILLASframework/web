@@ -97,6 +97,7 @@ class WidgetFactory {
                 widget.minWidth = 200;
                 widget.width = 300;
                 widget.height = 200;
+                widget.customProperties.showUnit = false;
                 break;
             case 'Label':
                 widget.minWidth = 20;
@@ -150,6 +151,7 @@ class WidgetFactory {
                 widget.customProperties.rangeMax = 200;
                 widget.customProperties.rangeUseMinMax = true;
                 widget.customProperties.showUnit = true;
+                widget.customProperties.continous_update = false;
 
                 break;
             case 'Gauge':
