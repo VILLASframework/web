@@ -39,8 +39,9 @@ class EditWidgetSignalControl extends Component {
 
   handleSignalChange(e){
 
+    let tempSignal = parseInt(e.target.value,10);
     let newSignal = [];
-    newSignal.push(e.target.value);
+    newSignal.push(tempSignal);
 
     this.props.handleChange({ target: { id: this.props.controlId, value: newSignal } });
 
