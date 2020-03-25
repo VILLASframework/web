@@ -1,9 +1,4 @@
 /**
- * File: plot.js
- * Author: Ricardo Hernandez-Montoya <rhernandez@gridhound.de>
- * Date: 10.04.2017
- * Copyright: 2018, Institute for Automation of Complex Power Systems, EONERC
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -104,7 +99,7 @@ class Plot extends React.Component {
       } else {
         yScale = scaleLinear().domain([0, 10]).range([props.height + topMargin - bottomMargin, topMargin]);
       }
-      
+
       const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(timeFormat("%M:%S"));
       const yAxis = axisLeft().scale(yScale).ticks(5).tickFormat(format(".3s"));
 

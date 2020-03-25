@@ -1,9 +1,4 @@
 /**
- * File: edit-widget-color-control.js
- * Author: Ricardo Hernandez-Montoya <rhernandez@gridhound.de>
- * Date: 24.04.2017
- * Copyright: 2018, Institute for Automation of Complex Power Systems, EONERC
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify

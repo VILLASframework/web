@@ -1,8 +1,4 @@
 /**
- * File: edit-widget-time-control.js
- * Author: Ricardo Hernandez-Montoya <rhernandez@gridhound.de>
- * Date: 13.04.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify

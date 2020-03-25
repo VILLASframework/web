@@ -1,8 +1,4 @@
 /**
- * File: lamp.js
- * Author: Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
- * Date: 20.09.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify

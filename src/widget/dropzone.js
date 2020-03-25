@@ -1,8 +1,4 @@
 /**
- * File: dropzone.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -42,7 +38,7 @@ const dropzoneTarget = {
           }
         }
       }
-      
+
       return maxZ;
     }, 0);
     position.z = foundZ >= 100? foundZ : ++foundZ;

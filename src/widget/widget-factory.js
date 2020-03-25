@@ -1,10 +1,4 @@
 /**
- * File: widget-factory.js
- * Description: A factory to create and pre-configure widgets
- * Author: Ricardo Hernandez-Montoya <rhernandez@gridhound.de>
- * Date: 02.03.2017
- * Copyright: 2018, Institute for Automation of Complex Power Systems, EONERC
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify

@@ -1,8 +1,4 @@
 /**
- * File: edit-user.js
- * Author: Ricardo Hernandez-Montoya <rhernandez@gridhound.de>
- * Date: 02.05.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -26,7 +22,7 @@ class DeleteDialog extends React.Component {
     onModalKeyPress = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            
+
             this.props.onClose(false);
         }
       }

@@ -1,8 +1,4 @@
 /**
- * File: dashboard.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -114,7 +110,7 @@ class Dashboard extends Component {
 
   }
 
-  
+
   static getNewWidgetKey() {
     const widgetKey = this.lastWidgetKey;
     this.lastWidgetKey++;
@@ -245,13 +241,13 @@ class Dashboard extends Component {
   closeEdit(data){
 
     if (data == null) {
-  
+
       AppDispatcher.dispatch({
         type: 'widgets/start-load',
         token: this.state.sessionToken,
         param: '?dashboardID=1'
       });
-      
+
       this.setState({ editModal: false });
 
       return;
@@ -339,7 +335,7 @@ class Dashboard extends Component {
   };
 
   setGrid(value) {
-    
+
     let dashboard = this.state.dashboard;
     dashboard.grid = value;
     this.setState({ dashboard });

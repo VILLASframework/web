@@ -1,8 +1,4 @@
 /**
- * File: edit-widget-aspect-control.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 29.07.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify

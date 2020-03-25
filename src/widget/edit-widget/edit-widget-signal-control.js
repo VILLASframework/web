@@ -1,8 +1,4 @@
 /**
- * File: edit-widget-signal-control.js
- * Author: Ricardo Hernandez-Montoya <rhernandez@gridhound.de>
- * Date: 03.04.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify

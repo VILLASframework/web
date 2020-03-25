@@ -1,8 +1,4 @@
 /**
- * File: widget-toolbox.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 31.05.2018
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify

@@ -1,8 +1,4 @@
 /**
- * File: scenarios.js
- * Author: Sonja Happ <sonja.happ@eonerc.rwth-aachen.de>
- * Date: 20.08.2019
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify

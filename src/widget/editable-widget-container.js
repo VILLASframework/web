@@ -1,8 +1,4 @@
 /**
- * File: editable-widget-container.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 31.05.2018
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -27,7 +23,7 @@ import { Rnd } from 'react-rnd';
 class EditableWidgetContainer extends React.Component {
   constructor(props) {
     super(props);
-  
+
     this.rnd = null;
   }
 
@@ -66,7 +62,7 @@ class EditableWidgetContainer extends React.Component {
   };
 
   resizeStop = (event, direction, ref,delta, position) => {
-    
+
     const widget = this.props.widget;
 
     // resize depends on direction
@@ -125,9 +121,9 @@ class EditableWidgetContainer extends React.Component {
       enableResizing={resizing}
       disableDragging={widget.isLocked}
     >
-      
+
         {this.props.children}
-      
+
     </Rnd>;
   }
 }

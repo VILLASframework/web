@@ -1,8 +1,4 @@
 /**
- * File: topology.js
- * Author: Ricardo Hernandez-Montoya <rhernandez@gridhound.de>
- * Date: 08.01.2018
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify

@@ -1,8 +1,4 @@
 /**
- * File: users-store.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 15.03.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -55,7 +51,7 @@ class UsersStore extends ArrayStore {
           NotificationsDataManager.addNotification(USER_EDIT_ERROR_NOTIFICATION);
 
         }
-        return super.reduce(state, action); 
+        return super.reduce(state, action);
 
       default:
         return super.reduce(state, action);

@@ -1,8 +1,4 @@
 /**
- * File: widget-container.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 31.05.2018
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -24,7 +20,7 @@ import PropTypes from 'prop-types';
 
 class WidgetContainer extends React.Component {
   render() {
-    
+
     const containerStyle = {
       width: Number(this.props.widget.width),
       height: Number(this.props.widget.height),

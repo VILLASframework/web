@@ -1,8 +1,4 @@
 /**
- * File: grid.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 27.07.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -32,7 +28,7 @@ class Grid extends React.Component {
             <path d={"M " + this.props.size + " 0 L 0 0 0 " + this.props.size} fill="none" stroke="gray" strokeWidth="0.5" />
           </pattern>
         </defs>
-        
+
         <rect width="100%" height="100%" fill="url(#grid)" />
       </svg>
     );

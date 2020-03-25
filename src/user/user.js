@@ -1,8 +1,4 @@
 /**
- * File: user.js
- * Author: Sonja Happ
- * Date: 18.09.2019
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
