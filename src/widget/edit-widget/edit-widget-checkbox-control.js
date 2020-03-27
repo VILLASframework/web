@@ -22,31 +22,36 @@ class EditWidgetCheckboxControl extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      widget: props.widget
-    };
-  }
-
-  static getDerivedStateFromProps(props, state){
-    return{
-      widget: props.widget
-    };
-  }
-
-  render() {
     let parts = this.props.controlId.split('.');
     let isCustomProperty = true;
     if (parts.length ===1){
       isCustomProperty = false;
     }
 
+    let isChecked;
+    if (isCustomProperty){
+      isChecked = this.props.widget[parts[0]][parts[1]]
+    } else{
+      isChecked = this.props.widget[this.props.controlId]
+    }
 
+    this.state = {
+      isChecked
+    };
+  }
+
+  handleCheckboxChange(e){
+    this.props.handleChange({target: { id: this.props.controlId, value: !this.state.isChecked} })
+  }
+
+  render() {
     return <FormGroup>
       <FormCheck
+        type={"checkbox"}
         id={this.props.controlId}
         label={this.props.text}
-        checked={isCustomProperty ? this.state.widget[parts[0]][parts[1]] : this.state.widget[this.props.controlId]}
-        onChange={e => this.props.handleChange(e)}>
+        defaultChecked={this.state.isChecked}
+        onChange={e => this.handleCheckboxChange(e)}>
 
       </FormCheck>
     </FormGroup>;

@@ -55,7 +55,7 @@ export default function CreateControls(widgetType = null, widget = null, session
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Signal name'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
                 <EditWidgetSignalControl key={1} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetTextSizeControl key={2} widget={widget} handleChange={e => handleChange(e)} />,
-                <EditWidgetCheckboxControl key={3} widget={widget} controlId={'customProperties.showUnit'} text="Show unit" handleChange={e => handleChange(e)} />
+                <EditWidgetCheckboxControl key={3} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Lamp':
@@ -77,7 +77,7 @@ export default function CreateControls(widgetType = null, widget = null, session
         case 'Table':
             DialogControls.push(
                 <EditWidgetSignalsControl key={0} widget={widget} controlId={'signalIDs'}  signals={signals} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetCheckboxControl key={1} widget={widget} controlId={'customProperties.showUnit'} text="Show unit" handleChange={e => handleChange(e)} />
+                <EditWidgetCheckboxControl key={1} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Image':
@@ -92,7 +92,7 @@ export default function CreateControls(widgetType = null, widget = null, session
             DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
                 <EditWidgetSignalControl key={1} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetCheckboxControl key={2} widget={widget} controlId="customProperties.colorZones" text="Show color zones" handleChange={e => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={2} widget={widget} controlId="customProperties.colorZones" input text="Show color zones" handleChange={e => handleChange(e)} />,
                 <EditWidgetColorZonesControl key={3} widget={widget} handleChange={e => handleChange(e)} />,
                 <EditWidgetMinMaxControl key={4} widget={widget} controlId="customProperties.value" handleChange={e => handleChange(e)} />
             );
@@ -110,8 +110,8 @@ export default function CreateControls(widgetType = null, widget = null, session
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
                 <EditWidgetOrientation key={1} widget={widget} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetSignalControl key={2} widget={widget} controlId={'signalIDs'} input signals={signals} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetCheckboxControl key={3} widget={widget} controlId={'customProperties.continous_update'} text={'Continous Update'} input handleChange={(e) => handleChange(e)} />,
-                <EditWidgetCheckboxControl key={4} widget={widget} controlId={'customProperties.showUnit'} text="Show unit" handleChange={e => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={3} widget={widget} controlId={'customProperties.continous_update'} input text={'Continous Update'} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={4} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />,
                 <EditWidgetMinMaxControl key={5} widget={widget} controlId={'customProperties.range'} handleChange={e => handleChange(e)} />,
                 <EditWidgetNumberControl key={6} widget={widget} controlId={'customProperties.step'} label={'Step Size'} defaultValue={0.1} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetNumberControl key={7} widget={widget} controlId={'customProperties.default_value'} label={'Default Value'} defaultValue={50} handleChange={(e) => handleChange(e)} />
@@ -121,7 +121,7 @@ export default function CreateControls(widgetType = null, widget = null, session
             DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
                 <EditWidgetSignalControl key={1} widget={widget} controlId={'signalIDs'} input signals={signals} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetCheckboxControl key={2} widget={widget} controlId={'customProperties.toggle'} text="Toggle" handleChange={e => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={2} widget={widget} controlId={'customProperties.toggle'} input text="Toggle" handleChange={e => handleChange(e)} />,
                 <EditWidgetNumberControl key={3} widget={widget} controlId={'customProperties.on_value'} label={'On Value'} defaultValue={1} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetNumberControl key={4} widget={widget} controlId={'customProperties.off_value'} label={'Off Value'} defaultValue={0} handleChange={(e) => handleChange(e)} />
             );
