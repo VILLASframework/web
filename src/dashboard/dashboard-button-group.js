@@ -67,7 +67,7 @@ class DashboardButtonGroup extends React.Component {
 
       buttons.push(
         <Button key={key++} onClick={this.props.onEdit} style={buttonStyle}>
-          <Icon icon="pen" /> Edit
+          <Icon icon="pen" /> Edit Layout
         </Button>
       );
     }
