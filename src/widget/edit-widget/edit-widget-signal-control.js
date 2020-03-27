@@ -47,7 +47,7 @@ class EditWidgetSignalControl extends Component {
 
     return (
         <FormGroup controlId="signal">
-          <FormLabel>Signal</FormLabel>
+          <FormLabel>Select signal</FormLabel>
           <FormControl as="select" placeholder="Select signal" value={this.props.widget.signalIDs[0]} onChange={(e) => this.handleSignalChange(e)}>
             {
               this.props.signals.length === 0 ? (

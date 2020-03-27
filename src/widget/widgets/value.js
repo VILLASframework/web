@@ -37,11 +37,18 @@ class WidgetValue extends Component {
     const ICid = props.icIDs[0];
 
     // update value
+    let value = '';
     if (props.data == null
       || props.data[ICid] == null
       || props.data[ICid].output == null
       || props.data[ICid].output.values == null) {
-      return{ value: '' };
+      value = '';
+    } else {
+      // check if value has changed
+      const signalData = props.data[ICid].output.values[signal.index];
+      if (signalData != null && state.value !== signalData[signalData.length - 1].y) {
+        value = signalData[signalData.length - 1].y
+      }
     }
 
     // Update unit (assuming there is exactly one signal for this widget)
@@ -52,14 +59,10 @@ class WidgetValue extends Component {
       unit = signal.unit;
     }
 
-    // check if value has changed
-    const signalData = props.data[ICid].output.values[signal.index];
-    if (signalData != null && state.value !== signalData[signalData.length - 1].y) {
-      return {
-        value: signalData[signalData.length - 1].y,
-        unit: unit,
-      };
-    }
+    return {
+      value: value,
+      unit: unit,
+    };
 
   }
 

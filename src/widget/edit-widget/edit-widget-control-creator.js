@@ -52,7 +52,7 @@ export default function CreateControls(widgetType = null, widget = null, session
             break;
         case 'Value':
             DialogControls.push(
-                <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
+                <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Signal name'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
                 <EditWidgetSignalControl key={1} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetTextSizeControl key={2} widget={widget} handleChange={e => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={3} widget={widget} controlId={'customProperties.showUnit'} text="Show unit" handleChange={e => handleChange(e)} />
