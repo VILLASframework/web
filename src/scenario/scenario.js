@@ -269,7 +269,7 @@ class Scenario extends React.Component {
   getICName(icID) {
     for (let ic of this.state.ics) {
       if (ic.id === icID) {
-        return _.get(ic, 'properties.name') || _.get(ic, 'rawProperties.name') ||  ic.uuid;
+        return ic.name ||  ic.uuid;
       }
     }
   }
@@ -283,7 +283,7 @@ class Scenario extends React.Component {
     let newDashboard = data;
     // add default grid value and scenarioID
     newDashboard["grid"] = 15;
-    newDashboard["scenarioID"] = this.state.scenario.id
+    newDashboard["scenarioID"] = this.state.scenario.id;
 
     if (data) {
       AppDispatcher.dispatch({
