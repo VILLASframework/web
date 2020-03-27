@@ -22,36 +22,65 @@ class EditWidgetMinMaxControl extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      widget: props.widget
-    }
 
-  }
-
-  static getDerivedStateFromProps(props, state){
-    return{
-      widget: props.widget
-    };
-  }
-
-  render() {
-
-    let parts = this.props.controlId.split('.');
+    let parts = props.controlId.split('.');
     let isCustomProperty = true;
     if (parts.length === 1){
       isCustomProperty = false;
     }
 
-    console.log("min max edit: ", isCustomProperty);
+    let useMinMax;
+    let minValue = 0;
+    let maxValue = 0;
+    if (isCustomProperty){
+      useMinMax = props.widget[parts[0]][parts[1]+"UseMinMax"];
+      if (useMinMax) {
+        minValue = props.widget[parts[0]][parts[1] + 'Min'];
+        maxValue = props.widget[parts[0]][parts[1] + 'Max'];
+      }
+
+    } else {
+      useMinMax = props.widget[props.controlId + "UseMinMax"]
+      if (useMinMax){
+        minValue = props.widget[props.controlId + "Min"]
+        maxValue = props.widget[props.controlId + "Max"]
+      }
+    }
+
+    this.state = {
+      useMinMax,
+      minValue,
+      maxValue,
+    }
+
+  }
+
+  handleCheckboxChange(e){
+
+    // toggle boolean variable
+    let status = this.state.useMinMax;
+    this.setState({useMinMax: !status});
+    this.props.handleChange({target: { id: this.props.controlId + "UseMinMax", value: !status} })
+  }
+
+  handleMinChange(e){
+    this.setState({minValue: e.target.value});
+    this.props.handleChange({target: { id: this.props.controlId + "Min", value: Number(e.target.value)} })
+  }
+
+  handleMaxChange(e){
+    this.setState({maxValue: e.target.value});
+    this.props.handleChange({target: { id: this.props.controlId + "Max", value: Number(e.target.value)} })
+  }
+
+  render() {
 
     return <FormGroup>
       <FormLabel>{this.props.label}</FormLabel>
       <FormCheck
-        type={'checkbox'}
-        id={this.props.controlId + "UseMinMax"}
         label= {"UseMinMax"}
-        checked={isCustomProperty ? this.state.widget[parts[0]][parts[1]+"UseMinMax"]  ==='on' : this.state.widget[this.props.controlId + "UseMinMax"] === 'on'}
-        onChange={e => this.props.handleChange(e)}>
+        defaultChecked={this.state.useMinMax}
+        onChange={e => this.handleCheckboxChange(e)}>
       </FormCheck>
 
       <Table>
@@ -62,22 +91,20 @@ class EditWidgetMinMaxControl extends React.Component {
               <FormControl
                 type="number"
                 step="any"
-                id={this.props.controlId + "Min"}
-                disabled={isCustomProperty ? !(this.state.widget[parts[0]][parts[1] + "UseMinMax"] === 'on'): !(this.state.widget[this.props.controlId + "UseMinMax"] === 'on')}
+                disabled={!this.state.useMinMax}
                 placeholder="Minimum value"
-                value={isCustomProperty ? this.state.widget[parts[0]][parts[1] + 'Min'] : this.state.widget[this.props.controlId + "Min"]}
-                onChange={e => this.props.handleChange(e)} />
+                value={this.state.minValue}
+                onChange={e => this.handleMinChange(e)} />
             </td>
             <td>
               Max:
               <FormControl
                 type="number"
                 step="any"
-                id={this.props.controlId + "Max"}
-                disabled={isCustomProperty ? !(this.state.widget[parts[0]][parts[1] + "UseMinMax"] === 'on'): !(this.state.widget[this.props.controlId + "UseMinMax"] === 'on')}
+                disabled={!this.state.useMinMax}
                 placeholder="Maximum value"
-                value={ isCustomProperty ? this.state.widget[parts[0]][parts[1] + 'Max'] : this.state.widget[this.props.controlId + "Max"]}
-                onChange={e => this.props.handleChange(e)} />
+                value={ this.state.maxValue}
+                onChange={e => this.handleMaxChange(e)} />
             </td>
           </tr>
         </tbody>
