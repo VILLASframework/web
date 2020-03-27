@@ -19,7 +19,6 @@ import React from 'react';
 import { Container } from 'flux/utils';
 import { Button } from 'react-bootstrap';
 import FileSaver from 'file-saver';
-import _ from 'lodash';
 
 import ScenarioStore from './scenario-store';
 import ICStore from '../ic/ic-store';

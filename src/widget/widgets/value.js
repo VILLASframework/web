@@ -35,6 +35,9 @@ class WidgetValue extends Component {
 
     // TODO does the following line make sense?
     const ICid = props.icIDs[0];
+    let signalID = props.widget.signalIDs[0];
+    let signal = props.signals.find(sig => sig.id === signalID);
+
 
     // update value
     let value = '';
@@ -53,8 +56,6 @@ class WidgetValue extends Component {
 
     // Update unit (assuming there is exactly one signal for this widget)
     let unit = '';
-    let signalID = props.widget.signalIDs[0];
-    let signal = props.signals.find(sig => sig.id === signalID);
     if(signal !== undefined){
       unit = signal.unit;
     }
