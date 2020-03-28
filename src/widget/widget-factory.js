@@ -128,6 +128,9 @@ class WidgetFactory {
                 widget.height = 100;
                 widget.customProperties.background_color = 1;
                 widget.customProperties.font_color = 0;
+                widget.customProperties.on_value = 1;
+                widget.customProperties.off_value = 0;
+                widget.customProperties.toggle = false;
                 break;
             case 'Input':
                 widget.minWidth = 200;
@@ -146,6 +149,7 @@ class WidgetFactory {
                 widget.customProperties.rangeUseMinMax = true;
                 widget.customProperties.showUnit = true;
                 widget.customProperties.continous_update = false;
+                widget.customProperties.default_value = 0;
 
                 break;
             case 'Gauge':
