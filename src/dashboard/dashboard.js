@@ -264,12 +264,7 @@ class Dashboard extends Component {
 
 
   deleteWidget(widget, index) {
-    /*const widgets = this.state.dashboard.get('widgets');
-    delete widgets[index];
-
-    const dashboard = this.state.dashboard.set('widgets');
-
-    this.setState({ dashboard });*/
+    
     AppDispatcher.dispatch({
       type: 'widgets/start-remove',
       data: widget,

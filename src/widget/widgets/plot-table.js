@@ -92,14 +92,12 @@ class WidgetPlotTable extends Component {
 
   render() {
     let checkBoxes = [];
-
+    let icData = [];
+    let legendSignals = [];
     // Data passed to plot
-    if (this.props.config == null) {
-      return <div />;
-    }
+    if (this.props.config) {
 
     const ic = this.props.config.icID;
-    let icData = [];
 
     if (this.props.data[ic] != null && this.props.data[ic].output != null && this.props.data[ic].output.values != null) {
       icData = this.props.data[ic].output.values.filter((values, index) => (
@@ -121,7 +119,7 @@ class WidgetPlotTable extends Component {
     }
 
     // Prepare an array with the signals to show in the legend
-    var legendSignals = this.state.preselectedSignals.reduce( (accum, signal, i) => {
+    legendSignals = this.state.preselectedSignals.reduce( (accum, signal, i) => {
       if (this.state.signals.includes(signal.index)) {
         accum.push({
           index: signal.index,
@@ -130,7 +128,12 @@ class WidgetPlotTable extends Component {
         });
       }
       return accum;
-    }, []);
+    }, []);}
+
+    let showLegend = false;
+    if(legendSignals !== []){
+      showLegend = true;
+    }
 
     return (
       <div className="plot-table-widget" ref="wrapper">
@@ -159,7 +162,9 @@ class WidgetPlotTable extends Component {
               />
             </div>
           </div>
-          <PlotLegend signals={legendSignals} />
+          {showLegend? (
+          <PlotLegend signals={legendSignals} /> ) : (<div></div>)
+          }
         </div>
       </div>
     );
