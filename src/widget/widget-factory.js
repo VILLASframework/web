@@ -132,7 +132,7 @@ class WidgetFactory {
                 widget.customProperties.off_value = 0;
                 widget.customProperties.toggle = false;
                 break;
-            case 'Input':
+            case 'NumberInput':
                 widget.minWidth = 200;
                 widget.minHeight = 50;
                 widget.width = 200;

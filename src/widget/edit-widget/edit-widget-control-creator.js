@@ -152,7 +152,7 @@ export default function CreateControls(widgetType = null, widget = null, session
             );
             break;
 
-        case 'Input':
+        case 'NumberInput':
             DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
                 <EditWidgetSignalControl key={2} widget={widget} controlId={'signalIDs'} input  signals={signals} handleChange={(e) => handleChange(e)} />

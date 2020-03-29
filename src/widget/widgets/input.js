@@ -76,7 +76,7 @@ class WidgetInput extends Component {
   render() {
     return (
       <div className="number-input-widget full">
-          <Form componentClass="fieldset" horizontal>
+          <Form componentclass="fieldset" horizontal="true">
               <FormGroup>
                   <Col as={FormLabel} xs={3}>
                     {this.props.widget.name}
@@ -84,7 +84,9 @@ class WidgetInput extends Component {
                   <Col xs={9}>
                     <InputGroup>
                       <FormControl type="number" step="any" disabled={ this.props.editing } onKeyPress={ (e) => this.handleKeyPress(e) } onBlur={ (e) => this.valueChanged(this.state.value) } onChange={ (e) => this.valueIsChanging(e.target.value) } placeholder="Enter value" value={ this.state.value } />
-                      <InputGroup.Addon>{this.state.unit}</InputGroup.Addon>
+                      <InputGroup.Append>
+                        <InputGroup.Text>{this.state.unit}</InputGroup.Text>
+                      </InputGroup.Append>
                     </InputGroup>
                   </Col>
                 </FormGroup>
