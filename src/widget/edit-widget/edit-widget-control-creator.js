@@ -101,7 +101,7 @@ export default function CreateControls(widgetType = null, widget = null, session
             DialogControls.push(
                 <EditWidgetSignalsControl key={0} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetTextControl key={1} widget={widget} controlId={'customProperties.ylabel'} label={'Y-Axis'} placeholder={'Enter a name for the Y-axis'} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetTimeControl key={2} widget={widget} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetTimeControl key={2} widget={widget} controlId={'customProperties.time'} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetMinMaxControl key={3} widget={widget} controlId="customProperties.y" handleChange={e => handleChange(e)} />
             );
             break;
