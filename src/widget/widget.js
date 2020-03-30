@@ -144,7 +144,7 @@ class Widget extends React.Component {
     } else if (widget.type === 'Button') {
       return <WidgetButton widget={widget} editing={this.props.editing}  onInputChanged={(value) => this.inputDataChanged(widget, value)} signals={this.state.signals} />
     } else if (widget.type === 'NumberInput') {
-      return <WidgetInput widget={widget} editing={this.props.editing}  onInputChanged={(value) => this.inputDataChanged(widget, value)} />
+      return <WidgetInput widget={widget} editing={this.props.editing}  onInputChanged={(value) => this.inputDataChanged(widget, value)} signals={this.state.signals} />
     } else if (widget.type === 'Slider') {
       return <WidgetSlider widget={widget} editing={this.props.editing}  onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } onInputChanged={value => this.inputDataChanged(widget, value)} signals={this.state.signals}/>
     } else if (widget.type === 'Gauge') {

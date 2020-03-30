@@ -139,7 +139,7 @@ class WidgetTopology extends React.Component {
       }
     } else {
       // No file has been selected
-      if (!this.props.widget.customProperties.file) {
+      if (!this.props.widget.customProperties.file&& this.state.message !== 'Select a topology model first.') {
         this.setState({
           'dashboardState': 'show_message',
           'message': 'Select a topology model first.'});

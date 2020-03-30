@@ -89,6 +89,7 @@ class WidgetGauge extends Component {
       || props.data[ICid].output.values.length === 0
       || props.data[ICid].output.values[0].length === 0) {
      returnState["value"] = 0;
+     return returnState;
     }
 
     // memorize if min or max value is updated
@@ -191,7 +192,7 @@ class WidgetGauge extends Component {
     if (zones != null) {
       // adapt range 0-100 to actual min-max
       const step = (maxValue - minValue) / 100;
-
+    
       zones = zones.map(zone => {
         return Object.assign({}, zone, { min: (zone.min * step) + +minValue, max: zone.max * step + +minValue, strokeStyle: '#' + zone.strokeStyle });
       });
