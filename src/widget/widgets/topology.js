@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import {ReactSVGPanZoom} from 'react-svg-pan-zoom';
+import {UncontrolledReactSVGPanZoom} from 'react-svg-pan-zoom';
 import config from '../../config';
 import '../../styles/simple-spinner.css';
 import { cimsvg } from 'libcimsvg';
@@ -149,6 +149,13 @@ class WidgetTopology extends React.Component {
 
   render() {
     var markup = null;
+    const miniatureProps = {
+      miniaturePosition: "none",
+    }
+    
+    const toolbarProps = {
+      toolbarPosition: "none"
+    }
 
     switch(this.state.dashboardState) {
       case 'loading':
@@ -157,12 +164,12 @@ class WidgetTopology extends React.Component {
         markup = <div style={msgContainerStyle}><div style={msgStyle}>{ this.state.message }</div></div>; break;
       default:
         markup = (<div>
-          <ReactSVGPanZoom
+          <UncontrolledReactSVGPanZoom
                   ref={Viewer => this.Viewer = Viewer}
                   style={{outline: "1px solid grey"}}
                   detectAutoPan={false}
-                  miniaturePosition="none"
-                  toolbarPosition="none"
+                  toolbarProps={toolbarProps}
+                  miniatureProps={miniatureProps}
                   background="white"
                   tool="pan"
                   width={this.props.widget.width-2} height={this.props.widget.height-2} >
@@ -173,7 +180,7 @@ class WidgetTopology extends React.Component {
                       <g className="diagrams"/>
                     </svg>
                   </svg>
-          </ReactSVGPanZoom>
+          </UncontrolledReactSVGPanZoom>
         </div>);
     }
     return markup;
