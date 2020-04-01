@@ -22,28 +22,58 @@ class EditWidgetHTMLContent extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      widget: {}
-    };
-  }
+    let value = "";
+    let parts = props.controlId.split('.');
+    if (parts.length === 1) {
+      // not a customProperty
+      value=props.widget[props.controlId]
+    } else if(parts.length === 2){
+      // a custom property
+      value=props.widget[parts[0]][parts[1]]
+    } else {
+      value="controlID contains too many dots"
+    }
 
-  handleKeyIgnore(event){
-  // This function prevents a keystroke from beeing handled by dialog.js
-  event.stopPropagation();
+    this.state = {
+      value: value
+    };
   }
 
   static getDerivedStateFromProps(props, state){
+
+    let value = "";
+    let parts = props.controlId.split('.');
+    if (parts.length === 1) {
+      // not a customProperty
+      value=props.widget[props.controlId]
+    } else if(parts.length === 2){
+      // a custom property
+      value=props.widget[parts[0]][parts[1]]
+    } else {
+      value="controlID contains too many dots"
+    }
+
     return {
-      widget: props.widget
-    };
+      value: value
+    }
   }
 
+  handleKeyIgnore(event){
+    // This function prevents a keystroke from beeing handled by dialog.js
+    event.stopPropagation();
+  }
+
+
   render() {
-    return <FormGroup controlId={this.props.controlId}>
-      <FormLabel>HTML Content</FormLabel>
-      <FormControl onKeyPress={this.handleKeyIgnore} componentClass="textarea" style={{ height: 200 }} placeholder={this.props.placeholder} value={this.state.widget[this.props.controlId] || this.state.widget.customProperties[this.props.controlId] || ''} onChange={e => this.props.handleChange(e)} />
-    </FormGroup>;
+    return (
+        <FormGroup controlId={this.props.controlId}>
+          <FormLabel>HTML Content</FormLabel>
+          <FormControl type="text" onKeyPress={this.handleKeyIgnore} componentclass="textarea" style={{ height: 200 }} placeholder={this.props.placeholder} value={this.state.value} onChange={e => this.props.handleChange(e)} />
+          <FormControl.Feedback />
+        </FormGroup>
+    );
   }
 }
+
 
 export default EditWidgetHTMLContent;
