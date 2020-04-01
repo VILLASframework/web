@@ -4,9 +4,9 @@
 
 This is VILLASweb, the website displaying and processing simulation data in the web browser. The term __frontend__ refers to this project, the actual website.
 
-The frontend connects to __two__ backends: _VILLASweb-backend_ and _VILLASnode_.
+The frontend connects to __two__ backends: _VILLASweb-backend-go_ and _VILLASnode_.
 
-VILLASnode provides actual simulation data via websockets. VILLASweb-backend provides any other data like user accounts, infrastructure components and configurations, dashboards etc.
+VILLASnode provides actual simulation data via websockets. VILLASweb-backend-go provides any other data like user accounts, infrastructure components and configurations, dashboards etc.
 
 For more information on the backends see their repositories.
 
@@ -32,8 +32,6 @@ $ cd VILLASweb
 $ npm install
 $ npm start
 ```
-
-The default user and password are configured in the `config.js` file of the _backend_. By default they are: __admin__ / __admin__.
 
 ## Copyright
 
