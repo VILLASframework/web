@@ -33,6 +33,11 @@ $ npm install
 $ npm start
 ```
 
+We recommend to start the VILLASweb-backend-go before the frontend.
+If you want to use test data (including some test users), you can start the backend with the parameter `-mode=test`.
+Please check the repository of the VILLASweb-backend-go to find information on the test user login names and passwords.
+The testing mode is NOT intended for production deployments.
+
 ## Copyright
 
 2020, Institute for Automation of Complex Power Systems, EONERC  
