@@ -38,7 +38,9 @@ class EditWidgetOrientation extends Component {
   }
 
   handleOrientationChange(orientation) {
-    this.props.handleChange({ target: { id: 'orientation', value: orientation } });
+    console.log("handle OrinetationChange was called. the orientation: " + orientation);
+
+    this.props.handleChange({ target: { id: 'customProperties.orientation', value: orientation } });
   }
 
   render() {
@@ -55,6 +57,7 @@ class EditWidgetOrientation extends Component {
                 Object.keys(WidgetSlider.OrientationTypes).map( (type) => {
                   let value = WidgetSlider.OrientationTypes[type].value;
                   let name = WidgetSlider.OrientationTypes[type].name;
+                  console.log("value: " + value + " name: " + name)
 
                   return (
                     <FormCheck inline label={name} key={value} id={value} type='radio' title='orientation' checked={ value === this.state.widget.customProperties.orientation } onChange={(e) => this.handleOrientationChange(value)}>
