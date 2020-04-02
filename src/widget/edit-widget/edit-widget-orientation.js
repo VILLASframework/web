@@ -38,9 +38,15 @@ class EditWidgetOrientation extends Component {
   }
 
   handleOrientationChange(orientation) {
-    console.log("handle OrinetationChange was called. the orientation: " + orientation);
-
     this.props.handleChange({ target: { id: 'customProperties.orientation', value: orientation } });
+    this.handleNewDimensions(this.state.widget.width,this.state.widget.height,this.state.widget.minWidth,this.state.widget.minHeight);
+  }
+
+  handleNewDimensions(width,height,minWidth,minHeight){
+    this.props.handleChange({ target: { id: 'height', value: width } });
+    this.props.handleChange({ target: { id: 'width', value: height } });
+    this.props.handleChange({ target: { id: 'minHeight', value: minWidth } });
+    this.props.handleChange({ target: { id: 'minWidth', value: minHeight } });
   }
 
   render() {
@@ -57,7 +63,6 @@ class EditWidgetOrientation extends Component {
                 Object.keys(WidgetSlider.OrientationTypes).map( (type) => {
                   let value = WidgetSlider.OrientationTypes[type].value;
                   let name = WidgetSlider.OrientationTypes[type].name;
-                  console.log("value: " + value + " name: " + name)
 
                   return (
                     <FormCheck inline label={name} key={value} id={value} type='radio' title='orientation' checked={ value === this.state.widget.customProperties.orientation } onChange={(e) => this.handleOrientationChange(value)}>

@@ -57,7 +57,7 @@ class WidgetSlider extends Component {
     if (props.widget.customProperties.default_value && state.value === undefined) {
       returnState["value"] = props.widget.customProperties.default_value;
     }
-
+  
     // Update unit (assuming there is exactly one signal for this widget)
     let signalID = props.widget.signalIDs[0];
     let signal = props.signals.find(sig => sig.id === signalID);
@@ -76,6 +76,7 @@ class WidgetSlider extends Component {
 
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
     // Check if the orientation changed, update the size if it did
+    // this part didn't work -> dimensions and constraints are now handled by the edit orientation component
     if (this.props.widget.customProperties.orientation !== prevProps.widget.customProperties.orientation) {
       let baseWidget = this.props.widget;
 
@@ -125,33 +126,14 @@ class WidgetSlider extends Component {
                   });
 
     return (
-       !isVertical? (
         <div className={widgetClasses}>
           <label>{ fields.name }</label>
-          <div className='slider'>{ fields.control }</div>
+          { fields.control }
           <span>{ fields.value }</span>
+          {this.props.widget.customProperties.showUnit && fields.unit}
         </div>
-      ) : (
-        <div className={widgetClasses}>
-          <Slider vertical min={ this.props.widget.customProperties.rangeMin } max={ this.props.widget.customProperties.rangeMax } step={ this.props.widget.customProperties.step } value={ this.state.value } disabled={ this.props.editing } onChange={ (v) => this.valueIsChanging(v) } onAfterChange={ (v) => this.valueChanged(v) }/>,
-        </div>
-      )
     );
   }
 }
 
 export default WidgetSlider;
-/*!isVertical? (
-  <div className={widgetClasses}>
-    <label>{ fields.name }</label>
-    <div className='slider'>{ fields.control }</div>
-    <span>{ fields.value }</span>
-  </div>
-) : (
-  <div className={widgetClasses}>
-    <label>{ fields.name }</label>
-    { fields.control }
-    { fields.value }
-    { this.props.widget.customProperties.showUnit && fields.unit }
-  </div>
-)*/
