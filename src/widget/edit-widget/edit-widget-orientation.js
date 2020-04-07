@@ -38,7 +38,15 @@ class EditWidgetOrientation extends Component {
   }
 
   handleOrientationChange(orientation) {
-    this.props.handleChange({ target: { id: 'orientation', value: orientation } });
+    this.props.handleChange({ target: { id: 'customProperties.orientation', value: orientation } });
+    this.handleNewDimensions(this.state.widget.width,this.state.widget.height,this.state.widget.minWidth,this.state.widget.minHeight);
+  }
+
+  handleNewDimensions(width,height,minWidth,minHeight){
+    this.props.handleChange({ target: { id: 'height', value: width } });
+    this.props.handleChange({ target: { id: 'width', value: height } });
+    this.props.handleChange({ target: { id: 'minHeight', value: minWidth } });
+    this.props.handleChange({ target: { id: 'minWidth', value: minHeight } });
   }
 
   render() {

@@ -60,15 +60,15 @@ class EditWidgetHTMLContent extends React.Component {
 
   handleKeyIgnore(event){
     // This function prevents a keystroke from beeing handled by dialog.js
-    event.stopPropagation();
-  }
-
+    event.stopPropagation();    
+    }
+    
 
   render() {
     return (
         <FormGroup controlId={this.props.controlId}>
           <FormLabel>HTML Content</FormLabel>
-          <FormControl type="text" onKeyPress={this.handleKeyIgnore} componentclass="textarea" style={{ height: 200 }} placeholder={this.props.placeholder} value={this.state.value} onChange={e => this.props.handleChange(e)} />
+          <FormControl  onKeyDown={this.handleKeyIgnore} componentclass="textarea" style={{ height: 200 }} placeholder={this.props.placeholder} value={this.state.value} onChange={e => this.props.handleChange(e)} />
           <FormControl.Feedback />
         </FormGroup>
     );
