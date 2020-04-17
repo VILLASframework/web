@@ -28,20 +28,20 @@ const dropzoneTarget = {
     position.y -= dropzoneRect.top;
 
     // Z-Index is one more the top most children
-    let foundZ = props.children.reduce( (maxZ, currentChildren) => {
-      if (currentChildren.props != null) {
+    let foundZ = props.widgets.reduce( (maxZ, currentWidget) => {
+      if (currentWidget != null) {
         // Is there a simpler way? Is not easy to expose a getter in a Container.create(Component)
-        let widget = currentChildren.props.data;
-        if (widget && widget.z) {
-          if (widget.z > maxZ) {
-            return widget.z;
+          if (currentWidget.z > maxZ) {
+            return currentWidget.z;
           }
-        }
       }
-
+    
       return maxZ;
-    }, 0);
-    position.z = foundZ >= 100? foundZ : ++foundZ;
+    }, 0)
+    position.z = foundZ >= 100? foundZ : foundZ += 10;
+    if(monitor.getItem().name === "Box"){
+      position.z = 0;
+    }
 
     props.onDrop(monitor.getItem(), position);
   }

@@ -206,10 +206,12 @@ class Dashboard extends Component {
 
   widgetChange(widget, index, callback = null){
 
-    let tempChanges = this.state.widgetChangeData;
-    tempChanges.push(widget);
+    AppDispatcher.dispatch({
+      type: 'widgets/start-edit',
+      token: this.state.sessionToken,
+      data: widget
+    });
 
-    this.setState({ widgetChangeData: tempChanges})
 
   }
 
