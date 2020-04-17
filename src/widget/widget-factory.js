@@ -137,6 +137,7 @@ class WidgetFactory {
                 widget.minHeight = 50;
                 widget.width = 200;
                 widget.height = 50;
+                widget.customProperties.showUnit = false;
                 break;
             case 'Slider':
                 widget.minWidth = 380;
