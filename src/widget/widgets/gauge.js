@@ -31,17 +31,20 @@ class WidgetGauge extends Component {
       unit: '',
       minValue: null,
       maxValue: null,
+      useColorZones: false,
+      useMinMax: false,
+      useMinMaxChange: false,
     };
   }
 
   componentDidMount() {
     this.gauge = new Gauge(this.gaugeCanvas).setOptions(this.computeGaugeOptions(this.props.widget));
-    //this.gauge.maxValue = this.state.maxValue;
-    //this.gauge.setMinValue(this.state.minValue);
+    this.gauge.maxValue = this.state.maxValue;
+    this.gauge.setMinValue(this.state.minValue);
     this.gauge.animationSpeed = 30;
-    //this.gauge.set(this.state.value);
+    this.gauge.set(this.state.value);
 
-    //this.updateLabels(this.state.minValue, this.state.maxValue);
+    this.updateLabels(this.state.minValue, this.state.maxValue);
   }
 
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
@@ -57,9 +60,19 @@ class WidgetGauge extends Component {
       this.gauge.set(this.state.value)
     }
 
+    if(prevState.useMinMax === true && this.state.useMinMax === false){
+      this.setState({useMinMaxChange: true});
+    }
+
     // update labels
-    if(prevState.minValue !== this.state.minValue || prevState.maxValue !== this.state.maxValue){
-      this.updateLabels(this.state.minValue, this.state.maxValue)
+    if(prevState.minValue !== this.state.minValue || prevState.maxValue !== this.state.maxValue || prevState.useColorZones !== this.state.useColorZones
+      || prevState.useMinMax !== this.state.useMinMax){
+        this.gauge = new Gauge(this.gaugeCanvas).setOptions(this.computeGaugeOptions(this.props.widget));
+        this.gauge.maxValue = this.state.maxValue;
+        this.gauge.setMinValue(this.state.minValue);
+        this.gauge.animationSpeed = 30;
+        this.gauge.set(this.state.value);
+        this.updateLabels(this.state.minValue, this.state.maxValue)
     }
 
   }
@@ -69,8 +82,9 @@ class WidgetGauge extends Component {
     if(props.widget.signalIDs.length === 0){
       return null;
     }
-
     let returnState = {}
+
+    returnState["useColorZones"] = props.widget.customProperties.colorZones;
 
     // Update unit (assuming there is exactly one signal for this widget)
     let signalID = props.widget.signalIDs[0];
@@ -105,7 +119,8 @@ class WidgetGauge extends Component {
       const value = Math.round(signalData[signalData.length - 1].y * 1e3) / 1e3;
       let minValue = null;
       let maxValue = null;
-      if (state.value !== value && value != null) {
+      
+      if ((state.value !== value && value != null) || props.widget.customProperties.valueUseMinMax || state.useMinMaxChange) {
         //value has changed
         updateValue = true;
 
@@ -114,17 +129,18 @@ class WidgetGauge extends Component {
 
         minValue = state.minValue;
         maxValue = state.maxValue;
-
-        if (minValue == null) {
+        
+        if (minValue == null || state.useMinMaxChange) {
           minValue = value - 0.5;
           updateLabels = true;
           updateMinValue = true;
         }
 
-        if (maxValue == null) {
+        if (maxValue == null || state.useMinMaxChange) {
           maxValue = value + 0.5;
           updateLabels = true;
           updateMaxValue = true;
+          returnState["useMinMaxChange"] = false;
         }
 
         if (props.widget.customProperties.valueUseMinMax) {
@@ -141,7 +157,7 @@ class WidgetGauge extends Component {
           }
         }
 
-        if (updateLabels === false) {
+        if (updateLabels === false && state.gauge) {
           // check if min/max changed
           if (minValue > state.gauge.minValue) {
             minValue = state.gauge.minValue;
@@ -153,6 +169,13 @@ class WidgetGauge extends Component {
             updateMaxValue = true;
           }
         }
+      }
+
+      if(props.widget.customProperties.valueUseMinMax !== state.useMinMax){
+        returnState["useMinMax"] = props.widget.customProperties.valueUseMinMax;
+      }
+      if(props.widget.customProperties.colorZones !== state.useColorZones){
+        returnState["useColorZones"] = props.widget.customProperties.colorZones;
       }
 
       // prepare returned state
