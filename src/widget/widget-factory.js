@@ -70,7 +70,7 @@ class WidgetFactory {
             case 'Value':
                 widget.minWidth = 70;
                 widget.minHeight = 20;
-                widget.width = 120;
+                widget.width = 150;
                 widget.height = 30;
                 widget.customProperties.textSize = 16;
                 widget.name = 'Value';
