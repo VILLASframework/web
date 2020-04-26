@@ -75,6 +75,7 @@ class WidgetFactory {
                 widget.customProperties.textSize = 16;
                 widget.name = 'Value';
                 widget.customProperties.showUnit = false;
+                widget.customProperties.resizeTopBottomLock = true;
                 break;
             case 'Plot':
                 widget.customProperties.ylabel = '';
@@ -96,11 +97,13 @@ class WidgetFactory {
             case 'Label':
                 widget.minWidth = 20;
                 widget.minHeight = 20;
+                widget.customProperties.maxWidth = 100;
                 widget.width = 100;
                 widget.height = 35;
                 widget.name = 'Label';
                 widget.customProperties.textSize = 32;
                 widget.customProperties.fontColor = 0;
+                widget.customProperties.resizeTopBottomLock = true;
                 break;
             case 'PlotTable':
                 widget.customProperties.ylabel = '';
@@ -138,6 +141,7 @@ class WidgetFactory {
                 widget.width = 200;
                 widget.height = 50;
                 widget.customProperties.showUnit = false;
+                widget.customProperties.resizeTopBottomLock = true;
                 break;
             case 'Slider':
                 widget.minWidth = 380;
@@ -151,6 +155,8 @@ class WidgetFactory {
                 widget.customProperties.showUnit = true;
                 widget.customProperties.continous_update = false;
                 widget.customProperties.default_value = 0;
+                widget.customProperties.resizeLeftRightLock = false;
+                widget.customProperties.resizeTopBottomLock = true;
 
                 break;
             case 'Gauge':

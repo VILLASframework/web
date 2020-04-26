@@ -84,16 +84,21 @@ class EditableWidgetContainer extends React.Component {
 
   render() {
     const widget = this.props.widget;
+    let resizingRestricted = false;
+    if(widget.customProperties.resizeRightLeftLock || widget.customProperties.resizeTopBottomLock){
+      resizingRestricted = true;
+    }
+    
 
     const resizing = {
-      bottom: !widget.isLocked,
-      bottomLeft: !widget.isLocked,
-      bottomRight: !widget.isLocked,
-      left: !widget.isLocked,
-      right: !widget.idLocked,
-      top: !widget.isLocked,
-      topLeft: !widget.isLocked,
-      topRight: !widget.isLocked
+      bottom: !(widget.customProperties.resizeTopBottomLock || widget.isLocked),
+      bottomLeft: !(resizingRestricted|| widget.isLocked),
+      bottomRight: !(resizingRestricted || widget.isLocked),
+      left: !(widget.customProperties.resizeRightLeftLock || widget.isLocked),
+      right: !(widget.customProperties.resizeRightLeftLock || widget.isLocked),
+      top: !(widget.customProperties.resizeTopBottomLock || widget.isLocked),
+      topLeft: !(resizingRestricted || widget.isLocked),
+      topRight: !(resizingRestricted || widget.isLocked)
     };
 
     const gridArray = [ this.props.grid, this.props.grid ];
@@ -108,6 +113,7 @@ class EditableWidgetContainer extends React.Component {
       default={{ x: Number(widget.x), y: Number(widget.y), width: widget.width, height: widget.height }}
       minWidth={widget.minWidth}
       minHeight={widget.minHeight}
+      maxWidth ={widget.customProperties.maxWidth || '100%' }
       lockAspectRatio={Boolean(widget.isLocked)}
       bounds={'parent'}
       className={widgetClasses}
