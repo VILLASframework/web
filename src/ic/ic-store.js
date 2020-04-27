@@ -15,11 +15,10 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import _ from 'lodash';
-
 import ArrayStore from '../common/array-store';
 import ICsDataManager from './ics-data-manager';
 import ICDataDataManager from './ic-data-data-manager';
+import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
 
 class InfrastructureComponentStore extends ArrayStore {
   constructor() {
@@ -29,28 +28,43 @@ class InfrastructureComponentStore extends ArrayStore {
   reduce(state, action) {
     switch(action.type) {
       case 'ics/loaded':
-        // connect to each infrastructure component
-        for (let ic of action.data) {
-          const endpoint = _.get(ic, 'properties.endpoint') || _.get(ic, 'rawProperties.endpoint');
-          if (endpoint != null && endpoint !== '') {
-            ICDataDataManager.open(endpoint, ic.id);
-          } else {
-            // console.warn('Endpoint not found for IC at ' + endpoint);
-            // console.log(ic);
-          }
-        }
 
         return super.reduce(state, action);
 
       case 'ics/edited':
         // connect to each infrastructure component
         const ic = action.data;
-        const endpoint = _.get(ic, 'properties.endpoint') || _.get(ic, 'rawProperties.endpoint');
 
-        if (endpoint != null && endpoint !== '') {
-          ICDataDataManager.update(endpoint, ic.id);
+        if (ic.host != null && ic.host !== '') {
+          ICDataDataManager.update(ic.host, ic.id);
         }
 
+        return super.reduce(state, action);
+      case 'ics/open-sockets':
+        // open websocket for each IC contained in array action.data
+        // TODO should be done when dashboard is loaded
+        // TODO action.data should contain only those IC used by the scenario
+        for (let ic of action.data) {
+          if (ic.host != null && ic.host !== '') {
+            // TODO connection should be closed again when dashboard is closed
+
+            ICDataDataManager.open(ic.host, ic.id);
+          } else {
+
+            // TODO add to pool of notifications
+            const IC_WEBSOCKET_HOST_ERROR = {
+              title: 'Host of websocket not available',
+              message: action.error.response.body.message,
+              level: 'warning'
+            };
+            NotificationsDataManager.addNotification(IC_WEBSOCKET_HOST_ERROR);
+          }
+        }
+        return super.reduce(state, action);
+
+      case 'ics/close-sockets':
+        // close all websockets
+        ICDataDataManager.closeAll();
         return super.reduce(state, action);
 
       case 'ics/fetched':
