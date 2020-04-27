@@ -86,7 +86,7 @@ class Dashboard extends Component {
       }
     }
 
-
+    // TODO create list of infrastructure components in use
 
     return {
       dashboard,
@@ -110,7 +110,6 @@ class Dashboard extends Component {
 
   }
 
-
   static getNewWidgetKey() {
     const widgetKey = this.lastWidgetKey;
     this.lastWidgetKey++;
@@ -128,7 +127,9 @@ class Dashboard extends Component {
       param: '?dashboardID=' + this.state.dashboard.id
     });
 
+    // TODO open websockets in componentDidMount
 
+    // TODO close websockets in componentWillUnmount
   }
 
   handleKeydown(e) {
@@ -264,7 +265,7 @@ class Dashboard extends Component {
 
 
   deleteWidget(widget, index) {
-    
+
     AppDispatcher.dispatch({
       type: 'widgets/start-remove',
       data: widget,
