@@ -68,14 +68,16 @@ class WidgetValue extends Component {
   }
 
   render() {
-    var value_to_render = Number(this.state.value);
+    let value_to_render = Number(this.state.value);
+    let value_width = this.props.widget.customProperties.textSize*0.55* (this.state.value.length +2);
+    let unit_width = this.props.widget.customProperties.textSize*2;
     return (
       <div className="single-value-widget">
-        <strong style={{ fontSize: this.props.widget.customProperties.textSize + 'px' }}>{this.props.widget.name}</strong>
-        <span style={{ fontSize: this.props.widget.customProperties.textSize + 'px' }}>{Number.isNaN(value_to_render) ? NaN : format('.3s')(value_to_render)}</span>
+        <strong style={{ fontSize: this.props.widget.customProperties.textSize + 'px'}}>{this.props.widget.name}</strong>
+        <span style={{ fontSize: this.props.widget.customProperties.textSize + 'px',width: value_width }}>{Number.isNaN(value_to_render) ? NaN : format('.3s')(value_to_render)}</span>
         {this.props.widget.customProperties.showUnit &&
-          <span style={{ fontSize: this.props.widget.customProperties.textSize + 'px' }}>[{this.state.unit}]</span>
-        }
+          <span style={{ fontSize: this.props.widget.customProperties.textSize + 'px', width: unit_width}}>[{this.state.unit}]</span>
+        }    
       </div>
     );
   }

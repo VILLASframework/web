@@ -92,6 +92,14 @@ class WidgetTable extends Component {
   }
 
   render() {
+    
+    let rows = this.state.rows;
+    if(rows.length === 0){
+      rows.push({
+        name: "no entries"
+      })
+    }
+
     var columns = [
       <TableColumn key={1} title="Signal" dataKey="name" width={120} />,
       <TableColumn key={2} title="Value" dataKey="value" modifier={format('.4s')} />
@@ -102,7 +110,7 @@ class WidgetTable extends Component {
 
     return (
       <div className="table-widget">
-        <Table data={this.state.rows}>
+        <Table data={rows}>
           { columns }
         </Table>
       </div>

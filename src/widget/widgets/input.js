@@ -84,9 +84,13 @@ class WidgetInput extends Component {
                   <Col>
                     <InputGroup>
                       <FormControl type="number" step="any" disabled={ this.props.editing } onKeyPress={ (e) => this.handleKeyPress(e) } onBlur={ (e) => this.valueChanged(this.state.value) } onChange={ (e) => this.valueIsChanging(e.target.value) } placeholder="Enter value" value={ this.state.value } />
+                    {this.props.widget.customProperties.showUnit? (
                       <InputGroup.Append>
                         <InputGroup.Text>{this.state.unit}</InputGroup.Text>
                       </InputGroup.Append>
+                    ):(
+                      <div></div>
+                    )}
                     </InputGroup>
                   </Col>
                 </FormGroup>
