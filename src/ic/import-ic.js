@@ -30,7 +30,7 @@ class ImportICDialog extends React.Component {
 
     this.state = {
       name: '',
-      endpoint: '',
+      host: '',
       uuid: ''
     };
   }
@@ -45,8 +45,8 @@ class ImportICDialog extends React.Component {
           uuid: this.state.uuid
         };
 
-        if (this.state.endpoint != null && this.state.endpoint !== "" && this.state.endpoint !== 'http://') {
-          data.properties.endpoint = this.state.endpoint;
+        if (this.state.host != null && this.state.host !== "" && this.state.host !== 'http://') {
+          data.host = this.state.host;
         }
 
         this.props.onClose(data);
@@ -61,7 +61,7 @@ class ImportICDialog extends React.Component {
   }
 
   resetState() {
-    this.setState({ name: '', endpoint: 'http://', uuid: '' });
+    this.setState({ name: '', host: 'http://', uuid: '' });
   }
 
   loadFile(fileList) {
@@ -81,7 +81,7 @@ class ImportICDialog extends React.Component {
       self.imported = true;
       self.setState({
         name: _.get(ic, 'properties.name') || _.get(ic, 'rawProperties.name'),
-        endpoint: _.get(ic, 'properties.endpoint') || _.get(ic, 'rawProperties.endpoint'),
+        host: _.get(ic, 'host'),
         uuid: ic.uuid
       });
     };
@@ -124,8 +124,8 @@ class ImportICDialog extends React.Component {
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="host">
-            <FormLabel>Endpoint</FormLabel>
-            <FormControl type="text" placeholder="Enter host" value={this.state.endpoint} onChange={(e) => this.handleChange(e)} />
+            <FormLabel>Host</FormLabel>
+            <FormControl type="text" placeholder="Enter host" value={this.state.host} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="uuid" validationState={this.validateForm('uuid')}>
