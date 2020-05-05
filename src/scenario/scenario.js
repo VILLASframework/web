@@ -40,10 +40,12 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 import EditConfigDialog from "../componentconfig/edit-config";
 import EditSignalMapping from "../signal/edit-signal-mapping";
 import FileStore from "../file/file-store"
+import WidgetStore from "../widget/widget-store";
 
 class Scenario extends React.Component {
+
   static getStores() {
-    return [ ScenarioStore, ConfigStore, DashboardStore, ICStore, LoginStore, SignalStore, FileStore];
+    return [ ScenarioStore, ConfigStore, DashboardStore, ICStore, LoginStore, SignalStore, FileStore, WidgetStore];
   }
 
   static calculateState(prevState, props) {
@@ -96,7 +98,6 @@ class Scenario extends React.Component {
   }
 
   componentDidMount() {
-
     //load selected scenario
     AppDispatcher.dispatch({
       type: 'scenarios/start-load',
@@ -108,24 +109,36 @@ class Scenario extends React.Component {
     AppDispatcher.dispatch({
       type: 'configs/start-load',
       token: this.state.sessionToken,
-      param: '?scenarioID='+this.state.scenario.id,
+      param: '?scenarioID='+this.state.scenario.id
     });
 
     // load dashboards of selected scenario
     AppDispatcher.dispatch({
       type: 'dashboards/start-load',
       token: this.state.sessionToken,
-      param: '?scenarioID='+this.state.scenario.id,
+      param: '?scenarioID='+this.state.scenario.id
     });
 
     // load ICs to enable that component configs work with them
     AppDispatcher.dispatch({
       type: 'ics/start-load',
-      token: this.state.sessionToken,
+      token: this.state.sessionToken
     });
-
-
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    // load widgets when dashboard id(s) are available
+    if (this.state.dashboards.length !== prevState.dashboards.length) {
+      let dashboards = Object.assign([], this.state.dashboards);
+      dashboards.forEach(dboard => {
+        AppDispatcher.dispatch({
+          type: 'widgets/start-load',
+          token: this.state.sessionToken,
+          param: '?dashboardID='+dboard.id
+      })})
+    }
+  }
+
 
   /* ##############################################
   * Component Configuration modification methods
@@ -323,10 +336,14 @@ class Scenario extends React.Component {
     // filter properties
     const dashboard = Object.assign({}, this.state.dashboards[index]);
 
-    // TODO get elements recursively
+    let widgets = WidgetStore.getState().filter(w => w.dashboardID === parseInt(dashboard.id, 10));
 
+
+    var jsonObj = dashboard;
+    jsonObj["widgets"] = widgets;
+ 
     // show save dialog
-    const blob = new Blob([JSON.stringify(dashboard, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(jsonObj, null, 2)], { type: 'application/json' });
     FileSaver.saveAs(blob, 'dashboard - ' + dashboard.name + '.json');
   }
 

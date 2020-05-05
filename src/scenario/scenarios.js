@@ -23,6 +23,9 @@ import FileSaver from 'file-saver';
 import AppDispatcher from '../common/app-dispatcher';
 import ScenarioStore from './scenario-store';
 import LoginStore from '../user/login-store';
+import DashboardStore from '../dashboard/dashboard-store';
+import WidgetStore from "../widget/widget-store";
+import ConfigStore from '../componentconfig/config-store';
 
 import Icon from '../common/icon';
 import Table from '../common/table';
@@ -33,17 +36,24 @@ import ImportScenarioDialog from './import-scenario';
 
 import DeleteDialog from '../common/dialogs/delete-dialog';
 
+
 class Scenarios extends Component {
+
   static getStores() {
-    return [ ScenarioStore, LoginStore ];
+    return [ ScenarioStore, LoginStore, DashboardStore, WidgetStore, ConfigStore];
   }
 
   static calculateState() {
     const scenarios = ScenarioStore.getState();
     const sessionToken = LoginStore.getState().token;
 
+    let dashboards = DashboardStore.getState();
+    let configs = ConfigStore.getState();
+
     return {
       scenarios,
+      dashboards,
+      configs,
       sessionToken,
 
       newModal: false,
@@ -63,7 +73,37 @@ class Scenarios extends Component {
     });
   }
 
-  componentDidUpdate() {}
+  componentDidUpdate(prevProps, prevState) {
+    // TODO check/change conditions
+
+    // load dashboards when scanario(s) are available
+    if (this.state.scenarios.length !== prevState.scenarios.length) {
+      let scenarios = Object.assign([], this.state.scenarios);
+      scenarios.forEach(scenario => {
+        AppDispatcher.dispatch({
+          type: 'dashboards/start-load',
+          token: this.state.sessionToken,
+          param: '?scenarioID='+scenario.id
+        });
+        AppDispatcher.dispatch({
+          type: 'scenarios/configs',
+          token: this.state.sessionToken,
+          param: '?scenarioID='+scenario.id
+        });
+      })
+    }
+    // load widgets when dashboard id(s) are available
+    if (this.state.dashboards.length !== prevState.dashboards.length) {
+      let dashboards = Object.assign([], this.state.dashboards);
+      dashboards.forEach(dboard => {
+        AppDispatcher.dispatch({
+          type: 'widgets/start-load',
+          token: this.state.sessionToken,
+          param: '?dashboardID='+dboard.id
+      })})
+    }
+  }
+
 
   closeNewModal(data) {
     this.setState({ newModal : false });
@@ -150,14 +190,30 @@ class Scenarios extends Component {
   };
 
   exportScenario(index) {
-    // filter properties
     let scenario = Object.assign({}, this.state.scenarios[index]);
+    let configs = this.state.configs.filter(config => config.scenarioID === scenario.id);
+    let dashboards = this.state.dashboards.filter(dashb => dashb.scenarioID === scenario.id);
+
+    // create JSON object and add component configs
     delete scenario.id;
+    let jsonObj = scenario;
+    jsonObj["configs"] = configs;
 
-    // TODO request missing scenario parameters (Dashboards and component configs) recursively for export
+    // add Dashboards and Widgets to JSON object
+    let json_dashboards = dashboards;
+    json_dashboards.forEach((dboard) =>  {
+      let widgets = WidgetStore.getState().filter(w => w.dashboardID === parseInt(dboard.id, 10));
+      widgets.forEach((widget) => {
+        delete widget.dashboardID;
+      })
+      dboard["widgets"] = widgets;
+      delete dboard.scenarioID;
+    });
+    jsonObj["dashboards"] = json_dashboards;
 
-    // show save dialog
-    const blob = new Blob([JSON.stringify(scenario, null, 2)], { type: 'application/json' });
+
+    // create JSON string and show save dialog
+    const blob = new Blob([JSON.stringify(jsonObj, null, 2)], { type: 'application/json' });
     FileSaver.saveAs(blob, 'scenario - ' + scenario.name + '.json');
   }
 
