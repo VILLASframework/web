@@ -57,9 +57,33 @@ class EditWidgetDialog extends React.Component {
     const file = this.props.files.find(element => element.id === fileId);
 
     // scale width to match aspect
+    if(file.dimensions){
     const aspectRatio = file.dimensions.width / file.dimensions.height;
     changeObject.width = this.state.temporal.height * aspectRatio;
+    }
 
+    return changeObject;
+  }
+
+  setMaxWidth(changeObject){
+    if(changeObject.type === 'Label'){
+      changeObject.customProperties.maxWidth = (changeObject.customProperties.textSize* 0.34) * changeObject.name.length;
+    }
+    else if (changeObject.type === 'Value'){
+    //  changeObject.customProperties.maxWidth = (changeObject.customProperties.textSize* 0.5) * (changeObject.name.length+13);
+    }
+    return changeObject;
+  }
+
+  setNewLockRestrictions(changeObject){
+    if(changeObject.customProperties.orientation === 0){
+      changeObject.customProperties.resizeTopBottomLock = true;
+      changeObject.customProperties.resizeRightLeftLock = false;
+    }
+    else if(changeObject.customProperties.orientation === 1){
+      changeObject.customProperties.resizeTopBottomLock = false;
+      changeObject.customProperties.resizeRightLeftLock = true;
+    }
     return changeObject;
   }
 
@@ -73,13 +97,13 @@ class EditWidgetDialog extends React.Component {
       // not a customProperty
       customProperty = false;
     }
-
-    if (e.target.id === 'lockAspect') {
+    
+    if (parts[1] === 'lockAspect') {
       //not a customProperty
       customProperty ? changeObject[parts[0]][parts[1]] = e.target.checked : changeObject[e.target.id] = e.target.checked;
 
       // correct image aspect if turned on
-      if (e.target.checked) {
+      if (e.target.checked && this.state.temporal.customProperties.file) {
         changeObject = this.assignAspectRatio(changeObject, this.state.temporal.customProperties.file);
       }
     } else if (e.target.id.includes('file')) {
@@ -91,7 +115,15 @@ class EditWidgetDialog extends React.Component {
         // TODO this if condition requires changes to work!!!
         changeObject = this.assignAspectRatio(changeObject, e.target.value);
       }
-    } else if (e.target.type === 'number') {
+    }else if (parts[1] === 'textSize'){
+      changeObject[parts[0]][parts[1]] = Number(e.target.value);
+      changeObject = this.setMaxWidth(changeObject);
+
+    }else if(parts[1] === 'orientation'){
+      customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value ;
+      changeObject = this.setNewLockRestrictions(changeObject);
+    } 
+    else if (e.target.type === 'number') {
       customProperty ?  changeObject[parts[0]][parts[1]] = Number(e.target.value) : changeObject[e.target.id] = Number(e.target.value);
     } else if(e.target.id === 'name'){
       if(customProperty ? (changeObject[parts[0]][parts[1]] != null) : (changeObject[e.target.id] != null)){
@@ -99,6 +131,7 @@ class EditWidgetDialog extends React.Component {
       } else{
         customProperty ? changeObject[parts[0]][parts[1]]= 'default' : changeObject[e.target.id] = 'default';
       }
+      changeObject = this.setMaxWidth(changeObject);
     } else {
       customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value ;
     }

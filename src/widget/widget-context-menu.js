@@ -34,7 +34,7 @@ class WidgetContextMenu extends React.Component {
   };
 
   moveAbove = event => {
-    this.props.widget.z++;
+    this.props.widget.z += 10;
     if (this.props.widget.z > 100) {
       this.props.widget.z = 100;
     }
@@ -53,7 +53,7 @@ class WidgetContextMenu extends React.Component {
   };
 
   moveUnderneath = event => {
-    this.props.widget.z--;
+    this.props.widget.z -= 10;
     if (this.props.widget.z < 0) {
       this.props.widget.z = 0;
     }
@@ -90,7 +90,7 @@ class WidgetContextMenu extends React.Component {
   render() {
     const isLocked = this.props.widget.locked;
     const ContextMenu = () => (
-      <Menu id={'widgetMenu'+ this.props.index}>
+      <Menu id={'widgetMenu'+ this.props.index} style={{zIndex: 1000}}>
       <Item disabled={isLocked} onClick={this.editWidget}>Edit</Item>
       <Item disabled={isLocked} onClick={this.deleteWidget}>Delete</Item>
 

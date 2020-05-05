@@ -86,7 +86,7 @@ class Dashboard extends Component {
       }
     }
 
-
+    // TODO create list of infrastructure components in use
 
     return {
       dashboard,
@@ -110,7 +110,6 @@ class Dashboard extends Component {
 
   }
 
-
   static getNewWidgetKey() {
     const widgetKey = this.lastWidgetKey;
     this.lastWidgetKey++;
@@ -128,7 +127,9 @@ class Dashboard extends Component {
       param: '?dashboardID=' + this.state.dashboard.id
     });
 
+    // TODO open websockets in componentDidMount
 
+    // TODO close websockets in componentWillUnmount
   }
 
   handleKeydown(e) {
@@ -185,17 +186,6 @@ class Dashboard extends Component {
     });
 
 
-    /*let widgets = [];
-    widgets = this.state.dashboard.get('widgets');
-
-    const widgetKey = Dashboard.getNewWidgetKey();
-    widgets[widgetKey] = widget;
-
-    const dashboard = this.state.dashboard.set('widgets',widgets);
-
-    // this.increaseHeightWithWidget(widget);
-
-    this.setState({ dashboard });*/
   };
 
 
@@ -205,11 +195,9 @@ class Dashboard extends Component {
   }
 
   widgetChange(widget, index, callback = null){
-
-    let tempChanges = this.state.widgetChangeData;
-    tempChanges.push(widget);
-
-    this.setState({ widgetChangeData: tempChanges})
+    let temp = this.state.widgetChangeData;
+    temp.push(widget);
+    this.setState({widgetChangeData: temp});
 
   }
 
@@ -264,7 +252,7 @@ class Dashboard extends Component {
 
 
   deleteWidget(widget, index) {
-    
+
     AppDispatcher.dispatch({
       type: 'widgets/start-remove',
       data: widget,
@@ -293,7 +281,7 @@ class Dashboard extends Component {
         data: widget
       });
     });
-    this.setState({ editing: false });
+    this.setState({ editing: false, widgetChangeData: [], widgetAddData: [] });
   };
 
   saveChanges() {
@@ -311,21 +299,28 @@ class Dashboard extends Component {
 
   cancelEditing() {
     //raw widget has no id -> cannot be deleted in its original form
-    /*
-    this.state.widgetAddData.forEach( widget => {
+    let temp = [];
+    this.state.widgetAddData.forEach(rawWidget => {
+      this.state.widgets.forEach(widget => {
+        if(widget.y === rawWidget.y && widget.x === rawWidget.x && widget.type === rawWidget.type){
+          temp.push(widget);
+        }
+      })
+    })
+    
+    temp.forEach( widget => {
       AppDispatcher.dispatch({
         type: 'widgets/start-remove',
         data: widget,
         token: this.state.sessionToken
       });
-    }); */
-
+    }); 
     AppDispatcher.dispatch({
       type: 'widgets/start-load',
       token: this.state.sessionToken,
       param: '?dashboardID=1'
     });
-    this.setState({ editing: false, widgetChangeData: [], widgetAddData: [] });
+    this.setState({ editing: false, widgetChangeData: [], widgetAddData: []});
 
   };
 

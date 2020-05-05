@@ -17,8 +17,6 @@
 
 import React from 'react';
 import {FormGroup, FormControl, FormLabel} from 'react-bootstrap';
-import _ from 'lodash';
-
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
 import SelectFile from "../file/select-file";
@@ -104,7 +102,7 @@ class EditConfigDialog extends React.Component {
 
     render() {
         const ICOptions = this.props.ics.map(s =>
-            <option key={s.id} value={s.id}>{_.get(s, 'properties.name') || _.get(s, 'rawProperties.name') || s.uuid}</option>
+            <option key={s.id} value={s.id}>{s.name}</option>
         );
 
         return (

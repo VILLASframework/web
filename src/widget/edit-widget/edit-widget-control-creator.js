@@ -129,7 +129,8 @@ export default function CreateControls(widgetType = null, widget = null, session
         case 'Box':
             DialogControls.push(
                 <EditWidgetColorControl key={0} widget={widget} controlId={'customProperties.border_color'} label={'Border color'} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetColorControl key={1} widget={widget} controlId={'customProperties.background_color'} label={'Background color'} handleChange={e => handleChange(e)} />
+                <EditWidgetColorControl key={1} widget={widget} controlId={'customProperties.background_color'} label={'Background color'} handleChange={e => handleChange(e)} />,
+                <EditWidgetNumberControl key={2} widget={widget} controlId={'customProperties.background_color_opacity'} label={'Background opacity'} defaultValue={0.5} handleChange={(e) => handleChange(e)} />
             );
             break;
         case 'Label':
@@ -155,7 +156,8 @@ export default function CreateControls(widgetType = null, widget = null, session
         case 'NumberInput':
             DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
-                <EditWidgetSignalControl key={2} widget={widget} controlId={'signalIDs'} input  signals={signals} handleChange={(e) => handleChange(e)} />
+                <EditWidgetSignalControl key={2} widget={widget} controlId={'signalIDs'} input  signals={signals} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={1} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />
             );
             break;
 

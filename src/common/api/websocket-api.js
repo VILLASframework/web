@@ -16,19 +16,19 @@
  ******************************************************************************/
 
 class WebsocketAPI {
-  constructor(endpoint, callbacks) {
-    this.endpoint = endpoint;
+  constructor(host, callbacks) {
+    this.host = host;
     this.callbacks = callbacks;
 
     this.wasConnected = false;
     this.isClosing = false;
 
-    this.connect(endpoint, callbacks);
+    this.connect(host, callbacks);
   }
 
-  connect(endpoint, callbacks) {
+  connect(host, callbacks) {
     // create web socket client
-    this.socket = new WebSocket(WebsocketAPI.getURL(endpoint), 'live');
+    this.socket = new WebSocket(WebsocketAPI.getURL(host), 'live');
     this.socket.binaryType = 'arraybuffer';
     this.socket.onclose = this.onClose;
     this.socket.onopen = this.onOpen;
@@ -40,12 +40,12 @@ class WebsocketAPI {
   }
 
   reconnect() {
-    //console.log("Reconnecting: " + this.endpoint);
-    this.connect(this.endpoint, this.callbacks);
+    //console.log("Reconnecting: " + this.host);
+    this.connect(this.host, this.callbacks);
   }
 
   get url() {
-    return WebsocketAPI.getURL(this.endpoint);
+    return WebsocketAPI.getURL(this.host);
   }
 
   send(data) {
@@ -58,7 +58,7 @@ class WebsocketAPI {
   }
 
   onError = e => {
-    console.error('Error on WebSocket connection to: ' + this.endpoint + ':', e);
+    console.error('Error on WebSocket connection to: ' + this.host + ':', e);
 
     if ('onError' in this.callbacks)
       this.callbacks.onError(e);
@@ -78,16 +78,16 @@ class WebsocketAPI {
     }
     else {
       if (this.wasConnected) {
-        console.log("Connection to " + this.endpoint + " dropped. Attempt reconnect in 1 sec");
+        console.log("Connection to " + this.host + " dropped. Attempt reconnect in 1 sec");
         window.setTimeout(() => { this.reconnect(); }, 1000);
       }
     }
   }
 
-  static getURL(endpoint) {
+  static getURL(host) {
     // create an anchor element (note: no need to append this element to the document)
     var link = document.createElement('a');
-    link.href = endpoint;
+    link.href = host;
 
     if (link.protocol === 'https:')
       link.protocol = 'wss:';

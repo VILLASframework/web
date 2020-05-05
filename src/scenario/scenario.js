@@ -70,15 +70,28 @@ class Scenario extends React.Component {
     let signals = SignalStore.getState();
     let files = FileStore.getState();
 
+    // apply filter to contain only ICs that are used by configs
+    let icsUsed = ICStore.getState().filter(ic => {
+      let ICused = false;
+      for (let config of configs){
+        if (ic.id === config.icID){
+          ICused = true;
+          break;
+        }
+      }
+      return ICused;
+    });
+
 
     return {
       scenario,
       sessionToken,
-      configs: configs,
+      configs,
       dashboards,
       signals,
       files,
       ics: ICStore.getState(),
+      icsUsed,
 
       deleteConfigModal: false,
       importConfigModal: false,
@@ -119,7 +132,7 @@ class Scenario extends React.Component {
       param: '?scenarioID='+this.state.scenario.id
     });
 
-    // load ICs to enable that component configs work with them
+    // load ICs to enable that component configs and dashboards work with them
     AppDispatcher.dispatch({
       type: 'ics/start-load',
       token: this.state.sessionToken

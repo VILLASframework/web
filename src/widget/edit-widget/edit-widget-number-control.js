@@ -25,21 +25,25 @@ class EditWidgetNumberControl extends Component {
     this.state = {
       widget: {
         customProperties:{}
-      }
-    };
+      }         
+     };
   }
-
+  
   static getDerivedStateFromProps(props, state){
     return{
-      widget: props.widget
-    };
-  }
+      widget: props.widget   
+     };
+  } 
 
-  render() {   
+  render() {
+    let step = 1;
+    if(this.props.controlId ==='customProperties.background_color_opacity'){
+      step = 0.1;
+    }   
     return (
         <FormGroup controlId={this.props.controlId}>
           <FormLabel>{this.props.label}</FormLabel>
-          <FormControl type="number" step="any" value={this.state.widget[this.props.controlId]} onChange={e => this.props.handleChange(e)} />
+          <FormControl type="number" step={step} value={this.state.widget[this.props.controlId]} onChange={e => this.props.handleChange(e)} />
         </FormGroup>
     );
   }
