@@ -86,7 +86,7 @@ class Scenarios extends Component {
           param: '?scenarioID='+scenario.id
         });
         AppDispatcher.dispatch({
-          type: 'scenarios/configs',
+          type: 'configs/start-load',
           token: this.state.sessionToken,
           param: '?scenarioID='+scenario.id
         });
@@ -190,7 +190,8 @@ class Scenarios extends Component {
   };
 
   exportScenario(index) {
-    let scenario = Object.assign({}, this.state.scenarios[index]);
+    console.log("exportScenario")
+    let scenario = this.state.scenarios[index];
     let configs = this.state.configs.filter(config => config.scenarioID === scenario.id);
     let dashboards = this.state.dashboards.filter(dashb => dashb.scenarioID === scenario.id);
 
