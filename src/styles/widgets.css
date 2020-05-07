@@ -265,6 +265,15 @@ span.signal-unit::after {
 
 /* End button widget styling */
 
+/*Lamp Widget styling*/
+
+.lamp-widget {
+    width: 100%;
+    height: 100%;
+}
+
+/* End lamp widget styling*/
+
 .full {
     width: 100%;
     height: 100%;
