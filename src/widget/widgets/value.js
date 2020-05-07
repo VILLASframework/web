@@ -69,14 +69,14 @@ class WidgetValue extends Component {
 
   render() {
     let value_to_render = Number(this.state.value);
-    let value_width = this.props.widget.customProperties.textSize*0.55* (this.state.value.length +2);
-    let unit_width = this.props.widget.customProperties.textSize*2;
+    let value_width = this.props.widget.customProperties.textSize*(value_to_render < 1000 ? (2):(3));
+    let unit_width = this.props.widget.customProperties.textSize*(this.state.unit.length + 0.7);
     return (
       <div className="single-value-widget">
-        <strong style={{ fontSize: this.props.widget.customProperties.textSize + 'px'}}>{this.props.widget.name}</strong>
-        <span style={{ fontSize: this.props.widget.customProperties.textSize + 'px',width: value_width }}>{Number.isNaN(value_to_render) ? NaN : format('.3s')(value_to_render)}</span>
+        <strong style={{ fontSize: this.props.widget.customProperties.textSize + 'px', flex: '1 1 auto'}}>{this.props.widget.name}</strong>
+        <span style={{ fontSize: this.props.widget.customProperties.textSize + 'px', flex: 'none', width: value_width }}>{Number.isNaN(value_to_render) ? NaN : format('.3s')(value_to_render)}</span>
         {this.props.widget.customProperties.showUnit &&
-          <span style={{ fontSize: this.props.widget.customProperties.textSize + 'px', width: unit_width}}>[{this.state.unit}]</span>
+          <span style={{ fontSize: this.props.widget.customProperties.textSize + 'px', flex: 'none',  width: unit_width}}>[{this.state.unit}]</span>
         }    
       </div>
     );
