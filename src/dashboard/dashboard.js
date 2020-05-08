@@ -262,6 +262,16 @@ class Dashboard extends Component {
 
 
   startEditing(){
+    this.state.widgets.forEach( widget => {
+      if(widget.type === 'Slider' || widget.type === 'NumberInput' || widget.type === 'Button'){
+        console.log("we should move in here");
+      AppDispatcher.dispatch({
+        type: 'widgets/start-edit',
+        token: this.state.sessionToken,
+        data: widget
+      });
+    }
+    });
     this.setState({ editing: true });
   };
 
