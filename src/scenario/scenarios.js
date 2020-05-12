@@ -74,33 +74,32 @@ class Scenarios extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // TODO check/change conditions
-
-    // load dashboards when scanario(s) are available
-    if (this.state.scenarios.length !== prevState.scenarios.length) {
-      let scenarios = Object.assign([], this.state.scenarios);
-      scenarios.forEach(scenario => {
+    // load dashboards when length of scanario array has increased
+    if (this.state.scenarios.length > prevState.scenarios.length) {
+      let scenarios = Object.assign([], this.state.scenarios); // copying neccessary?
+      for (var i = prevState.scenarios.length; i < scenarios.length; i++) {
         AppDispatcher.dispatch({
           type: 'dashboards/start-load',
           token: this.state.sessionToken,
-          param: '?scenarioID='+scenario.id
+          param: '?scenarioID='+scenarios[i].id
         });
         AppDispatcher.dispatch({
           type: 'configs/start-load',
           token: this.state.sessionToken,
-          param: '?scenarioID='+scenario.id
+          param: '?scenarioID='+scenarios[i].id
         });
-      })
+      }
     }
-    // load widgets when dashboard id(s) are available
-    if (this.state.dashboards.length !== prevState.dashboards.length) {
+    // load widgets when length of dashboard array has increased
+    if (this.state.dashboards.length > prevState.dashboards.length) {
       let dashboards = Object.assign([], this.state.dashboards);
-      dashboards.forEach(dboard => {
+      for (var j = prevState.dashboards.length; j < dashboards.length; j++) {
         AppDispatcher.dispatch({
           type: 'widgets/start-load',
           token: this.state.sessionToken,
-          param: '?dashboardID='+dboard.id
-      })})
+          param: '?dashboardID='+dashboards[j].id
+        })
+      }
     }
   }
 
@@ -190,10 +189,11 @@ class Scenarios extends Component {
   };
 
   exportScenario(index) {
-    console.log("exportScenario")
-    let scenario = this.state.scenarios[index];
-    let configs = this.state.configs.filter(config => config.scenarioID === scenario.id);
-    let dashboards = this.state.dashboards.filter(dashb => dashb.scenarioID === scenario.id);
+    // copy by value by converting to JSON and back
+    // otherwise, IDs of state objects will be deleted
+    let scenario = JSON.parse(JSON.stringify(this.state.scenarios[index]));
+    let configs = JSON.parse(JSON.stringify(this.state.configs.filter(config => config.scenarioID === scenario.id)));
+    let dashboards = JSON.parse(JSON.stringify(this.state.dashboards.filter(dashb => dashb.scenarioID === scenario.id)));
 
     // create JSON object and add component configs
     delete scenario.id;
@@ -201,16 +201,17 @@ class Scenarios extends Component {
     jsonObj["configs"] = configs;
 
     // add Dashboards and Widgets to JSON object
-    let json_dashboards = dashboards;
-    json_dashboards.forEach((dboard) =>  {
-      let widgets = WidgetStore.getState().filter(w => w.dashboardID === parseInt(dboard.id, 10));
+      dashboards.forEach((dboard) =>  {
+      let widgets = JSON.parse(JSON.stringify(WidgetStore.getState().filter(w => w.dashboardID === parseInt(dboard.id, 10))));
       widgets.forEach((widget) => {
         delete widget.dashboardID;
+        delete widget.id;
       })
       dboard["widgets"] = widgets;
       delete dboard.scenarioID;
+      delete dboard.id;
     });
-    jsonObj["dashboards"] = json_dashboards;
+    jsonObj["dashboards"] = dashboards;
 
 
     // create JSON string and show save dialog

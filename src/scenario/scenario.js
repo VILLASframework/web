@@ -140,15 +140,32 @@ class Scenario extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // load widgets when dashboard id(s) are available
-    if (this.state.dashboards.length !== prevState.dashboards.length) {
-      let dashboards = Object.assign([], this.state.dashboards);
-      dashboards.forEach(dboard => {
-        AppDispatcher.dispatch({
-          type: 'widgets/start-load',
-          token: this.state.sessionToken,
-          param: '?dashboardID='+dboard.id
-      })})
+    if (this.state.dashboards.length > prevState.dashboards.length) {
+      if (this.addWidgets) { // add widgets
+        // this can only be true after dashboard import, so there is only one dashboard
+        // (the newest) and this dashboards ID is used
+        let dashboardID = this.state.dashboards[this.state.dashboards.length - 1].id;
+        this.widgetsToAdd.forEach((widget) => {
+          widget.dashboardID = dashboardID;
+          AppDispatcher.dispatch({
+            type: 'widgets/start-add',
+            data: widget,
+            token: this.state.sessionToken,
+          })
+        })
+        this.addWidgets = false;
+        this.widgetsToAdd = [];
+      }
+      else { // get widgets
+        let dashboards = Object.assign([], this.state.dashboards);
+        for (var i = prevState.dashboards.length; i < this.state.dashboards.length; i++) {
+          AppDispatcher.dispatch({
+            type: 'widgets/start-load',
+            token: this.state.sessionToken,
+            param: '?dashboardID=' + dashboards[i].id
+          })
+        }
+      }
     }
   }
 
@@ -337,9 +354,17 @@ class Scenario extends React.Component {
     this.setState({ importDashboardModal: false });
 
     if (data) {
+      let newDashboard = JSON.parse(JSON.stringify(data));
+      newDashboard["scenarioID"] = this.state.scenario.id;
+      // temporarily store widget data until dashboard is created
+      if (data.widgets) {
+        this.addWidgets = true;
+        this.widgetsToAdd = data.widgets;
+      }
+      delete newDashboard.widgets;
       AppDispatcher.dispatch({
         type: 'dashboards/start-add',
-        data,
+        data: newDashboard,
         token: this.state.sessionToken,
       });
     }
