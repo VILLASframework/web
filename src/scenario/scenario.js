@@ -292,12 +292,12 @@ class Scenario extends React.Component {
 
   closeNewDashboardModal(data) {
     this.setState({ newDashboardModal : false });
-    let newDashboard = data;
-    // add default grid value and scenarioID
-    newDashboard["grid"] = 15;
-    newDashboard["scenarioID"] = this.state.scenario.id;
-
     if (data) {
+      let newDashboard = data;
+      // add default grid value and scenarioID
+      newDashboard["grid"] = 15;
+      newDashboard["scenarioID"] = this.state.scenario.id;
+
       AppDispatcher.dispatch({
         type: 'dashboards/start-add',
         data,
