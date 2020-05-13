@@ -19,7 +19,6 @@ import request from 'superagent/lib/client';
 import Promise from 'es6-promise';
 import NotificationsDataManager from '../data-managers/notifications-data-manager';
 
-
 // TODO: Add this to a central pool of notifications
 const SERVER_NOT_REACHABLE_NOTIFICATION = {
           title: 'Server not reachable',
@@ -55,23 +54,13 @@ class RestAPI {
 
       if (token != null) {
         req.set('Authorization', "Bearer " + token);
-
       }
 
       req.end(function (error, res) {
         if (res == null || res.status !== 200) {
           reject(error);
         } else {
-          if (res.type ==="application/json"){
-            resolve(JSON.parse(res.text));
-          } else {
-            // if received data is not JSON it is a File
-            //create file name:
-            let parts = url.split("/");
-            console.log("res.text has type: ", typeof res.text);
-            resolve({data: res.text, type: res.type, id: parts[parts.length-1]})
-          }
-
+          resolve(JSON.parse(res.text));
         }
       });
     });
@@ -151,6 +140,28 @@ class RestAPI {
       });
     });
   }
+
+
+  download(url, token, fileID) {
+    return new Promise(function (resolve, reject) {
+      let req = request.get(url + "/" + fileID).buffer(true).responseType("blob")
+      // use blob response type and buffer
+      if (token != null) {
+        req.set('Authorization', "Bearer " + token);
+      }
+
+      req.end(function (error, res) {
+        if (error !== null || res.status !== 200) {
+          reject(error);
+        } else {
+            // file data is contained in res.body (because of blob response type)
+            let parts = url.split("/");
+            resolve({data: res.body, type: res.type, id: parts[parts.length-1]})
+          }
+      });
+    });
+  }
+
 }
 
 export default new RestAPI();
