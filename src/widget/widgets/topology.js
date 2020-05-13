@@ -102,17 +102,21 @@ class WidgetTopology extends React.Component {
   }
 
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-    const file = this.props.files.find(file => file._id === this.props.widget.customProperties.file);
+    const file = this.props.files.find(file => file.id === this.props.widget.customProperties.file);
+
+    // TODO the following code requires revision!
+    // TODO The model file is no longer stored on the local disc (config.publicPathBase and file.path are not available!).
+    // TODO It is part of the file store and needs to be taken from there.
     // Ensure model is requested only once or a different was selected
     if (prevProps.widget.customProperties.file !== this.props.widget.customProperties.file
       || (prevState.dashboardState === 'initial' && file)) {
 
-      this.setState({'dashboardState': 'loading' });
+      this.setState({dashboardState: 'loading' });
       if (file) {
         fetch(new Request('/' + config.publicPathBase + file.path))
         .then( response => {
           if (response.status === 200) {
-            this.setState({'dashboardState': 'ready' });
+            this.setState({dashboardState: 'ready' });
             return response.text().then( contents => {
               if (this.svgElem) {
                 let cimsvgInstance = new cimsvg(this.svgElem.current);
@@ -152,7 +156,7 @@ class WidgetTopology extends React.Component {
     const miniatureProps = {
       miniaturePosition: "none",
     }
-    
+
     const toolbarProps = {
       toolbarPosition: "none"
     }
