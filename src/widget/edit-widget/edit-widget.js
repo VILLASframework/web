@@ -65,12 +65,24 @@ class EditWidgetDialog extends React.Component {
     return changeObject;
   }
 
+  getTextWidth(text, fontSize) {
+    let font = fontSize + "px ariel";
+    let canvas = this.getTextWidth.canvas || (this.getTextWidth.canvas = document.createElement("canvas"));
+    let context = canvas.getContext("2d");
+    context.font = font;
+    let metrics = context.measureText(text);
+    return metrics.width;
+  }
+
   setMaxWidth(changeObject){
     if(changeObject.type === 'Label'){
-      changeObject.customProperties.maxWidth = (changeObject.customProperties.textSize* 0.34) * changeObject.name.length;
+      changeObject.customProperties.maxWidth = Math.ceil(this.getTextWidth(changeObject.name, changeObject.customProperties.textSize));
     }
-    else if (changeObject.type === 'Value'){
-    //  changeObject.customProperties.maxWidth = (changeObject.customProperties.textSize* 0.5) * (changeObject.name.length+13);
+    /*else if (changeObject.type === 'Value'){
+      changeObject.customProperties.maxWidth = Math.ceil(this.getTextWidth(changeObject.name, changeObject.customProperties.textSize));
+    }*/
+    if(this.state.temporal.width > changeObject.customProperties.maxWidth){
+      changeObject.width = changeObject.customProperties.maxWidth;
     }
     return changeObject;
   }
