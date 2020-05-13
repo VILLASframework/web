@@ -25,21 +25,34 @@ class FileStore extends ArrayStore {
 
   saveFile(state, action){
 
-    // save file data file
-    let fileID = parseInt(action.data.id)
-    console.log("Received file", action);
-    for (let f of state){
-      if (f.id === fileID){
-        f["data"] = action.data.data;
-        f.type = action.data.type;
-        console.log("Saving file data to file id", fileID);
-      }
-    }
+    let fileID = parseInt(action.id)
+    state.forEach((element, index, array) => {
+         if (element.id === fileID) {
+           // save file object
+           array[index]["data"] = new File([action.data.data], element.name, {type: action.data.type});
+           // update file type
+           array[index]["type"] = action.data.type;
 
+           if (array[index]["objectURL"] !== ''){
+             // free memory of previously generated object URL
+             URL.revokeObjectURL(array[index]["objectURL"]);
+           }
+           // create an object URL for the file
+           array[index]["objectURL"] = URL.createObjectURL(array[index]["data"])
+        }
+    });
+
+    // announce change to listeners
+    this.__emitChange();
+    return state
   }
 
   reduce(state, action) {
     switch (action.type) {
+      case 'files/start-download':
+        FilesDataManager.download(action)
+        return state
+
       case 'files/start-upload':
         FilesDataManager.upload(action.data, action.token, action.progressCallback, action.finishedCallback, action.objectType, action.objectID);
         return state;
@@ -51,15 +64,10 @@ class FileStore extends ArrayStore {
       case 'files/upload-error':
         console.log(action.error);
         return state;
-      case 'files/loaded':
-        if (Array.isArray(action.data)) {
-          return super.reduce(state, action)
-        } else {
-          // in this case a file is contained in the response (no JSON)
-          // TODO we have to extract and process the file here (=save it somewhere?)
-          this.saveFile(state, action)
-          return super.reduce(state, action)
-        }
+
+      case 'files/downloaded':
+        // in this case a file is contained in the response (no JSON)
+        return this.saveFile(state, action)
 
       default:
         return super.reduce(state, action);

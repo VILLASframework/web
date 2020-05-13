@@ -48,6 +48,23 @@ class FilesDataManager extends RestDataManager {
       });
     });
   }
+
+  download(action){
+    RestAPI.download(this.makeURL(this.url), action.token, action.data).then(response => {
+      AppDispatcher.dispatch({
+        type: 'files/downloaded',
+        data: response,
+        id: action.data,
+        token: action.token
+      });
+
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'files/load-error',
+        error: error
+      });
+    });
+  }
 }
 
 export default new FilesDataManager();
