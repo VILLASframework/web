@@ -122,7 +122,7 @@ class WidgetFactory {
                 widget.width = 200;
                 widget.height = 200;
                 widget.customProperties.lockAspect = true;
-                widget.customProperties.file = 2; // ID of image file, -1 means non selected
+                widget.customProperties.file = -1; // ID of image file, -1 means non selected
                 break;
             case 'Button':
                 widget.minWidth = 100;
