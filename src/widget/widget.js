@@ -154,7 +154,7 @@ class Widget extends React.Component {
     } else if (widget.type === 'HTML') {
       return <WidgetHTML widget={widget} editing={this.props.editing} />
     } else if (widget.type === 'Topology') {
-      return <WidgetTopology widget={widget} files={this.state.files} />
+      return <WidgetTopology widget={widget} files={this.state.files} token={this.state.sessionToken} />
     }
 
     return null;
