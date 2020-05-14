@@ -28,8 +28,8 @@ class FileStore extends ArrayStore {
     let fileID = parseInt(action.id)
     state.forEach((element, index, array) => {
          if (element.id === fileID) {
-           // save file object
-           array[index]["data"] = new File([action.data.data], element.name, {type: action.data.type});
+           // save blob object
+           array[index]["data"] = new Blob([action.data.data], {type: action.data.type});
            // update file type
            array[index]["type"] = action.data.type;
 
