@@ -20,6 +20,7 @@ import {UncontrolledReactSVGPanZoom} from 'react-svg-pan-zoom';
 import config from '../../config';
 import '../../styles/simple-spinner.css';
 import { cimsvg } from 'libcimsvg';
+import AppDispatcher from "../../common/app-dispatcher";
 
 // Do not show Pintura's grid
 const pinturaGridStyle = {
@@ -80,10 +81,25 @@ class WidgetTopology extends React.Component {
     super(props);
     this.svgElem = React.createRef();
     this.Viewer = null;
+    this.dashboardState = 'initial'
+    this.message = ''
+    let file = this.props.files.find(file => file.id === parseInt(this.props.widget.customProperties.file, 10));
+
 
     this.state = {
-      dashboardState: 'initial'
+      file: file
     };
+  }
+
+  static getDerivedStateFromProps(props, state){
+    let file = props.files.find(file => file.id === parseInt(props.widget.customProperties.file, 10));
+
+    if (state.file === undefined || state.file.id !== file.id) {
+        return{
+          file: file
+        };
+    }
+    return null
   }
 
   componentDidMount() {
@@ -95,6 +111,19 @@ class WidgetTopology extends React.Component {
       window.onMouseDown = function() {};
       window.onMouseMove = function() {};
     }
+
+
+    // Query the file referenced by the widget
+    let widgetFile = parseInt(this.props.widget.customProperties.file, 10);
+    console.log("Topology, componenDidMount, file:", widgetFile)
+    if (widgetFile !== -1 && this.state.file === undefined) {
+      this.dashboardState = 'loading';
+      AppDispatcher.dispatch({
+        type: 'files/start-download',
+        data: widgetFile,
+        token: this.props.token
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -102,53 +131,43 @@ class WidgetTopology extends React.Component {
   }
 
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-    const file = this.props.files.find(file => file.id === this.props.widget.customProperties.file);
 
-    // TODO the following code requires revision!
-    // TODO The model file is no longer stored on the local disc (config.publicPathBase and file.path are not available!).
-    // TODO It is part of the file store and needs to be taken from there.
-    // Ensure model is requested only once or a different was selected
-    if (prevProps.widget.customProperties.file !== this.props.widget.customProperties.file
-      || (prevState.dashboardState === 'initial' && file)) {
+    console.log("Topology, componendDidUpdate, prevState:", prevState, "State", this.state)
 
-      this.setState({dashboardState: 'loading' });
-      if (file) {
-        fetch(new Request('/' + config.publicPathBase + file.path))
-        .then( response => {
-          if (response.status === 200) {
-            this.setState({dashboardState: 'ready' });
-            return response.text().then( contents => {
-              if (this.svgElem) {
-                let cimsvgInstance = new cimsvg(this.svgElem.current);
-                cimsvg.setCimsvg(cimsvgInstance);
-                cimsvgInstance.setFileCount(1);
-                cimsvgInstance.loadFile(contents);
-                //cimsvgInstance.fit();
-                attachComponentEvents();
-              }
-              else {
-                console.error("The svgElem variable is not initialized before the attempt to create the cimsvg instance.");
-              }
-            });
-          } else {
-            throw new Error('Request failed');
-          }
-        })
-        .catch(error => {
-          console.error(error);
-          this.setState({
-            'dashboardState': 'show_message',
-            'message': 'Topology could not be loaded.'});
-        });
-      }
-    } else {
+    if(this.state.file === undefined) {
       // No file has been selected
-      if (!this.props.widget.customProperties.file&& this.state.message !== 'Select a topology model first.') {
-        this.setState({
-          'dashboardState': 'show_message',
-          'message': 'Select a topology model first.'});
-      }
+      this.dashboardState = 'show_message';
+      this.message = 'Select a topology model first.';
+      return;
     }
+
+    if((prevState.file === undefined && this.state.file !== undefined)
+      || (this.state.file.id !== prevState.file.id && this.state.file.id !== -1)) {
+      // if file has changed, download new file
+      this.dashboardState = 'loading';
+      AppDispatcher.dispatch({
+        type: 'files/start-download',
+        data: this.state.file.id,
+        token: this.props.token
+      });
+    } else if (this.state.file.hasOwnProperty("data") && this.dashboardState === 'loading') {
+      // data of file has been newly downloaded (did not exist in previous state)
+      this.dashboardState = 'ready';
+      console.log("Topology file data: ", this.state.file.data.text());
+      if (this.svgElem) {
+        let cimsvgInstance = new cimsvg(this.svgElem.current);
+        cimsvg.setCimsvg(cimsvgInstance);
+        cimsvgInstance.setFileCount(1);
+        cimsvgInstance.loadFile(this.state.file.data.text());
+        //cimsvgInstance.fit();
+        attachComponentEvents();
+      }
+      else {
+        console.error("The svgElem variable is not initialized before the attempt to create the cimsvg instance.");
+      }
+
+    }
+
   }
 
   render() {
@@ -161,11 +180,11 @@ class WidgetTopology extends React.Component {
       toolbarPosition: "none"
     }
 
-    switch(this.state.dashboardState) {
+    switch(this.dashboardState) {
       case 'loading':
         markup = <div style={spinnerContainerStyle}><div className="loader" /></div>; break;
       case 'show_message':
-        markup = <div style={msgContainerStyle}><div style={msgStyle}>{ this.state.message }</div></div>; break;
+        markup = <div style={msgContainerStyle}><div style={msgStyle}>{ this.message }</div></div>; break;
       default:
         markup = (<div>
           <UncontrolledReactSVGPanZoom
