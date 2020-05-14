@@ -188,6 +188,7 @@ class WidgetFactory {
             case 'Topology':
                 widget.width = 600;
                 widget.height = 400;
+                widget.customProperties.file = -1; // ID of file, -1 means non selected
                 break;
 
             default:
