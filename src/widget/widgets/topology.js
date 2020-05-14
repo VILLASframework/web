@@ -17,7 +17,6 @@
 
 import React from 'react';
 import {UncontrolledReactSVGPanZoom} from 'react-svg-pan-zoom';
-import config from '../../config';
 import '../../styles/simple-spinner.css';
 import { cimsvg } from 'libcimsvg';
 import AppDispatcher from "../../common/app-dispatcher";
