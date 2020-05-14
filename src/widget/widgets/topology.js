@@ -114,7 +114,6 @@ class WidgetTopology extends React.Component {
 
     // Query the file referenced by the widget
     let widgetFile = parseInt(this.props.widget.customProperties.file, 10);
-    console.log("Topology, componenDidMount, file:", widgetFile)
     if (widgetFile !== -1 && this.state.file === undefined) {
       this.dashboardState = 'loading';
       AppDispatcher.dispatch({
@@ -130,8 +129,6 @@ class WidgetTopology extends React.Component {
   }
 
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-
-    console.log("Topology, componendDidUpdate, prevState:", prevState, "State", this.state)
 
     if(this.state.file === undefined) {
       // No file has been selected
@@ -152,19 +149,22 @@ class WidgetTopology extends React.Component {
     } else if (this.state.file.hasOwnProperty("data") && this.dashboardState === 'loading') {
       // data of file has been newly downloaded (did not exist in previous state)
       this.dashboardState = 'ready';
-      console.log("Topology file data: ", this.state.file.data.text());
+
+    } else if(this.state.file.hasOwnProperty("data") && this.dashboardState === 'ready'){
       if (this.svgElem) {
         let cimsvgInstance = new cimsvg(this.svgElem.current);
         cimsvg.setCimsvg(cimsvgInstance);
         cimsvgInstance.setFileCount(1);
-        cimsvgInstance.loadFile(this.state.file.data.text());
-        //cimsvgInstance.fit();
-        attachComponentEvents();
+        // transform data blob into string format
+        this.state.file.data.text().then(function(content) {
+            cimsvgInstance.loadFile(content);
+            cimsvgInstance.fit();
+            attachComponentEvents();
+        });
       }
       else {
         console.error("The svgElem variable is not initialized before the attempt to create the cimsvg instance.");
       }
-
     }
 
   }
