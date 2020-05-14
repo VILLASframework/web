@@ -80,13 +80,16 @@ class EditImageWidgetControl extends React.Component {
       isCustomProperty = false;
     }
 
-    let fileOptions;
+    let fileOptions = [];
     if (this.props.files.length > 0){
-      fileOptions = this.props.files.map((file, index) => (
+      fileOptions.push(
+        <option key = {0} default>Select image file</option>
+        )
+      fileOptions.push(this.props.files.map((file, index) => (
         <option key={index+1} value={file.id}>{file.name}</option>
-      ))
+      )))
     } else {
-      fileOptions.set = <option disabled value style={{ display: 'none' }}>No files found, please upload one first.</option>
+      fileOptions = <option disabled value style={{ display: 'none' }}>No files found, please upload one first.</option>
     }
 
     return <div>
@@ -94,7 +97,6 @@ class EditImageWidgetControl extends React.Component {
         <FormLabel>Image</FormLabel>
         <FormControl
           as="select"
-          placeholder="Select image file"
           value={isCustomProperty ? this.state.widget[parts[0]][parts[1]] : this.state.widget[this.props.controlId]}
           onChange={(e) => this.handleFileChange(e)}>{fileOptions} </FormControl>
       </FormGroup>
