@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import {INITIAL_VALUE, ReactSVGPanZoom, TOOL_NONE} from 'react-svg-pan-zoom';
+import {UncontrolledReactSVGPanZoom} from 'react-svg-pan-zoom';
 import '../../styles/simple-spinner.css';
 import { cimsvg } from 'libcimsvg';
 import AppDispatcher from "../../common/app-dispatcher";
@@ -62,11 +62,22 @@ function textSibling(e) {
 }
 
 function show(element) {
-  element.style.visibility = 'inherit';
+  if(element !== undefined) {
+    element.style.visibility = 'inherit';
+  }
+  else{
+    console.log("MouseOver, show, element undefined.")
+  }
 }
 
 function hide(element) {
-  element.style.visibility = 'hidden';
+  if (element !== undefined) {
+    element.style.visibility = 'hidden';
+  } else {
+    console.log("MouseLeave, hide, element undefined.")
+  }
+
+
 }
 
 // De-initialize functions
@@ -86,9 +97,7 @@ class WidgetTopology extends React.Component {
 
 
     this.state = {
-      file: file,
-      tool: TOOL_NONE,
-      value: INITIAL_VALUE,
+      file: file
     };
   }
 
@@ -113,6 +122,7 @@ class WidgetTopology extends React.Component {
       window.onMouseMove = function() {};
     }
 
+    //this.Viewer.fitToViewer();
 
     // Query the file referenced by the widget
     let widgetFile = parseInt(this.props.widget.customProperties.file, 10);
@@ -171,24 +181,15 @@ class WidgetTopology extends React.Component {
 
   }
 
-  changeTool(nextTool) {
-    this.setState({tool: nextTool})
-  }
-
-  changeValue(nextValue) {
-    this.setState({value: nextValue})
-  }
-
   render() {
 
-    console.log("Topology widget: ", this.props.widget);
     var markup = null;
     const miniatureProps = {
-      miniaturePosition: "none",
+      position: "none",
     }
 
     const toolbarProps = {
-      toolbarPosition: "none"
+      position: "right"
     }
 
     switch(this.dashboardState) {
@@ -198,24 +199,23 @@ class WidgetTopology extends React.Component {
         markup = <div style={msgContainerStyle}><div style={msgStyle}>{ this.message }</div></div>; break;
       default:
         markup = (<div>
-          <ReactSVGPanZoom
-                  ref={Viewer => this.Viewer = Viewer}
-                  style={{outline: "1px solid grey"}}
-                  detectAutoPan={false}
-                  toolbarProps={toolbarProps}
-                  miniatureProps={miniatureProps}
-                  background={"white"}
-                  tool={this.state.tool} onChangeTool={tool => this.changeTool((tool))}
-                  value={this.state.value} onChangeValue={value => this.changeValue(value)}
-                  width={this.props.widget.width-2} height={this.props.widget.height-2} >
-                  <svg width={this.props.widget.width} height={this.props.widget.height}>
-                    <svg ref={ this.svgElem } width={this.props.widget.width} height={this.props.widget.height}>
-                      <rect className="backing" style={pinturaBackingStyle} />
-                      <g className="grid" style={pinturaGridStyle} />
-                      <g className="diagrams"/>
-                    </svg>
-                  </svg>
-          </ReactSVGPanZoom>
+          <UncontrolledReactSVGPanZoom
+            ref={Viewer => this.Viewer = Viewer}
+            style={{outline: "1px solid grey"}}
+            detectAutoPan={false}
+            toolbarProps={toolbarProps}
+            miniatureProps={miniatureProps}
+            background={"white"}
+            width={this.props.widget.width-2}
+            height={this.props.widget.height-2} >
+            <svg width={this.props.widget.width} height={this.props.widget.height}>
+              <svg ref={ this.svgElem } width={this.props.widget.width} height={this.props.widget.height}>
+                <rect className="backing" style={pinturaBackingStyle} />
+                <g className="grid" style={pinturaGridStyle} />
+                <g className="diagrams"/>
+              </svg>
+            </svg>
+          </UncontrolledReactSVGPanZoom>
         </div>);
     }
     return markup;
