@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import {UncontrolledReactSVGPanZoom} from 'react-svg-pan-zoom';
+import {INITIAL_VALUE, ReactSVGPanZoom, TOOL_NONE} from 'react-svg-pan-zoom';
 import '../../styles/simple-spinner.css';
 import { cimsvg } from 'libcimsvg';
 import AppDispatcher from "../../common/app-dispatcher";
@@ -86,7 +86,9 @@ class WidgetTopology extends React.Component {
 
 
     this.state = {
-      file: file
+      file: file,
+      tool: TOOL_NONE,
+      value: INITIAL_VALUE,
     };
   }
 
@@ -169,7 +171,17 @@ class WidgetTopology extends React.Component {
 
   }
 
+  changeTool(nextTool) {
+    this.setState({tool: nextTool})
+  }
+
+  changeValue(nextValue) {
+    this.setState({value: nextValue})
+  }
+
   render() {
+
+    console.log("Topology widget: ", this.props.widget);
     var markup = null;
     const miniatureProps = {
       miniaturePosition: "none",
@@ -186,14 +198,15 @@ class WidgetTopology extends React.Component {
         markup = <div style={msgContainerStyle}><div style={msgStyle}>{ this.message }</div></div>; break;
       default:
         markup = (<div>
-          <UncontrolledReactSVGPanZoom
+          <ReactSVGPanZoom
                   ref={Viewer => this.Viewer = Viewer}
                   style={{outline: "1px solid grey"}}
                   detectAutoPan={false}
                   toolbarProps={toolbarProps}
                   miniatureProps={miniatureProps}
-                  background="white"
-                  tool="pan"
+                  background={"white"}
+                  tool={this.state.tool} onChangeTool={tool => this.changeTool((tool))}
+                  value={this.state.value} onChangeValue={value => this.changeValue(value)}
                   width={this.props.widget.width-2} height={this.props.widget.height-2} >
                   <svg width={this.props.widget.width} height={this.props.widget.height}>
                     <svg ref={ this.svgElem } width={this.props.widget.width} height={this.props.widget.height}>
@@ -202,7 +215,7 @@ class WidgetTopology extends React.Component {
                       <g className="diagrams"/>
                     </svg>
                   </svg>
-          </UncontrolledReactSVGPanZoom>
+          </ReactSVGPanZoom>
         </div>);
     }
     return markup;
