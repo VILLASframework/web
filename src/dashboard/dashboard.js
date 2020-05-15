@@ -32,6 +32,8 @@ import DashboardStore from './dashboard-store';
 import SignalStore from '../signal/signal-store'
 import FileStore from '../file/file-store';
 import WidgetStore from '../widget/widget-store';
+import ICStore from '../ic/ic-store'
+import ConfigStore from '../componentconfig/config-store'
 import AppDispatcher from '../common/app-dispatcher';
 
 import 'react-contexify/dist/ReactContexify.min.css';
@@ -40,7 +42,7 @@ class Dashboard extends Component {
 
   static lastWidgetKey = 0;
   static getStores() {
-    return [ DashboardStore, FileStore, LoginStore, WidgetStore, SignalStore ];
+    return [ DashboardStore, FileStore, LoginStore, WidgetStore, SignalStore, ConfigStore, ICStore];
   }
 
   static calculateState(prevState, props) {
@@ -86,14 +88,35 @@ class Dashboard extends Component {
       }
     }
 
-    // TODO create list of infrastructure components in use
+    let configs = []
+    if (dashboard !== null) {
+      // obtain all component configurations of the scenario to which the dashboard belongs
+      configs = ConfigStore.getState().filter(config => config.scenarioID === dashboard.scenarioID);
+    }
+
+    // create list of infrastructure components in use
+    let ics = []
+    if (configs.length > 0){
+      ics = ICStore.getState().filter(ic => {
+        let ICused = false;
+        for (let config of configs){
+          if (ic.id === config.icID){
+            ICused = true;
+            break;
+          }
+        }
+        return ICused;
+      });
+    }
 
     return {
       dashboard,
       widgets,
       signals,
-      sessionToken: sessionToken,
-      files: files,
+      sessionToken,
+      files,
+      configs,
+      ics,
 
       editing: prevState.editing || false,
       paused: prevState.paused || false,
@@ -117,7 +140,6 @@ class Dashboard extends Component {
     return widgetKey;
   }
 
-//!!!won't work anymore
   componentDidMount() {
 
     // load widgets of dashboard
@@ -127,9 +149,25 @@ class Dashboard extends Component {
       param: '?dashboardID=' + this.state.dashboard.id
     });
 
-    // TODO open websockets in componentDidMount
+    // open web sockets if ICs are already known
+    if(this.state.ics.length > 0){
+      console.log("Starting to open IC websockets:", this.state.ics);
+      AppDispatcher.dispatch({
+        type: 'ics/open-sockets',
+        data: this.state.ics
+      });
+    } else {
+      console.log("ICs unknown in componentDidMount", this.state.dashboard)
+    }
 
-    // TODO close websockets in componentWillUnmount
+  }
+
+  componentWillUnmount() {
+    // close web sockets of ICs
+    console.log("Starting to close all web sockets");
+    AppDispatcher.dispatch({
+      type: 'ics/close-sockets',
+    });
   }
 
   handleKeydown(e) {
@@ -317,14 +355,14 @@ class Dashboard extends Component {
         }
       })
     })
-    
+
     temp.forEach( widget => {
       AppDispatcher.dispatch({
         type: 'widgets/start-remove',
         data: widget,
         token: this.state.sessionToken
       });
-    }); 
+    });
     AppDispatcher.dispatch({
       type: 'widgets/start-load',
       token: this.state.sessionToken,

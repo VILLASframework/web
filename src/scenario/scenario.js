@@ -68,18 +68,6 @@ class Scenario extends React.Component {
     let signals = SignalStore.getState();
     let files = FileStore.getState();
 
-    // apply filter to contain only ICs that are used by configs
-    let icsUsed = ICStore.getState().filter(ic => {
-      let ICused = false;
-      for (let config of configs){
-        if (ic.id === config.icID){
-          ICused = true;
-          break;
-        }
-      }
-      return ICused;
-    });
-
 
     return {
       scenario,
@@ -89,7 +77,6 @@ class Scenario extends React.Component {
       signals,
       files,
       ics: ICStore.getState(),
-      icsUsed,
 
       deleteConfigModal: false,
       importConfigModal: false,
