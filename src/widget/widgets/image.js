@@ -45,20 +45,16 @@ class WidgetImage extends React.Component {
 
     let file = this.props.files.find(file => file.id === parseInt(this.props.widget.customProperties.file, 10));
 
-    if(file !== undefined){
-      if(this.state.file === undefined || (this.state.file.id !== file.id )){
+    if (file !== undefined) {
+      if (this.state.file === undefined || (this.state.file.id !== file.id)) {
 
-        // if file has changed, download new file
-        if (this.state.file !== undefined && this.state.file.id !== file.id){
-          AppDispatcher.dispatch({
-            type: 'files/start-download',
-            data: file.id,
-            token: this.props.token
-          });
-        }
-
-        // either first time update or file id has changed
-        this.setState({file:file})
+        AppDispatcher.dispatch({
+          type: 'files/start-download',
+          data: file.id,
+          token: this.props.token
+        });
+        
+        this.setState({ file: file })
       }
     }
 
