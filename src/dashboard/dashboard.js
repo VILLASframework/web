@@ -61,7 +61,7 @@ class Dashboard extends Component {
       });
     }
 
-    // obtain all widgets of a dashboard
+    // obtain all widgets of this dashboard
     let widgets = WidgetStore.getState().filter(w => w.dashboardID === parseInt(props.match.params.dashboard, 10));
 
     // compute max y coordinate
@@ -73,10 +73,25 @@ class Dashboard extends Component {
       return thisWidgetHeight > maxHeightSoFar? thisWidgetHeight : maxHeightSoFar;
     }, 0);
 
-    // TODO filter signals to the ones belonging to the scenario at hand!
-    let signals = SignalStore.getState();
+    // filter component configurations to the ones that belong to this scenario
+    let configs = []
+    if (dashboard !== null) {
+      configs = ConfigStore.getState().filter(config => config.scenarioID === dashboard.scenarioID);
+    }
 
-    // get files of all widgets
+    // filter signals to the ones belonging to the scenario at hand
+    let signals = []
+    let allSignals = SignalStore.getState();
+    let sig, con;
+    for (sig of allSignals){
+      for (con of configs){
+        if (sig.configID === con.id){
+          signals.push(sig);
+        }
+      }
+    }
+
+    // filter files to the ones associated with a widget of this dashboard
     let allFiles = FileStore.getState();
     let files = [];
     let file, widget;
@@ -88,13 +103,7 @@ class Dashboard extends Component {
       }
     }
 
-    let configs = []
-    if (dashboard !== null) {
-      // obtain all component configurations of the scenario to which the dashboard belongs
-      configs = ConfigStore.getState().filter(config => config.scenarioID === dashboard.scenarioID);
-    }
-
-    // create list of infrastructure components in use
+    // filter ICs to the ones used by this scenario
     let ics = []
     if (configs.length > 0){
       ics = ICStore.getState().filter(ic => {
