@@ -62,7 +62,6 @@ class WidgetPlotTable extends Component {
 
     let checkBoxes = [];
     let icData = [];
-    let legendSignals = [];
     let showLegend = false;
 
     if (this.state.signals.length > 0) {
