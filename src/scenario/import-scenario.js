@@ -32,6 +32,7 @@ class ImportScenarioDialog extends React.Component {
       name: '',
       running: '',
       configs: [],
+      dashboards: [],
       startParameters: {}
     };
   }
@@ -94,7 +95,7 @@ class ImportScenarioDialog extends React.Component {
 
       self.imported = true;
       self.valid = true;
-      self.setState({ name: scenario.name, configs: scenario.configs, startParameters: scenario.startParameters, running: scenario.running });
+      self.setState({ name: scenario.name, configs: scenario.configs, dashboards: scenario.dashboards, startParameters: scenario.startParameters, running: scenario.running });
     };
 
     reader.readAsText(file);
