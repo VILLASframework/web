@@ -130,7 +130,7 @@ class Widget extends React.Component {
     } else if (widget.type === 'Value') {
       return <WidgetValue widget={widget} data={this.state.icData} dummy={this.state.sequence}  signals={this.state.signals} icIDs={this.state.icIDs} />
     } else if (widget.type === 'Plot') {
-      return <WidgetPlot widget={widget} data={this.state.icData} dummy={this.state.sequence}  paused={this.props.paused} />
+      return <WidgetPlot widget={widget} data={this.state.icData} dummy={this.state.sequence}  signals={this.state.signals} icIDs={this.state.icIDs} paused={this.props.paused} />
     } else if (widget.type === 'Table') {
       return <WidgetTable widget={widget} data={this.state.icData} dummy={this.state.sequence} signals={this.state.signals} icIDs={this.state.icIDs}  />
     } else if (widget.type === 'Label') {
