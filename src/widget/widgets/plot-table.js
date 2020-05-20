@@ -24,65 +24,61 @@ class WidgetPlotTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      signals: []
+      signals: [],
+      data: []
     };
   }
 
   static getDerivedStateFromProps(props, state){
     let intersection = []
+    let data = [];
     let signalID, sig;
     for (signalID of props.widget.signalIDs) {
       for (sig of props.signals) {
         if (signalID === sig.id) {
           intersection.push(sig);
-        }
-      }
-    }
 
-    return {signals: intersection}
+          // sig is a selected signal, get data
+          // determine ID of infrastructure component related to signal (via config)
+          let icID = props.icIDs[sig.id]
+
+          // distinguish between input and output signals
+          if (sig.direction === "out") {
+            if (props.data[icID] != null && props.data[icID].output != null && props.data[icID].output.values != null) {
+              if (props.data[icID].output.values[sig.index] !== undefined) {
+                data.push(props.data[icID].output.values[sig.index]);
+              }
+            }
+          } else if (sig.direction === "in") {
+            if (props.data[icID] != null && props.data[icID].input != null && props.data[icID].input.values != null) {
+              if (props.data[icID].input.values[sig.index] !== undefined) {
+                data.push(props.data[icID].input.values[sig.index]);
+              }
+            }
+          }
+        } // sig is selected signal
+      } // loop over props.signals
+    } // loop over selected signals
+
+    return {signals: intersection, data: data}
   }
 
-  updateSignalSelection(signal, checked) {
-    // Update the selected signals and propagate to parent component
-    var new_widget = Object.assign({}, this.props.widget, {
-      checkedSignals: checked ? this.state.signals.concat(signal) : this.state.signals.filter((idx) => idx !== signal)
-    });
-    this.props.onWidgetChange(new_widget);
-  }
+  // updateSignalSelection(signal, checked) {
+  //   // Update the selected signals and propagate to parent component
+  //   var new_widget = Object.assign({}, this.props.widget, {
+  //     checkedSignals: checked ? this.state.signals.concat(signal) : this.state.signals.filter((idx) => idx !== signal)
+  //   });
+  //   this.props.onWidgetChange(new_widget);
+  // }
 
   render() {
 
     let checkBoxes = [];
-    let icData = [];
+
     let showLegend = false;
     if (this.state.signals.length > 0) {
 
       showLegend = true;
-
-      // get data of preselected signals
-      let signal;
-      for (signal of this.state.signals) {
-
-        // determine ID of infrastructure component related to signal (via config)
-        let icID = this.props.icIDs[signal.id]
-
-        // distinguish between input and output signals
-        if (signal.direction === "out"){
-          if (this.props.data[icID] != null && this.props.data[icID].output != null && this.props.data[icID].output.values != null) {
-            if (this.props.data[icID].output.values[signal.index] !== undefined){
-              icData.push(this.props.data[icID].output.values[signal.index]);
-            }
-          }
-        } else if (signal.direction === "in"){
-          if (this.props.data[icID] != null && this.props.data[icID].input != null && this.props.data[icID].input.values != null) {
-            if (this.props.data[icID].input.values[signal.index] !== undefined){
-              icData.push(this.props.data[icID].input.values[signal.index]);
-            }
-          }
-        }
-
-
-      }
 
       // Create checkboxes using the signal indices from component config
       // checkBoxes = this.state.signals.map((signal) => {
@@ -112,7 +108,7 @@ class WidgetPlotTable extends Component {
 
             <div className="widget-plot">
               <Plot
-                data={icData}
+                data={this.state.data}
                 time={this.props.widget.customProperties.time}
                 width={this.props.widget.width - 100}
                 height={this.props.widget.height - 55}
