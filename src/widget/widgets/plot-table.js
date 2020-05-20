@@ -45,14 +45,14 @@ class WidgetPlotTable extends Component {
           // distinguish between input and output signals
           if (sig.direction === "out") {
             if (props.data[icID] != null && props.data[icID].output != null && props.data[icID].output.values != null) {
-              if (props.data[icID].output.values[sig.index] !== undefined) {
-                data.push(props.data[icID].output.values[sig.index]);
+              if (props.data[icID].output.values[sig.index-1] !== undefined) {
+                data.push(props.data[icID].output.values[sig.index-1]);
               }
             }
           } else if (sig.direction === "in") {
             if (props.data[icID] != null && props.data[icID].input != null && props.data[icID].input.values != null) {
-              if (props.data[icID].input.values[sig.index] !== undefined) {
-                data.push(props.data[icID].input.values[sig.index]);
+              if (props.data[icID].input.values[sig.index-1] !== undefined) {
+                data.push(props.data[icID].input.values[sig.index-1]);
               }
             }
           }
@@ -72,7 +72,6 @@ class WidgetPlotTable extends Component {
   // }
 
   render() {
-
     let checkBoxes = [];
 
     let showLegend = false;
