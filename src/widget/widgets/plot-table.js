@@ -16,44 +16,36 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-import classNames from 'classnames';
-import { FormGroup, FormCheck } from 'react-bootstrap';
-
+import { FormGroup } from 'react-bootstrap';
 import Plot from '../widget-plot/plot';
 import PlotLegend from '../widget-plot/plot-legend';
 
 class WidgetPlotTable extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       signals: []
     };
   }
 
-  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-    // Identify if there was a change in the selected signals
-    if (JSON.stringify(prevProps.widget.signalIDs) !== JSON.stringify(this.props.widget.signalIDs)
-      || this.state.signals.length === 0) {
-      // Update the currently selected signals
-      let intersection = []
-      let signalID, sig;
-      for (signalID of this.props.widget.signalIDs) {
-        for (sig of this.props.signals) {
-          if (signalID === sig.id) {
-            intersection.push(sig);
-          }
+  static getDerivedStateFromProps(props, state){
+    let intersection = []
+    let signalID, sig;
+    for (signalID of props.widget.signalIDs) {
+      for (sig of props.signals) {
+        if (signalID === sig.id) {
+          intersection.push(sig);
         }
       }
-
-      this.setState({signals: intersection});
     }
+
+    return {signals: intersection}
   }
 
-  updateSignalSelection(signal_index, checked) {
+  updateSignalSelection(signal, checked) {
     // Update the selected signals and propagate to parent component
     var new_widget = Object.assign({}, this.props.widget, {
-      signals: checked ? this.state.signals.concat(signal_index) : this.state.signals.filter((idx) => idx !== signal_index)
+      checkedSignals: checked ? this.state.signals.concat(signal) : this.state.signals.filter((idx) => idx !== signal)
     });
     this.props.onWidgetChange(new_widget);
   }
@@ -63,7 +55,6 @@ class WidgetPlotTable extends Component {
     let checkBoxes = [];
     let icData = [];
     let showLegend = false;
-
     if (this.state.signals.length > 0) {
 
       showLegend = true;
@@ -75,24 +66,35 @@ class WidgetPlotTable extends Component {
         // determine ID of infrastructure component related to signal (via config)
         let icID = this.props.icIDs[signal.id]
 
-        if (this.props.data[icID] != null && this.props.data[icID].output != null && this.props.data[icID].output.values != null) {
-          if (this.props.data[icID].output.values[signal.index] !== undefined){
-            icData.push(this.props.data[icID].output.values[signal.index]);
+        // distinguish between input and output signals
+        if (signal.direction === "out"){
+          if (this.props.data[icID] != null && this.props.data[icID].output != null && this.props.data[icID].output.values != null) {
+            if (this.props.data[icID].output.values[signal.index] !== undefined){
+              icData.push(this.props.data[icID].output.values[signal.index]);
+            }
+          }
+        } else if (signal.direction === "in"){
+          if (this.props.data[icID] != null && this.props.data[icID].input != null && this.props.data[icID].input.values != null) {
+            if (this.props.data[icID].input.values[signal.index] !== undefined){
+              icData.push(this.props.data[icID].input.values[signal.index]);
+            }
           }
         }
+
+
       }
 
       // Create checkboxes using the signal indices from component config
-      checkBoxes = this.state.signals.map((signal) => {
-        let checked = this.state.signals.indexOf(signal.index) > -1;
-        let chkBxClasses = classNames({
-          'btn': true,
-          'btn-default': true,
-          'active': checked
-        });
-        return <FormCheck key={signal.index} className={chkBxClasses} checked={checked} disabled={this.props.editing}
-                          onChange={(e) => this.updateSignalSelection(signal.index, e.target.checked)}> {signal.name} </FormCheck>
-      });
+      // checkBoxes = this.state.signals.map((signal) => {
+      //   let checked = this.state.signals.indexOf(signal) > -1;
+      //   let chkBxClasses = classNames({
+      //     'btn': true,
+      //     'btn-default': true,
+      //     'active': checked
+      //   });
+      //   return <FormCheck key={signal.index} className={chkBxClasses} checked={checked} disabled={this.props.editing}
+      //                     onChange={(e) => this.updateSignalSelection(signal, e.target.checked)}> {signal.name} </FormCheck>
+      // });
     }
 
     return (
@@ -104,7 +106,7 @@ class WidgetPlotTable extends Component {
                 <FormGroup className="btn-group-vertical">
                   {checkBoxes}
                 </FormGroup>
-              ) : (<small>No signal has been pre-selected.</small>)
+              ) : (<small>Use edit menu to change selected signals.</small>)
               }
             </div>
 
