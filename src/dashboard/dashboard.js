@@ -42,7 +42,7 @@ class Dashboard extends Component {
 
   static lastWidgetKey = 0;
   static getStores() {
-    return [ DashboardStore, FileStore, LoginStore, WidgetStore, SignalStore, ConfigStore, ICStore];
+    return [ DashboardStore, LoginStore, WidgetStore, SignalStore, ConfigStore, ICStore];
   }
 
   static calculateState(prevState, props) {
@@ -272,6 +272,17 @@ class Dashboard extends Component {
     this.setState({ editModal: true, modalData: widget, modalIndex: index });
   };
 
+  uploadFile(data,widget){
+    console.log("tschuuuu tschuuuu");
+    AppDispatcher.dispatch({
+      type: 'files/start-upload',
+      data: data,
+      token: this.state.sessionToken,
+      objectType: "widget",
+      objectID: widget.id,
+    });
+
+  }
 
   closeEdit(data){
 
@@ -469,6 +480,7 @@ class Dashboard extends Component {
           sessionToken={this.state.sessionToken}
           show={this.state.editModal}
           onClose={this.closeEdit.bind(this)}
+          onUpload = {this.uploadFile.bind(this)}
           widget={this.state.modalData}
           signals={this.state.signals}
           files={this.state.files}

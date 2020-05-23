@@ -33,7 +33,7 @@ import EditWidgetMinMaxControl from './edit-widget-min-max-control';
 import EditWidgetHTMLContent from './edit-widget-html-content';
 import EditWidgetParametersControl from './edit-widget-parameters-control';
 
-export default function CreateControls(widgetType = null, widget = null, sessionToken = null, files = null, signals, handleChange) {
+export default function CreateControls(widgetType = null, widget = null, sessionToken = null, files = null, signals, handleChange, onUpload) {
     // Use a list to concatenate the controls according to the widget type
     var DialogControls = [];
 
@@ -84,7 +84,7 @@ export default function CreateControls(widgetType = null, widget = null, session
             // Restrict to only image file types (MIME)
             //let imageControlFiles = files == null? [] : files.filter(file => file.type.includes('image'));
             DialogControls.push(
-                <EditImageWidgetControl key={0} widget={widget} controlId={"customProperties.file"} sessionToken={sessionToken} files={files} handleChange={(e) => handleChange(e)} />,
+                <EditImageWidgetControl key={0} widget={widget} controlId={"customProperties.file"} sessionToken={sessionToken} files={files} handleChange={(e) => handleChange(e)} onUpload={(f,i) => onUpload(f,i)} />,
                 <EditWidgetAspectControl key={1} widget={widget} controlId={"customProperties.lockAspect"} handleChange={e => handleChange(e)} />
             );
             break;

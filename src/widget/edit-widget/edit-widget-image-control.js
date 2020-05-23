@@ -18,7 +18,7 @@
 import React from 'react';
 import {FormGroup, FormControl, FormLabel, Button, ProgressBar} from 'react-bootstrap';
 
-import AppDispatcher from '../../common/app-dispatcher';
+//import AppDispatcher from '../../common/app-dispatcher';
 
 class EditImageWidgetControl extends React.Component {
 
@@ -47,9 +47,11 @@ class EditImageWidgetControl extends React.Component {
         formData.append("file", this.state.fileList[key]);
       }
     }
+    
+    this.props.onUpload(formData,this.props.widget);
 
     // upload files
-    AppDispatcher.dispatch({
+   /* AppDispatcher.dispatch({
       type: 'files/start-upload',
       data: formData,
       token: this.props.sessionToken,
@@ -57,7 +59,7 @@ class EditImageWidgetControl extends React.Component {
       finishedCallback: this.clearProgress,
       objectType: "widget",
       objectID: this.props.widget.id,
-    });
+    });*/
   }
 
   uploadProgress = (e) => {

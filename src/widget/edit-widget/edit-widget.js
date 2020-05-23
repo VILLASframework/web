@@ -122,7 +122,7 @@ class EditWidgetDialog extends React.Component {
 
       customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value;
 
-      // get file and update size (if it's an image)
+      // get file and update size (if it's an image)     
       if ('lockAspect' in this.state.temporal && this.state.temporal.lockAspect) {
         // TODO this if condition requires changes to work!!!
         changeObject = this.assignAspectRatio(changeObject, e.target.value);
@@ -179,7 +179,8 @@ class EditWidgetDialog extends React.Component {
             this.props.sessionToken,
             this.props.files,
             this.props.signals,
-            (e) => this.handleChange(e));
+            (e) => this.handleChange(e),
+            (f,i) => this.props.onUpload(f,i));
     }
 
     return (
