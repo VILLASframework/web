@@ -53,6 +53,7 @@ class EditWidgetDialog extends React.Component {
   }
 
   assignAspectRatio(changeObject, fileId) {
+    fileId = parseInt(fileId, 10)
     // get aspect ratio of file
     const file = this.props.files.find(element => element.id === fileId);
 
@@ -113,9 +114,9 @@ class EditWidgetDialog extends React.Component {
     if (parts[1] === 'lockAspect') {
       //not a customProperty
       customProperty ? changeObject[parts[0]][parts[1]] = e.target.checked : changeObject[e.target.id] = e.target.checked;
-
+      
       // correct image aspect if turned on
-      if (e.target.checked && this.state.temporal.customProperties.file) {
+      if (e.target.checked && (this.state.temporal.customProperties.file !== -1)) {
         changeObject = this.assignAspectRatio(changeObject, this.state.temporal.customProperties.file);
       }
     } else if (e.target.id.includes('file')) {
@@ -123,7 +124,7 @@ class EditWidgetDialog extends React.Component {
       customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value;
 
       // get file and update size (if it's an image)     
-      if ('lockAspect' in this.state.temporal && this.state.temporal.lockAspect) {
+      if ((changeObject.customProperties.file !== -1)&&('lockAspect' in this.state.temporal && this.state.temporal.lockAspect)) {
         // TODO this if condition requires changes to work!!!
         changeObject = this.assignAspectRatio(changeObject, e.target.value);
       }

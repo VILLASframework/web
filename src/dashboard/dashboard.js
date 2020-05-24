@@ -42,7 +42,7 @@ class Dashboard extends Component {
 
   static lastWidgetKey = 0;
   static getStores() {
-    return [ DashboardStore, LoginStore, WidgetStore, SignalStore, ConfigStore, ICStore];
+    return [ DashboardStore, LoginStore,FileStore, WidgetStore, SignalStore, ConfigStore, ICStore];
   }
 
   static calculateState(prevState, props) {
@@ -273,7 +273,6 @@ class Dashboard extends Component {
   };
 
   uploadFile(data,widget){
-    console.log("tschuuuu tschuuuu");
     AppDispatcher.dispatch({
       type: 'files/start-upload',
       data: data,
