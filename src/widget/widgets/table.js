@@ -94,6 +94,7 @@ class WidgetTable extends Component {
   render() {
     
     let rows = this.state.rows;
+
     if(rows.length === 0){
       rows.push({
         name: "no entries"
@@ -109,7 +110,7 @@ class WidgetTable extends Component {
       columns.push(<TableColumn key={3} title="Unit" dataKey="unit" />)
 
     return (
-      <div className="table-widget">
+      <div className="table-widget" style={{width: this.props.widget.width, height: this.props.widget.height, overflowY: 'auto'}}>
         <Table data={rows}>
           { columns }
         </Table>

@@ -415,7 +415,13 @@ div[class*="-widget"] label {
     background-color: #fff;
 }
 
-.table-widget td, .table-widget th {
+.table-widget th {
+    position: sticky; 
+    top: 0;
+    text-align: left;
+}
+
+.table-widget td{
     text-align: left;
 }
 
