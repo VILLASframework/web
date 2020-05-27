@@ -24,6 +24,20 @@ class ScenariosDataManager extends RestDataManager {
     super('scenario', '/scenarios');
   }
 
+  getUsers(token, id) {
+    RestAPI.get(this.makeURL('/scenarios/' + id + '/users/'), token).then(response => {
+      AppDispatcher.dispatch({
+        type: 'scenarios/users',
+        users: response.users
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'scenarios/users-error',
+        error: error
+      })
+    })
+  }
+
   getComponentConfigs(token, id) {
     RestAPI.get(this.makeURL('/scenarios/' + id + '/configs'), token).then(response => {
       AppDispatcher.dispatch({

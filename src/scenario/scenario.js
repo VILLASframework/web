@@ -21,6 +21,7 @@ import { Button } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 
 import ScenarioStore from './scenario-store';
+//import ScenariosDataManager from './scenarios-data-manager';
 import ICStore from '../ic/ic-store';
 import DashboardStore from '../dashboard/dashboard-store';
 import ConfigStore from '../componentconfig/config-store';
@@ -43,6 +44,10 @@ import FileStore from "../file/file-store"
 import WidgetStore from "../widget/widget-store";
 
 class Scenario extends React.Component {
+  constructor(props) {
+    super(props);
+    this.getUsers = true;
+  }
 
   static getStores() {
     return [ ScenarioStore, ConfigStore, DashboardStore, ICStore, LoginStore, SignalStore, FileStore, WidgetStore];
@@ -51,7 +56,7 @@ class Scenario extends React.Component {
   static calculateState(prevState, props) {
     // get selected scenario
     const sessionToken = LoginStore.getState().token;
-
+    
     const scenario = ScenarioStore.getState().find(s => s.id === parseInt(props.match.params.scenario, 10));
     if (scenario == null) {
       AppDispatcher.dispatch({
@@ -60,6 +65,21 @@ class Scenario extends React.Component {
         token: sessionToken
       });
     }
+    let users = null;
+    let sc = ScenarioStore.getState().users;
+ /*
+    if (sc) {
+      users = sc.users;
+      if (users == null && this.getUsers ) {
+        ScenarioStore.getUsers(sessionToken, props.match.params.scenario);
+        this.getUsers = false;
+      }
+    }
+    */
+    
+    
+    
+ //   ScenariosDataManager.getUsers(sessionToken, props.match.params.scenario);
 
     // obtain all dashboards of a scenario
     let dashboards = DashboardStore.getState().filter(dashb => dashb.scenarioID === parseInt(props.match.params.scenario, 10));
@@ -85,6 +105,7 @@ class Scenario extends React.Component {
 
     return {
       scenario,
+      users,
       sessionToken,
       configs,
       dashboards,
@@ -111,6 +132,9 @@ class Scenario extends React.Component {
   }
 
   componentDidMount() {
+    // get users of scenario
+    ScenarioStore.getUsers(this.state.sessionToken, this.state.scenario.id);
+
     //load selected scenario
     AppDispatcher.dispatch({
       type: 'scenarios/start-load',
@@ -140,6 +164,9 @@ class Scenario extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+//    if (this.state.users) {
+//      this.getUsers = false;
+//    }
     if (this.state.dashboards.length > prevState.dashboards.length) {
       if (this.addWidgets) { // add widgets
         // this can only be true after dashboard import, so there is only one dashboard
@@ -461,6 +488,17 @@ class Scenario extends React.Component {
 
     return <div className='section'>
       <h1>{this.state.scenario.name}</h1>
+      <h2>Users</h2>
+      <Table data={this.state.users}>
+        <TableColumn title='Name' dataKey='username' link='/users/' linkKey='id' />
+        <TableColumn title='Mail' dataKey='mail' />
+        <TableColumn
+          title=''
+          width='200'
+          deleteButton
+          onDelete={(index) => this.setState({ deleteUserModal: true, modalUserData: this.state.users[index], modalUserIndex: index })}
+          />
+      </Table>
 
       {/*Component Configurations table*/}
       <h2>Component Configurations</h2>
