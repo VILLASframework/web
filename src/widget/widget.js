@@ -88,27 +88,6 @@ class Widget extends React.Component {
     };
   }
 
-  componentDidMount() {
-    if (this.state.sessionToken == null) {
-      return;
-    }
-
-    /*AppDispatcher.dispatch({
-      type: 'files/start-load',
-      token: this.state.sessionToken,
-      param: '?objectID=1&objectType=widget'
-    });*/
-
-    // TODO no not load component congfigs here, since they are loaded via the scenario, pass them as props
-    /*
-    AppDispatcher.dispatch({
-      type: 'configs/start-load',
-      token: this.state.sessionToken,
-      param: '?scenarioID=1' // TODO do not hardcode scenarioID!
-    });
-    */
-  }
-
   inputDataChanged(widget, data) {
     // The following assumes that a widget modifies/ uses exactly one signal
     AppDispatcher.dispatch({

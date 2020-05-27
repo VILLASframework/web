@@ -65,8 +65,11 @@ class Scenario extends React.Component {
     // obtain all component configurations of a scenario
     let configs = ConfigStore.getState().filter(config => config.scenarioID === parseInt(props.match.params.scenario, 10));
 
+    // obtain all files of a scenario
+    let files = FileStore.getState().filter(file => file.scenarioID === parseInt(props.match.params.scenario, 10));
+
     let signals = SignalStore.getState();
-    let files = FileStore.getState();
+
 
 
     return {
@@ -114,6 +117,13 @@ class Scenario extends React.Component {
     // load dashboards of selected scenario
     AppDispatcher.dispatch({
       type: 'dashboards/start-load',
+      token: this.state.sessionToken,
+      param: '?scenarioID='+this.state.scenario.id,
+    });
+
+    // load files of selected scenario
+    AppDispatcher.dispatch({
+      type: 'files/start-load',
       token: this.state.sessionToken,
       param: '?scenarioID='+this.state.scenario.id,
     });

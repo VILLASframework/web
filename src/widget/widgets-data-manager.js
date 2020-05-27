@@ -26,18 +26,6 @@ class WidgetsDataManager extends RestDataManager{
     super('widget', '/widgets');
   }
 
-  loadFiles(token, widgets){
-    for (let widget of widgets) {
-      // request files of widget
-      RestAPI.get(this.makeURL('/files?objectType=widget&objectID=' + widget.id), token).then(response => {
-        AppDispatcher.dispatch({
-          type: 'files/loaded',
-          data: response.files
-        });
-      });
-    }
-  }
-
 }
 
 export default new WidgetsDataManager()

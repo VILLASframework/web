@@ -68,7 +68,7 @@ class ConfigDataManager extends RestDataManager {
   loadFiles(token, configs){
     for (let config of configs) {
       // request files of config
-      RestAPI.get(this.makeURL('/files?objectType=config&objectID=' + config.id), token).then(response => {
+      RestAPI.get(this.makeURL('/files?scenarioID' + config.scenarioID), token).then(response => {
         AppDispatcher.dispatch({
           type: 'files/loaded',
           data: response.files

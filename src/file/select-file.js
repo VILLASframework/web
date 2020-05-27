@@ -34,10 +34,8 @@ class SelectFile extends React.Component {
   static calculateState(prevState, props) {
 
     let files = FileStore.getState().filter((file) => {
-      return (file.configID === props.objectID)
+      return (file.scenarioID === props.scenarioID)
     });
-
-    console.log("props.objectID=", props.objectID)
 
       return {
           files: files,
@@ -83,8 +81,7 @@ class SelectFile extends React.Component {
           token: this.state.sessionToken,
           //progressCallback: this.updateUploadProgress,
           //finishedCallback: this.clearProgress,
-          objectType: this.props.type,
-          objectID: this.props.objectID,
+          scenarioID: this.props.scenarioID,
       });
   };
 

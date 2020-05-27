@@ -121,7 +121,7 @@ class EditConfigDialog extends React.Component {
                       </FormControl>
                     </FormGroup>
 
-                    <SelectFile type='config' name='Configuration File' onChange={(e) => this.handleSelectedFileChange(e)} value={this.state.selectedFileID} objectID={this.props.config.id}/>
+                    <SelectFile type='config' name='Configuration File' onChange={(e) => this.handleSelectedFileChange(e)} value={this.state.selectedFileID} scenarioID={this.props.config.scenarioID}/>
 
                     <FormGroup controlId='startParameters'>
                         <FormLabel> Start Parameters </FormLabel>

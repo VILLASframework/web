@@ -18,15 +18,14 @@
 import React from 'react';
 import {FormGroup, FormControl, FormLabel, Button, ProgressBar} from 'react-bootstrap';
 
-//import AppDispatcher from '../../common/app-dispatcher';
-
-class EditImageWidgetControl extends React.Component {
+class EditFileWidgetControl extends React.Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
       widget: { },
+      files: [],
       fileList: null,
       progress: 0
     };
@@ -34,7 +33,8 @@ class EditImageWidgetControl extends React.Component {
 
   static getDerivedStateFromProps(props, state){
     return {
-      widget: props.widget
+      widget: props.widget,
+      files: props.files.filter(file => file.type.includes(props.type))
     };
   }
 
@@ -47,19 +47,8 @@ class EditImageWidgetControl extends React.Component {
         formData.append("file", this.state.fileList[key]);
       }
     }
-    
-    this.props.onUpload(formData,this.props.widget);
 
-    // upload files
-   /* AppDispatcher.dispatch({
-      type: 'files/start-upload',
-      data: formData,
-      token: this.props.sessionToken,
-      progressCallback: this.uploadProgress,
-      finishedCallback: this.clearProgress,
-      objectType: "widget",
-      objectID: this.props.widget.id,
-    });*/
+    this.props.onUpload(formData,this.props.widget);
   }
 
   uploadProgress = (e) => {
@@ -83,11 +72,11 @@ class EditImageWidgetControl extends React.Component {
     }
 
     let fileOptions = [];
-    if (this.props.files.length > 0){
+    if (this.state.files.length > 0){
       fileOptions.push(
         <option key = {0} default>Select image file</option>
         )
-      fileOptions.push(this.props.files.map((file, index) => (
+      fileOptions.push(this.state.files.map((file, index) => (
         <option key={index+1} value={file.id}>{file.name}</option>
       )))
     } else {
@@ -114,4 +103,4 @@ class EditImageWidgetControl extends React.Component {
   }
 }
 
-export default EditImageWidgetControl;
+export default EditFileWidgetControl;

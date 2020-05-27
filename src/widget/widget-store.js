@@ -29,7 +29,8 @@ class WidgetStore extends ArrayStore {
 
       case 'widgets/loaded':
 
-        WidgetsDataManager.loadFiles(action.token, action.data);
+        //WidgetsDataManager.loadFiles(action.token, action.data);
+        // TODO make sure files of scenario are loaded
         return super.reduce(state, action);
 
       default:

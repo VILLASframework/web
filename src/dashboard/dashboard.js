@@ -75,8 +75,10 @@ class Dashboard extends Component {
 
     // filter component configurations to the ones that belong to this scenario
     let configs = []
+    let files = []
     if (dashboard !== null) {
       configs = ConfigStore.getState().filter(config => config.scenarioID === dashboard.scenarioID);
+      files = FileStore.getState().filter(file => file.scenarioID === dashboard.scenarioID);
     }
 
     // filter signals to the ones belonging to the scenario at hand
@@ -87,18 +89,6 @@ class Dashboard extends Component {
       for (con of configs){
         if (sig.configID === con.id){
           signals.push(sig);
-        }
-      }
-    }
-
-    // filter files to the ones associated with a widget of this dashboard
-    let allFiles = FileStore.getState();
-    let files = [];
-    let file, widget;
-    for (file of allFiles){
-      for (widget of widgets){
-        if (file.widgetID === widget.id){
-          files.push(file);
         }
       }
     }
@@ -277,8 +267,7 @@ class Dashboard extends Component {
       type: 'files/start-upload',
       data: data,
       token: this.state.sessionToken,
-      objectType: "widget",
-      objectID: widget.id,
+      scenarioID: this.state.dashboard.scenarioID,
     });
 
   }

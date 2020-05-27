@@ -5,7 +5,7 @@ import createControls from '../../widget/edit-widget/edit-widget-control-creator
 import EditWidgetTextControl from '../../widget/edit-widget/edit-widget-text-control';
 import EditWidgetColorControl from '../../widget/edit-widget/edit-widget-color-control';
 import EditWidgetTimeControl from '../../widget/edit-widget/edit-widget-time-control';
-import EditImageWidgetControl from '../../widget/edit-widget/edit-widget-image-control';
+import EditFileWidgetControl from '../../widget/edit-widget/edit-widget-file-control';
 import EditWidgetSignalControl from '../../widget/edit-widget/edit-widget-signal-control';
 import EditWidgetSignalsControl from '../../widget/edit-widget/edit-widget-signals-control';
 import EditWidgetOrientation from '../../widget/edit-widget/edit-widget-orientation';
@@ -28,7 +28,7 @@ describe('edit widget control creator', () => {
         { args: { widgetType: 'Value' }, result: { controlNumber: 5, controlTypes: [EditWidgetTextControl, EditWidgetSignalControl, EditWidgetTextSizeControl, EditWidgetCheckboxControl] } },
         { args: { widgetType: 'Plot' }, result: { controlNumber: 5, controlTypes: [EditWidgetTimeControl, EditWidgetSignalsControl, EditWidgetTextControl, EditWidgetMinMaxControl] } },
         { args: { widgetType: 'Table' }, result: { controlNumber: 2, controlTypes: [EditWidgetCheckboxControl] } },
-        { args: { widgetType: 'Image' }, result: { controlNumber: 2, controlTypes: [EditImageWidgetControl, EditWidgetAspectControl] } },
+        { args: { widgetType: 'Image' }, result: { controlNumber: 2, controlTypes: [EditFileWidgetControl, EditWidgetAspectControl] } },
         { args: { widgetType: 'Gauge' }, result: { controlNumber: 6, controlTypes: [EditWidgetTextControl, EditWidgetSignalControl, EditWidgetCheckboxControl, EditWidgetColorZonesControl, EditWidgetMinMaxControl] } },
         { args: { widgetType: 'PlotTable' }, result: { controlNumber: 5, controlTypes: [EditWidgetSignalsControl, EditWidgetTextControl, EditWidgetTimeControl, EditWidgetMinMaxControl] } },
         { args: { widgetType: 'Slider' }, result: { controlNumber: 9, controlTypes: [EditWidgetTextControl, EditWidgetOrientation, EditWidgetSignalControl, EditWidgetCheckboxControl, EditWidgetCheckboxControl, EditWidgetMinMaxControl, EditWidgetNumberControl, EditWidgetNumberControl] } },
