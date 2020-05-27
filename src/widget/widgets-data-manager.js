@@ -17,8 +17,6 @@
 
 
 import RestDataManager from '../common/data-managers/rest-data-manager';
-import RestAPI from "../common/api/rest-api";
-import AppDispatcher from "../common/app-dispatcher";
 
 class WidgetsDataManager extends RestDataManager{
 
