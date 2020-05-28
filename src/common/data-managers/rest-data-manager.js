@@ -133,16 +133,51 @@ class RestDataManager {
     }
 
 
-  add(object, token = null, param = null) {
+  add(object, token = null, param = null, subObjects = null) {
     var obj = {};
     obj[this.type] = this.filterKeys(object);
-
     RestAPI.post(this.requestURL('load/add',null,param), obj, token).then(response => {
         AppDispatcher.dispatch({
           type: this.type + 's/added',
           data: response[this.type],
           token: token
         });
+
+      // check if POST is done for import of object and issue dispatches of sub-objects
+      if (subObjects !== null){
+        // there are sub-objects to be added for an import
+        for (let objectType of subObjects){
+          let type = Object.keys(objectType) // type can be dashboards, configs, widgets, ...
+          type = type[0];
+          for (let newObj of objectType[type]){
+
+            // set the ID of the object that the sub-object shall be associated with
+            if(type === "configs" || type === "dashboards"){
+              // the main object is a scenario
+              newObj.scenarioID = response[this.type].id
+            } else if (type === "widgets") {
+              // the main object is a dashboard
+              newObj.dashboardID = response[this.type].id
+            } else if (type === "signals") {
+              // the main object is a component configuration
+              newObj.configID = response[this.type].id
+            }
+
+            console.log("Adding new object of type", type, "with content", newObj, "to object of type ", this.type, "with ID ", response[this.type].id)
+            // iterate over all objects of type 'type' add issue add dispatch
+            AppDispatcher.dispatch({
+              type: type + '/start-add',
+              data: newObj,
+              token: token
+            })
+
+          }
+        }
+
+
+      }
+
+
       }).catch(error => {
         AppDispatcher.dispatch({
           type: this.type + 's/add-error',

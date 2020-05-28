@@ -33,6 +33,35 @@ class ConfigStore extends ArrayStore {
         ConfigsDataManager.loadFiles(action.token, action.data);
         return super.reduce(state, action);
 
+      case 'configs/start-add':
+        // Check if this is a recursive component config import or not
+        if (action.data.hasOwnProperty("outputMapping") || action.data.hasOwnProperty("inputMapping")) {
+          // import
+          let subObjects = []
+          let outputMapping = {}
+          let inputMapping = {}
+
+          if (action.data.hasOwnProperty("outputMapping")){
+            outputMapping["signals"] = action.data.outputMapping
+            subObjects.push(outputMapping)
+            delete action.data.outputMapping; // remove outputMapping signals from config object
+          }
+          if (action.data.hasOwnProperty("inputMapping")){
+            inputMapping["signals"] = action.data.inputMapping
+            subObjects.push(inputMapping)
+            delete action.data.inputMapping; // remove inputMapping signals from config object
+          }
+
+          // action.data should now contain the config and no sub-objects
+          // sub-objects are treated in add method of RestDataManager
+          this.dataManager.add(action.data, action.token,action.param, subObjects);
+          return state
+
+        } else {
+          // no import
+          return super.reduce(state, action);
+        }
+
       default:
         return super.reduce(state, action);
 

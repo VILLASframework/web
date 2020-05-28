@@ -74,12 +74,27 @@ class Scenarios extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+
+    for (let i = prevState.scenarios.length; i < this.state.scenarios.length; i++) {
+      AppDispatcher.dispatch({
+        type: 'dashboards/start-load',
+        token: this.state.sessionToken,
+        param: '?scenarioID=' + this.state.scenarios[i].id
+      });
+      AppDispatcher.dispatch({
+        type: 'configs/start-load',
+        token: this.state.sessionToken,
+        param: '?scenarioID=' + this.state.scenarios[i].id
+      });
+    }
+
     // when length of scenarios array has increased, either add data (after import)
     // or load data (after export)
+    /*
     if (this.state.scenarios.length > prevState.scenarios.length) {
       if (this.addDashboards || this.addConfigs) {
         let scenarioID = this.state.scenarios[this.state.scenarios.length - 1].id;
-        
+
         if (this.addDashboards) {
           this.dashboardsToAdd.forEach((dashboard) => {
             if (dashboard.widgets) {
@@ -124,7 +139,10 @@ class Scenarios extends Component {
           });
         }
       }
+
+
     }
+
 
     // when length of dashboards array has increased, either add widgets (after import)
     // or load widgets (after export)
@@ -167,11 +185,16 @@ class Scenarios extends Component {
       }
 
     }
+
+
+     */
   }
 
 
   closeNewModal(data) {
     this.setState({ newModal: false });
+
+    // TODO create dispatch here to add scenario to Backend database!
   }
 
   showDeleteModal(id) {
@@ -240,9 +263,9 @@ class Scenarios extends Component {
     this.setState({ importModal: false });
 
     if (data) {
-      let newScenario = JSON.parse(JSON.stringify(data));
+      //let newScenario = JSON.parse(JSON.stringify(data));
       // temporarily store dashboard data until scenario is created
-      if (data.dashboards) {
+      /*if (data.dashboards) {
         this.addDashboards = true;
         this.dashboardsToAdd = data.dashboards;
       }
@@ -251,9 +274,11 @@ class Scenarios extends Component {
         this.configsToAdd = data.configs;
       }
       delete newScenario.dashboards;
+      */
+
       AppDispatcher.dispatch({
         type: 'scenarios/start-add',
-        data: newScenario,
+        data: data,
         token: this.state.sessionToken,
       });
     }
