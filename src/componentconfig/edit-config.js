@@ -32,8 +32,8 @@ class EditConfigDialog extends React.Component {
             name: '',
             icID: '',
             configuration: null,
-            startParameters: {},
-            selectedFileID:0
+            startParameters: this.props.config.startParameters,
+            selectedFileID: this.props.config.selectedFileID
 
         };
     }
@@ -49,7 +49,7 @@ class EditConfigDialog extends React.Component {
                 if (this.state.icID !== '' && this.props.config.icID !== parseInt(this.state.icID)) {
                     data.icID = parseInt(this.state.icID, 10);
                 }
-                if(this.state.startParameters !==  {} && this.props.config.startParameters !== this.state.startParameters){
+                if(this.state.startParameters !==  {} && JSON.stringify(this.props.config.startParameters) !== JSON.stringify(this.state.startParameters)){
                     data.startParameters = this.state.startParameters;
                 }
                 if (parseInt(this.state.selectedFileID, 10) !== 0 &&
@@ -79,9 +79,9 @@ class EditConfigDialog extends React.Component {
       this.valid = this.isValid()
     }
 
-    handleSelectedFileChange(newFileID){
-      console.log("Config file change to: ", newFileID);
-      this.setState({selectedFileID: newFileID})
+    handleSelectedFileChange(event){
+      //console.log("Config file change to: ", event.target.value);
+      this.setState({selectedFileID: event.target.value})
 
       this.valid = this.isValid()
     }
@@ -121,11 +121,19 @@ class EditConfigDialog extends React.Component {
                       </FormControl>
                     </FormGroup>
 
-                    <SelectFile type='config' name='Configuration File' onChange={(e) => this.handleSelectedFileChange(e)} value={this.state.selectedFileID} scenarioID={this.props.config.scenarioID}/>
+                    <SelectFile
+                      type='config'
+                      name='Configuration File'
+                      onChange={(e) => this.handleSelectedFileChange(e)}
+                      files={this.props.files}
+                      value={this.state.selectedFileID}
+                      scenarioID={this.props.config.scenarioID}
+                      sessionToken={this.props.sessionToken}
+                    />
 
                     <FormGroup controlId='startParameters'>
                         <FormLabel> Start Parameters </FormLabel>
-                        <ParametersEditor content={this.props.config.startParameters} onChange={(data) => this.handleParameterChange(data)} />
+                        <ParametersEditor content={this.state.startParameters} onChange={(data) => this.handleParameterChange(data)} />
                     </FormGroup>
                 </form>
             </Dialog>

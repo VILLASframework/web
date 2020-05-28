@@ -38,9 +38,9 @@ class FilesDataManager extends RestDataManager {
         token: token
       });
 
-      /*if (finishedCallback) {
-        finishedCallback();
-      }*/
+      if (finishedCallback) {
+        finishedCallback(response.file.id);
+      }
     }).catch(error => {
       AppDispatcher.dispatch({
         type: 'files/upload-error',

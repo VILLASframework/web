@@ -467,7 +467,15 @@ class Scenario extends React.Component {
 
       <div style={{ clear: 'both' }} />
 
-      <EditConfigDialog show={this.state.editConfigModal} onClose={data => this.closeEditConfigModal(data)} config={this.state.modalConfigData} ics={this.state.ics} />
+      <EditConfigDialog
+        show={this.state.editConfigModal}
+        onClose={data => this.closeEditConfigModal(data)}
+        config={this.state.modalConfigData}
+        ics={this.state.ics}
+        files={this.state.files}
+        sessionToken={this.state.sessionToken}
+      />
+
       <ImportConfigDialog show={this.state.importConfigModal} onClose={data => this.importConfig(data)} ics={this.state.ics} />
       <DeleteDialog title="component configuration" name={this.state.modalConfigData.name} show={this.state.deleteConfigModal} onClose={(c) => this.closeDeleteConfigModal(c)} />
 
