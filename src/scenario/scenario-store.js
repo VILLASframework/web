@@ -19,37 +19,14 @@
 import ScenariosDataManager from './scenarios-data-manager';
 import ArrayStore from '../common/array-store';
 
-//export default new ArrayStore('scenarios', ScenariosDataManager);
-
 class ScenarioStore extends ArrayStore {
     constructor() {
-      super('scenarios', ScenariosDataManager);
-    }
-
-    getInitialState() {
-        return {
-            state: super.getInitialState(),
-            users: null
-        };
+        super('scenarios', ScenariosDataManager);
     }
 
     getUsers(token, id) {
         ScenariosDataManager.getUsers(token, id);
     }
-
-    reduce(state, action) {
-        switch (action.type) {
-            case 'scenarios/users':
-                state.users = action.users;
-                return state;
-            case 'scenarios/users-error':
-                return state;
-
-            default:
-                return super.reduce(state, action);
-        }
-    }
-
 }
 
 export default new ScenarioStore();

@@ -43,11 +43,8 @@ import EditSignalMapping from "../signal/edit-signal-mapping";
 import FileStore from "../file/file-store"
 import WidgetStore from "../widget/widget-store";
 
+
 class Scenario extends React.Component {
-  constructor(props) {
-    super(props);
-    this.getUsers = true;
-  }
 
   static getStores() {
     return [ ScenarioStore, ConfigStore, DashboardStore, ICStore, LoginStore, SignalStore, FileStore, WidgetStore];
@@ -65,22 +62,8 @@ class Scenario extends React.Component {
         token: sessionToken
       });
     }
-    let users = null;
-    let sc = ScenarioStore.getState().users;
- /*
-    if (sc) {
-      users = sc.users;
-      if (users == null && this.getUsers ) {
-        ScenarioStore.getUsers(sessionToken, props.match.params.scenario);
-        this.getUsers = false;
-      }
-    }
-    */
     
-    
-    
- //   ScenariosDataManager.getUsers(sessionToken, props.match.params.scenario);
-
+    let users = LoginStore.getState().scenarioUsers;
     // obtain all dashboards of a scenario
     let dashboards = DashboardStore.getState().filter(dashb => dashb.scenarioID === parseInt(props.match.params.scenario, 10));
 
@@ -132,7 +115,6 @@ class Scenario extends React.Component {
   }
 
   componentDidMount() {
-    // get users of scenario
     ScenarioStore.getUsers(this.state.sessionToken, this.state.scenario.id);
 
     //load selected scenario

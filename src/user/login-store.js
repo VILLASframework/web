@@ -30,7 +30,8 @@ class LoginStore extends ReduceStore {
     return {
       currentUser: null,
       token: null,
-      loginMessage: null
+      loginMessage: null,
+      scenarioUsers: null
     };
   }
 
@@ -76,7 +77,13 @@ class LoginStore extends ReduceStore {
           // If it was an error and hasn't been handled, the credentials must have been wrong.
           state = Object.assign({}, state, { loginMessage: 'Wrong credentials! Please try again.' });
         }
+        return state;
 
+      case 'scenarios/users':
+        state.scenarioUsers = action.users;
+        return state;
+
+      case 'scenarios/users-error':
         return state;
 
       default:
