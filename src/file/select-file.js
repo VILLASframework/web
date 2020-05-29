@@ -69,11 +69,15 @@ class SelectFile extends React.Component {
 
   render() {
 
-      let fileOptions;
+      let fileOptions = [];
       if (this.props.files.length > 0){
-        fileOptions = this.props.files.map(f =>
+        fileOptions.push(
+          <option key = {0} value={-1}>Select file</option>
+        )
+
+        fileOptions.push(this.props.files.map(f =>
           <option key={f.id} value={f.id}>{f.name}</option>
-        );
+        ));
       } else {
         fileOptions = <option >No files available</option>
       }
