@@ -17,7 +17,6 @@
 
 import RestDataManager from '../common/data-managers/rest-data-manager';
 import AppDispatcher from '../common/app-dispatcher';
-import RestAPI from "../common/api/rest-api";
 
 class ConfigDataManager extends RestDataManager {
   constructor() {
