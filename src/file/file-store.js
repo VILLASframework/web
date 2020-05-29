@@ -54,7 +54,7 @@ class FileStore extends ArrayStore {
         return state
 
       case 'files/start-upload':
-        FilesDataManager.upload(action.data, action.token, action.progressCallback, action.finishedCallback, action.objectType, action.objectID);
+        FilesDataManager.upload(action.data, action.token, action.progressCallback, action.finishedCallback, action.scenarioID);
         return state;
 
       case 'files/uploaded':

@@ -17,25 +17,11 @@
 
 
 import RestDataManager from '../common/data-managers/rest-data-manager';
-import RestAPI from "../common/api/rest-api";
-import AppDispatcher from "../common/app-dispatcher";
 
 class WidgetsDataManager extends RestDataManager{
 
   constructor() {
     super('widget', '/widgets');
-  }
-
-  loadFiles(token, widgets){
-    for (let widget of widgets) {
-      // request files of widget
-      RestAPI.get(this.makeURL('/files?objectType=widget&objectID=' + widget.id), token).then(response => {
-        AppDispatcher.dispatch({
-          type: 'files/loaded',
-          data: response.files
-        });
-      });
-    }
   }
 
 }

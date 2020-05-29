@@ -67,8 +67,11 @@ class Scenario extends React.Component {
     // obtain all component configurations of a scenario
     let configs = ConfigStore.getState().filter(config => config.scenarioID === parseInt(props.match.params.scenario, 10));
 
+    // obtain all files of a scenario
+    let files = FileStore.getState().filter(file => file.scenarioID === parseInt(props.match.params.scenario, 10));
+
     let signals = SignalStore.getState();
-    let files = FileStore.getState();
+
 
 
     return {
@@ -131,13 +134,6 @@ class Scenario extends React.Component {
       token: this.state.sessionToken
     });
 
-    this.setState({ scenario: {} }, () => {
-      AppDispatcher.dispatch({
-        type: 'scenarios/start-load',
-        data: this.props.match.params.scenario,
-        token: this.state.sessionToken
-      });
-    });
   }
 
   closeEditConfigModal(data){
@@ -467,7 +463,15 @@ class Scenario extends React.Component {
 
       <div style={{ clear: 'both' }} />
 
-      <EditConfigDialog show={this.state.editConfigModal} onClose={data => this.closeEditConfigModal(data)} config={this.state.modalConfigData} ics={this.state.ics} />
+      <EditConfigDialog
+        show={this.state.editConfigModal}
+        onClose={data => this.closeEditConfigModal(data)}
+        config={this.state.modalConfigData}
+        ics={this.state.ics}
+        files={this.state.files}
+        sessionToken={this.state.sessionToken}
+      />
+
       <ImportConfigDialog show={this.state.importConfigModal} onClose={data => this.importConfig(data)} ics={this.state.ics} />
       <DeleteDialog title="component configuration" name={this.state.modalConfigData.name} show={this.state.deleteConfigModal} onClose={(c) => this.closeDeleteConfigModal(c)} />
 

@@ -44,7 +44,11 @@ class ScenariosDataManager extends RestDataManager {
         param: '?scenarioID=' + scenario.id
       });
 
-      // TODO add dispatch for files
+      AppDispatcher.dispatch({
+        type: 'files/start-load',
+        token: token,
+        param: '?scenarioID='+scenario.id,
+      });
     }
   }
 }
