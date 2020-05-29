@@ -118,55 +118,11 @@ class Scenario extends React.Component {
       token: this.state.sessionToken
     });
 
-    // load component configurations for selected scenario
-    AppDispatcher.dispatch({
-      type: 'configs/start-load',
-      token: this.state.sessionToken,
-      param: '?scenarioID='+this.state.scenario.id
-    });
-
-    // load dashboards of selected scenario
-    AppDispatcher.dispatch({
-      type: 'dashboards/start-load',
-      token: this.state.sessionToken,
-      param: '?scenarioID='+this.state.scenario.id
-    });
-
     // load ICs to enable that component configs and dashboards work with them
     AppDispatcher.dispatch({
       type: 'ics/start-load',
       token: this.state.sessionToken
     });
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.dashboards.length > prevState.dashboards.length) {
-      if (this.addWidgets) { // add widgets
-        // this can only be true after dashboard import, so there is only one dashboard
-        // (the newest) and this dashboards ID is used
-        let dashboardID = this.state.dashboards[this.state.dashboards.length - 1].id;
-        this.widgetsToAdd.forEach((widget) => {
-          widget.dashboardID = dashboardID;
-          AppDispatcher.dispatch({
-            type: 'widgets/start-add',
-            data: widget,
-            token: this.state.sessionToken,
-          })
-        })
-        this.addWidgets = false;
-        this.widgetsToAdd = [];
-      }
-      else { // get widgets
-        let dashboards = Object.assign([], this.state.dashboards);
-        for (var i = prevState.dashboards.length; i < this.state.dashboards.length; i++) {
-          AppDispatcher.dispatch({
-            type: 'widgets/start-load',
-            token: this.state.sessionToken,
-            param: '?dashboardID=' + dashboards[i].id
-          })
-        }
-      }
-    }
   }
 
 
@@ -223,33 +179,47 @@ class Scenario extends React.Component {
     });
   }
 
-  importConfig(config){
+  importConfig(data){
     this.setState({ importConfigModal: false });
 
-    if (config == null) {
+    if (data == null) {
       return;
     }
 
-    config.scenario = this.state.scenario.id;
+    let newConfig = JSON.parse(JSON.stringify(data.config))
+
+    newConfig["scenarioID"] = this.state.scenario.id;
+    newConfig.name = data.name;
 
     AppDispatcher.dispatch({
       type: 'configs/start-add',
-      data: config,
+      data: newConfig,
       token: this.state.sessionToken
-    });
-
-    this.setState({ scenario: {} }, () => {
-      AppDispatcher.dispatch({
-        type: 'scenarios/start-load',
-        data: this.props.match.params.scenario,
-        token: this.state.sessionToken
-      });
     });
   }
 
   exportConfig(index) {
     // filter properties
-    const config = Object.assign({}, this.state.configs[index]);
+    let config = JSON.parse(JSON.stringify(this.state.configs[index]));
+
+    let signals = JSON.parse(JSON.stringify(SignalStore.getState().filter(s => s.configID === parseInt(config.id, 10))));
+    signals.forEach((signal) => {
+      delete signal.configID;
+      delete signal.id;
+    })
+
+    // two separate lists for inputMapping and outputMapping
+    let inputSignals = signals.filter(s => s.direction === 'in');
+    let outputSignals = signals.filter(s => s.direction === 'out');
+
+    // add signal mappings to config
+    config["inputMapping"] = inputSignals;
+    config["outputMapping"] = outputSignals;
+
+    delete config.id;
+    delete config.scenarioID;
+    delete config.inputLength;
+    delete config.outputLength;
 
     // show save dialog
     const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
@@ -356,12 +326,7 @@ class Scenario extends React.Component {
     if (data) {
       let newDashboard = JSON.parse(JSON.stringify(data));
       newDashboard["scenarioID"] = this.state.scenario.id;
-      // temporarily store widget data until dashboard is created
-      if (data.widgets) {
-        this.addWidgets = true;
-        this.widgetsToAdd = data.widgets;
-      }
-      delete newDashboard.widgets;
+
       AppDispatcher.dispatch({
         type: 'dashboards/start-add',
         data: newDashboard,
@@ -372,16 +337,19 @@ class Scenario extends React.Component {
 
   exportDashboard(index) {
     // filter properties
-    const dashboard = Object.assign({}, this.state.dashboards[index]);
+    let dashboard = JSON.parse(JSON.stringify(this.state.dashboards[index]));
 
-    let widgets = WidgetStore.getState().filter(w => w.dashboardID === parseInt(dashboard.id, 10));
+    let widgets = JSON.parse(JSON.stringify(WidgetStore.getState().filter(w => w.dashboardID === parseInt(dashboard.id, 10))));
+    widgets.forEach((widget) => {
+      delete widget.dashboardID;
+      delete widget.id;
+    })
+    dashboard["widgets"] = widgets;
+    delete dashboard.scenarioID;
+    delete dashboard.id;
 
-
-    var jsonObj = dashboard;
-    jsonObj["widgets"] = widgets;
- 
     // show save dialog
-    const blob = new Blob([JSON.stringify(jsonObj, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(dashboard, null, 2)], { type: 'application/json' });
     FileSaver.saveAs(blob, 'dashboard - ' + dashboard.name + '.json');
   }
 

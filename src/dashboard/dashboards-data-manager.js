@@ -30,7 +30,6 @@ class DashboardsDataManager extends RestDataManager{
       data = [data];
     }
 
-    console.log("onDashboardsLoad");
     for (let dashboard of data){
       AppDispatcher.dispatch({
         type: 'widgets/start-load',
