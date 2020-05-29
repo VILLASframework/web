@@ -40,10 +40,12 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 import EditConfigDialog from "../componentconfig/edit-config";
 import EditSignalMapping from "../signal/edit-signal-mapping";
 import FileStore from "../file/file-store"
+import WidgetStore from "../widget/widget-store";
 
 class Scenario extends React.Component {
+
   static getStores() {
-    return [ ScenarioStore, ConfigStore, DashboardStore, ICStore, LoginStore, SignalStore, FileStore];
+    return [ ScenarioStore, ConfigStore, DashboardStore, ICStore, LoginStore, SignalStore, FileStore, WidgetStore];
   }
 
   static calculateState(prevState, props) {
@@ -96,7 +98,6 @@ class Scenario extends React.Component {
   }
 
   componentDidMount() {
-
     //load selected scenario
     AppDispatcher.dispatch({
       type: 'scenarios/start-load',
@@ -104,28 +105,13 @@ class Scenario extends React.Component {
       token: this.state.sessionToken
     });
 
-    // load component configurations for selected scenario
-    AppDispatcher.dispatch({
-      type: 'configs/start-load',
-      token: this.state.sessionToken,
-      param: '?scenarioID='+this.state.scenario.id,
-    });
-
-    // load dashboards of selected scenario
-    AppDispatcher.dispatch({
-      type: 'dashboards/start-load',
-      token: this.state.sessionToken,
-      param: '?scenarioID='+this.state.scenario.id,
-    });
-
     // load ICs to enable that component configs and dashboards work with them
     AppDispatcher.dispatch({
       type: 'ics/start-load',
-      token: this.state.sessionToken,
+      token: this.state.sessionToken
     });
-
-
   }
+
 
   /* ##############################################
   * Component Configuration modification methods
@@ -180,33 +166,47 @@ class Scenario extends React.Component {
     });
   }
 
-  importConfig(config){
+  importConfig(data){
     this.setState({ importConfigModal: false });
 
-    if (config == null) {
+    if (data == null) {
       return;
     }
 
-    config.scenario = this.state.scenario.id;
+    let newConfig = JSON.parse(JSON.stringify(data.config))
+
+    newConfig["scenarioID"] = this.state.scenario.id;
+    newConfig.name = data.name;
 
     AppDispatcher.dispatch({
       type: 'configs/start-add',
-      data: config,
+      data: newConfig,
       token: this.state.sessionToken
-    });
-
-    this.setState({ scenario: {} }, () => {
-      AppDispatcher.dispatch({
-        type: 'scenarios/start-load',
-        data: this.props.match.params.scenario,
-        token: this.state.sessionToken
-      });
     });
   }
 
   exportConfig(index) {
     // filter properties
-    const config = Object.assign({}, this.state.configs[index]);
+    let config = JSON.parse(JSON.stringify(this.state.configs[index]));
+
+    let signals = JSON.parse(JSON.stringify(SignalStore.getState().filter(s => s.configID === parseInt(config.id, 10))));
+    signals.forEach((signal) => {
+      delete signal.configID;
+      delete signal.id;
+    })
+
+    // two separate lists for inputMapping and outputMapping
+    let inputSignals = signals.filter(s => s.direction === 'in');
+    let outputSignals = signals.filter(s => s.direction === 'out');
+
+    // add signal mappings to config
+    config["inputMapping"] = inputSignals;
+    config["outputMapping"] = outputSignals;
+
+    delete config.id;
+    delete config.scenarioID;
+    delete config.inputLength;
+    delete config.outputLength;
 
     // show save dialog
     const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
@@ -311,9 +311,12 @@ class Scenario extends React.Component {
     this.setState({ importDashboardModal: false });
 
     if (data) {
+      let newDashboard = JSON.parse(JSON.stringify(data));
+      newDashboard["scenarioID"] = this.state.scenario.id;
+
       AppDispatcher.dispatch({
         type: 'dashboards/start-add',
-        data,
+        data: newDashboard,
         token: this.state.sessionToken,
       });
     }
@@ -321,9 +324,16 @@ class Scenario extends React.Component {
 
   exportDashboard(index) {
     // filter properties
-    const dashboard = Object.assign({}, this.state.dashboards[index]);
+    let dashboard = JSON.parse(JSON.stringify(this.state.dashboards[index]));
 
-    // TODO get elements recursively
+    let widgets = JSON.parse(JSON.stringify(WidgetStore.getState().filter(w => w.dashboardID === parseInt(dashboard.id, 10))));
+    widgets.forEach((widget) => {
+      delete widget.dashboardID;
+      delete widget.id;
+    })
+    dashboard["widgets"] = widgets;
+    delete dashboard.scenarioID;
+    delete dashboard.id;
 
     // show save dialog
     const blob = new Blob([JSON.stringify(dashboard, null, 2)], { type: 'application/json' });

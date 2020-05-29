@@ -16,41 +16,36 @@
  ******************************************************************************/
 
 import RestDataManager from '../common/data-managers/rest-data-manager';
-import RestAPI from "../common/api/rest-api";
 import AppDispatcher from "../common/app-dispatcher";
 
 class ScenariosDataManager extends RestDataManager {
   constructor() {
     super('scenario', '/scenarios');
+
+    this.onLoad =  this.onScenariosLoad
   }
 
-  getComponentConfigs(token, id) {
-    RestAPI.get(this.makeURL('/scenarios/' + id + '/configs'), token).then(response => {
-      AppDispatcher.dispatch({
-        type: 'scenarios/configs',
-        configs: response.configs
-      });
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: 'scenarios/configs-error',
-        error: error
-      });
-    });
-  }
+  onScenariosLoad(data, token){
 
-  getDashboards(token, id) {
-    RestAPI.get(this.makeURL('/scenarios/' + id + '/dashboards'), token).then(response => {
-      AppDispatcher.dispatch({
-        type: 'scenarios/dashboards',
-        dashboards: response.dashboards
-      });
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: 'scenarios/dashboards-error',
-        error: error
-      });
-    });
-  }
+    if (!Array.isArray(data)) {
+      data = [data];
+    }
 
+    for (let scenario of data){
+      AppDispatcher.dispatch({
+        type: 'configs/start-load',
+        token: token,
+        param: '?scenarioID=' + scenario.id
+      });
+
+      AppDispatcher.dispatch({
+        type: 'dashboards/start-load',
+        token: token,
+        param: '?scenarioID=' + scenario.id
+      });
+
+      // TODO add dispatch for files
+    }
+  }
 }
 export default new ScenariosDataManager();

@@ -17,18 +17,19 @@
 
 import React from 'react';
 import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
-import _ from 'lodash';
 
 import Dialog from '../common/dialogs/dialog';
 
 class ImportConfigDialog extends React.Component {
   imported = false;
+  valid = false;
 
   constructor(props) {
     super(props);
 
     this.state = {
-      config: {}
+      config: {},
+      name: '',
     };
   }
 
@@ -39,12 +40,13 @@ class ImportConfigDialog extends React.Component {
       return;
     }
 
-    this.props.onClose(this.state.config);
+    this.props.onClose(this.state);
   }
 
   resetState = () => {
     this.setState({
-      config: {}
+      config: {},
+      name: ''
     });
 
     this.imported = false;
@@ -58,46 +60,65 @@ class ImportConfigDialog extends React.Component {
     }
 
     // create file reader
-    const reader = new FileReader();
-    const self = this;
+    let reader = new FileReader();
+    let self = this;
 
     reader.onload = event => {
       const config = JSON.parse(event.target.result);
 
-      config.icID = this.props.ics.length > 0 ? this.props.ics[0]._id : null;
-
       self.imported = true;
-
-      this.setState({ config: config });
+      self.valid = true;
+      this.setState({name: config.name, config: config });
     };
 
     reader.readAsText(file);
   }
 
-  handleICChange = event => {
-    const config = this.state.config;
+  handleChange(e, index) {
+    this.setState({ [e.target.id]: e.target.value });
+  }
 
-    config.icID = event.target.value;
+  validateForm(target) {
+    // check all controls
+    let name = true;
 
-    this.setState({ config: config });
+    if (this.state.name === '') {
+      name = false;
+    }
+    this.valid =  name;
+
+    // return state to control
+    if (target === 'name'){
+      return name;
+    }
   }
 
   render() {
     return (
-      <Dialog show={this.props.show} title="Import Component Configuration" buttonTitle="Import" onClose={(c) => this.onClose(c)} onReset={this.resetState} valid={this.imported}>
+      <Dialog
+        show={this.props.show}
+        title="Import Component Configuration"
+        buttonTitle="Import"
+        onClose={(c) => this.onClose(c)}
+        onReset={() => this.resetState()}
+        valid={this.valid} >
         <form>
           <FormGroup controlId='file'>
             <FormLabel>Component Configuration File</FormLabel>
             <FormControl type='file' onChange={this.loadFile} />
           </FormGroup>
 
-          <FormGroup controlId='IC'>
-            <FormLabel>Infrastructure Component</FormLabel>
-            <FormControl disabled={this.imported === false} as='select' placeholder='Select infrastructure component' value={this.state.config.icID} onChange={this.handleICChange}>
-              {this.props.ics.map(ic => (
-                <option key={ic.id} value={ic.id}>{_.get(ic, 'properties.name') || _.get(ic, 'rawProperties.name')}</option>
-              ))}
-            </FormControl>
+          <FormGroup controlId="name" >
+            <FormLabel>Name</FormLabel>
+            <FormControl
+              readOnly={!this.imported}
+              isValid={this.validateForm('name')}
+              type="text"
+              placeholder="Enter name"
+              value={this.state.name}
+              onChange={(e) => this.handleChange(e)}
+            />
+            <FormControl.Feedback />
           </FormGroup>
         </form>
       </Dialog>

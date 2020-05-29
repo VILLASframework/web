@@ -32,6 +32,7 @@ class ImportScenarioDialog extends React.Component {
       name: '',
       running: '',
       configs: [],
+      dashboards: [],
       startParameters: {}
     };
   }
@@ -51,15 +52,6 @@ class ImportScenarioDialog extends React.Component {
   }
 
   handleChange(e, index) {
-    /*if (e.target.id === 'icID') {
-      const configs = this.state.configs;
-      configs[index].icID = JSON.parse(e.target.value);
-
-      this.setState({ configs: configs });
-
-      return;
-    }*/
-
     this.setState({ [e.target.id]: e.target.value });
 
     // check all controls
@@ -94,7 +86,7 @@ class ImportScenarioDialog extends React.Component {
 
       self.imported = true;
       self.valid = true;
-      self.setState({ name: scenario.name, configs: scenario.configs, startParameters: scenario.startParameters, running: scenario.running });
+      self.setState({ name: scenario.name, configs: scenario.configs, dashboards: scenario.dashboards, startParameters: scenario.startParameters, running: scenario.running });
     };
 
     reader.readAsText(file);

@@ -23,6 +23,10 @@ import FileSaver from 'file-saver';
 import AppDispatcher from '../common/app-dispatcher';
 import ScenarioStore from './scenario-store';
 import LoginStore from '../user/login-store';
+import DashboardStore from '../dashboard/dashboard-store';
+import WidgetStore from "../widget/widget-store";
+import ConfigStore from '../componentconfig/config-store';
+import SignalStore from '../signal/signal-store'
 
 import Icon from '../common/icon';
 import Table from '../common/table';
@@ -33,18 +37,20 @@ import ImportScenarioDialog from './import-scenario';
 
 import DeleteDialog from '../common/dialogs/delete-dialog';
 
+
 class Scenarios extends Component {
+
   static getStores() {
-    return [ ScenarioStore, LoginStore ];
+    return [ScenarioStore, LoginStore, DashboardStore, WidgetStore, ConfigStore, SignalStore];
   }
 
   static calculateState() {
-    const scenarios = ScenarioStore.getState();
-    const sessionToken = LoginStore.getState().token;
 
     return {
-      scenarios,
-      sessionToken,
+      scenarios: ScenarioStore.getState(),
+      dashboards: DashboardStore.getState(),
+      configs: ConfigStore.getState(),
+      sessionToken: LoginStore.getState().token,
 
       newModal: false,
       deleteModal: false,
@@ -63,23 +69,20 @@ class Scenarios extends Component {
     });
   }
 
-  componentDidUpdate() {}
-
   closeNewModal(data) {
-    this.setState({ newModal : false });
-
-    if (data) {
+    if(data) {
       AppDispatcher.dispatch({
         type: 'scenarios/start-add',
-        data,
-        token: this.state.sessionToken
+        data: data,
+        token: this.state.sessionToken,
       });
     }
+    this.setState({ newModal: false });
   }
 
   showDeleteModal(id) {
     // get scenario by id
-    var deleteScenario;
+    let deleteScenario;
 
     this.state.scenarios.forEach((scenario) => {
       if (scenario.id === id) {
@@ -96,6 +99,16 @@ class Scenarios extends Component {
     if (confirmDelete === false) {
       return;
     }
+
+    this.state.dashboards.forEach((dashboard) => {
+      if (dashboard.id === this.state.modalScenario.id) {
+        AppDispatcher.dispatch({
+          type: 'dashboards/start-remove',
+          data: dashboard,
+          token: this.state.sessionToken
+        })
+      }
+    });
 
     AppDispatcher.dispatch({
       type: 'scenarios/start-remove',
@@ -118,7 +131,7 @@ class Scenarios extends Component {
   }
 
   closeEditModal(data) {
-    this.setState({ editModal : false });
+    this.setState({ editModal: false });
 
     if (data != null) {
       AppDispatcher.dispatch({
@@ -135,8 +148,8 @@ class Scenarios extends Component {
     if (data) {
       AppDispatcher.dispatch({
         type: 'scenarios/start-add',
-        data,
-        token: this.state.sessionToken
+        data: data,
+        token: this.state.sessionToken,
       });
     }
   }
@@ -150,14 +163,54 @@ class Scenarios extends Component {
   };
 
   exportScenario(index) {
-    // filter properties
-    let scenario = Object.assign({}, this.state.scenarios[index]);
+    // copy by value by converting to JSON and back
+    // otherwise, IDs of state objects will be deleted
+    let scenario = JSON.parse(JSON.stringify(this.state.scenarios[index]));
+    let configs = JSON.parse(JSON.stringify(this.state.configs.filter(config => config.scenarioID === scenario.id)));
+    let dashboards = JSON.parse(JSON.stringify(this.state.dashboards.filter(dashb => dashb.scenarioID === scenario.id)));
+
+    // create JSON object and add component configs
     delete scenario.id;
+    let jsonObj = scenario;
 
-    // TODO request missing scenario parameters (Dashboards and component configs) recursively for export
+    configs.forEach((config) => {
+      let signals = JSON.parse(JSON.stringify(SignalStore.getState().filter(s => s.configID === parseInt(config.id, 10))));
+      signals.forEach((signal) => {
+        delete signal.configID;
+        delete signal.id;
+      })
 
-    // show save dialog
-    const blob = new Blob([JSON.stringify(scenario, null, 2)], { type: 'application/json' });
+      // two separate lists for inputMapping and outputMapping
+      let inputSignals = signals.filter(s => s.direction === 'in');
+      let outputSignals = signals.filter(s => s.direction === 'out');
+
+      // add signal mappings to config
+      config["inputMapping"] = inputSignals;
+      config["outputMapping"] = outputSignals;
+
+      delete config.id;
+      delete config.scenarioID;
+      delete config.inputLength;
+      delete config.outputLength;
+    })
+    jsonObj["configs"] = configs;
+
+    // add Dashboards and Widgets to JSON object
+    dashboards.forEach((dboard) => {
+      let widgets = JSON.parse(JSON.stringify(WidgetStore.getState().filter(w => w.dashboardID === parseInt(dboard.id, 10))));
+      widgets.forEach((widget) => {
+        delete widget.dashboardID;
+        delete widget.id;
+      })
+      dboard["widgets"] = widgets;
+      delete dboard.scenarioID;
+      delete dboard.id;
+    });
+    jsonObj["dashboards"] = dashboards;
+
+
+    // create JSON string and show save dialog
+    const blob = new Blob([JSON.stringify(jsonObj, null, 2)], { type: 'application/json' });
     FileSaver.saveAs(blob, 'scenario - ' + scenario.name + '.json');
   }
 
