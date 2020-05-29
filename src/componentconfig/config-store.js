@@ -28,8 +28,6 @@ class ConfigStore extends ArrayStore {
     switch (action.type) {
 
       case 'configs/loaded':
-
-        ConfigsDataManager.loadFiles(action.token, action.data);
         return super.reduce(state, action);
 
       case 'configs/start-add':
