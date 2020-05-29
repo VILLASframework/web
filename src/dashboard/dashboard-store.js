@@ -24,6 +24,7 @@ class DashboardStore extends  ArrayStore {
   }
 
   reduce(state, action) {
+
     switch (action.type) {
       case 'dashboards/start-add':
 

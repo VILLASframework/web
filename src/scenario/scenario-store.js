@@ -26,6 +26,7 @@ class ScenarioStore extends ArrayStore{
 
   reduce(state, action) {
     switch (action.type) {
+
       case 'scenarios/start-add':
 
         // Check if this is a recursive scenario import or not

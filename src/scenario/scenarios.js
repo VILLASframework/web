@@ -26,6 +26,7 @@ import LoginStore from '../user/login-store';
 import DashboardStore from '../dashboard/dashboard-store';
 import WidgetStore from "../widget/widget-store";
 import ConfigStore from '../componentconfig/config-store';
+import SignalStore from '../signal/signal-store'
 
 import Icon from '../common/icon';
 import Table from '../common/table';
@@ -40,21 +41,16 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 class Scenarios extends Component {
 
   static getStores() {
-    return [ScenarioStore, LoginStore, DashboardStore, WidgetStore, ConfigStore];
+    return [ScenarioStore, LoginStore, DashboardStore, WidgetStore, ConfigStore, SignalStore];
   }
 
   static calculateState() {
-    const scenarios = ScenarioStore.getState();
-    const sessionToken = LoginStore.getState().token;
-
-    let dashboards = DashboardStore.getState();
-    let configs = ConfigStore.getState();
 
     return {
-      scenarios,
-      dashboards,
-      configs,
-      sessionToken,
+      scenarios: ScenarioStore.getState(),
+      dashboards: DashboardStore.getState(),
+      configs: ConfigStore.getState(),
+      sessionToken: LoginStore.getState().token,
 
       newModal: false,
       deleteModal: false,
@@ -73,133 +69,20 @@ class Scenarios extends Component {
     });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-
-    for (let i = prevState.scenarios.length; i < this.state.scenarios.length; i++) {
-      AppDispatcher.dispatch({
-        type: 'dashboards/start-load',
-        token: this.state.sessionToken,
-        param: '?scenarioID=' + this.state.scenarios[i].id
-      });
-      AppDispatcher.dispatch({
-        type: 'configs/start-load',
-        token: this.state.sessionToken,
-        param: '?scenarioID=' + this.state.scenarios[i].id
-      });
-    }
-
-    // when length of scenarios array has increased, either add data (after import)
-    // or load data (after export)
-    /*
-    if (this.state.scenarios.length > prevState.scenarios.length) {
-      if (this.addDashboards || this.addConfigs) {
-        let scenarioID = this.state.scenarios[this.state.scenarios.length - 1].id;
-
-        if (this.addDashboards) {
-          this.dashboardsToAdd.forEach((dashboard) => {
-            if (dashboard.widgets) {
-              this.addWidgets = true;
-            }
-            dashboard.scenarioID = scenarioID;
-            AppDispatcher.dispatch({
-              type: 'dashboards/start-add',
-              token: this.state.sessionToken,
-              data: dashboard
-            });
-          })
-          this.addDashboards = false;
-        }
-
-        if (this.addConfigs) {
-          this.configsToAdd.forEach((config) => {
-            config.scenarioID = scenarioID;
-            AppDispatcher.dispatch({
-              type: 'configs/start-add',
-              token: this.state.sessionToken,
-              data: config
-            })
-          })
-          delete this.configsToAdd;
-          this.addConfigs = false;
-        }
-
-      }
-      else {
-        let scenarios = Object.assign([], this.state.scenarios); // copying neccessary?
-        for (var i = prevState.scenarios.length; i < scenarios.length; i++) {
-          AppDispatcher.dispatch({
-            type: 'dashboards/start-load',
-            token: this.state.sessionToken,
-            param: '?scenarioID=' + scenarios[i].id
-          });
-          AppDispatcher.dispatch({
-            type: 'configs/start-load',
-            token: this.state.sessionToken,
-            param: '?scenarioID=' + scenarios[i].id
-          });
-        }
-      }
-
-
-    }
-
-
-    // when length of dashboards array has increased, either add widgets (after import)
-    // or load widgets (after export)
-    if (this.state.dashboards.length > prevState.dashboards.length) {
-      if (this.addWidgets && !this.addDashboards) { // add widget data
-        let dashboards = Object.assign([], this.state.dashboards);
-        for (var j = prevState.dashboards.length; j < dashboards.length; j++) {
-          let dboard = dashboards[j];
-          let dboardID = dboard.id;
-          let dashboard = this.dashboardsToAdd.shift();
-          if (dashboard.name !== dboard.name) {
-            console.log("Cannot add widgets, dashboard was not added as expected!");
-            this.addWidgets = false;
-            return;
-          }
-          dashboard.widgets.forEach((widget) => {
-            widget.dashboardID = dboardID;
-            AppDispatcher.dispatch({
-              type: 'widgets/start-add',
-              token: this.state.sessionToken,
-              data: widget
-            });
-          });
-        }
-
-        if (this.dashboardsToAdd.length === 0) {
-          delete this.dashboardsToAdd;
-          this.addWidgets = false;
-        }
-      }
-      else { // load widget data
-        let dashboards = Object.assign([], this.state.dashboards);
-        for (var j = prevState.dashboards.length; j < dashboards.length; j++) {
-          AppDispatcher.dispatch({
-            type: 'widgets/start-load',
-            token: this.state.sessionToken,
-            param: '?dashboardID=' + dashboards[j].id
-          })
-        }
-      }
-
-    }
-
-
-     */
-  }
-
-
   closeNewModal(data) {
+    if(data) {
+      AppDispatcher.dispatch({
+        type: 'scenarios/start-add',
+        data: data,
+        token: this.state.sessionToken,
+      });
+    }
     this.setState({ newModal: false });
-
-    // TODO create dispatch here to add scenario to Backend database!
   }
 
   showDeleteModal(id) {
     // get scenario by id
-    var deleteScenario;
+    let deleteScenario;
 
     this.state.scenarios.forEach((scenario) => {
       if (scenario.id === id) {
@@ -263,19 +146,6 @@ class Scenarios extends Component {
     this.setState({ importModal: false });
 
     if (data) {
-      //let newScenario = JSON.parse(JSON.stringify(data));
-      // temporarily store dashboard data until scenario is created
-      /*if (data.dashboards) {
-        this.addDashboards = true;
-        this.dashboardsToAdd = data.dashboards;
-      }
-      if (data.configs) {
-        this.addConfigs = true;
-        this.configsToAdd = data.configs;
-      }
-      delete newScenario.dashboards;
-      */
-
       AppDispatcher.dispatch({
         type: 'scenarios/start-add',
         data: data,
@@ -304,6 +174,20 @@ class Scenarios extends Component {
     let jsonObj = scenario;
 
     configs.forEach((config) => {
+      let signals = JSON.parse(JSON.stringify(SignalStore.getState().filter(s => s.configID === parseInt(config.id, 10))));
+      signals.forEach((signal) => {
+        delete signal.configID;
+        delete signal.id;
+      })
+
+      // two separate lists for inputMapping and outputMapping
+      let inputSignals = signals.filter(s => s.direction === 'in');
+      let outputSignals = signals.filter(s => s.direction === 'out');
+
+      // add signal mappings to config
+      config["inputMapping"] = inputSignals;
+      config["outputMapping"] = outputSignals;
+
       delete config.id;
       delete config.scenarioID;
     })

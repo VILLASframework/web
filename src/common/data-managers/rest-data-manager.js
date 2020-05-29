@@ -99,7 +99,7 @@ class RestDataManager {
           });
 
           if (this.onLoad != null) {
-            this.onLoad(data);
+            this.onLoad(data, token);
           }
         }).catch(error => {
           AppDispatcher.dispatch({
@@ -121,7 +121,7 @@ class RestDataManager {
           });
 
           if (this.onLoad != null) {
-            this.onLoad(data);
+            this.onLoad(data, token);
           }
         }).catch(error => {
           AppDispatcher.dispatch({
@@ -163,7 +163,6 @@ class RestDataManager {
               newObj.configID = response[this.type].id
             }
 
-            console.log("Adding new object of type", type, "with content", newObj, "to object of type ", this.type, "with ID ", response[this.type].id)
             // iterate over all objects of type 'type' add issue add dispatch
             AppDispatcher.dispatch({
               type: type + '/start-add',

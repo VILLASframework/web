@@ -29,7 +29,6 @@ class ConfigStore extends ArrayStore {
 
       case 'configs/loaded':
 
-        ConfigsDataManager.loadSignals(action.token, action.data);
         ConfigsDataManager.loadFiles(action.token, action.data);
         return super.reduce(state, action);
 

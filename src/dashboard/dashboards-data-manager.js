@@ -16,5 +16,30 @@
  ******************************************************************************/
 
 import RestDataManager from '../common/data-managers/rest-data-manager';
+import AppDispatcher from "../common/app-dispatcher";
 
-export default new RestDataManager('dashboard', '/dashboards');
+class DashboardsDataManager extends RestDataManager{
+  constructor() {
+    super('dashboard', '/dashboards');
+    this.onLoad = this.onDashboardsLoad
+  }
+
+  onDashboardsLoad(data, token){
+
+    if (!Array.isArray(data)) {
+      data = [data];
+    }
+
+    console.log("onDashboardsLoad");
+    for (let dashboard of data){
+      AppDispatcher.dispatch({
+        type: 'widgets/start-load',
+        token: token,
+        param: '?dashboardID=' + dashboard.id
+      });
+    }
+  }
+
+}
+
+export default new DashboardsDataManager();
