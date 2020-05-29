@@ -17,7 +17,6 @@
 
 import RestDataManager from '../common/data-managers/rest-data-manager';
 import AppDispatcher from '../common/app-dispatcher';
-import RestAPI from "../common/api/rest-api";
 
 class ConfigDataManager extends RestDataManager {
   constructor() {
@@ -26,55 +25,35 @@ class ConfigDataManager extends RestDataManager {
     this.onLoad = this.onConfigsLoad;
   }
 
-  onConfigsLoad(data) {
+  onConfigsLoad(data, token) {
     if (!Array.isArray(data))
       data = [ data ];
 
-    for (let config of data)
-      this.loadICData(config);
-  }
+    for (let config of data) {
 
-  loadICData(config) {
-    AppDispatcher.dispatch({
-      type: 'icData/prepare',
-      inputLength: parseInt(config.inputLength, 10),
-      outputLength: parseInt(config.outputLength, 10),
-      id: config.icID
-    });
-  }
+      // prepare IC data
+      AppDispatcher.dispatch({
+        type: 'icData/prepare',
+        inputLength: parseInt(config.inputLength, 10),
+        outputLength: parseInt(config.outputLength, 10),
+        id: config.icID
+      });
 
-  loadSignals(token, configs){
-
-    for (let config of configs) {
       // request in signals
-      RestAPI.get(this.makeURL('/signals?direction=in&configID=' + config.id), token).then(response => {
-        AppDispatcher.dispatch({
-          type: 'signals/loaded',
-          data: response.signals
-        });
+      AppDispatcher.dispatch({
+        type: 'signals/start-load',
+        token: token,
+        param: '?direction=in&configID=' + config.id,
       });
 
       // request out signals
-      RestAPI.get(this.makeURL('/signals?direction=out&configID=' + config.id), token).then(response => {
-        AppDispatcher.dispatch({
-          type: 'signals/loaded',
-          data: response.signals
-        });
-      });
-
-    }
-  }
-
-  loadFiles(token, configs){
-    for (let config of configs) {
-      // request files of config
-      RestAPI.get(this.makeURL('/files?objectType=config&objectID=' + config.id), token).then(response => {
-        AppDispatcher.dispatch({
-          type: 'files/loaded',
-          data: response.files
-        });
+      AppDispatcher.dispatch({
+        type: 'signals/start-load',
+        token: token,
+        param: '?direction=out&configID=' + config.id,
       });
     }
+
   }
 }
 

@@ -67,27 +67,6 @@ class ImportDashboardDialog extends React.Component {
       // read IC
       const dashboard = JSON.parse(event.target.result);
 
-      /*let defaultIC = "";
-      if (self.props.configs != null) {
-        defaultIC = self.props.configs[0].icID;
-      }
-
-      dashboard.widgets.forEach(widget => {
-        switch (widget.type) {
-          case 'Value':
-          case 'Plot':
-          case 'Table':
-          case 'PlotTable':
-          case 'Gauge':
-            break;
-
-          default:
-            break;
-        }
-      });
-
-      */
-
       self.imported = true;
       self.valid = true;
       self.setState({ name: dashboard.name, widgets: dashboard.widgets, grid: dashboard.grid });
@@ -107,21 +86,36 @@ class ImportDashboardDialog extends React.Component {
     this.valid =  name;
 
     // return state to control
-    if (target === 'name') return name ? "success" : "error";
+    if (target === 'name'){
+      return name;
+    }
   }
 
   render() {
     return (
-      <Dialog show={this.props.show} title="Import Dashboard" buttonTitle="Import" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog
+        show={this.props.show}
+        title="Import Dashboard"
+        buttonTitle="Import"
+        onClose={(c) => this.onClose(c)}
+        onReset={() => this.resetState()}
+        valid={this.valid}>
         <form>
           <FormGroup controlId="file">
             <FormLabel>Dashboard File</FormLabel>
             <FormControl type="file" onChange={(e) => this.loadFile(e.target.files)} />
           </FormGroup>
 
-          <FormGroup controlId="name" validationState={this.validateForm('name')}>
+          <FormGroup controlId="name" >
             <FormLabel>Name</FormLabel>
-            <FormControl readOnly={!this.imported} type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <FormControl
+              readOnly={!this.imported}
+              isValid={this.validateForm('name')}
+              type="text"
+              placeholder="Enter name"
+              value={this.state.name}
+              onChange={(e) => this.handleChange(e)}
+            />
             <FormControl.Feedback />
           </FormGroup>
         </form>

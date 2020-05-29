@@ -32,6 +32,8 @@ import DashboardStore from './dashboard-store';
 import SignalStore from '../signal/signal-store'
 import FileStore from '../file/file-store';
 import WidgetStore from '../widget/widget-store';
+import ICStore from '../ic/ic-store'
+import ConfigStore from '../componentconfig/config-store'
 import AppDispatcher from '../common/app-dispatcher';
 
 import 'react-contexify/dist/ReactContexify.min.css';
@@ -40,7 +42,7 @@ class Dashboard extends Component {
 
   static lastWidgetKey = 0;
   static getStores() {
-    return [ DashboardStore, FileStore, LoginStore, WidgetStore, SignalStore ];
+    return [ DashboardStore, LoginStore,FileStore, WidgetStore, SignalStore, ConfigStore, ICStore];
   }
 
   static calculateState(prevState, props) {
@@ -59,7 +61,7 @@ class Dashboard extends Component {
       });
     }
 
-    // obtain all widgets of a dashboard
+    // obtain all widgets of this dashboard
     let widgets = WidgetStore.getState().filter(w => w.dashboardID === parseInt(props.match.params.dashboard, 10));
 
     // compute max y coordinate
@@ -71,29 +73,49 @@ class Dashboard extends Component {
       return thisWidgetHeight > maxHeightSoFar? thisWidgetHeight : maxHeightSoFar;
     }, 0);
 
-    // TODO filter signals to the ones belonging to the scenario at hand!
-    let signals = SignalStore.getState();
+    // filter component configurations to the ones that belong to this scenario
+    let configs = []
+    let files = []
+    if (dashboard !== null) {
+      configs = ConfigStore.getState().filter(config => config.scenarioID === dashboard.scenarioID);
+      files = FileStore.getState().filter(file => file.scenarioID === dashboard.scenarioID);
+    }
 
-    // get files of all widgets
-    let allFiles = FileStore.getState();
-    let files = [];
-    let file, widget;
-    for (file of allFiles){
-      for (widget of widgets){
-        if (file.widgetID === widget.id){
-          files.push(file);
+    // filter signals to the ones belonging to the scenario at hand
+    let signals = []
+    let allSignals = SignalStore.getState();
+    let sig, con;
+    for (sig of allSignals){
+      for (con of configs){
+        if (sig.configID === con.id){
+          signals.push(sig);
         }
       }
     }
 
-    // TODO create list of infrastructure components in use
+    // filter ICs to the ones used by this scenario
+    let ics = []
+    if (configs.length > 0){
+      ics = ICStore.getState().filter(ic => {
+        let ICused = false;
+        for (let config of configs){
+          if (ic.id === config.icID){
+            ICused = true;
+            break;
+          }
+        }
+        return ICused;
+      });
+    }
 
     return {
       dashboard,
       widgets,
       signals,
-      sessionToken: sessionToken,
-      files: files,
+      sessionToken,
+      files,
+      configs,
+      ics,
 
       editing: prevState.editing || false,
       paused: prevState.paused || false,
@@ -117,7 +139,6 @@ class Dashboard extends Component {
     return widgetKey;
   }
 
-//!!!won't work anymore
   componentDidMount() {
 
     // load widgets of dashboard
@@ -127,9 +148,25 @@ class Dashboard extends Component {
       param: '?dashboardID=' + this.state.dashboard.id
     });
 
-    // TODO open websockets in componentDidMount
+    // open web sockets if ICs are already known
+    if(this.state.ics.length > 0){
+      console.log("Starting to open IC websockets:", this.state.ics);
+      AppDispatcher.dispatch({
+        type: 'ics/open-sockets',
+        data: this.state.ics
+      });
+    } else {
+      console.log("ICs unknown in componentDidMount", this.state.dashboard)
+    }
 
-    // TODO close websockets in componentWillUnmount
+  }
+
+  componentWillUnmount() {
+    // close web sockets of ICs
+    console.log("Starting to close all web sockets");
+    AppDispatcher.dispatch({
+      type: 'ics/close-sockets',
+    });
   }
 
   handleKeydown(e) {
@@ -225,6 +262,15 @@ class Dashboard extends Component {
     this.setState({ editModal: true, modalData: widget, modalIndex: index });
   };
 
+  uploadFile(data,widget){
+    AppDispatcher.dispatch({
+      type: 'files/start-upload',
+      data: data,
+      token: this.state.sessionToken,
+      scenarioID: this.state.dashboard.scenarioID,
+    });
+
+  }
 
   closeEdit(data){
 
@@ -262,6 +308,15 @@ class Dashboard extends Component {
 
 
   startEditing(){
+    this.state.widgets.forEach( widget => {
+      if(widget.type === 'Slider' || widget.type === 'NumberInput' || widget.type === 'Button'){
+        AppDispatcher.dispatch({
+          type: 'widgets/start-edit',
+          token: this.state.sessionToken,
+          data: widget
+        });
+      }
+    });
     this.setState({ editing: true });
   };
 
@@ -307,14 +362,14 @@ class Dashboard extends Component {
         }
       })
     })
-    
+
     temp.forEach( widget => {
       AppDispatcher.dispatch({
         type: 'widgets/start-remove',
         data: widget,
         token: this.state.sessionToken
       });
-    }); 
+    });
     AppDispatcher.dispatch({
       type: 'widgets/start-load',
       token: this.state.sessionToken,
@@ -412,6 +467,7 @@ class Dashboard extends Component {
           sessionToken={this.state.sessionToken}
           show={this.state.editModal}
           onClose={this.closeEdit.bind(this)}
+          onUpload = {this.uploadFile.bind(this)}
           widget={this.state.modalData}
           signals={this.state.signals}
           files={this.state.files}

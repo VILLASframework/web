@@ -27,7 +27,6 @@ class SignalsDataManager extends RestDataManager{
 
   reloadConfig(token, data){
     // request in signals
-    console.log("Reloading component config due to signal add/remove")
     RestAPI.get(this.makeURL('/configs/' + data.configID), token).then(response => {
       AppDispatcher.dispatch({
         type: 'configs/edited',

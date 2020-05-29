@@ -21,39 +21,60 @@ import AppDispatcher from '../../common/app-dispatcher';
 
 class WidgetImage extends React.Component {
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      file: undefined,
+    }
+  }
+
   componentDidMount() {
     // Query the image referenced by the widget
     let widgetFile = this.props.widget.customProperties.file;
-    if (widgetFile !== -1 && !this.props.files.find(file => file.id === widgetFile)) {
+    if (widgetFile !== -1 && this.state.file === undefined) {
       AppDispatcher.dispatch({
-        type: 'files/start-load',
+        type: 'files/start-download',
         data: widgetFile,
         token: this.props.token
       });
     }
   }
 
-  render() {
-    const file = this.props.files.find(file => file.id === this.props.widget.customProperties.file);
-    let fileHasData = false;
-    let fileData, objectURL;
-    if (file){
-      fileHasData = file.hasOwnProperty("data");
-      if (fileHasData){
-        //console.log("File data: ", file.data);
+  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
 
-        fileData = new Blob([file.data],  {type: file.type});
-        objectURL = window.URL.createObjectURL(fileData);
-        console.log("Image created new file", fileData, "and objectID", objectURL)
+    let file = this.props.files.find(file => file.id === parseInt(this.props.widget.customProperties.file, 10));
+
+    if (file !== undefined) {
+      if (this.state.file === undefined || (this.state.file.id !== file.id)) {
+
+        AppDispatcher.dispatch({
+          type: 'files/start-download',
+          data: file.id,
+          token: this.props.token
+        });
+        
+        this.setState({ file: file })
       }
     }
 
-    console.log("Image: has data:", fileHasData);
+  }
+
+  imageError(e){
+    console.error("Image ", this.state.file.name, "cannot be displayed.");
+  }
+
+  render() {
+
+    let objectURL=''
+    if(this.state.file !== undefined && this.state.file.objectURL !== undefined) {
+      objectURL = this.state.file.objectURL
+    }
 
     return (
       <div className="full">
-        {file ? (
-          <img className="full" alt={file.name} src={fileHasData ? objectURL : ''} onDragStart={e => e.preventDefault()} />
+        {objectURL !== '' ? (
+          <img onError={(e) => this.imageError(e)} className="full" alt={this.state.file.name} src={objectURL} onDragStart={e => e.preventDefault()} />
         ) : (
           <img className="full" alt="No file selected." />
         )}

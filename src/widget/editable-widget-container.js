@@ -114,7 +114,7 @@ class EditableWidgetContainer extends React.Component {
       minWidth={widget.minWidth}
       minHeight={widget.minHeight}
       maxWidth ={widget.customProperties.maxWidth || '100%' }
-      lockAspectRatio={Boolean(widget.isLocked)}
+      lockAspectRatio={Boolean(widget.customProperties.lockAspect)}
       bounds={'parent'}
       className={widgetClasses}
       onResizeStart={this.borderWasClicked}

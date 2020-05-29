@@ -70,7 +70,7 @@ class WidgetFactory {
             case 'Value':
                 widget.minWidth = 70;
                 widget.minHeight = 20;
-                widget.width = 150;
+                widget.width = 110;
                 widget.height = 30;
                 widget.customProperties.textSize = 16;
                 widget.name = 'Value';
@@ -122,7 +122,7 @@ class WidgetFactory {
                 widget.width = 200;
                 widget.height = 200;
                 widget.customProperties.lockAspect = true;
-                widget.customProperties.file = 2; // ID of image file, -1 means non selected
+                widget.customProperties.file = -1; // ID of image file, -1 means non selected
                 break;
             case 'Button':
                 widget.minWidth = 100;
@@ -134,6 +134,7 @@ class WidgetFactory {
                 widget.customProperties.on_value = 1;
                 widget.customProperties.off_value = 0;
                 widget.customProperties.toggle = false;
+                widget.customProperties.pressed = false;
                 break;
             case 'NumberInput':
                 widget.minWidth = 150;
@@ -142,6 +143,7 @@ class WidgetFactory {
                 widget.height = 50;
                 widget.customProperties.showUnit = false;
                 widget.customProperties.resizeTopBottomLock = true;
+                widget.customProperties.value = '';
                 break;
             case 'Slider':
                 widget.minWidth = 380;
@@ -154,7 +156,8 @@ class WidgetFactory {
                 widget.customProperties.rangeUseMinMax = true;
                 widget.customProperties.showUnit = true;
                 widget.customProperties.continous_update = false;
-                widget.customProperties.default_value = 0;
+                widget.customProperties.default_value = '0';
+                widget.customProperties.value = '';
                 widget.customProperties.resizeLeftRightLock = false;
                 widget.customProperties.resizeTopBottomLock = true;
 
@@ -185,6 +188,7 @@ class WidgetFactory {
             case 'Topology':
                 widget.width = 600;
                 widget.height = 400;
+                widget.customProperties.file = -1; // ID of file, -1 means non selected
                 break;
 
             default:

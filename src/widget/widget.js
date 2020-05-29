@@ -69,14 +69,12 @@ class Widget extends React.Component {
     // TODO make sure that the signals are only the signals that belong to the scenario at hand
     let signals = SignalStore.getState();
     let icIDs = [];
-    if ( props.data.signalIDs.length > 0){
-      for (let i in props.data.signalIDs.length){
-        let signal = signals.find(s => s.id === props.data.signalIDs[i]);
-        let config = configs.find(m => m.id === signal.configID);
-        icIDs[i] = config.icID;
-      }
-    }
 
+    for (let id of props.data.signalIDs){
+      let signal = signals.find(s => s.id === id);
+      let config = configs.find(m => m.id === signal.configID);
+      icIDs[signal.id] = config.icID;
+    }
 
     return {
       icData: icData,
@@ -88,27 +86,6 @@ class Widget extends React.Component {
 
       sessionToken: LoginStore.getState().token
     };
-  }
-
-  componentDidMount() {
-    if (this.state.sessionToken == null) {
-      return;
-    }
-
-    /*AppDispatcher.dispatch({
-      type: 'files/start-load',
-      token: this.state.sessionToken,
-      param: '?objectID=1&objectType=widget'
-    });*/
-
-    // TODO no not load component congfigs here, since they are loaded via the scenario, pass them as props
-    /*
-    AppDispatcher.dispatch({
-      type: 'configs/start-load',
-      token: this.state.sessionToken,
-      param: '?scenarioID=1' // TODO do not hardcode scenarioID!
-    });
-    */
   }
 
   inputDataChanged(widget, data) {
@@ -132,13 +109,13 @@ class Widget extends React.Component {
     } else if (widget.type === 'Value') {
       return <WidgetValue widget={widget} data={this.state.icData} dummy={this.state.sequence}  signals={this.state.signals} icIDs={this.state.icIDs} />
     } else if (widget.type === 'Plot') {
-      return <WidgetPlot widget={widget} data={this.state.icData} dummy={this.state.sequence}  paused={this.props.paused} />
+      return <WidgetPlot widget={widget} data={this.state.icData} dummy={this.state.sequence}  signals={this.state.signals} icIDs={this.state.icIDs} paused={this.props.paused} />
     } else if (widget.type === 'Table') {
       return <WidgetTable widget={widget} data={this.state.icData} dummy={this.state.sequence} signals={this.state.signals} icIDs={this.state.icIDs}  />
     } else if (widget.type === 'Label') {
       return <WidgetLabel widget={widget} />
     } else if (widget.type === 'PlotTable') {
-      return <WidgetPlotTable widget={widget} data={this.state.icData} dummy={this.state.sequence} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index)} paused={this.props.paused} />
+      return <WidgetPlotTable widget={widget} data={this.state.icData} dummy={this.state.sequence}  signals={this.state.signals} icIDs={this.state.icIDs} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index)} paused={this.props.paused} />
     } else if (widget.type === 'Image') {
       return <WidgetImage widget={widget} files={this.state.files} token={this.state.sessionToken} />
     } else if (widget.type === 'Button') {
@@ -154,7 +131,7 @@ class Widget extends React.Component {
     } else if (widget.type === 'HTML') {
       return <WidgetHTML widget={widget} editing={this.props.editing} />
     } else if (widget.type === 'Topology') {
-      return <WidgetTopology widget={widget} files={this.state.files} />
+      return <WidgetTopology widget={widget} files={this.state.files} token={this.state.sessionToken} />
     }
 
     return null;

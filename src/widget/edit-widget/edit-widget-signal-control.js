@@ -48,7 +48,8 @@ class EditWidgetSignalControl extends Component {
     return (
         <FormGroup controlId="signal">
           <FormLabel>Select signal</FormLabel>
-          <FormControl as="select" placeholder="Select signal" value={this.props.widget.signalIDs[0]} onChange={(e) => this.handleSignalChange(e)}>
+          <FormControl as="select" value={this.props.widget.signalIDs[0] || ""} onChange={(e) => this.handleSignalChange(e)}>
+          <option default>Select signal</option>
             {
               this.props.signals.length === 0 ? (
                 <option disabled value style={{ display: 'none' }}>No signals available.</option>

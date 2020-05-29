@@ -16,10 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-//import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
-
 import Dialog from '../../common/dialogs/dialog';
-
 import CreateControls from './edit-widget-control-creator';
 
 class EditWidgetDialog extends React.Component {
@@ -53,6 +50,7 @@ class EditWidgetDialog extends React.Component {
   }
 
   assignAspectRatio(changeObject, fileId) {
+    fileId = parseInt(fileId, 10)
     // get aspect ratio of file
     const file = this.props.files.find(element => element.id === fileId);
 
@@ -65,12 +63,24 @@ class EditWidgetDialog extends React.Component {
     return changeObject;
   }
 
+  getTextWidth(text, fontSize) {
+    let font = fontSize + "px ariel";
+    let canvas = this.getTextWidth.canvas || (this.getTextWidth.canvas = document.createElement("canvas"));
+    let context = canvas.getContext("2d");
+    context.font = font;
+    let metrics = context.measureText(text);
+    return metrics.width;
+  }
+
   setMaxWidth(changeObject){
     if(changeObject.type === 'Label'){
-      changeObject.customProperties.maxWidth = (changeObject.customProperties.textSize* 0.34) * changeObject.name.length;
+      changeObject.customProperties.maxWidth = Math.ceil(this.getTextWidth(changeObject.name, changeObject.customProperties.textSize));
     }
-    else if (changeObject.type === 'Value'){
-    //  changeObject.customProperties.maxWidth = (changeObject.customProperties.textSize* 0.5) * (changeObject.name.length+13);
+    /*else if (changeObject.type === 'Value'){
+      changeObject.customProperties.maxWidth = Math.ceil(this.getTextWidth(changeObject.name, changeObject.customProperties.textSize));
+    }*/
+    if(this.state.temporal.width > changeObject.customProperties.maxWidth){
+      changeObject.width = changeObject.customProperties.maxWidth;
     }
     return changeObject;
   }
@@ -97,13 +107,13 @@ class EditWidgetDialog extends React.Component {
       // not a customProperty
       customProperty = false;
     }
-    
+
     if (parts[1] === 'lockAspect') {
       //not a customProperty
       customProperty ? changeObject[parts[0]][parts[1]] = e.target.checked : changeObject[e.target.id] = e.target.checked;
 
       // correct image aspect if turned on
-      if (e.target.checked && this.state.temporal.customProperties.file) {
+      if (e.target.checked && (this.state.temporal.customProperties.file !== -1)) {
         changeObject = this.assignAspectRatio(changeObject, this.state.temporal.customProperties.file);
       }
     } else if (e.target.id.includes('file')) {
@@ -111,7 +121,7 @@ class EditWidgetDialog extends React.Component {
       customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value;
 
       // get file and update size (if it's an image)
-      if ('lockAspect' in this.state.temporal && this.state.temporal.lockAspect) {
+      if ((changeObject.customProperties.file !== -1)&&('lockAspect' in this.state.temporal && this.state.temporal.lockAspect)) {
         // TODO this if condition requires changes to work!!!
         changeObject = this.assignAspectRatio(changeObject, e.target.value);
       }
@@ -122,7 +132,7 @@ class EditWidgetDialog extends React.Component {
     }else if(parts[1] === 'orientation'){
       customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value ;
       changeObject = this.setNewLockRestrictions(changeObject);
-    } 
+    }
     else if (e.target.type === 'number') {
       customProperty ?  changeObject[parts[0]][parts[1]] = Number(e.target.value) : changeObject[e.target.id] = Number(e.target.value);
     } else if(e.target.id === 'name'){
@@ -167,7 +177,8 @@ class EditWidgetDialog extends React.Component {
             this.props.sessionToken,
             this.props.files,
             this.props.signals,
-            (e) => this.handleChange(e));
+            (e) => this.handleChange(e),
+            (f,i) => this.props.onUpload(f,i));
     }
 
     return (

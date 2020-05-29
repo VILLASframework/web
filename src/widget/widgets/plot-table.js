@@ -16,123 +16,80 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-import classNames from 'classnames';
-import { FormGroup, FormCheck } from 'react-bootstrap';
-
+import { FormGroup } from 'react-bootstrap';
 import Plot from '../widget-plot/plot';
 import PlotLegend from '../widget-plot/plot-legend';
 
 class WidgetPlotTable extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      preselectedSignals: [],
-      signals: []
+      signals: [],
+      data: []
     };
   }
 
-  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-    if (this.props.config == null) {
-      return;
-    }
+  static getDerivedStateFromProps(props, state){
+    let intersection = []
+    let data = [];
+    let signalID, sig;
+    for (signalID of props.widget.signalIDs) {
+      for (sig of props.signals) {
+        if (signalID === sig.id) {
+          intersection.push(sig);
 
-    // Update internal selected signals state with props (different array objects)
-    if (prevProps.widget.customProperties.signals !== this.props.widget.customProperties.signals) {
-      this.setState( {signals: this.props.widget.customProperties.signals});
-    }
+          // sig is a selected signal, get data
+          // determine ID of infrastructure component related to signal (via config)
+          let icID = props.icIDs[sig.id]
 
-    // Identify if there was a change in the preselected signals
-    if (JSON.stringify(prevProps.widget.customProperties.preselectedSignals) !== JSON.stringify(this.props.widget.customProperties.preselectedSignals)
-      || this.state.preselectedSignals.length === 0) {
-      // Update the currently selected signals by intersecting with the preselected signalsWidget
-      // Do the same with the plot values
-      var intersection = this.computeIntersection(this.props.widget.customProperties.preselectedSignals, this.props.widget.customProperties.signals);
-      this.setState({ signals: intersection });
-
-      this.updatePreselectedSignalsState(this.props);
-    }
-  }
-
-  // Perform the intersection of the lists, alternatively could be done with Sets ensuring unique values
-  computeIntersection(preselectedSignals, selectedSignals) {
-    return preselectedSignals.filter( s => selectedSignals.includes(s));
-  }
-
-  updatePreselectedSignalsState(props) {
-    // Create checkboxes using the signal indices from component config
-    if(props.config.outputMapping){
-    const preselectedSignals = props.config.outputMapping.reduce(
-      // Loop through component config signals
-      (accum, signal, signal_index) => {
-        // Append them if they belong to the current selected type
-        if (props.widget.customProperties.preselectedSignals.indexOf(signal_index) > -1) {
-            accum.push(
-              {
-                index: signal_index,
-                name: signal.name,
-                type: signal.type
+          // distinguish between input and output signals
+          if (sig.direction === "out") {
+            if (props.data[icID] != null && props.data[icID].output != null && props.data[icID].output.values != null) {
+              if (props.data[icID].output.values[sig.index-1] !== undefined) {
+                data.push(props.data[icID].output.values[sig.index-1]);
               }
-            )
+            }
+          } else if (sig.direction === "in") {
+            if (props.data[icID] != null && props.data[icID].input != null && props.data[icID].input.values != null) {
+              if (props.data[icID].input.values[sig.index-1] !== undefined) {
+                data.push(props.data[icID].input.values[sig.index-1]);
+              }
+            }
           }
-          return accum;
-        }, []);
+        } // sig is selected signal
+      } // loop over props.signals
+    } // loop over selected signals
 
-    this.setState({ preselectedSignals });
-      }
+    return {signals: intersection, data: data}
   }
 
-  updateSignalSelection(signal_index, checked) {
-    // Update the selected signals and propagate to parent component
-    var new_widget = Object.assign({}, this.props.widget, {
-      signals: checked? this.state.signals.concat(signal_index) : this.state.signals.filter( (idx) => idx !== signal_index )
-    });
-    this.props.onWidgetChange(new_widget);
-  }
+  // updateSignalSelection(signal, checked) {
+  //   // Update the selected signals and propagate to parent component
+  //   var new_widget = Object.assign({}, this.props.widget, {
+  //     checkedSignals: checked ? this.state.signals.concat(signal) : this.state.signals.filter((idx) => idx !== signal)
+  //   });
+  //   this.props.onWidgetChange(new_widget);
+  // }
 
   render() {
     let checkBoxes = [];
-    let icData = [];
-    let legendSignals = [];
-    // Data passed to plot
-    if (this.props.config) {
-
-    const ic = this.props.config.icID;
-
-    if (this.props.data[ic] != null && this.props.data[ic].output != null && this.props.data[ic].output.values != null) {
-      icData = this.props.data[ic].output.values.filter((values, index) => (
-        this.props.widget.customProperties.signals.findIndex(value => value === index) !== -1
-      ));
-    }
-
-    if (this.state.preselectedSignals && this.state.preselectedSignals.length > 0) {
-      // Create checkboxes using the signal indices from component config
-      checkBoxes = this.state.preselectedSignals.map( (signal) => {
-        var checked = this.state.signals.indexOf(signal.index) > -1;
-        var chkBxClasses = classNames({
-          'btn': true,
-          'btn-default': true,
-          'active': checked
-        });
-        return <FormCheck key={signal.index} className={chkBxClasses} checked={checked} disabled={ this.props.editing } onChange={(e) => this.updateSignalSelection(signal.index, e.target.checked) } > { signal.name } </FormCheck>
-      });
-    }
-
-    // Prepare an array with the signals to show in the legend
-    legendSignals = this.state.preselectedSignals.reduce( (accum, signal, i) => {
-      if (this.state.signals.includes(signal.index)) {
-        accum.push({
-          index: signal.index,
-          name: signal.name,
-          type: signal.type
-        });
-      }
-      return accum;
-    }, []);}
 
     let showLegend = false;
-    if(legendSignals !== []){
+    if (this.state.signals.length > 0) {
+
       showLegend = true;
+
+      // Create checkboxes using the signal indices from component config
+      // checkBoxes = this.state.signals.map((signal) => {
+      //   let checked = this.state.signals.indexOf(signal) > -1;
+      //   let chkBxClasses = classNames({
+      //     'btn': true,
+      //     'btn-default': true,
+      //     'active': checked
+      //   });
+      //   return <FormCheck key={signal.index} className={chkBxClasses} checked={checked} disabled={this.props.editing}
+      //                     onChange={(e) => this.updateSignalSelection(signal, e.target.checked)}> {signal.name} </FormCheck>
+      // });
     }
 
     return (
@@ -140,17 +97,17 @@ class WidgetPlotTable extends Component {
         <div className="content">
           <div className="table-plot-row">
             <div className="widget-table">
-              { checkBoxes.length > 0 ? (
+              {checkBoxes.length > 0 ? (
                 <FormGroup className="btn-group-vertical">
-                  { checkBoxes }
+                  {checkBoxes}
                 </FormGroup>
-                ) : ( <small>No signal has been pre-selected.</small> )
+              ) : (<small>Use edit menu to change selected signals.</small>)
               }
             </div>
 
             <div className="widget-plot">
               <Plot
-                data={icData}
+                data={this.state.data}
                 time={this.props.widget.customProperties.time}
                 width={this.props.widget.width - 100}
                 height={this.props.widget.height - 55}
@@ -162,13 +119,12 @@ class WidgetPlotTable extends Component {
               />
             </div>
           </div>
-          {showLegend? (
-          <PlotLegend signals={legendSignals} /> ) : (<div></div>)
+          {showLegend ? (
+            <PlotLegend signals={this.state.signals}/>) : (<div></div>)
           }
         </div>
       </div>
     );
   }
 }
-
 export default WidgetPlotTable;

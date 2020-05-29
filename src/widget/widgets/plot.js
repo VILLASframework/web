@@ -26,49 +26,44 @@ class WidgetPlot extends React.Component {
 
     this.state = {
       data: [],
-      legend: []
+      signals: []
     };
   }
 
 
   static getDerivedStateFromProps(props, state){
 
-    if (props.config == null) {
-      return{
-        data: [],
-        legend: [],
-      };
-    }
+    let intersection = []
+    let data = [];
+    let signalID, sig;
+    for (signalID of props.widget.signalIDs) {
+      for (sig of props.signals) {
+        if (signalID === sig.id) {
+          intersection.push(sig);
 
-    const ic = props.config.icID;
+          // sig is a selected signal, get data
+          // determine ID of infrastructure component related to signal (via config)
+          let icID = props.icIDs[sig.id]
 
-    // Proceed if a config and a IC are available
-    if (ic && props.data[ic] != null && props.data[ic] != null && props.data[ic].output != null && props.data[ic].output.values != null) {
-      const chosenSignals = props.widget.customProperties.signals;
+          // distinguish between input and output signals
+          if (sig.direction === "out") {
+            if (props.data[icID] != null && props.data[icID].output != null && props.data[icID].output.values != null) {
+              if (props.data[icID].output.values[sig.index-1] !== undefined) {
+                data.push(props.data[icID].output.values[sig.index-1]);
+              }
+            }
+          } else if (sig.direction === "in") {
+            if (props.data[icID] != null && props.data[icID].input != null && props.data[icID].input.values != null) {
+              if (props.data[icID].input.values[sig.index-1] !== undefined) {
+                data.push(props.data[icID].input.values[sig.index-1]);
+              }
+            }
+          }
+        } // sig is selected signal
+      } // loop over props.signals
+    } // loop over selected signals
 
-      const data = props.data[ic].output.values.filter((values, index) => (
-        props.widget.customProperties.signals.findIndex(value => value === index) !== -1
-      ));
-
-      // Query the signals that will be displayed in the legend
-      const legend = props.config.outputMapping.reduce( (accum, signal, signal_index) => {
-        if (chosenSignals.includes(signal_index)) {
-          accum.push({ index: signal_index, name: signal.name, type: signal.unit });
-        }
-
-        return accum;
-      }, []);
-
-      return{
-        data: data,
-        legend: legend,
-      };
-    } else {
-      return{
-        data: [],
-        legend: [],
-      };
-    }
+    return {signals: intersection, data: data}
 
   }
 
@@ -87,7 +82,7 @@ class WidgetPlot extends React.Component {
           yLabel={this.props.widget.customProperties.ylabel}
         />
       </div>
-      <PlotLegend signals={this.state.legend} />
+      <PlotLegend signals={this.state.signals} />
     </div>;
   }
 }

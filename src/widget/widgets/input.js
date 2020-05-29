@@ -31,14 +31,27 @@ class WidgetInput extends Component {
 
   static getDerivedStateFromProps(props, state){
 
-    if(props.widget.signalIDs.length === 0){
-      return null;
-    }
-
     let returnState = {};
 
+    if(props.widget.customProperties.value !== ''){
+      returnState["value"] = props.widget.customProperties.value;
+    }
+
+    if(props.widget.signalIDs.length === 0){
+      if (props.widget.customProperties.default_value && state.value === undefined && props.widget.customProperties.value === '') {
+        returnState["value"] = props.widget.customProperties.default_value;
+      } else { // if no default available
+        if (returnState !== {}){
+          return returnState;
+        }
+        else{
+          return null;
+        }
+      }
+    }
+
     // Update value
-    if (props.widget.customProperties.default_value && this.state.value === undefined) {
+    if (props.widget.customProperties.default_value && this.state.value === undefined && props.widget.customProperties.value === '') {
       returnState["value"] = props.widget.customProperties.default_value;
     }
 
@@ -59,6 +72,7 @@ class WidgetInput extends Component {
 
   valueIsChanging(newValue) {
     this.setState({ value: newValue });
+    this.props.widget.customProperties.value = newValue;
   }
 
   valueChanged(newValue) {

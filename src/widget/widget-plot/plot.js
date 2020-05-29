@@ -80,7 +80,7 @@ class Plot extends React.Component {
     }
 
     // check if data is invalid
-    if (props.data == null || props.data.length === 0 || props.data[0].length === 0) {
+    if (props.data == null || props.data.length === 0) {
       // create empty plot axes
       let xScale;
       let yScale;
@@ -116,11 +116,14 @@ class Plot extends React.Component {
 
     // only show data in requested time
     let data = props.data;
+    let icDataset = data.find(function(element) {
+      return element !== undefined;
+    })
 
-    const firstTimestamp = data[0][data[0].length - 1].x - (props.time + 1) * 1000;
-    if (data[0][0].x < firstTimestamp) {
+    const firstTimestamp = icDataset[icDataset.length - 1].x - (props.time + 1) * 1000;
+    if (icDataset[0].x < firstTimestamp) {
       // only show data in range (+100 ms)
-      const index = data[0].findIndex(value => value.x >= firstTimestamp - 100);
+      const index = icDataset.findIndex(value => value.x >= firstTimestamp - 100);
       data = data.map(values => values.slice(index));
     }
 
@@ -177,7 +180,11 @@ class Plot extends React.Component {
     if (this.props.yUseMinMax) {
       yRange = [this.props.yMin, this.props.yMax];
     } else if (this.props.data.length > 0) {
-      yRange = [this.props.data[0][0].y, this.props.data[0][0].y];
+      let icDataset = this.props.data.find(function(element) {
+        return element !== undefined;
+      })
+
+      yRange = [icDataset[0].y, icDataset[0].y];
 
       this.props.data.forEach(values => {
         const range = extent(values, p => p.y);

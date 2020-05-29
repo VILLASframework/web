@@ -66,8 +66,6 @@ class WidgetLamp extends Component {
 
     let style = {
       backgroundColor: color,
-      width:  this.props.widget.width,
-      height: this.props.widget.height
     }
 
     return (

@@ -52,15 +52,6 @@ class ImportScenarioDialog extends React.Component {
   }
 
   handleChange(e, index) {
-    /*if (e.target.id === 'icID') {
-      const configs = this.state.configs;
-      configs[index].icID = JSON.parse(e.target.value);
-
-      this.setState({ configs: configs });
-
-      return;
-    }*/
-
     this.setState({ [e.target.id]: e.target.value });
 
     // check all controls

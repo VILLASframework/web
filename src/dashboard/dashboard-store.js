@@ -18,4 +18,40 @@
 import ArrayStore from '../common/array-store';
 import DashboardsDataManager from './dashboards-data-manager';
 
-export default new ArrayStore('dashboards', DashboardsDataManager);
+class DashboardStore extends  ArrayStore {
+  constructor() {
+    super('dashboards', DashboardsDataManager);
+  }
+
+  reduce(state, action) {
+
+    switch (action.type) {
+      case 'dashboards/start-add':
+
+        // Check if this is a recursive dashboard import or not
+        if (action.data.hasOwnProperty("widgets")) {
+          // import
+          let subObjects = []
+          let widgets = {}
+          widgets["widgets"] = action.data.widgets
+          subObjects.push(widgets)
+          delete action.data.widgets; // remove widgets from dashboard object
+
+          // action.data should now contain the dashboard and no sub-objects
+          // sub-objects are treated in add method of RestDataManager
+          this.dataManager.add(action.data, action.token,action.param, subObjects);
+          return state
+
+        } else {
+          // no import
+          return super.reduce(state, action);
+        }
+
+      default:
+        return super.reduce(state, action);
+    }
+  }
+
+}
+
+export default new DashboardStore();

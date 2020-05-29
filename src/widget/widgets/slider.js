@@ -42,19 +42,28 @@ class WidgetSlider extends Component {
   static getDerivedStateFromProps(props, state){
     let returnState = {};
 
+    if(props.widget.customProperties.value !== ''){
+      returnState["value"] = props.widget.customProperties.value;
+    }
+
     if(props.widget.signalIDs.length === 0){
 
       // set value to default
-      if (props.widget.customProperties.default_value && state.value === undefined) {
+      if (props.widget.customProperties.default_value && state.value === undefined && props.widget.customProperties.value === '') {
         returnState["value"] = props.widget.customProperties.default_value;
       } else { // if no default available
-        return null;
+        if (returnState !== {}){
+          return returnState;
+        }
+        else{
+          return null;
+        }
       }
 
     }
 
     // Update value
-    if (props.widget.customProperties.default_value && state.value === undefined) {
+    if (props.widget.customProperties.default_value && state.value === undefined && props.widget.customProperties.value === '') {
       returnState["value"] = props.widget.customProperties.default_value;
     }
   
@@ -96,6 +105,7 @@ class WidgetSlider extends Component {
   }
 
   valueIsChanging(newValue) {
+    this.props.widget.customProperties.value = newValue;
     if (this.props.widget.continous_update)
       this.valueChanged(newValue);
 
