@@ -17,7 +17,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button } from 'react-bootstrap';
+import { Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 
 import ScenarioStore from './scenario-store';
@@ -42,12 +42,14 @@ import EditConfigDialog from "../componentconfig/edit-config";
 import EditSignalMapping from "../signal/edit-signal-mapping";
 import FileStore from "../file/file-store"
 import WidgetStore from "../widget/widget-store";
+import UsersStore from '../user/users-store';
+
 
 
 class Scenario extends React.Component {
 
   static getStores() {
-    return [ ScenarioStore, ConfigStore, DashboardStore, ICStore, LoginStore, SignalStore, FileStore, WidgetStore];
+    return [ ScenarioStore, ConfigStore, DashboardStore, ICStore, LoginStore, SignalStore, FileStore, WidgetStore, UsersStore];
   }
 
   static calculateState(prevState, props) {
@@ -64,6 +66,12 @@ class Scenario extends React.Component {
     }
     
     let users = LoginStore.getState().scenarioUsers;
+    let allUsers = UsersStore.getState();
+    let allUserNames = [];
+    allUsers.forEach((user) => {
+      allUserNames.push(user.username);
+    });
+
     // obtain all dashboards of a scenario
     let dashboards = DashboardStore.getState().filter(dashb => dashb.scenarioID === parseInt(props.match.params.scenario, 10));
 
@@ -80,6 +88,8 @@ class Scenario extends React.Component {
     return {
       scenario,
       users,
+      allUsers,
+      allUserNames,
       sessionToken,
       configs,
       dashboards,
@@ -101,6 +111,9 @@ class Scenario extends React.Component {
       deleteDashboardModal: false,
       importDashboardModal: false,
       modalDashboardData: {},
+
+      addUserModal: false,
+      deleteUserName: '',
     }
   }
 
@@ -119,8 +132,22 @@ class Scenario extends React.Component {
       type: 'ics/start-load',
       token: this.state.sessionToken
     });
+
+    // load users
+    AppDispatcher.dispatch({
+      type: 'users/start-load',
+      token: this.state.sessionToken
+    });
   }
 
+  // add User to Scenario
+  addUser() {
+
+  }
+
+  closeDeleteUserModal() {
+    ScenarioStore.deleteUser(this.state.sessionToken, this.state.scenario.id, this.state.deleteUserName);
+  }
 
   /* ##############################################
   * Component Configuration modification methods
@@ -418,6 +445,8 @@ class Scenario extends React.Component {
 
     return <div className='section'>
       <h1>{this.state.scenario.name}</h1>
+
+      {/*Scenario Users table*/}
       <h2>Users</h2>
       <Table data={this.state.users}>
         <TableColumn title='Name' dataKey='username' link='/users/' linkKey='id' />
@@ -426,9 +455,25 @@ class Scenario extends React.Component {
           title=''
           width='200'
           deleteButton
-          onDelete={(index) => this.setState({ deleteUserModal: true, modalUserData: this.state.users[index], modalUserIndex: index })}
+          onDelete={(index) => this.setState({ deleteUserModal: true, deleteUserName: this.state.users[index].username, modalUserIndex: index })}
           />
       </Table>
+
+      <div style={{ float: 'right' }}>
+        <DropdownButton
+          title="Add User"
+          onSelect={() => this.addUser()} 
+        //  style={buttonStyle}><Icon icon="plus" /> User
+        >
+          {this.state.allUserNames.map((opt,i) => (
+            <Dropdown.Item key={i} eventKey={i}>
+              {opt}
+            </Dropdown.Item>
+          ))}
+          </DropdownButton>
+      </div>
+
+      <DeleteDialog title="user" name={this.state.deleteUserName} show={this.state.deleteUserModal} onClose={(c) => this.closeDeleteUserModal(c)} />
 
       {/*Component Configurations table*/}
       <h2>Component Configurations</h2>

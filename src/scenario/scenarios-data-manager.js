@@ -41,6 +41,13 @@ class ScenariosDataManager extends RestDataManager {
     })
   }
 
+  deleteUser(token, id, username) {
+    RestAPI.delete(this.requestURL('remove/update', 'user', 'username='+username), token).then(response => {
+
+    })
+    //super.remove(user, token, "scenarioID="+id);
+  }
+
   onScenariosLoad(data, token){
 
     if (!Array.isArray(data)) {

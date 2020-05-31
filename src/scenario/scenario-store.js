@@ -29,6 +29,10 @@ class ScenarioStore extends ArrayStore{
     ScenariosDataManager.getUsers(token, id);
   }
 
+  deleteUser(token, id, username) {
+    ScenariosDataManager.deleteUser(token, id, username);
+  }
+
   reduce(state, action) {
     switch (action.type) {
 
