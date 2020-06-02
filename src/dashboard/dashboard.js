@@ -22,6 +22,7 @@ import classNames from 'classnames';
 
 import Widget from '../widget/widget';
 import EditWidget from '../widget/edit-widget/edit-widget';
+import EditFiles from '../file/edit-files'
 import WidgetContextMenu from '../widget/widget-context-menu';
 import WidgetToolbox from '../widget/widget-toolbox';
 import WidgetArea from '../widget/widget-area';
@@ -121,6 +122,8 @@ class Dashboard extends Component {
       paused: prevState.paused || false,
 
       editModal:  false,
+      filesEditModal: false,
+      filesEditSaveState: prevState.filesEditSaveState || [],
       modalData:  null,
       modalIndex:  null,
       widgetChangeData: [],
@@ -261,6 +264,63 @@ class Dashboard extends Component {
   editWidget(widget, index){
     this.setState({ editModal: true, modalData: widget, modalIndex: index });
   };
+
+  startEditFiles(){
+    let tempFiles = [];
+    this.state.files.forEach( file => {
+      tempFiles.push({
+        id: file.id,
+        name: file.name
+      });
+    })
+    this.setState({filesEditModal: true, filesEditSaveState: tempFiles});
+  }
+
+  closeEditFiles(files,deleteData,addData){
+
+    if(files || deleteData || addData){
+
+      if(addData.length > 0){
+        let formData = new FormData();
+        addData.forEach( file => {
+          delete file.id;
+          formData.append("file", file);
+        });
+        AppDispatcher.dispatch({
+          type: 'files/start-upload',
+          data: formData,
+          token: this.state.sessionToken,
+          scenarioID: this.state.dashboard.scenarioID,
+        });
+      }
+
+      if(deleteData.length > 0){
+        deleteData.forEach( file => {
+          AppDispatcher.dispatch({
+            type: 'files/start-remove',
+            data: file,
+            token: this.state.sessionToken
+          });
+        });
+      }
+    }
+    let formData = new FormData();
+    files.forEach( file => {
+      if(file.type === "application/octet-stream"){
+        let originalFile = this.state.filesEditSaveState.find(element => parseInt(element.id,10) === parseInt(file.id,10));
+        if(originalFile.name !== file.name){
+          formData.append("file", file);
+          AppDispatcher.dispatch({
+            type: 'files/start-edit',
+            token: this.state.sessionToken,
+            data: formData
+          });
+        }
+      }
+    })
+
+    this.setState({ filesEditModal: false, filesEditSaveState: [] });
+  }
 
   uploadFile(data,widget){
     AppDispatcher.dispatch({
@@ -416,6 +476,7 @@ class Dashboard extends Component {
           onFullscreen={this.props.toggleFullscreen}
           onPause={this.pauseData.bind(this)}
           onUnpause={this.unpauseData.bind(this)}
+          onEditFiles = {this.startEditFiles.bind(this)}
         />
       </div>
 
@@ -469,6 +530,14 @@ class Dashboard extends Component {
           onClose={this.closeEdit.bind(this)}
           onUpload = {this.uploadFile.bind(this)}
           widget={this.state.modalData}
+          signals={this.state.signals}
+          files={this.state.files}
+        />
+
+        <EditFiles
+          sessionToken={this.state.sessionToken}
+          show={this.state.filesEditModal}
+          onClose={this.closeEditFiles.bind(this)}
           signals={this.state.signals}
           files={this.state.files}
         />
