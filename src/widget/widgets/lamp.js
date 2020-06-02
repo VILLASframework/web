@@ -25,7 +25,6 @@ class WidgetLamp extends Component {
 
     this.state = {
       value: '',
-      threshold: 0
     };
   }
 
@@ -34,28 +33,31 @@ class WidgetLamp extends Component {
       return{ value: ''};
     }
 
-    const ic = props.icIDs[0];
+    // get the signal with the selected signal ID
     let signalID = props.widget.signalIDs[0];
-    let widgetSignal = props.signals.find(sig => sig.id === signalID);
+    let signal = props.signals.filter(s => s.id === signalID)
+    // determine ID of infrastructure component related to signal[0] (there is only one signal for a lamp widget)
+    let icID = props.icIDs[signal[0].id];
 
-    // update value
+    // check if data available
     if (props.data == null
-      || props.data[ic] == null
-      || props.data[ic].output == null
-      || props.data[ic].output.values == null) {
+      || props.data[icID] == null
+      || props.data[icID].output == null
+      || props.data[icID].output.values == null) {
       return{value:''};
     }
 
     // check if value has changed
-    const signalData = props.data[ic].output.values[widgetSignal.index];
-    if (signalData != null && state.value !== signalData[signalData.length - 1].y) {
-      return { value: signalData[signalData.length - 1].y };
+    const data = props.data[icID].output.values[signal[0].index-1];
+    if (data != null && Number(state.value) !== data[data.length - 1].y) {
+      return { value: data[data.length - 1].y };
     }
 
     return null;
   }
 
   render() {
+
     let colors = EditWidgetColorControl.ColorPalette;
     let color;
 
