@@ -109,7 +109,7 @@ class ICDataStore extends ReduceStore {
         // update message properties
         state[action.ic].input.timestamp = Date.now();
         state[action.ic].input.sequence++;
-        state[action.ic].input.values[action.signal] = action.data;
+        state[action.ic].input.values[action.signal-1] = action.data;
 
         ICDataDataManager.send(state[action.ic].input, action.ic);
 

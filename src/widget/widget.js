@@ -72,8 +72,12 @@ class Widget extends React.Component {
 
     for (let id of props.data.signalIDs){
       let signal = signals.find(s => s.id === id);
-      let config = configs.find(m => m.id === signal.configID);
-      icIDs[signal.id] = config.icID;
+      if (signal !== undefined) {
+        let config = configs.find(m => m.id === signal.configID);
+        if (config !== undefined){
+          icIDs[signal.id] = config.icID;
+        }
+      }
     }
 
     return {
@@ -90,10 +94,21 @@ class Widget extends React.Component {
 
   inputDataChanged(widget, data) {
     // The following assumes that a widget modifies/ uses exactly one signal
+
+    // get the signal with the selected signal ID
+    let signalID = widget.signalIDs[0];
+    let signal = this.state.signals.filter(s => s.id === signalID)
+    if (signal.length === 0){
+      console.warn("Unable to send signal for signal ID", signalID, ". Signal not found.");
+      return;
+    }
+    // determine ID of infrastructure component related to signal[0]
+    // Remark: there is only one selected signal for an input type widget
+    let icID = this.state.icIDs[signal[0].id];
     AppDispatcher.dispatch({
       type: 'icData/inputChanged',
-      ic: this.state.icIDs[0],
-      signal: this.state.signals[0].index,
+      ic: icID,
+      signal: signal[0].index,
       data
     });
   }
