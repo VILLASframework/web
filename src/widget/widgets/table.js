@@ -27,72 +27,55 @@ class WidgetTable extends Component {
 
     this.state = {
       rows: [],
-      sequence: null,
-      showUnit: false
     };
   }
-
 
   static getDerivedStateFromProps(props, state){
 
-    if(props.widget.signalIDs.length === 0){
-      return{
-        rows: [],
-        sequence: null,
-      };
-    }
+    let rows = [];
+    let signalID, sig;
+    for (signalID of props.widget.signalIDs) {
+      for (sig of props.signals) {
+        if (signalID === sig.id) {
+          // sig is a selected signal, get data
+          // determine ID of infrastructure component related to signal (via config)
+          let icID = props.icIDs[sig.id]
 
+          // distinguish between input and output signals
+          if (sig.direction === "out") {
+            if (props.data[icID] != null && props.data[icID].output != null && props.data[icID].output.values != null) {
+              if (props.data[icID].output.values[sig.index-1] !== undefined) {
+                let data = props.data[icID].output.values[sig.index-1];
+                rows.push({
+                  name: sig.name,
+                  unit: sig.unit,
+                  value: data[data.length - 1].y
+                });
 
-    const ICid = props.icIDs[0];
-    let widgetSignals = props.signals.find(sig => {
-      for (let id of props.widget.signalIDs){
-        if (id === sig.id){
-          return true;
-        }
-      }
-      return false;
-    });
+              }
+            }
+          } else if (sig.direction === "in") {
+            if (props.data[icID] != null && props.data[icID].input != null && props.data[icID].input.values != null) {
+              if (props.data[icID].input.values[sig.index-1] !== undefined) {
+                let data = props.data[icID].input.values[sig.index-1];
+                rows.push({
+                  name: sig.name,
+                  unit: sig.unit,
+                  value: data[data.length - 1].y
+                });
+              }
+            }
+          }
+        } // sig is selected signal
+      } // loop over props.signals
+    } // loop over selected signals
 
-    // check data
-    if (props.data == null
-      || props.data[ICid] == null
-      || props.data[ICid].output == null
-      || props.data[ICid].output.values.length === 0
-      || props.data[ICid].output.values[0].length === 0) {
+    return {rows: rows}
 
-      // clear values
-      return{
-        rows: [],
-        sequence: null,
-        showUnit: false,
-      };
-    }
-
-    // get rows
-    const rows = [];
-
-    props.data[ICid].output.values.forEach((signal, index) => {
-      let s = widgetSignals.find( sig => sig.index === index);
-      // if the signal is used by the widget
-      if (s !== undefined) {
-        // push data of the signal
-        rows.push({
-          name: s.name,
-          unit: s.unit,
-          value: signal[signal.length - 1].y
-        });
-      }
-    });
-
-    return {
-      showUnit: props.showUnit,
-      rows: rows,
-      sequence: props.data[ICid].output.sequence
-    };
   }
 
   render() {
-    
+
     let rows = this.state.rows;
 
     if(rows.length === 0){
