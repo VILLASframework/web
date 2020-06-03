@@ -30,32 +30,41 @@ class WidgetButton extends Component {
 
   onPress(e) {
 
-    if (!this.props.widget.customProperties.toggle) {
+    if (e.button === 0 && !this.props.widget.customProperties.toggle) {
       this.setState({ pressed: true });
       this.valueChanged(this.props.widget.customProperties.on_value);
     }
   }
 
   onRelease(e) {
-    
-    let nextState = false;
-    if (this.props.widget.customProperties.toggle) {
-      nextState = !this.state.pressed;
+
+    if (e.button === 0) {
+      let nextState = false;
+      if (this.props.widget.customProperties.toggle) {
+        nextState = !this.state.pressed;
+      }
+      this.props.widget.customProperties.pressed = nextState;
+      this.setState({pressed: nextState});
+      this.valueChanged(nextState ? this.props.widget.customProperties.on_value : this.props.widget.customProperties.off_value);
     }
-    this.props.widget.customProperties.pressed = nextState;
-    this.setState({ pressed: nextState });
-    this.valueChanged(nextState ? this.props.widget.customProperties.on_value : this.props.widget.customProperties.off_value);
   }
 
   valueChanged(newValue) {
     if (this.props.onInputChanged)
-      this.props.onInputChanged(newValue);
+      this.props.onInputChanged(newValue, 'pressed');
   }
 
   render() {
     return (
       <div className="button-widget full">
-          <Button className="full" active={ this.state.pressed } disabled={ this.props.editing } onMouseDown={ (e) => this.onPress(e) } onMouseUp={ (e) => this.onRelease(e) }>{this.props.widget.name}</Button>
+          <Button
+            className="full"
+            active={ this.state.pressed }
+            disabled={ this.props.editing }
+            onMouseDown={ (e) => this.onPress(e) }
+            onMouseUp={ (e) => this.onRelease(e) }>
+            {this.props.widget.name}
+          </Button>
       </div>
     );
   }
