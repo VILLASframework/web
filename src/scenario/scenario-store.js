@@ -25,12 +25,57 @@ class ScenarioStore extends ArrayStore{
     super('scenarios', ScenariosDataManager);
   }
 
+  // calls to VILLASweb backend
   getUsers(token, id) {
     ScenariosDataManager.getUsers(token, id);
   }
 
+  addUser(token, id, username) {
+    ScenariosDataManager.addUser(token, id, username);
+  }
+
   deleteUser(token, id, username) {
     ScenariosDataManager.deleteUser(token, id, username);
+  }
+
+  /* store functions, called when calls to backend have returned */
+  // save users after they are loaded ('getUsers' call)
+  saveUsers(state, action) {
+    let scenarioID = action.scenarioID;
+    state.forEach((element, index, array) => {
+      if (element.id === scenarioID) {
+        array[index]["users"] = action.users;
+        this.__emitChange();
+        return state;
+      }
+    })
+  }
+
+  // save new user after it was added to scenario ('addUser' call)
+  saveUser(state, action) {
+    let scenarioID = action.scenarioID;
+    state.forEach((element, index, array) => {
+      if (element.id === scenarioID) {
+        array[index]["users"].push(action.user);
+        this.__emitChange();
+        return state;
+      }
+    })
+  }
+
+  // remove user from ScenarioStore
+  removeUser(state, action) {
+    let scenarioID = action.scenarioID;
+    state.forEach((element, index, array) => {
+      if (element.id === scenarioID) {
+        const userindex = array[index]["users"].indexOf(action.user);
+        if (index > -1) {
+          array[index]["users"].splice(userindex, 1);
+        }
+        this.__emitChange();
+        return state;
+      }
+    })
   }
 
   reduce(state, action) {
@@ -66,7 +111,14 @@ class ScenarioStore extends ArrayStore{
           return super.reduce(state, action);
         }
 
-//      case 'scenarios/users/start-load':
+      case 'scenarios/users':
+        return this.saveUsers(state, action);
+
+      case 'scenarios/user-added':
+        return this.saveUser(state, action);
+
+      case 'scenarios/user-deleted':
+        return this.removeUser(state, action);
 
       default:
         return super.reduce(state, action);

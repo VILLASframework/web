@@ -56,6 +56,7 @@ class Scenario extends React.Component {
     // get selected scenario
     const sessionToken = LoginStore.getState().token;
     
+    let users = null;
     const scenario = ScenarioStore.getState().find(s => s.id === parseInt(props.match.params.scenario, 10));
     if (scenario == null) {
       AppDispatcher.dispatch({
@@ -64,8 +65,10 @@ class Scenario extends React.Component {
         token: sessionToken
       });
     }
+    else {
+      users = scenario.users;
+    }
     
-    let users = LoginStore.getState().scenarioUsers;
     let allUsers = UsersStore.getState();
     let allUserNames = [];
     allUsers.forEach((user) => {
@@ -114,6 +117,7 @@ class Scenario extends React.Component {
 
       addUserModal: false,
       deleteUserName: '',
+      deleteUserModal: false,
     }
   }
 
@@ -141,11 +145,13 @@ class Scenario extends React.Component {
   }
 
   // add User to Scenario
-  addUser() {
-
+  addUser(userindex) {
+    let username = this.state.allUserNames[userindex];
+    ScenarioStore.addUser(this.state.sessionToken, this.state.scenario.id, username);
   }
 
   closeDeleteUserModal() {
+    this.setState({deleteUserModal: false});
     ScenarioStore.deleteUser(this.state.sessionToken, this.state.scenario.id, this.state.deleteUserName);
   }
 
@@ -462,8 +468,7 @@ class Scenario extends React.Component {
       <div style={{ float: 'right' }}>
         <DropdownButton
           title="Add User"
-          onSelect={() => this.addUser()} 
-        //  style={buttonStyle}><Icon icon="plus" /> User
+          onSelect={(index) => this.addUser(index)} 
         >
           {this.state.allUserNames.map((opt,i) => (
             <Dropdown.Item key={i} eventKey={i}>
