@@ -80,30 +80,33 @@ class WidgetGauge extends Component {
   static getDerivedStateFromProps(props, state){
 
     if(props.widget.signalIDs.length === 0){
-      return null;
+      return{ value: 0};
     }
+
+    // get the signal with the selected signal ID
+    let signalID = props.widget.signalIDs[0];
+    let signal = props.signals.filter(s => s.id === signalID)
+    // determine ID of infrastructure component related to signal[0] (there is only one signal for a lamp widget)
+    let icID = props.icIDs[signal[0].id];
+
     let returnState = {}
 
     returnState["useColorZones"] = props.widget.customProperties.colorZones;
 
     // Update unit (assuming there is exactly one signal for this widget)
-    let signalID = props.widget.signalIDs[0];
-    let widgetSignal = props.signals.find(sig => sig.id === signalID);
-    if(widgetSignal !== undefined){
-      returnState["unit"] = widgetSignal.unit;
+    if(signal !== undefined){
+      returnState["unit"] = signal[0].unit;
     }
 
-    const ICid = props.icIDs[0];
-
     // update value
+
+    // check if data available
     if (props.data == null
-      || props.data[ICid] == null
-      || props.data[ICid].output == null
-      || props.data[ICid].output.values == null
-      || props.data[ICid].output.values.length === 0
-      || props.data[ICid].output.values[0].length === 0) {
-     returnState["value"] = 0;
-     return returnState;
+      || props.data[icID] == null
+      || props.data[icID].output == null
+      || props.data[icID].output.values == null) {
+      returnState["value"] = 0;
+      return returnState;
     }
 
     // memorize if min or max value is updated
@@ -112,14 +115,14 @@ class WidgetGauge extends Component {
     let updateMaxValue = false;
 
     // check if value has changed
-    const signalData = props.data[ICid].output.values[widgetSignal.index];
+    const data = props.data[icID].output.values[signal[0].index-1];
     // Take just 3 decimal positions
     // Note: Favor this method over Number.toFixed(n) in order to avoid a type conversion, since it returns a String
-    if (signalData != null) {
-      const value = Math.round(signalData[signalData.length - 1].y * 1e3) / 1e3;
+    if (data != null) {
+      const value = Math.round(data[data.length - 1].y * 1e3) / 1e3;
       let minValue = null;
       let maxValue = null;
-      
+
       if ((state.value !== value && value != null) || props.widget.customProperties.valueUseMinMax || state.useMinMaxChange) {
         //value has changed
         updateValue = true;
@@ -129,7 +132,7 @@ class WidgetGauge extends Component {
 
         minValue = state.minValue;
         maxValue = state.maxValue;
-        
+
         if (minValue == null || state.useMinMaxChange) {
           minValue = value - 0.5;
           updateLabels = true;
@@ -215,7 +218,7 @@ class WidgetGauge extends Component {
     if (zones != null) {
       // adapt range 0-100 to actual min-max
       const step = (maxValue - minValue) / 100;
-    
+
       zones = zones.map(zone => {
         return Object.assign({}, zone, { min: (zone.min * step) + +minValue, max: zone.max * step + +minValue, strokeStyle: '#' + zone.strokeStyle });
       });
