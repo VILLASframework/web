@@ -75,7 +75,7 @@ class WidgetGauge extends Component {
   static getDerivedStateFromProps(props, state){
 
     if(props.widget.signalIDs.length === 0){
-      return{ value: 0};
+      return{ value: 0, minValue: 0, maxValue: 10};
     }
 
     // get the signal with the selected signal ID
@@ -103,8 +103,7 @@ class WidgetGauge extends Component {
       || props.data[icID] == null
       || props.data[icID].output == null
       || props.data[icID].output.values == null) {
-      returnState["value"] = 0;
-      return returnState;
+       return{ value: 0, minValue: 0, maxValue: 10};
     }
 
     // memorize if min or max value is updated
@@ -202,7 +201,7 @@ class WidgetGauge extends Component {
     for (let i = 0; i < labelCount; i++) {
       labels.push(minValue + labelStep * i);
     }
-
+    
     // calculate zones
     let zones = this.props.widget.customProperties.colorZones ? this.props.widget.customProperties.zones : null;
     if (zones != null) {
@@ -214,6 +213,7 @@ class WidgetGauge extends Component {
       });
     }
 
+    if(this.state.signalID !== ''){
     this.gauge.setOptions({
       staticLabels: {
         font: '10px "Helvetica Neue"',
@@ -223,6 +223,7 @@ class WidgetGauge extends Component {
       },
       staticZones: zones
     });
+  }
   }
 
   computeGaugeOptions(widget) {
