@@ -339,7 +339,7 @@ class Dashboard extends Component {
       AppDispatcher.dispatch({
         type: 'widgets/start-load',
         token: this.state.sessionToken,
-        param: '?dashboardID=1'
+        param: '?dashboardID=' + this.state.dashboard.id
       });
 
       this.setState({ editModal: false });
@@ -433,7 +433,7 @@ class Dashboard extends Component {
     AppDispatcher.dispatch({
       type: 'widgets/start-load',
       token: this.state.sessionToken,
-      param: '?dashboardID=1'
+      param: '?dashboardID=' + this.state.dashboard.id
     });
     this.setState({ editing: false, widgetChangeData: [], widgetAddData: []});
 

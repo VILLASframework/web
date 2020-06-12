@@ -29,9 +29,10 @@ class WidgetGauge extends Component {
     this.state = {
       value: 0,
       unit: '',
+      signalID: '',
       minValue: null,
       maxValue: null,
-      useColorZones: false,
+      colorZones: [],
       useMinMax: false,
       useMinMaxChange: false,
     };
@@ -48,13 +49,7 @@ class WidgetGauge extends Component {
   }
 
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-    if(prevState.minValue !== this.state.minValue){
-      this.gauge.setMinValue(this.state.minValue);
-    }
-    if(prevState.maxValue !== this.state.maxValue){
-      this.gauge.maxValue = this.state.maxValue
-    }
-
+   
     // update gauge's value
     if(prevState.value !== this.state.value){
       this.gauge.set(this.state.value)
@@ -65,8 +60,8 @@ class WidgetGauge extends Component {
     }
 
     // update labels
-    if(prevState.minValue !== this.state.minValue || prevState.maxValue !== this.state.maxValue || prevState.useColorZones !== this.state.useColorZones
-      || prevState.useMinMax !== this.state.useMinMax){
+    if(prevState.minValue !== this.state.minValue || prevState.maxValue !== this.state.maxValue || prevState.colorZones !== this.state.colorZones
+      || prevState.useMinMax !== this.state.useMinMax || prevState.signalID !== this.state.signalID){
         this.gauge = new Gauge(this.gaugeCanvas).setOptions(this.computeGaugeOptions(this.props.widget));
         this.gauge.maxValue = this.state.maxValue;
         this.gauge.setMinValue(this.state.minValue);
@@ -91,8 +86,11 @@ class WidgetGauge extends Component {
 
     let returnState = {}
 
-    returnState["useColorZones"] = props.widget.customProperties.colorZones;
+    returnState["colorZones"] = props.widget.customProperties.zones;
 
+    if(signalID){
+    returnState["signalID"] = signalID;
+    }
     // Update unit (assuming there is exactly one signal for this widget)
     if(signal !== undefined){
       returnState["unit"] = signal[0].unit;
@@ -133,13 +131,13 @@ class WidgetGauge extends Component {
         minValue = state.minValue;
         maxValue = state.maxValue;
 
-        if (minValue == null || state.useMinMaxChange) {
+        if (minValue == null || (!props.widget.customProperties.valueUseMinMax && (value < minValue || signalID !== state.signalID)) ||state.useMinMaxChange) {
           minValue = value - 0.5;
           updateLabels = true;
           updateMinValue = true;
         }
 
-        if (maxValue == null || state.useMinMaxChange) {
+        if (maxValue == null || (!props.widget.customProperties.valueUseMinMax && (value > maxValue || signalID !== state.signalID)) || state.useMinMaxChange) {
           maxValue = value + 0.5;
           updateLabels = true;
           updateMaxValue = true;
@@ -147,17 +145,12 @@ class WidgetGauge extends Component {
         }
 
         if (props.widget.customProperties.valueUseMinMax) {
-          if (state.minValue > props.widget.customProperties.valueMin) {
             minValue = props.widget.customProperties.valueMin;
             updateMinValue = true;
-            updateLabels = true;
-          }
-
-          if (state.maxValue < props.widget.customProperties.valueMax) {
             maxValue = props.widget.customProperties.valueMax;
             updateMaxValue = true;
             updateLabels = true;
-          }
+          
         }
 
         if (updateLabels === false && state.gauge) {
@@ -177,10 +170,7 @@ class WidgetGauge extends Component {
       if(props.widget.customProperties.valueUseMinMax !== state.useMinMax){
         returnState["useMinMax"] = props.widget.customProperties.valueUseMinMax;
       }
-      if(props.widget.customProperties.colorZones !== state.useColorZones){
-        returnState["useColorZones"] = props.widget.customProperties.colorZones;
-      }
-
+      
       // prepare returned state
       if(updateValue === true){
         returnState["value"] = value;
@@ -248,8 +238,8 @@ class WidgetGauge extends Component {
       colorStop: '#6EA2B0',
       strokeColor: '#E0E0E0',
       highDpiSupport: true,
-      limitMax: false,
-      limitMin: false
+      limitMax: widget.customProperties.valueUseMinMax || false,
+      limitMin: widget.customProperties.valueUseMinMax || false
     };
   }
 
