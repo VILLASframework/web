@@ -127,7 +127,7 @@ class Dashboard extends Component {
       modalData:  null,
       modalIndex:  null,
       widgetChangeData: [],
-      widgetAddData:prevState.widgetAddData || [],
+      widgetOrigIDs: prevState.widgetOrigIDs || [],
 
       maxWidgetHeight: maxHeight || null,
       dropZoneHeight: maxHeight +80 || null,
@@ -214,10 +214,6 @@ class Dashboard extends Component {
 
   handleDrop(widget) {
     widget.dashboardID = this.state.dashboard.id;
-    let tempChanges = this.state.widgetAddData;
-    tempChanges.push(widget);
-
-    this.setState({ widgetAddData: tempChanges})
 
     AppDispatcher.dispatch({
       type: 'widgets/start-add',
@@ -368,7 +364,9 @@ class Dashboard extends Component {
 
 
   startEditing(){
+    let originalIDs = [];
     this.state.widgets.forEach( widget => {
+      originalIDs.push(widget.id);
       if(widget.type === 'Slider' || widget.type === 'NumberInput' || widget.type === 'Button'){
         AppDispatcher.dispatch({
           type: 'widgets/start-edit',
@@ -377,7 +375,7 @@ class Dashboard extends Component {
         });
       }
     });
-    this.setState({ editing: true });
+    this.setState({ editing: true, widgetOrigIDs: originalIDs });
   };
 
   saveEditing() {
@@ -396,7 +394,7 @@ class Dashboard extends Component {
         data: widget
       });
     });
-    this.setState({ editing: false, widgetChangeData: [], widgetAddData: [] });
+    this.setState({ editing: false, widgetChangeData: []});
   };
 
   saveChanges() {
@@ -414,28 +412,23 @@ class Dashboard extends Component {
 
   cancelEditing() {
     //raw widget has no id -> cannot be deleted in its original form
-    let temp = [];
-    this.state.widgetAddData.forEach(rawWidget => {
       this.state.widgets.forEach(widget => {
-        if(widget.y === rawWidget.y && widget.x === rawWidget.x && widget.type === rawWidget.type){
-          temp.push(widget);
+        let tempID = this.state.widgetOrigIDs.find(element => element === widget.id);
+        if(typeof tempID === 'undefined'){
+          AppDispatcher.dispatch({
+            type: 'widgets/start-remove',
+            data: widget,
+            token: this.state.sessionToken
+          });
         }
       })
-    })
-
-    temp.forEach( widget => {
-      AppDispatcher.dispatch({
-        type: 'widgets/start-remove',
-        data: widget,
-        token: this.state.sessionToken
-      });
-    });
+          
     AppDispatcher.dispatch({
       type: 'widgets/start-load',
       token: this.state.sessionToken,
       param: '?dashboardID=' + this.state.dashboard.id
     });
-    this.setState({ editing: false, widgetChangeData: [], widgetAddData: []});
+    this.setState({ editing: false, widgetChangeData: []});
 
   };
 
