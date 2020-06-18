@@ -16,10 +16,11 @@
  ******************************************************************************/
 
 import React from 'react';
-import {FormGroup, FormControl, FormLabel, Button} from 'react-bootstrap';
-
-
+import {FormGroup, FormControl, Button, Col, ProgressBar} from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
+import AppDispatcher from "../common/app-dispatcher";
+import Table from "../common/table";
+import TableColumn from "../common/table-column";
 
 
 class EditFilesDialog extends React.Component {
@@ -30,168 +31,133 @@ class EditFilesDialog extends React.Component {
     super(props);
 
     this.state = {
-      files: [],  
-      selectedFile: {},
-      deleteData: [],
-      addData: [],
-      addFile: {}
+      uploadFile: null,
+      uploadProgress: 0
     };
   }
-
-  static getDerivedStateFromProps(props, state){
-    return {
-      files: props.files
-    };
-  }
-
-
 
   onClose(canceled) {
     if (canceled === false) {
       if (this.validChanges()) {
-        this.props.onClose(this.state.files,this.state.deleteData,this.state.addData);
+        this.props.onClose();
       }
     } else {
       this.props.onClose();
     }
   }
-//can you add file to state array?
-  addFile(){
-  let addFile = this.state.addFile[0];
-  addFile.id = this.state.files[this.state.files.length -1 ].id +1;
-   let tempFiles = this.state.files;
-   tempFiles.push(addFile);
-   this.setState({files: tempFiles});
 
-   let tempAddFiles = this.state.addData;
-   tempAddFiles.push(addFile);
-   this.setState({addData: tempAddFiles});
+  selectUploadFile(event) {
+    this.setState({ uploadFile: event.target.files[0] });
+  };
 
-   this.setState({addFile: {}});
+  startFileUpload(){
+    // upload file
+    const formData = new FormData();
+    formData.append("file", this.state.uploadFile);
+
+    AppDispatcher.dispatch({
+      type: 'files/start-upload',
+      data: formData,
+      token: this.props.sessionToken,
+      progressCallback: this.updateUploadProgress,
+      finishedCallback: this.clearProgress,
+      scenarioID: this.props.scenarioID,
+    });
+
+    // TODO make sure that dialog remains open after clicking "Upload" button
+  };
+
+  updateUploadProgress = (event) => {
+    this.setState({ uploadProgress: parseInt(event.percent.toFixed(), 10) });
+  };
+
+  clearProgress = (newFileID) => {
+    /*if (this.props.onChange != null) {
+      let event = {}
+      event["target"] = {}
+      event.target["value"] = newFileID
+      this.props.onChange(event);
+    }
+    */
+    this.setState({ uploadProgress: 0 });
+
+
+  };
+
+  deleteFile(index){
+
+    let file = this.props.files[index]
+    AppDispatcher.dispatch({
+      type: 'files/start-remove',
+      data: file,
+      token: this.props.sessionToken
+    });
+
+    // TODO make sure that dialog remains open after clicking delete button
 
   }
 
-  deleteFile(){
-    let tempFiles = this.state.files;
-    let changeId = false;
-    for (let i = 0; i < tempFiles.length; i++) { 
-      if(changeId){
-        tempFiles[i-1] = tempFiles[i];
-      }
-      else if(tempFiles[i].id === this.state.selectedFile.id){
-        changeId = true;
-      }
-    } 
-    tempFiles.pop();
-    this.setState({files: tempFiles});
-
-    if(this.state.selectedFile.type !== "application/octet-stream"){
-      let tempAddFiles = this.state.addData;
-      let changePosition = false;
-      for (let i = 0; i < tempAddFiles.length; i++) {
-        if(changePosition){
-          tempAddFiles[i-1] = tempAddFiles[i];
-        } 
-        else if(tempAddFiles[i].id === this.state.selectedFile.id){
-          changePosition = true;
-        }
-      } 
-      tempAddFiles.pop();
-      this.setState({addData: tempAddFiles});
-    }
-    else{
-    let tempDeleteFiles = this.state.deleteData;
-    tempDeleteFiles.push(this.state.selectedFile);
-    this.setState({deleteData: tempDeleteFiles});
-    }
-
-
-  }
-
-  
-  handleChange(e) {
-    
-    if(e.target.id === "selectedFile"){
-    let tempFile = this.state.files.find(element => element.id === parseInt(e.target.value, 10));
-
-    this.setState({ [e.target.id]: tempFile });
-    }
-    else if(e.target.id === "name"){
-      if(this.state.selectedFile.type === "application/octet-stream"){
-    
-    let tempFile = this.state.selectedFile;
-    tempFile.name = e.target.value;
-    this.setState({selectedFile: tempFile});
-    let tempFileList = this.state.files;
-    tempFileList[tempFile.id - 1] = tempFile;
-    this.setState({files: tempFileList});
-      }
-      else {
-        const newFile = new File([this.state.selectedFile], e.target.value , {type: this.state.selectedFile.type});
-        this.setState({selectedFile: newFile});
-        let tempFileList = this.state.files;
-        newFile.id = this.state.selectedFile.id;
-        tempFileList[newFile.id - 1] = newFile;
-        this.setState({files: tempFileList});
-
-        let tempAddFiles = this.state.addData;
-        for (let i = 0; i < tempAddFiles.length; i++) { 
-          if(tempAddFiles[i].id === newFile.id){
-            tempAddFiles[i] = newFile;
-          }
-        } 
-        this.setState({addData: tempAddFiles});
-
-      }
-    
-    }
-
-
-  }
-
-  validChanges() {
-    return true;
-  }
 
   render() {
 
     let fileOptions = [];
-    if (this.state.files.length > 0){
+    if (this.props.files.length > 0){
       fileOptions.push(
         <option key = {0} default>Select image file</option>
         )
-      fileOptions.push(this.state.files.map((file, index) => (
+      fileOptions.push(this.props.files.map((file, index) => (
         <option key={index+1} value={file.id}>{file.name}</option>
       )))
     } else {
       fileOptions = <option disabled value style={{ display: 'none' }}>No files found, please upload one first.</option>
     }
-    
+
+    const progressBarStyle = {
+      marginLeft: '100px',
+      marginTop: '-40px'
+    };
+
     return (
-      <Dialog show={this.props.show} title="Edit File" buttonTitle="Save" onClose={(c) => this.onClose(c)} valid={true}>
+      <Dialog show={this.props.show} title="Edit Files of scenario" buttonTitle="Close" valid={true}>
         <div>
-          <FormGroup controlId="selectedFile">
-            <FormLabel>Image</FormLabel>
+          <Table data={this.props.files}>
+            <TableColumn title='ID' dataKey='id'  />
+            <TableColumn title='Name' dataKey='name'  />
+            <TableColumn title='Size (bytes)' dataKey='size' />
+            <TableColumn title='Type' dataKey='type' />
+            <TableColumn
+              title='Delete'
+              width='50'
+              deleteButton
+              onDelete={(index) => this.deleteFile(index)}
+            />
+          </Table>
+
+
+          <FormGroup as={Col} >
             <FormControl
-              as="select"
-              value={this.state.selectedFile.id}
-              onChange={(e) => this.handleChange(e)}>{fileOptions} </FormControl>
-          </FormGroup>
-      
-          <FormGroup controlId={"name"}>
-            <FormLabel>{"File Name"}</FormLabel>
-            <FormControl type="text" placeholder={"Enter name"} value={this.state.selectedFile.name} onChange={e => this.handleChange(e)} />
-            <FormControl.Feedback />
+              disabled={this.props.disabled}
+              type='file'
+              onChange={(event) => this.selectUploadFile(event)} />
           </FormGroup>
 
-          <Button onClick={this.deleteFile.bind(this)}>Delete File</Button>
-
-          <FormGroup controlId="upload">
-            <FormLabel>Upload</FormLabel>
-            <FormControl type="file" onChange={(e) => this.setState({ addFile: e.target.files })} />
+          <FormGroup as={Col} >
+            <Button
+              disabled={this.state.uploadFile === null}
+              onClick={() => this.startFileUpload()}>
+              Upload
+            </Button>
           </FormGroup>
 
-          <Button size='sm' onClick={this.addFile.bind(this)}>Add File</Button>
+          <FormGroup as={Col} >
+            <ProgressBar
+              striped={true}
+              animated={true}
+              now={this.state.uploadProgress}
+              label={this.state.uploadProgress + '%'}
+              style={progressBarStyle}
+            />
+          </FormGroup>
         </div>
       </Dialog>
     );

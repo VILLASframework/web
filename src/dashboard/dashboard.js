@@ -272,60 +272,9 @@ class Dashboard extends Component {
     this.setState({filesEditModal: true, filesEditSaveState: tempFiles});
   }
 
-  closeEditFiles(files,deleteData,addData){
+  closeEditFiles(){
 
-    if(files || deleteData || addData){
-
-      if(addData.length > 0){
-        let formData = new FormData();
-        addData.forEach( file => {
-          delete file.id;
-          formData.append("file", file);
-        });
-        AppDispatcher.dispatch({
-          type: 'files/start-upload',
-          data: formData,
-          token: this.state.sessionToken,
-          scenarioID: this.state.dashboard.scenarioID,
-        });
-      }
-
-      if(deleteData.length > 0){
-        deleteData.forEach( file => {
-          AppDispatcher.dispatch({
-            type: 'files/start-remove',
-            data: file,
-            token: this.state.sessionToken
-          });
-        });
-      }
-    }
-    let formData = new FormData();
-    files.forEach( file => {
-      if(file.type === "application/octet-stream"){
-        let originalFile = this.state.filesEditSaveState.find(element => parseInt(element.id,10) === parseInt(file.id,10));
-        if(originalFile.name !== file.name){
-          formData.append("file", file);
-          AppDispatcher.dispatch({
-            type: 'files/start-edit',
-            token: this.state.sessionToken,
-            data: formData
-          });
-        }
-      }
-    })
-
-    this.setState({ filesEditModal: false, filesEditSaveState: [] });
-  }
-
-  uploadFile(data,widget){
-    AppDispatcher.dispatch({
-      type: 'files/start-upload',
-      data: data,
-      token: this.state.sessionToken,
-      scenarioID: this.state.dashboard.scenarioID,
-    });
-
+    // TODO do we need this if the dispatches happen in the dialog?
   }
 
   closeEdit(data){
@@ -422,7 +371,7 @@ class Dashboard extends Component {
           });
         }
       })
-          
+
     AppDispatcher.dispatch({
       type: 'widgets/start-load',
       token: this.state.sessionToken,
@@ -521,7 +470,6 @@ class Dashboard extends Component {
           sessionToken={this.state.sessionToken}
           show={this.state.editModal}
           onClose={this.closeEdit.bind(this)}
-          onUpload = {this.uploadFile.bind(this)}
           widget={this.state.modalData}
           signals={this.state.signals}
           files={this.state.files}
@@ -533,6 +481,7 @@ class Dashboard extends Component {
           onClose={this.closeEditFiles.bind(this)}
           signals={this.state.signals}
           files={this.state.files}
+          scenarioID={this.state.dashboard.scenarioID}
         />
 
 
