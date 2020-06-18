@@ -39,20 +39,20 @@ class WidgetToolbox extends React.Component {
     const topologyItemMsg = thereIsTopologyWidget? 'Currently only one is supported' : '';
 
     return <div className='toolbox box-header'>
-      <ToolboxItem name='Lamp' type='widget' />
-      <ToolboxItem name='Value' type='widget' />
-      <ToolboxItem name='Plot' type='widget' />
-      <ToolboxItem name='Table' type='widget' />
-      <ToolboxItem name='Label' type='widget' />
-      <ToolboxItem name='Image' type='widget' />
-      <ToolboxItem name='PlotTable' type='widget' />
-      <ToolboxItem name='Button' type='widget' />
-      <ToolboxItem name='NumberInput' type='widget' />
-      <ToolboxItem name='Slider' type='widget' />
-      <ToolboxItem name='Gauge' type='widget' />
-      <ToolboxItem name='Box' type='widget' />
-      <ToolboxItem name='HTML' type='html' />
-      <ToolboxItem name='Topology' type='widget' disabled={thereIsTopologyWidget} title={topologyItemMsg}/>
+      <ToolboxItem name='Lamp' type='widget' icon = 'plus' />
+      <ToolboxItem name='Value' type='widget' icon = 'plus' />
+      <ToolboxItem name='Plot' type='widget' icon = 'plus'/>
+      <ToolboxItem name='Table' type='widget' icon = 'plus'/>
+      <ToolboxItem name='Label' type='widget' icon = 'plus'/>
+      <ToolboxItem name='Image' type='widget' icon = 'plus'/>
+      <ToolboxItem name='PlotTable' type='widget' icon = 'plus'/>
+      <ToolboxItem name='Button' type='widget' icon = 'plus'/>
+      <ToolboxItem name='NumberInput' type='widget' icon = 'plus'/>
+      <ToolboxItem name='Slider' type='widget' icon = 'plus'/>
+      <ToolboxItem name='Gauge' type='widget' icon = 'plus'/>
+      <ToolboxItem name='Box' type='widget' icon = 'plus'/>
+      <ToolboxItem name='HTML' type='html' icon = 'plus'/>
+      <ToolboxItem name='Topology' type='widget' disabled={thereIsTopologyWidget} title={topologyItemMsg} icon = 'plus'/>
 
       <div className='section-buttons-group-right'>
         <div>
