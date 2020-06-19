@@ -17,11 +17,11 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Button, InputGroup, FormControl } from 'react-bootstrap';
+
 import FileSaver from 'file-saver';
 
 import ScenarioStore from './scenario-store';
-//import ScenariosDataManager from './scenarios-data-manager';
 import ICStore from '../ic/ic-store';
 import DashboardStore from '../dashboard/dashboard-store';
 import ConfigStore from '../componentconfig/config-store';
@@ -42,21 +42,18 @@ import EditConfigDialog from "../componentconfig/edit-config";
 import EditSignalMapping from "../signal/edit-signal-mapping";
 import FileStore from "../file/file-store"
 import WidgetStore from "../widget/widget-store";
-import UsersStore from '../user/users-store';
 
 
 
 class Scenario extends React.Component {
 
   static getStores() {
-    return [ ScenarioStore, ConfigStore, DashboardStore, ICStore, LoginStore, SignalStore, FileStore, WidgetStore, UsersStore];
+    return [ScenarioStore, ConfigStore, DashboardStore, ICStore, LoginStore, SignalStore, FileStore, WidgetStore];
   }
 
   static calculateState(prevState, props) {
     // get selected scenario
     const sessionToken = LoginStore.getState().token;
-    
-    let users = null;
     const scenario = ScenarioStore.getState().find(s => s.id === parseInt(props.match.params.scenario, 10));
     if (scenario == null) {
       AppDispatcher.dispatch({
@@ -65,15 +62,6 @@ class Scenario extends React.Component {
         token: sessionToken
       });
     }
-    else {
-      users = scenario.users;
-    }
-    
-    let allUsers = UsersStore.getState();
-    let allUserNames = [];
-    allUsers.forEach((user) => {
-      allUserNames.push(user.username);
-    });
 
     // obtain all dashboards of a scenario
     let dashboards = DashboardStore.getState().filter(dashb => dashb.scenarioID === parseInt(props.match.params.scenario, 10));
@@ -87,12 +75,8 @@ class Scenario extends React.Component {
     let signals = SignalStore.getState();
 
 
-
     return {
       scenario,
-      users,
-      allUsers,
-      allUserNames,
       sessionToken,
       configs,
       dashboards,
@@ -115,7 +99,6 @@ class Scenario extends React.Component {
       importDashboardModal: false,
       modalDashboardData: {},
 
-      addUserModal: false,
       deleteUserName: '',
       deleteUserModal: false,
     }
@@ -136,22 +119,18 @@ class Scenario extends React.Component {
       type: 'ics/start-load',
       token: this.state.sessionToken
     });
-
-    // load users
-    AppDispatcher.dispatch({
-      type: 'users/start-load',
-      token: this.state.sessionToken
-    });
   }
 
-  // add User to Scenario
-  addUser(userindex) {
-    let username = this.state.allUserNames[userindex];
-    ScenarioStore.addUser(this.state.sessionToken, this.state.scenario.id, username);
+  /* ##############################################
+  * User modification methods
+  ############################################## */
+
+  addUser() {
+    ScenarioStore.addUser(this.state.sessionToken, this.state.scenario.id, this.userToAdd);
   }
 
   closeDeleteUserModal() {
-    this.setState({deleteUserModal: false});
+    this.setState({ deleteUserModal: false });
     ScenarioStore.deleteUser(this.state.sessionToken, this.state.scenario.id, this.state.deleteUserName);
   }
 
@@ -159,7 +138,7 @@ class Scenario extends React.Component {
   * Component Configuration modification methods
   ############################################## */
 
-  addConfig(){
+  addConfig() {
     const config = {
       scenarioID: this.state.scenario.id,
       name: 'New Component Configuration',
@@ -175,8 +154,8 @@ class Scenario extends React.Component {
 
   }
 
-  closeEditConfigModal(data){
-    this.setState({ editConfigModal : false });
+  closeEditConfigModal(data) {
+    this.setState({ editConfigModal: false });
 
     if (data) {
       AppDispatcher.dispatch({
@@ -201,7 +180,7 @@ class Scenario extends React.Component {
     });
   }
 
-  importConfig(data){
+  importConfig(data) {
     this.setState({ importConfigModal: false });
 
     if (data == null) {
@@ -303,7 +282,7 @@ class Scenario extends React.Component {
   getICName(icID) {
     for (let ic of this.state.ics) {
       if (ic.id === icID) {
-        return ic.name ||  ic.uuid;
+        return ic.name || ic.uuid;
       }
     }
   }
@@ -313,7 +292,7 @@ class Scenario extends React.Component {
   ############################################## */
 
   closeNewDashboardModal(data) {
-    this.setState({ newDashboardModal : false });
+    this.setState({ newDashboardModal: false });
     if (data) {
       let newDashboard = data;
       // add default grid value and scenarioID
@@ -328,7 +307,7 @@ class Scenario extends React.Component {
     }
   }
 
-  closeDeleteDashboardModal(confirmDelete){
+  closeDeleteDashboardModal(confirmDelete) {
     this.setState({ deleteDashboardModal: false });
 
     if (confirmDelete === false) {
@@ -379,9 +358,9 @@ class Scenario extends React.Component {
   * Signal modification methods
   ############################################## */
 
-  closeDeleteSignalModal(data){
+  closeDeleteSignalModal(data) {
     // data contains the signal to be deleted
-    if (data){
+    if (data) {
 
       AppDispatcher.dispatch({
         type: 'signals/start-remove',
@@ -392,7 +371,7 @@ class Scenario extends React.Component {
     }
   }
 
-  closeNewSignalModal(data){
+  closeNewSignalModal(data) {
     //data contains the new signal incl. configID and direction
     if (data) {
       AppDispatcher.dispatch({
@@ -403,17 +382,17 @@ class Scenario extends React.Component {
     }
   }
 
-  closeEditSignalsModal(data, direction){
+  closeEditSignalsModal(data, direction) {
 
-    if( direction === "in") {
-      this.setState({editInputSignalsModal: false});
-    } else if( direction === "out"){
-      this.setState({editOutputSignalsModal: false});
+    if (direction === "in") {
+      this.setState({ editInputSignalsModal: false });
+    } else if (direction === "out") {
+      this.setState({ editOutputSignalsModal: false });
     } else {
       return; // no valid direction
     }
 
-    if (data){
+    if (data) {
       //data is an array of signals
       for (let sig of data) {
         //dispatch changes to signals
@@ -431,7 +410,7 @@ class Scenario extends React.Component {
   * File modification methods
   ############################################## */
 
-  getFileName(id){
+  getFileName(id) {
     for (let file of this.state.files) {
       if (file.id === id) {
         return file.name;
@@ -454,38 +433,42 @@ class Scenario extends React.Component {
 
       {/*Scenario Users table*/}
       <h2>Users</h2>
-      <Table data={this.state.users}>
-        <TableColumn title='Name' dataKey='username' link='/users/' linkKey='id' />
-        <TableColumn title='Mail' dataKey='mail' />
-        <TableColumn
-          title=''
-          width='200'
-          deleteButton
-          onDelete={(index) => this.setState({ deleteUserModal: true, deleteUserName: this.state.users[index].username, modalUserIndex: index })}
+      <div>
+        <Table data={this.state.scenario.users}>
+          <TableColumn title='Name' dataKey='username' link='/users/' linkKey='id' />
+          <TableColumn title='Mail' dataKey='mail' />
+          <TableColumn
+            title=''
+            width='200'
+            deleteButton
+            onDelete={(index) => this.setState({ deleteUserModal: true, deleteUserName: this.state.scenario.users[index].username, modalUserIndex: index })}
           />
-      </Table>
+        </Table>
 
-      <div style={{ float: 'right' }}>
-        <DropdownButton
-          title="Add User"
-          onSelect={(index) => this.addUser(index)} 
-        >
-          {this.state.allUserNames.map((opt,i) => (
-            <Dropdown.Item key={i} eventKey={i}>
-              {opt}
-            </Dropdown.Item>
-          ))}
-          </DropdownButton>
+        <InputGroup style={{ width: 400, float: 'right' }}>
+          <FormControl
+            placeholder="Username"
+            onChange={(e) => this.userToAdd = e.target.value}
+          />
+          <InputGroup.Append>
+            <Button
+              type="submit"
+              onClick={() => this.addUser()}>
+              Add User
+            </Button>
+          </InputGroup.Append>
+        </InputGroup><br/>
       </div>
 
       <DeleteDialog title="user" name={this.state.deleteUserName} show={this.state.deleteUserModal} onClose={(c) => this.closeDeleteUserModal(c)} />
+
 
       {/*Component Configurations table*/}
       <h2>Component Configurations</h2>
       <Table data={this.state.configs}>
         <TableColumn checkbox onChecked={(index, event) => this.onConfigChecked(index, event)} width='30' />
         <TableColumn title='Name' dataKey='name' />
-        <TableColumn title='Selected configuration file' dataKey='selectedFileID' modifier={(selectedFileID) => this.getFileName(selectedFileID)}/>
+        <TableColumn title='Selected configuration file' dataKey='selectedFileID' modifier={(selectedFileID) => this.getFileName(selectedFileID)} />
         <TableColumn
           title='# Output Signals'
           dataKey='outputLength'
@@ -520,7 +503,7 @@ class Scenario extends React.Component {
             { id: '1', title: 'Stop', data: { action: 'stop' } },
             { id: '2', title: 'Pause', data: { action: 'pause' } },
             { id: '3', title: 'Resume', data: { action: 'resume' } }
-          ]}/>
+          ]} />
       </div>
 
       <div style={{ float: 'right' }}>
@@ -557,7 +540,7 @@ class Scenario extends React.Component {
         onDelete={(data) => this.closeDeleteSignalModal(data)}
         direction="Input"
         signals={this.state.signals}
-        configID={this.state.modalConfigData.id}/>
+        configID={this.state.modalConfigData.id} />
 
       {/*Dashboard table*/}
       <h2>Dashboards</h2>
@@ -581,10 +564,10 @@ class Scenario extends React.Component {
 
       <div style={{ clear: 'both' }} />
 
-      <NewDashboardDialog show={this.state.newDashboardModal} onClose={data => this.closeNewDashboardModal(data)}/>
-      <ImportDashboardDialog show={this.state.importDashboardModal} onClose={data => this.closeImportDashboardModal(data)}  />
+      <NewDashboardDialog show={this.state.newDashboardModal} onClose={data => this.closeNewDashboardModal(data)} />
+      <ImportDashboardDialog show={this.state.importDashboardModal} onClose={data => this.closeImportDashboardModal(data)} />
 
-      <DeleteDialog title="dashboard" name={this.state.modalDashboardData.name} show={this.state.deleteDashboardModal} onClose={(e) => this.closeDeleteDashboardModal(e)}/>
+      <DeleteDialog title="dashboard" name={this.state.modalDashboardData.name} show={this.state.deleteDashboardModal} onClose={(e) => this.closeDeleteDashboardModal(e)} />
 
 
     </div>;

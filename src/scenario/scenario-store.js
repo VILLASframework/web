@@ -39,8 +39,9 @@ class ScenarioStore extends ArrayStore{
   }
 
   /* store functions, called when calls to backend have returned */
+
   // save users after they are loaded ('getUsers' call)
-  saveUsers(state, action) {
+  storeUsers(state, action) {
     let scenarioID = action.scenarioID;
     state.forEach((element, index, array) => {
       if (element.id === scenarioID) {
@@ -52,7 +53,7 @@ class ScenarioStore extends ArrayStore{
   }
 
   // save new user after it was added to scenario ('addUser' call)
-  saveUser(state, action) {
+  storeUser(state, action) {
     let scenarioID = action.scenarioID;
     state.forEach((element, index, array) => {
       if (element.id === scenarioID) {
@@ -71,8 +72,8 @@ class ScenarioStore extends ArrayStore{
         const userindex = array[index]["users"].indexOf(action.user);
         if (index > -1) {
           array[index]["users"].splice(userindex, 1);
+          this.__emitChange();
         }
-        this.__emitChange();
         return state;
       }
     })
@@ -112,10 +113,10 @@ class ScenarioStore extends ArrayStore{
         }
 
       case 'scenarios/users':
-        return this.saveUsers(state, action);
+        return this.storeUsers(state, action);
 
       case 'scenarios/user-added':
-        return this.saveUser(state, action);
+        return this.storeUser(state, action);
 
       case 'scenarios/user-deleted':
         return this.removeUser(state, action);
