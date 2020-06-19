@@ -122,7 +122,7 @@ export default function CreateControls(widgetType = null, widget = null, session
             DialogControls.push(
                 <EditWidgetColorControl key={0} widget={widget} controlId={'customProperties.border_color'} label={'Border color'} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetColorControl key={1} widget={widget} controlId={'customProperties.background_color'} label={'Background color'} handleChange={e => handleChange(e)} />,
-                <EditWidgetNumberControl key={2} widget={widget} controlId={'customProperties.background_color_opacity'} label={'Background opacity'} defaultValue={0.5} handleChange={(e) => handleChange(e)} />
+                <EditWidgetNumberControl key={2} widget={widget} controlId={'customProperties.background_color_opacity'} label={'Background opacity (0.0 - 1.0)'} defaultValue={0.5} handleChange={(e) => handleChange(e)} />
             );
             break;
         case 'Label':
