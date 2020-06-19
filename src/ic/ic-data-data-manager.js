@@ -58,7 +58,7 @@ class IcDataDataManager {
     if (socket == null) {
       return false;
     }
-
+    console.log("Sending to IC", identifier, "message: ", message);
     const data = this.messageToBuffer(message);
     socket.send(data);
 

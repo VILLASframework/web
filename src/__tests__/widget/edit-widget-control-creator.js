@@ -30,7 +30,6 @@ describe('edit widget control creator', () => {
         { args: { widgetType: 'Table' }, result: { controlNumber: 2, controlTypes: [EditWidgetCheckboxControl] } },
         { args: { widgetType: 'Image' }, result: { controlNumber: 2, controlTypes: [EditFileWidgetControl, EditWidgetAspectControl] } },
         { args: { widgetType: 'Gauge' }, result: { controlNumber: 6, controlTypes: [EditWidgetTextControl, EditWidgetSignalControl, EditWidgetCheckboxControl, EditWidgetColorZonesControl, EditWidgetMinMaxControl] } },
-        { args: { widgetType: 'PlotTable' }, result: { controlNumber: 5, controlTypes: [EditWidgetSignalsControl, EditWidgetTextControl, EditWidgetTimeControl, EditWidgetMinMaxControl] } },
         { args: { widgetType: 'Slider' }, result: { controlNumber: 9, controlTypes: [EditWidgetTextControl, EditWidgetOrientation, EditWidgetSignalControl, EditWidgetCheckboxControl, EditWidgetCheckboxControl, EditWidgetMinMaxControl, EditWidgetNumberControl, EditWidgetNumberControl] } },
         { args: { widgetType: 'Button' }, result: { controlNumber: 6, controlTypes: [EditWidgetTextControl, EditWidgetSignalControl, EditWidgetCheckboxControl, EditWidgetNumberControl, EditWidgetNumberControl] } },
         { args: { widgetType: 'Box' }, result: { controlNumber: 2, controlTypes: [EditWidgetColorControl, EditWidgetColorControl] } },

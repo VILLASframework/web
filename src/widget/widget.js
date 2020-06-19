@@ -35,7 +35,6 @@ import WidgetValue from './widgets/value';
 import WidgetPlot from './widgets/plot';
 import WidgetTable from './widgets/table';
 import WidgetLabel from './widgets/label';
-import WidgetPlotTable from './widgets/plot-table';
 import WidgetImage from './widgets/image';
 import WidgetButton from './widgets/button';
 import WidgetInput from './widgets/input';
@@ -169,16 +168,6 @@ class Widget extends React.Component {
     } else if (widget.type === 'Label') {
       return <WidgetLabel
         widget={widget}
-      />
-    } else if (widget.type === 'PlotTable') {
-      return <WidgetPlotTable
-        widget={widget}
-        data={this.state.icData}
-        signals={this.state.signals}
-        icIDs={this.state.icIDs}
-        editing={this.props.editing}
-        onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index)}
-        paused={this.props.paused}
       />
     } else if (widget.type === 'Image') {
       return <WidgetImage

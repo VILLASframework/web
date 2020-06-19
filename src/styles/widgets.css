@@ -115,65 +115,6 @@ div[class*="-widget"] .btn[disabled], .btn.disabled, div[class*="-widget"] input
 
 /* End edit menu: Colors */
 
-/* PlotTable widget */
-.plot-table-widget, .plot-widget, .value-widget, .image-widget, .label-widget {
-    width: 100%;
-    height: 100%;
-    padding: 3px 6px;
-}
-
-.plot-table-widget {
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: column;
-}
-
-.plot-table-widget .content {
-  -webkit-flex: 1 0 auto;
-  flex: 1 0 auto;
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: column;
-}
-
-.table-plot-row {
-  -webkit-flex: 1 0 auto;
-  flex: 1 0 auto;
-  display: -webkit-flex;
-  display: flex;
-}
-
-.plot-table-widget .widget-table {
-  -webkit-flex: 1 0 auto;
-  flex: 1 0 auto;
-  flex-basis: 90px;
-  max-width: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-right: 10px;
-}
-
-.plot-table-widget small {
-    text-align: center;
-}
-
-.plot-table-widget .checkbox label {
-    height: 100%;
-    width: 100%;
-    padding: 6px 12px;
-    overflow-x: hidden;
-}
-
-.plot-table-widget .btn {
-    padding: 0px;
-}
-
-.plot-table-widget input[type="checkbox"] {
-    display: none;
-}
-/* End PlotTable Widget */
-
 /* Plot Widget */
 .plot-widget {
   display: -webkit-flex;
@@ -438,8 +379,3 @@ div[class*="-widget"] label {
     border: 2px solid;
 }
 /* End box widget */
-
-.plot-table-widget .widget-plot {
-  -webkit-flex: 1 0 auto;
-  flex: 1 0 auto;
-}

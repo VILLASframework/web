@@ -105,17 +105,6 @@ class WidgetFactory {
                 widget.customProperties.fontColor = 0;
                 widget.customProperties.resizeTopBottomLock = true;
                 break;
-            case 'PlotTable':
-                widget.customProperties.ylabel = '';
-                widget.minWidth = 200;
-                widget.minHeight = 100;
-                widget.width = 600;
-                widget.height = 300;
-                widget.customProperties.time = 60;
-                widget.customProperties.yMin = 0;
-                widget.customProperties.yMax = 10;
-                widget.customProperties.yUseMinMax = false;
-                break;
           case 'Image':
                 widget.minWidth = 20;
                 widget.minHeight = 20;
