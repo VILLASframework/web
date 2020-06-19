@@ -47,20 +47,20 @@ export default function CreateControls(widgetType = null, widget = null, session
             break;
         case 'Action':
             DialogControls.push(
-              <EditWidgetSignalControl key={0} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} />,
+              <EditWidgetSignalControl key={0} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} direction={'in'} />,
             );
             break;
         case 'Value':
             DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Signal name'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
-                <EditWidgetSignalControl key={1} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetSignalControl key={1} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
                 <EditWidgetTextSizeControl key={2} widget={widget} handleChange={e => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={3} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Lamp':
               DialogControls.push(
-                <EditWidgetSignalControl key={0} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetSignalControl key={0} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
                 <EditWidgetTextControl key={1} widget={widget} controlId={'customProperties.threshold'} label={'Threshold'} placeholder={'0.5'} handleChange={e => handleChange(e)} />,
                 <EditWidgetColorControl key={2} widget={widget} controlId={'customProperties.on_color'} label={'Color On'} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetColorControl key={3} widget={widget} controlId={'customProperties.off_color'} label={'Color Off'} handleChange={(e) => handleChange(e)} />,
@@ -69,14 +69,14 @@ export default function CreateControls(widgetType = null, widget = null, session
         case 'Plot':
             DialogControls.push(
                 <EditWidgetTimeControl key={0} widget={widget} controlId={'customProperties.time'} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetSignalsControl key={1} widget={widget} controlId={'signalIDs'}  signals={signals} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetSignalsControl key={1} widget={widget} controlId={'signalIDs'}  signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
                 <EditWidgetTextControl key={2} widget={widget} controlId={'customProperties.ylabel'} label={'Y-Axis name'} placeholder={'Enter a name for the y-axis'}  handleChange={(e) => handleChange(e)} />,
                 <EditWidgetMinMaxControl key={3} widget={widget} controlId="customProperties.y" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Table':
             DialogControls.push(
-                <EditWidgetSignalsControl key={0} widget={widget} controlId={'signalIDs'}  signals={signals} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetSignalsControl key={0} widget={widget} controlId={'signalIDs'}  signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
                 <EditWidgetCheckboxControl key={1} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />
             );
             break;
@@ -91,7 +91,7 @@ export default function CreateControls(widgetType = null, widget = null, session
         case 'Gauge':
             DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
-                <EditWidgetSignalControl key={1} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetSignalControl key={1} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
                 <EditWidgetCheckboxControl key={2} widget={widget} controlId="customProperties.colorZones" input text="Show color zones" handleChange={e => handleChange(e)} />,
                 <EditWidgetColorZonesControl key={3} widget={widget} handleChange={e => handleChange(e)} />,
                 <EditWidgetMinMaxControl key={4} widget={widget} controlId="customProperties.value" handleChange={e => handleChange(e)} />
@@ -101,7 +101,7 @@ export default function CreateControls(widgetType = null, widget = null, session
             DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
                 <EditWidgetOrientation key={1} widget={widget} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetSignalControl key={2} widget={widget} controlId={'signalIDs'} input signals={signals} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetSignalControl key={2} widget={widget} controlId={'signalIDs'} input signals={signals} handleChange={(e) => handleChange(e)} direction={'in'}/>,
                 <EditWidgetCheckboxControl key={3} widget={widget} controlId={'customProperties.continous_update'} input text={'Continous Update'} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={4} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />,
                 <EditWidgetMinMaxControl key={5} widget={widget} controlId={'customProperties.range'} handleChange={e => handleChange(e)} />,
@@ -112,7 +112,7 @@ export default function CreateControls(widgetType = null, widget = null, session
         case 'Button':
             DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
-                <EditWidgetSignalControl key={1} widget={widget} controlId={'signalIDs'} input signals={signals} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetSignalControl key={1} widget={widget} controlId={'signalIDs'} input signals={signals} handleChange={(e) => handleChange(e)} direction={'in'}/>,
                 <EditWidgetCheckboxControl key={2} widget={widget} controlId={'customProperties.toggle'} input text="Toggle" handleChange={e => handleChange(e)} />,
                 <EditWidgetNumberControl key={3} widget={widget} controlId={'customProperties.on_value'} label={'On Value'} defaultValue={1} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetNumberControl key={4} widget={widget} controlId={'customProperties.off_value'} label={'Off Value'} defaultValue={0} handleChange={(e) => handleChange(e)} />
@@ -148,7 +148,7 @@ export default function CreateControls(widgetType = null, widget = null, session
         case 'NumberInput':
             DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
-                <EditWidgetSignalControl key={2} widget={widget} controlId={'signalIDs'} input  signals={signals} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetSignalControl key={2} widget={widget} controlId={'signalIDs'} input  signals={signals} handleChange={(e) => handleChange(e)} direction={'in'}/>,
                 <EditWidgetCheckboxControl key={1} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />
             );
             break;

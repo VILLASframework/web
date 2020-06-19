@@ -23,7 +23,17 @@ class EditWidgetSignalsControl extends Component {
     super(props);
 
     this.state = {
+      widget: {},
+      signals: [],
+      checkedSignals: props.widget[props.controlId]
+    };
+  }
+
+
+  static getDerivedStateFromProps(props, state){
+    return {
       widget: props.widget,
+      signals: props.signals.filter(s => s.direction === props.direction),
       checkedSignals: props.widget[props.controlId]
     };
   }
@@ -48,10 +58,10 @@ class EditWidgetSignalsControl extends Component {
         <FormGroup>
           <FormLabel>Signals</FormLabel>
           {
-            this.props.signals === 0 || !this.state.widget.hasOwnProperty(this.props.controlId)? (
+            this.state.signals === 0 || !this.state.widget.hasOwnProperty(this.props.controlId)? (
               <FormLabel>No signals available</FormLabel>
             ) : (
-              this.props.signals.map((signal, index) => (
+              this.state.signals.map((signal, index) => (
                 <FormCheck
                   type={'checkbox'}
                   label={signal.name}
@@ -61,7 +71,7 @@ class EditWidgetSignalsControl extends Component {
                   onChange={(e) => this.handleSignalChange(e.target.checked, signal.id)}>
                 </FormCheck>
                 ))
-            )
+              )
           }
         </FormGroup>
     );
