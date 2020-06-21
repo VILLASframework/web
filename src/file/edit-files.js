@@ -38,7 +38,7 @@ class EditFilesDialog extends React.Component {
 
   onClose(canceled) {
     if (canceled === false) {
-      if (this.validChanges()) {
+      if (true) {
         this.props.onClose();
       }
     } else {
@@ -64,6 +64,7 @@ class EditFilesDialog extends React.Component {
       scenarioID: this.props.scenarioID,
     });
 
+    this.setState({ uploadFile: null });
     // TODO make sure that dialog remains open after clicking "Upload" button
   };
 
@@ -118,21 +119,23 @@ class EditFilesDialog extends React.Component {
     };
 
     return (
-      <Dialog show={this.props.show} title="Edit Files of scenario" buttonTitle="Close" valid={true}>
+      <Dialog show={this.props.show} title="Edit Files of scenario" buttonTitle="Close" onClose={(c) => this.onClose(c)} valid={true}>
         <div>
-          <Table data={this.props.files}>
-            <TableColumn title='ID' dataKey='id'  />
-            <TableColumn title='Name' dataKey='name'  />
-            <TableColumn title='Size (bytes)' dataKey='size' />
-            <TableColumn title='Type' dataKey='type' />
+
+        <div className="edit-table">
+          <Table data={this.props.files} width = {467}>
+            <TableColumn title='ID' dataKey='id' width={42}  />
+            <TableColumn title='Name' dataKey='name'  width={107}/>
+            <TableColumn title='Size (bytes)' dataKey='size' width={83.3}/>
+            <TableColumn title='Type' dataKey='type' width={159.7}/>
             <TableColumn
               title='Delete'
-              width='50'
+              width='75'
               deleteButton
               onDelete={(index) => this.deleteFile(index)}
             />
           </Table>
-
+        </div>
 
           <FormGroup as={Col} >
             <FormControl
