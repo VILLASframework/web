@@ -119,7 +119,7 @@ class EditFilesDialog extends React.Component {
     };
 
     return (
-      <Dialog show={this.props.show} title="Edit Files of scenario" buttonTitle="Close" onClose={(c) => this.onClose(c)} valid={true}>
+      <Dialog show={this.props.show} title="Edit Files of scenario" buttonTitle="Close" onClose={(c) => this.onClose(c)} blendOutCancel = {true} valid={true}>
         <div>
 
         <div className="edit-table">

@@ -56,7 +56,7 @@ class Dialog extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={this.cancelModal}>Cancel</Button>
+         {this.props.blendOutCancel? <div></div>:  <Button onClick={this.cancelModal}>Cancel</Button>}
           <Button onClick={this.closeModal} disabled={!this.props.valid}>{this.props.buttonTitle}</Button>
         </Modal.Footer>
       </Modal>

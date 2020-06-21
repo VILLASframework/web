@@ -122,7 +122,7 @@ class Dashboard extends Component {
       paused: prevState.paused || false,
 
       editModal:  false,
-      filesEditModal: false,
+      filesEditModal: prevState.filesEditModal || false,
       filesEditSaveState: prevState.filesEditSaveState || [],
       modalData:  null,
       modalIndex:  null,
