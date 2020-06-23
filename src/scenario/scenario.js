@@ -234,12 +234,18 @@ class Scenario extends React.Component {
     this.setState({ selectedConfigs: selectedConfigs });
   }
 
-  runAction = action => {
+  runAction(action) {
+
+    if(action.data.action === 'none'){
+      console.warn("No command selected. Nothing was sent.");
+      return;
+    }
+
     for (let index of this.state.selectedConfigs) {
       // get IC for component config
       let ic = null;
       for (let component of this.state.ics) {
-        if (component._id === this.state.configs[index].icID) {
+        if (component.id === this.state.configs[index].icID) {
           ic = component;
         }
       }
@@ -410,11 +416,15 @@ class Scenario extends React.Component {
       marginLeft: '10px'
     };
 
+    const tableHeadingStyle = {
+      paddingTop: '30px'
+    }
+
     return <div className='section'>
       <h1>{this.state.scenario.name}</h1>
 
       {/*Component Configurations table*/}
-      <h2>Component Configurations</h2>
+      <h2 style={tableHeadingStyle}>Component Configurations</h2>
       <Table data={this.state.configs}>
         <TableColumn checkbox onChecked={(index, event) => this.onConfigChecked(index, event)} width='30' />
         <TableColumn title='Name' dataKey='name' />
@@ -447,8 +457,9 @@ class Scenario extends React.Component {
       <div style={{ float: 'left' }}>
         <ICAction
           runDisabled={this.state.selectedConfigs.length === 0}
-          runAction={this.runAction}
+          runAction={(action) => this.runAction(action)}
           actions={[
+            { id: '-1', title: 'Select command', data: { action: 'none' } },
             { id: '0', title: 'Start', data: { action: 'start' } },
             { id: '1', title: 'Stop', data: { action: 'stop' } },
             { id: '2', title: 'Pause', data: { action: 'pause' } },
@@ -493,7 +504,7 @@ class Scenario extends React.Component {
         configID={this.state.modalConfigData.id}/>
 
       {/*Dashboard table*/}
-      <h2>Dashboards</h2>
+      <h2 style={tableHeadingStyle}>Dashboards</h2>
       <Table data={this.state.dashboards}>
         <TableColumn title='Name' dataKey='name' link='/dashboards/' linkKey='id' />
         <TableColumn title='Grid' dataKey='grid' />
