@@ -28,9 +28,9 @@ class ScenariosDataManager extends RestDataManager {
   }
 
   getUsers(token, id) {
-    RestAPI.get(this.makeURL('/scenarios/' + id + '/users/'), token).then(response => {
+    RestAPI.get(this.makeURL('/scenarios/' + id + '/users'), token).then(response => {
       AppDispatcher.dispatch({
-        type: 'scenarios/users',
+        type: 'scenarios/users-loaded',
         users: response.users,
         scenarioID: id
       });
@@ -46,10 +46,11 @@ class ScenariosDataManager extends RestDataManager {
     let path = id + '/user';
     RestAPI.put(this.requestURL('load/add', path, '?username=' + username), null, token).then(response => {
       AppDispatcher.dispatch({
-        type: 'scenarios/user-added',
-        user: response.user,
-        scenarioID: id
+        type: 'scenarios/start-load-users',
+        data: id,
+        token: token
       });
+
     }).catch(error => {
       AppDispatcher.dispatch({
         type: 'scenarios/users-error',
@@ -62,10 +63,11 @@ class ScenariosDataManager extends RestDataManager {
     let path = id + '/user';
     RestAPI.delete(this.makeURL(this.url + '/' + path + '?username=' + username), token).then(response => {
       AppDispatcher.dispatch({
-        type: 'scenarios/user-deleted',
-        user: response.user,
-        scenarioID: id
+        type: 'scenarios/start-load-users',
+        data: id,
+        token: token
       });
+
     }).catch(error => {
       AppDispatcher.dispatch({
         type: 'scenarios/users-error',

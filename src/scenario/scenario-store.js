@@ -18,6 +18,7 @@
 
 import ScenariosDataManager from './scenarios-data-manager';
 import ArrayStore from '../common/array-store';
+import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
 
 
 class ScenarioStore extends ArrayStore{
@@ -25,58 +26,18 @@ class ScenarioStore extends ArrayStore{
     super('scenarios', ScenariosDataManager);
   }
 
-  // calls to VILLASweb backend
-  getUsers(token, id) {
-    ScenariosDataManager.getUsers(token, id);
-  }
-
-  addUser(token, id, username) {
-    ScenariosDataManager.addUser(token, id, username);
-  }
-
-  deleteUser(token, id, username) {
-    ScenariosDataManager.deleteUser(token, id, username);
-  }
-
-  /* store functions, called when calls to backend have returned */
-
+  // store function, called when calls to backend have returned
   // save users after they are loaded ('getUsers' call)
   storeUsers(state, action) {
     let scenarioID = action.scenarioID;
     state.forEach((element, index, array) => {
       if (element.id === scenarioID) {
         array[index]["users"] = action.users;
-        this.__emitChange();
-        return state;
       }
     })
-  }
+    this.__emitChange();
+    return state;
 
-  // save new user after it was added to scenario ('addUser' call)
-  storeUser(state, action) {
-    let scenarioID = action.scenarioID;
-    state.forEach((element, index, array) => {
-      if (element.id === scenarioID) {
-        array[index]["users"].push(action.user);
-        this.__emitChange();
-        return state;
-      }
-    })
-  }
-
-  // remove user from ScenarioStore
-  removeUser(state, action) {
-    let scenarioID = action.scenarioID;
-    state.forEach((element, index, array) => {
-      if (element.id === scenarioID) {
-        const userindex = array[index]["users"].indexOf(action.user);
-        if (index > -1) {
-          array[index]["users"].splice(userindex, 1);
-          this.__emitChange();
-        }
-        return state;
-      }
-    })
   }
 
   reduce(state, action) {
@@ -112,14 +73,33 @@ class ScenarioStore extends ArrayStore{
           return super.reduce(state, action);
         }
 
-      case 'scenarios/users':
+      case 'scenarios/start-load-users':
+        this.dataManager.getUsers(action.token, action.data);
+        return super.reduce(state, action);
+
+      case 'scenarios/users-loaded':
         return this.storeUsers(state, action);
 
-      case 'scenarios/user-added':
-        return this.storeUser(state, action);
+      case 'scenarios/add-user':
+        this.dataManager.addUser(action.token, action.data, action.username);
+        return super.reduce(state, action);
 
-      case 'scenarios/user-deleted':
-        return this.removeUser(state, action);
+      case 'scenarios/remove-user':
+        this.dataManager.deleteUser(action.token, action.data, action.username)
+        return super.reduce(state, action);
+
+      case 'scenarios/users-error':
+        if (action.error && !action.error.handled && action.error.response) {
+
+          const SCENARIO_USERS_ERROR_NOTIFICATION = {
+            title: 'Failed to modify scenario users ',
+            message: action.error.response.body.message,
+            level: 'error'
+          };
+          NotificationsDataManager.addNotification(SCENARIO_USERS_ERROR_NOTIFICATION);
+
+        }
+        return super.reduce(state, action);
 
       default:
         return super.reduce(state, action);

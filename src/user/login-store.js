@@ -79,13 +79,6 @@ class LoginStore extends ReduceStore {
         }
         return state;
 
-      case 'scenarios/users':
-        state.scenarioUsers = action.users;
-        return state;
-
-      case 'scenarios/users-error':
-        return state;
-
       default:
         return state;
     }
