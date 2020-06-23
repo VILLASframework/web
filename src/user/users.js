@@ -122,6 +122,16 @@ class Users extends Component {
     }
   };
 
+  modifyActiveColumn(active){
+
+    if(active){
+      return <Icon icon='check' />
+    } else {
+      return <Icon icon='times' />
+    }
+
+  }
+
   render() {
 
     return (
@@ -132,8 +142,8 @@ class Users extends Component {
           <TableColumn title='Username' width='150' dataKey='username' />
           <TableColumn title='ID' width='150' dataKey='id' />
           <TableColumn title='E-mail' dataKey='mail'  />
-          <TableColumn title='Role' dataKey='role'   modifier={(role) => this.getHumanRoleName(role)} />
-          <TableColumn title='Active' dataKey='active' />
+          <TableColumn title='Role' dataKey='role'  modifier={(role) => this.getHumanRoleName(role)} />
+          <TableColumn title='Active' dataKey='active' modifier={(active) => this.modifyActiveColumn(active)} />
           <TableColumn width='200' editButton deleteButton onEdit={index => this.setState({ editModal: true, modalData: this.state.users[index] })} onDelete={index => this.setState({ deleteModal: true, modalData: this.state.users[index] })} />
         </Table>
 
