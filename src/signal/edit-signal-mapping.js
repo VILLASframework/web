@@ -61,7 +61,6 @@ class EditSignalMapping extends React.Component {
   }
 
   handleMappingChange = (event, row, column) => {
-      const signals = this.state.signals;
       let sig = {}
 
       if (column === 1) { // Name change
