@@ -85,14 +85,17 @@ class CustomTable extends Component {
         labelContent = child.props.labelModifier(labelContent, data);
       }
 
+      let labelStyle = child.props.labelStyle(data[labelKey], data)
+
       cell.push(<span>
         &nbsp;
-          <FormLabel column={false} classes={child.props.labelStyle(data[labelKey], data)}>
+          <FormLabel column={false} className={labelStyle}>
             {labelContent.toString()}
           </FormLabel>
       </span>
       );
     }
+
 
     if (child.props.dataIndex) {
       cell.push(index);
