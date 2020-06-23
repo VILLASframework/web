@@ -49,6 +49,10 @@ class Scenario extends React.Component {
   }
 
   static calculateState(prevState, props) {
+    if (prevState == null) {
+      prevState = {};
+    }
+
     // get selected scenario
     const sessionToken = LoginStore.getState().token;
 
@@ -86,12 +90,12 @@ class Scenario extends React.Component {
       deleteConfigModal: false,
       importConfigModal: false,
       editConfigModal: false,
-      modalConfigData: {},
+      modalConfigData: (prevState.modalConfigData !== {} && prevState.modalConfigData !== undefined )? prevState.modalConfigData : {},
       selectedConfigs: [],
       modalConfigIndex: 0,
 
-      editOutputSignalsModal: false,
-      editInputSignalsModal: false,
+      editOutputSignalsModal: prevState.editOutputSignalsModal || false,
+      editInputSignalsModal: prevState.editInputSignalsModal || false,
 
       newDashboardModal: false,
       deleteDashboardModal: false,
@@ -346,52 +350,12 @@ class Scenario extends React.Component {
   * Signal modification methods
   ############################################## */
 
-  closeDeleteSignalModal(data){
-    // data contains the signal to be deleted
-    if (data){
-
-      AppDispatcher.dispatch({
-        type: 'signals/start-remove',
-        data: data,
-        token: this.state.sessionToken
-      });
-
-    }
-  }
-
-  closeNewSignalModal(data){
-    //data contains the new signal incl. configID and direction
-    if (data) {
-      AppDispatcher.dispatch({
-        type: 'signals/start-add',
-        data: data,
-        token: this.state.sessionToken
-      });
-    }
-  }
-
-  closeEditSignalsModal(data, direction){
-
+  closeEditSignalsModal(direction){
     if( direction === "in") {
       this.setState({editInputSignalsModal: false});
     } else if( direction === "out"){
       this.setState({editOutputSignalsModal: false});
-    } else {
-      return; // no valid direction
     }
-
-    if (data){
-      //data is an array of signals
-      for (let sig of data) {
-        //dispatch changes to signals
-        AppDispatcher.dispatch({
-          type: 'signals/start-edit',
-          data: sig,
-          token: this.state.sessionToken,
-        });
-      }
-    }
-
   }
 
   /* ##############################################
@@ -488,20 +452,20 @@ class Scenario extends React.Component {
 
       <EditSignalMapping
         show={this.state.editOutputSignalsModal}
-        onCloseEdit={(data, direction) => this.closeEditSignalsModal(data, direction)}
-        onAdd={(data) => this.closeNewSignalModal(data)}
-        onDelete={(data) => this.closeDeleteSignalModal(data)}
+        onCloseEdit={(direction) => this.closeEditSignalsModal(direction)}
         direction="Output"
         signals={this.state.signals}
-        configID={this.state.modalConfigData.id} />
+        configID={this.state.modalConfigData.id}
+        sessionToken={this.state.sessionToken}
+      />
       <EditSignalMapping
         show={this.state.editInputSignalsModal}
-        onCloseEdit={(data, direction) => this.closeEditSignalsModal(data, direction)}
-        onAdd={(data) => this.closeNewSignalModal(data)}
-        onDelete={(data) => this.closeDeleteSignalModal(data)}
+        onCloseEdit={(direction) => this.closeEditSignalsModal(direction)}
         direction="Input"
         signals={this.state.signals}
-        configID={this.state.modalConfigData.id}/>
+        configID={this.state.modalConfigData.id}
+        sessionToken={this.state.sessionToken}
+      />
 
       {/*Dashboard table*/}
       <h2 style={tableHeadingStyle}>Dashboards</h2>
