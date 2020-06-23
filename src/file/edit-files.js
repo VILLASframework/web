@@ -65,7 +65,6 @@ class EditFilesDialog extends React.Component {
     });
 
     this.setState({ uploadFile: null });
-    // TODO make sure that dialog remains open after clicking "Upload" button
   };
 
   updateUploadProgress = (event) => {
@@ -93,9 +92,6 @@ class EditFilesDialog extends React.Component {
       data: file,
       token: this.props.sessionToken
     });
-
-    // TODO make sure that dialog remains open after clicking delete button
-
   }
 
 
