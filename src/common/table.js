@@ -63,7 +63,7 @@ class CustomTable extends Component {
 
     let cell = [];
     if (content != null) {
-      content = content.toString();
+      //content = content.toString();
 
       // check if cell should be a link
       const linkKey = child.props.linkKey;
@@ -79,7 +79,7 @@ class CustomTable extends Component {
     // add label to content
     const labelKey = child.props.labelKey;
     if (labelKey && data[labelKey] != null) {
-      var labelContent = data[labelKey];
+      let labelContent = data[labelKey];
 
       if (child.props.labelModifier) {
         labelContent = child.props.labelModifier(labelContent, data);
@@ -90,7 +90,7 @@ class CustomTable extends Component {
       cell.push(<span>
         &nbsp;
           <FormLabel column={false} className={labelStyle}>
-            {labelContent.toString()}
+            {labelContent}
           </FormLabel>
       </span>
       );
