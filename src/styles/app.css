@@ -272,6 +272,27 @@ body {
                                              supported by Chrome and Opera */
 }
 
+.edit-table table {
+  background-color: #fff;
+  table-layout: fixed;
+  word-wrap: break-word;
+  width: 467px;
+}
+
+.edit-table th {
+  position: sticky; 
+  top: 0;
+  text-align: left;
+}
+
+.edit-table td{
+  text-align: left;
+}
+
+.edit-table td {
+  padding: 2px 8px !important;
+}
+
 /**
  * Toolbox
  */
@@ -379,6 +400,6 @@ body {
   margin-right: 0 !important;
 }
 
-.label-outdated {
+.badge-outdated {
   opacity: 0.4;
 }

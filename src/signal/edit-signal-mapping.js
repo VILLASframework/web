@@ -18,35 +18,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Button, FormGroup, FormLabel, FormText} from 'react-bootstrap';
-
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
 import Dialog from "../common/dialogs/dialog";
-
-import SignalStore from "./signal-store"
 import Icon from "../common/icon";
+import AppDispatcher from "../common/app-dispatcher";
 
 class EditSignalMapping extends React.Component {
-  valid = false;
-
-  static getStores() {
-    return [ SignalStore];
-  }
 
   constructor(props) {
-      super(props);
+    super(props);
 
-      let dir = "";
-      if ( this.props.direction === "Output"){
-        dir = "out";
-      } else if ( this.props.direction === "Input" ){
-        dir = "in";
-      }
+    let dir = "";
+    if ( this.props.direction === "Output"){
+      dir = "out";
+    } else if ( this.props.direction === "Input" ){
+      dir = "in";
+    }
 
-      this.state = {
-        dir,
-        signals: [],
-      };
+
+    this.state = {
+      dir,
+      signals: []
+    };
   }
 
   static getDerivedStateFromProps(props, state){
@@ -63,55 +57,51 @@ class EditSignalMapping extends React.Component {
 
 
   onClose(canceled) {
-      if (canceled === false) {
-        if (this.valid) {
-          let data = this.state.signals;
-
-          //forward modified signals back to callback function
-          this.props.onCloseEdit(data, this.state.dir)
-        }
-      } else {
-        this.props.onCloseEdit(null, this.state.dir);
-      }
-    }
-
-  onDelete(e){
-    console.log("On signal delete");
+    this.props.onCloseEdit(this.state.dir)
   }
 
-
   handleMappingChange = (event, row, column) => {
-      const signals = this.state.signals;
+      let sig = {}
 
       if (column === 1) { // Name change
           if (event.target.value !== '') {
-            signals[row].name = event.target.value;
-            this.setState({signals: signals});
-            this.valid = true;
+            sig = this.state.signals[row];
+            sig.name = event.target.value;
           }
       } else if (column === 2) { // unit change
           if (event.target.value !== '') {
-            signals[row].unit = event.target.value;
-            this.setState({signals: signals});
-            this.valid = true;
+            sig = this.state.signals[row];
+            sig.unit = event.target.value;
           }
       } else if (column === 0) { //index change
-
-            signals[row].index = parseInt(event.target.value, 10);
-            this.setState({signals: signals});
-            this.valid = true;
+        sig = this.state.signals[row];
+        sig.index = parseInt(event.target.value, 10);
       }
+
+      if (sig !== {}){
+        //dispatch changes to signal
+        AppDispatcher.dispatch({
+          type: 'signals/start-edit',
+          data: sig,
+          token: this.props.sessionToken,
+        });
+      }
+
   };
 
   handleDelete = (index) => {
 
     let data = this.state.signals[index]
-    this.props.onDelete(data);
+
+    AppDispatcher.dispatch({
+      type: 'signals/start-remove',
+      data: data,
+      token: this.props.sessionToken
+    });
 
   };
 
   handleAdd = () => {
-    console.log("add signal");
 
     let newSignal = {
       configID: this.props.configID,
@@ -121,12 +111,15 @@ class EditSignalMapping extends React.Component {
       index: 999
     };
 
-    this.props.onAdd(newSignal)
+    AppDispatcher.dispatch({
+      type: 'signals/start-add',
+      data: newSignal,
+      token: this.props.sessionToken
+    });
 
   };
 
   resetState() {
-      this.valid=false;
 
       let signals = this.props.signals.filter((sig) => {
         return (sig.configID === this.props.configID) && (sig.direction === this.state.dir);
@@ -143,7 +136,14 @@ class EditSignalMapping extends React.Component {
 
       return(
 
-        <Dialog show={this.props.show} title="Edit Signal Mapping" buttonTitle="Save Edits" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+        <Dialog
+          show={this.props.show}
+          title="Edit Signal Mapping"
+          buttonTitle="Close"
+          blendOutCancel = {true}
+          onClose={(c) => this.onClose(c)}
+          onReset={() => this.resetState()}
+          valid={true}>
 
           <FormGroup>
               <FormLabel>{this.props.direction} Mapping</FormLabel>

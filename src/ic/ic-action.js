@@ -55,11 +55,12 @@ class ICAction extends React.Component {
         ));
 
         return <div>
+          Send command to infrastructure component
           <ButtonToolbar>
             <DropdownButton title={this.state.selectedAction != null ? this.state.selectedAction.title : ''} id="action-dropdown" onSelect={this.setAction}>
               {actionList}
             </DropdownButton>
-            <Button style={{ marginLeft: '5px' }} disabled={this.props.runDisabled} onClick={() => this.props.runAction(this.state.selectedAction)}>Run</Button>
+            <Button style={{ marginLeft: '5px' }} disabled={this.props.runDisabled} onClick={() => this.props.runAction(this.state.selectedAction)}>Send command</Button>
           </ButtonToolbar>
 
         </div>;

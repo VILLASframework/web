@@ -23,13 +23,15 @@ class EditWidgetSignalControl extends Component {
     super(props);
 
     this.state = {
-      widget: {}
+      widget: {},
+      signals: []
     };
   }
 
   static getDerivedStateFromProps(props, state){
     return {
-      widget: props.widget
+      widget: props.widget,
+      signals: props.signals.filter(s => s.direction === props.direction)
     };
   }
 
@@ -51,10 +53,10 @@ class EditWidgetSignalControl extends Component {
           <FormControl as="select" value={this.props.widget.signalIDs[0] || ""} onChange={(e) => this.handleSignalChange(e)}>
           <option default>Select signal</option>
             {
-              this.props.signals.length === 0 ? (
+              this.state.signals.length === 0 ? (
                 <option disabled value style={{ display: 'none' }}>No signals available.</option>
               ) : (
-                this.props.signals.map((signal, index) => (
+                this.state.signals.map((signal, index) => (
                   <option key={index} value={signal.id}>{signal.name}</option>
                 ))
               )

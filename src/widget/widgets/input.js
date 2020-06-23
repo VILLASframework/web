@@ -31,53 +31,47 @@ class WidgetInput extends Component {
 
   static getDerivedStateFromProps(props, state){
 
-    let returnState = {};
+    let value = ''
+    let unit = ''
 
-    if(props.widget.customProperties.value !== ''){
-      returnState["value"] = props.widget.customProperties.value;
-    }
-
-    if(props.widget.signalIDs.length === 0){
-      if (props.widget.customProperties.default_value && state.value === undefined && props.widget.customProperties.value === '') {
-        returnState["value"] = props.widget.customProperties.default_value;
-      } else { // if no default available
-        if (returnState !== {}){
-          return returnState;
-        }
-        else{
-          return null;
-        }
-      }
-    }
-
-    // Update value
-    if (props.widget.customProperties.default_value && this.state.value === undefined && props.widget.customProperties.value === '') {
-      returnState["value"] = props.widget.customProperties.default_value;
+    if(props.widget.customProperties.hasOwnProperty('value') && props.widget.customProperties.value !== state.value){
+      // set value to customProperties.value if this property exists and the value is different from current state
+      value = Number(props.widget.customProperties.value);
+    } else if (props.widget.customProperties.hasOwnProperty('default_value') && state.value === ''){
+      // if customProperties.default_value exists and value has been assigned yet, set the value to the default_value
+      value = Number(props.widget.customProperties.default_value)
     }
 
     // Update unit (assuming there is exactly one signal for this widget)
     let signalID = props.widget.signalIDs[0];
     let signal = props.signals.find(sig => sig.id === signalID);
     if(signal !== undefined){
-      returnState["unit"] = signal.unit;
+      unit = signal.unit;
     }
 
-    if (returnState !== {}){
-      return returnState;
-    }
-    else{
-      return null;
+    if (unit !== '' && value !== ''){
+      // unit and value have changed
+      return {unit: unit, value: value};
+    } else if (unit !== ''){
+      // only unit has changed
+      return {unit: unit}
+    } else if (value !== ''){
+      // only value has changed
+      return {value: value}
+    } else{
+      // nothing has changed
+      return null
     }
   }
 
   valueIsChanging(newValue) {
-    this.setState({ value: newValue });
-    this.props.widget.customProperties.value = newValue;
+    this.setState({ value: Number(newValue) });
+    this.props.widget.customProperties.value = Number(newValue);
   }
 
   valueChanged(newValue) {
     if (this.props.onInputChanged) {
-      this.props.onInputChanged(newValue);
+      this.props.onInputChanged(Number(newValue), 'value');
     }
   }
 
@@ -97,7 +91,16 @@ class WidgetInput extends Component {
                   </Col>
                   <Col>
                     <InputGroup>
-                      <FormControl type="number" step="any" disabled={ this.props.editing } onKeyPress={ (e) => this.handleKeyPress(e) } onBlur={ (e) => this.valueChanged(this.state.value) } onChange={ (e) => this.valueIsChanging(e.target.value) } placeholder="Enter value" value={ this.state.value } />
+                      <FormControl
+                        type="number"
+                        step="any"
+                        disabled={ this.props.editing }
+                        onKeyPress={ (e) => this.handleKeyPress(e) }
+                        onBlur={ (e) => this.valueChanged(this.state.value) }
+                        onChange={ (e) => this.valueIsChanging(e.target.value) }
+                        placeholder="Enter value"
+                        value={ this.state.value }
+                      />
                     {this.props.widget.customProperties.showUnit? (
                       <InputGroup.Append>
                         <InputGroup.Text>{this.state.unit}</InputGroup.Text>

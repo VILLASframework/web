@@ -177,8 +177,7 @@ class EditWidgetDialog extends React.Component {
             this.props.sessionToken,
             this.props.files,
             this.props.signals,
-            (e) => this.handleChange(e),
-            (f,i) => this.props.onUpload(f,i));
+            (e) => this.handleChange(e));
     }
 
     return (

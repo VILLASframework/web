@@ -22,6 +22,7 @@ import classNames from 'classnames';
 
 import Widget from '../widget/widget';
 import EditWidget from '../widget/edit-widget/edit-widget';
+import EditFiles from '../file/edit-files'
 import WidgetContextMenu from '../widget/widget-context-menu';
 import WidgetToolbox from '../widget/widget-toolbox';
 import WidgetArea from '../widget/widget-area';
@@ -121,10 +122,12 @@ class Dashboard extends Component {
       paused: prevState.paused || false,
 
       editModal:  false,
+      filesEditModal: prevState.filesEditModal || false,
+      filesEditSaveState: prevState.filesEditSaveState || [],
       modalData:  null,
       modalIndex:  null,
       widgetChangeData: [],
-      widgetAddData:prevState.widgetAddData || [],
+      widgetOrigIDs: prevState.widgetOrigIDs || [],
 
       maxWidgetHeight: maxHeight || null,
       dropZoneHeight: maxHeight +80 || null,
@@ -211,10 +214,6 @@ class Dashboard extends Component {
 
   handleDrop(widget) {
     widget.dashboardID = this.state.dashboard.id;
-    let tempChanges = this.state.widgetAddData;
-    tempChanges.push(widget);
-
-    this.setState({ widgetAddData: tempChanges})
 
     AppDispatcher.dispatch({
       type: 'widgets/start-add',
@@ -262,14 +261,20 @@ class Dashboard extends Component {
     this.setState({ editModal: true, modalData: widget, modalIndex: index });
   };
 
-  uploadFile(data,widget){
-    AppDispatcher.dispatch({
-      type: 'files/start-upload',
-      data: data,
-      token: this.state.sessionToken,
-      scenarioID: this.state.dashboard.scenarioID,
-    });
+  startEditFiles(){
+    let tempFiles = [];
+    this.state.files.forEach( file => {
+      tempFiles.push({
+        id: file.id,
+        name: file.name
+      });
+    })
+    this.setState({filesEditModal: true, filesEditSaveState: tempFiles});
+  }
 
+  closeEditFiles(){
+    this.setState({ filesEditModal: false });
+    // TODO do we need this if the dispatches happen in the dialog?
   }
 
   closeEdit(data){
@@ -279,7 +284,7 @@ class Dashboard extends Component {
       AppDispatcher.dispatch({
         type: 'widgets/start-load',
         token: this.state.sessionToken,
-        param: '?dashboardID=1'
+        param: '?dashboardID=' + this.state.dashboard.id
       });
 
       this.setState({ editModal: false });
@@ -308,7 +313,9 @@ class Dashboard extends Component {
 
 
   startEditing(){
+    let originalIDs = [];
     this.state.widgets.forEach( widget => {
+      originalIDs.push(widget.id);
       if(widget.type === 'Slider' || widget.type === 'NumberInput' || widget.type === 'Button'){
         AppDispatcher.dispatch({
           type: 'widgets/start-edit',
@@ -317,7 +324,7 @@ class Dashboard extends Component {
         });
       }
     });
-    this.setState({ editing: true });
+    this.setState({ editing: true, widgetOrigIDs: originalIDs });
   };
 
   saveEditing() {
@@ -336,7 +343,7 @@ class Dashboard extends Component {
         data: widget
       });
     });
-    this.setState({ editing: false, widgetChangeData: [], widgetAddData: [] });
+    this.setState({ editing: false, widgetChangeData: []});
   };
 
   saveChanges() {
@@ -354,28 +361,23 @@ class Dashboard extends Component {
 
   cancelEditing() {
     //raw widget has no id -> cannot be deleted in its original form
-    let temp = [];
-    this.state.widgetAddData.forEach(rawWidget => {
       this.state.widgets.forEach(widget => {
-        if(widget.y === rawWidget.y && widget.x === rawWidget.x && widget.type === rawWidget.type){
-          temp.push(widget);
+        let tempID = this.state.widgetOrigIDs.find(element => element === widget.id);
+        if(typeof tempID === 'undefined'){
+          AppDispatcher.dispatch({
+            type: 'widgets/start-remove',
+            data: widget,
+            token: this.state.sessionToken
+          });
         }
       })
-    })
 
-    temp.forEach( widget => {
-      AppDispatcher.dispatch({
-        type: 'widgets/start-remove',
-        data: widget,
-        token: this.state.sessionToken
-      });
-    });
     AppDispatcher.dispatch({
       type: 'widgets/start-load',
       token: this.state.sessionToken,
-      param: '?dashboardID=1'
+      param: '?dashboardID=' + this.state.dashboard.id
     });
-    this.setState({ editing: false, widgetChangeData: [], widgetAddData: []});
+    this.setState({ editing: false, widgetChangeData: []});
 
   };
 
@@ -416,6 +418,7 @@ class Dashboard extends Component {
           onFullscreen={this.props.toggleFullscreen}
           onPause={this.pauseData.bind(this)}
           onUnpause={this.unpauseData.bind(this)}
+          onEditFiles = {this.startEditFiles.bind(this)}
         />
       </div>
 
@@ -467,10 +470,18 @@ class Dashboard extends Component {
           sessionToken={this.state.sessionToken}
           show={this.state.editModal}
           onClose={this.closeEdit.bind(this)}
-          onUpload = {this.uploadFile.bind(this)}
           widget={this.state.modalData}
           signals={this.state.signals}
           files={this.state.files}
+        />
+
+        <EditFiles
+          sessionToken={this.state.sessionToken}
+          show={this.state.filesEditModal}
+          onClose={this.closeEditFiles.bind(this)}
+          signals={this.state.signals}
+          files={this.state.files}
+          scenarioID={this.state.dashboard.scenarioID}
         />
 
 

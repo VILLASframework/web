@@ -66,10 +66,17 @@ class DashboardButtonGroup extends React.Component {
       }
 
       buttons.push(
+        <Button key={key++} onClick={this.props.onEditFiles} style={buttonStyle}>
+          <Icon icon="file" /> Edit Files
+        </Button>
+      );
+
+      buttons.push(
         <Button key={key++} onClick={this.props.onEdit} style={buttonStyle}>
           <Icon icon="pen" /> Edit Layout
         </Button>
       );
+
     }
 
     return <div className='section-buttons-group-right'>

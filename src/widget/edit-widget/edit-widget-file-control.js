@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import {FormGroup, FormControl, FormLabel, Button, ProgressBar} from 'react-bootstrap';
+import {FormGroup, FormControl, FormLabel} from 'react-bootstrap';
 
 class EditFileWidgetControl extends React.Component {
 
@@ -24,39 +24,14 @@ class EditFileWidgetControl extends React.Component {
     super(props);
 
     this.state = {
-      widget: { },
       files: [],
-      fileList: null,
-      progress: 0
     };
   }
 
   static getDerivedStateFromProps(props, state){
     return {
-      widget: props.widget,
       files: props.files.filter(file => file.type.includes(props.type))
     };
-  }
-
-  startFileUpload = () => {
-    // get selected file
-    let formData = new FormData();
-
-    for (let key in this.state.fileList) {
-      if (this.state.fileList.hasOwnProperty(key) && this.state.fileList[key] instanceof File) {
-        formData.append("file", this.state.fileList[key]);
-      }
-    }
-
-    this.props.onUpload(formData,this.props.widget);
-  }
-
-  uploadProgress = (e) => {
-    this.setState({ progress: Math.round(e.percent) });
-  }
-
-  clearProgress = () => {
-    this.setState({ progress: 0 });
   }
 
   handleFileChange(e){
@@ -88,17 +63,9 @@ class EditFileWidgetControl extends React.Component {
         <FormLabel>Image</FormLabel>
         <FormControl
           as="select"
-          value={isCustomProperty ? this.state.widget[parts[0]][parts[1]] : this.state.widget[this.props.controlId]}
+          value={isCustomProperty ? this.props.widget[parts[0]][parts[1]] : this.props.widget[this.props.controlId]}
           onChange={(e) => this.handleFileChange(e)}>{fileOptions} </FormControl>
       </FormGroup>
-
-      <FormGroup controlId="upload">
-        <FormLabel>Upload</FormLabel>
-        <FormControl type="file" onChange={(e) => this.setState({ fileList: e.target.files }) } />
-      </FormGroup>
-
-      <ProgressBar striped active={'true'} now={this.state.progress} label={`${this.state.progress}%`} />
-      <Button size='sm' onClick={this.startFileUpload}>Upload</Button>
     </div>;
   }
 }

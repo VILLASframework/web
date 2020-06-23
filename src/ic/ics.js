@@ -220,39 +220,40 @@ class InfrastructureComponents extends Component {
     return Date.now() - new Date(component.stateUpdatedAt) > fiveMinutes;
   }
 
-  static stateLabelStyle(state, component){
-    var style = [ 'label' ];
+  stateLabelStyle(state, component){
+
+    var style = [ 'badge' ];
 
     if (InfrastructureComponents.isICOutdated(component) && state !== 'shutdown') {
-      style.push('label-outdated');
+      style.push('badge-outdated');
     }
 
     switch (state) {
       case 'running':
-        style.push('label-success');
+        style.push('badge-success');
         break;
 
       case 'paused':
-        style.push('label-info');
+        style.push('badge-info');
         break;
 
       case 'idle':
-        style.push('label-primary');
+        style.push('badge-primary');
         break;
 
       case 'error':
-        style.push('label-danger');
+        style.push('badge-danger');
         break;
 
       case 'shutdown':
-        style.push('label-warning');
+        style.push('badge-warning');
         break;
 
       default:
-        style.push('label-default');
+        style.push('badge-default');
     }
 
-    return style.join(' ');
+    return style.join(' ')
   }
 
   static stateUpdateModifier(updatedAt) {
@@ -273,7 +274,7 @@ class InfrastructureComponents extends Component {
         <Table data={this.state.ics}>
           <TableColumn checkbox onChecked={(index, event) => this.onICChecked(index, event)} width='30' />
           <TableColumn title='Name' dataKeys={['name', 'rawProperties.name']} />
-          <TableColumn title='State' labelKey='state' tooltipKey='error' labelModifier={InfrastructureComponents.stateLabelModifier} labelStyle={InfrastructureComponents.stateLabelStyle} />
+          <TableColumn title='State' labelKey='state' tooltipKey='error' labelStyle={(state, component) => this.stateLabelStyle(state, component)} />
           <TableColumn title='Category' dataKeys={['category', 'rawProperties.category']} />
           <TableColumn title='Type' dataKeys={['type', 'rawProperties.type']} />
           <TableColumn title='Location' dataKeys={['properties.location', 'rawProperties.location']} />

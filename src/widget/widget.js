@@ -35,7 +35,6 @@ import WidgetValue from './widgets/value';
 import WidgetPlot from './widgets/plot';
 import WidgetTable from './widgets/table';
 import WidgetLabel from './widgets/label';
-import WidgetPlotTable from './widgets/plot-table';
 import WidgetImage from './widgets/image';
 import WidgetButton from './widgets/button';
 import WidgetInput from './widgets/input';
@@ -72,8 +71,12 @@ class Widget extends React.Component {
 
     for (let id of props.data.signalIDs){
       let signal = signals.find(s => s.id === id);
-      let config = configs.find(m => m.id === signal.configID);
-      icIDs[signal.id] = config.icID;
+      if (signal !== undefined) {
+        let config = configs.find(m => m.id === signal.configID);
+        if (config !== undefined){
+          icIDs[signal.id] = config.icID;
+        }
+      }
     }
 
     return {
@@ -81,19 +84,40 @@ class Widget extends React.Component {
       signals: signals,
       icIDs: icIDs,
       files: FileStore.getState(),
-
-      sequence: prevState != null ? prevState.sequence + 1 : 0,
-
       sessionToken: LoginStore.getState().token
     };
   }
 
-  inputDataChanged(widget, data) {
+  inputDataChanged(widget, data, controlID) {
+    // controlID is the path to the widget customProperty that is changed (for example 'value')
+
+    // modify the widget customProperty
+    if (controlID !== '') {
+      let updatedWidget = JSON.parse(JSON.stringify(widget));
+      updatedWidget.customProperties[controlID] = data;
+      AppDispatcher.dispatch({
+        type: 'widgets/start-edit',
+        token: this.state.sessionToken,
+        data: updatedWidget
+      });
+    }
+
     // The following assumes that a widget modifies/ uses exactly one signal
+
+    // get the signal with the selected signal ID
+    let signalID = widget.signalIDs[0];
+    let signal = this.state.signals.filter(s => s.id === signalID)
+    if (signal.length === 0){
+      console.warn("Unable to send signal for signal ID", signalID, ". Signal not found.");
+      return;
+    }
+    // determine ID of infrastructure component related to signal[0]
+    // Remark: there is only one selected signal for an input type widget
+    let icID = this.state.icIDs[signal[0].id];
     AppDispatcher.dispatch({
       type: 'icData/inputChanged',
-      ic: this.state.icIDs[0],
-      signal: this.state.signals[0].index,
+      ic: icID,
+      signal: signal[0].index,
       data
     });
   }
@@ -101,37 +125,102 @@ class Widget extends React.Component {
   createWidget(widget) {
 
     if (widget.type === 'CustomAction') {
-      return <WidgetCustomAction widget={widget} data={this.state.icData} dummy={this.state.sequence}  signals={this.state.signals} icIDs={this.state.icIDs} />
+      return <WidgetCustomAction
+        widget={widget}
+        data={this.state.icData}
+        signals={this.state.signals}
+        icIDs={this.state.icIDs}
+      />
     } else if (widget.type === 'Action') {
-      return <WidgetAction widget={widget} data={this.state.icData} dummy={this.state.sequence} />
+      return <WidgetAction
+        widget={widget}
+        data={this.state.icData}
+      />
     } else if (widget.type === 'Lamp') {
-      return <WidgetLamp widget={widget} data={this.state.icData} dummy={this.state.sequence}  signals={this.state.signals} icIDs={this.state.icIDs} />
+      return <WidgetLamp
+        widget={widget}
+        data={this.state.icData}
+        signals={this.state.signals}
+        icIDs={this.state.icIDs}
+      />
     } else if (widget.type === 'Value') {
-      return <WidgetValue widget={widget} data={this.state.icData} dummy={this.state.sequence}  signals={this.state.signals} icIDs={this.state.icIDs} />
+      return <WidgetValue
+        widget={widget}
+        data={this.state.icData}
+        signals={this.state.signals}
+        icIDs={this.state.icIDs}
+      />
     } else if (widget.type === 'Plot') {
-      return <WidgetPlot widget={widget} data={this.state.icData} dummy={this.state.sequence}  signals={this.state.signals} icIDs={this.state.icIDs} paused={this.props.paused} />
+      return <WidgetPlot
+        widget={widget}
+        data={this.state.icData}
+        signals={this.state.signals}
+        icIDs={this.state.icIDs}
+        paused={this.props.paused}
+      />
     } else if (widget.type === 'Table') {
-      return <WidgetTable widget={widget} data={this.state.icData} dummy={this.state.sequence} signals={this.state.signals} icIDs={this.state.icIDs}  />
+      return <WidgetTable
+        widget={widget}
+        data={this.state.icData}
+        signals={this.state.signals}
+        icIDs={this.state.icIDs}
+      />
     } else if (widget.type === 'Label') {
-      return <WidgetLabel widget={widget} />
-    } else if (widget.type === 'PlotTable') {
-      return <WidgetPlotTable widget={widget} data={this.state.icData} dummy={this.state.sequence}  signals={this.state.signals} icIDs={this.state.icIDs} editing={this.props.editing} onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index)} paused={this.props.paused} />
+      return <WidgetLabel
+        widget={widget}
+      />
     } else if (widget.type === 'Image') {
-      return <WidgetImage widget={widget} files={this.state.files} token={this.state.sessionToken} />
+      return <WidgetImage
+        widget={widget}
+        files={this.state.files}
+        token={this.state.sessionToken}
+      />
     } else if (widget.type === 'Button') {
-      return <WidgetButton widget={widget} editing={this.props.editing}  onInputChanged={(value) => this.inputDataChanged(widget, value)} signals={this.state.signals} />
+      return <WidgetButton
+        widget={widget}
+        editing={this.props.editing}
+        onInputChanged={(value, controlID) => this.inputDataChanged(widget, value, controlID)}
+        signals={this.state.signals}
+      />
     } else if (widget.type === 'NumberInput') {
-      return <WidgetInput widget={widget} editing={this.props.editing}  onInputChanged={(value) => this.inputDataChanged(widget, value)} signals={this.state.signals} />
+      return <WidgetInput
+        widget={widget}
+        editing={this.props.editing}
+        onInputChanged={(value, controlID) => this.inputDataChanged(widget, value, controlID)}
+        signals={this.state.signals}
+      />
     } else if (widget.type === 'Slider') {
-      return <WidgetSlider widget={widget} editing={this.props.editing}  onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) } onInputChanged={value => this.inputDataChanged(widget, value)} signals={this.state.signals}/>
+      return <WidgetSlider
+        widget={widget}
+        editing={this.props.editing}
+        onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) }
+        onInputChanged={(value, controlID) => this.inputDataChanged(widget, value, controlID)}
+        signals={this.state.signals}
+      />
     } else if (widget.type === 'Gauge') {
-      return <WidgetGauge widget={widget} data={this.state.icData} editing={this.props.editing} signals={this.state.signals} icIDs={this.state.icIDs}  />
+      return <WidgetGauge
+        widget={widget}
+        data={this.state.icData}
+        editing={this.props.editing}
+        signals={this.state.signals}
+        icIDs={this.state.icIDs}
+      />
     } else if (widget.type === 'Box') {
-      return <WidgetBox widget={widget} editing={this.props.editing} />
+      return <WidgetBox
+        widget={widget}
+        editing={this.props.editing}
+      />
     } else if (widget.type === 'HTML') {
-      return <WidgetHTML widget={widget} editing={this.props.editing} />
+      return <WidgetHTML
+        widget={widget}
+        editing={this.props.editing}
+      />
     } else if (widget.type === 'Topology') {
-      return <WidgetTopology widget={widget} files={this.state.files} token={this.state.sessionToken} />
+      return <WidgetTopology
+        widget={widget}
+        files={this.state.files}
+        token={this.state.sessionToken}
+      />
     }
 
     return null;

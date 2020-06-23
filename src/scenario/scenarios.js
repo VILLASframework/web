@@ -214,6 +214,15 @@ class Scenarios extends Component {
     FileSaver.saveAs(blob, 'scenario - ' + scenario.name + '.json');
   }
 
+  modifyRunningColumn(running){
+
+    if(running){
+      return <Icon icon='check' />
+    } else {
+      return <Icon icon='times' />
+    }
+
+  }
 
   render() {
     const buttonStyle = {
@@ -227,7 +236,7 @@ class Scenarios extends Component {
         <Table data={this.state.scenarios}>
           <TableColumn title='Name' dataKey='name' link='/scenarios/' linkKey='id' />
           <TableColumn title='ID' dataKey='id' />
-          <TableColumn title='Running' dataKey='running' />
+          <TableColumn title='Running' dataKey='running' modifier={(running) => this.modifyRunningColumn(running)}/>
           <TableColumn
             width='200'
             editButton

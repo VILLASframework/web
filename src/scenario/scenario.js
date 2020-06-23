@@ -43,17 +43,20 @@ import EditSignalMapping from "../signal/edit-signal-mapping";
 import FileStore from "../file/file-store"
 import WidgetStore from "../widget/widget-store";
 
-
-
 class Scenario extends React.Component {
 
   static getStores() {
-    return [ScenarioStore, ConfigStore, DashboardStore, ICStore, LoginStore, SignalStore, FileStore, WidgetStore];
+    return [ ScenarioStore, ConfigStore, DashboardStore, ICStore, LoginStore, SignalStore, FileStore, WidgetStore];
   }
 
   static calculateState(prevState, props) {
+    if (prevState == null) {
+      prevState = {};
+    }
+
     // get selected scenario
     const sessionToken = LoginStore.getState().token;
+
     const scenario = ScenarioStore.getState().find(s => s.id === parseInt(props.match.params.scenario, 10));
     if (scenario == null) {
       AppDispatcher.dispatch({
@@ -87,12 +90,12 @@ class Scenario extends React.Component {
       deleteConfigModal: false,
       importConfigModal: false,
       editConfigModal: false,
-      modalConfigData: {},
+      modalConfigData: (prevState.modalConfigData !== {} && prevState.modalConfigData !== undefined )? prevState.modalConfigData : {},
       selectedConfigs: [],
       modalConfigIndex: 0,
 
-      editOutputSignalsModal: false,
-      editInputSignalsModal: false,
+      editOutputSignalsModal: prevState.editOutputSignalsModal || false,
+      editInputSignalsModal: prevState.editInputSignalsModal || false,
 
       newDashboardModal: false,
       deleteDashboardModal: false,
@@ -252,12 +255,18 @@ class Scenario extends React.Component {
     this.setState({ selectedConfigs: selectedConfigs });
   }
 
-  runAction = action => {
+  runAction(action) {
+
+    if(action.data.action === 'none'){
+      console.warn("No command selected. Nothing was sent.");
+      return;
+    }
+
     for (let index of this.state.selectedConfigs) {
       // get IC for component config
       let ic = null;
       for (let component of this.state.ics) {
-        if (component._id === this.state.configs[index].icID) {
+        if (component.id === this.state.configs[index].icID) {
           ic = component;
         }
       }
@@ -358,52 +367,12 @@ class Scenario extends React.Component {
   * Signal modification methods
   ############################################## */
 
-  closeDeleteSignalModal(data) {
-    // data contains the signal to be deleted
-    if (data) {
-
-      AppDispatcher.dispatch({
-        type: 'signals/start-remove',
-        data: data,
-        token: this.state.sessionToken
-      });
-
+  closeEditSignalsModal(direction){
+    if( direction === "in") {
+      this.setState({editInputSignalsModal: false});
+    } else if( direction === "out"){
+      this.setState({editOutputSignalsModal: false});
     }
-  }
-
-  closeNewSignalModal(data) {
-    //data contains the new signal incl. configID and direction
-    if (data) {
-      AppDispatcher.dispatch({
-        type: 'signals/start-add',
-        data: data,
-        token: this.state.sessionToken
-      });
-    }
-  }
-
-  closeEditSignalsModal(data, direction) {
-
-    if (direction === "in") {
-      this.setState({ editInputSignalsModal: false });
-    } else if (direction === "out") {
-      this.setState({ editOutputSignalsModal: false });
-    } else {
-      return; // no valid direction
-    }
-
-    if (data) {
-      //data is an array of signals
-      for (let sig of data) {
-        //dispatch changes to signals
-        AppDispatcher.dispatch({
-          type: 'signals/start-edit',
-          data: sig,
-          token: this.state.sessionToken,
-        });
-      }
-    }
-
   }
 
   /* ##############################################
@@ -428,11 +397,15 @@ class Scenario extends React.Component {
       marginLeft: '10px'
     };
 
+    const tableHeadingStyle = {
+      paddingTop: '30px'
+    }
+
     return <div className='section'>
       <h1>{this.state.scenario.name}</h1>
 
       {/*Scenario Users table*/}
-      <h2>Users</h2>
+      <h2 style={tableHeadingStyle}>Users</h2>
       <div>
         <Table data={this.state.scenario.users}>
           <TableColumn title='Name' dataKey='username' link='/users/' linkKey='id' />
@@ -464,7 +437,7 @@ class Scenario extends React.Component {
 
 
       {/*Component Configurations table*/}
-      <h2>Component Configurations</h2>
+      <h2 style={tableHeadingStyle}>Component Configurations</h2>
       <Table data={this.state.configs}>
         <TableColumn checkbox onChecked={(index, event) => this.onConfigChecked(index, event)} width='30' />
         <TableColumn title='Name' dataKey='name' />
@@ -497,8 +470,9 @@ class Scenario extends React.Component {
       <div style={{ float: 'left' }}>
         <ICAction
           runDisabled={this.state.selectedConfigs.length === 0}
-          runAction={this.runAction}
+          runAction={(action) => this.runAction(action)}
           actions={[
+            { id: '-1', title: 'Select command', data: { action: 'none' } },
             { id: '0', title: 'Start', data: { action: 'start' } },
             { id: '1', title: 'Stop', data: { action: 'stop' } },
             { id: '2', title: 'Pause', data: { action: 'pause' } },
@@ -527,23 +501,23 @@ class Scenario extends React.Component {
 
       <EditSignalMapping
         show={this.state.editOutputSignalsModal}
-        onCloseEdit={(data, direction) => this.closeEditSignalsModal(data, direction)}
-        onAdd={(data) => this.closeNewSignalModal(data)}
-        onDelete={(data) => this.closeDeleteSignalModal(data)}
+        onCloseEdit={(direction) => this.closeEditSignalsModal(direction)}
         direction="Output"
         signals={this.state.signals}
-        configID={this.state.modalConfigData.id} />
+        configID={this.state.modalConfigData.id}
+        sessionToken={this.state.sessionToken}
+      />
       <EditSignalMapping
         show={this.state.editInputSignalsModal}
-        onCloseEdit={(data, direction) => this.closeEditSignalsModal(data, direction)}
-        onAdd={(data) => this.closeNewSignalModal(data)}
-        onDelete={(data) => this.closeDeleteSignalModal(data)}
+        onCloseEdit={(direction) => this.closeEditSignalsModal(direction)}
         direction="Input"
         signals={this.state.signals}
-        configID={this.state.modalConfigData.id} />
+        configID={this.state.modalConfigData.id}
+        sessionToken={this.state.sessionToken}
+      />
 
       {/*Dashboard table*/}
-      <h2>Dashboards</h2>
+      <h2 style={tableHeadingStyle}>Dashboards</h2>
       <Table data={this.state.dashboards}>
         <TableColumn title='Name' dataKey='name' link='/dashboards/' linkKey='id' />
         <TableColumn title='Grid' dataKey='grid' />

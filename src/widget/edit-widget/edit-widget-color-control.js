@@ -75,7 +75,16 @@ class EditWidgetColorControl extends Component {
                   'checked': idx === (isCustomProperty ? this.state.widget[parts[0]][parts[1]] : this.state.widget[this.props.controlId])
                 });
 
-                return (<FormCheck type='radio' key={idx} name={this.props.label} style={colorStyle} className={checkedClass} value={idx} inline onChange={(e) => this.props.handleChange({target: { id: this.props.controlId, value: idx}})} />)
+                return (<FormCheck
+                  type='radio'
+                  key={idx}
+                  name={this.props.label}
+                  style={colorStyle}
+                  className={checkedClass}
+                  value={idx}
+                  inline
+                  defaultChecked={isCustomProperty ? this.state.widget[parts[0]][parts[1]] ===idx: this.state.widget[this.props.controlId] === idx}
+                  onChange={(e) => this.props.handleChange({target: { id: this.props.controlId, value: idx}})} />)
               }
             )
           }
