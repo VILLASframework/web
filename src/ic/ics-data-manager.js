@@ -26,7 +26,7 @@ class IcsDataManager extends RestDataManager {
 
     doActions(ic, action, token = null) {
         // TODO: Make only infrastructure component id dependent
-        RestAPI.post(this.makeURL(this.url + '/' + ic.id), action, token).then(response => {
+        RestAPI.post(this.makeURL(this.url + '/' + ic.id + '/action'), action, token).then(response => {
             AppDispatcher.dispatch({
                 type: 'ics/action-started',
                 data: response
