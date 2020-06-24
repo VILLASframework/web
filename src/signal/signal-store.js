@@ -17,6 +17,7 @@
 
 import ArrayStore from '../common/array-store';
 import SignalsDataManager from './signals-data-manager'
+import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
 
 class SignalStore extends  ArrayStore{
   constructor() {
@@ -26,10 +27,32 @@ class SignalStore extends  ArrayStore{
   reduce(state, action) {
     switch (action.type) {
       case 'signals/added':
-        SignalsDataManager.reloadConfig(action.token, action.data);
+        this.dataManager.reloadConfig(action.token, action.data);
         return super.reduce(state, action);
       case 'signals/removed':
-        SignalsDataManager.reloadConfig(action.token, action.data);
+        this.dataManager.reloadConfig(action.token, action.data);
+        return super.reduce(state, action);
+
+      case 'signals/start-autoconfig':
+        this.dataManager.startAutoConfig(action.data, action.url)
+        return super.reduce(state, action);
+
+      case 'signals/autoconfig-loaded':
+        console.log("AutoConfig Loaded: ", action.data)
+        // TODO save signal config contained in action.data
+        return super.reduce(state, action);
+
+      case 'signals/autoconfig-error':
+        if (action.error && !action.error.handled && action.error.response) {
+
+          const SIGNAL_AUTOCONF_ERROR_NOTIFICATION = {
+            title: 'Failed to load signal config ',
+            message: action.error.response.body.message,
+            level: 'error'
+          };
+          NotificationsDataManager.addNotification(SIGNAL_AUTOCONF_ERROR_NOTIFICATION);
+
+        }
         return super.reduce(state, action);
 
       default:

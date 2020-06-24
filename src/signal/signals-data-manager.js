@@ -36,6 +36,26 @@ class SignalsDataManager extends RestDataManager{
 
   }
 
+  startAutoConfig(data, url){
+    // This function queries the VILLASnode API to obtain the configuration of the VILLASnode located at url
+    // Endpoint: http[s]://server:port/api/v1 (to be generated based on IC host, port 4000)
+    // data contains the request data: { action, id, (request)}
+    // See documentation of VILLASnode API: https://villas.fein-aachen.org/doc/node-dev-api-node.html
+
+    console.log("startAutoConfig: POST to ", url, ": ", data);
+    RestAPI.post(url, data).then(response => {
+      AppDispatcher.dispatch({
+        type: 'signals/autoconfig-loaded',
+        data: response
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'signals/autoconfig-error',
+        error: error
+      })
+    })
+  }
+
 }
 
 export default new SignalsDataManager()
