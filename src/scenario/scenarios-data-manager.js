@@ -17,21 +17,72 @@
 
 import RestDataManager from '../common/data-managers/rest-data-manager';
 import AppDispatcher from "../common/app-dispatcher";
+import RestAPI from '../common/api/rest-api';
+
 
 class ScenariosDataManager extends RestDataManager {
   constructor() {
     super('scenario', '/scenarios');
 
-    this.onLoad =  this.onScenariosLoad
+    this.onLoad = this.onScenariosLoad
   }
 
-  onScenariosLoad(data, token){
+  getUsers(token, id) {
+    RestAPI.get(this.makeURL('/scenarios/' + id + '/users'), token).then(response => {
+      AppDispatcher.dispatch({
+        type: 'scenarios/users-loaded',
+        users: response.users,
+        scenarioID: id
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'scenarios/users-error',
+        error: error
+      })
+    })
+  }
+
+  addUser(token, id, username) {
+    let path = id + '/user';
+    RestAPI.put(this.requestURL('load/add', path, '?username=' + username), null, token).then(response => {
+      AppDispatcher.dispatch({
+        type: 'scenarios/start-load-users',
+        data: id,
+        token: token
+      });
+
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'scenarios/users-error',
+        error: error
+      })
+    })
+  }
+
+  deleteUser(token, id, username) {
+    let path = id + '/user';
+    RestAPI.delete(this.makeURL(this.url + '/' + path + '?username=' + username), token).then(response => {
+      AppDispatcher.dispatch({
+        type: 'scenarios/start-load-users',
+        data: id,
+        token: token
+      });
+
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'scenarios/users-error',
+        error: error
+      })
+    })
+  }
+
+  onScenariosLoad(data, token) {
 
     if (!Array.isArray(data)) {
       data = [data];
     }
 
-    for (let scenario of data){
+    for (let scenario of data) {
       AppDispatcher.dispatch({
         type: 'configs/start-load',
         token: token,
@@ -47,7 +98,7 @@ class ScenariosDataManager extends RestDataManager {
       AppDispatcher.dispatch({
         type: 'files/start-load',
         token: token,
-        param: '?scenarioID='+scenario.id,
+        param: '?scenarioID=' + scenario.id,
       });
     }
   }

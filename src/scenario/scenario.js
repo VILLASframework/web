@@ -17,7 +17,8 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button } from 'react-bootstrap';
+import { Button, InputGroup, FormControl } from 'react-bootstrap';
+
 import FileSaver from 'file-saver';
 
 import ScenarioStore from './scenario-store';
@@ -77,7 +78,6 @@ class Scenario extends React.Component {
     let signals = SignalStore.getState();
 
 
-
     return {
       scenario,
       sessionToken,
@@ -101,13 +101,24 @@ class Scenario extends React.Component {
       deleteDashboardModal: false,
       importDashboardModal: false,
       modalDashboardData: {},
+
+      deleteUserName: '',
+      deleteUserModal: false,
     }
   }
 
   componentDidMount() {
+
     //load selected scenario
     AppDispatcher.dispatch({
       type: 'scenarios/start-load',
+      data: this.state.scenario.id,
+      token: this.state.sessionToken
+    });
+
+
+    AppDispatcher.dispatch({
+      type: 'scenarios/start-load-users',
       data: this.state.scenario.id,
       token: this.state.sessionToken
     });
@@ -119,12 +130,35 @@ class Scenario extends React.Component {
     });
   }
 
+  /* ##############################################
+  * User modification methods
+  ############################################## */
+
+  addUser() {
+    AppDispatcher.dispatch({
+      type: 'scenarios/add-user',
+      data: this.state.scenario.id,
+      username: this.userToAdd,
+      token: this.state.sessionToken
+    });
+  }
+
+  closeDeleteUserModal() {
+    this.setState({ deleteUserModal: false });
+
+    AppDispatcher.dispatch({
+      type: 'scenarios/remove-user',
+      data: this.state.scenario.id,
+      username: this.state.deleteUserName,
+      token: this.state.sessionToken
+    });
+  }
 
   /* ##############################################
   * Component Configuration modification methods
   ############################################## */
 
-  addConfig(){
+  addConfig() {
     const config = {
       scenarioID: this.state.scenario.id,
       name: 'New Component Configuration',
@@ -140,8 +174,8 @@ class Scenario extends React.Component {
 
   }
 
-  closeEditConfigModal(data){
-    this.setState({ editConfigModal : false });
+  closeEditConfigModal(data) {
+    this.setState({ editConfigModal: false });
 
     if (data) {
       AppDispatcher.dispatch({
@@ -166,7 +200,7 @@ class Scenario extends React.Component {
     });
   }
 
-  importConfig(data){
+  importConfig(data) {
     this.setState({ importConfigModal: false });
 
     if (data == null) {
@@ -274,7 +308,7 @@ class Scenario extends React.Component {
   getICName(icID) {
     for (let ic of this.state.ics) {
       if (ic.id === icID) {
-        return ic.name ||  ic.uuid;
+        return ic.name || ic.uuid;
       }
     }
   }
@@ -284,7 +318,7 @@ class Scenario extends React.Component {
   ############################################## */
 
   closeNewDashboardModal(data) {
-    this.setState({ newDashboardModal : false });
+    this.setState({ newDashboardModal: false });
     if (data) {
       let newDashboard = data;
       // add default grid value and scenarioID
@@ -299,7 +333,7 @@ class Scenario extends React.Component {
     }
   }
 
-  closeDeleteDashboardModal(confirmDelete){
+  closeDeleteDashboardModal(confirmDelete) {
     this.setState({ deleteDashboardModal: false });
 
     if (confirmDelete === false) {
@@ -362,7 +396,7 @@ class Scenario extends React.Component {
   * File modification methods
   ############################################## */
 
-  getFileName(id){
+  getFileName(id) {
     for (let file of this.state.files) {
       if (file.id === id) {
         return file.name;
@@ -387,12 +421,14 @@ class Scenario extends React.Component {
     return <div className='section'>
       <h1>{this.state.scenario.name}</h1>
 
+
+
       {/*Component Configurations table*/}
       <h2 style={tableHeadingStyle}>Component Configurations</h2>
       <Table data={this.state.configs}>
         <TableColumn checkbox onChecked={(index, event) => this.onConfigChecked(index, event)} width='30' />
         <TableColumn title='Name' dataKey='name' />
-        <TableColumn title='Selected configuration file' dataKey='selectedFileID' modifier={(selectedFileID) => this.getFileName(selectedFileID)}/>
+        <TableColumn title='Selected configuration file' dataKey='selectedFileID' modifier={(selectedFileID) => this.getFileName(selectedFileID)} />
         <TableColumn
           title='# Output Signals'
           dataKey='outputLength'
@@ -428,7 +464,7 @@ class Scenario extends React.Component {
             { id: '1', title: 'Stop', data: { action: 'stop' } },
             { id: '2', title: 'Pause', data: { action: 'pause' } },
             { id: '3', title: 'Resume', data: { action: 'resume' } }
-          ]}/>
+          ]} />
       </div>
 
       <div style={{ float: 'right' }}>
@@ -489,10 +525,42 @@ class Scenario extends React.Component {
 
       <div style={{ clear: 'both' }} />
 
-      <NewDashboardDialog show={this.state.newDashboardModal} onClose={data => this.closeNewDashboardModal(data)}/>
-      <ImportDashboardDialog show={this.state.importDashboardModal} onClose={data => this.closeImportDashboardModal(data)}  />
+      <NewDashboardDialog show={this.state.newDashboardModal} onClose={data => this.closeNewDashboardModal(data)} />
+      <ImportDashboardDialog show={this.state.importDashboardModal} onClose={data => this.closeImportDashboardModal(data)} />
 
-      <DeleteDialog title="dashboard" name={this.state.modalDashboardData.name} show={this.state.deleteDashboardModal} onClose={(e) => this.closeDeleteDashboardModal(e)}/>
+      <DeleteDialog title="dashboard" name={this.state.modalDashboardData.name} show={this.state.deleteDashboardModal} onClose={(e) => this.closeDeleteDashboardModal(e)} />
+
+
+      {/*Scenario Users table*/}
+      <h2 style={tableHeadingStyle}>Users sharing this scenario</h2>
+      <div>
+        <Table data={this.state.scenario.users}>
+          <TableColumn title='Name' dataKey='username' link='/users/' linkKey='id' />
+          <TableColumn title='Mail' dataKey='mail' />
+          <TableColumn
+            title=''
+            width='200'
+            deleteButton
+            onDelete={(index) => this.setState({ deleteUserModal: true, deleteUserName: this.state.scenario.users[index].username, modalUserIndex: index })}
+          />
+        </Table>
+
+        <InputGroup style={{ width: 400, float: 'right' }}>
+          <FormControl
+            placeholder="Username"
+            onChange={(e) => this.userToAdd = e.target.value}
+          />
+          <InputGroup.Append>
+            <Button
+              type="submit"
+              onClick={() => this.addUser()}>
+              Add User
+            </Button>
+          </InputGroup.Append>
+        </InputGroup><br/><br/>
+      </div>
+
+      <DeleteDialog title="user from scenario:" name={this.state.deleteUserName} show={this.state.deleteUserModal} onClose={(c) => this.closeDeleteUserModal(c)} />
 
 
     </div>;
