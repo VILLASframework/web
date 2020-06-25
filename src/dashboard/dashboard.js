@@ -120,6 +120,7 @@ class Dashboard extends Component {
 
       editing: prevState.editing || false,
       paused: prevState.paused || false,
+      dropZoneHeight: prevState.dropZoneHeight || maxHeight +80,
 
       editModal:  false,
       filesEditModal: prevState.filesEditModal || false,
@@ -130,7 +131,6 @@ class Dashboard extends Component {
       widgetOrigIDs: prevState.widgetOrigIDs || [],
 
       maxWidgetHeight: maxHeight || null,
-      dropZoneHeight: maxHeight +80 || null,
     };
 
   }
@@ -389,6 +389,27 @@ class Dashboard extends Component {
     this.forceUpdate();
   };
 
+  setDashboardSize(value) {
+    const maxHeight = Object.values(this.state.widgets).reduce((currentHeight, widget) => {
+    const absolutHeight = widget.y + widget.height;
+
+    return absolutHeight > currentHeight ? absolutHeight : currentHeight;
+    }, 0);
+    let tempSize = null;
+    if(value === -1){
+      tempSize = this.state.dropZoneHeight - 50;
+      if(tempSize > maxHeight +80){
+        this.setState({dropZoneHeight: tempSize});
+      }
+    }
+    else{
+      tempSize = this.state.dropZoneHeight + 50;
+      this.setState( {dropZoneHeight: tempSize});
+      return tempSize;
+    }
+    
+  }
+
   pauseData(){
     this.setState({ paused: true });
   };
@@ -402,6 +423,7 @@ class Dashboard extends Component {
     const grid = this.state.dashboard.grid;
     const boxClasses = classNames('section', 'box', { 'fullscreen-padding': this.props.isFullscreen });
     let draggable = this.state.editing;
+    let dropZoneHeight = this.state.dropZoneHeight;
     return <div className={boxClasses} >
       <div className='section-header box-header'>
         <div className="section-title">
@@ -424,10 +446,10 @@ class Dashboard extends Component {
 
       <div className="box box-content" onContextMenu={ (e) => e.preventDefault() }>
         {this.state.editing &&
-        <WidgetToolbox grid={grid} onGridChange={this.setGrid.bind(this)} widgets={this.state.widgets} />
+        <WidgetToolbox grid={grid} onGridChange={this.setGrid.bind(this)} onDashboardSizeChange={this.setDashboardSize.bind(this)} widgets={this.state.widgets} />
         }
         {!draggable?(
-        <WidgetArea widgets={this.state.widgets} editing={this.state.editing} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
+        <WidgetArea widgets={this.state.widgets} dropZoneHeight = {dropZoneHeight} editing={this.state.editing} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
           {this.state.widgets != null && Object.keys(this.state.widgets).map(widgetKey => (
             <WidgetContextMenu
             key={widgetKey}
@@ -448,7 +470,7 @@ class Dashboard extends Component {
           ))}
         </WidgetArea>
         ) : (
-          <WidgetArea widgets={this.state.widgets} editing={this.state.editing} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
+          <WidgetArea widgets={this.state.widgets} editing={this.state.editing} dropZoneHeight= {dropZoneHeight} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
           {this.state.widgets != null && Object.keys(this.state.widgets).map(widgetKey => (
             <Widget
               key={widgetKey}
