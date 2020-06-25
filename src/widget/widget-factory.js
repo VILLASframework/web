@@ -168,6 +168,7 @@ class WidgetFactory {
                 widget.width = 100;
                 widget.height = 100;
                 widget.customProperties.border_color = 0;
+                widget.customProperties.background_color = 9;
                 widget.customProperties.background_color_opacity = 0.5;
                 widget.z = 0;
                 break;

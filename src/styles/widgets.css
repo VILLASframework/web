@@ -373,9 +373,9 @@ div[class*="-widget"] label {
 /* End table widget*/
 
 /* Begin box widget */
-.box-widget .border {
+.box-widget {
     width: 100%;
     height: 100%;
-    border: 2px solid;
+    border: 2px solid lightgray;
 }
 /* End box widget */
