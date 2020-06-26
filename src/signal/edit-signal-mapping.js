@@ -39,7 +39,8 @@ class EditSignalMapping extends React.Component {
 
     this.state = {
       dir,
-      signals: []
+      signals: [],
+      modifiedSignalIDs : []
     };
   }
 
@@ -51,46 +52,60 @@ class EditSignalMapping extends React.Component {
     });
 
     return {
-      signals: signals
+      signals: signals,
     };
   }
 
 
   onClose(canceled) {
+
+    for (let signalID of this.state.modifiedSignalIDs){
+
+      let sig = this.state.signals.find(s => s.id === signalID);
+
+      //dispatch changes to signal
+      AppDispatcher.dispatch({
+        type: 'signals/start-edit',
+        data: sig,
+        token: this.props.sessionToken,
+      });
+    }
+
     this.props.onCloseEdit(this.state.dir)
   }
 
   handleMappingChange = (event, row, column) => {
-      let sig = {}
+
+    let signals = this.state.signals;
+    let modifiedSignals = this.state.modifiedSignalIDs;
+
 
       if (column === 1) { // Name change
-          if (event.target.value !== '') {
-            sig = this.state.signals[row];
-            sig.name = event.target.value;
-          }
+        signals[row].name = event.target.value;
+        if (modifiedSignals.find(id => id === signals[row].id) === undefined){
+          modifiedSignals.push(signals[row].id);
+        }
       } else if (column === 2) { // unit change
-          if (event.target.value !== '') {
-            sig = this.state.signals[row];
-            sig.unit = event.target.value;
-          }
+        signals[row].unit = event.target.value;
+        if (modifiedSignals.find(id => id === signals[row].id) === undefined){
+          modifiedSignals.push(signals[row].id);
+        }
       } else if (column === 3) { // scaling factor change
-        if (parseFloat(event.target.value) !== 0.0) {
-          sig = this.state.signals[row];
-          sig.scalingFactor = parseFloat(event.target.value);
+        signals[row].scalingFactor = parseFloat(event.target.value);
+        if (modifiedSignals.find(id => id === signals[row].id) === undefined){
+          modifiedSignals.push(signals[row].id);
         }
       } else if (column === 0) { //index change
-        sig = this.state.signals[row];
-        sig.index = parseInt(event.target.value, 10);
+        signals[row].index =parseInt(event.target.value, 10);
+        if (modifiedSignals.find(id => id === signals[row].id) === undefined){
+          modifiedSignals.push(signals[row].id);
+        }
       }
 
-      if (sig !== {}){
-        //dispatch changes to signal
-        AppDispatcher.dispatch({
-          type: 'signals/start-edit',
-          data: sig,
-          token: this.props.sessionToken,
-        });
-      }
+      this.setState({
+        signals: signals,
+        modifiedSignalIDs: modifiedSignals
+      })
 
   };
 
@@ -145,7 +160,7 @@ class EditSignalMapping extends React.Component {
         <Dialog
           show={this.props.show}
           title="Edit Signal Mapping"
-          buttonTitle="Close"
+          buttonTitle="Save"
           blendOutCancel = {true}
           onClose={(c) => this.onClose(c)}
           onReset={() => this.resetState()}
@@ -155,10 +170,10 @@ class EditSignalMapping extends React.Component {
               <FormLabel>{this.props.direction} Mapping</FormLabel>
               <FormText>Click <i>Index</i>, <i>Name</i> or <i>Unit</i> cell to edit</FormText>
               <Table data={this.state.signals}>
-                  <TableColumn title='Index' dataKey='index' inlineEditable onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
-                  <TableColumn title='Name' dataKey='name' inlineEditable onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
-                  <TableColumn title='Unit' dataKey='unit' inlineEditable onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
-                  <TableColumn title='Scaling Factor' dataKey='scalingFactor' inlineEditable onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
+                  <TableColumn title='Index' dataKey='index' inlineEditable inputType='number' onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
+                  <TableColumn title='Name' dataKey='name' inlineEditable inputType='text' onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
+                  <TableColumn title='Unit' dataKey='unit' inlineEditable inputType='text' onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
+                  <TableColumn title='Scaling Factor' dataKey='scalingFactor' inlineEditable inputType='number' onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
                   <TableColumn title='Remove' deleteButton onDelete={(index) => this.handleDelete(index)} />
               </Table>
 

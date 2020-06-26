@@ -29,6 +29,7 @@ class TableColumn extends Component {
     linkKey: '',
     dataIndex: false,
     inlineEditable: false,
+    inputType: 'text',
     clickable: false,
     labelKey: null,
     checkbox: false,
