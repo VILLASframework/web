@@ -73,6 +73,11 @@ class EditSignalMapping extends React.Component {
             sig = this.state.signals[row];
             sig.unit = event.target.value;
           }
+      } else if (column === 3) { // scaling factor change
+        if (parseFloat(event.target.value) !== 0.0) {
+          sig = this.state.signals[row];
+          sig.scalingFactor = parseFloat(event.target.value);
+        }
       } else if (column === 0) { //index change
         sig = this.state.signals[row];
         sig.index = parseInt(event.target.value, 10);
@@ -108,7 +113,8 @@ class EditSignalMapping extends React.Component {
       direction: this.state.dir,
       name: "PlaceholderName",
       unit: "PlaceholderUnit",
-      index: 999
+      index: 999,
+      scalingFactor: 1.0
     };
 
     AppDispatcher.dispatch({
@@ -152,6 +158,7 @@ class EditSignalMapping extends React.Component {
                   <TableColumn title='Index' dataKey='index' inlineEditable onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
                   <TableColumn title='Name' dataKey='name' inlineEditable onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
                   <TableColumn title='Unit' dataKey='unit' inlineEditable onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
+                  <TableColumn title='Scaling Factor' dataKey='scalingFactor' inlineEditable onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
                   <TableColumn title='Remove' deleteButton onDelete={(index) => this.handleDelete(index)} />
               </Table>
 
