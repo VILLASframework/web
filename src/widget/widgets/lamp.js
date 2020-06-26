@@ -49,8 +49,8 @@ class WidgetLamp extends Component {
 
     // check if value has changed
     const data = props.data[icID].output.values[signal[0].index-1];
-    if (data != null && Number(state.value) !== data[data.length - 1].y) {
-      return { value: data[data.length - 1].y };
+    if (data != null && Number(state.value) !== signal[0].scalingFactor * data[data.length - 1].y) {
+      return { value: signal[0].scalingFactor * data[data.length - 1].y };
     }
 
     return null;
