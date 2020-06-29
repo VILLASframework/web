@@ -111,8 +111,11 @@ class ICDataStore extends ReduceStore {
         state[action.ic].input.sequence++;
         state[action.ic].input.values[action.signal-1] = action.data;
 
-        ICDataDataManager.send(state[action.ic].input, action.ic);
+        // copy of state needed because changes are not yet propagated
+        let input = JSON.parse(JSON.stringify(state[action.ic].input));
+        ICDataDataManager.send(input, action.ic);
 
+        this.__emitChange();
         return state;
 
       default:
