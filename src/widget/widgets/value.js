@@ -47,7 +47,7 @@ class WidgetValue extends Component {
       // check if value has changed
       const data = props.data[icID].output.values[signal[0].index - 1];
       if (data != null && Number(state.value) !== data[data.length - 1].y) {
-        value = data[data.length - 1].y;
+        value = signal[0].scalingFactor * data[data.length - 1].y;
       }
     }
 
@@ -66,12 +66,12 @@ class WidgetValue extends Component {
 
   render() {
     let value_to_render = Number(this.state.value);
-    let value_width = this.props.widget.customProperties.textSize*(value_to_render < 1000 ? (2):(3));
+    let value_width = this.props.widget.customProperties.textSize*(Math.abs(value_to_render) < 1000 ? (5):(8));
     let unit_width = this.props.widget.customProperties.textSize*(this.state.unit.length + 0.7);
     return (
       <div className="single-value-widget">
         <strong style={{ fontSize: this.props.widget.customProperties.textSize + 'px', flex: '1 1 auto'}}>{this.props.widget.name}</strong>
-        <span style={{ fontSize: this.props.widget.customProperties.textSize + 'px', flex: 'none', width: value_width }}>{Number.isNaN(value_to_render) ? NaN : format('.3s')(value_to_render)}</span>
+        <span style={{ fontSize: this.props.widget.customProperties.textSize + 'px', flex: 'none', width: value_width}}>{Number.isNaN(value_to_render) ? NaN : format('.3f')(value_to_render)}</span>
         {this.props.widget.customProperties.showUnit &&
           <span style={{ fontSize: this.props.widget.customProperties.textSize + 'px', flex: 'none',  width: unit_width}}>[{this.state.unit}]</span>
         }
