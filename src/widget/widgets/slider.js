@@ -105,7 +105,7 @@ class WidgetSlider extends Component {
 
   valueChanged(newValue) {
     if (this.props.onInputChanged) {
-      this.props.onInputChanged(newValue, 'value');
+      this.props.onInputChanged(newValue, 'value', newValue);
     }
   }
 

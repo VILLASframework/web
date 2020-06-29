@@ -71,7 +71,7 @@ class WidgetInput extends Component {
 
   valueChanged(newValue) {
     if (this.props.onInputChanged) {
-      this.props.onInputChanged(Number(newValue), 'value');
+      this.props.onInputChanged(Number(newValue), 'value', Number(newValue));
     }
   }
 

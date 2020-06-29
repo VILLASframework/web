@@ -28,11 +28,16 @@ class WidgetButton extends Component {
     }
   }
 
+  static getDerivedStateFromProps(props, state){
+    return {
+      pressed: props.widget.customProperties.pressed
+    }
+  }
+
   onPress(e) {
 
     if (e.button === 0 && !this.props.widget.customProperties.toggle) {
-      this.setState({ pressed: true });
-      this.valueChanged(this.props.widget.customProperties.on_value);
+      this.valueChanged(this.props.widget.customProperties.on_value, true);
     }
   }
 
@@ -43,15 +48,14 @@ class WidgetButton extends Component {
       if (this.props.widget.customProperties.toggle) {
         nextState = !this.state.pressed;
       }
-      this.props.widget.customProperties.pressed = nextState;
-      this.setState({pressed: nextState});
-      this.valueChanged(nextState ? this.props.widget.customProperties.on_value : this.props.widget.customProperties.off_value);
+      this.valueChanged(nextState ? this.props.widget.customProperties.on_value : this.props.widget.customProperties.off_value, nextState);
     }
   }
 
-  valueChanged(newValue) {
-    if (this.props.onInputChanged)
-      this.props.onInputChanged(newValue, 'pressed');
+  valueChanged(newValue, pressed) {
+    if (this.props.onInputChanged) {
+      this.props.onInputChanged(newValue, 'pressed', pressed);
+    }
   }
 
   render() {
