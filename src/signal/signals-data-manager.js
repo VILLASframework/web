@@ -42,7 +42,6 @@ class SignalsDataManager extends RestDataManager{
     // data contains the request data: { action, id, (request)}
     // See documentation of VILLASnode API: https://villas.fein-aachen.org/doc/node-dev-api-node.html
 
-    console.log("startAutoConfig: POST to ", url, ": ", data);
     RestAPI.post(url, data).then(response => {
       AppDispatcher.dispatch({
         type: 'signals/autoconfig-loaded',

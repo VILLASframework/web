@@ -394,23 +394,16 @@ class Scenario extends React.Component {
 
   signalsAutoConf(index){
     let componentConfig = this.state.configs[index];
-    console.log("Signal AutoConf for CC: ", componentConfig);
-
     // determine host of infrastructure component
-    let ic = this.state.ics.filter(ic => ic.id === componentConfig.icID)
-    console.log("Signal AutoConf for IC: ", ic);
-
+    let ic = this.state.ics.find(ic => ic.id === componentConfig.icID)
     let request = {};
     request["id"] = this.uuidv4();
     request["action"] = "config"
 
-    // TODO add parameter for API host in data model of infrastructure component
-    let api = 'https://villas.k8s.eonerc.rwth-aachen.de/ws/api/v1'
-
     AppDispatcher.dispatch({
       type: 'signals/start-autoconfig',
       data: request,
-      url: api
+      url: ic.apihost
     });
 
   }
