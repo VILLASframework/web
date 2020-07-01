@@ -18,7 +18,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Slider from 'rc-slider';
-import { Button } from 'react-bootstrap';
+import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Icon from "../common/icon";
 
 import ToolboxItem from './toolbox-item';
@@ -64,12 +64,16 @@ class WidgetToolbox extends React.Component {
       </div>
       <div className='section-buttons-group-right'>
         <div>
+        <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"increase"}`}> Increase dashboard height </Tooltip>} >
           <Button variant="dark" key={0} onClick={() => this.props.onDashboardSizeChange(1)}  >
           <Icon icon="plus" /> 
           </Button>
+          </OverlayTrigger>
+          <OverlayTrigger key={1} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"decrease"}`}> Decrease dashboard height </Tooltip>} >
           <Button variant="dark" key={1} onClick={() => this.props.onDashboardSizeChange(-1)} >
           <Icon icon="minus" /> 
           </Button>
+          </OverlayTrigger>
         </div>
       </div>
     </div>;

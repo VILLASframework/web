@@ -73,6 +73,10 @@ class Dashboard extends Component {
 
       return thisWidgetHeight > maxHeightSoFar? thisWidgetHeight : maxHeightSoFar;
     }, 0);
+    if(dashboard.height === 0 || maxHeight + 80 > dashboard.height)
+    {
+      dashboard.height = maxHeight + 80;
+    }
 
     // filter component configurations to the ones that belong to this scenario
     let configs = []
@@ -108,7 +112,7 @@ class Dashboard extends Component {
         return ICused;
       });
     }
-
+    
     return {
       dashboard,
       widgets,
@@ -120,7 +124,6 @@ class Dashboard extends Component {
 
       editing: prevState.editing || false,
       paused: prevState.paused || false,
-      dropZoneHeight: prevState.dropZoneHeight || maxHeight +80,
 
       editModal:  false,
       filesEditModal: prevState.filesEditModal || false,
@@ -188,25 +191,6 @@ class Dashboard extends Component {
     }
   }
 
-  /*
-  * Adapt the area's height with the position of the new widget.
-  * Return true if the height increased, otherwise false.
-  */
-  increaseHeightWithWidget(widget) {
-    let increased = false;
-    let thisWidgetHeight = widget.y + widget.height;
-
-    if (thisWidgetHeight > this.state.maxWidgetHeight) {
-      increased = true;
-
-      this.setState({
-        maxWidgetHeight: thisWidgetHeight,
-        dropZoneHeight:  thisWidgetHeight + 40
-      });
-    }
-
-    return increased;
-  }
 
   transformToWidgetsList(widgets) {
     return Object.keys(widgets).map( (key) => widgets[key]);
@@ -237,24 +221,6 @@ class Dashboard extends Component {
 
   }
 
-
-  /*
-  * Set the initial height state based on the existing widgets
-  */
-   computeHeightWithWidgets(widgets) {
-    // Compute max height from widgets
-    let maxHeight = Object.keys(widgets).reduce( (maxHeightSoFar, widgetKey) => {
-      let thisWidget = widgets[widgetKey];
-      let thisWidgetHeight = thisWidget.y + thisWidget.height;
-
-      return thisWidgetHeight > maxHeightSoFar? thisWidgetHeight : maxHeightSoFar;
-    }, 0);
-
-    this.setState({
-      maxWidgetHeight: maxHeight,
-      dropZoneHeight:  maxHeight + 80
-    });
-  }
 
 
   editWidget(widget, index){
@@ -377,6 +343,12 @@ class Dashboard extends Component {
       token: this.state.sessionToken,
       param: '?dashboardID=' + this.state.dashboard.id
     });
+
+    AppDispatcher.dispatch({
+      type: 'dashboards/start-load',
+      data: this.props.match.params.dashboard,
+      token: this.state.sessionToken
+    });
     this.setState({ editing: false, widgetChangeData: []});
 
   };
@@ -395,19 +367,22 @@ class Dashboard extends Component {
 
     return absolutHeight > currentHeight ? absolutHeight : currentHeight;
     }, 0);
-    let tempSize = null;
+    let dashboard = this.state.dashboard;
     if(value === -1){
-      tempSize = this.state.dropZoneHeight - 50;
-      if(tempSize > maxHeight +80){
-        this.setState({dropZoneHeight: tempSize});
+
+      let tempHeight = this.state.dashboard.height - 50;
+
+      if(tempHeight > (maxHeight + 80)){
+        dashboard.height = tempHeight;
+        this.setState({dashboard});
       }
     }
     else{
-      tempSize = this.state.dropZoneHeight + 50;
-      this.setState( {dropZoneHeight: tempSize});
-      return tempSize;
+      dashboard.height = this.state.dashboard.height +50;
+      this.setState( {dashboard});
     }
-    
+
+    this.forceUpdate();
   }
 
   pauseData(){
@@ -423,7 +398,7 @@ class Dashboard extends Component {
     const grid = this.state.dashboard.grid;
     const boxClasses = classNames('section', 'box', { 'fullscreen-padding': this.props.isFullscreen });
     let draggable = this.state.editing;
-    let dropZoneHeight = this.state.dropZoneHeight;
+    let dropZoneHeight = this.state.dashboard.height;
     return <div className={boxClasses} >
       <div className='section-header box-header'>
         <div className="section-title">
