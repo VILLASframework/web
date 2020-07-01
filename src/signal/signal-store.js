@@ -40,6 +40,14 @@ class SignalStore extends  ArrayStore{
       case 'signals/autoconfig-loaded':
         console.log("AutoConfig Loaded: ", action.data)
         // TODO save signal config contained in action.data
+
+        const SIGNAL_AUTOCONF_INFO_NOTIFICATION = {
+        title: 'Signal configuration loaded successfully.',
+        message: '',
+        level: 'info'
+      };
+        NotificationsDataManager.addNotification(SIGNAL_AUTOCONF_INFO_NOTIFICATION);
+
         return super.reduce(state, action);
 
       case 'signals/autoconfig-error':

@@ -42,6 +42,7 @@ import EditConfigDialog from "../componentconfig/edit-config";
 import EditSignalMapping from "../signal/edit-signal-mapping";
 import FileStore from "../file/file-store"
 import WidgetStore from "../widget/widget-store";
+import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
 
 class Scenario extends React.Component {
 
@@ -396,6 +397,19 @@ class Scenario extends React.Component {
     let componentConfig = this.state.configs[index];
     // determine host of infrastructure component
     let ic = this.state.ics.find(ic => ic.id === componentConfig.icID)
+    if(!ic.type.includes("VILLASnode") && !ic.type.includes("villasnode") && !ic.type.includes("VILLASNODE")){
+      let message = "Cannot autoconfigure signals for IC type " + ic.type + " of category " + ic.category + ". This is only possible for gateway ICs of type 'VILLASnode'."
+      console.warn(message);
+
+      const SIGNAL_AUTOCONF_WARN_NOTIFICATION = {
+        title: 'Failed to load signal config for IC ' + ic.name,
+        message: message,
+        level: 'warning'
+      };
+      NotificationsDataManager.addNotification(SIGNAL_AUTOCONF_WARN_NOTIFICATION);
+      return;
+    }
+
     let request = {};
     request["id"] = this.uuidv4();
     request["action"] = "config"
