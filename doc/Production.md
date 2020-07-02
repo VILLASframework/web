@@ -33,27 +33,27 @@ See: @ref node-installation
 ```
 nodes = {
     sine = {
-            type = "signal"
-            
-            signal = "mixed"
-            values = 5
-            rate = 25
-            frequency = 5
+        type = "signal"
+        
+        signal = "mixed"
+        values = 5
+        rate = 25
+        frequency = 5
     }
  
     web = {
-            type = "websocket"
- 
-            destinations = [
-                    "TODO"
-            ]
+        type = "websocket"
+
+        destinations = [
+                "TODO"
+        ]
     }
  }
  
  paths = (
     {
-            in = "sine"
-            out = "web"
+        in = "sine"
+        out = "web"
     }
  )
 ```
