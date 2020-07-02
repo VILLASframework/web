@@ -1,42 +1,38 @@
 # <img src="doc/pictures/villas_web.png" width=40 /> VILLASweb
 
-## Description
-
-This is VILLASweb, the website displaying and processing simulation data in the web browser. The term __frontend__ refers to this project, the actual website.
-
-The frontend connects to __two__ backends: _VILLASweb-backend-go_ and _VILLASnode_.
-
-VILLASnode provides actual simulation data via websockets. VILLASweb-backend-go provides any other data like user accounts, infrastructure components and configurations, dashboards etc.
-
+This is VILLASweb, the website to configure real-time co-simulations and display simulation real-time data in the web browser.
+The term **frontend** refers to this project, the actual website.
+The frontend connects to **two** backends: [VILLASweb-backend-go](https://git.rwth-aachen.de/acs/public/villas/web-backend-go) and [VILLASnode](https://git.rwth-aachen.de/acs/public/villas/node).
+VILLASnode provides actual simulation data via websockets. VILLASweb-backend-go provides any other data such as user accounts, infrastructure components and configurations, dashboards etc.
 For more information on the backends see their repositories.
 
 ## Frameworks
-
 The frontend is build upon [ReactJS](https://facebook.github.io/react/) and [Flux](https://facebook.github.io/flux/).
-
 React is responsible for rendering the UI and Flux for handling the data and communication with the backends. For more information also have a look at REACT.md
-
-Additional libraries are used, for a complete list see package.json.
+Additional libraries are used, for a complete list see the file `package.json`.
 
 ## Data model
-
 ![Datamodel](src/img/datamodel.png)
 
 ## Quick start
-
-We recommend Docker to get started quickly: 
-
 ```bash
-$ git clone --recursive git@git.rwth-aachen.de:VILLASframework/VILLASweb.git
-$ cd VILLASweb
+$ git clone --recursive https://git.rwth-aachen.de/acs/public/villas/web.git
+$ cd web
 $ npm install
 $ npm start
 ```
-
 We recommend to start the VILLASweb-backend-go before the frontend.
 If you want to use test data (including some test users), you can start the backend with the parameter `-mode=test`.
 Please check the repository of the VILLASweb-backend-go to find information on the test user login names and passwords.
 The testing mode is NOT intended for production deployments.
+
+## Documentation
+
+More details on the setup and usage of VILLASweb is available here:
+- [Requirements](doc/Requirements.md)
+- [Structure and datamodel](doc/Structure.md)
+- [Development setup](doc/development.md)
+- [Production setup](doc/Production.md)
 
 ## Copyright
 
