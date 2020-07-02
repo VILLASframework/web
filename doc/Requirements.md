@@ -1,16 +1,12 @@
 # Requirements {#web-requirements}
 
-## Services
- - NodeJS: Runs VILLASweb frontend
- - Go: Runs VILLASweb backend
- - PostgreSQL database (min version 11): Backend database
+## Services and tools required for development
+ - [NodeJS with npm](https://nodejs.org/en/): Runs VILLASweb frontend
+ - [Go](https://golang.org/): Runs VILLASweb backend
+ - [PostgreSQL database](https://www.postgresql.org/) (min version 11): Backend database
  - [swag](https://github.com/swaggo/swag): For automated API documentation creation
- - NGinX: Webserver and reverse proxy for backends (only for production)
- - Docker: Container management system
+ - [Docker](https://www.docker.com/): Container management system
 
-## Installed on your local computer
- - NodeJS with npm
- - Go (at least version 1.11)
- - [swag](https://github.com/swaggo/swag)
- - Docker
+## Additional requirements for productive use
+  - [NGinX](https://www.nginx.com/): Webserver and reverse proxy for backends
  
