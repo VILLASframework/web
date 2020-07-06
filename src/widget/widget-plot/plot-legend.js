@@ -27,7 +27,7 @@ class PlotLegend extends React.Component {
       <ul>
         {this.props.signals.map(signal =>
           <li key={signal.id} className="signal-legend" style={{ color: colorScale(signal.id) }}>
-            <span className="signal-legend-name">{signal.name}</span>
+            <span className="signal-legend-name">{signal.name + "(x" + signal.scalingFactor + ")"}</span>
             <span style={{ marginLeft: '0.3em' }} className="signal-unit">{signal.unit}</span>
           </li>
         )}

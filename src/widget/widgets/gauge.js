@@ -49,7 +49,7 @@ class WidgetGauge extends Component {
   }
 
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-   
+
     // update gauge's value
     if(prevState.value !== this.state.value){
       this.gauge.set(this.state.value)
@@ -116,7 +116,7 @@ class WidgetGauge extends Component {
     // Take just 3 decimal positions
     // Note: Favor this method over Number.toFixed(n) in order to avoid a type conversion, since it returns a String
     if (data != null) {
-      const value = Math.round(data[data.length - 1].y * 1e3) / 1e3;
+      const value = signal[0].scalingFactor * Math.round(data[data.length - 1].y * 1e3) / 1e3;
       let minValue = null;
       let maxValue = null;
 
@@ -149,7 +149,7 @@ class WidgetGauge extends Component {
             maxValue = props.widget.customProperties.valueMax;
             updateMaxValue = true;
             updateLabels = true;
-          
+
         }
 
         if (updateLabels === false && state.gauge) {
@@ -169,7 +169,7 @@ class WidgetGauge extends Component {
       if(props.widget.customProperties.valueUseMinMax !== state.useMinMax){
         returnState["useMinMax"] = props.widget.customProperties.valueUseMinMax;
       }
-      
+
       // prepare returned state
       if(updateValue === true){
         returnState["value"] = value;
@@ -201,7 +201,7 @@ class WidgetGauge extends Component {
     for (let i = 0; i < labelCount; i++) {
       labels.push(minValue + labelStep * i);
     }
-    
+
     // calculate zones
     let zones = this.props.widget.customProperties.colorZones ? this.props.widget.customProperties.zones : null;
     if (zones != null) {

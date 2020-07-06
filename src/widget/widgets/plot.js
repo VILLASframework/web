@@ -49,13 +49,31 @@ class WidgetPlot extends React.Component {
           if (sig.direction === "out") {
             if (props.data[icID] != null && props.data[icID].output != null && props.data[icID].output.values != null) {
               if (props.data[icID].output.values[sig.index-1] !== undefined) {
-                data.push(props.data[icID].output.values[sig.index-1]);
+                let values = props.data[icID].output.values[sig.index-1];
+                if(sig.scalingFactor !== 1) {
+                  let scaledValues = JSON.parse(JSON.stringify(values));
+                  for (let i=0; i< scaledValues.length; i++){
+                    scaledValues[i].y = scaledValues[i].y * sig.scalingFactor;
+                  }
+                  data.push(scaledValues);
+                } else {
+                  data.push(values);
+                }
               }
             }
           } else if (sig.direction === "in") {
             if (props.data[icID] != null && props.data[icID].input != null && props.data[icID].input.values != null) {
               if (props.data[icID].input.values[sig.index-1] !== undefined) {
-                data.push(props.data[icID].input.values[sig.index-1]);
+                let values = props.data[icID].output.values[sig.index-1];
+                if(sig.scalingFactor !== 1) {
+                  let scaledValues = JSON.parse(JSON.stringify(values));
+                  for (let i=0; i< scaledValues.length; i++){
+                    scaledValues[i].y = scaledValues[i].y * sig.scalingFactor;
+                  }
+                  data.push(scaledValues);
+                } else {
+                  data.push(values);
+                }
               }
             }
           }
@@ -65,6 +83,11 @@ class WidgetPlot extends React.Component {
 
     return {signals: intersection, data: data}
 
+  }
+
+
+  scaleData(data, scaleFactor){
+    // data is an array of value pairs x,y
   }
 
   render() {

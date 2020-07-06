@@ -41,15 +41,20 @@ class WidgetTable extends Component {
           // determine ID of infrastructure component related to signal (via config)
           let icID = props.icIDs[sig.id]
 
+          let signalName = sig.name;
+          if(sig.scalingFactor !== 1.0){
+            signalName = signalName + "(x" + String(sig.scalingFactor) + ")";
+          }
+
           // distinguish between input and output signals
           if (sig.direction === "out") {
             if (props.data[icID] != null && props.data[icID].output != null && props.data[icID].output.values != null) {
               if (props.data[icID].output.values[sig.index-1] !== undefined) {
                 let data = props.data[icID].output.values[sig.index-1];
                 rows.push({
-                  name: sig.name,
+                  name: signalName,
                   unit: sig.unit,
-                  value: data[data.length - 1].y
+                  value: data[data.length - 1].y * sig.scalingFactor
                 });
 
               }
@@ -59,9 +64,9 @@ class WidgetTable extends Component {
               if (props.data[icID].input.values[sig.index-1] !== undefined) {
                 let data = props.data[icID].input.values[sig.index-1];
                 rows.push({
-                  name: sig.name,
+                  name: signalName,
                   unit: sig.unit,
-                  value: data[data.length - 1].y
+                  value: data[data.length - 1].y * sig.scalingFactor
                 });
               }
             }
@@ -86,7 +91,7 @@ class WidgetTable extends Component {
 
     var columns = [
       <TableColumn key={1} title="Signal" dataKey="name" width={120} />,
-      <TableColumn key={2} title="Value" dataKey="value" modifier={format('.4s')} />
+      <TableColumn key={2} title="Value" dataKey="value" modifier={format('.4f')} />
     ];
 
     if (this.props.widget.customProperties.showUnit)

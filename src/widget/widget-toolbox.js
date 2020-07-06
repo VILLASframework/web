@@ -18,6 +18,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Slider from 'rc-slider';
+import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import Icon from "../common/icon";
 
 import ToolboxItem from './toolbox-item';
 
@@ -57,6 +59,21 @@ class WidgetToolbox extends React.Component {
         <div>
           <span>Grid: { this.props.grid > 1 ? this.props.grid : 'Disabled' }</span>
           <Slider value={this.props.grid} style={{ width: '80px' }} step={5} onChange={this.onGridChange} />
+          
+        </div>
+      </div>
+      <div className='section-buttons-group-right'>
+        <div>
+        <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"increase"}`}> Increase dashboard height </Tooltip>} >
+          <Button variant="dark" key={0} onClick={() => this.props.onDashboardSizeChange(1)}  >
+          <Icon icon="plus" /> 
+          </Button>
+          </OverlayTrigger>
+          <OverlayTrigger key={1} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"decrease"}`}> Decrease dashboard height </Tooltip>} >
+          <Button variant="dark" key={1} onClick={() => this.props.onDashboardSizeChange(-1)} >
+          <Icon icon="minus" /> 
+          </Button>
+          </OverlayTrigger>
         </div>
       </div>
     </div>;
@@ -66,7 +83,8 @@ class WidgetToolbox extends React.Component {
 WidgetToolbox.propTypes = {
   widgets: PropTypes.array,
   grid: PropTypes.number,
-  onGridChange: PropTypes.func
+  onGridChange: PropTypes.func,
+  onDashboardSizeChange: PropTypes.func
 };
 
 export default WidgetToolbox;

@@ -31,10 +31,8 @@ class WidgetBox extends Component {
     }
 
     return (
-      <div className="box-widget full">
-        <div className="border" style={colorStyle}>
+      <div className="box-widget full" style={colorStyle}>
           {  }
-        </div>
       </div>
     );
   }

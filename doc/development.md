@@ -8,11 +8,11 @@ In order to get started with VILLASweb, you might also want to check our our [de
 
 ### Description
 
-The website itself based on the React JavaScript framework.
+The website itself based on the [React JavaScript framework](https://reactjs.org/) and the [Flux library](https://facebook.github.io/flux/).
 
 ### Required
 
- - NodeJS with npm
+ - [NodeJS with npm](https://nodejs.org/en/)
 
 ### Setup
 
@@ -25,18 +25,19 @@ The website itself based on the React JavaScript framework.
  - `npm start`
 
 This runs the development server for the website on your local computer at port 3000.
-The backend must be running to make the website work.
+The backend must be running to make the website work. 
+Type `http://localhost:3000/` in the address field of your browser to open the website.
 
 ## Backend
 
 ### Description
 
-The backend of VILLASweb uses the programming language Go and a PostgreSQL data base.
+The backend of VILLASweb uses the programming language Go and a PostgreSQL database.
 
 ### Required
 
- - Go (min version 1.11)
- - Running PostgreSQL data base (min version 11)
+ - [Go](https://golang.org/) (min version 1.11)
+ - [PostgreSQL database](https://www.postgresql.org/) (min version 11)
  - [swag](https://github.com/swaggo/swag)
 
 ### Setup and Running

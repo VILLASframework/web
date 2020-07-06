@@ -44,13 +44,8 @@ class WidgetArea extends React.Component {
   }
 
   render() {
-        const maxHeight = Object.values(this.props.widgets).reduce((currentHeight, widget) => {
-      const absolutHeight = widget.y + widget.height;
 
-      return absolutHeight > currentHeight ? absolutHeight : currentHeight;
-    }, 0);
-
-    return <Dropzone height={maxHeight + 80} onDrop={this.handleDrop} editing={this.props.editing} widgets={this.props.widgets}>
+    return <Dropzone height={this.props.dropZoneHeight} onDrop={this.handleDrop} editing={this.props.editing} widgets={this.props.widgets}>
       {this.props.children}
 
       <Grid size={this.props.grid} disabled={this.props.grid === 1 || this.props.editing !== true} />

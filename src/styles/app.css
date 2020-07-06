@@ -387,7 +387,7 @@ body {
 
 .section-buttons-group-right {
   height: auto !important;
-
+  padding: 5px;
   float: right;
 }
 

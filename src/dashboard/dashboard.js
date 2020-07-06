@@ -73,6 +73,10 @@ class Dashboard extends Component {
 
       return thisWidgetHeight > maxHeightSoFar? thisWidgetHeight : maxHeightSoFar;
     }, 0);
+    if(dashboard.height === 0 || maxHeight + 80 > dashboard.height)
+    {
+      dashboard.height = maxHeight + 80;
+    }
 
     // filter component configurations to the ones that belong to this scenario
     let configs = []
@@ -108,7 +112,7 @@ class Dashboard extends Component {
         return ICused;
       });
     }
-
+    
     return {
       dashboard,
       widgets,
@@ -130,7 +134,6 @@ class Dashboard extends Component {
       widgetOrigIDs: prevState.widgetOrigIDs || [],
 
       maxWidgetHeight: maxHeight || null,
-      dropZoneHeight: maxHeight +80 || null,
     };
 
   }
@@ -188,25 +191,6 @@ class Dashboard extends Component {
     }
   }
 
-  /*
-  * Adapt the area's height with the position of the new widget.
-  * Return true if the height increased, otherwise false.
-  */
-  increaseHeightWithWidget(widget) {
-    let increased = false;
-    let thisWidgetHeight = widget.y + widget.height;
-
-    if (thisWidgetHeight > this.state.maxWidgetHeight) {
-      increased = true;
-
-      this.setState({
-        maxWidgetHeight: thisWidgetHeight,
-        dropZoneHeight:  thisWidgetHeight + 40
-      });
-    }
-
-    return increased;
-  }
 
   transformToWidgetsList(widgets) {
     return Object.keys(widgets).map( (key) => widgets[key]);
@@ -237,24 +221,6 @@ class Dashboard extends Component {
 
   }
 
-
-  /*
-  * Set the initial height state based on the existing widgets
-  */
-   computeHeightWithWidgets(widgets) {
-    // Compute max height from widgets
-    let maxHeight = Object.keys(widgets).reduce( (maxHeightSoFar, widgetKey) => {
-      let thisWidget = widgets[widgetKey];
-      let thisWidgetHeight = thisWidget.y + thisWidget.height;
-
-      return thisWidgetHeight > maxHeightSoFar? thisWidgetHeight : maxHeightSoFar;
-    }, 0);
-
-    this.setState({
-      maxWidgetHeight: maxHeight,
-      dropZoneHeight:  maxHeight + 80
-    });
-  }
 
 
   editWidget(widget, index){
@@ -377,6 +343,12 @@ class Dashboard extends Component {
       token: this.state.sessionToken,
       param: '?dashboardID=' + this.state.dashboard.id
     });
+
+    AppDispatcher.dispatch({
+      type: 'dashboards/start-load',
+      data: this.props.match.params.dashboard,
+      token: this.state.sessionToken
+    });
     this.setState({ editing: false, widgetChangeData: []});
 
   };
@@ -388,6 +360,30 @@ class Dashboard extends Component {
     this.setState({ dashboard });
     this.forceUpdate();
   };
+
+  setDashboardSize(value) {
+    const maxHeight = Object.values(this.state.widgets).reduce((currentHeight, widget) => {
+    const absolutHeight = widget.y + widget.height;
+
+    return absolutHeight > currentHeight ? absolutHeight : currentHeight;
+    }, 0);
+    let dashboard = this.state.dashboard;
+    if(value === -1){
+
+      let tempHeight = this.state.dashboard.height - 50;
+
+      if(tempHeight > (maxHeight + 80)){
+        dashboard.height = tempHeight;
+        this.setState({dashboard});
+      }
+    }
+    else{
+      dashboard.height = this.state.dashboard.height +50;
+      this.setState( {dashboard});
+    }
+
+    this.forceUpdate();
+  }
 
   pauseData(){
     this.setState({ paused: true });
@@ -402,6 +398,7 @@ class Dashboard extends Component {
     const grid = this.state.dashboard.grid;
     const boxClasses = classNames('section', 'box', { 'fullscreen-padding': this.props.isFullscreen });
     let draggable = this.state.editing;
+    let dropZoneHeight = this.state.dashboard.height;
     return <div className={boxClasses} >
       <div className='section-header box-header'>
         <div className="section-title">
@@ -424,10 +421,10 @@ class Dashboard extends Component {
 
       <div className="box box-content" onContextMenu={ (e) => e.preventDefault() }>
         {this.state.editing &&
-        <WidgetToolbox grid={grid} onGridChange={this.setGrid.bind(this)} widgets={this.state.widgets} />
+        <WidgetToolbox grid={grid} onGridChange={this.setGrid.bind(this)} onDashboardSizeChange={this.setDashboardSize.bind(this)} widgets={this.state.widgets} />
         }
         {!draggable?(
-        <WidgetArea widgets={this.state.widgets} editing={this.state.editing} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
+        <WidgetArea widgets={this.state.widgets} dropZoneHeight = {dropZoneHeight} editing={this.state.editing} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
           {this.state.widgets != null && Object.keys(this.state.widgets).map(widgetKey => (
             <WidgetContextMenu
             key={widgetKey}
@@ -448,7 +445,7 @@ class Dashboard extends Component {
           ))}
         </WidgetArea>
         ) : (
-          <WidgetArea widgets={this.state.widgets} editing={this.state.editing} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
+          <WidgetArea widgets={this.state.widgets} editing={this.state.editing} dropZoneHeight= {dropZoneHeight} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
           {this.state.widgets != null && Object.keys(this.state.widgets).map(widgetKey => (
             <Widget
               key={widgetKey}
