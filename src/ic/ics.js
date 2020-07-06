@@ -280,6 +280,7 @@ class InfrastructureComponents extends Component {
           <TableColumn title='Location' dataKeys={['properties.location', 'rawProperties.location']} />
           {/* <TableColumn title='Realm' dataKeys={['properties.realm', 'rawProperties.realm']} /> */}
           <TableColumn title='Host' dataKey='host' />
+          <TableColumn title='API Host' dataKey='apihost' />
           <TableColumn title='Last Update' dataKey='stateUpdatedAt' modifier={InfrastructureComponents.stateUpdateModifier} />
           <TableColumn
             width='200'
