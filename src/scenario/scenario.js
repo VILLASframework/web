@@ -396,12 +396,22 @@ class Scenario extends React.Component {
   * File modification methods
   ############################################## */
 
-  getFileName(id) {
-    for (let file of this.state.files) {
-      if (file.id === id) {
-        return file.name;
+  getListOfFiles(fileIDs, type) {
+
+    let fileList = '';
+
+    for (let id of fileIDs){
+      for (let file of this.state.files) {
+        if (file.id === id && (type === 'all' || file.type.includes(type))) {
+          fileList = fileList + '\n' + file.name;
+        }
       }
     }
+
+
+
+
+    return fileList;
   }
 
   /* ##############################################
@@ -428,7 +438,8 @@ class Scenario extends React.Component {
       <Table data={this.state.configs}>
         <TableColumn checkbox onChecked={(index, event) => this.onConfigChecked(index, event)} width='30' />
         <TableColumn title='Name' dataKey='name' />
-        <TableColumn title='Selected configuration file' dataKey='selectedFileID' modifier={(selectedFileID) => this.getFileName(selectedFileID)} />
+        <TableColumn title='Configuration file(s)' dataKey='fileIDs' modifier={(fileIDs) => this.getListOfFiles(fileIDs, 'all')} />
+        <TableColumn title='Model file(s)' dataKey='fileIDs' modifier={(fileIDs) => this.getListOfFiles(fileIDs, 'xml')} />
         <TableColumn
           title='# Output Signals'
           dataKey='outputLength'

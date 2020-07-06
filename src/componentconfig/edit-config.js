@@ -17,6 +17,7 @@
 
 import React from 'react';
 import {FormGroup, FormControl, FormLabel} from 'react-bootstrap';
+import  { Multiselect } from 'multiselect-react-dropdown'
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
 import SelectFile from "../file/select-file";
@@ -28,12 +29,11 @@ class EditConfigDialog extends React.Component {
         super(props);
 
         this.state = {
-            selectedFile: null,
             name: '',
             icID: '',
             configuration: null,
             startParameters: this.props.config.startParameters,
-            selectedFileID: this.props.config.selectedFileID
+            fileIDs: this.props.config.fileIDs
 
         };
     }
@@ -52,9 +52,13 @@ class EditConfigDialog extends React.Component {
                 if(this.state.startParameters !==  {} && JSON.stringify(this.props.config.startParameters) !== JSON.stringify(this.state.startParameters)){
                     data.startParameters = this.state.startParameters;
                 }
-                if (parseInt(this.state.selectedFileID, 10) !== 0 &&
-                  this.props.config.selectedFileID !== parseInt(this.state.selectedFileID)) {
-                  data.selectedFileID = parseInt(this.state.selectedFileID, 10);
+
+                let IDs = []
+                for(let e of this.state.fileIDs){
+                  IDs.push(e.id)
+                }
+                if (JSON.stringify(IDs) !== JSON.stringify(this.props.config.fileIDs)){
+                  data.fileIDs = IDs;
                 }
 
                 //forward modified config to callback function
@@ -79,10 +83,19 @@ class EditConfigDialog extends React.Component {
       this.valid = this.isValid()
     }
 
-    handleSelectedFileChange(event){
-      //console.log("Config file change to: ", event.target.value);
-      this.setState({selectedFileID: event.target.value})
+    onFileSelect(selectedList, selectedItem) {
 
+      this.setState({
+        fileIDs: selectedList
+      })
+      this.valid = this.isValid()
+    }
+
+    onFileRemove(selectedList, removedItem) {
+
+      this.setState({
+        fileIDs: selectedList
+      })
       this.valid = this.isValid()
     }
 
@@ -91,9 +104,7 @@ class EditConfigDialog extends React.Component {
       return this.state.name !== ''
         || this.state.icID !== ''
         || this.state.startParameters !== {}
-        || this.state.selectedFile != null
         || this.state.configuration != null
-        || this.state.selectedFileID !== 0;
     }
 
     resetState() {
@@ -104,6 +115,15 @@ class EditConfigDialog extends React.Component {
         const ICOptions = this.props.ics.map(s =>
             <option key={s.id} value={s.id}>{s.name}</option>
         );
+
+      let configFileOptions = [];
+      for(let file of this.props.files) {
+        configFileOptions.push(
+          {name: file.name, id: file.id}
+        );
+      }
+
+
 
         return (
             <Dialog show={this.props.show} title="Edit Component Configuration" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
@@ -121,14 +141,14 @@ class EditConfigDialog extends React.Component {
                       </FormControl>
                     </FormGroup>
 
-                    <SelectFile
-                      type='config'
-                      name='Configuration File'
-                      onChange={(e) => this.handleSelectedFileChange(e)}
-                      files={this.props.files}
-                      value={this.state.selectedFileID}
-                      scenarioID={this.props.config.scenarioID}
-                      sessionToken={this.props.sessionToken}
+                    <Multiselect
+                      options={configFileOptions}
+                      showCheckbox={true}
+                      selectedValues={this.state.fileIDs}
+                      onSelect={(selectedList, selectedItem) => this.onFileSelect(selectedList, selectedItem)}
+                      onRemove={(selectedList, removedItem) => this.onFileRemove(selectedList, removedItem)}
+                      displayValue={'name'}
+                      placeholder={'Select file(s)...'}
                     />
 
                     <FormGroup controlId='startParameters'>
