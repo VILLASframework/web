@@ -410,14 +410,18 @@ class Scenario extends React.Component {
       return;
     }
 
+    let splitHost = ic.host.split("/")
     let request = {};
     request["id"] = this.uuidv4();
-    request["action"] = "config"
+    request["action"] = "nodes"
 
     AppDispatcher.dispatch({
       type: 'signals/start-autoconfig',
       data: request,
-      url: ic.apihost
+      url: ic.apihost,
+      socketname: splitHost[splitHost.length -1],
+      token: this.state.sessionToken,
+      configID: componentConfig.id
     });
 
   }

@@ -34,19 +34,13 @@ class SignalStore extends  ArrayStore{
         return super.reduce(state, action);
 
       case 'signals/start-autoconfig':
-        this.dataManager.startAutoConfig(action.data, action.url)
+        this.dataManager.startAutoConfig(action.data, action.url, action.socketname, action.token, action.configID)
         return super.reduce(state, action);
 
       case 'signals/autoconfig-loaded':
         console.log("AutoConfig Loaded: ", action.data)
         // TODO save signal config contained in action.data
-
-        const SIGNAL_AUTOCONF_INFO_NOTIFICATION = {
-        title: 'Signal configuration loaded successfully.',
-        message: '',
-        level: 'info'
-      };
-        NotificationsDataManager.addNotification(SIGNAL_AUTOCONF_INFO_NOTIFICATION);
+        this.dataManager.saveSignals(action.data, action.token, action.configID, action.socketname);
 
         return super.reduce(state, action);
 
