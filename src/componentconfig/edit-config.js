@@ -20,7 +20,6 @@ import {FormGroup, FormControl, FormLabel} from 'react-bootstrap';
 import  { Multiselect } from 'multiselect-react-dropdown'
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
-import SelectFile from "../file/select-file";
 
 class EditConfigDialog extends React.Component {
     valid = false;
