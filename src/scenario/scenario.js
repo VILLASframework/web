@@ -17,7 +17,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button, InputGroup, FormControl } from 'react-bootstrap';
+import { Button, InputGroup, FormControl, Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 import FileSaver from 'file-saver';
 
@@ -35,6 +35,7 @@ import TableColumn from '../common/table-column';
 import ImportConfigDialog from '../componentconfig/import-config';
 import ImportDashboardDialog from "../dashboard/import-dashboard";
 import NewDashboardDialog from "../dashboard/new-dashboard";
+import EditFiles from '../file/edit-files'
 
 import ICAction from '../ic/ic-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
@@ -93,6 +94,8 @@ class Scenario extends React.Component {
       modalConfigData: (prevState.modalConfigData !== {} && prevState.modalConfigData !== undefined )? prevState.modalConfigData : {},
       selectedConfigs: [],
       modalConfigIndex: 0,
+      filesEditModal: prevState.filesEditModal || false,
+      filesEditSaveState: prevState.filesEditSaveState || [],
 
       editOutputSignalsModal: prevState.editOutputSignalsModal || false,
       editInputSignalsModal: prevState.editInputSignalsModal || false,
@@ -391,6 +394,24 @@ class Scenario extends React.Component {
       this.setState({editOutputSignalsModal: false});
     }
   }
+  
+  onEditFiles(){
+    console.log("here r the files in scenario:");
+    console.log(this.state.file);
+    let tempFiles = [];
+    this.state.files.forEach( file => {
+      tempFiles.push({
+        id: file.id,
+        name: file.name
+      });
+    })
+    this.setState({filesEditModal: true, filesEditSaveState: tempFiles});
+  }
+
+  closeEditFiles(){
+    this.setState({ filesEditModal: false });
+    // TODO do we need this if the dispatches happen in the dialog?
+  }
 
   /* ##############################################
   * File modification methods
@@ -419,7 +440,23 @@ class Scenario extends React.Component {
     }
 
     return <div className='section'>
+      <div className='section-buttons-group-right'>
+      <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete files of scenario </Tooltip>} >
+        <Button key={0} variant= 'light' size="lg" onClick={this.onEditFiles.bind(this)} style={buttonStyle}>
+          <Icon icon="file" />
+        </Button>
+        </OverlayTrigger>
+      </div>
       <h1>{this.state.scenario.name}</h1>
+
+      <EditFiles
+          sessionToken={this.state.sessionToken}
+          show={this.state.filesEditModal}
+          onClose={this.closeEditFiles.bind(this)}
+          signals={this.state.signals}
+          files={this.state.files}
+          scenarioID={this.state.scenario.id}
+        />
 
 
 
@@ -443,7 +480,7 @@ class Scenario extends React.Component {
         />
         <TableColumn title='Infrastructure Component' dataKey='icID' modifier={(icID) => this.getICName(icID)} />
         <TableColumn
-          title='Edit/ Delete/ Export'
+          title=''
           width='200'
           editButton
           deleteButton
