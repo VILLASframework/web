@@ -54,6 +54,11 @@ class WidgetToolbox extends React.Component {
       <ToolboxItem name='Box' type='widget' icon = 'plus'/>
       <ToolboxItem name='HTML' type='html' icon = 'plus'/>
       <ToolboxItem name='Topology' type='widget' disabled={thereIsTopologyWidget} title={topologyItemMsg} icon = 'plus'/>
+      <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"?"}`}> Drag and drop widgets onto the dashboard </Tooltip>} >   
+      <Button variant="light" size="sm" key={0}  >     
+          <Icon icon="question" />
+      </Button>
+      </OverlayTrigger>
 
       <div className='section-buttons-group-right'>
         <div>
@@ -65,12 +70,12 @@ class WidgetToolbox extends React.Component {
       <div className='section-buttons-group-right'>
         <div>
         <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"increase"}`}> Increase dashboard height </Tooltip>} >
-          <Button variant="dark" key={0} onClick={() => this.props.onDashboardSizeChange(1)}  >
+          <Button variant="light" key={0} onClick={() => this.props.onDashboardSizeChange(1)}  >
           <Icon icon="plus" /> 
           </Button>
           </OverlayTrigger>
           <OverlayTrigger key={1} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"decrease"}`}> Decrease dashboard height </Tooltip>} >
-          <Button variant="dark" key={1} onClick={() => this.props.onDashboardSizeChange(-1)} >
+          <Button variant="light" key={1} onClick={() => this.props.onDashboardSizeChange(-1)} >
           <Icon icon="minus" /> 
           </Button>
           </OverlayTrigger>

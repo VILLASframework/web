@@ -240,7 +240,6 @@ class Dashboard extends Component {
 
   closeEditFiles(){
     this.setState({ filesEditModal: false });
-    // TODO do we need this if the dispatches happen in the dialog?
   }
 
   closeEdit(data){
