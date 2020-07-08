@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Button, ButtonToolbar, DropdownButton, DropdownItem } from 'react-bootstrap';
+import { Button, ButtonToolbar, DropdownButton, Dropdown } from 'react-bootstrap';
 
 class ICAction extends React.Component {
     constructor(props) {
@@ -49,9 +49,9 @@ class ICAction extends React.Component {
 
     render() {
         const actionList = this.props.actions.map(action => (
-            <DropdownItem key={action.id} eventKey={action.id} active={this.state.selectedAction === action.id}>
+            <Dropdown.Item key={action.id} eventKey={action.id} active={this.state.selectedAction === action.id}>
                 {action.title}
-            </DropdownItem>
+            </Dropdown.Item>
         ));
 
         return <div>
