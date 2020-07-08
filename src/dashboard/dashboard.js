@@ -112,7 +112,7 @@ class Dashboard extends Component {
         return ICused;
       });
     }
-    
+
     return {
       dashboard,
       widgets,
@@ -125,7 +125,7 @@ class Dashboard extends Component {
       editing: prevState.editing || false,
       paused: prevState.paused || false,
 
-      editModal:  false,
+      editModal:  prevState.editModal || false,
       filesEditModal: prevState.filesEditModal || false,
       filesEditSaveState: prevState.filesEditSaveState || [],
       modalData:  null,
