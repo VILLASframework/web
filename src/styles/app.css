@@ -305,7 +305,7 @@ body {
 }
 
 .toolbox-dropzone-editing {
-  border: 3px dashed #e1e1e1;
+  outline: 3px dashed #e1e1e1;
 }
 
 .toolbox-dropzone-active {
