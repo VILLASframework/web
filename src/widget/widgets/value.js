@@ -36,31 +36,35 @@ class WidgetValue extends Component {
     // get the signal with the selected signal ID
     let signalID = props.widget.signalIDs[0];
     let signal = props.signals.filter(s => s.id === signalID)
-    // determine ID of infrastructure component related to signal[0] (there is only one signal for a value widget)
-    let icID = props.icIDs[signal[0].id];
+    if(signal.length>0) {
+      // determine ID of infrastructure component related to signal[0] (there is only one signal for a value widget)
+      let icID = props.icIDs[signal[0].id];
 
-    // check if data available
-    let value = ''
-    if (props.data == null || props.data[icID] == null || props.data[icID].output == null || props.data[icID].output.values == null) {
-      value = '';
-    } else {
-      // check if value has changed
-      const data = props.data[icID].output.values[signal[0].index - 1];
-      if (data != null && Number(state.value) !== data[data.length - 1].y) {
-        value = signal[0].scalingFactor * data[data.length - 1].y;
+      // check if data available
+      let value = ''
+      if (props.data == null || props.data[icID] == null || props.data[icID].output == null || props.data[icID].output.values == null) {
+        value = '';
+      } else {
+        // check if value has changed
+        const data = props.data[icID].output.values[signal[0].index - 1];
+        if (data != null && Number(state.value) !== data[data.length - 1].y) {
+          value = signal[0].scalingFactor * data[data.length - 1].y;
+        }
       }
+
+      // Update unit (assuming there is exactly one signal for this widget)
+      let unit = '';
+      if (signal !== undefined) {
+        unit = signal[0].unit;
+      }
+
+      return {
+        value: value,
+        unit: unit,
+      };
     }
 
-    // Update unit (assuming there is exactly one signal for this widget)
-    let unit = '';
-    if(signal !== undefined){
-      unit = signal[0].unit;
-    }
-
-    return {
-      value: value,
-      unit: unit,
-    };
+    return null;
 
   }
 
