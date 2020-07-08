@@ -417,11 +417,56 @@ class Scenario extends React.Component {
   * File modification methods
   ############################################## */
 
-  getFileName(id) {
-    for (let file of this.state.files) {
-      if (file.id === id) {
-        return file.name;
+  getListOfFiles(fileIDs, types) {
+
+    let fileList = '';
+
+    for (let id of fileIDs){
+      for (let file of this.state.files) {
+        if (file.id === id && types.some(e => file.type.includes(e))) {
+          if (fileList === ''){
+            fileList = file.name
+          } else {
+            fileList = fileList + ';' + file.name;
+          }
+        }
       }
+    }
+
+
+
+
+    return fileList;
+  }
+
+  startPintura(configIndex){
+    let config = this.state.configs[configIndex];
+
+    // get xml / CIM file
+    let files = []
+    for (let id of config.fileIDs){
+      for (let file of this.state.files) {
+        if (file.id === id && ['xml'].some(e => file.type.includes(e))) {
+          files.push(file);
+        }
+      }
+    }
+
+    if(files.length > 1){
+      // more than one CIM file...
+      console.warn("There is more than one CIM file selected in this component configuration. I will open them all in a separate tab.")
+    }
+
+    let base_host = 'aaa.bbb.ccc.ddd/api/v2/files/'
+    for (let file of files) {
+      // endpoint param serves for download and upload of CIM file, token is required for authentication
+      let params = {
+        token: this.state.sessionToken,
+        endpoint: base_host + String(file.id),
+      }
+
+      // TODO start Pintura for editing CIM/ XML file from here
+      console.warn("Starting Pintura... and nothing happens so far :-) ", params)
     }
   }
 
@@ -465,7 +510,14 @@ class Scenario extends React.Component {
       <Table data={this.state.configs}>
         <TableColumn checkbox onChecked={(index, event) => this.onConfigChecked(index, event)} width='30' />
         <TableColumn title='Name' dataKey='name' />
-        <TableColumn title='Selected configuration file' dataKey='selectedFileID' modifier={(selectedFileID) => this.getFileName(selectedFileID)} />
+        <TableColumn title='Configuration file(s)' dataKey='fileIDs' modifier={(fileIDs) => this.getListOfFiles(fileIDs, ['json', 'JSON'])} />
+        <TableColumn
+          title='Model file(s)'
+          dataKey='fileIDs'
+          modifier={(fileIDs) => this.getListOfFiles(fileIDs, ['xml'])}
+          editButton
+          onEdit={(index) => this.startPintura(index)}
+        />
         <TableColumn
           title='# Output Signals'
           dataKey='outputLength'
