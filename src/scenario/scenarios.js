@@ -117,19 +117,6 @@ class Scenarios extends Component {
     });
   };
 
-  showEditModal(id) {
-    // get scenario by id
-    var editScenario;
-
-    this.state.scenarios.forEach((scenario) => {
-      if (scenario.id === id) {
-        editScenario = scenario;
-      }
-    });
-
-    this.setState({ editModal: true, modalScenario: editScenario });
-  }
-
   closeEditModal(data) {
     this.setState({ editModal: false });
 
