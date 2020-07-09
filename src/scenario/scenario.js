@@ -35,6 +35,7 @@ import TableColumn from '../common/table-column';
 import ImportConfigDialog from '../componentconfig/import-config';
 import ImportDashboardDialog from "../dashboard/import-dashboard";
 import NewDashboardDialog from "../dashboard/new-dashboard";
+import EditDashboardDialog from '../dashboard/edit-dashboard';
 import EditFiles from '../file/edit-files'
 
 import ICAction from '../ic/ic-action';
@@ -101,6 +102,7 @@ class Scenario extends React.Component {
       editInputSignalsModal: prevState.editInputSignalsModal || false,
 
       newDashboardModal: false,
+      dashboardEditModal: prevState.dashboardEditModal || false,
       deleteDashboardModal: false,
       importDashboardModal: false,
       modalDashboardData: {},
@@ -332,6 +334,21 @@ class Scenario extends React.Component {
         type: 'dashboards/start-add',
         data,
         token: this.state.sessionToken,
+      });
+    }
+  }
+
+  closeEditDashboardModal(data) {
+    this.setState({ dashboardEditModal: false });
+
+    let editDashboard = this.state.modalDashboardData;
+
+    if (data != null) {
+      editDashboard.name = data.name;
+      AppDispatcher.dispatch({
+        type: 'dashboards/start-edit',
+        data: editDashboard,
+        token: this.state.sessionToken
       });
     }
   }
@@ -600,8 +617,10 @@ class Scenario extends React.Component {
         <TableColumn
           title=''
           width='200'
+          editButton
           deleteButton
           exportButton
+          onEdit={index => this.setState({ dashboardEditModal: true, modalDashboardData: this.state.dashboards[index] })}
           onDelete={(index) => this.setState({ deleteDashboardModal: true, modalDashboardData: this.state.dashboards[index], modalDashboardIndex: index })}
           onExport={index => this.exportDashboard(index)}
         />
@@ -615,6 +634,7 @@ class Scenario extends React.Component {
       <div style={{ clear: 'both' }} />
 
       <NewDashboardDialog show={this.state.newDashboardModal} onClose={data => this.closeNewDashboardModal(data)} />
+      <EditDashboardDialog show={this.state.dashboardEditModal} dashboard={this.state.modalDashboardData} onClose={data => this.closeEditDashboardModal(data)} />
       <ImportDashboardDialog show={this.state.importDashboardModal} onClose={data => this.closeImportDashboardModal(data)} />
 
       <DeleteDialog title="dashboard" name={this.state.modalDashboardData.name} show={this.state.deleteDashboardModal} onClose={(e) => this.closeDeleteDashboardModal(e)} />
