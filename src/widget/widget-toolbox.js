@@ -70,7 +70,7 @@ class WidgetToolbox extends React.Component {
       <div className='section-buttons-group-right'>
         <div>
         <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"increase"}`}> Increase dashboard height </Tooltip>} >
-          <Button variant="light" key={0} onClick={() => this.props.onDashboardSizeChange(1)}  >
+          <Button variant="light" key={0} style={{marginRight: '3px'}} onClick={() => this.props.onDashboardSizeChange(1)}  >
           <Icon icon="plus" /> 
           </Button>
           </OverlayTrigger>
