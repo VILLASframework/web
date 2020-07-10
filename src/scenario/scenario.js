@@ -107,6 +107,7 @@ class Scenario extends React.Component {
       importDashboardModal: false,
       modalDashboardData: {},
 
+      userToAdd: '',
       deleteUserName: '',
       deleteUserModal: false,
     }
@@ -139,13 +140,19 @@ class Scenario extends React.Component {
   * User modification methods
   ############################################## */
 
+  onUserInputChange(e) {
+    this.setState({userToAdd: e.target.value});
+  }
+
   addUser() {
     AppDispatcher.dispatch({
       type: 'scenarios/add-user',
       data: this.state.scenario.id,
-      username: this.userToAdd,
+      username: this.state.userToAdd,
       token: this.state.sessionToken
     });
+
+    this.setState({userToAdd: ''});
   }
 
   closeDeleteUserModal() {
@@ -657,7 +664,9 @@ class Scenario extends React.Component {
         <InputGroup style={{ width: 400, float: 'right' }}>
           <FormControl
             placeholder="Username"
-            onChange={(e) => this.userToAdd = e.target.value}
+            onChange={(e) => this.onUserInputChange(e)}
+            value={this.state.userToAdd}
+            type="text"
           />
           <InputGroup.Append>
             <Button
