@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Button, ButtonToolbar, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Button, ButtonToolbar, DropdownButton, Dropdown, Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 class ICAction extends React.Component {
     constructor(props) {
@@ -48,6 +48,8 @@ class ICAction extends React.Component {
     };
 
     render() {
+      let showTooltip = this.state.selectedAction.id === '-1';
+          
         const actionList = this.props.actions.map(action => (
             <Dropdown.Item key={action.id} eventKey={action.id} active={this.state.selectedAction === action.id}>
                 {action.title}
@@ -55,14 +57,25 @@ class ICAction extends React.Component {
         ));
 
         return <div>
-          Send command to infrastructure component
+        {showTooltip ? 
+          <ButtonToolbar>
+            <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"select"}`}> Select command for infrastructure component </Tooltip>} >
+              <DropdownButton title={this.state.selectedAction != null ? this.state.selectedAction.title : ''} id="action-dropdown" onSelect={this.setAction}>
+                {actionList}
+              </DropdownButton>
+            </OverlayTrigger>
+            <OverlayTrigger key={1} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"send"}`}> Send command to infrastructure component </Tooltip>} >
+              <Button style={{ marginLeft: '5px' }} disabled={this.props.runDisabled} onClick={() => this.props.runAction(this.state.selectedAction)}>Send command</Button>
+            </OverlayTrigger>
+          </ButtonToolbar>
+          :
           <ButtonToolbar>
             <DropdownButton title={this.state.selectedAction != null ? this.state.selectedAction.title : ''} id="action-dropdown" onSelect={this.setAction}>
               {actionList}
             </DropdownButton>
             <Button style={{ marginLeft: '5px' }} disabled={this.props.runDisabled} onClick={() => this.props.runAction(this.state.selectedAction)}>Send command</Button>
           </ButtonToolbar>
-
+        }
         </div>;
     }
 }

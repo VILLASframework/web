@@ -37,6 +37,12 @@ class WidgetToolbox extends React.Component {
 
   render() {
     // Only one topology widget at the time is supported
+    const iconStyle = {
+      color: '#007bff',
+      height: '25px', 
+      width : '25px'
+    }
+
     const thereIsTopologyWidget = this.props.widgets != null && Object.values(this.props.widgets).filter(w => w.type === 'Topology').length > 0;
     const topologyItemMsg = thereIsTopologyWidget? 'Currently only one is supported' : '';
 
@@ -70,13 +76,13 @@ class WidgetToolbox extends React.Component {
       <div className='section-buttons-group-right'>
         <div>
         <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"increase"}`}> Increase dashboard height </Tooltip>} >
-          <Button variant="light" key={0} style={{marginRight: '3px'}} onClick={() => this.props.onDashboardSizeChange(1)}  >
-          <Icon icon="plus" /> 
+          <Button variant="light" key={0} style={{marginRight: '3px', height: '40px'}} onClick={() => this.props.onDashboardSizeChange(1)}  >
+          <Icon icon="plus" style={iconStyle}/> 
           </Button>
           </OverlayTrigger>
           <OverlayTrigger key={1} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"decrease"}`}> Decrease dashboard height </Tooltip>} >
-          <Button variant="light" key={1} onClick={() => this.props.onDashboardSizeChange(-1)} >
-          <Icon icon="minus" /> 
+          <Button variant="light" key={1} style={{marginRight: '3px', height: '40px'}} onClick={() => this.props.onDashboardSizeChange(-1)} >
+          <Icon icon="minus" style={iconStyle}/> 
           </Button>
           </OverlayTrigger>
         </div>

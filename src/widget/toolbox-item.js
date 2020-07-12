@@ -51,7 +51,7 @@ class ToolboxItem extends React.Component {
     if (this.props.disabled === false) {
       return this.props.connectDragSource(
         <div className={itemClass}>
-          <span className="btn btn-outline-info " style={{marginTop: '5px'}}>
+          <span className="btn " style={{marginTop: '5px', color: '#6ea2b0', borderColor: '#6ea2b0'}}>
             {this.props.icon && <Icon style={{marginRight: '5px'}} icon={this.props.icon} /> }
             {this.props.name}
           </span>

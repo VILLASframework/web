@@ -24,7 +24,15 @@ class DashboardButtonGroup extends React.Component {
   render() {
     const buttonStyle = {
       marginLeft: '12px',
+      height: '44px', 
+      width : '35px'
     };
+
+    const iconStyle = {
+      color: '#007bff',
+      height: '25px', 
+      width : '25px'
+    }
 
     const buttons = [];
     let key = 0;
@@ -37,12 +45,12 @@ class DashboardButtonGroup extends React.Component {
       buttons.push(
         <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"save"}`}> Save changes </Tooltip>} >
         <Button variant= 'light' size="lg" key={key} onClick={this.props.onSave} style={buttonStyle}>
-          <Icon icon="save" /> 
+          <Icon icon="save" style={iconStyle} /> 
         </Button>
         </OverlayTrigger>,
         <OverlayTrigger key={key++}  placement={'bottom'} overlay={<Tooltip id={`tooltip-${"cancel"}`}> Discard changes </Tooltip>} >
         <Button key={key} variant= 'light' size="lg" onClick={this.props.onCancel} style={buttonStyle}>
-          <Icon icon="times" />
+          <Icon icon="times" style={iconStyle}/>
         </Button>
         </OverlayTrigger>
       );
@@ -51,7 +59,7 @@ class DashboardButtonGroup extends React.Component {
         buttons.push(
           <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"expand"}`}> Change to fullscreen view </Tooltip>} >
           <Button key={key} variant= 'light' size="lg" onClick={this.props.onFullscreen} style={buttonStyle}>
-            <Icon icon="expand" /> 
+            <Icon icon="expand" style={iconStyle}/> 
           </Button>
           </OverlayTrigger>
         );
@@ -61,7 +69,7 @@ class DashboardButtonGroup extends React.Component {
         buttons.push(
           <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"play"}`}> Continue simulation </Tooltip>} >
           <Button key={key} variant= 'light' size="lg" onClick={this.props.onUnpause} style={buttonStyle}>
-            <Icon icon="play" /> 
+            <Icon icon="play" style={iconStyle}/> 
           </Button>
           </OverlayTrigger>
         );
@@ -69,7 +77,7 @@ class DashboardButtonGroup extends React.Component {
         buttons.push(
           <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"pause"}`}> Pause simulation </Tooltip>} >
           <Button key={key} variant= 'light' size="lg" onClick={this.props.onPause} style={buttonStyle}>
-            <Icon icon="pause" /> 
+            <Icon icon="pause" style={iconStyle}/> 
           </Button>
           </OverlayTrigger>
         );
@@ -78,7 +86,7 @@ class DashboardButtonGroup extends React.Component {
       buttons.push(
         <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete files of scenario </Tooltip>} >
         <Button key={key} variant= 'light' size="lg" onClick={this.props.onEditFiles} style={buttonStyle}>
-          <Icon icon="file" />
+          <Icon icon="file" style={iconStyle}/>
         </Button>
         </OverlayTrigger>
       );
@@ -86,7 +94,7 @@ class DashboardButtonGroup extends React.Component {
       buttons.push(
         <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"layout"}`}> Add widgets and edit layout </Tooltip>} >
         <Button key={key} variant= 'light' size="lg" onClick={this.props.onEdit} style={buttonStyle}>
-          <Icon icon="pen" /> 
+          <Icon icon="pen" style={iconStyle} /> 
         </Button>
         </OverlayTrigger>
       );

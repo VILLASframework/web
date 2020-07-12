@@ -508,11 +508,17 @@ class Scenario extends React.Component {
       paddingTop: '30px'
     }
 
+    const iconStyle = {
+      color: '#007bff',
+      height: '25px', 
+      width : '25px'
+    }
+
     return <div className='section'>
       <div className='section-buttons-group-right'>
       <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete files of scenario </Tooltip>} >
         <Button key={0} variant= 'light' size="lg" onClick={this.onEditFiles.bind(this)} style={buttonStyle}>
-          <Icon icon="file" />
+          <Icon icon="file" style= {iconStyle}/>
         </Button>
         </OverlayTrigger>
       </div>
