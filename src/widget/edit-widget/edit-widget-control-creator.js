@@ -155,7 +155,7 @@ export default function CreateControls(widgetType = null, widget = null, session
             DialogControls.push(
                 <EditWidgetColorControl key={0} widget={widget} controlId={'customProperties.border_color'} label={'Line color'} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetNumberControl key={1} widget={widget} controlId={'customProperties.rotation'} label={'Rotation (degrees)'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetNumberControl key={1} widget={widget} controlId={'customProperties.border_width'} label={'Line width'} defaultValue={0} handleChange={(e) => handleChange(e)} />
+                <EditWidgetNumberControl key={2} widget={widget} controlId={'customProperties.border_width'} label={'Line width'} defaultValue={0} handleChange={(e) => handleChange(e)} />
             );
             break;
 

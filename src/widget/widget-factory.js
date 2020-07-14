@@ -182,6 +182,7 @@ class WidgetFactory {
                 break;
             case 'Line':
                 widget.height = 30;
+                widget.width = 150;
                 widget.customProperties.border_color = 0;
                 widget.customProperties.border_width = 2;
                 widget.customProperties.margin_top = 15;
