@@ -144,12 +144,18 @@ export default function CreateControls(widgetType = null, widget = null, session
                 <EditFileWidgetControl key={0} widget={widget} controlId={"customProperties.file"} files={files} type={'xml'} handleChange={(e) => handleChange(e) } />
             );
             break;
-
         case 'NumberInput':
             DialogControls.push(
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
                 <EditWidgetSignalControl key={2} widget={widget} controlId={'signalIDs'} input  signals={signals} handleChange={(e) => handleChange(e)} direction={'in'}/>,
                 <EditWidgetCheckboxControl key={1} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />
+            );
+            break;
+        case 'Line':
+            DialogControls.push(
+                <EditWidgetColorControl key={0} widget={widget} controlId={'customProperties.border_color'} label={'Line color'} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetNumberControl key={1} widget={widget} controlId={'customProperties.rotation'} label={'Rotation (degrees)'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetNumberControl key={1} widget={widget} controlId={'customProperties.border_width'} label={'Line width'} defaultValue={0} handleChange={(e) => handleChange(e)} />
             );
             break;
 

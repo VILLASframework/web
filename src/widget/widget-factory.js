@@ -180,6 +180,13 @@ class WidgetFactory {
                 widget.height = 400;
                 widget.customProperties.file = -1; // ID of file, -1 means non selected
                 break;
+            case 'Line':
+                widget.height = 50;
+                widget.customProperties.border_color = 8;
+                WidgetSlider.customPropertier.border_width = 2;
+                widget.customProperties.margin_top = 15;
+                widget.customProperties.rotation = 0;
+                break;
 
             default:
                 widget.width = 100;

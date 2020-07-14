@@ -53,6 +53,7 @@ class WidgetToolbox extends React.Component {
       <ToolboxItem name='Table' type='widget' icon = 'plus'/>
       <ToolboxItem name='Label' type='widget' icon = 'plus'/>
       <ToolboxItem name='Image' type='widget' icon = 'plus'/>
+      <ToolboxItem name='Line' type='widget' icon='plus'/>
       <ToolboxItem name='Button' type='widget' icon = 'plus'/>
       <ToolboxItem name='NumberInput' type='widget' icon = 'plus'/>
       <ToolboxItem name='Slider' type='widget' icon = 'plus'/>
