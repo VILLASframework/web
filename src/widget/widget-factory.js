@@ -181,7 +181,7 @@ class WidgetFactory {
                 widget.customProperties.file = -1; // ID of file, -1 means non selected
                 break;
             case 'Line':
-                widget.height = 20;
+                widget.height = 30;
                 widget.customProperties.border_color = 0;
                 widget.customProperties.border_width = 2;
                 widget.customProperties.margin_top = 15;
