@@ -18,7 +18,6 @@
 import React, { Component } from 'react';
 
 import EditWidgetColorControl from '../edit-widget/edit-widget-color-control';
-import EditWidgetNumberControl from '../edit-widget/edit-widget-number-control';
 
 class WidgetLine extends Component {
   render() {
