@@ -164,7 +164,8 @@ class EditSignalMapping extends React.Component {
           blendOutCancel = {true}
           onClose={(c) => this.onClose(c)}
           onReset={() => this.resetState()}
-          valid={true}>
+          valid={true}
+          size='lg'>
 
           <FormGroup>
               <FormLabel>{this.props.direction} Mapping</FormLabel>

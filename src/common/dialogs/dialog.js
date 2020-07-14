@@ -46,7 +46,7 @@ class Dialog extends React.Component {
 
   render() {
     return (
-      <Modal keyboard show={this.props.show} onEnter={this.props.onReset} onHide={this.cancelModal} onKeyPress={this.onKeyPress}>
+      <Modal size={this.props.size || 'sm'} keyboard show={this.props.show} onEnter={this.props.onReset} onHide={this.cancelModal} onKeyPress={this.onKeyPress}>
         <Modal.Header>
           <Modal.Title>{this.props.title}</Modal.Title>
         </Modal.Header>
