@@ -85,8 +85,17 @@ class EditICDialog extends React.Component {
 
   render() {
     return (
-      <Dialog show={this.props.show} title="Edit Infrastructure Component" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog
+        show={this.props.show}
+        title="Edit Infrastructure Component"
+        buttonTitle="Save"
+        onClose={(c) => this.onClose(c)}
+        onReset={() => this.resetState()}
+        valid={this.valid}
+        size='lg'
+      >
         <form>
+          <FormLabel column={false}>UUID: {this.props.ic.uuid}</FormLabel>
           <FormGroup controlId="name">
             <FormLabel column={false}>Name</FormLabel>
             <FormControl type="text" placeholder={this.props.ic.name} value={this.state.name} onChange={(e) => this.handleChange(e)} />
