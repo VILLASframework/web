@@ -73,6 +73,10 @@ class EditICDialog extends React.Component {
     this.setState({ [e.target.id]: e.target.value });
   }
 
+  handlePropertiesChange(data) {
+    this.setState({ properties: data });
+  }
+
   resetState() {
     this.setState({
       name: this.props.ic.name,
@@ -118,7 +122,11 @@ class EditICDialog extends React.Component {
           </FormGroup>
           <FormGroup controlId='properties'>
             <FormLabel column={false}>Properties</FormLabel>
-            <ParametersEditor content={this.state.properties} disabled={false} />
+            <ParametersEditor
+              content={this.state.properties}
+              disabled={false}
+              onChange={(data) => this.handlePropertiesChange(data)}
+            />
           </FormGroup>
         </form>
       </Dialog>
