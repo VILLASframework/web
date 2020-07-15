@@ -420,8 +420,6 @@ class Scenario extends React.Component {
   }
   
   onEditFiles(){
-    console.log("here r the files in scenario:");
-    console.log(this.state.file);
     let tempFiles = [];
     this.state.files.forEach( file => {
       tempFiles.push({

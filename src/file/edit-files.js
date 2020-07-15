@@ -21,6 +21,7 @@ import Dialog from '../common/dialogs/dialog';
 import AppDispatcher from "../common/app-dispatcher";
 import Table from "../common/table";
 import TableColumn from "../common/table-column";
+import EditFileName from  "./edit-file-name";
 
 
 class EditFilesDialog extends React.Component {
@@ -32,7 +33,9 @@ class EditFilesDialog extends React.Component {
 
     this.state = {
       uploadFile: null,
-      uploadProgress: 0
+      uploadProgress: 0,
+      editModal: false,
+      modalFile: {}
     };
   }
 
@@ -84,6 +87,22 @@ class EditFilesDialog extends React.Component {
 
   };
 
+  closeEditModal(data){
+    if(data !== {} || data !== "undefined"){
+    const formData = new FormData();
+    formData.append("object", data);
+
+    AppDispatcher.dispatch({
+      type: 'files/start-edit',
+      data: formData,
+      token: this.props.sessionToken,
+      id: data.id
+    });
+  }
+   
+  this.setState({editModal: false});
+  }
+
   deleteFile(index){
 
     let file = this.props.files[index]
@@ -114,24 +133,24 @@ class EditFilesDialog extends React.Component {
       marginTop: '-40px'
     };
 
+
     return (
-      <Dialog show={this.props.show} title="Edit Files of scenario" buttonTitle="Close" onClose={(c) => this.onClose(c)} blendOutCancel = {true} valid={true}>
+      <Dialog show={this.props.show} title="Edit Files of scenario" buttonTitle="Close" onClose={(c) => this.onClose(c)} blendOutCancel = {true} valid={true} size = 'lg'>
         <div>
 
-        <div className="edit-table">
-          <Table data={this.props.files} width = {467}>
-            <TableColumn title='ID' dataKey='id' width={42}  />
-            <TableColumn title='Name' dataKey='name'  width={107}/>
-            <TableColumn title='Size (bytes)' dataKey='size' width={83.3}/>
-            <TableColumn title='Type' dataKey='type' width={159.7}/>
+          <Table data={this.props.files}>
+            <TableColumn title='ID' dataKey='id'/>
+            <TableColumn title='Name' dataKey='name'/>
+            <TableColumn title='Size (bytes)' dataKey='size'/>
+            <TableColumn title='Type' dataKey='type'/>
             <TableColumn
-              title='Delete'
-              width='75'
+              title=''
               deleteButton
               onDelete={(index) => this.deleteFile(index)}
+              editButton
+              onEdit={index => this.setState({ editModal: true, modalFile: this.props.files[index] })}
             />
           </Table>
-        </div>
 
           <FormGroup as={Col} >
             <FormControl
@@ -157,8 +176,14 @@ class EditFilesDialog extends React.Component {
               style={progressBarStyle}
             />
           </FormGroup>
-        </div>
+          <div style={{ clear: 'both' }} />
+
+          <EditFileName show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} file={this.state.modalFile} />
+
+         </div>
       </Dialog>
+
+      
     );
   }
 }
