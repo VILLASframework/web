@@ -35,7 +35,23 @@ class WidgetToolbox extends React.Component {
     }
   };
 
+  disableDecrease(){
+    const maxHeight = Object.values(this.props.widgets).reduce((currentHeight, widget) => {
+      const absolutHeight = widget.y + widget.height;
+  
+      return absolutHeight > currentHeight ? absolutHeight : currentHeight;
+      }, 0);
+      
+      if(this.props.dashboard.height <= 400 || this.props.dashboard.height <= maxHeight + 80){
+        return true;
+      }
+
+      return false;
+  }
+
   render() {
+
+    const disableDecrease = this.disableDecrease();
     // Only one topology widget at the time is supported
     const iconStyle = {
       color: '#007bff',
@@ -82,7 +98,7 @@ class WidgetToolbox extends React.Component {
           </Button>
           </OverlayTrigger>
           <OverlayTrigger key={1} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"decrease"}`}> Decrease dashboard height </Tooltip>} >
-          <Button variant="light" key={1} style={{marginRight: '3px', height: '40px'}} onClick={() => this.props.onDashboardSizeChange(-1)} >
+          <Button variant="light" key={1} disabled={disableDecrease} style={{marginRight: '3px', height: '40px'}} onClick={() => this.props.onDashboardSizeChange(-1)} >
           <Icon icon="minus" style={iconStyle}/> 
           </Button>
           </OverlayTrigger>

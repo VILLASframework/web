@@ -73,7 +73,10 @@ class Dashboard extends Component {
 
       return thisWidgetHeight > maxHeightSoFar? thisWidgetHeight : maxHeightSoFar;
     }, 0);
-    if(dashboard.height === 0 || maxHeight + 80 > dashboard.height)
+    if(dashboard.height === 0){
+      dashboard.height = 400;
+    }
+    else if(maxHeight + 80 > dashboard.height)
     {
       dashboard.height = maxHeight + 80;
     }
@@ -367,11 +370,12 @@ class Dashboard extends Component {
     return absolutHeight > currentHeight ? absolutHeight : currentHeight;
     }, 0);
     let dashboard = this.state.dashboard;
+
     if(value === -1){
 
       let tempHeight = this.state.dashboard.height - 50;
 
-      if(tempHeight > (maxHeight + 80)){
+      if(tempHeight >= 400 && tempHeight >= (maxHeight + 80)){
         dashboard.height = tempHeight;
         this.setState({dashboard});
       }
@@ -420,7 +424,7 @@ class Dashboard extends Component {
 
       <div className="box box-content" onContextMenu={ (e) => e.preventDefault() }>
         {this.state.editing &&
-        <WidgetToolbox grid={grid} onGridChange={this.setGrid.bind(this)} onDashboardSizeChange={this.setDashboardSize.bind(this)} widgets={this.state.widgets} />
+        <WidgetToolbox grid={grid} onGridChange={this.setGrid.bind(this)} dashboard={this.state.dashboard} onDashboardSizeChange={this.setDashboardSize.bind(this)} widgets={this.state.widgets} />
         }
         {!draggable?(
         <WidgetArea widgets={this.state.widgets} dropZoneHeight = {dropZoneHeight} editing={this.state.editing} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
