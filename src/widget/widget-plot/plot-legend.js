@@ -19,17 +19,39 @@ import React from 'react';
 import { scaleOrdinal} from 'd3-scale';
 import {schemeCategory10} from 'd3-scale-chromatic'
 
+function Legend(props){
+  const signal = props.sig;
+  const hasScalingFactor = (signal.scalingFactor !== 1);
+
+
+  if(hasScalingFactor){
+    return (
+      <li key={signal.id} className="signal-legend" style={{ color: props.colorScale(signal.id) }}>
+      <span className="signal-legend-name">{signal.name}</span>
+      <span style={{ marginLeft: '0.3em' }} className="signal-unit">{signal.unit}</span>
+      <span style={{ marginLeft: '0.3em' }} className="signal-scale">{signal.scalingFactor}</span>
+      </li>
+    )
+  } else {
+    return (
+      <li key={signal.id} className="signal-legend" style={{ color: props.colorScale(signal.id) }}>
+        <span className="signal-legend-name">{signal.name}</span>
+        <span style={{ marginLeft: '0.3em' }} className="signal-unit">{signal.unit}</span>
+      </li>
+    )
+  }
+
+}
+
 class PlotLegend extends React.Component {
   render() {
     const colorScale = scaleOrdinal(schemeCategory10);
 
     return <div className="plot-legend">
       <ul>
-        {this.props.signals.map(signal =>
-          <li key={signal.id} className="signal-legend" style={{ color: colorScale(signal.id) }}>
-            <span className="signal-legend-name">{signal.name + "(x" + signal.scalingFactor + ")"}</span>
-            <span style={{ marginLeft: '0.3em' }} className="signal-unit">{signal.unit}</span>
-          </li>
+        {
+          this.props.signals.map( signal =>
+             <Legend key={signal.id} sig={signal} colorScale={colorScale}/>
         )}
       </ul>
     </div>;

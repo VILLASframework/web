@@ -181,6 +181,22 @@ span.signal-unit::after {
     font-style: normal;
 }
 
+span.signal-scale {
+    color: grey;
+    font-style: italic;
+    font-weight: 200;
+}
+
+span.signal-scale::before {
+    content: '(x';
+    font-style: italic;
+}
+
+span.signal-scale::after {
+    content: ')';
+    font-style: italic;
+}
+
 /* End Plots */
 
 .single-value-widget {

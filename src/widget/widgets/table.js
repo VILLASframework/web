@@ -41,22 +41,27 @@ class WidgetTable extends Component {
           // determine ID of infrastructure component related to signal (via config)
           let icID = props.icIDs[sig.id]
 
-          let signalName = sig.name;
-          if(sig.scalingFactor !== 1.0){
-            signalName = signalName + "(x" + String(sig.scalingFactor) + ")";
-          }
-
           // distinguish between input and output signals
           if (sig.direction === "out") {
             if (props.data[icID] != null && props.data[icID].output != null && props.data[icID].output.values != null) {
               if (props.data[icID].output.values[sig.index-1] !== undefined) {
+                console.log("Table: sig", sig)
                 let data = props.data[icID].output.values[sig.index-1];
                 rows.push({
-                  name: signalName,
+                  name: sig.name,
                   unit: sig.unit,
-                  value: data[data.length - 1].y * sig.scalingFactor
+                  value: data[data.length - 1].y * sig.scalingFactor,
+                  scalingFactor: sig.scalingFactor
                 });
 
+              } else {
+                // no data available
+                rows.push({
+                  name: sig.name,
+                  unit: sig.unit,
+                  value: NaN,
+                  scalingFactor: sig.scalingFactor
+                })
               }
             }
           } else if (sig.direction === "in") {
@@ -64,10 +69,19 @@ class WidgetTable extends Component {
               if (props.data[icID].input.values[sig.index-1] !== undefined) {
                 let data = props.data[icID].input.values[sig.index-1];
                 rows.push({
-                  name: signalName,
+                  name: sig.name,
                   unit: sig.unit,
-                  value: data[data.length - 1].y * sig.scalingFactor
+                  value: data[data.length - 1].y * sig.scalingFactor,
+                  scalingFactor: sig.scalingFactor
                 });
+              } else {
+                // no data available
+                rows.push({
+                  name: sig.name,
+                  unit: sig.unit,
+                  value: NaN,
+                  scalingFactor: sig.scalingFactor
+                })
               }
             }
           }
@@ -91,11 +105,12 @@ class WidgetTable extends Component {
 
     var columns = [
       <TableColumn key={1} title="Signal" dataKey="name" width={120} />,
-      <TableColumn key={2} title="Value" dataKey="value" modifier={format('.4f')} />
+      <TableColumn key={2} title="Value" dataKey="value" modifier={format('.4f')} />,
+      <TableColumn key={3} title="Scale" dataKey="scalingFactor" modifier={format('.2f')} />
     ];
 
     if (this.props.widget.customProperties.showUnit)
-      columns.push(<TableColumn key={3} title="Unit" dataKey="unit" />)
+      columns.push(<TableColumn key={4} title="Unit" dataKey="unit" />)
 
     return (
       <div className="table-widget" style={{width: this.props.widget.width, height: this.props.widget.height, overflowY: 'auto'}}>

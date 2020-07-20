@@ -29,6 +29,7 @@ class WidgetGauge extends Component {
     this.state = {
       value: 0,
       unit: '',
+      scalingFactor: 1.0,
       signalID: '',
       minValue: null,
       maxValue: null,
@@ -96,6 +97,7 @@ class WidgetGauge extends Component {
       // Update unit (assuming there is exactly one signal for this widget)
       if (signal !== undefined) {
         returnState["unit"] = signal[0].unit;
+        returnState["scalingFactor"] = signal[0].scalingFactor;
       }
 
       // update value
@@ -105,7 +107,11 @@ class WidgetGauge extends Component {
         || props.data[icID] == null
         || props.data[icID].output == null
         || props.data[icID].output.values == null) {
-        return {value: 0, minValue: 0, maxValue: 10};
+
+        returnState["value"] = 0;
+        returnState["minValue"] = 0;
+        returnState["maxValue"] = 10;
+        return returnState;
       }
 
       // memorize if min or max value is updated
@@ -183,12 +189,14 @@ class WidgetGauge extends Component {
           returnState["maxValue"] = maxValue;
         }
 
-        if (returnState !== {}) {
-          return returnState;
-        } else {
-          return null;
-        }
+
       } // if there is signal data
+
+      if (JSON.stringify(returnState) !== JSON.stringify({})) {
+        return returnState;
+      } else {
+        return null;
+      }
     }
     return null;
 
@@ -248,13 +256,19 @@ class WidgetGauge extends Component {
 
   render() {
     const componentClass = this.props.editing ? "gauge-widget editing" : "gauge-widget";
+    let scaleText = "";
+    if(this.state.scalingFactor !== 1){
+      scaleText = " (x" + this.state.scalingFactor + ")"
+    }
 
     return (
       <div className={componentClass}>
           <div className="gauge-name">{this.props.widget.name}</div>
           <canvas ref={node => this.gaugeCanvas = node} />
-          <div className="gauge-unit">{this.state.unit}</div>
+          <div className="gauge-unit">{this.state.unit + scaleText}</div>
           <div className="gauge-value">{this.state.value}</div>
+
+
       </div>
     );
   }
