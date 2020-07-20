@@ -68,7 +68,11 @@ class RestDataManager {
           }
         }
       case 'remove/update':
-        if(param === null){
+        if(id !== null){
+         return this.makeURL(this.url + '/' + id);
+
+        }
+        else if(param === null){
           return this.makeURL(this.url + '/' + object.id);
         }
         else{
@@ -201,11 +205,11 @@ class RestDataManager {
       });
     }
 
-  update(object, token = null, param = null) {
+  update(object, token = null, param = null, id = null) {
     var obj = {};
     obj[this.type] = this.filterKeys(object);
 
-    RestAPI.put(this.requestURL('remove/update',null,param,object), obj, token).then(response => {
+    RestAPI.put(this.requestURL('remove/update',id,param,object), obj, token).then(response => {
         AppDispatcher.dispatch({
           type: this.type + 's/edited',
           data: response[this.type]

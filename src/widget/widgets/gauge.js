@@ -81,114 +81,116 @@ class WidgetGauge extends Component {
     // get the signal with the selected signal ID
     let signalID = props.widget.signalIDs[0];
     let signal = props.signals.filter(s => s.id === signalID)
-    // determine ID of infrastructure component related to signal[0] (there is only one signal for a lamp widget)
-    let icID = props.icIDs[signal[0].id];
 
-    let returnState = {}
+    if(signal.length > 0) {
+      // determine ID of infrastructure component related to signal[0] (there is only one signal for a lamp widget)
+      let icID = props.icIDs[signal[0].id];
 
-    returnState["colorZones"] = props.widget.customProperties.zones;
+      let returnState = {}
 
-    if(signalID){
-    returnState["signalID"] = signalID;
-    }
-    // Update unit (assuming there is exactly one signal for this widget)
-    if(signal !== undefined){
-      returnState["unit"] = signal[0].unit;
-    }
+      returnState["colorZones"] = props.widget.customProperties.zones;
 
-    // update value
+      if (signalID) {
+        returnState["signalID"] = signalID;
+      }
+      // Update unit (assuming there is exactly one signal for this widget)
+      if (signal !== undefined) {
+        returnState["unit"] = signal[0].unit;
+      }
 
-    // check if data available
-    if (props.data == null
-      || props.data[icID] == null
-      || props.data[icID].output == null
-      || props.data[icID].output.values == null) {
-       return{ value: 0, minValue: 0, maxValue: 10};
-    }
+      // update value
 
-    // memorize if min or max value is updated
-    let updateValue = false;
-    let updateMinValue = false;
-    let updateMaxValue = false;
+      // check if data available
+      if (props.data == null
+        || props.data[icID] == null
+        || props.data[icID].output == null
+        || props.data[icID].output.values == null) {
+        return {value: 0, minValue: 0, maxValue: 10};
+      }
 
-    // check if value has changed
-    const data = props.data[icID].output.values[signal[0].index-1];
-    // Take just 3 decimal positions
-    // Note: Favor this method over Number.toFixed(n) in order to avoid a type conversion, since it returns a String
-    if (data != null) {
-      const value = signal[0].scalingFactor * Math.round(data[data.length - 1].y * 1e3) / 1e3;
-      let minValue = null;
-      let maxValue = null;
+      // memorize if min or max value is updated
+      let updateValue = false;
+      let updateMinValue = false;
+      let updateMaxValue = false;
 
-      if ((state.value !== value && value != null) || props.widget.customProperties.valueUseMinMax || state.useMinMaxChange) {
-        //value has changed
-        updateValue = true;
+      // check if value has changed
+      const data = props.data[icID].output.values[signal[0].index - 1];
+      // Take just 3 decimal positions
+      // Note: Favor this method over Number.toFixed(n) in order to avoid a type conversion, since it returns a String
+      if (data != null) {
+        const value = signal[0].scalingFactor * Math.round(data[data.length - 1].y * 1e3) / 1e3;
+        let minValue = null;
+        let maxValue = null;
 
-        // update min-max if needed
-        let updateLabels = false;
+        if ((state.value !== value && value != null) || props.widget.customProperties.valueUseMinMax || state.useMinMaxChange) {
+          //value has changed
+          updateValue = true;
 
-        minValue = state.minValue;
-        maxValue = state.maxValue;
+          // update min-max if needed
+          let updateLabels = false;
 
-        if (minValue == null || (!props.widget.customProperties.valueUseMinMax && (value < minValue || signalID !== state.signalID)) ||state.useMinMaxChange) {
-          minValue = value - 0.5;
-          updateLabels = true;
-          updateMinValue = true;
-        }
+          minValue = state.minValue;
+          maxValue = state.maxValue;
 
-        if (maxValue == null || (!props.widget.customProperties.valueUseMinMax && (value > maxValue || signalID !== state.signalID)) || state.useMinMaxChange) {
-          maxValue = value + 0.5;
-          updateLabels = true;
-          updateMaxValue = true;
-          returnState["useMinMaxChange"] = false;
-        }
+          if (minValue == null || (!props.widget.customProperties.valueUseMinMax && (value < minValue || signalID !== state.signalID)) || state.useMinMaxChange) {
+            minValue = value - 0.5;
+            updateLabels = true;
+            updateMinValue = true;
+          }
 
-        if (props.widget.customProperties.valueUseMinMax) {
+          if (maxValue == null || (!props.widget.customProperties.valueUseMinMax && (value > maxValue || signalID !== state.signalID)) || state.useMinMaxChange) {
+            maxValue = value + 0.5;
+            updateLabels = true;
+            updateMaxValue = true;
+            returnState["useMinMaxChange"] = false;
+          }
+
+          if (props.widget.customProperties.valueUseMinMax) {
             minValue = props.widget.customProperties.valueMin;
             updateMinValue = true;
             maxValue = props.widget.customProperties.valueMax;
             updateMaxValue = true;
             updateLabels = true;
 
-        }
-
-        if (updateLabels === false && state.gauge) {
-          // check if min/max changed
-          if (minValue > state.gauge.minValue) {
-            minValue = state.gauge.minValue;
-            updateMinValue = true;
           }
 
-          if (maxValue < state.gauge.maxValue) {
-            maxValue = state.gauge.maxValue;
-            updateMaxValue = true;
+          if (updateLabels === false && state.gauge) {
+            // check if min/max changed
+            if (minValue > state.gauge.minValue) {
+              minValue = state.gauge.minValue;
+              updateMinValue = true;
+            }
+
+            if (maxValue < state.gauge.maxValue) {
+              maxValue = state.gauge.maxValue;
+              updateMaxValue = true;
+            }
           }
         }
-      }
 
-      if(props.widget.customProperties.valueUseMinMax !== state.useMinMax){
-        returnState["useMinMax"] = props.widget.customProperties.valueUseMinMax;
-      }
+        if (props.widget.customProperties.valueUseMinMax !== state.useMinMax) {
+          returnState["useMinMax"] = props.widget.customProperties.valueUseMinMax;
+        }
 
-      // prepare returned state
-      if(updateValue === true){
-        returnState["value"] = value;
-      }
-      if(updateMinValue === true){
-        returnState["minValue"] = minValue;
-      }
-      if(updateMaxValue === true){
-        returnState["maxValue"] = maxValue;
-      }
+        // prepare returned state
+        if (updateValue === true) {
+          returnState["value"] = value;
+        }
+        if (updateMinValue === true) {
+          returnState["minValue"] = minValue;
+        }
+        if (updateMaxValue === true) {
+          returnState["maxValue"] = maxValue;
+        }
 
-      if (returnState !== {}){
-        return returnState;
-      }
-      else{
-        return null;
-      }
-    } // if there is signal data
-
+        if (returnState !== {}) {
+          return returnState;
+        } else {
+          return null;
+        }
+      } // if there is signal data
+    }
+    return null;
 
   }
 

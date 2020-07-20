@@ -36,21 +36,24 @@ class WidgetLamp extends Component {
     // get the signal with the selected signal ID
     let signalID = props.widget.signalIDs[0];
     let signal = props.signals.filter(s => s.id === signalID)
-    // determine ID of infrastructure component related to signal[0] (there is only one signal for a lamp widget)
-    let icID = props.icIDs[signal[0].id];
 
-    // check if data available
-    if (props.data == null
-      || props.data[icID] == null
-      || props.data[icID].output == null
-      || props.data[icID].output.values == null) {
-      return{value:''};
-    }
+    if(signal.length>0) {
+      // determine ID of infrastructure component related to signal[0] (there is only one signal for a lamp widget)
+      let icID = props.icIDs[signal[0].id];
 
-    // check if value has changed
-    const data = props.data[icID].output.values[signal[0].index-1];
-    if (data != null && Number(state.value) !== signal[0].scalingFactor * data[data.length - 1].y) {
-      return { value: signal[0].scalingFactor * data[data.length - 1].y };
+      // check if data available
+      if (props.data == null
+        || props.data[icID] == null
+        || props.data[icID].output == null
+        || props.data[icID].output.values == null) {
+        return {value: ''};
+      }
+
+      // check if value has changed
+      const data = props.data[icID].output.values[signal[0].index - 1];
+      if (data != null && Number(state.value) !== signal[0].scalingFactor * data[data.length - 1].y) {
+        return {value: signal[0].scalingFactor * data[data.length - 1].y};
+      }
     }
 
     return null;

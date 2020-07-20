@@ -128,7 +128,12 @@ class ArrayStore extends ReduceStore {
         return super.reduce(state, action);
 
       case this.type + '/start-edit':
+        if(action.id){
+          this.dataManager.update(action.data, action.token,action.param,action.id);
+        }
+        else{
         this.dataManager.update(action.data, action.token,action.param);
+        }
         return state;
 
       case this.type + '/edited':

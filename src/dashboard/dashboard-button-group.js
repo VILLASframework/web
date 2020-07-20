@@ -17,14 +17,22 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'react-bootstrap';
+import { Button,OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Icon from "../common/icon";
 
 class DashboardButtonGroup extends React.Component {
   render() {
     const buttonStyle = {
-      marginLeft: '8px'
+      marginLeft: '12px',
+      height: '44px', 
+      width : '35px'
     };
+
+    const iconStyle = {
+      color: '#007bff',
+      height: '25px', 
+      width : '25px'
+    }
 
     const buttons = [];
     let key = 0;
@@ -35,46 +43,60 @@ class DashboardButtonGroup extends React.Component {
 
     if (this.props.editing) {
       buttons.push(
-        <Button key={key++} onClick={this.props.onSave} style={buttonStyle}>
-          <Icon icon="save" /> Save
-        </Button>,
-        <Button key={key++} onClick={this.props.onCancel} style={buttonStyle}>
-          <Icon icon="times" /> Cancel
+        <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"save"}`}> Save changes </Tooltip>} >
+        <Button variant= 'light' size="lg" key={key} onClick={this.props.onSave} style={buttonStyle}>
+          <Icon icon="save" style={iconStyle} /> 
         </Button>
+        </OverlayTrigger>,
+        <OverlayTrigger key={key++}  placement={'bottom'} overlay={<Tooltip id={`tooltip-${"cancel"}`}> Discard changes </Tooltip>} >
+        <Button key={key} variant= 'light' size="lg" onClick={this.props.onCancel} style={buttonStyle}>
+          <Icon icon="times" style={iconStyle}/>
+        </Button>
+        </OverlayTrigger>
       );
     } else {
       if (this.props.fullscreen !== true) {
         buttons.push(
-          <Button key={key++} onClick={this.props.onFullscreen} style={buttonStyle}>
-            <Icon icon="expand" /> Fullscreen
+          <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"expand"}`}> Change to fullscreen view </Tooltip>} >
+          <Button key={key} variant= 'light' size="lg" onClick={this.props.onFullscreen} style={buttonStyle}>
+            <Icon icon="expand" style={iconStyle}/> 
           </Button>
+          </OverlayTrigger>
         );
       }
 
       if (this.props.paused) {
         buttons.push(
-          <Button key={key++} onClick={this.props.onUnpause} style={buttonStyle}>
-            <Icon icon="play" /> Live
+          <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"play"}`}> Continue simulation </Tooltip>} >
+          <Button key={key} variant= 'light' size="lg" onClick={this.props.onUnpause} style={buttonStyle}>
+            <Icon icon="play" style={iconStyle}/> 
           </Button>
+          </OverlayTrigger>
         );
       } else {
         buttons.push(
-          <Button key={key++} onClick={this.props.onPause} style={buttonStyle}>
-            <Icon icon="pause" /> Pause
+          <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"pause"}`}> Pause simulation </Tooltip>} >
+          <Button key={key} variant= 'light' size="lg" onClick={this.props.onPause} style={buttonStyle}>
+            <Icon icon="pause" style={iconStyle}/> 
           </Button>
+          </OverlayTrigger>
         );
       }
 
       buttons.push(
-        <Button key={key++} onClick={this.props.onEditFiles} style={buttonStyle}>
-          <Icon icon="file" /> Edit Files
+        <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete files of scenario </Tooltip>} >
+        <Button key={key} variant= 'light' size="lg" onClick={this.props.onEditFiles} style={buttonStyle}>
+          <Icon icon="file" style={iconStyle}/>
         </Button>
+        </OverlayTrigger>
       );
 
       buttons.push(
-        <Button key={key++} onClick={this.props.onEdit} style={buttonStyle}>
-          <Icon icon="pen" /> Edit Layout
+        <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"layout"}`}> Add widgets and edit layout </Tooltip>} >
+        <Button key={key} variant= 'light' size="lg" onClick={this.props.onEdit} style={buttonStyle}>
+          <Icon icon="pen" style={iconStyle} /> 
         </Button>
+        </OverlayTrigger>
       );
 
     }

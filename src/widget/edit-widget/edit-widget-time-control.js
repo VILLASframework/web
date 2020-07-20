@@ -23,7 +23,7 @@ class EditWidgetTimeControl extends Component {
     super(props);
 
     this.state = {
-      widget: {      
+      widget: {
       }
     };
   }
@@ -36,10 +36,23 @@ class EditWidgetTimeControl extends Component {
 
   render() {
 
+    let parts = this.props.controlId.split('.');
+    let isCustomProperty = true;
+    if (parts.length === 1){
+      isCustomProperty = false;
+    }
+
     return (
       <FormGroup controlId= {this.props.controlId}>
         <FormLabel>Time</FormLabel>
-        <FormControl type="number" min="1" max="300" placeholder="Enter time" value={this.state.widget[this.props.controlId]} onChange={(e) => this.props.handleChange(e)} />
+        <FormControl
+          type="number"
+          min="1"
+          max="300"
+          placeholder="Enter time"
+          value={isCustomProperty ? this.state.widget[parts[0]][parts[1]] : this.state.widget[this.props.controlId]}
+          onChange={(e) => this.props.handleChange(e)}
+        />
         <FormText>Time in seconds</FormText>
       </FormGroup>
     );

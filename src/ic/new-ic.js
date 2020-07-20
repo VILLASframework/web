@@ -80,10 +80,6 @@ class NewICDialog extends React.Component {
       uuid = false;
     }
 
-    if (this.state.host === '') {
-      host = false;
-    }
-
     if (this.state.type === '') {
       type = false;
     }

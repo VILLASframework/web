@@ -17,7 +17,7 @@
 
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { Table, Button, FormControl, FormLabel, FormCheck } from 'react-bootstrap';
+import { Table, Button, FormControl, FormLabel, FormCheck, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Icon from './icon';
 
@@ -103,11 +103,13 @@ class CustomTable extends Component {
 
     // add buttons
     if (child.props.editButton) {
-      cell.push(<Button variant='table-control-button' onClick={() => child.props.onEdit(index)} disabled={child.props.onEdit == null}><Icon icon='edit' /></Button>);
+      cell.push(<OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"edit"}`}> Edit </Tooltip>} >
+      <Button variant='table-control-button' onClick={() => child.props.onEdit(index)} disabled={child.props.onEdit == null}><Icon icon='edit' /></Button></OverlayTrigger>);
     }
 
     if (child.props.deleteButton) {
-      cell.push(<Button variant='table-control-button' onClick={() => child.props.onDelete(index)} disabled={child.props.onDelete == null}><Icon icon='trash' /></Button>);
+      cell.push(<OverlayTrigger key={1} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"delete"}`}> Delete </Tooltip>} >
+      <Button variant='table-control-button' onClick={() => child.props.onDelete(index)} disabled={child.props.onDelete == null}><Icon icon='trash' /></Button></OverlayTrigger>);
     }
 
     if (child.props.checkbox) {
@@ -117,7 +119,8 @@ class CustomTable extends Component {
     }
 
     if (child.props.exportButton) {
-      cell.push(<Button variant='table-control-button' onClick={() => child.props.onExport(index)} disabled={child.props.onExport == null}><Icon icon='download' /></Button>);
+      cell.push(<OverlayTrigger key={2} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"export"}`}> Export </Tooltip>} >
+      <Button variant='table-control-button' onClick={() => child.props.onExport(index)} disabled={child.props.onExport == null}><Icon icon='download' /></Button></OverlayTrigger>);
     }
 
     return cell;

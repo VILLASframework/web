@@ -31,7 +31,6 @@ class EditableWidgetContainer extends React.Component {
     if (this.props.grid === 1) {
       return value;
     }
-
     return Math.round(value / this.props.grid) * this.props.grid;
   }
 
@@ -41,20 +40,15 @@ class EditableWidgetContainer extends React.Component {
     }
   };
 
-  drag = (event, data) => {
-    const x = this.snapToGrid(data.x);
-    const y = this.snapToGrid(data.y);
-
-    if (x !== data.x || y !== data.y) {
-      this.rnd.updatePosition({ x, y });
-    }
-  };
-
   dragStop = (event, data) => {
     const widget = this.props.widget;
-
     widget.x = this.snapToGrid(data.x);
     widget.y = this.snapToGrid(data.y);
+
+
+    if (widget.x !== data.x || widget.y !== data.y) {
+      this.rnd.updatePosition({ x: widget.x, y: widget.y});
+    }
 
     if (this.props.onWidgetChange != null) {
       this.props.onWidgetChange(widget, this.props.index);
@@ -62,7 +56,6 @@ class EditableWidgetContainer extends React.Component {
   };
 
   resizeStop = (event, direction, ref,delta, position) => {
-
     const widget = this.props.widget;
 
     // resize depends on direction
@@ -119,7 +112,6 @@ class EditableWidgetContainer extends React.Component {
       className={widgetClasses}
       onResizeStart={this.borderWasClicked}
       onResizeStop={this.resizeStop}
-      onDrag={this.drag}
       onDragStop={this.dragStop}
       dragGrid={gridArray}
       resizeGrid={gridArray}

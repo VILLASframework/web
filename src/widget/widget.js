@@ -43,6 +43,7 @@ import WidgetGauge from './widgets/gauge';
 import WidgetBox from './widgets/box';
 import WidgetHTML from './widgets/html';
 import WidgetTopology from './widgets/topology';
+import WidgetLine from './widgets/line';
 
 import '../styles/widgets.css';
 
@@ -220,6 +221,11 @@ class Widget extends React.Component {
         widget={widget}
         files={this.state.files}
         token={this.state.sessionToken}
+      />
+    } else if (widget.type === 'Line') {
+      return <WidgetLine
+        widget={widget}
+        editing={this.props.editing}
       />
     }
 

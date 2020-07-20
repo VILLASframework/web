@@ -17,7 +17,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button, InputGroup, FormControl } from 'react-bootstrap';
+import { Button, InputGroup, FormControl, Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 import FileSaver from 'file-saver';
 
@@ -35,6 +35,8 @@ import TableColumn from '../common/table-column';
 import ImportConfigDialog from '../componentconfig/import-config';
 import ImportDashboardDialog from "../dashboard/import-dashboard";
 import NewDashboardDialog from "../dashboard/new-dashboard";
+import EditDashboardDialog from '../dashboard/edit-dashboard';
+import EditFiles from '../file/edit-files'
 
 import ICAction from '../ic/ic-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
@@ -94,15 +96,19 @@ class Scenario extends React.Component {
       modalConfigData: (prevState.modalConfigData !== {} && prevState.modalConfigData !== undefined )? prevState.modalConfigData : {},
       selectedConfigs: [],
       modalConfigIndex: 0,
+      filesEditModal: prevState.filesEditModal || false,
+      filesEditSaveState: prevState.filesEditSaveState || [],
 
       editOutputSignalsModal: prevState.editOutputSignalsModal || false,
       editInputSignalsModal: prevState.editInputSignalsModal || false,
 
       newDashboardModal: false,
+      dashboardEditModal: prevState.dashboardEditModal || false,
       deleteDashboardModal: false,
       importDashboardModal: false,
       modalDashboardData: {},
 
+      userToAdd: '',
       deleteUserName: '',
       deleteUserModal: false,
     }
@@ -135,13 +141,19 @@ class Scenario extends React.Component {
   * User modification methods
   ############################################## */
 
+  onUserInputChange(e) {
+    this.setState({userToAdd: e.target.value});
+  }
+
   addUser() {
     AppDispatcher.dispatch({
       type: 'scenarios/add-user',
       data: this.state.scenario.id,
-      username: this.userToAdd,
+      username: this.state.userToAdd,
       token: this.state.sessionToken
     });
+
+    this.setState({userToAdd: ''});
   }
 
   closeDeleteUserModal() {
@@ -334,6 +346,21 @@ class Scenario extends React.Component {
     }
   }
 
+  closeEditDashboardModal(data) {
+    this.setState({ dashboardEditModal: false });
+
+    let editDashboard = this.state.modalDashboardData;
+
+    if (data != null) {
+      editDashboard.name = data.name;
+      AppDispatcher.dispatch({
+        type: 'dashboards/start-edit',
+        data: editDashboard,
+        token: this.state.sessionToken
+      });
+    }
+  }
+
   closeDeleteDashboardModal(confirmDelete) {
     this.setState({ deleteDashboardModal: false });
 
@@ -392,6 +419,22 @@ class Scenario extends React.Component {
       this.setState({editOutputSignalsModal: false});
     }
   }
+  
+  onEditFiles(){
+    let tempFiles = [];
+    this.state.files.forEach( file => {
+      tempFiles.push({
+        id: file.id,
+        name: file.name
+      });
+    })
+    this.setState({filesEditModal: true, filesEditSaveState: tempFiles});
+  }
+
+  closeEditFiles(){
+    this.setState({ filesEditModal: false });
+    // TODO do we need this if the dispatches happen in the dialog?
+  }
 
   signalsAutoConf(index){
     let componentConfig = this.state.configs[index];
@@ -438,11 +481,56 @@ class Scenario extends React.Component {
   * File modification methods
   ############################################## */
 
-  getFileName(id) {
-    for (let file of this.state.files) {
-      if (file.id === id) {
-        return file.name;
+  getListOfFiles(fileIDs, types) {
+
+    let fileList = '';
+
+    for (let id of fileIDs){
+      for (let file of this.state.files) {
+        if (file.id === id && types.some(e => file.type.includes(e))) {
+          if (fileList === ''){
+            fileList = file.name
+          } else {
+            fileList = fileList + ';' + file.name;
+          }
+        }
       }
+    }
+
+
+
+
+    return fileList;
+  }
+
+  startPintura(configIndex){
+    let config = this.state.configs[configIndex];
+
+    // get xml / CIM file
+    let files = []
+    for (let id of config.fileIDs){
+      for (let file of this.state.files) {
+        if (file.id === id && ['xml'].some(e => file.type.includes(e))) {
+          files.push(file);
+        }
+      }
+    }
+
+    if(files.length > 1){
+      // more than one CIM file...
+      console.warn("There is more than one CIM file selected in this component configuration. I will open them all in a separate tab.")
+    }
+
+    let base_host = 'aaa.bbb.ccc.ddd/api/v2/files/'
+    for (let file of files) {
+      // endpoint param serves for download and upload of CIM file, token is required for authentication
+      let params = {
+        token: this.state.sessionToken,
+        endpoint: base_host + String(file.id),
+      }
+
+      // TODO start Pintura for editing CIM/ XML file from here
+      console.warn("Starting Pintura... and nothing happens so far :-) ", params)
     }
   }
 
@@ -460,8 +548,30 @@ class Scenario extends React.Component {
       paddingTop: '30px'
     }
 
+    const iconStyle = {
+      color: '#007bff',
+      height: '25px', 
+      width : '25px'
+    }
+
     return <div className='section'>
+      <div className='section-buttons-group-right'>
+      <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete files of scenario </Tooltip>} >
+        <Button key={0} variant= 'light' size="lg" onClick={this.onEditFiles.bind(this)} style={buttonStyle}>
+          <Icon icon="file" style= {iconStyle}/>
+        </Button>
+        </OverlayTrigger>
+      </div>
       <h1>{this.state.scenario.name}</h1>
+
+      <EditFiles
+          sessionToken={this.state.sessionToken}
+          show={this.state.filesEditModal}
+          onClose={this.closeEditFiles.bind(this)}
+          signals={this.state.signals}
+          files={this.state.files}
+          scenarioID={this.state.scenario.id}
+        />
 
 
 
@@ -470,7 +580,14 @@ class Scenario extends React.Component {
       <Table data={this.state.configs}>
         <TableColumn checkbox onChecked={(index, event) => this.onConfigChecked(index, event)} width='30' />
         <TableColumn title='Name' dataKey='name' />
-        <TableColumn title='Selected configuration file' dataKey='selectedFileID' modifier={(selectedFileID) => this.getFileName(selectedFileID)} />
+        <TableColumn title='Configuration file(s)' dataKey='fileIDs' modifier={(fileIDs) => this.getListOfFiles(fileIDs, ['json', 'JSON'])} />
+        <TableColumn
+          title='Model file(s)'
+          dataKey='fileIDs'
+          modifier={(fileIDs) => this.getListOfFiles(fileIDs, ['xml'])}
+          editButton
+          onEdit={(index) => this.startPintura(index)}
+        />
         <TableColumn
           title='# Output Signals'
           dataKey='outputLength'
@@ -490,7 +607,7 @@ class Scenario extends React.Component {
         />
         <TableColumn title='Infrastructure Component' dataKey='icID' modifier={(icID) => this.getICName(icID)} />
         <TableColumn
-          title='Edit/ Delete/ Export'
+          title=''
           width='200'
           editButton
           deleteButton
@@ -558,8 +675,10 @@ class Scenario extends React.Component {
         <TableColumn
           title=''
           width='200'
+          editButton
           deleteButton
           exportButton
+          onEdit={index => this.setState({ dashboardEditModal: true, modalDashboardData: this.state.dashboards[index] })}
           onDelete={(index) => this.setState({ deleteDashboardModal: true, modalDashboardData: this.state.dashboards[index], modalDashboardIndex: index })}
           onExport={index => this.exportDashboard(index)}
         />
@@ -573,6 +692,7 @@ class Scenario extends React.Component {
       <div style={{ clear: 'both' }} />
 
       <NewDashboardDialog show={this.state.newDashboardModal} onClose={data => this.closeNewDashboardModal(data)} />
+      <EditDashboardDialog show={this.state.dashboardEditModal} dashboard={this.state.modalDashboardData} onClose={data => this.closeEditDashboardModal(data)} />
       <ImportDashboardDialog show={this.state.importDashboardModal} onClose={data => this.closeImportDashboardModal(data)} />
 
       <DeleteDialog title="dashboard" name={this.state.modalDashboardData.name} show={this.state.deleteDashboardModal} onClose={(e) => this.closeDeleteDashboardModal(e)} />
@@ -595,7 +715,9 @@ class Scenario extends React.Component {
         <InputGroup style={{ width: 400, float: 'right' }}>
           <FormControl
             placeholder="Username"
-            onChange={(e) => this.userToAdd = e.target.value}
+            onChange={(e) => this.onUserInputChange(e)}
+            value={this.state.userToAdd}
+            type="text"
           />
           <InputGroup.Append>
             <Button

@@ -379,3 +379,14 @@ div[class*="-widget"] label {
     border: 2px solid lightgray;
 }
 /* End box widget */
+
+/* Begin line widget */
+.line-widget {
+    width: 100%;
+    height: 1%;
+    border: 2px solid red;
+    transform: rotate(0deg);
+}
+
+
+/* End line widget */

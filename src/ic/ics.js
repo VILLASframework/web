@@ -20,6 +20,7 @@ import { Container } from 'flux/utils';
 import { Button } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
+import moment from 'moment'
 
 import AppDispatcher from '../common/app-dispatcher';
 import InfrastructureComponentStore from './ic-store';
@@ -256,10 +257,10 @@ class InfrastructureComponents extends Component {
     return style.join(' ')
   }
 
-  static stateUpdateModifier(updatedAt) {
-    const date = new Date(updatedAt);
-
-    return date.toLocaleString('de-DE');
+  stateUpdateModifier(updatedAt) {
+    let dateFormat = 'ddd, DD MMM YYYY HH:mm:ss';
+    let dateTime = moment.utc(updatedAt, dateFormat);
+    return dateTime.toLocaleString('de-DE');
   }
 
   render() {
@@ -279,9 +280,9 @@ class InfrastructureComponents extends Component {
           <TableColumn title='Type' dataKeys={['type', 'rawProperties.type']} />
           <TableColumn title='Location' dataKeys={['properties.location', 'rawProperties.location']} />
           {/* <TableColumn title='Realm' dataKeys={['properties.realm', 'rawProperties.realm']} /> */}
-          <TableColumn title='Host' dataKey='host' />
+          <TableColumn title='WebSocket Endpoint' dataKey='host' />
           <TableColumn title='API Host' dataKey='apihost' />
-          <TableColumn title='Last Update' dataKey='stateUpdatedAt' modifier={InfrastructureComponents.stateUpdateModifier} />
+          <TableColumn title='Last Update' dataKey='stateUpdateAt' modifier={(stateUpdateAt) => this.stateUpdateModifier(stateUpdateAt)} />
           <TableColumn
             width='200'
             editButton

@@ -35,8 +35,30 @@ class WidgetToolbox extends React.Component {
     }
   };
 
+  disableDecrease(){
+    const maxHeight = Object.values(this.props.widgets).reduce((currentHeight, widget) => {
+      const absolutHeight = widget.y + widget.height;
+  
+      return absolutHeight > currentHeight ? absolutHeight : currentHeight;
+      }, 0);
+      
+      if(this.props.dashboard.height <= 400 || this.props.dashboard.height <= maxHeight + 80){
+        return true;
+      }
+
+      return false;
+  }
+
   render() {
+
+    const disableDecrease = this.disableDecrease();
     // Only one topology widget at the time is supported
+    const iconStyle = {
+      color: '#007bff',
+      height: '25px', 
+      width : '25px'
+    }
+
     const thereIsTopologyWidget = this.props.widgets != null && Object.values(this.props.widgets).filter(w => w.type === 'Topology').length > 0;
     const topologyItemMsg = thereIsTopologyWidget? 'Currently only one is supported' : '';
 
@@ -47,6 +69,7 @@ class WidgetToolbox extends React.Component {
       <ToolboxItem name='Table' type='widget' icon = 'plus'/>
       <ToolboxItem name='Label' type='widget' icon = 'plus'/>
       <ToolboxItem name='Image' type='widget' icon = 'plus'/>
+      <ToolboxItem name='Line' type='widget' icon='plus'/>
       <ToolboxItem name='Button' type='widget' icon = 'plus'/>
       <ToolboxItem name='NumberInput' type='widget' icon = 'plus'/>
       <ToolboxItem name='Slider' type='widget' icon = 'plus'/>
@@ -54,6 +77,11 @@ class WidgetToolbox extends React.Component {
       <ToolboxItem name='Box' type='widget' icon = 'plus'/>
       <ToolboxItem name='HTML' type='html' icon = 'plus'/>
       <ToolboxItem name='Topology' type='widget' disabled={thereIsTopologyWidget} title={topologyItemMsg} icon = 'plus'/>
+      <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"?"}`}> Drag and drop widgets onto the dashboard </Tooltip>} >   
+      <Button variant="light" size="sm" key={0}  >     
+          <Icon icon="question" />
+      </Button>
+      </OverlayTrigger>
 
       <div className='section-buttons-group-right'>
         <div>
@@ -65,13 +93,13 @@ class WidgetToolbox extends React.Component {
       <div className='section-buttons-group-right'>
         <div>
         <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"increase"}`}> Increase dashboard height </Tooltip>} >
-          <Button variant="dark" key={0} onClick={() => this.props.onDashboardSizeChange(1)}  >
-          <Icon icon="plus" /> 
+          <Button variant="light" key={0} style={{marginRight: '3px', height: '40px'}} onClick={() => this.props.onDashboardSizeChange(1)}  >
+          <Icon icon="plus" style={iconStyle}/> 
           </Button>
           </OverlayTrigger>
           <OverlayTrigger key={1} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"decrease"}`}> Decrease dashboard height </Tooltip>} >
-          <Button variant="dark" key={1} onClick={() => this.props.onDashboardSizeChange(-1)} >
-          <Icon icon="minus" /> 
+          <Button variant="light" key={1} disabled={disableDecrease} style={{marginRight: '3px', height: '40px'}} onClick={() => this.props.onDashboardSizeChange(-1)} >
+          <Icon icon="minus" style={iconStyle}/> 
           </Button>
           </OverlayTrigger>
         </div>

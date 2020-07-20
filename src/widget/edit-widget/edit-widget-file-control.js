@@ -49,7 +49,7 @@ class EditFileWidgetControl extends React.Component {
     let fileOptions = [];
     if (this.state.files.length > 0){
       fileOptions.push(
-        <option key = {0} default>Select image file</option>
+        <option key = {0} default>Select file</option>
         )
       fileOptions.push(this.state.files.map((file, index) => (
         <option key={index+1} value={file.id}>{file.name}</option>
@@ -60,7 +60,7 @@ class EditFileWidgetControl extends React.Component {
 
     return <div>
       <FormGroup controlId="file">
-        <FormLabel>Image</FormLabel>
+        <FormLabel>File</FormLabel>
         <FormControl
           as="select"
           value={isCustomProperty ? this.props.widget[parts[0]][parts[1]] : this.props.widget[this.props.controlId]}

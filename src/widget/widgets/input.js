@@ -42,11 +42,13 @@ class WidgetInput extends Component {
       value = Number(props.widget.customProperties.default_value)
     }
 
-    // Update unit (assuming there is exactly one signal for this widget)
-    let signalID = props.widget.signalIDs[0];
-    let signal = props.signals.find(sig => sig.id === signalID);
-    if(signal !== undefined){
-      unit = signal.unit;
+    if (props.widget.signalIDs.length > 0) {
+      // Update unit (assuming there is exactly one signal for this widget)
+      let signalID = props.widget.signalIDs[0];
+      let signal = props.signals.find(sig => sig.id === signalID);
+      if (signal !== undefined) {
+        unit = signal.unit;
+      }
     }
 
     if (unit !== '' && value !== ''){

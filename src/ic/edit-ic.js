@@ -78,6 +78,10 @@ class EditICDialog extends React.Component {
     this.setState({ [e.target.id]: e.target.value });
   }
 
+  handlePropertiesChange(data) {
+    this.setState({ properties: data });
+  }
+
   resetState() {
     this.setState({
       name: this.props.ic.name,
@@ -91,8 +95,17 @@ class EditICDialog extends React.Component {
 
   render() {
     return (
-      <Dialog show={this.props.show} title="Edit Infrastructure Component" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog
+        show={this.props.show}
+        title="Edit Infrastructure Component"
+        buttonTitle="Save"
+        onClose={(c) => this.onClose(c)}
+        onReset={() => this.resetState()}
+        valid={this.valid}
+        size='lg'
+      >
         <form>
+          <FormLabel column={false}>UUID: {this.props.ic.uuid}</FormLabel>
           <FormGroup controlId="name">
             <FormLabel column={false}>Name</FormLabel>
             <FormControl type="text" placeholder={this.props.ic.name} value={this.state.name} onChange={(e) => this.handleChange(e)} />
@@ -120,7 +133,11 @@ class EditICDialog extends React.Component {
           </FormGroup>
           <FormGroup controlId='properties'>
             <FormLabel column={false}>Properties</FormLabel>
-            <ParametersEditor content={this.state.properties} disabled={false} />
+            <ParametersEditor
+              content={this.state.properties}
+              disabled={false}
+              onChange={(data) => this.handlePropertiesChange(data)}
+            />
           </FormGroup>
         </form>
       </Dialog>

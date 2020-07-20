@@ -21,14 +21,14 @@ import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
 
 class EditDashboardDialog extends React.Component {
-  valid: false;
+  valid = true;
 
   constructor(props) {
     super(props);
 
     this.state = {
       name: '',
-      _id: ''
+      id: ''
     }
   }
 
@@ -49,7 +49,7 @@ class EditDashboardDialog extends React.Component {
   resetState() {
     this.setState({
       name: this.props.dashboard.name,
-      _id: this.props.dashboard._id
+      id: this.props.dashboard.id
     });
   }
 
