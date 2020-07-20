@@ -19,6 +19,7 @@ import React from 'react';
 
 import config from '../config';
 import LoginStore from "../user/login-store";
+import {Redirect} from "react-router-dom";
 
 class Home extends React.Component {
   constructor(props) {
@@ -38,6 +39,13 @@ class Home extends React.Component {
   }
 
   render() {
+
+    let currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (currentUser == null){
+      console.log("HOME redirecting to logout/ login")
+      return (<Redirect to="/logout" />);
+    }
+
     return (
       <div className="home-container">
         <img style={{height: 120, float: 'right'}} src={require('../img/villas_web.svg')} alt="Logo VILLASweb" />
@@ -47,7 +55,7 @@ class Home extends React.Component {
           VILLASweb is a frontend for distributed real-time simulation hosted by <a href={"mailto:" + config.admin.mail}>{config.admin.name}</a>.
         </p>
         <p>
-        You are logged in as user <b>{this.state.currentUser.username}</b> with <b>ID {this.state.currentUser.id}</b> and role <b>{this.state.currentUser.role}</b>.
+        You are logged in as user <b>{currentUser.username}</b> with <b>ID {currentUser.id}</b> and role <b>{currentUser.role}</b>.
         </p>
 
         <h3>Data Model</h3>

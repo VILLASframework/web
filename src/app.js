@@ -87,8 +87,13 @@ class App extends React.Component {
   };
 
   render() {
-    if (this.state.token == null) {
-      return (<Redirect to="/login" />);
+
+    let token = localStorage.getItem("token");
+    let currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+    if (token == null || currentUser == null) {
+      console.log("APP redirecting to logout/ login")
+      return (<Redirect to="/logout" />);
     }
 
     return (
@@ -99,7 +104,7 @@ class App extends React.Component {
           */}
           <Hidden sm md lg xl>
             <Col style={{ width: this.state.showSidebarMenu ? '280px' : '0px' }} className="sidenav">
-                <HeaderMenu onClose={this.hideSidebarMenu} currentRole={this.state.currentUser.role} />
+                <HeaderMenu onClose={this.hideSidebarMenu} currentRole={currentUser.role} />
             </Col>
           </Hidden>
 
@@ -110,17 +115,17 @@ class App extends React.Component {
 
             <div className={`app-body app-body-spacing`} >
               <Col xs={false}>
-                <SidebarMenu currentRole={this.state.currentUser.role} />
+                <SidebarMenu currentRole={currentUser.role} />
               </Col>
 
               <div className={`app-content app-content-margin-left`}>
                 <Route exact path="/" component={Home} />
                 <Route path="/home" component={Home} />
-                <Route path="/dashboards/:dashboard" component={Dashboard} />
                 <Route exact path="/scenarios" component={Scenarios} />
                 <Route path="/scenarios/:scenario" component={Scenario} />
+                <Route path="/dashboards/:dashboard" component={Dashboard} />
                 <Route path="/infrastructure" component={InfrastructureComponents} />
-                <Route path="/user" component={User} />
+                <Route path="/account" component={User} />
                 <Route path="/users" component={Users} />
               </div>
             </div>

@@ -22,7 +22,6 @@ import FileSaver from 'file-saver';
 
 import AppDispatcher from '../common/app-dispatcher';
 import ScenarioStore from './scenario-store';
-import LoginStore from '../user/login-store';
 import DashboardStore from '../dashboard/dashboard-store';
 import WidgetStore from "../widget/widget-store";
 import ConfigStore from '../componentconfig/config-store';
@@ -41,7 +40,7 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 class Scenarios extends Component {
 
   static getStores() {
-    return [ScenarioStore, LoginStore, DashboardStore, WidgetStore, ConfigStore, SignalStore];
+    return [ScenarioStore, DashboardStore, WidgetStore, ConfigStore, SignalStore];
   }
 
   static calculateState() {
@@ -50,7 +49,7 @@ class Scenarios extends Component {
       scenarios: ScenarioStore.getState(),
       dashboards: DashboardStore.getState(),
       configs: ConfigStore.getState(),
-      sessionToken: LoginStore.getState().token,
+      sessionToken: localStorage.getItem("token"),
 
       newModal: false,
       deleteModal: false,

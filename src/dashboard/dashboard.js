@@ -28,7 +28,6 @@ import WidgetToolbox from '../widget/widget-toolbox';
 import WidgetArea from '../widget/widget-area';
 import DashboardButtonGroup from './dashboard-button-group';
 
-import LoginStore from '../user/login-store';
 import DashboardStore from './dashboard-store';
 import SignalStore from '../signal/signal-store'
 import FileStore from '../file/file-store';
@@ -43,7 +42,7 @@ class Dashboard extends Component {
 
   static lastWidgetKey = 0;
   static getStores() {
-    return [ DashboardStore, LoginStore,FileStore, WidgetStore, SignalStore, ConfigStore, ICStore];
+    return [ DashboardStore, FileStore, WidgetStore, SignalStore, ConfigStore, ICStore];
   }
 
   static calculateState(prevState, props) {
@@ -51,7 +50,7 @@ class Dashboard extends Component {
       prevState = {};
     }
 
-    const sessionToken = LoginStore.getState().token;
+    const sessionToken = localStorage.getItem("token");
 
     let dashboard = DashboardStore.getState().find(d => d.id === parseInt(props.match.params.dashboard, 10));
     if (dashboard == null){
@@ -73,20 +72,22 @@ class Dashboard extends Component {
 
       return thisWidgetHeight > maxHeightSoFar? thisWidgetHeight : maxHeightSoFar;
     }, 0);
-    if(dashboard.height === 0){
-      dashboard.height = 400;
-    }
-    else if(maxHeight + 80 > dashboard.height)
-    {
-      dashboard.height = maxHeight + 80;
-    }
+
 
     // filter component configurations to the ones that belong to this scenario
     let configs = []
     let files = []
-    if (dashboard !== null) {
+    if (dashboard !== undefined) {
       configs = ConfigStore.getState().filter(config => config.scenarioID === dashboard.scenarioID);
       files = FileStore.getState().filter(file => file.scenarioID === dashboard.scenarioID);
+
+      if(dashboard.height === 0){
+        dashboard.height = 400;
+      }
+      else if(maxHeight + 80 > dashboard.height)
+      {
+        dashboard.height = maxHeight + 80;
+      }
     }
 
     // filter signals to the ones belonging to the scenario at hand
@@ -154,10 +155,11 @@ class Dashboard extends Component {
     AppDispatcher.dispatch({
       type: 'widgets/start-load',
       token: this.state.sessionToken,
-      param: '?dashboardID=' + this.state.dashboard.id
+      param: '?dashboardID=' + parseInt(this.props.match.params.dashboard, 10),
     });
 
     // open web sockets if ICs are already known
+    // TODO opening websockets has to be moved to componentDidUpdate and should be done as soon as ICs are loaded!
     if(this.state.ics.length > 0){
       console.log("Starting to open IC websockets:", this.state.ics);
       AppDispatcher.dispatch({
@@ -398,6 +400,10 @@ class Dashboard extends Component {
 
 
   render() {
+    if (this.state.dashboard === undefined){
+      return <div className="section-title">  <span>{"Loading Dashboard..."}</span>  </div>
+    }
+
     const grid = this.state.dashboard.grid;
     const boxClasses = classNames('section', 'box', { 'fullscreen-padding': this.props.isFullscreen });
     let draggable = this.state.editing;
