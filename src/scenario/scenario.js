@@ -658,7 +658,7 @@ class Scenario extends React.Component {
       <h2 style={tableHeadingStyle}>Users sharing this scenario</h2>
       <div>
         <Table data={this.state.scenario.users}>
-          <TableColumn title='Name' dataKey='username' link='/users/' linkKey='id' />
+          <TableColumn title='Name' dataKey='username'/>
           <TableColumn title='Mail' dataKey='mail' />
           <TableColumn
             title=''
