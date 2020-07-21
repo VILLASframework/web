@@ -24,6 +24,7 @@ import Logout from './user/logout';
 import Home from './common/home';
 import Scenarios from './scenario/scenarios';
 import Scenario from './scenario/scenario';
+import Dashboard from './dashboard/dashboard'
 import InfrastructureComponents from './ic/ics';
 import Users from './user/users';
 import User from "./user/user";
@@ -38,6 +39,8 @@ class Root extends React.Component {
           <Route path='/' component={App} />
           <Route path='/home' component={Home} />
           <Route path='/scenarios' component={Scenarios} />
+          <Route path='/scenarios/:scenario' component={Scenario} />
+          <Route path='/dashboards/:dashboard' component={Dashboard} />
           <Route path='/infrastructure' component={InfrastructureComponents} />
           <Route path='/users' component={Users} />
           <Route path='/account' component={User} />
