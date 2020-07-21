@@ -41,6 +41,7 @@ import 'react-contexify/dist/ReactContexify.min.css';
 class Dashboard extends Component {
 
   static lastWidgetKey = 0;
+  static webSocketsOpened = false;
   static getStores() {
     return [ DashboardStore, FileStore, WidgetStore, SignalStore, ConfigStore, ICStore];
   }
@@ -158,16 +159,43 @@ class Dashboard extends Component {
       param: '?dashboardID=' + parseInt(this.props.match.params.dashboard, 10),
     });
 
-    // open web sockets if ICs are already known
-    // TODO opening websockets has to be moved to componentDidUpdate and should be done as soon as ICs are loaded!
-    if(this.state.ics.length > 0){
+    // load ICs to enable that component configs and dashboards work with them
+    AppDispatcher.dispatch({
+      type: 'ics/start-load',
+      token: this.state.sessionToken
+    });
+
+
+
+  }
+
+  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
+      // open web sockets if ICs are already known and sockets are not opened yet
+    if(!Dashboard.webSocketsOpened && this.state.ics.length > 0){
       console.log("Starting to open IC websockets:", this.state.ics);
       AppDispatcher.dispatch({
         type: 'ics/open-sockets',
         data: this.state.ics
       });
-    } else {
-      console.log("ICs unknown in componentDidMount", this.state.dashboard)
+
+      Dashboard.webSocketsOpened = true;
+    }
+
+    if(this.state.configs.length === 0 && this.state.dashboard !== undefined) {
+      // load configs
+      AppDispatcher.dispatch({
+        type: 'configs/start-load',
+        token: this.state.sessionToken,
+        param: '?scenarioID=' + this.state.dashboard.scenarioID
+      });
+    }
+
+    if(this.state.files.length === 0 && this.state.dashboard !== undefined){
+      AppDispatcher.dispatch({
+        type: 'files/start-load',
+        param: '?scenarioID=' + this.state.dashboard.scenarioID,
+        token: this.state.sessionToken
+      });
     }
 
   }
