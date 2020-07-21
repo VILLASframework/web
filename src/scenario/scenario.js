@@ -25,7 +25,6 @@ import ScenarioStore from './scenario-store';
 import ICStore from '../ic/ic-store';
 import DashboardStore from '../dashboard/dashboard-store';
 import ConfigStore from '../componentconfig/config-store';
-import LoginStore from '../user/login-store';
 import SignalStore from '../signal/signal-store'
 import AppDispatcher from '../common/app-dispatcher';
 
@@ -48,7 +47,7 @@ import WidgetStore from "../widget/widget-store";
 class Scenario extends React.Component {
 
   static getStores() {
-    return [ ScenarioStore, ConfigStore, DashboardStore, ICStore, LoginStore, SignalStore, FileStore, WidgetStore];
+    return [ ScenarioStore, ConfigStore, DashboardStore, ICStore, SignalStore, FileStore, WidgetStore];
   }
 
   static calculateState(prevState, props) {
@@ -57,10 +56,10 @@ class Scenario extends React.Component {
     }
 
     // get selected scenario
-    const sessionToken = LoginStore.getState().token;
+    const sessionToken = localStorage.getItem("token");
 
     const scenario = ScenarioStore.getState().find(s => s.id === parseInt(props.match.params.scenario, 10));
-    if (scenario == null) {
+    if (scenario === undefined) {
       AppDispatcher.dispatch({
         type: 'scenarios/start-load',
         data: props.match.params.scenario,
@@ -118,14 +117,14 @@ class Scenario extends React.Component {
     //load selected scenario
     AppDispatcher.dispatch({
       type: 'scenarios/start-load',
-      data: this.state.scenario.id,
+      data: parseInt(this.props.match.params.scenario, 10),
       token: this.state.sessionToken
     });
 
 
     AppDispatcher.dispatch({
       type: 'scenarios/start-load-users',
-      data: this.state.scenario.id,
+      data: parseInt(this.props.match.params.scenario, 10),
       token: this.state.sessionToken
     });
 
@@ -418,7 +417,7 @@ class Scenario extends React.Component {
       this.setState({editOutputSignalsModal: false});
     }
   }
-  
+
   onEditFiles(){
     let tempFiles = [];
     this.state.files.forEach( file => {
@@ -508,8 +507,12 @@ class Scenario extends React.Component {
 
     const iconStyle = {
       color: '#007bff',
-      height: '25px', 
+      height: '25px',
       width : '25px'
+    }
+
+    if(this.state.scenario === undefined){
+      return <h1>Loading Scenario...</h1>;
     }
 
     return <div className='section'>
@@ -655,7 +658,7 @@ class Scenario extends React.Component {
       <h2 style={tableHeadingStyle}>Users sharing this scenario</h2>
       <div>
         <Table data={this.state.scenario.users}>
-          <TableColumn title='Name' dataKey='username' link='/users/' linkKey='id' />
+          <TableColumn title='Name' dataKey='username'/>
           <TableColumn title='Mail' dataKey='mail' />
           <TableColumn
             title=''

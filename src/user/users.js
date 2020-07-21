@@ -20,7 +20,6 @@ import { Container } from 'flux/utils';
 import { Button } from 'react-bootstrap';
 
 import AppDispatcher from '../common/app-dispatcher';
-import LoginStore from './login-store';
 import UsersStore from './users-store';
 
 import Icon from '../common/icon';
@@ -34,23 +33,23 @@ import NotificationsDataManager from "../common/data-managers/notifications-data
 
 class Users extends Component {
   static getStores() {
-    return [ LoginStore, UsersStore ];
+    return [ UsersStore ];
   }
 
   static calculateState(prevState, props) {
 
-    let tokenState = LoginStore.getState().token;
+    let token = localStorage.getItem("token");
 
     // If there is a token available and this method was called as a result of loading users
-    if (!prevState && tokenState) {
+    if (!prevState && token) {
       AppDispatcher.dispatch({
         type: 'users/start-load',
-        token: tokenState
+        token: token
       });
     }
 
     return {
-      token: tokenState,
+      token: token,
       users: UsersStore.getState(),
 
       newModal: false,

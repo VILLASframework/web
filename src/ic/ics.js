@@ -75,7 +75,7 @@ class InfrastructureComponents extends Component {
     });
 
     return {
-      sessionToken: LoginStore.getState().token,
+      sessionToken: localStorage.getItem("token"),
       ics: ics,
       modalIC: {},
       deleteModal: false,

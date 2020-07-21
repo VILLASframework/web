@@ -20,9 +20,7 @@ import { Container } from 'flux/utils';
 import {Button, Col, Row} from 'react-bootstrap';
 
 import AppDispatcher from '../common/app-dispatcher';
-import LoginStore from './login-store';
 import UsersStore from './users-store';
-
 
 import Icon from '../common/icon';
 import EditOwnUserDialog from './edit-own-user'
@@ -31,17 +29,15 @@ import NotificationsDataManager from "../common/data-managers/notifications-data
 
 class User extends Component {
   static getStores() {
-    return [ LoginStore, UsersStore ];
+    return [ UsersStore ];
   }
 
   static calculateState(prevState, props) {
     prevState = prevState || {};
 
-    let user = LoginStore.getState().currentUser;
-
     return {
-      currentUser: user,
-      token: LoginStore.getState().token,
+      currentUser: JSON.parse(localStorage.getItem("currentUser")),
+      token: localStorage.getItem("token"),
       editModal: false,
     };
   }
