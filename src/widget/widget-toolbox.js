@@ -20,10 +20,20 @@ import PropTypes from 'prop-types';
 import Slider from 'rc-slider';
 import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Icon from "../common/icon";
+import {Collapse} from 'react-collapse';
 
 import ToolboxItem from './toolbox-item';
 
 class WidgetToolbox extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+        showCosmeticWidgets: false,
+        showDisplayingWidgets: false,
+        showManipulationWidgets: false
+    };
+}
   onGridChange = value => {
     // value 0 would block all widgets, set 1 as 'grid disabled'
     if (value === 0) {
@@ -49,7 +59,39 @@ class WidgetToolbox extends React.Component {
       return false;
   }
 
+  showWidgets(value){
+    let tempValue = false;
+    switch(value){
+      case 'cosmetic':
+        tempValue = !this.state.showCosmeticWidgets;
+        this.setState({showCosmeticWidgets: tempValue});
+        break;
+      case 'displaying':
+        tempValue = !this.state.showDisplayingWidgets;
+        this.setState({showDisplayingWidgets: tempValue});
+        break;
+      case 'manipulation':
+        tempValue = !this.state.showManipulationWidgets;
+        this.setState({showManipulationWidgets: tempValue});
+        break;
+      default:
+        break;
+    }
+  }
+
   render() {
+    let cosmeticIcon = 'chevron-up';
+    let displayingIcon = 'chevron-up';
+    let manipulationIcon = 'chevron-up';
+    if(this.state.showCosmeticWidgets){
+      cosmeticIcon = 'chevron-down';
+    }
+    if(this.state.showDisplayingWidgets){
+      displayingIcon = 'chevron-down';
+    }
+    if(this.state.showManipulationWidgets){
+      manipulationIcon = 'chevron-down';
+    }
 
     const disableDecrease = this.disableDecrease();
     // Only one topology widget at the time is supported
@@ -63,25 +105,44 @@ class WidgetToolbox extends React.Component {
     const topologyItemMsg = thereIsTopologyWidget? 'Currently only one is supported' : '';
 
     return <div className='toolbox box-header'>
-      <ToolboxItem name='Lamp' type='widget' icon = 'plus' />
-      <ToolboxItem name='Value' type='widget' icon = 'plus' />
-      <ToolboxItem name='Plot' type='widget' icon = 'plus'/>
-      <ToolboxItem name='Table' type='widget' icon = 'plus'/>
+      <Collapse isOpened={this.state.showCosmeticWidgets} >
+      <ToolboxItem name='Line' type='widget' icon='plus'/>
+      <ToolboxItem name='Box' type='widget' icon = 'plus'/>
       <ToolboxItem name='Label' type='widget' icon = 'plus'/>
       <ToolboxItem name='Image' type='widget' icon = 'plus'/>
-      <ToolboxItem name='Line' type='widget' icon='plus'/>
-      <ToolboxItem name='Button' type='widget' icon = 'plus'/>
-      <ToolboxItem name='NumberInput' type='widget' icon = 'plus'/>
-      <ToolboxItem name='Slider' type='widget' icon = 'plus'/>
-      <ToolboxItem name='Gauge' type='widget' icon = 'plus'/>
-      <ToolboxItem name='Box' type='widget' icon = 'plus'/>
-      <ToolboxItem name='HTML' type='html' icon = 'plus'/>
-      <ToolboxItem name='Topology' type='widget' disabled={thereIsTopologyWidget} title={topologyItemMsg} icon = 'plus'/>
       <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"?"}`}> Drag and drop widgets onto the dashboard </Tooltip>} >   
-      <Button variant="light" size="sm" key={0}  >     
+      <Button disabled={true} variant="light" size="sm" key={0}  >     
           <Icon icon="question" />
       </Button>
       </OverlayTrigger>
+      </Collapse>
+
+      <Collapse isOpened={this.state.showDisplayingWidgets} >
+      <ToolboxItem name='Plot' type='widget' icon = 'plus'/>
+      <ToolboxItem name='Table' type='widget' icon = 'plus'/>
+      <ToolboxItem name='Value' type='widget' icon = 'plus' />
+      <ToolboxItem name='Lamp' type='widget' icon = 'plus' />
+      <ToolboxItem name='Gauge' type='widget' icon = 'plus'/>
+      <ToolboxItem name='Topology' type='widget' disabled={thereIsTopologyWidget} title={topologyItemMsg} icon = 'plus'/>
+      <ToolboxItem name='HTML' type='html' icon = 'plus'/>
+      <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"?"}`}> Drag and drop widgets onto the dashboard </Tooltip>} >   
+      <Button disabled={true} variant="light" size="sm" key={0}  >     
+          <Icon icon="question" />
+      </Button>
+      </OverlayTrigger>
+      </Collapse>
+      
+      <Collapse isOpened={this.state.showManipulationWidgets} >
+      <ToolboxItem name='Button' type='widget' icon = 'plus'/>
+      <ToolboxItem name='NumberInput' type='widget' icon = 'plus'/>
+      <ToolboxItem name='Slider' type='widget' icon = 'plus'/>
+      <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"?"}`}> Drag and drop widgets onto the dashboard </Tooltip>} >   
+      <Button disabled={true} variant="light" size="sm" key={0}  >     
+          <Icon icon="question" />
+      </Button>
+      </OverlayTrigger>
+      </Collapse>
+      
 
       <div className='section-buttons-group-right'>
         <div>
@@ -90,8 +151,27 @@ class WidgetToolbox extends React.Component {
           
         </div>
       </div>
+      
       <div className='section-buttons-group-right'>
         <div>
+        <OverlayTrigger key={2} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"cosmetic"}`}> Cosmetic Widgets </Tooltip>} >
+        <Button variant="light" key={2} style={{ marginRight: '3px', height: '40px' }} onClick={() => this.showWidgets('cosmetic')}  >
+          <Icon icon={cosmeticIcon} style={{color: '#007bff'}}/>
+          Cosmetic Widgets
+        </Button>
+      </OverlayTrigger>
+      <OverlayTrigger key={3} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"increase"}`}> Displaying Widgets </Tooltip>} >
+        <Button variant="light" key={3} style={{ marginRight: '3px', height: '40px' }} onClick={() => this.showWidgets('displaying')}  >
+          <Icon icon={displayingIcon} style={{color: '#007bff'}} />
+          Displaying Widgets
+        </Button>
+      </OverlayTrigger>
+      <OverlayTrigger key={4} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"increase"}`}> Manipulation Widgets </Tooltip>} >
+        <Button variant="light" key={2} style={{ marginRight: '238px', height: '40px' }} onClick={() => this.showWidgets('manipulation')}  >
+          <Icon icon={manipulationIcon} style={{color: '#007bff'}} />
+          Manipulation Widgets
+        </Button>
+      </OverlayTrigger>
         <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"increase"}`}> Increase dashboard height </Tooltip>} >
           <Button variant="light" key={0} style={{marginRight: '3px', height: '40px'}} onClick={() => this.props.onDashboardSizeChange(1)}  >
           <Icon icon="plus" style={iconStyle}/> 
