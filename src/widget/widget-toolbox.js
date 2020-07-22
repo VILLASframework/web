@@ -48,10 +48,10 @@ class WidgetToolbox extends React.Component {
   disableDecrease(){
     const maxHeight = Object.values(this.props.widgets).reduce((currentHeight, widget) => {
       const absolutHeight = widget.y + widget.height;
-  
+
       return absolutHeight > currentHeight ? absolutHeight : currentHeight;
       }, 0);
-      
+
       if(this.props.dashboard.height <= 400 || this.props.dashboard.height <= maxHeight + 80){
         return true;
       }
@@ -97,7 +97,7 @@ class WidgetToolbox extends React.Component {
     // Only one topology widget at the time is supported
     const iconStyle = {
       color: '#007bff',
-      height: '25px', 
+      height: '25px',
       width : '25px'
     }
 
@@ -110,8 +110,8 @@ class WidgetToolbox extends React.Component {
       <ToolboxItem name='Box' type='widget' icon = 'plus'/>
       <ToolboxItem name='Label' type='widget' icon = 'plus'/>
       <ToolboxItem name='Image' type='widget' icon = 'plus'/>
-      <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"?"}`}> Drag and drop widgets onto the dashboard </Tooltip>} >   
-      <Button disabled={true} variant="light" size="sm" key={0}  >     
+      <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"?"}`}> Drag and drop widgets onto the dashboard </Tooltip>} >
+      <Button disabled={true} variant="light" size="sm" key={0}  >
           <Icon icon="question" />
       </Button>
       </OverlayTrigger>
@@ -125,48 +125,48 @@ class WidgetToolbox extends React.Component {
       <ToolboxItem name='Gauge' type='widget' icon = 'plus'/>
       <ToolboxItem name='Topology' type='widget' disabled={thereIsTopologyWidget} title={topologyItemMsg} icon = 'plus'/>
       <ToolboxItem name='HTML' type='html' icon = 'plus'/>
-      <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"?"}`}> Drag and drop widgets onto the dashboard </Tooltip>} >   
-      <Button disabled={true} variant="light" size="sm" key={0}  >     
+      <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"?"}`}> Drag and drop widgets onto the dashboard </Tooltip>} >
+      <Button disabled={true} variant="light" size="sm" key={0}  >
           <Icon icon="question" />
       </Button>
       </OverlayTrigger>
       </Collapse>
-      
+
       <Collapse isOpened={this.state.showManipulationWidgets} >
       <ToolboxItem name='Button' type='widget' icon = 'plus'/>
       <ToolboxItem name='NumberInput' type='widget' icon = 'plus'/>
       <ToolboxItem name='Slider' type='widget' icon = 'plus'/>
-      <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"?"}`}> Drag and drop widgets onto the dashboard </Tooltip>} >   
-      <Button disabled={true} variant="light" size="sm" key={0}  >     
+      <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"?"}`}> Drag and drop widgets onto the dashboard </Tooltip>} >
+      <Button disabled={true} variant="light" size="sm" key={0}  >
           <Icon icon="question" />
       </Button>
       </OverlayTrigger>
       </Collapse>
-      
+
 
       <div className='section-buttons-group-right'>
         <div>
           <span>Grid: { this.props.grid > 1 ? this.props.grid : 'Disabled' }</span>
           <Slider value={this.props.grid} style={{ width: '80px' }} step={5} onChange={this.onGridChange} />
-          
+
         </div>
       </div>
-      
+
       <div className='section-buttons-group-right'>
         <div>
-        <OverlayTrigger key={2} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"cosmetic"}`}> Cosmetic Widgets </Tooltip>} >
+        <OverlayTrigger key={2} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"cosmetic"}`}> Show/ hide available Cosmetic Widgets </Tooltip>} >
         <Button variant="light" key={2} style={{ marginRight: '3px', height: '40px' }} onClick={() => this.showWidgets('cosmetic')}  >
           <Icon icon={cosmeticIcon} style={{color: '#007bff'}}/>
           Cosmetic Widgets
         </Button>
       </OverlayTrigger>
-      <OverlayTrigger key={3} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"increase"}`}> Displaying Widgets </Tooltip>} >
+      <OverlayTrigger key={3} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"increase"}`}> Show/ hide available Displaying Widgets </Tooltip>} >
         <Button variant="light" key={3} style={{ marginRight: '3px', height: '40px' }} onClick={() => this.showWidgets('displaying')}  >
           <Icon icon={displayingIcon} style={{color: '#007bff'}} />
           Displaying Widgets
         </Button>
       </OverlayTrigger>
-      <OverlayTrigger key={4} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"increase"}`}> Manipulation Widgets </Tooltip>} >
+      <OverlayTrigger key={4} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"increase"}`}> Show/ hide available Manipulation Widgets </Tooltip>} >
         <Button variant="light" key={2} style={{ marginRight: '238px', height: '40px' }} onClick={() => this.showWidgets('manipulation')}  >
           <Icon icon={manipulationIcon} style={{color: '#007bff'}} />
           Manipulation Widgets
@@ -174,12 +174,12 @@ class WidgetToolbox extends React.Component {
       </OverlayTrigger>
         <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"increase"}`}> Increase dashboard height </Tooltip>} >
           <Button variant="light" key={0} style={{marginRight: '3px', height: '40px'}} onClick={() => this.props.onDashboardSizeChange(1)}  >
-          <Icon icon="plus" style={iconStyle}/> 
+          <Icon icon="plus" style={iconStyle}/>
           </Button>
           </OverlayTrigger>
           <OverlayTrigger key={1} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"decrease"}`}> Decrease dashboard height </Tooltip>} >
           <Button variant="light" key={1} disabled={disableDecrease} style={{marginRight: '3px', height: '40px'}} onClick={() => this.props.onDashboardSizeChange(-1)} >
-          <Icon icon="minus" style={iconStyle}/> 
+          <Icon icon="minus" style={iconStyle}/>
           </Button>
           </OverlayTrigger>
         </div>
