@@ -73,6 +73,7 @@ class InfrastructureComponents extends Component {
         return a.stateUpdatedAt < b.stateUpdatedAt;
       }
     });
+    const currentUser = LoginStore.getState().currentUser;
 
     return {
       sessionToken: localStorage.getItem("token"),
@@ -80,7 +81,8 @@ class InfrastructureComponents extends Component {
       modalIC: {},
       deleteModal: false,
 
-      selectedICs: []
+      selectedICs: [],
+      currentUser: currentUser
     };
   }
 
@@ -282,6 +284,7 @@ class InfrastructureComponents extends Component {
           {/* <TableColumn title='Realm' dataKeys={['properties.realm', 'rawProperties.realm']} /> */}
           <TableColumn title='WebSocket Endpoint' dataKey='host' />
           <TableColumn title='Last Update' dataKey='stateUpdateAt' modifier={(stateUpdateAt) => this.stateUpdateModifier(stateUpdateAt)} />
+          {this.state.currentUser.role === "Admin" ? 
           <TableColumn
             width='200'
             editButton
@@ -290,7 +293,14 @@ class InfrastructureComponents extends Component {
             onEdit={index => this.setState({ editModal: true, modalIC: this.state.ics[index], modalIndex: index })}
             onExport={index => this.exportIC(index)}
             onDelete={index => this.setState({ deleteModal: true, modalIC: this.state.ics[index], modalIndex: index })}
-          />
+          /> 
+          :
+          <TableColumn
+            width='100'
+            exportButton
+            onExport={index => this.exportIC(index)}
+          /> 
+          }
         </Table>
 
         <div style={{ float: 'left' }}>
@@ -301,9 +311,16 @@ class InfrastructureComponents extends Component {
         </div>
 
         <div style={{ float: 'right' }}>
-          <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" /> Infrastructure Component</Button>
           <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
         </div>
+        
+        {this.state.currentUser.role === "Admin" ?
+        <div style={{ float: 'right' }}>
+          <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" /> Infrastructure Component</Button>
+        </div>
+        : 
+        <div> </div>
+        }
 
         <div style={{ clear: 'both' }} />
 
