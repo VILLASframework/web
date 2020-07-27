@@ -302,24 +302,24 @@ class InfrastructureComponents extends Component {
           /> 
           }
         </Table>
-
-        <div style={{ float: 'left' }}>
-          <ICAction
-            runDisabled={this.state.selectedICs.length === 0}
-            runAction={this.runAction}
-            actions={[ { id: '0', title: 'Reset', data: { action: 'reset' } }, { id: '1', title: 'Shutdown', data: { action: 'shutdown' } } ]}/>
-        </div>
-
-        <div style={{ float: 'right' }}>
-          <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
-        </div>
-        
         {this.state.currentUser.role === "Admin" ?
-        <div style={{ float: 'right' }}>
-          <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" /> Infrastructure Component</Button>
-        </div>
-        : 
-        <div> </div>
+          <div style={{ float: 'left' }}>
+            <ICAction
+              runDisabled={this.state.selectedICs.length === 0}
+              runAction={this.runAction}
+              actions={[{ id: '0', title: 'Reset', data: { action: 'reset' } }, { id: '1', title: 'Shutdown', data: { action: 'shutdown' } }]} />
+          </div>
+          :
+          <div> </div>
+        }
+
+        {this.state.currentUser.role === "Admin" ?
+          <div style={{ float: 'right' }}>
+            <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" /> Infrastructure Component</Button>
+            <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
+          </div>
+          :
+          <div> </div>
         }
 
         <div style={{ clear: 'both' }} />
