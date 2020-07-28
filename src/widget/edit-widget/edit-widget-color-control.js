@@ -16,10 +16,12 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, Col, Row, FormCheck, FormLabel } from 'react-bootstrap';
-import classNames from 'classnames';
+import { FormGroup, OverlayTrigger, Tooltip , FormLabel, Button } from 'react-bootstrap';
 import { scaleOrdinal } from 'd3-scale';
-import {schemeCategory10} from 'd3-scale-chromatic'
+import {schemeCategory10} from 'd3-scale-chromatic';
+import ColorPicker from './color-picker'
+import Icon from "../../common/icon";
+
 // schemeCategory20 no longer available in d3
 
 class EditWidgetColorControl extends Component {
@@ -38,9 +40,8 @@ class EditWidgetColorControl extends Component {
     super(props);
 
     this.state = {
-      widget: {
-
-      }
+      widget: {},
+      showColorPicker: false
     };
   }
 
@@ -50,47 +51,36 @@ class EditWidgetColorControl extends Component {
     };
   }
 
-  render() {
+  openColorPicker = () =>{
+    this.setState({showColorPicker: true})
+  }
 
-    let parts = this.props.controlId.split('.');
-    let isCustomProperty = true;
-    if (parts.length === 1){
-      isCustomProperty = false;
+  closeEditModal = (data) => {
+    this.setState({showColorPicker: false})
+    if(data){
+    this.props.handleChange({target: { id: this.props.controlId, value: data}});
     }
+  }
+
+  render() {
+    const currentColor = this.state.widget[this.props.controlId];
+   
     return (
-      <FormGroup bsclass="color-control">
-        <Row>
-          <Col className={FormLabel} style={{whiteSpace: 'nowrap' }} sm={3}>
-            { this.props.label }
-          </Col>
-          <Col sm={10} bsclass='colors-column'>
-          {
-            EditWidgetColorControl.ColorPalette.map( (color, idx ) => {
-                let colorStyle = {
-                  background: color,
-                  borderColor: color
-                };
+      <FormGroup>
+        <FormLabel>{this.props.label}</FormLabel>
 
-                let checkedClass = classNames({
-                  'checked': idx === (isCustomProperty ? this.state.widget[parts[0]][parts[1]] : this.state.widget[this.props.controlId])
-                });
+        <div className='section-buttons-group-right'>
+        <OverlayTrigger key={0} placement={'right'} overlay={<Tooltip id={`tooltip-${"color"}`}> Change color </Tooltip>} >
+        <Button key={2} style={{ width: '260px', height: '40px', color:{currentColor} }} onClick={this.openColorPicker.bind(this)}  >
+          <Icon icon="paint-brush"/>
+        </Button>
+        </OverlayTrigger>
+        </div>
 
-                return (<FormCheck
-                  type='radio'
-                  key={idx}
-                  name={this.props.label}
-                  style={colorStyle}
-                  className={checkedClass}
-                  value={idx}
-                  inline
-                  defaultChecked={isCustomProperty ? this.state.widget[parts[0]][parts[1]] ===idx: this.state.widget[this.props.controlId] === idx}
-                  onChange={(e) => this.props.handleChange({target: { id: this.props.controlId, value: idx}})} />)
-              }
-            )
-          }
-          </Col>
-        </Row>
-      </FormGroup> )
+        <ColorPicker show={this.state.showColorPicker} onClose={(data) => this.closeEditModal(data)} widget={this.state.widget} controlId={this.props.controlId} />
+      </FormGroup>
+
+    )
   }
 }
 
