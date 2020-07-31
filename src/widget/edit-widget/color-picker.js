@@ -27,25 +27,27 @@ class ColorPicker extends React.Component {
     super(props);
 
     this.state = {
-      color: null
+      widget: {}
     };
   }
 
   static getDerivedStateFromProps(props, state){
-    let parts = props.controlId.split('.');
-    let isCustomProperty = true;
-    if (parts.length === 1){
-      isCustomProperty = false;
-    }
-    let color = (isCustomProperty ? props.widget[parts[0]][parts[1]] : props.widget[props.controlId]);
 
     return {
-      color: color
+      widget: props.widget
     };
   }
 
   handleChangeComplete = (color) => {
-    this.setState({ color: color.hex });
+    let parts = this.props.controlId.split('.');
+    let isCustomProperty = true;
+    if (parts.length === 1){
+      isCustomProperty = false;
+    }
+
+    let temp = this.state.widget;
+    isCustomProperty ? temp[parts[0]][parts[1]] = color.hex : temp[this.props.controlId] = color.hex;
+    this.setState({ widget: temp });
   };
 
   onClose = canceled => {
@@ -58,15 +60,20 @@ class ColorPicker extends React.Component {
     }
 
     if (this.valid && this.props.onClose != null) {
-      this.props.onClose(this.state.color);
+      this.props.onClose(this.state.widget);
     }
   };
 
   render() {
+    let parts = this.props.controlId.split('.');
+    let isCustomProperty = true;
+    if (parts.length === 1){
+      isCustomProperty = false;
+    }
       return <Dialog show={this.props.show} title='Color Picker' buttonTitle='Save' onClose={(c) => this.onClose(c)} valid={true}>
           <form>
               <SketchPicker
-                  color={this.state.color}
+                  color={isCustomProperty ? this.state.widget[parts[0]][parts[1]]: this.state.widget[this.props.controlId]}
                   onChangeComplete={ this.handleChangeComplete }
                   width={"300"}
               />

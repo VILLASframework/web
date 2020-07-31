@@ -17,12 +17,10 @@
 
 import React, { Component } from 'react';
 
-import EditWidgetColorControl from '../edit-widget/edit-widget-color-control';
-
 class WidgetLine extends Component {
   render() {
       const lineStyle = {
-        borderColor: EditWidgetColorControl.ColorPalette[this.props.widget.customProperties.border_color],
+        borderColor: this.props.widget.customProperties.border_color,
         transform: 'rotate(' + this.props.widget.customProperties.rotation + 'deg)',
         borderWidth: '' + this.props.widget.customProperties.border_width + 'px'
     };

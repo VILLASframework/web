@@ -17,16 +17,13 @@
 
 import React, { Component } from 'react';
 
-import EditWidgetColorControl from '../edit-widget/edit-widget-color-control';
 
 class WidgetBox extends Component {
   render() {
 
-    let colors = EditWidgetColorControl.ColorPalette;
-
     let colorStyle = {
-      borderColor: colors[this.props.widget.customProperties.border_color],
-      backgroundColor: colors[this.props.widget.customProperties.background_color],
+      borderColor: this.props.widget.customProperties.border_color,
+      backgroundColor: this.props.widget.customProperties.background_color,
       opacity: this.props.widget.customProperties.background_color_opacity,
     }
 

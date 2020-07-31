@@ -17,8 +17,6 @@
 
 import React, { Component } from 'react';
 import { FormGroup, OverlayTrigger, Tooltip , FormLabel, Button } from 'react-bootstrap';
-import { scaleOrdinal } from 'd3-scale';
-import {schemeCategory10} from 'd3-scale-chromatic';
 import ColorPicker from './color-picker'
 import Icon from "../../common/icon";
 
@@ -26,22 +24,13 @@ import Icon from "../../common/icon";
 
 class EditWidgetColorControl extends Component {
 
-  static get ColorPalette() {
-    let colorCount = 0;
-    const colors = [];
-    const colorScale = scaleOrdinal(schemeCategory10);
-    while (colorCount < 10) { colors.push(colorScale(colorCount)); colorCount++; }
-    colors.unshift('#000', '#FFF'); // include black and white
-
-    return colors;
-  }
-
   constructor(props) {
     super(props);
 
     this.state = {
       widget: {},
-      showColorPicker: false
+      showColorPicker: false,
+      originalColor: null
     };
   }
 
@@ -52,18 +41,44 @@ class EditWidgetColorControl extends Component {
   }
 
   openColorPicker = () =>{
-    this.setState({showColorPicker: true})
+    let parts = this.props.controlId.split('.');
+    let isCustomProperty = true;
+    if (parts.length === 1){
+      isCustomProperty = false;
+    }
+    let color = (isCustomProperty ? this.props.widget[parts[0]][parts[1]] : this.props.widget[this.props.controlId]);
+
+    this.setState({showColorPicker: true, originalColor: color});
   }
 
   closeEditModal = (data) => {
     this.setState({showColorPicker: false})
-    if(data){
-    this.props.handleChange({target: { id: this.props.controlId, value: data}});
+    if(typeof data === 'undefined'){
+      let parts = this.props.controlId.split('.');
+      let isCustomProperty = true;
+      if (parts.length === 1) {
+        isCustomProperty = false;
+      }
+
+      let temp = this.state.widget;
+      isCustomProperty ? temp[parts[0]][parts[1]] = this.state.originalColor : temp[this.props.controlId] = this.state.originalColor;
+      this.setState({ widget: temp });
     }
   }
 
   render() {
-    const currentColor = this.state.widget[this.props.controlId];
+    let parts = this.props.controlId.split('.');
+    let isCustomProperty = true;
+    if (parts.length === 1){
+      isCustomProperty = false;
+    }
+    let color = (isCustomProperty ? this.props.widget[parts[0]][parts[1]] : this.props.widget[this.props.controlId]);
+    let style = {
+      backgroundColor: color,
+      width: '260px', 
+      height: '40px'
+    }
+
    
     return (
       <FormGroup>
@@ -71,7 +86,7 @@ class EditWidgetColorControl extends Component {
 
         <div className='section-buttons-group-right'>
         <OverlayTrigger key={0} placement={'right'} overlay={<Tooltip id={`tooltip-${"color"}`}> Change color </Tooltip>} >
-        <Button key={2} style={{ width: '260px', height: '40px', color:{currentColor} }} onClick={this.openColorPicker.bind(this)}  >
+        <Button key={2} style={style} onClick={this.openColorPicker.bind(this)}  >
           <Icon icon="paint-brush"/>
         </Button>
         </OverlayTrigger>

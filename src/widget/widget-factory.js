@@ -63,8 +63,8 @@ class WidgetFactory {
                 widget.minHeight = 5;
                 widget.width = 20;
                 widget.height = 20;
-                widget.customProperties.on_color = 6;
-                widget.customProperties.off_color = 8;
+                widget.customProperties.on_color = '#4287f5';
+                widget.customProperties.off_color = '#4287f5';
                 widget.customProperties.threshold = 0.5;
                 break;
             case 'Value':
@@ -102,7 +102,7 @@ class WidgetFactory {
                 widget.height = 35;
                 widget.name = 'Label';
                 widget.customProperties.textSize = 32;
-                widget.customProperties.fontColor = 0;
+                widget.customProperties.fontColor = '#4287f5';
                 widget.customProperties.resizeTopBottomLock = true;
                 break;
           case 'Image':
@@ -118,8 +118,8 @@ class WidgetFactory {
                 widget.minHeight = 50;
                 widget.width = 100;
                 widget.height = 100;
-                widget.customProperties.background_color = 1;
-                widget.customProperties.font_color = 0;
+                widget.customProperties.background_color = '#4287f5';
+                widget.customProperties.font_color = '#4287f5';
                 widget.customProperties.on_value = 1;
                 widget.customProperties.off_value = 0;
                 widget.customProperties.toggle = false;
@@ -167,8 +167,8 @@ class WidgetFactory {
                 widget.minHeight = 50;
                 widget.width = 100;
                 widget.height = 100;
-                widget.customProperties.border_color = 0;
-                widget.customProperties.background_color = 9;
+                widget.customProperties.border_color = '#4287f5';
+                widget.customProperties.background_color = '#961520';
                 widget.customProperties.background_color_opacity = 0.5;
                 widget.z = 0;
                 break;
@@ -183,7 +183,7 @@ class WidgetFactory {
             case 'Line':
                 widget.height = 30;
                 widget.width = 150;
-                widget.customProperties.border_color = 0;
+                widget.customProperties.border_color = '#4287f5';
                 widget.customProperties.border_width = 2;
                 widget.customProperties.margin_top = 15;
                 widget.customProperties.rotation = 0;
