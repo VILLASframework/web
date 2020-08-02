@@ -38,6 +38,16 @@ class ColorPicker extends React.Component {
     };
   }
 
+  hexToRgb = (hex,opacity) => {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16),
+      a: opacity
+    } : null;
+  }
+
   handleChangeComplete = (color) => {
     let parts = this.props.controlId.split('.');
     let isCustomProperty = true;
@@ -47,6 +57,8 @@ class ColorPicker extends React.Component {
 
     let temp = this.state.widget;
     isCustomProperty ? temp[parts[0]][parts[1]] = color.hex : temp[this.props.controlId] = color.hex;
+    isCustomProperty ? temp[parts[0]][parts[1] + "_opacity"] = color.rgb.a : temp[this.props.controlId +"_opacity"] = color.rgb.a;
+
     this.setState({ widget: temp });
   };
 
@@ -65,15 +77,26 @@ class ColorPicker extends React.Component {
   };
 
   render() {
+    let disableOpacity = false;
     let parts = this.props.controlId.split('.');
     let isCustomProperty = true;
     if (parts.length === 1){
       isCustomProperty = false;
     }
+
+    if(this.state.widget.type === "Box" && parts[1] === "border_color"){
+      disableOpacity = true;
+    }
+
+    let hexColor = isCustomProperty ? this.state.widget[parts[0]][parts[1]]: this.state.widget[this.props.controlId];
+    let opacity = isCustomProperty ? this.state.widget[parts[0]][parts[1] + "_opacity"]: this.state.widget[this.props.controlId + "_opacity"];
+    let rgbColor = this.hexToRgb(hexColor, opacity);
+
       return <Dialog show={this.props.show} title='Color Picker' buttonTitle='Save' onClose={(c) => this.onClose(c)} valid={true}>
           <form>
               <SketchPicker
-                  color={isCustomProperty ? this.state.widget[parts[0]][parts[1]]: this.state.widget[this.props.controlId]}
+                  color={rgbColor}
+                  disableAlpha={disableOpacity} 
                   onChangeComplete={ this.handleChangeComplete }
                   width={"300"}
               />

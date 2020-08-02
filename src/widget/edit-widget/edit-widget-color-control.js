@@ -73,10 +73,17 @@ class EditWidgetColorControl extends Component {
       isCustomProperty = false;
     }
     let color = (isCustomProperty ? this.props.widget[parts[0]][parts[1]] : this.props.widget[this.props.controlId]);
+    let opacity = (isCustomProperty ? this.props.widget[parts[0]][parts[1] + "_opacity"] : this.props.widget[this.props.controlId + "_opacity"]);
     let style = {
       backgroundColor: color,
+      opacity: opacity,
       width: '260px', 
       height: '40px'
+    }
+
+    let tooltipText = "Change color and opacity";
+    if(this.state.widget.type === "Box" && parts[1] === "border_color"){
+      tooltipText = "Change border color";
     }
 
    
@@ -85,7 +92,7 @@ class EditWidgetColorControl extends Component {
         <FormLabel>{this.props.label}</FormLabel>
 
         <div className='section-buttons-group-right'>
-        <OverlayTrigger key={0} placement={'right'} overlay={<Tooltip id={`tooltip-${"color"}`}> Change color </Tooltip>} >
+        <OverlayTrigger key={0} placement={'right'} overlay={<Tooltip id={`tooltip-${"color"}`}> {tooltipText} </Tooltip>} >
         <Button key={2} style={style} onClick={this.openColorPicker.bind(this)}  >
           <Icon icon="paint-brush"/>
         </Button>

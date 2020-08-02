@@ -64,7 +64,9 @@ class WidgetFactory {
                 widget.width = 20;
                 widget.height = 20;
                 widget.customProperties.on_color = '#4287f5';
+                widget.customProperties.on_color_opacity = 1;
                 widget.customProperties.off_color = '#4287f5';
+                widget.customProperties.off_color_opacity = 1;
                 widget.customProperties.threshold = 0.5;
                 break;
             case 'Value':
@@ -103,6 +105,7 @@ class WidgetFactory {
                 widget.name = 'Label';
                 widget.customProperties.textSize = 32;
                 widget.customProperties.fontColor = '#4287f5';
+                widget.customProperties.fontColor_opacity = 1;
                 widget.customProperties.resizeTopBottomLock = true;
                 break;
           case 'Image':
@@ -168,8 +171,9 @@ class WidgetFactory {
                 widget.width = 100;
                 widget.height = 100;
                 widget.customProperties.border_color = '#4287f5';
+                widget.customProperties.border_color_opacity = 1;
                 widget.customProperties.background_color = '#961520';
-                widget.customProperties.background_color_opacity = 0.5;
+                widget.customProperties.background_color_opacity = 1;
                 widget.z = 0;
                 break;
             case 'HTML':
@@ -184,6 +188,7 @@ class WidgetFactory {
                 widget.height = 30;
                 widget.width = 150;
                 widget.customProperties.border_color = '#4287f5';
+                widget.customProperties.border_color_opacity = 1;
                 widget.customProperties.border_width = 2;
                 widget.customProperties.margin_top = 15;
                 widget.customProperties.rotation = 0;

@@ -22,7 +22,8 @@ class WidgetLabel extends Component {
   render() {
       const style = {
       fontSize: this.props.widget.customProperties.textSize + 'px',
-      color: this.props.widget.customProperties.fontColor
+      color: this.props.widget.customProperties.fontColor,
+      opacity: this.props.widget.customProperties.fontColor_opacity,
     };
 
     return (

@@ -61,14 +61,20 @@ class WidgetLamp extends Component {
   render() {
 
     let color;
+    let opacity;
 
-    if (Number(this.state.value) > Number(this.props.widget.customProperties.threshold))
+    if (Number(this.state.value) > Number(this.props.widget.customProperties.threshold)){
       color = this.props.widget.customProperties.on_color;
-    else
+      opacity = this.props.widget.customProperties.on_color_opacity;
+    }
+    else{
       color = this.props.widget.customProperties.off_color;
+      opacity = this.props.widget.customProperties.off_color_opacity;
+    }
 
     let style = {
       backgroundColor: color,
+      opacity: opacity
     }
 
     return (

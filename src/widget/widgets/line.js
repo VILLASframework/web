@@ -21,6 +21,7 @@ class WidgetLine extends Component {
   render() {
       const lineStyle = {
         borderColor: this.props.widget.customProperties.border_color,
+        opacity: this.props.widget.customProperties.border_color_opacity,
         transform: 'rotate(' + this.props.widget.customProperties.rotation + 'deg)',
         borderWidth: '' + this.props.widget.customProperties.border_width + 'px'
     };
