@@ -169,15 +169,18 @@ class Dashboard extends Component {
 
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
       // open web sockets if ICs are already known and sockets are not opened yet
-    if(!Dashboard.webSocketsOpened && this.state.ics.length > 0){
-      console.log("Starting to open IC websockets:", this.state.ics);
-      AppDispatcher.dispatch({
-        type: 'ics/open-sockets',
-        data: this.state.ics
-      });
+    if(this.state.ics !== undefined && !Dashboard.webSocketsOpened){
+      if(this.state.ics.length > 0){
+        console.log("Starting to open IC websockets:", this.state.ics);
+        AppDispatcher.dispatch({
+          type: 'ics/open-sockets',
+          data: this.state.ics
+        });
 
-      Dashboard.webSocketsOpened = true;
+        Dashboard.webSocketsOpened = true;
+      }
     }
+
 
     if(prevState.dashboard === undefined && this.state.dashboard !== undefined){
       // the dashboard was loaded, so that the scenarioID is available
