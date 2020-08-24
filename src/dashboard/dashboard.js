@@ -165,8 +165,6 @@ class Dashboard extends Component {
       token: this.state.sessionToken
     });
 
-
-
   }
 
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
@@ -181,23 +179,23 @@ class Dashboard extends Component {
       Dashboard.webSocketsOpened = true;
     }
 
-    if(this.state.configs.length === 0 && this.state.dashboard !== undefined) {
-      // load configs
+    if(prevState.dashboard === undefined && this.state.dashboard !== undefined){
+      // the dashboard was loaded, so that the scenarioID is available
+
+      // load configs of scenario
       AppDispatcher.dispatch({
         type: 'configs/start-load',
         token: this.state.sessionToken,
         param: '?scenarioID=' + this.state.dashboard.scenarioID
       });
-    }
 
-    if(this.state.files.length === 0 && this.state.dashboard !== undefined){
+      // load files of scenario
       AppDispatcher.dispatch({
         type: 'files/start-load',
         param: '?scenarioID=' + this.state.dashboard.scenarioID,
         token: this.state.sessionToken
       });
     }
-
   }
 
   componentWillUnmount() {
