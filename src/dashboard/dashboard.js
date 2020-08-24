@@ -152,6 +152,8 @@ class Dashboard extends Component {
 
   componentDidMount() {
 
+    Dashboard.webSocketsOpened = false;
+
     // load widgets of dashboard
     AppDispatcher.dispatch({
       type: 'widgets/start-load',
