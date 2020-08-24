@@ -42,19 +42,16 @@ class InfrastructureComponentStore extends ArrayStore {
         return super.reduce(state, action);
       case 'ics/open-sockets':
         // open websocket for each IC contained in array action.data
-        // TODO should be done when dashboard is loaded
-        // TODO action.data should contain only those IC used by the scenario
+        // action.data contains only those IC used by the scenario
         for (let ic of action.data) {
           if (ic.host != null && ic.host !== '') {
-            // TODO connection should be closed again when dashboard is closed
-
             ICDataDataManager.open(ic.host, ic.id);
           } else {
 
             // TODO add to pool of notifications
             const IC_WEBSOCKET_HOST_ERROR = {
-              title: 'Host of websocket not available',
-              message: action.error.response.body.message,
+              title: 'Websocket connection warning',
+              message: "Websocket host parameter not available for IC " + ic.name + "(" + ic.uuid + "), connection not possible",
               level: 'warning'
             };
             NotificationsDataManager.addNotification(IC_WEBSOCKET_HOST_ERROR);
