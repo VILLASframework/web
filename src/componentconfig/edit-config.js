@@ -53,8 +53,13 @@ class EditConfigDialog extends React.Component {
         for(let e of this.state.selectedFiles){
           IDs.push(e.id)
         }
-        if (JSON.stringify(IDs) !== JSON.stringify(this.props.config.fileIDs)){
-          data.fileIDs = IDs;
+        if(this.props.config.fileIDs !== null && this.props.config.fileIDs !== undefined) {
+          if (JSON.stringify(IDs) !== JSON.stringify(this.props.config.fileIDs)) {
+            data.fileIDs = IDs;
+          }
+        }
+        else{
+          data.fileIDs = IDs
         }
 
         //forward modified config to callback function
@@ -96,10 +101,12 @@ class EditConfigDialog extends React.Component {
 
     // determine list of selected files incl id and filename
     let selectedFiles = []
-    for(let selectedFileID of this.props.config.fileIDs){
-      for (let file of this.props.files){
-        if (file.id === selectedFileID){
-          selectedFiles.push({name: file.name, id: file.id})
+    if(this.props.config.fileIDs !== null && this.props.config.fileIDs !== undefined) {
+      for (let selectedFileID of this.props.config.fileIDs) {
+        for (let file of this.props.files) {
+          if (file.id === selectedFileID) {
+            selectedFiles.push({name: file.name, id: file.id})
+          }
         }
       }
     }
