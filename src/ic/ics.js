@@ -24,7 +24,6 @@ import moment from 'moment'
 
 import AppDispatcher from '../common/app-dispatcher';
 import InfrastructureComponentStore from './ic-store';
-import LoginStore from '../user/login-store';
 
 import Icon from '../common/icon';
 import Table from '../common/table';
@@ -38,7 +37,7 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 
 class InfrastructureComponents extends Component {
   static getStores() {
-    return [ LoginStore, InfrastructureComponentStore ];
+    return [ InfrastructureComponentStore ];
   }
 
   static statePrio(state) {
@@ -73,16 +72,14 @@ class InfrastructureComponents extends Component {
         return a.stateUpdatedAt < b.stateUpdatedAt;
       }
     });
-    const currentUser = LoginStore.getState().currentUser;
 
     return {
       sessionToken: localStorage.getItem("token"),
       ics: ics,
       modalIC: {},
       deleteModal: false,
-
       selectedICs: [],
-      currentUser: currentUser
+      currentUser: JSON.parse(localStorage.getItem("currentUser"))
     };
   }
 
@@ -284,7 +281,7 @@ class InfrastructureComponents extends Component {
           {/* <TableColumn title='Realm' dataKeys={['properties.realm', 'rawProperties.realm']} /> */}
           <TableColumn title='WebSocket Endpoint' dataKey='host' />
           <TableColumn title='Last Update' dataKey='stateUpdateAt' modifier={(stateUpdateAt) => this.stateUpdateModifier(stateUpdateAt)} />
-          {this.state.currentUser.role === "Admin" ? 
+          {this.state.currentUser.role === "Admin" ?
           <TableColumn
             width='200'
             editButton
@@ -293,13 +290,13 @@ class InfrastructureComponents extends Component {
             onEdit={index => this.setState({ editModal: true, modalIC: this.state.ics[index], modalIndex: index })}
             onExport={index => this.exportIC(index)}
             onDelete={index => this.setState({ deleteModal: true, modalIC: this.state.ics[index], modalIndex: index })}
-          /> 
+          />
           :
           <TableColumn
             width='100'
             exportButton
             onExport={index => this.exportIC(index)}
-          /> 
+          />
           }
         </Table>
         {this.state.currentUser.role === "Admin" ?
