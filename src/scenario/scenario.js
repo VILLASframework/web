@@ -90,7 +90,7 @@ class Scenario extends React.Component {
 
       deleteConfigModal: false,
       importConfigModal: false,
-      editConfigModal: false,
+      editConfigModal: prevState.editConfigModal || false,
       modalConfigData: (prevState.modalConfigData !== {} && prevState.modalConfigData !== undefined )? prevState.modalConfigData : {},
       selectedConfigs: [],
       modalConfigIndex: 0,
@@ -453,10 +453,6 @@ class Scenario extends React.Component {
         }
       }
     }
-
-
-
-
     return fileList;
   }
 
