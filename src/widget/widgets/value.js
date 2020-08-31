@@ -23,7 +23,7 @@ class WidgetValue extends Component {
     super(props);
 
     this.state = {
-      value: '',
+      value: NaN,
       unit: '',
       scalingFactor: 1.0
     };
@@ -42,13 +42,12 @@ class WidgetValue extends Component {
       let icID = props.icIDs[signal[0].id];
 
       // check if data available
-      let value = ''
+      let value = NaN
       if (props.data == null || props.data[icID] == null || props.data[icID].output == null || props.data[icID].output.values == null) {
-        value = '';
+        // no data
       } else {
-        // check if value has changed
         const data = props.data[icID].output.values[signal[0].index - 1];
-        if (data != null && Number(state.value) !== data[data.length - 1].y) {
+        if (data != null) {
           value = signal[0].scalingFactor * data[data.length - 1].y;
         }
       }
@@ -56,10 +55,8 @@ class WidgetValue extends Component {
       // Update unit (assuming there is exactly one signal for this widget)
       let unit = '';
       let scalingFactor = ''
-      if (signal !== undefined) {
-        unit = signal[0].unit;
-        scalingFactor = signal[0].scalingFactor
-      }
+      unit = signal[0].unit;
+      scalingFactor = signal[0].scalingFactor
 
       return {
         value: value,
@@ -73,7 +70,7 @@ class WidgetValue extends Component {
   }
 
   render() {
-    let value_to_render = Number(this.state.value);
+    let value_to_render = this.state.value;
     let value_width = this.props.widget.customProperties.textSize*(Math.abs(value_to_render) < 1000 ? (5):(8));
     let unit_width = this.props.widget.customProperties.textSize*(this.state.unit.length + 0.7);
     const showScalingFactor = (this.state.scalingFactor !== 1);
