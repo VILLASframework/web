@@ -77,7 +77,7 @@ class WidgetValue extends Component {
     return (
       <div className="single-value-widget">
         <strong style={{ fontSize: this.props.widget.customProperties.textSize + 'px', flex: '1 1 auto'}}>{this.props.widget.name}</strong>
-        <span style={{ fontSize: this.props.widget.customProperties.textSize + 'px', flex: 'none', width: value_width}}>{Number.isNaN(value_to_render) ? NaN : format('.3f')(value_to_render)}</span>
+        <span style={{ fontSize: this.props.widget.customProperties.textSize + 'px', flex: 'none', width: value_width}}>{Number.isNaN(value_to_render) ? String(NaN) : format('.3f')(value_to_render)}</span>
         {this.props.widget.customProperties.showUnit &&
           <span style={{ fontSize: this.props.widget.customProperties.textSize + 'px', flex: 'none',  width: unit_width}}>[{this.state.unit}]</span>
         }
