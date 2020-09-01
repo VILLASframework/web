@@ -47,7 +47,7 @@ class EditableWidgetContainer extends React.Component {
 
 
     if (widget.x !== data.x || widget.y !== data.y) {
-      this.rnd.updatePosition({ x: widget.x, y: widget.y});
+      this.rnd.updatePosition({ x: widget.x, y: widget.y });
     }
 
     if (this.props.onWidgetChange != null) {
@@ -55,7 +55,7 @@ class EditableWidgetContainer extends React.Component {
     }
   };
 
-  resizeStop = (event, direction, ref,delta, position) => {
+  resizeStop = (event, direction, ref, delta, position) => {
     const widget = this.props.widget;
 
     // resize depends on direction
@@ -73,19 +73,40 @@ class EditableWidgetContainer extends React.Component {
     if (this.props.onWidgetChange != null) {
       this.props.onWidgetChange(widget, this.props.index);
     }
+
+    /* hand over new dimensions to child element so that the rotation is displayed correctly
+    *  already before the dashboard changes are saved
+    */
+    if (this.props.widget.type === 'Line') {
+      this.refs.child0.illustrateDuringEdit(widget.width, widget.height);
+    }
   };
 
   render() {
     const widget = this.props.widget;
+    let isLine = false;
+    let children = null;
+
+    // clone WidgetLine child element so that it can be referenced while resizing
+    if (widget.type === 'Line') {
+      isLine = true;
+
+      children = React.Children.map(this.props.children,
+        (child, index) => React.cloneElement(child, {
+          ref: `child${index}`
+        })
+      );
+    }
+
     let resizingRestricted = false;
-    if(widget.customProperties.resizeRightLeftLock || widget.customProperties.resizeTopBottomLock){
+    if (widget.customProperties.resizeRightLeftLock || widget.customProperties.resizeTopBottomLock) {
       resizingRestricted = true;
     }
-    
+
 
     const resizing = {
       bottom: !(widget.customProperties.resizeTopBottomLock || widget.isLocked),
-      bottomLeft: !(resizingRestricted|| widget.isLocked),
+      bottomLeft: !(resizingRestricted || widget.isLocked),
       bottomRight: !(resizingRestricted || widget.isLocked),
       left: !(widget.customProperties.resizeRightLeftLock || widget.isLocked),
       right: !(widget.customProperties.resizeRightLeftLock || widget.isLocked),
@@ -94,19 +115,42 @@ class EditableWidgetContainer extends React.Component {
       topRight: !(resizingRestricted || widget.isLocked)
     };
 
-    const gridArray = [ this.props.grid, this.props.grid ];
+    const gridArray = [this.props.grid, this.props.grid];
 
     const widgetClasses = classNames({
       'editing-widget': true,
       'locked': widget.isLocked
     });
 
+    if (isLine) {
+      return <Rnd
+        ref={c => { this.rnd = c; }}
+        default={{ x: Number(widget.x), y: Number(widget.y), width: widget.width, height: widget.height }}
+        minWidth={widget.minWidth}
+        minHeight={widget.minHeight}
+        maxWidth={widget.customProperties.maxWidth || '100%'}
+        lockAspectRatio={Boolean(widget.customProperties.lockAspect)}
+        bounds={'parent'}
+        className={widgetClasses}
+        onResizeStart={this.borderWasClicked}
+        onResizeStop={this.resizeStop}
+        onDragStop={this.dragStop}
+        dragGrid={gridArray}
+        resizeGrid={gridArray}
+        zindex={widget.z}
+        enableResizing={resizing}
+        disableDragging={widget.isLocked}
+      >
+        {children}
+      </Rnd>;
+    }
+
     return <Rnd
       ref={c => { this.rnd = c; }}
       default={{ x: Number(widget.x), y: Number(widget.y), width: widget.width, height: widget.height }}
       minWidth={widget.minWidth}
       minHeight={widget.minHeight}
-      maxWidth ={widget.customProperties.maxWidth || '100%' }
+      maxWidth={widget.customProperties.maxWidth || '100%'}
       lockAspectRatio={Boolean(widget.customProperties.lockAspect)}
       bounds={'parent'}
       className={widgetClasses}
@@ -119,9 +163,7 @@ class EditableWidgetContainer extends React.Component {
       enableResizing={resizing}
       disableDragging={widget.isLocked}
     >
-
-        {this.props.children}
-
+      {this.props.children}
     </Rnd>;
   }
 }

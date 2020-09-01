@@ -20,18 +20,76 @@ import React, { Component } from 'react';
 import EditWidgetColorControl from '../edit-widget/edit-widget-color-control';
 
 class WidgetLine extends Component {
+  // WidgetLine is newly created when widget props are changed and saved
+  constructor(props)  {
+    super(props);
+    this.illustrateDuringEdit = this.illustrateDuringEdit.bind(this);
+
+    this.state = {
+      width: 0,
+      height: 0,
+      editing: false
+    }
+  }
+
+  // needed to update the looks of the line in edit mode
+   illustrateDuringEdit(newwidth, newheight) {
+     this.setState({width: newwidth, height: newheight, editing: true});
+   }
+
   render() {
-      const lineStyle = {
-        borderColor: EditWidgetColorControl.ColorPalette[this.props.widget.customProperties.border_color],
-        transform: 'rotate(' + this.props.widget.customProperties.rotation + 'deg)',
-        borderWidth: '' + this.props.widget.customProperties.border_width + 'px'
+    let rotation = this.props.widget.customProperties.rotation;
+    let rad = rotation * (Math.PI / 180);
+
+    // get the dimensions either from props (saved widget)
+    // or from the state (widget in edit mode)
+    let width = this.props.widget.width;
+    let height = this.props.widget.height;
+    
+    if (this.state.editing) {
+      width = this.state.width;
+      height = this.state.height;
+    }
+
+    // calculate the length of the line
+    let length = 0;
+    if (width <= height) {
+      if (rotation > 0) {
+        length = width / Math.abs(Math.cos(rad));
+      }
+      else {
+        length = width
+      }
+    } else { // height < width
+      if (rotation > 0) {
+        length = height / Math.abs(Math.sin(rad));
+      } else {
+        length = height;
+      }
+    }
+
+    // calculate line coordinates (in percent)
+    const x1 = width * 0.5 - 0.5 * Math.cos(rad) * length;
+    const x1p = '' + Math.round(100 * x1 / width) + '%';
+
+    const x2 = width * 0.5 + 0.5 * Math.cos(rad) * length;
+    const x2p = '' + Math.round(100 * x2/width) + '%';
+
+    const y1 = height * 0.5 + 0.5 * Math.sin(rad) * length;
+    const y1p = '' + Math.round(100 * y1/height) + '%';
+
+    const y2 = height * 0.5 - 0.5 * Math.sin(rad) * length;
+    const y2p = '' + Math.round(100 * y2/height) + '%';
+
+
+    const lineStyle = {
+        stroke: EditWidgetColorControl.ColorPalette[this.props.widget.customProperties.border_color],
+        strokeWidth: '' + this.props.widget.customProperties.border_width + 'px'
     };
 
-    return (
-      <div className="line-widget" style={lineStyle}>
-            { } 
-      </div>
-    );
+      return <svg height="100%" width="100%">
+                <line x1={x1p} x2={x2p} y1={y1p} y2={y2p} style={lineStyle}/>
+              </svg>;
   }
 }
 
