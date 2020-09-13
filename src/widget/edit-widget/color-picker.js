@@ -49,15 +49,23 @@ class ColorPicker extends React.Component {
   }
 
   handleChangeComplete = (color) => {
+    
+    let temp = this.state.widget;
+
+    if(this.props.controlId === 'strokeStyle'){
+      temp.customProperties.zones[this.props.zoneIndex]['strokeStyle'] = color.hex;
+    }
+    else{
     let parts = this.props.controlId.split('.');
     let isCustomProperty = true;
+
     if (parts.length === 1){
       isCustomProperty = false;
     }
 
-    let temp = this.state.widget;
     isCustomProperty ? temp[parts[0]][parts[1]] = color.hex : temp[this.props.controlId] = color.hex;
     isCustomProperty ? temp[parts[0]][parts[1] + "_opacity"] = color.rgb.a : temp[this.props.controlId +"_opacity"] = color.rgb.a;
+    }
 
     this.setState({ widget: temp });
   };
@@ -78,19 +86,32 @@ class ColorPicker extends React.Component {
 
   render() {
     let disableOpacity = false;
+    let hexColor;
+    let opacity = 1;
     let parts = this.props.controlId.split('.');
     let isCustomProperty = true;
     if (parts.length === 1){
       isCustomProperty = false;
     }
 
-    if(this.state.widget.type === "Box" && parts[1] === "border_color"){
+    if((this.state.widget.type === "Box" && parts[1] === "border_color") || this.props.controlId === 'strokeStyle'){
       disableOpacity = true;
     }
+    if(this.props.controlId === 'strokeStyle'){
+      if(typeof this.state.widget.customProperties.zones[this.props.zoneIndex] !== 'undefined'){
+    hexColor = this.state.widget.customProperties.zones[this.props.zoneIndex]['strokeStyle'];
+      }
+    }
+    else{
+    hexColor = isCustomProperty ? this.state.widget[parts[0]][parts[1]]: this.state.widget[this.props.controlId];
+    opacity = isCustomProperty ? this.state.widget[parts[0]][parts[1] + "_opacity"]: this.state.widget[this.props.controlId + "_opacity"];
 
-    let hexColor = isCustomProperty ? this.state.widget[parts[0]][parts[1]]: this.state.widget[this.props.controlId];
-    let opacity = isCustomProperty ? this.state.widget[parts[0]][parts[1] + "_opacity"]: this.state.widget[this.props.controlId + "_opacity"];
+    }
+
+    
     let rgbColor = this.hexToRgb(hexColor, opacity);
+
+
 
       return <Dialog show={this.props.show} title='Color Picker' buttonTitle='Save' onClose={(c) => this.onClose(c)} valid={true}>
           <form>
