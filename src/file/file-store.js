@@ -67,7 +67,17 @@ class FileStore extends ArrayStore {
 
       case 'files/downloaded':
         // in this case a file is contained in the response (no JSON)
-        return this.saveFile(state, action)
+        return this.saveFile(state, action);
+
+      case 'files/start-edit':
+          FilesDataManager.update(action.data, action.token, action.id);
+        return state;
+
+      case 'files/edited':
+          return this.updateElements(state, [action.data]);
+
+      case this.type + '/edit-error':
+        return state;
 
       default:
         return super.reduce(state, action);
