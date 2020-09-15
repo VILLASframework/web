@@ -37,7 +37,6 @@ class ScenarioStore extends ArrayStore{
     })
     this.__emitChange();
     return state;
-
   }
 
   reduce(state, action) {
@@ -85,7 +84,7 @@ class ScenarioStore extends ArrayStore{
         return super.reduce(state, action);
 
       case 'scenarios/remove-user':
-        this.dataManager.deleteUser(action.token, action.data, action.username)
+        this.dataManager.deleteUser(action.token, action.data, action.username, action.ownuser)
         return super.reduce(state, action);
 
       case 'scenarios/users-error':

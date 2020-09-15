@@ -110,10 +110,16 @@ class ArrayStore extends ReduceStore {
         return state;
 
       case this.type + '/removed':
-        return state.filter((item) => {
-          return (item !== action.original);
-        });
-
+        if (action.original) {
+          return state.filter((item) => {
+            return (item !== action.original);
+          });
+        } else {
+          return state.filter((item) => {
+            return (item.id !== action.data);
+          });
+        }
+        
       case this.type + '/remove-error':
         if (action.error && !action.error.handled && action.error.response) {
 

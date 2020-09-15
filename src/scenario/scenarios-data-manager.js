@@ -59,15 +59,23 @@ class ScenariosDataManager extends RestDataManager {
     })
   }
 
-  deleteUser(token, id, username) {
+  deleteUser(token, id, username, ownuser=false) {
     let path = id + '/user';
     RestAPI.delete(this.makeURL(this.url + '/' + path + '?username=' + username), token).then(response => {
-      AppDispatcher.dispatch({
-        type: 'scenarios/start-load-users',
-        data: id,
-        token: token
-      });
-
+      if (!ownuser) {
+        AppDispatcher.dispatch({
+          type: 'scenarios/start-load-users',
+          data: id,
+          token: token
+        });
+      } else {
+        // delete scenario from scenariostore
+        AppDispatcher.dispatch({
+          type: 'scenarios/removed',
+          data: id,
+          token: token
+        });
+      }
     }).catch(error => {
       AppDispatcher.dispatch({
         type: 'scenarios/users-error',

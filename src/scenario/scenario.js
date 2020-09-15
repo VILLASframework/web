@@ -43,11 +43,13 @@ import EditConfigDialog from "../componentconfig/edit-config";
 import EditSignalMapping from "../signal/edit-signal-mapping";
 import FileStore from "../file/file-store"
 import WidgetStore from "../widget/widget-store";
+import LoginStore from "../user/login-store"
+import { Redirect } from 'react-router-dom';
 
 class Scenario extends React.Component {
 
   static getStores() {
-    return [ ScenarioStore, ConfigStore, DashboardStore, ICStore, SignalStore, FileStore, WidgetStore];
+    return [ ScenarioStore, ConfigStore, DashboardStore, ICStore, SignalStore, FileStore, WidgetStore, LoginStore];
   }
 
   static calculateState(prevState, props) {
@@ -78,6 +80,7 @@ class Scenario extends React.Component {
 
     let signals = SignalStore.getState();
 
+    let currentUser = LoginStore.getState().currentUser;
 
     return {
       scenario,
@@ -85,6 +88,7 @@ class Scenario extends React.Component {
       configs,
       dashboards,
       signals,
+      currentUser,
       files,
       ics: ICStore.getState(),
 
@@ -109,6 +113,7 @@ class Scenario extends React.Component {
       userToAdd: '',
       deleteUserName: '',
       deleteUserModal: false,
+      goToScenarios: false
     }
   }
 
@@ -155,14 +160,26 @@ class Scenario extends React.Component {
   }
 
   closeDeleteUserModal() {
+    let scenarioID = this.state.scenario.id;
+    if (this.state.deleteUserName === this.state.currentUser.username) { 
+      AppDispatcher.dispatch({
+        type: 'scenarios/remove-user',
+        data: scenarioID,
+        username: this.state.deleteUserName,
+        token: this.state.sessionToken,
+        ownuser: true
+      });
+      this.setState({ goToScenarios: true });
+    } else {
+      AppDispatcher.dispatch({
+        type: 'scenarios/remove-user',
+        data: scenarioID,
+        username: this.state.deleteUserName,
+        token: this.state.sessionToken,
+        ownuser: false
+      });
+    }
     this.setState({ deleteUserModal: false });
-
-    AppDispatcher.dispatch({
-      type: 'scenarios/remove-user',
-      data: this.state.scenario.id,
-      username: this.state.deleteUserName,
-      token: this.state.sessionToken
-    });
   }
 
   /* ##############################################
@@ -492,6 +509,10 @@ class Scenario extends React.Component {
   ############################################## */
 
   render() {
+    if (this.state.goToScenarios) {
+      console.log("redirect to scenario overview")
+      return (<Redirect to="/scenarios" />);
+    }
 
     const buttonStyle = {
       marginLeft: '10px'
