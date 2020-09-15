@@ -56,7 +56,6 @@ class Scenario extends React.Component {
     if (prevState == null) {
       prevState = {};
     }
-
     // get selected scenario
     const sessionToken = localStorage.getItem("token");
 
@@ -74,6 +73,16 @@ class Scenario extends React.Component {
 
     // obtain all component configurations of a scenario
     let configs = ConfigStore.getState().filter(config => config.scenarioID === parseInt(props.match.params.scenario, 10));
+    let editConfigModal = prevState.editConfigModal || false;
+    let modalConfigData = (prevState.modalConfigData !== {} && prevState.modalConfigData !== undefined )? prevState.modalConfigData : {};
+    let modalConfigIndex = 0;
+
+    if((typeof prevState.configs !== "undefined") && (prevState.newConfig === true ) && (configs.length !== prevState.configs.length)){
+      let index = configs.length -1;
+      editConfigModal = true;
+      modalConfigData = configs[index];
+      modalConfigIndex = index;
+    }
 
     // obtain all files of a scenario
     let files = FileStore.getState().filter(file => file.scenarioID === parseInt(props.match.params.scenario, 10));
@@ -90,14 +99,15 @@ class Scenario extends React.Component {
       signals,
       currentUser,
       files,
+      editConfigModal,
+      modalConfigData,
+      modalConfigIndex,
       ics: ICStore.getState(),
 
       deleteConfigModal: false,
       importConfigModal: false,
-      editConfigModal: prevState.editConfigModal || false,
-      modalConfigData: (prevState.modalConfigData !== {} && prevState.modalConfigData !== undefined )? prevState.modalConfigData : {},
+      newConfig: prevState.newConfig || false,
       selectedConfigs: [],
-      modalConfigIndex: 0,
       filesEditModal: prevState.filesEditModal || false,
       filesEditSaveState: prevState.filesEditSaveState || [],
 
@@ -200,10 +210,12 @@ class Scenario extends React.Component {
       token: this.state.sessionToken
     });
 
+    this.setState({newConfig: true});
+
   }
 
   closeEditConfigModal(data) {
-    this.setState({ editConfigModal: false });
+    this.setState({ editConfigModal: false, newConfig: false });
 
     if (data) {
       AppDispatcher.dispatch({

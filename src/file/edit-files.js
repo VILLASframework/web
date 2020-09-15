@@ -21,7 +21,7 @@ import Dialog from '../common/dialogs/dialog';
 import AppDispatcher from "../common/app-dispatcher";
 import Table from "../common/table";
 import TableColumn from "../common/table-column";
-import EditFileName from  "./edit-file-name";
+import EditFileContent from  "./edit-file-content";
 
 
 class EditFilesDialog extends React.Component {
@@ -39,14 +39,9 @@ class EditFilesDialog extends React.Component {
     };
   }
 
-  onClose(canceled) {
-    if (canceled === false) {
-      if (true) {
-        this.props.onClose();
-      }
-    } else {
-      this.props.onClose();
-    }
+  onClose() {
+    
+    this.props.onClose();
   }
 
   selectUploadFile(event) {
@@ -87,18 +82,7 @@ class EditFilesDialog extends React.Component {
 
   };
 
-  closeEditModal(data){
-    if(data !== {} || data !== "undefined"){
-    const formData = new FormData();
-    formData.append("object", data);
-
-    AppDispatcher.dispatch({
-      type: 'files/start-edit',
-      data: formData,
-      token: this.props.sessionToken,
-      id: data.id
-    });
-  }
+  closeEditModal(){
    
   this.setState({editModal: false});
   }
@@ -135,7 +119,7 @@ class EditFilesDialog extends React.Component {
 
 
     return (
-      <Dialog show={this.props.show} title="Edit Files of scenario" buttonTitle="Close" onClose={(c) => this.onClose(c)} blendOutCancel = {true} valid={true} size = 'lg'>
+      <Dialog show={this.props.show} title="Edit Files of scenario" buttonTitle="Close" onClose={() => this.onClose()} blendOutCancel = {true} valid={true} size = 'lg'>
         <div>
 
           <Table data={this.props.files}>
@@ -178,7 +162,7 @@ class EditFilesDialog extends React.Component {
           </FormGroup>
           <div style={{ clear: 'both' }} />
 
-          <EditFileName show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} file={this.state.modalFile} />
+          <EditFileContent show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} sessionToken={this.props.sessionToken} file={this.state.modalFile} />
 
          </div>
       </Dialog>

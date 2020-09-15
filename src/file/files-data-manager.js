@@ -65,6 +65,21 @@ class FilesDataManager extends RestDataManager {
       });
     });
   }
+
+  update(file, token, id) {
+
+    RestAPI.put(this.makeURL(this.url + '/' + id), file, token).then(response => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/edited',
+          data: response[this.type]
+        });
+      }).catch(error => {
+        AppDispatcher.dispatch({
+          type: this.type + 's/edit-error',
+          error: error
+        });
+      });
+    }
 }
 
 export default new FilesDataManager();
