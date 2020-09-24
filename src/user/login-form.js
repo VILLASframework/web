@@ -59,32 +59,33 @@ class LoginForm extends Component {
     return (
       <Form>
         <FormGroup controlId="username">
-          <FormLabel column={true} sm={2}>Username</FormLabel>
-          <Col sm={10}>
+          <FormLabel column={true}>Username</FormLabel>
+          <Col>
             <FormControl type="text" placeholder="Username" onChange={(e) => this.handleChange(e)} />
           </Col>
         </FormGroup>
 
         <FormGroup controlId="password">
-          <FormLabel column={true} sm={2}>Password</FormLabel>
-          <Col sm={10}>
+          <FormLabel column={true}>Password</FormLabel>
+          <Col >
             <FormControl type="password" placeholder="Password" onChange={(e) => this.handleChange(e)} />
           </Col>
         </FormGroup>
 
         {this.props.loginMessage &&
-          <div style={{ marginBottom: '50px', color: 'red' }}>
-            <Col sm={{span: 10, offset: 2}} style={{ paddingLeft: '5px' }}>
+          <div style={{ marginBottom: '20px', color: 'red', fontSize: 'small' }}>
+            <Col sm={{ span: 10, offset: 2 }} style={{ paddingLeft: '5px' }}>
               <i>Error: </i>{this.props.loginMessage}
             </Col>
           </div>
         }
 
-        <FormGroup>
-          <Col sm={{span: 10, offset: 2}}>
-            <Button type="submit" disabled={this.state.disableLogin} onClick={e => this.login(e)}>Login</Button>
+        <FormGroup style={{paddingTop: 15, paddingBottom: 5}}>
+          <Col>
+            <Button style={{width: 90}} type="submit" disabled={this.state.disableLogin} onClick={e => this.login(e)}>Login</Button>
           </Col>
         </FormGroup>
+
       </Form>
     );
   }
