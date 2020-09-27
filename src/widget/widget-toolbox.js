@@ -104,7 +104,47 @@ class WidgetToolbox extends React.Component {
     const thereIsTopologyWidget = this.props.widgets != null && Object.values(this.props.widgets).filter(w => w.type === 'Topology').length > 0;
     const topologyItemMsg = thereIsTopologyWidget? 'Currently only one is supported' : '';
 
-    return <div className='toolbox box-header'>
+    return (
+    
+    <div className='toolbox box-header'>
+<div className='section-buttons-group-left'>
+        <div>
+        <OverlayTrigger key={2} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"cosmetic"}`}> Show/ hide available Cosmetic Widgets </Tooltip>} >
+        <Button variant="light" key={2} style={{ marginRight: '3px', height: '40px' }} onClick={() => this.showWidgets('cosmetic')}  >
+          <Icon icon={cosmeticIcon} style={{color: '#007bff'}}/> Cosmetic Widgets</Button>
+      </OverlayTrigger>
+      <OverlayTrigger key={3} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"displaying"}`}> Show/ hide available Displaying Widgets </Tooltip>} >
+        <Button variant="light" key={3} style={{ marginRight: '3px', height: '40px' }} onClick={() => this.showWidgets('displaying')}  >
+          <Icon icon={displayingIcon} style={{color: '#007bff'}} /> Displaying Widgets</Button>
+      </OverlayTrigger>
+      <OverlayTrigger key={4} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"manipulation"}`}> Show/ hide available Manipulation Widgets </Tooltip>} >
+        <Button variant="light" key={2} style={{ marginRight: '3px', height: '40px' }} onClick={() => this.showWidgets('manipulation')}  >
+          <Icon icon={manipulationIcon} style={{color: '#007bff'}} /> Manipulation Widgets</Button>
+      </OverlayTrigger>
+        </div>
+      </div>
+      <div className='section-buttons-group-right'>
+        <div>
+          <span>Grid: { this.props.grid > 1 ? this.props.grid : 'Disabled' }</span>
+          <Slider value={this.props.grid} style={{ width: '80px' }} step={5} onChange={this.onGridChange} />
+          <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"increase"}`}> Increase dashboard height </Tooltip>} >
+          <Button variant="light" key={0} style={{marginRight: '3px', height: '40px'}} onClick={() => this.props.onDashboardSizeChange(1)}  >
+          <Icon icon="plus" style={iconStyle}/>
+          </Button>
+          </OverlayTrigger>
+          <OverlayTrigger key={1} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"decrease"}`}> Decrease dashboard height </Tooltip>} >
+          <Button variant="light" key={1} disabled={disableDecrease} style={{marginRight: '3px', height: '40px'}} onClick={() => this.props.onDashboardSizeChange(-1)} >
+          <Icon icon="minus" style={iconStyle}/>
+          </Button>
+          </OverlayTrigger>
+
+        </div>
+      </div>
+      <br></br>
+      <br></br>
+      <br></br>
+      <div className= 'section-buttons-group-left'>
+      <span>
       <Collapse isOpened={this.state.showCosmeticWidgets} >
       <ToolboxItem name='Line' type='widget' icon='plus'/>
       <ToolboxItem name='Box' type='widget' icon = 'plus'/>
@@ -142,52 +182,16 @@ class WidgetToolbox extends React.Component {
       </Button>
       </OverlayTrigger>
       </Collapse>
-
-
-      <div className='section-buttons-group-right'>
-        <div>
-          <span>Grid: { this.props.grid > 1 ? this.props.grid : 'Disabled' }</span>
-          <Slider value={this.props.grid} style={{ width: '80px' }} step={5} onChange={this.onGridChange} />
-
-        </div>
+      </span>
       </div>
 
-      <div className='section-buttons-group-right'>
-        <div>
-        <OverlayTrigger key={2} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"cosmetic"}`}> Show/ hide available Cosmetic Widgets </Tooltip>} >
-        <Button variant="light" key={2} style={{ marginRight: '3px', height: '40px' }} onClick={() => this.showWidgets('cosmetic')}  >
-          <Icon icon={cosmeticIcon} style={{color: '#007bff'}}/>
-          Cosmetic Widgets
-        </Button>
-      </OverlayTrigger>
-      <OverlayTrigger key={3} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"increase"}`}> Show/ hide available Displaying Widgets </Tooltip>} >
-        <Button variant="light" key={3} style={{ marginRight: '3px', height: '40px' }} onClick={() => this.showWidgets('displaying')}  >
-          <Icon icon={displayingIcon} style={{color: '#007bff'}} />
-          Displaying Widgets
-        </Button>
-      </OverlayTrigger>
-      <OverlayTrigger key={4} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"increase"}`}> Show/ hide available Manipulation Widgets </Tooltip>} >
-        <Button variant="light" key={2} style={{ marginRight: '238px', height: '40px' }} onClick={() => this.showWidgets('manipulation')}  >
-          <Icon icon={manipulationIcon} style={{color: '#007bff'}} />
-          Manipulation Widgets
-        </Button>
-      </OverlayTrigger>
-        <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"increase"}`}> Increase dashboard height </Tooltip>} >
-          <Button variant="light" key={0} style={{marginRight: '3px', height: '40px'}} onClick={() => this.props.onDashboardSizeChange(1)}  >
-          <Icon icon="plus" style={iconStyle}/>
-          </Button>
-          </OverlayTrigger>
-          <OverlayTrigger key={1} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"decrease"}`}> Decrease dashboard height </Tooltip>} >
-          <Button variant="light" key={1} disabled={disableDecrease} style={{marginRight: '3px', height: '40px'}} onClick={() => this.props.onDashboardSizeChange(-1)} >
-          <Icon icon="minus" style={iconStyle}/>
-          </Button>
-          </OverlayTrigger>
-        </div>
-      </div>
-    </div>;
+
+      
+    </div>
+    )
   };
 }
-
+    
 WidgetToolbox.propTypes = {
   widgets: PropTypes.array,
   grid: PropTypes.number,

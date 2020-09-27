@@ -370,6 +370,12 @@ body {
   float: right;
 }
 
+.section-buttons-group-left {
+  height: auto !important;
+  padding: 5px;
+  float: left;
+}
+
 .section-buttons-group-right .rc-slider {
   margin-left: 12px;
 }
