@@ -25,10 +25,25 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
 
+
+
+    // create url for API documentation, distinguish between localhost and production deployment
+    let docs_url = "";
+    let docs_location = "/swagger/index.html";
+    let base_url = window.location.origin;
+    if (base_url.search("localhost") === -1){
+      docs_url = base_url + docs_location;
+    } else {
+      // useful for local testing, replace port 3000 with port 4000 (port of backend)
+      docs_url = base_url.replace("3000", "4000") + docs_location;
+    }
+
     this.state = {
       currentUser: LoginStore.getState().currentUser,
-      token: LoginStore.getState().token
+      token: LoginStore.getState().token,
+      docs_url: docs_url
     };
+
   }
 
   getCounts(type) {
@@ -51,12 +66,16 @@ class Home extends React.Component {
         <img style={{height: 120, float: 'right'}} src={require('../img/villas_web.svg')} alt="Logo VILLASweb" />
         <h1>Home</h1>
         <p>
-          Welcome to <b>{config.instance}</b>!<br />
-          VILLASweb is a frontend for distributed real-time simulation hosted by <a href={"mailto:" + config.admin.mail}>{config.admin.name}</a>.
+          Welcome to <b>{config.instance}</b> hosted by  <a href={"mailto:" + config.admin.mail}>{config.admin.name}</a>!<br />
         </p>
         <p>
         You are logged in as user <b>{currentUser.username}</b> with <b>ID {currentUser.id}</b> and role <b>{currentUser.role}</b>.
         </p>
+
+        <p>
+          An interactive documentation of the VILLASweb API is available <a href={this.state.docs_url} target="_blank" rel="noopener noreferrer">here</a>.
+        </p>
+
 
         <h3>Data Model</h3>
         <img height={400} src={require('../img/datamodel.png')} alt="Datamodel VILLASweb" />
