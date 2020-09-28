@@ -30,8 +30,8 @@ import EditWidgetTextSizeControl from './edit-widget-text-size-control';
 import EditWidgetCheckboxControl from './edit-widget-checkbox-control';
 import EditWidgetColorZonesControl from './edit-widget-color-zones-control';
 import EditWidgetMinMaxControl from './edit-widget-min-max-control';
-import EditWidgetHTMLContent from './edit-widget-html-content';
 import EditWidgetParametersControl from './edit-widget-parameters-control';
+//import EditWidgetHTMLContent from './edit-widget-html-content';
 
 export default function CreateControls(widgetType = null, widget = null, sessionToken = null, files = null, signals, handleChange) {
     // Use a list to concatenate the controls according to the widget type
@@ -132,11 +132,11 @@ export default function CreateControls(widgetType = null, widget = null, session
                 <EditWidgetColorControl key={2} widget={widget} controlId={'customProperties.fontColor'} label={'Text color'} handleChange={e => handleChange(e)} />
             );
             break;
-        case 'HTML':
+        /*case 'HTML':
             DialogControls.push(
                 <EditWidgetHTMLContent key={0} widget={widget} controlId={'customProperties.content'} placeholder='HTML Code'  handleChange={e => handleChange(e)} />
             );
-            break;
+            break; */
         case 'Topology':
             // Restrict to only xml files (MIME)
             //let topologyControlFiles = files == null? [] : files.filter( file => file.type.includes('xml'));

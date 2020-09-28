@@ -172,9 +172,9 @@ class WidgetFactory {
                 widget.customProperties.background_color_opacity = 0.5;
                 widget.z = 0;
                 break;
-            case 'HTML':
+            /*case 'HTML':
                 widget.customProperties.content = '<i>Hello World</i>';
-                break;
+                break;*/
             case 'Topology':
                 widget.width = 600;
                 widget.height = 400;

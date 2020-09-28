@@ -41,9 +41,9 @@ import WidgetInput from './widgets/input';
 import WidgetSlider from './widgets/slider';
 import WidgetGauge from './widgets/gauge';
 import WidgetBox from './widgets/box';
-import WidgetHTML from './widgets/html';
 import WidgetTopology from './widgets/topology';
 import WidgetLine from './widgets/line';
+//import WidgetHTML from './widgets/html';
 
 import '../styles/widgets.css';
 
@@ -211,11 +211,11 @@ class Widget extends React.Component {
         widget={widget}
         editing={this.props.editing}
       />
-    } else if (widget.type === 'HTML') {
-      return <WidgetHTML
-        widget={widget}
-        editing={this.props.editing}
-      />
+    //} else if (widget.type === 'HTML') {
+      //return <WidgetHTML
+      //  widget={widget}
+      //  editing={this.props.editing}
+      ///>
     } else if (widget.type === 'Topology') {
       return <WidgetTopology
         widget={widget}
