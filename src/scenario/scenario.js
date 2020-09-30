@@ -43,13 +43,12 @@ import EditConfigDialog from "../componentconfig/edit-config";
 import EditSignalMapping from "../signal/edit-signal-mapping";
 import FileStore from "../file/file-store"
 import WidgetStore from "../widget/widget-store";
-import LoginStore from "../user/login-store"
 import { Redirect } from 'react-router-dom';
 
 class Scenario extends React.Component {
 
   static getStores() {
-    return [ ScenarioStore, ConfigStore, DashboardStore, ICStore, SignalStore, FileStore, WidgetStore, LoginStore];
+    return [ ScenarioStore, ConfigStore, DashboardStore, ICStore, SignalStore, FileStore, WidgetStore];
   }
 
   static calculateState(prevState, props) {
@@ -68,8 +67,6 @@ class Scenario extends React.Component {
       });
     }
 
-    // obtain all dashboards of a scenario
-    let dashboards = DashboardStore.getState().filter(dashb => dashb.scenarioID === parseInt(props.match.params.scenario, 10));
 
     // obtain all component configurations of a scenario
     let configs = ConfigStore.getState().filter(config => config.scenarioID === parseInt(props.match.params.scenario, 10));
@@ -84,24 +81,18 @@ class Scenario extends React.Component {
       modalConfigIndex = index;
     }
 
-    // obtain all files of a scenario
-    let files = FileStore.getState().filter(file => file.scenarioID === parseInt(props.match.params.scenario, 10));
-
-    let signals = SignalStore.getState();
-
-    let currentUser = LoginStore.getState().currentUser;
-
     return {
       scenario,
       sessionToken,
       configs,
-      dashboards,
-      signals,
-      currentUser,
-      files,
       editConfigModal,
       modalConfigData,
       modalConfigIndex,
+      dashboards: DashboardStore.getState().filter(dashb => dashb.scenarioID === parseInt(props.match.params.scenario, 10)),
+      signals: SignalStore.getState(),
+      currentUser: JSON.parse(localStorage.getItem("currentUser")),
+      files: FileStore.getState().filter(file => file.scenarioID === parseInt(props.match.params.scenario, 10)),
+
       ics: ICStore.getState(),
 
       deleteConfigModal: false,
@@ -171,7 +162,7 @@ class Scenario extends React.Component {
 
   closeDeleteUserModal() {
     let scenarioID = this.state.scenario.id;
-    if (this.state.deleteUserName === this.state.currentUser.username) { 
+    if (this.state.deleteUserName === this.state.currentUser.username) {
       AppDispatcher.dispatch({
         type: 'scenarios/remove-user',
         data: scenarioID,

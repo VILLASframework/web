@@ -26,8 +26,11 @@ class Logout extends React.Component {
       type: 'users/logout'
     });
 
-    // discard login token
+    // The Login Store is deleted automatically
+
+    // discard login token and current User
     localStorage.setItem('token', '');
+    localStorage.setItem('currentUser', '');
   }
 
   render() {

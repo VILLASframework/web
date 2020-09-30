@@ -26,7 +26,6 @@ import Icon from '../common/icon';
 import EditOwnUserDialog from './edit-own-user'
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager"
 
-
 class User extends Component {
   static getStores() {
     return [ UsersStore ];
@@ -35,32 +34,52 @@ class User extends Component {
   static calculateState(prevState, props) {
     prevState = prevState || {};
 
+    let currentUserID = JSON.parse(localStorage.getItem("currentUser")).id;
+    let currentUser = UsersStore.getState().find(user => user.id === parseInt(currentUserID, 10));
+
     return {
-      currentUser: JSON.parse(localStorage.getItem("currentUser")),
+      currentUser,
       token: localStorage.getItem("token"),
       editModal: false,
     };
   }
 
+  componentDidMount() {
+
+    let currentUserID = JSON.parse(localStorage.getItem("currentUser")).id;
+
+    AppDispatcher.dispatch({
+      type: 'users/start-load',
+      data: parseInt(currentUserID, 10),
+      token: this.state.token
+    });
+
+  }
+
   closeEditModal(data) {
 
     this.setState({ editModal: false });
-    //this.setState({currentUser: data});
-    let updatedData = {};
+    let updatedData = {}
+    updatedData.id = this.state.currentUser.id;
+    let updatedUser = this.state.currentUser;
+    let hasChanged = false;
+    let pwChanged = false;
 
     if(data){
     if (data.username !== ''){
-      updatedData["id"] = data.id;
-      updatedData["username"] = data.username;
+      hasChanged = true;
+      updatedData.username = data.username;
+      updatedUser.username = data.username
     }
     if (data.mail !== ''){
-      updatedData["id"] = data.id;
-      updatedData["mail"] = data.mail;
+      hasChanged = true;
+      updatedData.mail = data.mail;
+      updatedUser.mail = data.mail;
     }
     if (data.password !== '' && data.oldPassword !== '' && data.password === data.confirmpassword ){
-      updatedData["id"] = data.id;
-      updatedData["password"] = data.password;
-      updatedData["oldPassword"] = data.oldPassword;
+      pwChanged = true;
+      updatedData.password = data.password;
+      updatedData.oldPassword = data.oldPassword;
     } else if (data.password !== '' && data.password !== data.confirmpassword) {
       const USER_UPDATE_ERROR_NOTIFICATION = {
         title: 'Update Error ',
@@ -71,13 +90,15 @@ class User extends Component {
       return
     }
 
-    if (updatedData !== {}) {
-      let requestData = {};
-      requestData["user"] = updatedData;
+    if (hasChanged || pwChanged) {
+
+      if(hasChanged){
+        this.setState({currentUser: updatedUser})
+      }
 
       AppDispatcher.dispatch({
-        type: 'users/start-edit-own-user',
-        data: requestData,
+        type: 'users/start-edit',
+        data: updatedData,
         token: this.state.token
       });
     } else {
@@ -100,35 +121,37 @@ class User extends Component {
 
 
   render() {
-
     return (
       <div>
         <h1>Your User Account</h1>
 
-        <form>
-          <Row>
-            <Col xs={3}>Username: </Col>
-            <Col xs={3}> {this.state.currentUser.username} </Col>
-          </Row>
+        {this.state.currentUser !== undefined && this.state.currentUser !== null ?
+
+          <form>
+            <Row>
+              <Col xs={3}>Username: </Col>
+              <Col xs={3}> {this.state.currentUser.username} </Col>
+            </Row>
 
 
-          <Row as={Col} >
-            <Col xs={3}>E-mail: </Col>
-            <Col xs={3}> {this.state.currentUser.mail} </Col>
-          </Row>
+            <Row as={Col}>
+              <Col xs={3}>E-mail: </Col>
+              <Col xs={3}> {this.state.currentUser.mail} </Col>
+            </Row>
 
-          <Row as={Col} >
-            <Col xs={3}>Role: </Col>
-            <Col xs={3}> {this.state.currentUser.role} </Col>
-          </Row>
+            <Row as={Col}>
+              <Col xs={3}>Role: </Col>
+              <Col xs={3}> {this.state.currentUser.role} </Col>
+            </Row>
 
 
-          <Button onClick={() => this.setState({ editModal: true })}><Icon icon='edit' /> Edit</Button>
+            <Button onClick={() => this.setState({editModal: true})}><Icon icon='edit'/> Edit</Button>
 
-          <EditOwnUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.currentUser} />
+            <EditOwnUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)}
+                               user={this.state.currentUser}/>
 
-        </form>
-
+          </form> : "Loading user data..."
+        }
       </div>
     );
   }

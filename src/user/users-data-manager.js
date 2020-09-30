@@ -38,35 +38,6 @@ class UsersDataManager extends RestDataManager {
       });
     });
   }
-
-  getCurrentUser(token, id) {
-    RestAPI.get(this.makeURL('/users/' + id), token).then(response => {
-      AppDispatcher.dispatch({
-        type: 'users/current-user',
-        currentUser: response.user
-      });
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: 'users/current-user-error',
-        error: error
-      });
-    });
-  }
-
-  updateCurrentUser(token, userUpdate){
-    RestAPI.put(this.makeURL('/users/' + userUpdate.user.id), userUpdate, token).then( response => {
-      AppDispatcher.dispatch({
-        type: 'users/current-user',
-        currentUser: response.user
-      });
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: 'users/current-user-error',
-        error: error
-      });
-    });
-  }
-
 }
 
 export default new UsersDataManager();

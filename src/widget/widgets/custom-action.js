@@ -18,7 +18,6 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import Icon from '../../common/icon';
-import LoginStore from '../../user/login-store';
 import ICStore from '../../ic/ic-store';
 import AppDispatcher from '../../common/app-dispatcher';
 
@@ -32,7 +31,7 @@ class WidgetCustomAction extends Component {
   }
 
   static getStores() {
-    return [ ICStore, LoginStore ];
+    return [ ICStore ];
   }
 
   static getDerivedStateFromProps(props, state){
@@ -42,7 +41,7 @@ class WidgetCustomAction extends Component {
 
     return{
       ic: ICStore.getState().find(s => s.id === props.icIDs[0]),
-      sessionToken: LoginStore.getState().token
+      sessionToken: localStorage.getItem("token")
     };
   }
 

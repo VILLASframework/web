@@ -19,7 +19,6 @@ import React from 'react';
 import { Container } from 'flux/utils';
 
 import AppDispatcher from '../common/app-dispatcher';
-import LoginStore from '../user/login-store';
 import ICDataStore from '../ic/ic-data-store';
 import ConfigsStore from '../componentconfig/config-store';
 import FileStore from '../file/file-store';
@@ -49,7 +48,7 @@ import '../styles/widgets.css';
 
 class Widget extends React.Component {
   static getStores() {
-    return [ ICDataStore, ConfigsStore, FileStore, LoginStore, SignalStore];
+    return [ ICDataStore, ConfigsStore, FileStore, SignalStore];
   }
 
   static calculateState(prevState, props) {
@@ -85,7 +84,7 @@ class Widget extends React.Component {
       signals: signals,
       icIDs: icIDs,
       files: FileStore.getState(),
-      sessionToken: LoginStore.getState().token
+      sessionToken: localStorage.getItem("token")
     };
   }
 

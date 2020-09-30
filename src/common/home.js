@@ -18,14 +18,11 @@
 import React from 'react';
 
 import config from '../config';
-import LoginStore from "../user/login-store";
 import {Redirect} from "react-router-dom";
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
-
-
 
     // create url for API documentation, distinguish between localhost and production deployment
     let docs_url = "";
@@ -39,8 +36,6 @@ class Home extends React.Component {
     }
 
     this.state = {
-      currentUser: LoginStore.getState().currentUser,
-      token: LoginStore.getState().token,
       docs_url: docs_url
     };
 

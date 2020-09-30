@@ -25,54 +25,31 @@ import LoginForm from './login-form';
 import Header from '../common/header';
 import Footer from '../common/footer';
 import NotificationsDataManager from '../common/data-managers/notifications-data-manager';
-
-import AppDispatcher from '../common/app-dispatcher';
-import LoginStore from './login-store';
+import LoginStore from './login-store'
 
 class Login extends Component {
-  static getStores() {
-    return [ LoginStore ];
+
+  static getStores(){
+    return [LoginStore]
   }
 
-  static calculateState() {
+  static calculateState(prevState, props) {
+    // We need to work with the login store here to trigger the re-render upon state change after login
+    // Upon successful login, the token and currentUser are stored in the local storage as strings
     return {
-      currentUser: LoginStore.getState().currentUser,
-      token: LoginStore.getState().token,
       loginMessage: LoginStore.getState().loginMessage,
-    };
+      token: LoginStore.getState().token,
+      currentUser: LoginStore.getState().currentUser,
+    }
   }
 
   componentDidMount() {
     NotificationsDataManager.setSystem(this.refs.notificationSystem);
   }
 
-  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-
-    // if token stored locally, request user
-    if (this.state.token == null) {
-      const token = localStorage.getItem('token');
-      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-      if (token != null && token !== '' && currentUser != null && this.state.currentUser == null) {
-        AppDispatcher.dispatch({
-          type: 'users/logged-in',
-          token: token,
-          currentUser: currentUser
-        });
-      }
-    } else {
-      // check if logged in
-      if (this.state.currentUser != null) {
-        // save login in local storage
-        localStorage.setItem('token', this.state.token);
-        localStorage.setItem('currentUser', JSON.stringify(this.state.currentUser));
-      }
-    }
-
-  }
-
   render() {
-    if (this.state.currentUser != null) {
+
+    if (this.state.currentUser !== null && this.state.currentUser !== "") {
       return (<Redirect to="/home" />);
     }
 

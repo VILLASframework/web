@@ -16,7 +16,6 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Container } from 'flux/utils';
 import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import NotificationSystem from 'react-notification-system';
@@ -25,9 +24,6 @@ import { Col } from 'react-bootstrap';
 import { Hidden } from 'react-grid-system'
 
 import AppDispatcher from './common/app-dispatcher';
-import ScenarioStore from './scenario/scenario-store';
-import ICStore from './ic/ic-store';
-import LoginStore from './user/login-store';
 import NotificationsDataManager from './common/data-managers/notifications-data-manager';
 
 import Home from './common/home';
@@ -47,29 +43,21 @@ import './styles/app.css';
 
 class App extends React.Component {
 
-  static getStores() {
-    return [ ICStore, LoginStore, ScenarioStore];
-  }
-
-  static calculateState(prevState) {
-
-    return {
-      ics: ICStore.getState(),
-      scenarios: ScenarioStore.getState(),
-      currentUser: LoginStore.getState().currentUser,
-      token: LoginStore.getState().token,
-
+  constructor(props) {
+    super(props);
+    this.state = {
       showSidebarMenu: false,
-    };
+    }
   }
 
   componentDidMount() {
     NotificationsDataManager.setSystem(this.refs.notificationSystem);
 
-    // if token stored locally, request user
+    // if token stored locally, we are already logged-in
     let token = localStorage.getItem("token");
-    let currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    if (token != null && token !== '' && currentUser != null) {
+    if (token != null && token !== '') {
+      let currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      console.log("Already logged-in")
       AppDispatcher.dispatch({
         type: 'users/logged-in',
         token: token,
@@ -89,12 +77,14 @@ class App extends React.Component {
   render() {
 
     let token = localStorage.getItem("token");
-    let currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    let currentUserRaw = localStorage.getItem("currentUser");
 
-    if (token == null || currentUser == null) {
+    if (token == null || token === "" || currentUserRaw == null || currentUserRaw === "") {
       console.log("APP redirecting to logout/ login")
       return (<Redirect to="/logout" />);
     }
+
+    let currentUser = JSON.parse(currentUserRaw);
 
     return (
       <DndProvider backend={HTML5Backend} >
@@ -138,6 +128,5 @@ class App extends React.Component {
   }
 }
 
-let fluxContainerConverter = require('./common/FluxContainerConverter');
-export default Container.create(fluxContainerConverter.convert(App));
-//DragDropContext(HTML5Backend)(Container.create(App));
+
+export default App

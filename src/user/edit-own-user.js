@@ -19,7 +19,6 @@ import React from 'react';
 import {FormGroup, FormControl, FormLabel, Col} from 'react-bootstrap';
 
 import Dialog from '../common/dialogs/dialog';
-//import LoginStore from './login-store';
 
 
 class EditOwnUserDialog extends React.Component {

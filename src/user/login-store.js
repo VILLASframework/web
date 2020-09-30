@@ -31,7 +31,6 @@ class LoginStore extends ReduceStore {
       currentUser: null,
       token: null,
       loginMessage: null,
-      scenarioUsers: null
     };
   }
 
@@ -47,30 +46,15 @@ class LoginStore extends ReduceStore {
         //remove token and current user from local storage
         localStorage.clear();
 
-        // delete user and token
-        return Object.assign({}, state, { token: null, currentUser: null });
+        // delete user, token and loginMessage
+        return Object.assign({}, state, { token: null, currentUser: null, loginMessage: null});
 
       case 'users/logged-in':
-        // // request logged-in user data
-        UsersDataManager.getCurrentUser(action.token, action.currentUser.id);
+        // save login in local storage
+        localStorage.setItem('token', action.token);
+        localStorage.setItem('currentUser', JSON.stringify(action.currentUser));
+
         return Object.assign({}, state, { token: action.token, currentUser: action.currentUser});
-
-      case 'users/current-user':
-      //  // save logged-in user
-        return Object.assign({}, state, { currentUser: action.currentUser});
-
-      case 'users/start-edit-own-user':
-        // update the current user
-        UsersDataManager.updateCurrentUser(action.token, action.data);
-        return Object.assign({}, state, { token: action.token, currentUser: action.data});
-
-      case 'users/reload-current-user':
-        UsersDataManager.getCurrentUser(action.token, action.currentUser.id);
-        return  Object.assign({}, state, { token: action.token, currentUser: action.currentUser});
-
-      case 'users/current-user-error':
-        // discard user token
-        return Object.assign({}, state, { currentUser: null, token: null });
 
       case 'users/login-error':
         if (action.error && !action.error.handled) {
