@@ -229,28 +229,57 @@ class InfrastructureComponents extends Component {
     }
 
     switch (state) {
-      case 'running':
-        style.push('badge-success');
-        break;
-
-      case 'paused':
-        style.push('badge-info');
-        break;
-
-      case 'idle':
-        style.push('badge-primary');
-        break;
-
       case 'error':
         style.push('badge-danger');
         break;
-
+      case 'idle':
+        style.push('badge-primary');
+        break;
+      case 'starting':
+        style.push('badge-info');
+        break;
+      case 'running':
+        style.push('badge-success');
+        break;
+      case 'pausing':
+        style.push('badge-info');
+        break;
+      case 'paused':
+        style.push('badge-info');
+        break;
+      case 'resuming':
+        style.push('badge-warning');
+        break;
+      case 'stopping':
+        style.push('badge-warning');
+        break;
+      case 'resetting':
+        style.push('badge-warning');
+        break;
+      case 'shuttingdown':
+        style.push('badge-warning');
+        break;
       case 'shutdown':
         style.push('badge-warning');
         break;
 
       default:
         style.push('badge-default');
+
+
+        /* Possible states of ICs
+        *   'error':        ['resetting', 'error'],
+            'idle':         ['resetting', 'error', 'idle', 'starting', 'shuttingdown'],
+            'starting':     ['resetting', 'error', 'running'],
+            'running':      ['resetting', 'error', 'pausing', 'stopping'],
+            'pausing':      ['resetting', 'error', 'paused'],
+            'paused':       ['resetting', 'error', 'resuming', 'stopping'],
+            'resuming':     ['resetting', 'error', 'running'],
+            'stopping':     ['resetting', 'error', 'idle'],
+            'resetting':    ['resetting', 'error', 'idle'],
+            'shuttingdown': ['shutdown', 'error'],
+            'shutdown':     ['starting', 'error']
+        * */
     }
 
     return style.join(' ')
