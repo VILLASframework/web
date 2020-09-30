@@ -90,7 +90,7 @@ class InfrastructureComponents extends Component {
     });
 
     // Start timer for periodic refresh
-    this.timer = window.setInterval(() => this.refresh(), 1000);
+    this.timer = window.setInterval(() => this.refresh(), 10000);
   }
 
   componentWillUnmount() {
