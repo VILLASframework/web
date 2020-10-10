@@ -17,7 +17,7 @@
 
 import React, { Component } from 'react';
 import { Form, Button, FormGroup, FormControl, FormLabel, Col } from 'react-bootstrap';
-
+import RecoverPassword from './recover-password'
 import AppDispatcher from '../common/app-dispatcher';
 
 class LoginForm extends Component {
@@ -27,6 +27,7 @@ class LoginForm extends Component {
     this.state = {
       username: '',
       password: '',
+      forgottenPassword: false,
       disableLogin: true
     }
   }
@@ -53,6 +54,14 @@ class LoginForm extends Component {
     }
 
     this.setState({ [event.target.id]: event.target.value, disableLogin });
+  }
+
+  openRecoverPassword(){
+    this.setState({forgottenPassword: true});
+  }
+
+  closeRecoverPassword(){
+    this.setState({forgottenPassword: false});
   }
 
   render() {
@@ -83,10 +92,14 @@ class LoginForm extends Component {
         <FormGroup style={{paddingTop: 15, paddingBottom: 5}}>
           <Col>
             <Button style={{width: 90}} type="submit" disabled={this.state.disableLogin} onClick={e => this.login(e)}>Login</Button>
+            <Button variant="link" size="sm" style={{marginLeft: 85}} onClick={() => this.openRecoverPassword()}>Forgot your password?</Button>
           </Col>
         </FormGroup>
+        
+        <RecoverPassword show={this.state.forgottenPassword} onClose={() => this.closeRecoverPassword()} sessionToken={this.props.sessionToken} />
 
       </Form>
+      
     );
   }
 }
