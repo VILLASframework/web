@@ -303,7 +303,8 @@ class Scenario extends React.Component {
     this.setState({ selectedConfigs: selectedConfigs });
   }
 
-  runAction(action) {
+  runAction(action, delay) {
+    // delay in seconds
 
     if(action.data.action === 'none'){
       console.warn("No command selected. Nothing was sent.");
@@ -326,6 +327,11 @@ class Scenario extends React.Component {
       if (action.data.action === 'start') {
         action.data.parameters = this.state.configs[index].startParameters;
       }
+
+      // Unix time stamp + delay
+      action.data.when = Date.now() / 1000.0 + delay
+
+      console.log("Sending action: ", action.data)
 
       AppDispatcher.dispatch({
         type: 'ics/start-action',
@@ -597,7 +603,7 @@ class Scenario extends React.Component {
       <div style={{ float: 'left' }}>
         <ICAction
           runDisabled={this.state.selectedConfigs.length === 0}
-          runAction={(action) => this.runAction(action)}
+          runAction={(action, delay) => this.runAction(action, delay)}
           actions={[
             { id: '-1', title: 'Select command', data: { action: 'none' } },
             { id: '0', title: 'Start', data: { action: 'start' } },

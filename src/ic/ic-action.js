@@ -16,14 +16,16 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Button, ButtonToolbar, DropdownButton, Dropdown, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Button, ButtonToolbar, DropdownButton, Dropdown } from 'react-bootstrap';
+import TimePicker from 'react-bootstrap-time-picker'
 
 class ICAction extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            selectedAction: null
+            selectedAction: null,
+            selectedDelay: 0
         };
     }
 
@@ -47,9 +49,15 @@ class ICAction extends React.Component {
         }
     };
 
+    setDelayForAction = time => {
+      // time in int format: (hours * 3600 + minutes * 60 + seconds)
+      this.setState({selectedDelay: time})
+    }
+
     render() {
-      let showTooltip = this.state.selectedAction.id === '-1';
-          
+
+      let sendCommandDisabled = this.props.runDisabled || this.state.selectedAction == null || this.state.selectedAction.id === "-1"
+
         const actionList = this.props.actions.map(action => (
             <Dropdown.Item key={action.id} eventKey={action.id} active={this.state.selectedAction === action.id}>
                 {action.title}
@@ -57,25 +65,24 @@ class ICAction extends React.Component {
         ));
 
         return <div>
-        {showTooltip ? 
-          <ButtonToolbar>
-            <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"select"}`}> Select command for infrastructure component </Tooltip>} >
-              <DropdownButton title={this.state.selectedAction != null ? this.state.selectedAction.title : ''} id="action-dropdown" onSelect={this.setAction}>
-                {actionList}
-              </DropdownButton>
-            </OverlayTrigger>
-            <OverlayTrigger key={1} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"send"}`}> Send command to infrastructure component </Tooltip>} >
-              <Button style={{ marginLeft: '5px' }} disabled={this.props.runDisabled} onClick={() => this.props.runAction(this.state.selectedAction)}>Send command</Button>
-            </OverlayTrigger>
-          </ButtonToolbar>
-          :
+          {"Select delay for command execution (Format hh:mm, max 1h):"}
+          <TimePicker
+            format={24}
+            initialValue={this.state.selectedDelay}
+            value={this.state.selectedDelay}
+            start={"00:00"}
+            end={"01:00"}
+            step={1}
+            onChange={this.setDelayForAction}
+          />
           <ButtonToolbar>
             <DropdownButton title={this.state.selectedAction != null ? this.state.selectedAction.title : ''} id="action-dropdown" onSelect={this.setAction}>
               {actionList}
             </DropdownButton>
-            <Button style={{ marginLeft: '5px' }} disabled={this.props.runDisabled} onClick={() => this.props.runAction(this.state.selectedAction)}>Send command</Button>
+
+            <Button style={{ marginLeft: '5px' }} disabled={sendCommandDisabled} onClick={() => this.props.runAction(this.state.selectedAction, this.state.selectedDelay)}>Send command</Button>
+
           </ButtonToolbar>
-        }
         </div>;
     }
 }
