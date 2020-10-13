@@ -333,7 +333,12 @@ class InfrastructureComponents extends Component {
             <ICAction
               runDisabled={this.state.selectedICs.length === 0}
               runAction={this.runAction}
-              actions={[{ id: '0', title: 'Reset', data: { action: 'reset' } }, { id: '1', title: 'Shutdown', data: { action: 'shutdown' } }]} />
+              actions={[
+                { id: '-1', title: 'Select command', data: { action: 'none' } },
+                { id: '0', title: 'Reset', data: { action: 'reset' } },
+                { id: '1', title: 'Shutdown', data: { action: 'shutdown' } },
+                ]}
+            />
           </div>
           :
           <div> </div>
