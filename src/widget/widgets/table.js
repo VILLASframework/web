@@ -45,7 +45,6 @@ class WidgetTable extends Component {
           if (sig.direction === "out") {
             if (props.data[icID] != null && props.data[icID].output != null && props.data[icID].output.values != null) {
               if (props.data[icID].output.values[sig.index-1] !== undefined) {
-                console.log("Table: sig", sig)
                 let data = props.data[icID].output.values[sig.index-1];
                 rows.push({
                   name: sig.name,

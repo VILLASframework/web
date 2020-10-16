@@ -33,7 +33,7 @@ class EditWidgetColorZonesControl extends React.Component {
         }
       },
       selectedZone: null,
-      selectedIndex: 0,
+      selectedIndex: null,
       showColorPicker: false,
       originalColor: null,
       minValue: 0,
@@ -61,22 +61,28 @@ class EditWidgetColorZonesControl extends React.Component {
     }
     }
 
-    this.setState({ widget });
+    this.setState({ widget, selectedZone: null, selectedIndex: null });
 
     this.sendEvent(widget);
   }
 
   removeZones = () => {
-    // remove zones
-    const widget = this.state.widget;
+    
+    let temp = this.state.widget;
 
-    /*this.state.selectedZones.forEach(row => {
-      widget.customProperties.zones.splice(row, 1);
-    });
+    temp.customProperties.zones.splice(this.state.selectedIndex, 1);
 
-    this.setState({ selectedZones: [], widget });*/
+    if(temp.customProperties.zones.length > 0){      
+      let length = temp.customProperties.zones.length
+  
+      for(let i= 0 ; i < length; i++){
+      temp.customProperties.zones[i].min = i* 100/length;
+      temp.customProperties.zones[i].max = (i+1)* 100/length;
+      }
+      }
 
-    this.sendEvent(widget);
+    this.setState({widget: temp,selectedZone: null, selectedIndex: null});
+
   }
 
   changeCell = (event, row, column) => {
@@ -97,8 +103,12 @@ class EditWidgetColorZonesControl extends React.Component {
   }
 
   editColorZone = (index) => {
+    if(this.state.selectedIndex !== index){
     this.setState({selectedZone: this.state.widget.customProperties.zones[index], selectedIndex: index , minValue: this.state.widget.customProperties.zones[index].min, maxValue: this.state.widget.customProperties.zones[index].max});
-
+    }
+    else{
+      this.setState({selectedZone: null, selectedIndex: null});
+    }
   }
 
   openColorPicker = () =>{
@@ -119,8 +129,35 @@ class EditWidgetColorZonesControl extends React.Component {
     }
   }
 
-  handleMinMaxChange = () => {
-  }
+  handleMinChange = (e) => {
+
+    if(e.target.value < 0) return;
+    this.setState({minValue: e.target.value});
+
+    let temp = this.state.widget;
+    temp.customProperties.zones[this.state.selectedIndex]['min'] = e.target.value;
+
+    if(this.state.selectedIndex !== 0){
+      temp.customProperties.zones[this.state.selectedIndex - 1]['max'] = e.target.value
+    }
+
+    this.setState({ widget: temp });
+   }
+
+  handleMaxChange = (e) => {
+
+    if(e.target.value > 100) return;
+    this.setState({maxValue: e.target.value});
+
+    let temp = this.state.widget;
+    temp.customProperties.zones[this.state.selectedIndex]['max'] = e.target.value;
+
+    if(this.state.selectedIndex !== this.state.widget.customProperties.zones.length -1){
+      temp.customProperties.zones[this.state.selectedIndex + 1]['min'] = e.target.value
+    }
+    
+    this.setState({ widget: temp });
+    }
 
   sendEvent(widget) {
     // create event
@@ -194,7 +231,7 @@ class EditWidgetColorZonesControl extends React.Component {
                 step="any"
                 placeholder="Min"
                 value={this.state.minValue}
-                onChange={e => this.handleMinMaxChange(e)} />
+                onChange={e => this.handleMinChange(e)} />
             </td>
             <td>
               Max:
@@ -203,11 +240,12 @@ class EditWidgetColorZonesControl extends React.Component {
                 step="any"
                 placeholder="Max"
                 value={ this.state.maxValue}
-                onChange={e => this.handleMinMaxChange(e)} />
+                onChange={e => this.handleMaxChange(e)} />
             </td>
           </tr>
         </tbody>
       </Table>
+      <Button  onClick={this.removeZones}><Icon size='xs' icon="trash-alt" /></Button>
       </Collapse>
       
       <ColorPicker show={this.state.showColorPicker} onClose={(data) => this.closeEditModal(data)} widget={this.state.widget} zoneIndex={this.state.selectedIndex} controlId={'strokeStyle'} />
