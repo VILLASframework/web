@@ -17,8 +17,6 @@
 
 import React, { Component } from 'react';
 
-import EditWidgetColorControl from '../edit-widget/edit-widget-color-control';
-
 class WidgetLine extends Component {
   // WidgetLine is newly created when widget props are changed and saved
   constructor(props)  {
@@ -45,7 +43,7 @@ class WidgetLine extends Component {
     // or from the state (widget in edit mode)
     let width = this.props.widget.width;
     let height = this.props.widget.height;
-    
+
     if (this.state.editing) {
       width = this.state.width;
       height = this.state.height;
@@ -83,7 +81,7 @@ class WidgetLine extends Component {
 
 
     const lineStyle = {
-        stroke: EditWidgetColorControl.ColorPalette[this.props.widget.customProperties.border_color],
+        stroke: '' +  this.props.widget.customProperties.border_color,
         strokeWidth: '' + this.props.widget.customProperties.border_width + 'px'
     };
 

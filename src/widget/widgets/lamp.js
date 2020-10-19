@@ -17,7 +17,6 @@
 
 import React, { Component } from 'react';
 
-import EditWidgetColorControl from '../edit-widget/edit-widget-color-control';
 
 class WidgetLamp extends Component {
   constructor(props) {
@@ -61,16 +60,21 @@ class WidgetLamp extends Component {
 
   render() {
 
-    let colors = EditWidgetColorControl.ColorPalette;
     let color;
+    let opacity;
 
-    if (Number(this.state.value) > Number(this.props.widget.customProperties.threshold))
-      color = colors[this.props.widget.customProperties.on_color];
-    else
-      color = colors[this.props.widget.customProperties.off_color];
+    if (Number(this.state.value) > Number(this.props.widget.customProperties.threshold)){
+      color = this.props.widget.customProperties.on_color;
+      opacity = this.props.widget.customProperties.on_color_opacity;
+    }
+    else{
+      color = this.props.widget.customProperties.off_color;
+      opacity = this.props.widget.customProperties.off_color_opacity;
+    }
 
     let style = {
       backgroundColor: color,
+      opacity: opacity
     }
 
     return (

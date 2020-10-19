@@ -16,31 +16,21 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, Col, Row, FormCheck, FormLabel } from 'react-bootstrap';
-import classNames from 'classnames';
-import { scaleOrdinal } from 'd3-scale';
-import {schemeCategory10} from 'd3-scale-chromatic'
+import { FormGroup, OverlayTrigger, Tooltip , FormLabel, Button } from 'react-bootstrap';
+import ColorPicker from './color-picker'
+import Icon from "../../common/icon";
+
 // schemeCategory20 no longer available in d3
 
 class EditWidgetColorControl extends Component {
-
-  static get ColorPalette() {
-    let colorCount = 0;
-    const colors = [];
-    const colorScale = scaleOrdinal(schemeCategory10);
-    while (colorCount < 10) { colors.push(colorScale(colorCount)); colorCount++; }
-    colors.unshift('#000', '#FFF'); // include black and white
-
-    return colors;
-  }
 
   constructor(props) {
     super(props);
 
     this.state = {
-      widget: {
-
-      }
+      widget: {},
+      showColorPicker: false,
+      originalColor: null
     };
   }
 
@@ -50,47 +40,69 @@ class EditWidgetColorControl extends Component {
     };
   }
 
-  render() {
-
+  openColorPicker = () =>{
     let parts = this.props.controlId.split('.');
     let isCustomProperty = true;
     if (parts.length === 1){
       isCustomProperty = false;
     }
+    let color = (isCustomProperty ? this.props.widget[parts[0]][parts[1]] : this.props.widget[this.props.controlId]);
+
+    this.setState({showColorPicker: true, originalColor: color});
+  }
+
+  closeEditModal = (data) => {
+    this.setState({showColorPicker: false})
+    if(typeof data === 'undefined'){
+      let parts = this.props.controlId.split('.');
+      let isCustomProperty = true;
+      if (parts.length === 1) {
+        isCustomProperty = false;
+      }
+
+      let temp = this.state.widget;
+      isCustomProperty ? temp[parts[0]][parts[1]] = this.state.originalColor : temp[this.props.controlId] = this.state.originalColor;
+      this.setState({ widget: temp });
+    }
+  }
+
+  render() {
+    let parts = this.props.controlId.split('.');
+    let isCustomProperty = true;
+    if (parts.length === 1){
+      isCustomProperty = false;
+    }
+    let color = (isCustomProperty ? this.props.widget[parts[0]][parts[1]] : this.props.widget[this.props.controlId]);
+    let opacity = (isCustomProperty ? this.props.widget[parts[0]][parts[1] + "_opacity"] : this.props.widget[this.props.controlId + "_opacity"]);
+    let style = {
+      backgroundColor: color,
+      opacity: opacity,
+      width: '260px', 
+      height: '40px'
+    }
+
+    let tooltipText = "Change color and opacity";
+    if(this.state.widget.type === "Box" && parts[1] === "border_color"){
+      tooltipText = "Change border color";
+    }
+
+   
     return (
-      <FormGroup bsclass="color-control">
-        <Row>
-          <Col className={FormLabel} style={{whiteSpace: 'nowrap' }} sm={3}>
-            { this.props.label }
-          </Col>
-          <Col sm={10} bsclass='colors-column'>
-          {
-            EditWidgetColorControl.ColorPalette.map( (color, idx ) => {
-                let colorStyle = {
-                  background: color,
-                  borderColor: color
-                };
+      <FormGroup>
+        <FormLabel>{this.props.label}</FormLabel>
 
-                let checkedClass = classNames({
-                  'checked': idx === (isCustomProperty ? this.state.widget[parts[0]][parts[1]] : this.state.widget[this.props.controlId])
-                });
+        <div className='section-buttons-group-right'>
+        <OverlayTrigger key={0} placement={'right'} overlay={<Tooltip id={`tooltip-${"color"}`}> {tooltipText} </Tooltip>} >
+        <Button key={2} style={style} onClick={this.openColorPicker.bind(this)}  >
+          <Icon icon="paint-brush"/>
+        </Button>
+        </OverlayTrigger>
+        </div>
 
-                return (<FormCheck
-                  type='radio'
-                  key={idx}
-                  name={this.props.label}
-                  style={colorStyle}
-                  className={checkedClass}
-                  value={idx}
-                  inline
-                  defaultChecked={isCustomProperty ? this.state.widget[parts[0]][parts[1]] ===idx: this.state.widget[this.props.controlId] === idx}
-                  onChange={(e) => this.props.handleChange({target: { id: this.props.controlId, value: idx}})} />)
-              }
-            )
-          }
-          </Col>
-        </Row>
-      </FormGroup> )
+        <ColorPicker show={this.state.showColorPicker} onClose={(data) => this.closeEditModal(data)} widget={this.state.widget} controlId={this.props.controlId} />
+      </FormGroup>
+
+    )
   }
 }
 

@@ -17,13 +17,13 @@
 
 import React, { Component } from 'react';
 
-import EditWidgetColorControl from '../edit-widget/edit-widget-color-control';
 
 class WidgetLabel extends Component {
   render() {
       const style = {
       fontSize: this.props.widget.customProperties.textSize + 'px',
-      color: EditWidgetColorControl.ColorPalette[this.props.widget.customProperties.fontColor]
+      color: this.props.widget.customProperties.fontColor,
+      opacity: this.props.widget.customProperties.fontColor_opacity,
     };
 
     return (

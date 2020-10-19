@@ -16,12 +16,11 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormLabel, Button } from 'react-bootstrap';
-
+import { FormGroup, FormControl, Table, FormLabel, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import ColorPicker from './color-picker'
 
 import Icon from '../../common/icon';
-import Table from '../../common/table';
-import TableColumn from '../../common/table-column';
+import {Collapse} from 'react-collapse';
 
 class EditWidgetColorZonesControl extends React.Component {
   constructor(props) {
@@ -33,7 +32,12 @@ class EditWidgetColorZonesControl extends React.Component {
         zones: []
         }
       },
-      selectedZones: []
+      selectedZone: null,
+      selectedIndex: null,
+      showColorPicker: false,
+      originalColor: null,
+      minValue: 0,
+      maxValue: 100
     };
   }
 
@@ -46,24 +50,39 @@ class EditWidgetColorZonesControl extends React.Component {
   addZone = () => {
     // add row
     const widget = this.state.widget;
-    widget.customProperties.zones.push({ strokeStyle: 'ffffff', min: 0, max: 100 });
+    widget.customProperties.zones.push({ strokeStyle: '#d3cbcb', min: 0, max: 100 });
+    
+    if(widget.customProperties.zones.length > 0){      
+    let length = widget.customProperties.zones.length
 
-    this.setState({ widget });
+    for(let i= 0 ; i < length; i++){
+    widget.customProperties.zones[i].min = i* 100/length;
+    widget.customProperties.zones[i].max = (i+1)* 100/length;
+    }
+    }
+
+    this.setState({ widget, selectedZone: null, selectedIndex: null });
 
     this.sendEvent(widget);
   }
 
   removeZones = () => {
-    // remove zones
-    const widget = this.state.widget;
+    
+    let temp = this.state.widget;
 
-    this.state.selectedZones.forEach(row => {
-      widget.customProperties.zones.splice(row, 1);
-    });
+    temp.customProperties.zones.splice(this.state.selectedIndex, 1);
 
-    this.setState({ selectedZones: [], widget });
+    if(temp.customProperties.zones.length > 0){      
+      let length = temp.customProperties.zones.length
+  
+      for(let i= 0 ; i < length; i++){
+      temp.customProperties.zones[i].min = i* 100/length;
+      temp.customProperties.zones[i].max = (i+1)* 100/length;
+      }
+      }
 
-    this.sendEvent(widget);
+    this.setState({widget: temp,selectedZone: null, selectedIndex: null});
+
   }
 
   changeCell = (event, row, column) => {
@@ -83,6 +102,63 @@ class EditWidgetColorZonesControl extends React.Component {
     this.sendEvent(widget);
   }
 
+  editColorZone = (index) => {
+    if(this.state.selectedIndex !== index){
+    this.setState({selectedZone: this.state.widget.customProperties.zones[index], selectedIndex: index , minValue: this.state.widget.customProperties.zones[index].min, maxValue: this.state.widget.customProperties.zones[index].max});
+    }
+    else{
+      this.setState({selectedZone: null, selectedIndex: null});
+    }
+  }
+
+  openColorPicker = () =>{
+    
+    let color = this.state.selectedZone.strokeStyle;
+
+    this.setState({showColorPicker: true, originalColor: color});
+  }
+
+  closeEditModal = (data) => {
+    this.setState({showColorPicker: false})
+    if(typeof data === 'undefined'){
+
+      let temp = this.state.selectedZone;
+      temp.strokeStyle = this.state.originalColor;
+      
+      this.setState({ selectedZone : temp });
+    }
+  }
+
+  handleMinChange = (e) => {
+
+    if(e.target.value < 0) return;
+    this.setState({minValue: e.target.value});
+
+    let temp = this.state.widget;
+    temp.customProperties.zones[this.state.selectedIndex]['min'] = e.target.value;
+
+    if(this.state.selectedIndex !== 0){
+      temp.customProperties.zones[this.state.selectedIndex - 1]['max'] = e.target.value
+    }
+
+    this.setState({ widget: temp });
+   }
+
+  handleMaxChange = (e) => {
+
+    if(e.target.value > 100) return;
+    this.setState({maxValue: e.target.value});
+
+    let temp = this.state.widget;
+    temp.customProperties.zones[this.state.selectedIndex]['max'] = e.target.value;
+
+    if(this.state.selectedIndex !== this.state.widget.customProperties.zones.length -1){
+      temp.customProperties.zones[this.state.selectedIndex + 1]['min'] = e.target.value
+    }
+    
+    this.setState({ widget: temp });
+    }
+
   sendEvent(widget) {
     // create event
     const event = {
@@ -95,37 +171,84 @@ class EditWidgetColorZonesControl extends React.Component {
     this.props.handleChange(event);
   }
 
-  checkedCell = (row, event) => {
-    // update selected rows
-    const selectedZones = this.state.selectedZones;
-
-    if (event.target.checked) {
-      if (selectedZones.indexOf(row) === -1) {
-        selectedZones.push(row);
-      }
-    } else {
-      let index = selectedZones.indexOf(row);
-      if (row > -1) {
-        selectedZones.splice(index, 1);
-      }
-    }
-
-    this.setState({ selectedZones });
-  }
+  
 
   render() {
+
+
+    let tempColor = 'FFFFFF';
+    let collapse = false;
+    if(this.state.selectedZone !== null){
+      collapse = true;
+      tempColor = this.state.selectedZone.strokeStyle;
+    }
+
+    let pickerStyle = {
+      backgroundColor: tempColor,
+      width: '260px', 
+      height: '40px',
+      marginTop: '20px'
+    }
+    
     return <FormGroup>
       <FormLabel>Color zones</FormLabel>
+      <Button  onClick={this.addZone} style={{marginBottom: '10px', marginLeft: '120px'}} disabled={!this.props.widget.customProperties.colorZones}><Icon size='xs' icon="plus" /></Button>
 
-      <Table data={this.state.widget.customProperties.zones}>
-        <TableColumn width="20" checkbox onChecked={this.checkedCell} />
-        <TableColumn title="Color" dataKey="strokeStyle" inlineEditable onInlineChange={this.changeCell}  />
-        <TableColumn title="Minimum" dataKey="min" inlineEditable onInlineChange={this.changeCell} />
-        <TableColumn title="Maximum" dataKey="max" inlineEditable onInlineChange={this.changeCell} />
+    <div>
+      {
+          this.state.widget.customProperties.zones.map((zone, idx) => {
+            let color = zone.strokeStyle;
+            let width = (zone.max - zone.min)*(260/100);
+            let style = {
+              backgroundColor: color,
+              width: width,
+              height: '40px'
+            }
+            
+
+
+            return (<Button
+              style={style} key={idx} onClick={i => this.editColorZone(idx)} disabled={!this.props.widget.customProperties.colorZones}><Icon icon="pen" /></Button>
+            )
+          }
+          )
+
+      }
+      </div>
+      <Collapse isOpened={collapse} >
+      <OverlayTrigger key={0} placement={'right'} overlay={<Tooltip id={`tooltip-${"color"}`}>Change color</Tooltip>} >
+        <Button key={0} style={pickerStyle} onClick={this.openColorPicker.bind(this)}  >
+          <Icon icon="paint-brush"/>
+        </Button>
+        </OverlayTrigger>
+        <Table>
+        <tbody>
+          <tr>
+            <td>
+              Min:
+              <FormControl
+                type="number"
+                step="any"
+                placeholder="Min"
+                value={this.state.minValue}
+                onChange={e => this.handleMinChange(e)} />
+            </td>
+            <td>
+              Max:
+              <FormControl
+                type="number"
+                step="any"
+                placeholder="Max"
+                value={ this.state.maxValue}
+                onChange={e => this.handleMaxChange(e)} />
+            </td>
+          </tr>
+        </tbody>
       </Table>
-
-      <Button onClick={this.addZone} disabled={!this.props.widget.customProperties.colorZones}><Icon icon="plus" /> Add</Button>
-      <Button onClick={this.removeZones} disabled={!this.props.widget.customProperties.colorZones}><Icon icon="minus" /> Remove</Button>
+      <Button  onClick={this.removeZones}><Icon size='xs' icon="trash-alt" /></Button>
+      </Collapse>
+      
+      <ColorPicker show={this.state.showColorPicker} onClose={(data) => this.closeEditModal(data)} widget={this.state.widget} zoneIndex={this.state.selectedIndex} controlId={'strokeStyle'} />
     </FormGroup>;
   }
 }

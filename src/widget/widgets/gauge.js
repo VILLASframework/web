@@ -219,7 +219,7 @@ class WidgetGauge extends Component {
       const step = (maxValue - minValue) / 100;
 
       zones = zones.map(zone => {
-        return Object.assign({}, zone, { min: (zone.min * step) + +minValue, max: zone.max * step + +minValue, strokeStyle: '#' + zone.strokeStyle });
+        return Object.assign({}, zone, { min: (zone.min * step) + +minValue, max: zone.max * step + +minValue, strokeStyle: zone.strokeStyle });
       });
     }
 
