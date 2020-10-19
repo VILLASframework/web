@@ -47,9 +47,20 @@ class EditSignalMapping extends React.Component {
   static getDerivedStateFromProps(props, state){
 
     // filter all signals by configID and direction
-    let signals = props.signals.filter((sig) => {
+    let signals = [];
+    if(props.signalID != null || typeof props.configs === "undefined"){
+    signals = props.signals.filter((sig) => {
       return (sig.configID === props.configID) && (sig.direction === state.dir);
     });
+  }
+  else{
+    for(let i = 0; i < props.configs.length; i++){
+      let temp = props.signals.filter((sig) => {
+        return (sig.configID === props.configs[i].id) && (sig.direction === state.dir);
+      })
+      signals = signals.concat(temp);
+    }
+  }
 
     return {
       signals: signals,

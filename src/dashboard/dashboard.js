@@ -22,7 +22,8 @@ import classNames from 'classnames';
 
 import Widget from '../widget/widget';
 import EditWidget from '../widget/edit-widget/edit-widget';
-import EditFiles from '../file/edit-files'
+import EditFiles from '../file/edit-files';
+import EditSignalMapping from "../signal/edit-signal-mapping";
 import WidgetContextMenu from '../widget/widget-context-menu';
 import WidgetToolbox from '../widget/widget-toolbox';
 import WidgetArea from '../widget/widget-area';
@@ -76,12 +77,11 @@ class Dashboard extends Component {
 
 
     // filter component configurations to the ones that belong to this scenario
-    let configs = []
-    let files = []
+    let configs = [];
+    let files = [];
     if (dashboard !== undefined) {
       configs = ConfigStore.getState().filter(config => config.scenarioID === dashboard.scenarioID);
       files = FileStore.getState().filter(file => file.scenarioID === dashboard.scenarioID);
-
       if(dashboard.height === 0){
         dashboard.height = 400;
       }
@@ -131,6 +131,8 @@ class Dashboard extends Component {
       paused: prevState.paused || false,
 
       editModal:  prevState.editModal || false,
+      editOutputSignalsModal: prevState.editOutputSignals || false,
+      editInputSignalsModal: prevState.editInputSignals || false,
       filesEditModal: prevState.filesEditModal || false,
       filesEditSaveState: prevState.filesEditSaveState || [],
       modalData:  null,
@@ -429,6 +431,22 @@ class Dashboard extends Component {
     this.setState({ paused: false });
   };
 
+  editInputSignals(){
+    this.setState({editInputSignalsModal: true});
+  };
+
+  editOutputSignals(){
+    this.setState({editOutputSignalsModal: true});
+  };
+
+  closeEditSignalsModal(direction){
+    if( direction === "in") {
+      this.setState({editInputSignalsModal: false});
+    } else if( direction === "out"){
+      this.setState({editOutputSignalsModal: false});
+    }
+  }
+
 
   render() {
     if (this.state.dashboard === undefined){
@@ -456,6 +474,8 @@ class Dashboard extends Component {
           onPause={this.pauseData.bind(this)}
           onUnpause={this.unpauseData.bind(this)}
           onEditFiles = {this.startEditFiles.bind(this)}
+          onEditOutputSignals = {this.editOutputSignals.bind(this)}
+          onEditInputSignals = {this.editInputSignals.bind(this)}
         />
       </div>
 
@@ -519,6 +539,25 @@ class Dashboard extends Component {
           signals={this.state.signals}
           files={this.state.files}
           scenarioID={this.state.dashboard.scenarioID}
+        />
+
+        <EditSignalMapping
+          show={this.state.editOutputSignalsModal}
+          onCloseEdit={(direction) => this.closeEditSignalsModal(direction)}
+          direction="Output"
+          signals={this.state.signals}
+          configID={null}
+          configs={this.state.configs}
+          sessionToken={this.state.sessionToken}
+        />
+        <EditSignalMapping
+          show={this.state.editInputSignalsModal}
+          onCloseEdit={(direction) => this.closeEditSignalsModal(direction)}
+          direction="Input"
+          signals={this.state.signals}
+          configID={null}
+          configs={this.state.configs}
+          sessionToken={this.state.sessionToken}
         />
 
 

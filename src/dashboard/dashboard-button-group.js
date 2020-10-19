@@ -92,6 +92,22 @@ class DashboardButtonGroup extends React.Component {
       );
 
       buttons.push(
+        <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete input signal </Tooltip>} >
+        <Button key={key} variant= 'light' size="lg" onClick={this.props.onEditInputSignals} style={buttonStyle}>
+          <Icon icon="sign-in-alt" style={iconStyle}/>
+        </Button>
+        </OverlayTrigger>
+      );
+
+      buttons.push(
+        <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete output signals </Tooltip>} >
+        <Button key={key} variant= 'light' size="lg" onClick={this.props.onEditOutputSignals} style={buttonStyle}>
+          <Icon icon="sign-out-alt" style={iconStyle}/>
+        </Button>
+        </OverlayTrigger>
+      );
+
+      buttons.push(
         <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"layout"}`}> Add widgets and edit layout </Tooltip>} >
         <Button key={key} variant= 'light' size="lg" onClick={this.props.onEdit} style={buttonStyle}>
           <Icon icon="pen" style={iconStyle} /> 
