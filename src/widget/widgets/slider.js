@@ -99,7 +99,7 @@ class WidgetSlider extends Component {
 
   valueIsChanging(newValue) {
     this.props.widget.customProperties.value = newValue;
-    if (this.props.widget.continous_update)
+    if (this.props.widget.customProperties.continous_update)
       this.valueChanged(newValue);
 
     this.setState({ value: newValue });
