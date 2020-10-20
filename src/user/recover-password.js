@@ -17,7 +17,7 @@
 
 import React from 'react';
 import Dialog from '../common/dialogs/dialog';
-import {Col, Row} from 'react-bootstrap';
+import Config from '../config.js';
 
 
 class RecoverPassword extends React.Component {
@@ -25,7 +25,7 @@ class RecoverPassword extends React.Component {
     super(props);
 
     this.state = {
-      admins: this.props.admins
+      admin: Config.admin
     }
   }
 
@@ -36,33 +36,14 @@ class RecoverPassword extends React.Component {
 
 
 
-  
-  
-
   render() {
     return (
-      <Dialog show={this.props.show} title="Recover password" buttonTitle="Close" onClose={(c) => this.onClose(c)} blendOutCancel = {true} valid={true}>
+      <Dialog show={this.props.show} title="Recover password" buttonTitle="Close" onClose={(c) => this.onClose(c)} blendOutCancel = {true} valid={true} size = 'lg'>
         <div>
-        <span>Please contact an administrator</span>
-        <div>
-        {this.state.admins != null && this.state.admins.map(admin => (
-          <form>
-            <Row>
-              <Col xs={3}>Admin: </Col>
-              <Col xs={3}> {admin.username} </Col>
-            </Row>
-
-
-            <Row as={Col}>
-              <Col xs={3}>E-mail: </Col>
-              <Col xs={3}> {admin.mail} </Col>
-            </Row>
-
-          </form> 
-          ))}
-        </div>
-
-          
+        <div>Please contact:</div>
+        <div>{this.state.admin.name}</div>
+        <div>E-Mail:</div>
+        <a href={`mailto:${this.state.admin.mail}`}>{this.state.admin.mail}</a>          
       </div>
       </Dialog>
     );
