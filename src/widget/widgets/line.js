@@ -51,19 +51,15 @@ class WidgetLine extends Component {
 
     // calculate the length of the line
     let length = 0;
-    if (width <= height) {
-      if (rotation > 0) {
-        length = width / Math.abs(Math.cos(rad));
+    if (rotation > 0) {
+      if (width <= height) {
+          length = width / Math.abs(Math.cos(rad));
       }
       else {
-        length = width
-      }
-    } else { // height < width
-      if (rotation > 0) {
         length = height / Math.abs(Math.sin(rad));
-      } else {
-        length = height;
       }
+    } else {
+      length = width;
     }
 
     // calculate line coordinates (in percent)
