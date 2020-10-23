@@ -36,9 +36,9 @@ const REQUEST_TIMEOUT_NOTIFICATION = {
 // Can be used for the rest of requests
 function isNetworkError(err) {
   let result = false;
-  
+
   // If not status nor response fields, it is a network error. TODO: Handle timeouts
-  if (err.status == null || err.status == 500 || err.response == null) {
+  if (err.status == null || err.status === 500 || err.response == null) {
     result = true;
 
     let notification = err.timeout? REQUEST_TIMEOUT_NOTIFICATION : SERVER_NOT_REACHABLE_NOTIFICATION;
