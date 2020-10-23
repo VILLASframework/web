@@ -92,7 +92,7 @@ class DashboardButtonGroup extends React.Component {
       );
 
       buttons.push(
-        <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete input signal </Tooltip>} >
+        <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete input signals </Tooltip>} >
         <Button key={key} variant= 'light' size="lg" onClick={this.props.onEditInputSignals} style={buttonStyle}>
           <Icon icon="sign-in-alt" style={iconStyle}/>
         </Button>

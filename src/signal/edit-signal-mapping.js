@@ -18,6 +18,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Button, FormGroup, FormLabel, FormText} from 'react-bootstrap';
+import {Collapse} from 'react-collapse';
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
 import Dialog from "../common/dialogs/dialog";
@@ -40,7 +41,8 @@ class EditSignalMapping extends React.Component {
     this.state = {
       dir,
       signals: [],
-      modifiedSignalIDs : []
+      modifiedSignalIDs : [],
+      openCollapse: false
     };
   }
 
@@ -49,15 +51,15 @@ class EditSignalMapping extends React.Component {
     // filter all signals by configID and direction
     let signals = [];
     if(props.signalID != null || typeof props.configs === "undefined"){
-    signals = props.signals.filter((sig) => {
-      return (sig.configID === props.configID) && (sig.direction === state.dir);
-    });
-  }
-  else{
-    for(let i = 0; i < props.configs.length; i++){
-      let temp = props.signals.filter((sig) => {
-        return (sig.configID === props.configs[i].id) && (sig.direction === state.dir);
-      })
+      signals = props.signals.filter((sig) => {
+        return (sig.configID === props.configID) && (sig.direction === state.dir);
+      });
+    }
+    else{
+      for(let i = 0; i < props.configs.length; i++){
+        let temp = props.signals.filter((sig) => {
+          return (sig.configID === props.configs[i].id) && (sig.direction === state.dir);
+        })
       signals = signals.concat(temp);
     }
   }
@@ -132,10 +134,20 @@ class EditSignalMapping extends React.Component {
 
   };
 
-  handleAdd = () => {
+  handleAdd = (configID = null) => {
 
+    if(typeof this.props.configs !== "undefined"){
+
+      if(configID === null){
+        this.setState({openCollapse: true});
+        return
+        }
+      }
+      else{
+        configID = this.props.configID;
+      }
     let newSignal = {
-      configID: this.props.configID,
+      configID: configID,
       direction: this.state.dir,
       name: "PlaceholderName",
       unit: "PlaceholderUnit",
@@ -149,6 +161,7 @@ class EditSignalMapping extends React.Component {
       token: this.props.sessionToken
     });
 
+    this.setState({openCollapse: false});
   };
 
   resetState() {
@@ -190,7 +203,19 @@ class EditSignalMapping extends React.Component {
               </Table>
 
               <div style={{ float: 'right' }}>
-                <Button onClick={() => this.handleAdd()} style={buttonStyle}><Icon icon="plus" /> Signal</Button>
+                <Button key={50} onClick={() => this.handleAdd()} style={buttonStyle}><Icon icon="plus" /> Signal</Button>
+              </div>
+              <div>
+                <Collapse isOpened={this.state.openCollapse}>
+                <h6>Choose a Component Configuration to add the signal to: </h6>
+                <div>
+                {typeof this.props.configs !== "undefined" && this.props.configs.map(config => (
+
+                  <Button key ={config.id} onClick={() => this.handleAdd(config.id)} style={buttonStyle}>{config.name}</Button>
+
+                ))}
+                </div>
+                </Collapse> 
               </div>
           </FormGroup>
         </Dialog>
