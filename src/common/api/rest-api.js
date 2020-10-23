@@ -47,6 +47,8 @@ function isNetworkError(err) {
   return result;
 }
 
+let prevURL = null;
+
 class RestAPI {
   get(url, token) {
     return new Promise(function (resolve, reject) {
@@ -58,7 +60,8 @@ class RestAPI {
 
       req.end(function (error, res) {
         if (res == null || res.status !== 200) {
-          error.handled = isNetworkError(error);
+          if (req.url !== prevURL) error.handled = isNetworkError(error);
+          prevURL = req.url;
           reject(error);
         } else {
           resolve(JSON.parse(res.text));
