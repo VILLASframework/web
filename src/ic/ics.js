@@ -291,6 +291,16 @@ class InfrastructureComponents extends Component {
     return dateTime.toLocaleString('de-DE');
   }
 
+  modifyManagedExternallyColumn(managedExternally){
+
+    if(managedExternally){
+      return <Icon icon='check' />
+    } else {
+      return <Icon icon='times' />
+    }
+
+  }
+
   render() {
     const buttonStyle = {
       marginLeft: '10px'
@@ -306,6 +316,7 @@ class InfrastructureComponents extends Component {
           <TableColumn title='State' labelKey='state' tooltipKey='error' labelStyle={(state, component) => this.stateLabelStyle(state, component)} />
           <TableColumn title='Category' dataKeys={['category', 'rawProperties.category']} />
           <TableColumn title='Type' dataKeys={['type', 'rawProperties.type']} />
+          <TableColumn title='Managed externally' dataKey='managedexternally' modifier={(managedexternally) => this.modifyManagedExternallyColumn(managedexternally)} width='105' />
           <TableColumn title='Location' dataKeys={['properties.location', 'rawProperties.location']} />
           {/* <TableColumn title='Realm' dataKeys={['properties.realm', 'rawProperties.realm']} /> */}
           <TableColumn title='WebSocket Endpoint' dataKey='host' />
