@@ -27,7 +27,7 @@ class EditWidgetDialog extends React.Component {
     super(props);
 
     this.state = {
-      temporal: {},
+      temporal: props.widget,
     };
   }
 
@@ -38,12 +38,9 @@ class EditWidgetDialog extends React.Component {
   }
 
 
-
   onClose(canceled) {
     if (canceled === false) {
-      if (this.validChanges()) {
-        this.props.onClose(this.state.temporal);
-      }
+      this.props.onClose(this.state.temporal);
     } else {
       this.props.onClose();
     }
@@ -117,23 +114,26 @@ class EditWidgetDialog extends React.Component {
         changeObject = this.assignAspectRatio(changeObject, this.state.temporal.customProperties.file);
       }
     } else if (e.target.id.includes('file')) {
-
-      customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value;
+      if (e.target.value === "Select file")
+      {
+        customProperty ? changeObject[parts[0]][parts[1]] = -1 : changeObject[e.target.id] = -1;
+      } else {
+        customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value;
+      }
 
       // get file and update size (if it's an image)
-      if ((changeObject.customProperties.file !== -1)&&('lockAspect' in this.state.temporal && this.state.temporal.lockAspect)) {
+      /*if ((changeObject.customProperties.file !== -1)&&('lockAspect' in this.state.temporal && this.state.temporal.lockAspect)) {
         // TODO this if condition requires changes to work!!!
         changeObject = this.assignAspectRatio(changeObject, e.target.value);
-      }
-    }else if (parts[1] === 'textSize'){
+      }*/
+    } else if (parts[1] === 'textSize'){
       changeObject[parts[0]][parts[1]] = Number(e.target.value);
       changeObject = this.setMaxWidth(changeObject);
 
-    }else if(parts[1] === 'orientation'){
+    } else if(parts[1] === 'orientation'){
       customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value ;
       changeObject = this.setNewLockRestrictions(changeObject);
-    }
-    else if (e.target.type === 'number') {
+    } else if (e.target.type === 'number') {
       customProperty ?  changeObject[parts[0]][parts[1]] = Number(e.target.value) : changeObject[e.target.id] = Number(e.target.value);
     } else if(e.target.id === 'name'){
       if(customProperty ? (changeObject[parts[0]][parts[1]] != null) : (changeObject[e.target.id] != null)){
@@ -145,7 +145,7 @@ class EditWidgetDialog extends React.Component {
     } else {
       customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value ;
     }
-    this.validChanges();
+
     this.setState({ temporal: changeObject});
 
   }
@@ -153,18 +153,6 @@ class EditWidgetDialog extends React.Component {
   resetState() {
     let widget_data = Object.assign({}, this.props.widget);
     this.setState({ temporal: widget_data });
-  }
-
-  validChanges() {
-    // check that widget has a name
-    var name = true;
-
-    if (this.state.temporal[name] === '') {
-      name = false;
-    }
-
-    this.valid = name;
-    return name;
   }
 
   render() {
