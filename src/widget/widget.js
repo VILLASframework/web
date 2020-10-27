@@ -44,6 +44,8 @@ import WidgetTopology from './widgets/topology';
 import WidgetLine from './widgets/line';
 //import WidgetHTML from './widgets/html';
 
+import WidgetEditMenu from '../widget/widget-edit-menu';
+
 import '../styles/widgets.css';
 
 class Widget extends React.Component {
@@ -230,20 +232,9 @@ class Widget extends React.Component {
 
     return null;
   }
-  rn
 
   render() {
-    const element = this.createWidget(this.props.data);
-
-    if (this.props.editing) {
-      return <EditableWidgetContainer widget={this.props.data} grid={this.props.grid} index={this.props.index} onWidgetChange={this.props.onWidgetChange}>
-        {element}
-      </EditableWidgetContainer>;
-    }
-
-    return <WidgetContainer widget={this.props.data}>
-      {element}
-    </WidgetContainer>;
+    return this.createWidget(this.props.data);
   }
 }
 

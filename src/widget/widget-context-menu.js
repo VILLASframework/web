@@ -116,7 +116,6 @@ class WidgetContextMenu extends React.Component {
               onWidgetStatusChange={this.props.onWidgetStatusChange}
               editing={this.props.editing}
               index={this.props.index}
-              grid={this.props.grid}
               paused={this.props.paused}
             />
     </MenuProvider>
