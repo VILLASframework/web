@@ -116,6 +116,26 @@ class NewICDialog extends React.Component {
   }
 
   render() {
+    let typeOptions = [];
+    switch(this.state.category){
+      case "Simulator":
+        typeOptions = ["Dummy","Generic","DPsim","RTLAB","RSCAD"];
+          break;
+      case "Controller":
+        typeOptions = ["Kubernetes","VILLAS-controller"];
+        break;
+      case "Gateway":
+        typeOptions = ["VILLAS-node","VILLAS-relay"];
+        break;
+      case "Service":
+        typeOptions = ["EMS","Custom"];
+        break;
+      case "Equipment":
+        typeOptions = ["Chroma-emulator","Chroma-loads","SMA-sunnyboy","FLEPS","Sonnenbatterie"];
+        break;
+      default:
+        typeOptions =[];
+    }
     return (
       <Dialog show={this.props.show} title="New Infrastructure Component" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
@@ -137,14 +157,24 @@ class NewICDialog extends React.Component {
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="category">
-            <FormLabel>Category of component (e.g. Simulator, Gateway, ...)</FormLabel>
-            <FormControl type="text" placeholder="Enter category" value={this.state.category} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
+            <FormLabel>Category of component</FormLabel>
+            <FormControl as="select" value={this.state.category} onChange={(e) => this.handleChange(e)}>
+              <option default>Select category</option>
+              <option>Simulator</option>
+              <option>Controller</option>
+              <option>Service</option>
+              <option>Gateway</option>
+              <option>Equipment</option>
+            </FormControl>
           </FormGroup>
           <FormGroup controlId="type">
-            <FormLabel>Type of component (e.g. RTDS, VILLASnode, ...)</FormLabel>
-            <FormControl type="text" placeholder="Enter type" value={this.state.type} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
+            <FormLabel>Type of component</FormLabel>
+            <FormControl as="select" value={this.state.type} onChange={(e) => this.handleChange(e)}>
+              <option default>Select type</option>
+              {typeOptions.map((name,index) => (
+                <option key={index}>{name}</option>
+              ))}
+            </FormControl>
           </FormGroup>
           <FormGroup controlId="uuid" valid={this.validateForm('uuid')}>
             <FormLabel>UUID</FormLabel>

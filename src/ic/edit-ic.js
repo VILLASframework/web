@@ -99,6 +99,26 @@ class EditICDialog extends React.Component {
   }
 
   render() {
+    let typeOptions = [];
+    switch(this.state.category){
+      case "Simulator":
+        typeOptions = ["Dummy","Generic","DPsim","RTLAB","RSCAD"];
+          break;
+      case "Controller":
+        typeOptions = ["Kubernetes","VILLAS-controller"];
+        break;
+      case "Gateway":
+        typeOptions = ["VILLAS-node","VILLAS-relay"];
+        break;
+      case "Service":
+        typeOptions = ["EMS","Custom"];
+        break;
+      case "Equipment":
+        typeOptions = ["Chroma-emulator","Chroma-loads","SMA-sunnyboy","FLEPS","Sonnenbatterie"];
+        break;
+      default:
+        typeOptions =[];
+    }
     return (
       <Dialog
         show={this.props.show}
@@ -129,14 +149,23 @@ class EditICDialog extends React.Component {
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="category">
-            <FormLabel column={false}>Category (e.g. Simulator, Gateway, ...)</FormLabel>
-            <FormControl type="text" placeholder={this.props.ic.category} value={this.state.category} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
+            <FormLabel column={false}>Category</FormLabel>
+            <FormControl as="select" value={this.state.category} onChange={(e) => this.handleChange(e)}>
+              <option>Simulator</option>
+              <option>Controller</option>
+              <option>Service</option>
+              <option>Gateway</option>
+              <option>Equipment</option>
+            </FormControl>
           </FormGroup>
           <FormGroup controlId="type">
-            <FormLabel column={false}>Type (e.g. RTDS, VILLASnode, ...)</FormLabel>
-            <FormControl type="text" placeholder={this.props.ic.type} value={this.state.type} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
+            <FormLabel column={false}>Type</FormLabel>
+            <FormControl as="select" value={this.state.type} onChange={(e) => this.handleChange(e)}>
+              <option default>Select type</option>
+              {typeOptions.map((name,index) => (
+                <option key={index}>{name}</option>
+              ))}
+            </FormControl>
           </FormGroup>
           <FormGroup controlId='properties'>
             <FormLabel column={false}>Properties</FormLabel>
