@@ -16,9 +16,9 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel, FormCheck } from 'react-bootstrap';
 import _ from 'lodash';
-
+import {Collapse} from 'react-collapse';
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
 
@@ -33,6 +33,7 @@ class EditICDialog extends React.Component {
       host: '',
       type: '',
       category: '',
+      managedexternally: false,
       properties: {},
     };
   }
@@ -61,16 +62,25 @@ class EditICDialog extends React.Component {
           data.properties = this.state.properties
         }
 
+        data.managedexternally = this.state.managedexternally;
+
 
         this.props.onClose(data);
+        this.setState({managedexternally: false});
       }
     } else {
       this.props.onClose();
+      this.setState({managedexternally: false});
     }
   }
 
   handleChange(e) {
+    if(e.target.id === "managedexternally"){
+      this.setState({ managedexternally : !this.state.managedexternally});
+    }
+    else{
     this.setState({ [e.target.id]: e.target.value });
+    }
   }
 
   handlePropertiesChange(data) {
@@ -83,6 +93,7 @@ class EditICDialog extends React.Component {
       host: this.props.ic.host,
       type: this.props.ic.type,
       category: this.props.ic.category,
+      managedexternally: false,
       properties: _.merge({}, _.get(this.props.ic, 'rawProperties'), _.get(this.props.ic, 'properties'))
     });
   }
@@ -100,6 +111,13 @@ class EditICDialog extends React.Component {
       >
         <form>
           <FormLabel column={false}>UUID: {this.props.ic.uuid}</FormLabel>
+          <FormGroup controlId="managedexternally">
+            <FormCheck type={"checkbox"} label={"Managed externally"} defaultChecked={this.state.managedexternally} onChange={e => this.handleChange(e)}>
+            </FormCheck>
+          </FormGroup>
+          <Collapse isOpened={this.state.managedexternally} >
+            <FormLabel size="sm">Externally managed ICs cannot be edited by users</FormLabel>
+          </Collapse>
           <FormGroup controlId="name">
             <FormLabel column={false}>Name</FormLabel>
             <FormControl type="text" placeholder={this.props.ic.name} value={this.state.name} onChange={(e) => this.handleChange(e)} />

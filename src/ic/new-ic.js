@@ -16,8 +16,8 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
-
+import { FormGroup, FormControl, FormLabel, FormCheck } from 'react-bootstrap';
+import {Collapse} from 'react-collapse';
 import Dialog from '../common/dialogs/dialog';
 
 class NewICDialog extends React.Component {
@@ -32,6 +32,7 @@ class NewICDialog extends React.Component {
       uuid: '',
       type: '',
       category: '',
+      managedexternally: false,
     };
   }
 
@@ -42,7 +43,8 @@ class NewICDialog extends React.Component {
           name: this.state.name,
           type: this.state.type,
           category: this.state.category,
-          uuid: this.state.uuid
+          uuid: this.state.uuid,
+          managedexternally: this.state.managedexternally,
         };
 
         if (this.state.host != null && this.state.host !== "" && this.state.host !== 'http://') {
@@ -50,18 +52,25 @@ class NewICDialog extends React.Component {
         }
 
         this.props.onClose(data);
+        this.setState({managedexternally: false});
       }
     } else {
       this.props.onClose();
+      this.setState({managedexternally: false});
     }
   }
 
   handleChange(e) {
+    if(e.target.id === "managedexternally"){
+      this.setState({ managedexternally : !this.state.managedexternally});
+    }
+    else{
     this.setState({ [e.target.id]: e.target.value });
+    }
   }
 
   resetState() {
-    this.setState({ name: '', host: 'http://', uuid: this.uuidv4(), type: '', category: ''});
+    this.setState({ name: '', host: 'http://', uuid: this.uuidv4(), type: '', category: '', managedexternally: false});
   }
 
   validateForm(target) {
@@ -110,6 +119,13 @@ class NewICDialog extends React.Component {
     return (
       <Dialog show={this.props.show} title="New Infrastructure Component" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
+          <FormGroup controlId="managedexternally">
+            <FormCheck type={"checkbox"} label={"Managed externally"} defaultChecked={this.state.managedexternally} onChange={e => this.handleChange(e)}>
+            </FormCheck>
+          </FormGroup>
+          <Collapse isOpened={this.state.managedexternally} >
+            <FormLabel size="sm">the component will show up in the list only after a VILLAScontroller for the component type has created the component and cannot be edited by users</FormLabel>
+          </Collapse>
           <FormGroup controlId="name" valid={this.validateForm('name')}>
             <FormLabel>Name</FormLabel>
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
