@@ -44,6 +44,7 @@ class WidgetImage extends React.Component {
 
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
 
+
     let file = this.props.files.find(file => file.id === parseInt(this.props.widget.customProperties.file, 10));
 
 
@@ -55,9 +56,12 @@ class WidgetImage extends React.Component {
           data: file.id,
           token: this.props.token
         });
-        
+
         this.setState({ file: file, fileDate: file.date });
       }
+    } else if (this.setState.file !== undefined) {
+      console.log("file undefined", file)
+      this.setState({file:undefined})
     }
 
   }
