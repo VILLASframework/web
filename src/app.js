@@ -92,7 +92,7 @@ class App extends React.Component {
           {/*
           <Col style={{ width: this.state.showSidebarMenu ? '280px' : '0px' }} smHidden mdHidden lgHidden className="sidenav">
           */}
-          <Hidden sm md lg xl>
+          <Hidden sm md lg xl xxl>
             <Col style={{ width: this.state.showSidebarMenu ? '280px' : '0px' }} className="sidenav">
                 <HeaderMenu onClose={this.hideSidebarMenu} currentRole={currentUser.role} />
             </Col>

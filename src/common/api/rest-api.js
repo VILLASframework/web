@@ -38,7 +38,7 @@ function isNetworkError(err) {
   let result = false;
 
   // If not status nor response fields, it is a network error. TODO: Handle timeouts
-  if (err.status == null || err.response == null) {
+  if (err.status == null || err.status === 500 || err.response == null) {
     result = true;
 
     let notification = err.timeout? REQUEST_TIMEOUT_NOTIFICATION : SERVER_NOT_REACHABLE_NOTIFICATION;
@@ -46,6 +46,8 @@ function isNetworkError(err) {
   }
   return result;
 }
+
+let prevURL = null;
 
 class RestAPI {
   get(url, token) {
@@ -58,6 +60,8 @@ class RestAPI {
 
       req.end(function (error, res) {
         if (res == null || res.status !== 200) {
+          if (req.url !== prevURL) error.handled = isNetworkError(error);
+          prevURL = req.url;
           reject(error);
         } else {
           resolve(JSON.parse(res.text));
@@ -97,6 +101,7 @@ class RestAPI {
 
       req.end(function (error, res) {
         if (res == null || res.status !== 200) {
+          error.handled = isNetworkError(error);
           reject(error);
         } else {
           resolve(JSON.parse(res.text));
@@ -115,6 +120,7 @@ class RestAPI {
 
       req.end(function (error, res) {
         if (res == null || res.status !== 200) {
+          error.handled = isNetworkError(error);
           reject(error);
         } else {
           resolve(JSON.parse(res.text));
@@ -133,6 +139,7 @@ class RestAPI {
 
       req.end(function (error, res) {
         if (res == null || res.status !== 200) {
+          error.handled = isNetworkError(error);
           reject(error);
         } else {
           resolve(JSON.parse(res.text));
@@ -152,6 +159,7 @@ class RestAPI {
 
       req.end(function (error, res) {
         if (error !== null || res.status !== 200) {
+          error.handled = isNetworkError(error);
           reject(error);
         } else {
             // file data is contained in res.body (because of blob response type)

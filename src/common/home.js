@@ -58,7 +58,7 @@ class Home extends React.Component {
 
     return (
       <div className="home-container">
-        <img style={{height: 120, float: 'right'}} src={require('../img/villas_web.svg')} alt="Logo VILLASweb" />
+        <img style={{height: 120, float: 'right'}} src={require('../img/villas_web.svg').default} alt="Logo VILLASweb" />
         <h1>Home</h1>
         <p>
           Welcome to <b>{config.instance}</b> hosted by  <a href={"mailto:" + config.admin.mail}>{config.admin.name}</a>!<br />
@@ -73,7 +73,7 @@ class Home extends React.Component {
 
 
         <h3>Data Model</h3>
-        <img height={400} src={require('../img/datamodel.png')} alt="Datamodel VILLASweb" />
+        <img height={400} src={require('../img/datamodel.png').default} alt="Datamodel VILLASweb" />
 
         <h3>Terminology </h3>
 
@@ -124,13 +124,13 @@ class Home extends React.Component {
           <li><a href="http://www.re-serve.eu">RESERVE</a> a European Union’s Horizon 2020 research and innovation programme under grant agreement No 727481</li>
           <li><a href="http://www.jara.org/en/research/energy">JARA-ENERGY</a>. Jülich-Aachen Research Alliance (JARA) is an initiative of RWTH Aachen University and Forschungszentrum Jülich.</li>
         </ul>
-        <img height={100} src={require('../img/european_commission.svg')} alt="Logo EU" />
-        <img height={70} src={require('../img/reserve.svg')} alt="Logo EU" />
-        <img height={70} src={require('../img/uel_efre.jpeg')} alt="Logo UEL OP EFRE NRW" />
-        <img height={70} src={require('../img/uel.png')} alt="Logo UEL" />
-        <img height={60} src={require('../img/eonerc_rwth.svg')} alt="Logo ACS" />
+        <img height={100} src={require('../img/european_commission.svg').default} alt="Logo EU" />
+        <img height={70} src={require('../img/reserve.svg').default} alt="Logo EU" />
+        <img height={70} src={require('../img/uel_efre.jpeg').default} alt="Logo UEL OP EFRE NRW" />
+        <img height={70} src={require('../img/uel.png').default} alt="Logo UEL" />
+        <img height={60} src={require('../img/eonerc_rwth.svg').default} alt="Logo ACS" />
         {
-          //<img height={70} src={require('../img/jara.svg')} alt="Logo JARA" />
+          //<img height={70} src={require('../img/jara.svg').default} alt="Logo JARA" />
         }
       </div>
     );

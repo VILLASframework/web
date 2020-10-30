@@ -91,7 +91,7 @@ class Dashboard extends Component {
         dashboard.height = maxHeight + 80;
       }
     }
-
+    
     // filter signals to the ones belonging to the scenario at hand
     let signals = []
     let allSignals = SignalStore.getState();
@@ -119,6 +119,9 @@ class Dashboard extends Component {
       });
     }
 
+    let editOutputSignalsModal = prevState.editOutputSignalsModal;
+    let editInputSignalsModal = prevState.editInputSignalsModal;
+
     return {
       dashboard,
       widgets,
@@ -131,9 +134,9 @@ class Dashboard extends Component {
       editing: prevState.editing || false,
       paused: prevState.paused || false,
 
-      editModal: prevState.editModal || false,
-      editOutputSignalsModal: prevState.editOutputSignals || false,
-      editInputSignalsModal: prevState.editInputSignals || false,
+      editModal:  prevState.editModal || false,
+      editOutputSignalsModal: editOutputSignalsModal,
+      editInputSignalsModal: editInputSignalsModal,
       filesEditModal: prevState.filesEditModal || false,
       filesEditSaveState: prevState.filesEditSaveState || [],
       modalData: null,
