@@ -298,6 +298,11 @@ class Dashboard extends Component {
       return;
     }
 
+    if(data.type === "Image")
+    {
+      data.customProperties.update = true;    
+    }
+
     AppDispatcher.dispatch({
       type: 'widgets/start-edit',
       token: this.state.sessionToken,
