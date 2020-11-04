@@ -192,6 +192,7 @@ class WidgetFactory {
                 widget.customProperties.border_color_opacity = 1;
                 widget.customProperties.border_width = 2;
                 widget.customProperties.rotation = 0;
+                widget.customProperties.lockAspect = true;
                 break;
 
             default:
