@@ -26,7 +26,6 @@ class WidgetImage extends React.Component {
 
     this.state = {
       file: undefined,
-      fileDate: null
     }
   }
 
@@ -44,24 +43,23 @@ class WidgetImage extends React.Component {
 
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
 
+    if(this.props.widget.customProperties.file === -1){
+      this.props.widget.customProperties.update = false;
+      if(this.state.file !== undefined) this.setState({ file: undefined })
+    }
 
     let file = this.props.files.find(file => file.id === parseInt(this.props.widget.customProperties.file, 10));
 
-
     if (file !== undefined) {
-      if (this.state.file === undefined || (this.state.file.id !== file.id) || this.state.fileDate !== file.date) {
-
+      if (this.props.widget.customProperties.update) {
+        this.props.widget.customProperties.update = false;
         AppDispatcher.dispatch({
           type: 'files/start-download',
           data: file.id,
           token: this.props.token
         });
-
-        this.setState({ file: file, fileDate: file.date });
+        this.setState({ file: file })
       }
-    } else if (this.setState.file !== undefined) {
-      console.log("file undefined", file)
-      this.setState({file:undefined})
     }
 
   }
