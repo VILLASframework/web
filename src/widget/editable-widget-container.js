@@ -76,27 +76,15 @@ class EditableWidgetContainer extends React.Component {
 
     /* hand over new dimensions to child element so that the rotation is displayed correctly
     *  already before the dashboard changes are saved
-    */
+    
     if (this.props.widget.type === 'Line') {
       this.refs.child0.illustrateDuringEdit(widget.width, widget.height);
-    }
+    }*/
   };
 
   render() {
     const widget = this.props.widget;
-    let isLine = false;
     let children = null;
-
-    // clone WidgetLine child element so that it can be referenced while resizing
-    if (widget.type === 'Line') {
-      isLine = true;
-
-      children = React.Children.map(this.props.children,
-        (child, index) => React.cloneElement(child, {
-          ref: `child${index}`
-        })
-      );
-    }
 
     let resizingRestricted = false;
     if (widget.customProperties.resizeRightLeftLock || widget.customProperties.resizeTopBottomLock) {
@@ -121,29 +109,6 @@ class EditableWidgetContainer extends React.Component {
       'editing-widget': true,
       'locked': widget.isLocked
     });
-
-    if (isLine) {
-      return <Rnd
-        ref={c => { this.rnd = c; }}
-        default={{ x: Number(widget.x), y: Number(widget.y), width: widget.width, height: widget.height }}
-        minWidth={widget.minWidth}
-        minHeight={widget.minHeight}
-        maxWidth={widget.customProperties.maxWidth || '100%'}
-        lockAspectRatio={Boolean(widget.customProperties.lockAspect)}
-        bounds={'parent'}
-        className={widgetClasses}
-        onResizeStart={this.borderWasClicked}
-        onResizeStop={this.resizeStop}
-        onDragStop={this.dragStop}
-        dragGrid={gridArray}
-        resizeGrid={gridArray}
-        zindex={widget.z}
-        enableResizing={resizing}
-        disableDragging={widget.isLocked}
-      >
-        {children}
-      </Rnd>;
-    }
 
     return <Rnd
       ref={c => { this.rnd = c; }}

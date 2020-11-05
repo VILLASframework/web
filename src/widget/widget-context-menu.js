@@ -90,7 +90,7 @@ class WidgetContextMenu extends React.Component {
   render() {
     const isLocked = this.props.widget.locked;
     const ContextMenu = () => (
-      <Menu id={'widgetMenu'+ this.props.index} style={{zIndex: 1000}}>
+      <Menu id={'widgetMenu'+ this.props.index} style={{zIndex: 1000, display: 'inline-block'}}>
       <Item disabled={isLocked} onClick={this.editWidget}>Edit</Item>
       <Item disabled={isLocked} onClick={this.deleteWidget}>Delete</Item>
 
@@ -108,8 +108,8 @@ class WidgetContextMenu extends React.Component {
       </Menu>
   );
 
-    return <div>
-    <MenuProvider id={'widgetMenu'+ this.props.index}>
+    return <div style={{display: "inline-block"}}>
+    <MenuProvider id={'widgetMenu'+ this.props.index} style={{display: 'inline-block'}}>
     <Widget
               data={this.props.widget}
               onWidgetChange={this.props.onWidgetChange}
