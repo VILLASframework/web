@@ -108,8 +108,13 @@ class WidgetContextMenu extends React.Component {
       </Menu>
   );
 
-    return <div style={{display: "inline-block"}}>
-    <MenuProvider id={'widgetMenu'+ this.props.index} style={{display: 'inline-block'}}>
+  let dim = {
+    width: this.props.widget.width, 
+    height: this.props.widget.height
+  };
+
+    return <div style={dim}>
+    <MenuProvider id={'widgetMenu'+ this.props.index} style={dim}>
     <Widget
               data={this.props.widget}
               onWidgetChange={this.props.onWidgetChange}
