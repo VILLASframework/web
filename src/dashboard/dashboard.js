@@ -20,7 +20,6 @@ import { Container } from 'flux/utils';
 import Fullscreenable from 'react-fullscreenable';
 import classNames from 'classnames';
 
-import Widget from '../widget/widget';
 import EditWidget from '../widget/edit-widget/edit-widget';
 import EditFiles from '../file/edit-files';
 import EditSignalMapping from "../signal/edit-signal-mapping";

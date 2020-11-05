@@ -84,7 +84,6 @@ class EditableWidgetContainer extends React.Component {
 
   render() {
     const widget = this.props.widget;
-    let children = null;
 
     let resizingRestricted = false;
     if (widget.customProperties.resizeRightLeftLock || widget.customProperties.resizeTopBottomLock) {

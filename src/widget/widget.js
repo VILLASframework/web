@@ -24,9 +24,6 @@ import ConfigsStore from '../componentconfig/config-store';
 import FileStore from '../file/file-store';
 import SignalStore from '../signal/signal-store'
 
-import EditableWidgetContainer from './editable-widget-container';
-import WidgetContainer from './widget-container';
-
 import WidgetCustomAction from './widgets/custom-action';
 import WidgetAction from './widgets/action';
 import WidgetLamp from './widgets/lamp';
@@ -44,7 +41,6 @@ import WidgetTopology from './widgets/topology';
 import WidgetLine from './widgets/line';
 //import WidgetHTML from './widgets/html';
 
-import WidgetEditMenu from '../widget/widget-edit-menu';
 
 import '../styles/widgets.css';
 
