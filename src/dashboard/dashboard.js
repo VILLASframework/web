@@ -280,6 +280,11 @@ class Dashboard extends Component {
   }
 
   closeEditFiles(){
+    this.state.widgets.map(widget => {
+      if(widget.type === "Image"){
+        widget.customProperties.update = true;
+      }     
+    })
     this.setState({ filesEditModal: false });
   }
 

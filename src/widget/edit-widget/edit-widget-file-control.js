@@ -55,7 +55,7 @@ class EditFileWidgetControl extends React.Component {
         <option key={index+1} value={file.id}>{file.name}</option>
       )))
     } else {
-      fileOptions = <option disabled value style={{ display: 'none' }}>No files found, please upload one first.</option>
+      fileOptions = <option style={{ display: 'none' }}>No files found.</option>
     }
 
     return <div>

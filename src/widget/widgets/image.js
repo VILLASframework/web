@@ -60,6 +60,9 @@ class WidgetImage extends React.Component {
         });
         this.setState({ file: file })
       }
+      else if (this.state.file === undefined || (this.state.file.id !== file.id) ){
+        this.setState({ file: file})
+      }
     }
 
   }
