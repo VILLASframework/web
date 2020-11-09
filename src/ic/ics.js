@@ -337,6 +337,7 @@ class InfrastructureComponents extends Component {
           <TableColumn title='Location' dataKeys={['properties.location', 'rawProperties.location']} />
           {/* <TableColumn title='Realm' dataKeys={['properties.realm', 'rawProperties.realm']} /> */}
           <TableColumn title='WebSocket Endpoint' dataKey='host' />
+          <TableColumn title='API Host' dataKey='apihost' />
           <TableColumn title='Last Update' dataKey='stateUpdateAt' modifier={(stateUpdateAt) => this.stateUpdateModifier(stateUpdateAt)} />
           {this.state.currentUser.role === "Admin" ?
           <TableColumn
