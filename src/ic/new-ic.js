@@ -118,20 +118,20 @@ class NewICDialog extends React.Component {
   render() {
     let typeOptions = [];
     switch(this.state.category){
-      case "Simulator":
-        typeOptions = ["Dummy","Generic","DPsim","RTLAB","RSCAD"];
+      case "simulator":
+        typeOptions = ["dummy","generic","dpsim","rtlab","rscad"];
           break;
-      case "Controller":
-        typeOptions = ["Kubernetes","VILLAS-controller"];
+      case "controller":
+        typeOptions = ["kubernetes","villas-controller"];
         break;
-      case "Gateway":
-        typeOptions = ["VILLAS-node","VILLAS-relay"];
+      case "gateway":
+        typeOptions = ["villas-node","villas-relay"];
         break;
-      case "Service":
-        typeOptions = ["EMS","Custom"];
+      case "service":
+        typeOptions = ["ems","custom"];
         break;
-      case "Equipment":
-        typeOptions = ["Chroma-emulator","Chroma-loads","SMA-sunnyboy","FLEPS","Sonnenbatterie"];
+      case "equipment":
+        typeOptions = ["chroma-emulator","chroma-loads","sma-sunnyboy","fleps","sonnenbatterie"];
         break;
       default:
         typeOptions =[];
@@ -155,11 +155,11 @@ class NewICDialog extends React.Component {
             <FormLabel>Category of component</FormLabel>
             <FormControl as="select" value={this.state.category} onChange={(e) => this.handleChange(e)}>
               <option default>Select category</option>
-              <option>Simulator</option>
-              <option>Controller</option>
-              <option>Service</option>
-              <option>Gateway</option>
-              <option>Equipment</option>
+              <option>simulator</option>
+              <option>controller</option>
+              <option>service</option>
+              <option>gateway</option>
+              <option>equipment</option>
             </FormControl>
           </FormGroup>
           <FormGroup controlId="type">

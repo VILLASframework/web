@@ -37,13 +37,13 @@ class SignalsDataManager extends RestDataManager{
 
   }
 
-  startAutoConfig(data, url, socketname, token, configID){
+  startAutoConfig(url, socketname, token, configID){
     // This function queries the VILLASnode API to obtain the configuration of the VILLASnode located at url
     // Endpoint: http[s]://server:port/api/v1 (to be generated based on IC API URL, port 4000)
     // data contains the request data: { action, id, (request)}
     // See documentation of VILLASnode API: https://villas.fein-aachen.org/doc/node-dev-api-node.html
 
-    RestAPI.post(url, data).then(response => {
+    RestAPI.get(url, null).then(response => {
       AppDispatcher.dispatch({
         type: 'signals/autoconfig-loaded',
         data: response,
@@ -59,13 +59,12 @@ class SignalsDataManager extends RestDataManager{
     })
   }
 
-  saveSignals(data, token, configID, socketname){
-    // data.response contains the response from the VILLASnode API, an array of node configurations
+  saveSignals(nodes, token, configID, socketname){
 
-    if(!data.hasOwnProperty("response")){
+    if(nodes.length === 0){
       const SIGNAL_AUTOCONF_ERROR_NOTIFICATION = {
-        title: 'Failed to load signal config ',
-        message: 'VILLASnode returned no response field.',
+        title: 'Failed to load nodes ',
+        message: 'VILLASnode returned empty response',
         level: 'error'
       };
       NotificationsDataManager.addNotification(SIGNAL_AUTOCONF_ERROR_NOTIFICATION);
@@ -74,7 +73,8 @@ class SignalsDataManager extends RestDataManager{
 
     let configured = false;
     let error = false;
-    for(let nodeConfig of data.response){
+    for(let nodeConfig of nodes){
+      console.log("parsing node config: ", nodeConfig)
       if(!nodeConfig.hasOwnProperty("name")){
         console.warn("Could not parse the following node config because it lacks a name parameter:", nodeConfig);
       } else if(nodeConfig.name === socketname){
@@ -88,7 +88,6 @@ class SignalsDataManager extends RestDataManager{
           continue;
         }
         // signals are not yet configured:
-        console.log("Adding signals of websocket: ", nodeConfig);
         let index_in = 1
         let index_out = 1
 
@@ -104,9 +103,10 @@ class SignalsDataManager extends RestDataManager{
 
           // add all in signals
           for(let inSig of nodeConfig.in.signals) {
-            console.log("adding input signal:", inSig);
 
             if (inSig.enabled) {
+              console.log("adding input signal:", inSig);
+
               let newSignal = {
                 configID: configID,
                 direction: 'in',
@@ -140,9 +140,9 @@ class SignalsDataManager extends RestDataManager{
           // add all out signals
 
           for (let outSig of nodeConfig.out.signals) {
-            console.log("adding output signal:", outSig);
 
             if (outSig.enabled) {
+              console.log("adding output signal:", outSig);
               let newSignal = {
                 configID: configID,
                 direction: 'out',
@@ -165,7 +165,10 @@ class SignalsDataManager extends RestDataManager{
 
         console.log("Configured", index_in-1, "input signals and", index_out-1, "output signals");
         configured=true;
+      } else {
+        console.log("ignoring node with name ",nodeConfig.name, " expecting ", socketname )
       }
+
 
     }
 

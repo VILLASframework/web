@@ -465,7 +465,7 @@ class Scenario extends React.Component {
     let componentConfig = this.state.configs[index];
     // determine apiurl of infrastructure component
     let ic = this.state.ics.find(ic => ic.id === componentConfig.icID)
-    if(!ic.type.includes("VILLASnode") && !ic.type.includes("villasnode") && !ic.type.includes("VILLASNODE")){
+    if(!ic.type.includes("villas-node")){
       let message = "Cannot autoconfigure signals for IC type " + ic.type + " of category " + ic.category + ". This is only possible for gateway ICs of type 'VILLASnode'."
       console.warn(message);
 
@@ -479,14 +479,10 @@ class Scenario extends React.Component {
     }
 
     let splitWebsocketURL = ic.websocketurl.split("/")
-    let request = {};
-    request["id"] = this.uuidv4();
-    request["action"] = "nodes"
 
     AppDispatcher.dispatch({
       type: 'signals/start-autoconfig',
-      data: request,
-      url: ic.apiurl,
+      url: ic.apiurl+"/nodes",
       socketname: splitWebsocketURL[splitWebsocketURL.length -1],
       token: this.state.sessionToken,
       configID: componentConfig.id
