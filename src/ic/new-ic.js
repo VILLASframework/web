@@ -85,7 +85,7 @@ class NewICDialog extends React.Component {
       name = false;
     }
 
-    if (this.state.uuid === '') {
+    if (!this.state.managedexternally && this.state.uuid === '') {
       uuid = false;
     }
 
@@ -151,16 +151,6 @@ class NewICDialog extends React.Component {
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="websocketurl">
-            <FormLabel>Websocket URL</FormLabel>
-            <FormControl type="text" placeholder="Enter Websocket URL" value={this.state.websocketurl} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup controlId="apiurl">
-            <FormLabel>API URL</FormLabel>
-            <FormControl type="text" placeholder="Enter API URL" value={this.state.apiurl} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
           <FormGroup controlId="category">
             <FormLabel>Category of component</FormLabel>
             <FormControl as="select" value={this.state.category} onChange={(e) => this.handleChange(e)}>
@@ -180,6 +170,16 @@ class NewICDialog extends React.Component {
                 <option key={index}>{name}</option>
               ))}
             </FormControl>
+          </FormGroup>
+          <FormGroup controlId="websocketurl">
+            <FormLabel>Websocket URL</FormLabel>
+            <FormControl type="text" placeholder="Enter Websocket URL" value={this.state.websocketurl} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="apiurl">
+            <FormLabel>API URL</FormLabel>
+            <FormControl type="text" placeholder="Enter API URL" value={this.state.apiurl} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="uuid" valid={this.validateForm('uuid')}>
             <FormLabel>UUID</FormLabel>

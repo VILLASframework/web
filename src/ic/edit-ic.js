@@ -32,10 +32,12 @@ class EditICDialog extends React.Component {
       name: '',
       websocketurl: '',
       apiurl: '',
+      location: '',
+      description: '',
       type: '',
       category: '',
       managedexternally: false,
-      properties: {},
+      startParameterScheme: {},
     };
   }
 
@@ -56,6 +58,14 @@ class EditICDialog extends React.Component {
           data.apiurl = this.state.apiurl;
         }
 
+        if (this.state.location != null && this.state.location !== this.props.ic.location) {
+          data.location = this.state.location;
+        }
+
+        if (this.state.description != null && this.state.description !== this.props.ic.description) {
+          data.description = this.state.description;
+        }
+
         if (this.state.type != null && this.state.type !== "" && this.state.type !== this.props.ic.type) {
           data.type = this.state.type;
         }
@@ -63,8 +73,8 @@ class EditICDialog extends React.Component {
         if (this.state.category != null && this.state.category !== "" && this.state.category !== this.props.ic.category) {
           data.category = this.state.category;
         }
-        if (this.state.properties !== {}) {
-          data.properties = this.state.properties
+        if (this.state.startParameterScheme !== {}) {
+          data.startParameterScheme = this.state.startParameterScheme
         }
 
         data.managedexternally = this.state.managedexternally;
@@ -88,8 +98,8 @@ class EditICDialog extends React.Component {
     }
   }
 
-  handlePropertiesChange(data) {
-    this.setState({ properties: data });
+  handleStartParameterSchemeChange(data) {
+    this.setState({ startParameterScheme: data });
   }
 
   resetState() {
@@ -98,9 +108,11 @@ class EditICDialog extends React.Component {
       websocketurl: this.props.ic.websocketurl,
       apiurl: this.props.ic.apiurl,
       type: this.props.ic.type,
+      location: this.props.ic.location,
+      description: this.props.ic.description,
       category: this.props.ic.category,
       managedexternally: false,
-      properties: _.merge({}, _.get(this.props.ic, 'rawProperties'), _.get(this.props.ic, 'properties'))
+      startParameterScheme: this.props.ic.startParameterScheme,
     });
   }
 
@@ -114,7 +126,7 @@ class EditICDialog extends React.Component {
         typeOptions = ["Kubernetes","VILLAS-controller"];
         break;
       case "Gateway":
-        typeOptions = ["VILLAS-node","VILLAS-relay"];
+        typeOptions = ["VILLASnode","VILLASrelay"];
         break;
       case "Service":
         typeOptions = ["EMS","Custom"];
@@ -137,26 +149,9 @@ class EditICDialog extends React.Component {
       >
         <form>
           <FormLabel column={false}>UUID: {this.props.ic.uuid}</FormLabel>
-          <FormGroup controlId="managedexternally">
-            <FormCheck type={"checkbox"} label={"Managed externally"} defaultChecked={this.state.managedexternally} onChange={e => this.handleChange(e)}>
-            </FormCheck>
-          </FormGroup>
-          <Collapse isOpened={this.state.managedexternally} >
-            <FormLabel size="sm">Externally managed ICs cannot be edited by users</FormLabel>
-          </Collapse>
           <FormGroup controlId="name">
             <FormLabel column={false}>Name</FormLabel>
             <FormControl type="text" placeholder={this.props.ic.name} value={this.state.name} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup controlId="websocketurl">
-            <FormLabel column={false}>Websocket URL</FormLabel>
-            <FormControl type="text" placeholder={this.props.ic.websocketurl} value={this.state.websocketurl || 'http://' } onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup controlId="apiurl">
-            <FormLabel column={false}>API URL</FormLabel>
-            <FormControl type="text" placeholder={this.props.ic.apiurl} value={this.state.apiurl || 'http://' } onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="category">
@@ -178,12 +173,32 @@ class EditICDialog extends React.Component {
               ))}
             </FormControl>
           </FormGroup>
-          <FormGroup controlId='properties'>
-            <FormLabel column={false}>Properties</FormLabel>
+          <FormGroup controlId="websocketurl">
+            <FormLabel column={false}>Websocket URL</FormLabel>
+            <FormControl type="text" placeholder={this.props.ic.websocketurl} value={this.state.websocketurl || 'http://' } onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="apiurl">
+            <FormLabel column={false}>API URL</FormLabel>
+            <FormControl type="text" placeholder={this.props.ic.apiurl} value={this.state.apiurl || 'http://' } onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="location">
+            <FormLabel column={false}>Location</FormLabel>
+            <FormControl type="text" placeholder={this.props.ic.location} value={this.state.location || '' } onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="description">
+            <FormLabel column={false}>Description</FormLabel>
+            <FormControl type="text" placeholder={this.props.ic.description} value={this.state.description || '' } onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId='startParameterScheme'>
+            <FormLabel column={false}>Start parameter scheme of IC</FormLabel>
             <ParametersEditor
-              content={this.state.properties}
+              content={this.state.startParameterScheme}
               disabled={false}
-              onChange={(data) => this.handlePropertiesChange(data)}
+              onChange={(data) => this.handleStartParameterSchemeChange(data)}
             />
           </FormGroup>
         </form>
