@@ -463,7 +463,7 @@ class Scenario extends React.Component {
 
   signalsAutoConf(index){
     let componentConfig = this.state.configs[index];
-    // determine host of infrastructure component
+    // determine apiurl of infrastructure component
     let ic = this.state.ics.find(ic => ic.id === componentConfig.icID)
     if(!ic.type.includes("VILLASnode") && !ic.type.includes("villasnode") && !ic.type.includes("VILLASNODE")){
       let message = "Cannot autoconfigure signals for IC type " + ic.type + " of category " + ic.category + ". This is only possible for gateway ICs of type 'VILLASnode'."
@@ -478,7 +478,7 @@ class Scenario extends React.Component {
       return;
     }
 
-    let splitHost = ic.host.split("/")
+    let splitWebsocketURL = ic.websocketurl.split("/")
     let request = {};
     request["id"] = this.uuidv4();
     request["action"] = "nodes"
@@ -486,8 +486,8 @@ class Scenario extends React.Component {
     AppDispatcher.dispatch({
       type: 'signals/start-autoconfig',
       data: request,
-      url: ic.apihost,
-      socketname: splitHost[splitHost.length -1],
+      url: ic.apiurl,
+      socketname: splitWebsocketURL[splitWebsocketURL.length -1],
       token: this.state.sessionToken,
       configID: componentConfig.id
     });
@@ -542,12 +542,12 @@ class Scenario extends React.Component {
       console.warn("There is more than one CIM file selected in this component configuration. I will open them all in a separate tab.")
     }
 
-    let base_host = 'aaa.bbb.ccc.ddd/api/v2/files/'
+    let baseURL = 'aaa.bbb.ccc.ddd/api/v2/files/'
     for (let file of files) {
       // endpoint param serves for download and upload of CIM file, token is required for authentication
       let params = {
         token: this.state.sessionToken,
-        endpoint: base_host + String(file.id),
+        endpoint: baseURL + String(file.id),
       }
 
       // TODO start Pintura for editing CIM/ XML file from here

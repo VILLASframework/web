@@ -30,8 +30,8 @@ class EditICDialog extends React.Component {
 
     this.state = {
       name: '',
-      host: '',
-      apihost: '',
+      websocketurl: '',
+      apiurl: '',
       type: '',
       category: '',
       managedexternally: false,
@@ -48,12 +48,12 @@ class EditICDialog extends React.Component {
           data.name = this.state.name;
         }
 
-        if (this.state.host != null && this.state.host !== "" && this.state.host !== "http://" && this.state.host !== this.props.ic.host) {
-          data.host = this.state.host;
+        if (this.state.websocketurl != null && this.state.websocketurl !== "" && this.state.websocketurl !== "http://" && this.state.websocketurl !== this.props.ic.websocketurl) {
+          data.websocketurl = this.state.websocketurl;
         }
 
-        if (this.state.apihost != null && this.state.apihost !== "" && this.state.apihost !== "http://" && this.state.apihost !== this.props.ic.apihost) {
-          data.apihost = this.state.apihost;
+        if (this.state.apiurl != null && this.state.apiurl !== "" && this.state.apiurl !== "http://" && this.state.apiurl !== this.props.ic.apiurl) {
+          data.apiurl = this.state.apiurl;
         }
 
         if (this.state.type != null && this.state.type !== "" && this.state.type !== this.props.ic.type) {
@@ -95,8 +95,8 @@ class EditICDialog extends React.Component {
   resetState() {
     this.setState({
       name: this.props.ic.name,
-      host: this.props.ic.host,
-      apihost: this.props.ic.apihost,
+      websocketurl: this.props.ic.websocketurl,
+      apiurl: this.props.ic.apiurl,
       type: this.props.ic.type,
       category: this.props.ic.category,
       managedexternally: false,
@@ -149,14 +149,14 @@ class EditICDialog extends React.Component {
             <FormControl type="text" placeholder={this.props.ic.name} value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="host">
-            <FormLabel column={false}>Host</FormLabel>
-            <FormControl type="text" placeholder={this.props.ic.host} value={this.state.host || 'http://' } onChange={(e) => this.handleChange(e)} />
+          <FormGroup controlId="websocketurl">
+            <FormLabel column={false}>Websocket URL</FormLabel>
+            <FormControl type="text" placeholder={this.props.ic.websocketurl} value={this.state.websocketurl || 'http://' } onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="apihost">
-            <FormLabel column={false}>API Host</FormLabel>
-            <FormControl type="text" placeholder={this.props.ic.apihost} value={this.state.apihost || 'http://' } onChange={(e) => this.handleChange(e)} />
+          <FormGroup controlId="apiurl">
+            <FormLabel column={false}>API URL</FormLabel>
+            <FormControl type="text" placeholder={this.props.ic.apiurl} value={this.state.apiurl || 'http://' } onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="category">

@@ -26,19 +26,19 @@ class IcDataDataManager {
     this._sockets = {};
   }
 
-  open(host, identifier) {
+  open(websocketurl, identifier) {
     // pass signals to onOpen callback
     if (this._sockets[identifier] != null)
       return; // already open?
 
-    this._sockets[identifier] = new WebsocketAPI(host, { onOpen: (event) => this.onOpen(event, identifier, true), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier) });
+    this._sockets[identifier] = new WebsocketAPI(websocketurl, { onOpen: (event) => this.onOpen(event, identifier, true), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier) });
   }
 
-  update(host, identifier) {
+  update(websocketurl, identifier) {
     if (this._sockets[identifier] != null) {
-      if (this._sockets[identifier].host !== host) {
+      if (this._sockets[identifier].websocketurl !== websocketurl) {
         this._sockets[identifier].close();
-        this._sockets[identifier] = new WebsocketAPI(host, { onOpen: (event) => this.onOpen(event, identifier, false), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier), onError: (error) => this.onError(error, identifier) });
+        this._sockets[identifier] = new WebsocketAPI(websocketurl, { onOpen: (event) => this.onOpen(event, identifier, false), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier), onError: (error) => this.onError(error, identifier) });
       }
     }
   }

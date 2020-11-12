@@ -28,7 +28,7 @@ class NewICDialog extends React.Component {
 
     this.state = {
       name: '',
-      host: '',
+      websocketurl: '',
       uuid: '',
       type: '',
       category: '',
@@ -47,8 +47,8 @@ class NewICDialog extends React.Component {
           managedexternally: this.state.managedexternally,
         };
 
-        if (this.state.host != null && this.state.host !== "" && this.state.host !== 'http://') {
-          data.host = this.state.host;
+        if (this.state.websocketurl != null && this.state.websocketurl !== "" && this.state.websocketurl !== 'http://') {
+          data.websocketurl = this.state.websocketurl;
         }
 
         this.props.onClose(data);
@@ -70,14 +70,14 @@ class NewICDialog extends React.Component {
   }
 
   resetState() {
-    this.setState({ name: '', host: 'http://', uuid: this.uuidv4(), type: '', category: '', managedexternally: false});
+    this.setState({ name: '', websocketurl: 'http://', uuid: this.uuidv4(), type: '', category: '', managedexternally: false});
   }
 
   validateForm(target) {
     // check all controls
     let name = true;
     let uuid = true;
-    let host = true;
+    let websocketurl = true;
     let type = true;
     let category = true;
 
@@ -97,12 +97,12 @@ class NewICDialog extends React.Component {
       category = false;
     }
 
-    this.valid = name && uuid && host && type && category;
+    this.valid = name && uuid && websocketurl && type && category;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
     if (target === 'uuid') return uuid ? "success" : "error";
-    if (target === 'host') return host ? "success" : "error";
+    if (target === 'websocketurl') return websocketurl ? "success" : "error";
     if (target === 'type') return type ? "success" : "error";
     if (target === 'category') return category ? "success" : "error";
   }
@@ -151,9 +151,14 @@ class NewICDialog extends React.Component {
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="host">
-            <FormLabel>Host</FormLabel>
-            <FormControl type="text" placeholder="Enter host" value={this.state.host} onChange={(e) => this.handleChange(e)} />
+          <FormGroup controlId="websocketurl">
+            <FormLabel>Websocket URL</FormLabel>
+            <FormControl type="text" placeholder="Enter Websocket URL" value={this.state.websocketurl} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="apiurl">
+            <FormLabel>API URL</FormLabel>
+            <FormControl type="text" placeholder="Enter API URL" value={this.state.apiurl} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="category">

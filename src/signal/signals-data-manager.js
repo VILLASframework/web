@@ -39,7 +39,7 @@ class SignalsDataManager extends RestDataManager{
 
   startAutoConfig(data, url, socketname, token, configID){
     // This function queries the VILLASnode API to obtain the configuration of the VILLASnode located at url
-    // Endpoint: http[s]://server:port/api/v1 (to be generated based on IC host, port 4000)
+    // Endpoint: http[s]://server:port/api/v1 (to be generated based on IC API URL, port 4000)
     // data contains the request data: { action, id, (request)}
     // See documentation of VILLASnode API: https://villas.fein-aachen.org/doc/node-dev-api-node.html
 

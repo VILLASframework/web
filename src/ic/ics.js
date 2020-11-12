@@ -334,10 +334,10 @@ class InfrastructureComponents extends Component {
           <TableColumn title='Type' dataKeys={['type', 'rawProperties.type']} />
           <TableColumn title='Managed externally' dataKey='managedexternally' modifier={(managedexternally) => this.modifyManagedExternallyColumn(managedexternally)} width='105' />
           <TableColumn title='Uptime' dataKey='uptime' modifier={(uptime) => this.modifyUptimeColumn(uptime)}/>
-          <TableColumn title='Location' dataKeys={['properties.location', 'rawProperties.location']} />
+          <TableColumn title='Location' dataKey='location' />
           {/* <TableColumn title='Realm' dataKeys={['properties.realm', 'rawProperties.realm']} /> */}
-          <TableColumn title='WebSocket Endpoint' dataKey='host' />
-          <TableColumn title='API Host' dataKey='apihost' />
+          <TableColumn title='WebSocket URL' dataKey='websocketurl' />
+          <TableColumn title='API URL' dataKey='apiurl' />
           <TableColumn title='Last Update' dataKey='stateUpdateAt' modifier={(stateUpdateAt) => this.stateUpdateModifier(stateUpdateAt)} />
           {this.state.currentUser.role === "Admin" ?
           <TableColumn

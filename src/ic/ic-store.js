@@ -35,8 +35,8 @@ class InfrastructureComponentStore extends ArrayStore {
         // connect to each infrastructure component
         const ic = action.data;
 
-        if (ic.host != null && ic.host !== '') {
-          ICDataDataManager.update(ic.host, ic.id);
+        if (ic.websocketurl != null && ic.websocketurl !== '') {
+          ICDataDataManager.update(ic.websocketurl, ic.id);
         }
 
         return super.reduce(state, action);
@@ -44,17 +44,17 @@ class InfrastructureComponentStore extends ArrayStore {
         // open websocket for each IC contained in array action.data
         // action.data contains only those IC used by the scenario
         for (let ic of action.data) {
-          if (ic.host != null && ic.host !== '') {
-            ICDataDataManager.open(ic.host, ic.id);
+          if (ic.websocketurl	!= null && ic.websocketurl !== '') {
+            ICDataDataManager.open(ic.websocketurl, ic.id);
           } else {
 
             // TODO add to pool of notifications
-            const IC_WEBSOCKET_HOST_ERROR = {
+            const IC_WEBSOCKET_URL_ERROR = {
               title: 'Websocket connection warning',
-              message: "Websocket host parameter not available for IC " + ic.name + "(" + ic.uuid + "), connection not possible",
+              message: "Websocket URL parameter not available for IC " + ic.name + "(" + ic.uuid + "), connection not possible",
               level: 'warning'
             };
-            NotificationsDataManager.addNotification(IC_WEBSOCKET_HOST_ERROR);
+            NotificationsDataManager.addNotification(IC_WEBSOCKET_URL_ERROR);
           }
         }
         return super.reduce(state, action);
