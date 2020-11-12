@@ -90,7 +90,7 @@ class Dashboard extends Component {
         dashboard.height = maxHeight + 80;
       }
     }
-    
+
     // filter signals to the ones belonging to the scenario at hand
     let signals = []
     let allSignals = SignalStore.getState();
@@ -280,6 +280,11 @@ class Dashboard extends Component {
   }
 
   closeEditFiles() {
+    this.state.widgets.map(widget => {
+      if(widget.type === "Image"){
+        widget.customProperties.update = true;
+      }
+    })
     this.setState({ filesEditModal: false });
   }
 
@@ -300,7 +305,7 @@ class Dashboard extends Component {
 
     if(data.type === "Image")
     {
-      data.customProperties.update = true;    
+      data.customProperties.update = true;
     }
 
     AppDispatcher.dispatch({
