@@ -31,6 +31,7 @@ class EditICDialog extends React.Component {
     this.state = {
       name: '',
       host: '',
+      apihost: '',
       type: '',
       category: '',
       managedexternally: false,
@@ -49,6 +50,10 @@ class EditICDialog extends React.Component {
 
         if (this.state.host != null && this.state.host !== "" && this.state.host !== "http://" && this.state.host !== this.props.ic.host) {
           data.host = this.state.host;
+        }
+
+        if (this.state.apihost != null && this.state.apihost !== "" && this.state.apihost !== "http://" && this.state.apihost !== this.props.ic.apihost) {
+          data.apihost = this.state.apihost;
         }
 
         if (this.state.type != null && this.state.type !== "" && this.state.type !== this.props.ic.type) {
@@ -91,6 +96,7 @@ class EditICDialog extends React.Component {
     this.setState({
       name: this.props.ic.name,
       host: this.props.ic.host,
+      apihost: this.props.ic.apihost,
       type: this.props.ic.type,
       category: this.props.ic.category,
       managedexternally: false,
@@ -146,6 +152,11 @@ class EditICDialog extends React.Component {
           <FormGroup controlId="host">
             <FormLabel column={false}>Host</FormLabel>
             <FormControl type="text" placeholder={this.props.ic.host} value={this.state.host || 'http://' } onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="apihost">
+            <FormLabel column={false}>API Host</FormLabel>
+            <FormControl type="text" placeholder={this.props.ic.apihost} value={this.state.apihost || 'http://' } onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="category">
