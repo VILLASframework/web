@@ -109,8 +109,8 @@ class WidgetContextMenu extends React.Component {
   );
 
   let dim = {
-    width: this.props.widget.width, 
-    height: this.props.widget.height
+    width: '100%', 
+    height: '100%'
   };
 
     return <div style={dim}>
