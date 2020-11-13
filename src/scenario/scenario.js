@@ -48,7 +48,7 @@ import { Redirect } from 'react-router-dom';
 class Scenario extends React.Component {
 
   static getStores() {
-    return [ ScenarioStore, ConfigStore, DashboardStore, ICStore, SignalStore, FileStore, WidgetStore];
+    return [ScenarioStore, ConfigStore, DashboardStore, ICStore, SignalStore, FileStore, WidgetStore];
   }
 
   static calculateState(prevState, props) {
@@ -71,11 +71,11 @@ class Scenario extends React.Component {
     // obtain all component configurations of a scenario
     let configs = ConfigStore.getState().filter(config => config.scenarioID === parseInt(props.match.params.scenario, 10));
     let editConfigModal = prevState.editConfigModal || false;
-    let modalConfigData = (prevState.modalConfigData !== {} && prevState.modalConfigData !== undefined )? prevState.modalConfigData : {};
+    let modalConfigData = (prevState.modalConfigData !== {} && prevState.modalConfigData !== undefined) ? prevState.modalConfigData : {};
     let modalConfigIndex = 0;
 
-    if((typeof prevState.configs !== "undefined") && (prevState.newConfig === true ) && (configs.length !== prevState.configs.length)){
-      let index = configs.length -1;
+    if ((typeof prevState.configs !== "undefined") && (prevState.newConfig === true) && (configs.length !== prevState.configs.length)) {
+      let index = configs.length - 1;
       editConfigModal = true;
       modalConfigData = configs[index];
       modalConfigIndex = index;
@@ -146,7 +146,7 @@ class Scenario extends React.Component {
   ############################################## */
 
   onUserInputChange(e) {
-    this.setState({userToAdd: e.target.value});
+    this.setState({ userToAdd: e.target.value });
   }
 
   addUser() {
@@ -157,7 +157,7 @@ class Scenario extends React.Component {
       token: this.state.sessionToken
     });
 
-    this.setState({userToAdd: ''});
+    this.setState({ userToAdd: '' });
   }
 
   closeDeleteUserModal() {
@@ -201,7 +201,7 @@ class Scenario extends React.Component {
       token: this.state.sessionToken
     });
 
-    this.setState({newConfig: true});
+    this.setState({ newConfig: true });
 
   }
 
@@ -250,8 +250,7 @@ class Scenario extends React.Component {
     });
   }
 
-  exportConfig(index) {
-    // filter properties
+  copyConfig(index) {
     let config = JSON.parse(JSON.stringify(this.state.configs[index]));
 
     let signals = JSON.parse(JSON.stringify(SignalStore.getState().filter(s => s.configID === parseInt(config.id, 10))));
@@ -273,9 +272,27 @@ class Scenario extends React.Component {
     delete config.inputLength;
     delete config.outputLength;
 
+    return config;
+  }
+
+  exportConfig(index) {
+    let config = this.copyConfig(index);
+
     // show save dialog
     const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
     FileSaver.saveAs(blob, 'config-' + config.name + '.json');
+  }
+
+  duplicateConfig(index) {
+    let newConfig = this.copyConfig(index);
+    newConfig["scenarioID"] = this.state.scenario.id;
+    newConfig.name = newConfig.name + '_copy';
+
+    AppDispatcher.dispatch({
+      type: 'configs/start-add',
+      data: newConfig,
+      token: this.state.sessionToken
+    });
   }
 
   onConfigChecked(index, event) {
@@ -306,7 +323,7 @@ class Scenario extends React.Component {
   runAction(action, delay) {
     // delay in seconds
 
-    if(action.data.action === 'none'){
+    if (action.data.action === 'none') {
       console.warn("No command selected. Nothing was sent.");
       return;
     }
@@ -414,8 +431,7 @@ class Scenario extends React.Component {
     }
   }
 
-  exportDashboard(index) {
-    // filter properties
+  copyDashboard(index) {
     let dashboard = JSON.parse(JSON.stringify(this.state.dashboards[index]));
 
     let widgets = JSON.parse(JSON.stringify(WidgetStore.getState().filter(w => w.dashboardID === parseInt(dashboard.id, 10))));
@@ -427,35 +443,53 @@ class Scenario extends React.Component {
     delete dashboard.scenarioID;
     delete dashboard.id;
 
+    return dashboard;
+  }
+
+  exportDashboard(index) {
+    let dashboard = this.copyDashboard(index);
+
     // show save dialog
     const blob = new Blob([JSON.stringify(dashboard, null, 2)], { type: 'application/json' });
     FileSaver.saveAs(blob, 'dashboard - ' + dashboard.name + '.json');
+  }
+
+  duplicateDashboard(index) {
+    let newDashboard = this.copyDashboard(index);
+    newDashboard.scenarioID = this.state.scenario.id;
+    newDashboard.name = newDashboard.name + '_copy';
+
+    AppDispatcher.dispatch({
+      type: 'dashboards/start-add',
+      data: newDashboard,
+      token: this.state.sessionToken,
+    });
   }
 
   /* ##############################################
   * Signal modification methods
   ############################################## */
 
-  closeEditSignalsModal(direction){
-    if( direction === "in") {
-      this.setState({editInputSignalsModal: false});
-    } else if( direction === "out"){
-      this.setState({editOutputSignalsModal: false});
+  closeEditSignalsModal(direction) {
+    if (direction === "in") {
+      this.setState({ editInputSignalsModal: false });
+    } else if (direction === "out") {
+      this.setState({ editOutputSignalsModal: false });
     }
   }
 
-  onEditFiles(){
+  onEditFiles() {
     let tempFiles = [];
-    this.state.files.forEach( file => {
+    this.state.files.forEach(file => {
       tempFiles.push({
         id: file.id,
         name: file.name
       });
     })
-    this.setState({filesEditModal: true, filesEditSaveState: tempFiles});
+    this.setState({ filesEditModal: true, filesEditSaveState: tempFiles });
   }
 
-  closeEditFiles(){
+  closeEditFiles() {
     this.setState({ filesEditModal: false });
     // TODO do we need this if the dispatches happen in the dialog?
   }
@@ -468,10 +502,10 @@ class Scenario extends React.Component {
 
     let fileList = '';
 
-    for (let id of fileIDs){
+    for (let id of fileIDs) {
       for (let file of this.state.files) {
         if (file.id === id && types.some(e => file.type.includes(e))) {
-          if (fileList === ''){
+          if (fileList === '') {
             fileList = file.name
           } else {
             fileList = fileList + ';' + file.name;
@@ -482,12 +516,12 @@ class Scenario extends React.Component {
     return fileList;
   }
 
-  startPintura(configIndex){
+  startPintura(configIndex) {
     let config = this.state.configs[configIndex];
 
     // get xml / CIM file
     let files = []
-    for (let id of config.fileIDs){
+    for (let id of config.fileIDs) {
       for (let file of this.state.files) {
         if (file.id === id && ['xml'].some(e => file.type.includes(e))) {
           files.push(file);
@@ -495,7 +529,7 @@ class Scenario extends React.Component {
       }
     }
 
-    if(files.length > 1){
+    if (files.length > 1) {
       // more than one CIM file...
       console.warn("There is more than one CIM file selected in this component configuration. I will open them all in a separate tab.")
     }
@@ -534,31 +568,31 @@ class Scenario extends React.Component {
     const iconStyle = {
       color: '#007bff',
       height: '25px',
-      width : '25px'
+      width: '25px'
     }
 
-    if(this.state.scenario === undefined){
+    if (this.state.scenario === undefined) {
       return <h1>Loading Scenario...</h1>;
     }
 
     return <div className='section'>
       <div className='section-buttons-group-right'>
-      <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete files of scenario </Tooltip>} >
-        <Button key={0} variant= 'light' size="lg" onClick={this.onEditFiles.bind(this)} style={buttonStyle}>
-          <Icon icon="file" style= {iconStyle}/>
-        </Button>
+        <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete files of scenario </Tooltip>} >
+          <Button key={0} variant='light' size="lg" onClick={this.onEditFiles.bind(this)} style={buttonStyle}>
+            <Icon icon="file" style={iconStyle} />
+          </Button>
         </OverlayTrigger>
       </div>
       <h1>{this.state.scenario.name}</h1>
 
       <EditFiles
-          sessionToken={this.state.sessionToken}
-          show={this.state.filesEditModal}
-          onClose={this.closeEditFiles.bind(this)}
-          signals={this.state.signals}
-          files={this.state.files}
-          scenarioID={this.state.scenario.id}
-        />
+        sessionToken={this.state.sessionToken}
+        show={this.state.filesEditModal}
+        onClose={this.closeEditFiles.bind(this)}
+        signals={this.state.signals}
+        files={this.state.files}
+        scenarioID={this.state.scenario.id}
+      />
 
 
 
@@ -594,9 +628,11 @@ class Scenario extends React.Component {
           editButton
           deleteButton
           exportButton
+          duplicateButton
           onEdit={index => this.setState({ editConfigModal: true, modalConfigData: this.state.configs[index], modalConfigIndex: index })}
           onDelete={(index) => this.setState({ deleteConfigModal: true, modalConfigData: this.state.configs[index], modalConfigIndex: index })}
           onExport={index => this.exportConfig(index)}
+          onDuplicate={index => this.duplicateConfig(index)}
         />
       </Table>
 
@@ -660,9 +696,11 @@ class Scenario extends React.Component {
           editButton
           deleteButton
           exportButton
+          duplicateButton
           onEdit={index => this.setState({ dashboardEditModal: true, modalDashboardData: this.state.dashboards[index] })}
           onDelete={(index) => this.setState({ deleteDashboardModal: true, modalDashboardData: this.state.dashboards[index], modalDashboardIndex: index })}
           onExport={index => this.exportDashboard(index)}
+          onDuplicate={index => this.duplicateDashboard(index)}
         />
       </Table>
 
@@ -684,7 +722,7 @@ class Scenario extends React.Component {
       <h2 style={tableHeadingStyle}>Users sharing this scenario</h2>
       <div>
         <Table data={this.state.scenario.users}>
-          <TableColumn title='Name' dataKey='username'/>
+          <TableColumn title='Name' dataKey='username' />
           <TableColumn title='Mail' dataKey='mail' />
           <TableColumn
             title=''
@@ -708,7 +746,7 @@ class Scenario extends React.Component {
               Add User
             </Button>
           </InputGroup.Append>
-        </InputGroup><br/><br/>
+        </InputGroup><br /><br />
       </div>
 
       <DeleteDialog title="user from scenario:" name={this.state.deleteUserName} show={this.state.deleteUserModal} onClose={(c) => this.closeDeleteUserModal(c)} />
