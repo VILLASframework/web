@@ -52,6 +52,7 @@ class Scenarios extends Component {
       sessionToken: localStorage.getItem("token"),
 
       newModal: false,
+      duplicateModal: false,
       deleteModal: false,
       editModal: false,
       importModal: false,
@@ -148,17 +149,8 @@ class Scenarios extends Component {
     }
   };
 
-  exportScenario(index) {
-    // copy by value by converting to JSON and back
-    // otherwise, IDs of state objects will be deleted
-    let scenario = JSON.parse(JSON.stringify(this.state.scenarios[index]));
-    let configs = JSON.parse(JSON.stringify(this.state.configs.filter(config => config.scenarioID === scenario.id)));
-    let dashboards = JSON.parse(JSON.stringify(this.state.dashboards.filter(dashb => dashb.scenarioID === scenario.id)));
-
-    // create JSON object and add component configs
-    delete scenario.id;
-    let jsonObj = scenario;
-
+  getConfigs(scenarioID) {
+    let configs = JSON.parse(JSON.stringify(this.state.configs.filter(config => config.scenarioID === scenarioID)));
     configs.forEach((config) => {
       let signals = JSON.parse(JSON.stringify(SignalStore.getState().filter(s => s.configID === parseInt(config.id, 10))));
       signals.forEach((signal) => {
@@ -179,8 +171,12 @@ class Scenarios extends Component {
       delete config.inputLength;
       delete config.outputLength;
     })
-    jsonObj["configs"] = configs;
 
+    return configs;
+  }
+
+  getDashboards(scenarioID) {
+    let dashboards = JSON.parse(JSON.stringify(this.state.dashboards.filter(dashb => dashb.scenarioID === scenarioID)));
     // add Dashboards and Widgets to JSON object
     dashboards.forEach((dboard) => {
       let widgets = JSON.parse(JSON.stringify(WidgetStore.getState().filter(w => w.dashboardID === parseInt(dboard.id, 10))));
@@ -192,12 +188,40 @@ class Scenarios extends Component {
       delete dboard.scenarioID;
       delete dboard.id;
     });
-    jsonObj["dashboards"] = dashboards;
+    return dashboards;
+  }
 
+  exportScenario(index) {
+    // copy by value by converting to JSON and back
+    // otherwise, IDs of state objects will be deleted
+    let scenario = JSON.parse(JSON.stringify(this.state.scenarios[index]));
+    let scenarioID = scenario.id;
+    delete scenario.id;
+
+    let jsonObj = scenario;
+    jsonObj["configs"] = this.getConfigs(scenarioID);
+    jsonObj["dashboards"] = this.getDashboards(scenarioID);
 
     // create JSON string and show save dialog
     const blob = new Blob([JSON.stringify(jsonObj, null, 2)], { type: 'application/json' });
     FileSaver.saveAs(blob, 'scenario - ' + scenario.name + '.json');
+  }
+
+  duplicateScenario(index) {
+    let scenario = JSON.parse(JSON.stringify(this.state.scenarios[index]));
+    scenario.name = scenario.name + '_copy';
+    let jsonObj = scenario;
+
+    jsonObj["configs"] = this.getConfigs(scenario.id);
+    jsonObj["dashboards"] = this.getDashboards(scenario.id);
+
+    if(jsonObj) {
+      AppDispatcher.dispatch({
+        type: 'scenarios/start-add',
+        data: jsonObj,
+        token: this.state.sessionToken,
+      });
+    }
   }
 
   modifyRunningColumn(running){
@@ -228,9 +252,11 @@ class Scenarios extends Component {
             editButton
             deleteButton
             exportButton
+            duplicateButton
             onEdit={index => this.setState({ editModal: true, modalScenario: this.state.scenarios[index] })}
             onDelete={index => this.setState({ deleteModal: true, modalScenario: this.state.scenarios[index] })}
             onExport={index => this.exportScenario(index)}
+            onDuplicate={index => this.duplicateScenario(index)}
           />
         </Table>
 

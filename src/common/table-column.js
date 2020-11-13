@@ -25,6 +25,7 @@ class TableColumn extends Component {
     editButton: false,
     deleteButton: false,
     exportButton: false,
+    duplicateButton: false,
     link: '/',
     linkKey: '',
     dataIndex: false,

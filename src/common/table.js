@@ -123,6 +123,11 @@ class CustomTable extends Component {
       <Button variant='table-control-button' onClick={() => child.props.onExport(index)} disabled={child.props.onExport == null}><Icon icon='download' /></Button></OverlayTrigger>);
     }
 
+    if (child.props.duplicateButton) {
+      cell.push(<OverlayTrigger key={3} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"duplicate"}`}> Duplicate </Tooltip>} >
+      <Button variant='table-control-button' onClick={() => child.props.onDuplicate(index)} disabled={child.props.onDuplicate == null}><Icon icon='copy' /></Button></OverlayTrigger>);
+    }
+
     return cell;
   } // addCell
 
