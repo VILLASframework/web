@@ -181,6 +181,16 @@ class NewICDialog extends React.Component {
             <FormControl type="text" placeholder="Enter API URL" value={this.state.apiurl} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
+          <FormGroup controlId="location">
+            <FormLabel>Location</FormLabel>
+            <FormControl type="text" placeholder="Enter Location" value={this.state.location} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="description">
+            <FormLabel>Description</FormLabel>
+            <FormControl type="text" placeholder="Enter Description" value={this.state.description} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
           <FormGroup controlId="uuid" valid={this.validateForm('uuid')}>
             <FormLabel>UUID</FormLabel>
             <FormControl type="text" placeholder="Enter uuid" value={this.state.uuid} onChange={(e) => this.handleChange(e)} />
