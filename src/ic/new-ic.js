@@ -16,8 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, FormLabel, FormCheck } from 'react-bootstrap';
-import {Collapse} from 'react-collapse';
+import { FormGroup, FormControl, FormLabel, FormCheck, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
 
 class NewICDialog extends React.Component {
@@ -142,19 +141,22 @@ class NewICDialog extends React.Component {
       <Dialog show={this.props.show} title="New Infrastructure Component" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.validateForm()}>
         <form>
           <FormGroup controlId="managedexternally">
-            <FormCheck type={"checkbox"} label={"Managed externally"} defaultChecked={this.state.managedexternally} onChange={e => this.handleChange(e)}>
-            </FormCheck>
+            <OverlayTrigger key="3" placement={'left'} overlay={<Tooltip id={`tooltip-${"me"}`}>An externally managed component will show up in the list only after a VILLAScontroller for the component type has created the component and cannot be edited by users</Tooltip>} >
+              <FormCheck type={"checkbox"} label={"Managed externally"} defaultChecked={this.state.managedexternally} onChange={e => this.handleChange(e)}>
+              </FormCheck>
+            </OverlayTrigger>
           </FormGroup>
-          <Collapse isOpened={this.state.managedexternally} >
-            <FormLabel size="sm">the component will show up in the list only after a VILLAScontroller for the component type has created the component and cannot be edited by users</FormLabel>
-          </Collapse>
           <FormGroup controlId="name" valid={this.validateForm('name')}>
-            <FormLabel>Name</FormLabel>
+          <OverlayTrigger key="0" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
+            <FormLabel>Name *</FormLabel>
+          </OverlayTrigger>
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="category" valid={this.validateForm('category')}>
-            <FormLabel>Category of component</FormLabel>
+            <OverlayTrigger key="1" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
+              <FormLabel>Category of component *</FormLabel>
+            </OverlayTrigger>
             <FormControl as="select" value={this.state.category} onChange={(e) => this.handleChange(e)}>
               <option default>Select category</option>
               <option>simulator</option>
@@ -165,7 +167,9 @@ class NewICDialog extends React.Component {
             </FormControl>
           </FormGroup>
           <FormGroup controlId="type" valid={this.validateForm('type')}>
-            <FormLabel>Type of component</FormLabel>
+            <OverlayTrigger key="3" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
+              <FormLabel>Type of component *</FormLabel>
+            </OverlayTrigger>
             <FormControl as="select" value={this.state.type} onChange={(e) => this.handleChange(e)}>
               <option default>Select type</option>
               {typeOptions.map((name,index) => (
