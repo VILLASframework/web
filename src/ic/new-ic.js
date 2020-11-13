@@ -105,6 +105,8 @@ class NewICDialog extends React.Component {
     if (target === 'websocketurl') return websocketurl ? "success" : "error";
     if (target === 'type') return type ? "success" : "error";
     if (target === 'category') return category ? "success" : "error";
+
+    return this.valid;
   }
 
   uuidv4() {
@@ -137,7 +139,7 @@ class NewICDialog extends React.Component {
         typeOptions =[];
     }
     return (
-      <Dialog show={this.props.show} title="New Infrastructure Component" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog show={this.props.show} title="New Infrastructure Component" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.validateForm()}>
         <form>
           <FormGroup controlId="managedexternally">
             <FormCheck type={"checkbox"} label={"Managed externally"} defaultChecked={this.state.managedexternally} onChange={e => this.handleChange(e)}>
@@ -151,7 +153,7 @@ class NewICDialog extends React.Component {
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="category">
+          <FormGroup controlId="category" valid={this.validateForm('category')}>
             <FormLabel>Category of component</FormLabel>
             <FormControl as="select" value={this.state.category} onChange={(e) => this.handleChange(e)}>
               <option default>Select category</option>
@@ -162,7 +164,7 @@ class NewICDialog extends React.Component {
               <option>equipment</option>
             </FormControl>
           </FormGroup>
-          <FormGroup controlId="type">
+          <FormGroup controlId="type" valid={this.validateForm('type')}>
             <FormLabel>Type of component</FormLabel>
             <FormControl as="select" value={this.state.type} onChange={(e) => this.handleChange(e)}>
               <option default>Select type</option>
