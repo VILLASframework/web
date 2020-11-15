@@ -359,7 +359,7 @@ class InfrastructureComponents extends Component {
         <EditICDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} ic={this.state.modalIC} />
         <ImportICDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} />
 
-        <DeleteDialog title="infrastructure-component" name={_.get(this.state.modalIC, 'properties.name') || _.get(this.state.modalIC, 'rawProperties.name') || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
+        <DeleteDialog title="infrastructure-component" name={this.state.modalIC.name || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
       </div>
     );
   }
