@@ -316,6 +316,15 @@ class InfrastructureComponents extends Component {
     }
   }
 
+  modifyNameColumn(name){
+    let ic = this.state.ics.find(ic => ic.name === name);
+    let index = this.state.ics.indexOf(ic);
+    if(ic.type === "villas-node" || ic.type === "villas-relay"){
+      return <Button variant="link" onClick={() => this.setState({ icModal: true, modalIC: ic, modalIndex: index })}>{name}</Button>    } 
+    else{
+      return <span>{name}</span>
+    }
+  }
 
   render() {
     const buttonStyle = {
@@ -328,7 +337,7 @@ class InfrastructureComponents extends Component {
 
         <Table data={this.state.ics}>
           <TableColumn checkbox onChecked={(index, event) => this.onICChecked(index, event)} width='30' />
-          <TableColumn title='Name' dataKeys={['name', 'rawProperties.name']} clickable={true} onClick={index => this.setState({ icModal: true, modalIC: this.state.ics[index], modalIndex: index })}/>
+          <TableColumn title='Name' dataKeys={['name', 'rawProperties.name']} modifier={(name) => this.modifyNameColumn(name)}/>
           <TableColumn title='State' labelKey='state' tooltipKey='error' labelStyle={(state, component) => this.stateLabelStyle(state, component)} />
           <TableColumn title='Category' dataKeys={['category', 'rawProperties.category']} />
           <TableColumn title='Type' dataKeys={['type', 'rawProperties.type']} />
