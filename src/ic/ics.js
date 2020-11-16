@@ -17,7 +17,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button } from 'react-bootstrap';
+import { Button, Badge } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 import moment from 'moment'
@@ -31,6 +31,7 @@ import TableColumn from '../common/table-column';
 import NewICDialog from './new-ic';
 import EditICDialog from './edit-ic';
 import ImportICDialog from './import-ic';
+import ICDialog from './ic-dialog';
 
 import ICAction from './ic-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
@@ -78,6 +79,7 @@ class InfrastructureComponents extends Component {
       ics: ics,
       modalIC: {},
       deleteModal: false,
+      icModal: false,
       selectedICs: [],
       currentUser: JSON.parse(localStorage.getItem("currentUser"))
     };
@@ -99,7 +101,7 @@ class InfrastructureComponents extends Component {
 
   refresh() {
 
-    if (this.state.editModal || this.state.deleteModal){
+    if (this.state.editModal || this.state.deleteModal || this.state.icModal){
       // do nothing since a dialog is open at the moment
     }
     else {
@@ -137,6 +139,10 @@ class InfrastructureComponents extends Component {
         token: this.state.sessionToken,
       });
     }
+  }
+
+  closeICModal(data){
+    this.setState({ icModal : false });
   }
 
   closeDeleteModal(confirmDelete){
@@ -200,7 +206,7 @@ class InfrastructureComponents extends Component {
     this.setState({ selectedICs: selectedICs });
   }
 
-  runAction = action => {
+  runAction(action) {
     for (let index of this.state.selectedICs) {
       AppDispatcher.dispatch({
         type: 'ics/start-action',
@@ -291,6 +297,35 @@ class InfrastructureComponents extends Component {
     return dateTime.toLocaleString('de-DE');
   }
 
+  modifyManagedExternallyColumn(managedExternally){
+
+    if(managedExternally){
+      return <Icon icon='check' />
+    } else {
+      return <Icon icon='times' />
+    }
+
+  }
+
+  modifyUptimeColumn(uptime){
+    if(uptime >= 0){
+      return <span>{uptime + "s"}</span>
+    }
+    else{
+      return <Badge variant="secondary">Unknown</Badge>
+    }
+  }
+
+  modifyNameColumn(name){
+    let ic = this.state.ics.find(ic => ic.name === name);
+    let index = this.state.ics.indexOf(ic);
+    if(ic.type === "villas-node" || ic.type === "villas-relay"){
+      return <Button variant="link" onClick={() => this.setState({ icModal: true, modalIC: ic, modalIndex: index })}>{name}</Button>    }
+    else{
+      return <span>{name}</span>
+    }
+  }
+
   render() {
     const buttonStyle = {
       marginLeft: '10px'
@@ -302,13 +337,16 @@ class InfrastructureComponents extends Component {
 
         <Table data={this.state.ics}>
           <TableColumn checkbox onChecked={(index, event) => this.onICChecked(index, event)} width='30' />
-          <TableColumn title='Name' dataKeys={['name', 'rawProperties.name']} />
+          <TableColumn title='Name' dataKeys={['name', 'rawProperties.name']} modifier={(name) => this.modifyNameColumn(name)}/>
           <TableColumn title='State' labelKey='state' tooltipKey='error' labelStyle={(state, component) => this.stateLabelStyle(state, component)} />
           <TableColumn title='Category' dataKeys={['category', 'rawProperties.category']} />
           <TableColumn title='Type' dataKeys={['type', 'rawProperties.type']} />
-          <TableColumn title='Location' dataKeys={['properties.location', 'rawProperties.location']} />
+          <TableColumn title='Managed externally' dataKey='managedexternally' modifier={(managedexternally) => this.modifyManagedExternallyColumn(managedexternally)} width='105' />
+          <TableColumn title='Uptime' dataKey='uptime' modifier={(uptime) => this.modifyUptimeColumn(uptime)}/>
+          <TableColumn title='Location' dataKey='location' />
           {/* <TableColumn title='Realm' dataKeys={['properties.realm', 'rawProperties.realm']} /> */}
-          <TableColumn title='WebSocket Endpoint' dataKey='host' />
+          <TableColumn title='WebSocket URL' dataKey='websocketurl' />
+          <TableColumn title='API URL' dataKey='apiurl' />
           <TableColumn title='Last Update' dataKey='stateUpdateAt' modifier={(stateUpdateAt) => this.stateUpdateModifier(stateUpdateAt)} />
           {this.state.currentUser.role === "Admin" ?
           <TableColumn
@@ -332,7 +370,7 @@ class InfrastructureComponents extends Component {
           <div style={{ float: 'left' }}>
             <ICAction
               runDisabled={this.state.selectedICs.length === 0}
-              runAction={this.runAction}
+              runAction={action => this.runAction(action)}
               actions={[
                 { id: '-1', title: 'Select command', data: { action: 'none' } },
                 { id: '0', title: 'Reset', data: { action: 'reset' } },
@@ -358,6 +396,7 @@ class InfrastructureComponents extends Component {
         <NewICDialog show={this.state.newModal} onClose={data => this.closeNewModal(data)} />
         <EditICDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} ic={this.state.modalIC} />
         <ImportICDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} />
+        <ICDialog show={this.state.icModal} onClose={data => this.closeICModal(data)} ic={this.state.modalIC} token={this.state.sessionToken} />
 
         <DeleteDialog title="infrastructure-component" name={this.state.modalIC.name || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
       </div>
