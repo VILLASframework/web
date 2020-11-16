@@ -16,8 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
-
+import { FormGroup, FormControl, FormLabel, FormCheck, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
 
 class NewICDialog extends React.Component {
@@ -28,10 +27,11 @@ class NewICDialog extends React.Component {
 
     this.state = {
       name: '',
-      host: '',
+      websocketurl: '',
       uuid: '',
       type: '',
       category: '',
+      managedexternally: false,
     };
   }
 
@@ -42,33 +42,41 @@ class NewICDialog extends React.Component {
           name: this.state.name,
           type: this.state.type,
           category: this.state.category,
-          uuid: this.state.uuid
+          uuid: this.state.uuid,
+          managedexternally: this.state.managedexternally,
         };
 
-        if (this.state.host != null && this.state.host !== "" && this.state.host !== 'http://') {
-          data.host = this.state.host;
+        if (this.state.websocketurl != null && this.state.websocketurl !== "" && this.state.websocketurl !== 'http://') {
+          data.websocketurl = this.state.websocketurl;
         }
 
         this.props.onClose(data);
+        this.setState({managedexternally: false});
       }
     } else {
       this.props.onClose();
+      this.setState({managedexternally: false});
     }
   }
 
   handleChange(e) {
+    if(e.target.id === "managedexternally"){
+      this.setState({ managedexternally : !this.state.managedexternally});
+    }
+    else{
     this.setState({ [e.target.id]: e.target.value });
+    }
   }
 
   resetState() {
-    this.setState({ name: '', host: 'http://', uuid: this.uuidv4(), type: '', category: ''});
+    this.setState({ name: '', websocketurl: 'http://', uuid: this.uuidv4(), type: '', category: '', managedexternally: false});
   }
 
   validateForm(target) {
     // check all controls
     let name = true;
     let uuid = true;
-    let host = true;
+    let websocketurl = true;
     let type = true;
     let category = true;
 
@@ -76,7 +84,7 @@ class NewICDialog extends React.Component {
       name = false;
     }
 
-    if (this.state.uuid === '') {
+    if (!this.state.managedexternally && this.state.uuid === '') {
       uuid = false;
     }
 
@@ -88,14 +96,16 @@ class NewICDialog extends React.Component {
       category = false;
     }
 
-    this.valid = name && uuid && host && type && category;
+    this.valid = name && uuid && websocketurl && type && category;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
     if (target === 'uuid') return uuid ? "success" : "error";
-    if (target === 'host') return host ? "success" : "error";
+    if (target === 'websocketurl') return websocketurl ? "success" : "error";
     if (target === 'type') return type ? "success" : "error";
     if (target === 'category') return category ? "success" : "error";
+
+    return this.valid;
   }
 
   uuidv4() {
@@ -107,27 +117,84 @@ class NewICDialog extends React.Component {
   }
 
   render() {
+    let typeOptions = [];
+    switch(this.state.category){
+      case "simulator":
+        typeOptions = ["dummy","generic","dpsim","rtlab","rscad"];
+          break;
+      case "controller":
+        typeOptions = ["kubernetes","villas-controller"];
+        break;
+      case "gateway":
+        typeOptions = ["villas-node","villas-relay"];
+        break;
+      case "service":
+        typeOptions = ["ems","custom"];
+        break;
+      case "equipment":
+        typeOptions = ["chroma-emulator","chroma-loads","sma-sunnyboy","fleps","sonnenbatterie"];
+        break;
+      default:
+        typeOptions =[];
+    }
     return (
-      <Dialog show={this.props.show} title="New Infrastructure Component" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog show={this.props.show} title="New Infrastructure Component" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.validateForm()}>
         <form>
+          <FormGroup controlId="managedexternally">
+            <OverlayTrigger key="3" placement={'left'} overlay={<Tooltip id={`tooltip-${"me"}`}>An externally managed component will show up in the list only after a VILLAScontroller for the component type has created the component and cannot be edited by users</Tooltip>} >
+              <FormCheck type={"checkbox"} label={"Managed externally"} defaultChecked={this.state.managedexternally} onChange={e => this.handleChange(e)}>
+              </FormCheck>
+            </OverlayTrigger>
+          </FormGroup>
           <FormGroup controlId="name" valid={this.validateForm('name')}>
-            <FormLabel>Name</FormLabel>
+          <OverlayTrigger key="0" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
+            <FormLabel>Name *</FormLabel>
+          </OverlayTrigger>
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="host">
-            <FormLabel>Host</FormLabel>
-            <FormControl type="text" placeholder="Enter host" value={this.state.host} onChange={(e) => this.handleChange(e)} />
+          <FormGroup controlId="category" valid={this.validateForm('category')}>
+            <OverlayTrigger key="1" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
+              <FormLabel>Category of component *</FormLabel>
+            </OverlayTrigger>
+            <FormControl as="select" value={this.state.category} onChange={(e) => this.handleChange(e)}>
+              <option default>Select category</option>
+              <option>simulator</option>
+              <option>controller</option>
+              <option>service</option>
+              <option>gateway</option>
+              <option>equipment</option>
+            </FormControl>
+          </FormGroup>
+          <FormGroup controlId="type" valid={this.validateForm('type')}>
+            <OverlayTrigger key="3" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
+              <FormLabel>Type of component *</FormLabel>
+            </OverlayTrigger>
+            <FormControl as="select" value={this.state.type} onChange={(e) => this.handleChange(e)}>
+              <option default>Select type</option>
+              {typeOptions.map((name,index) => (
+                <option key={index}>{name}</option>
+              ))}
+            </FormControl>
+          </FormGroup>
+          <FormGroup controlId="websocketurl">
+            <FormLabel>Websocket URL</FormLabel>
+            <FormControl type="text" placeholder="Enter Websocket URL" value={this.state.websocketurl} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="category">
-            <FormLabel>Category of component (e.g. Simulator, Gateway, ...)</FormLabel>
-            <FormControl type="text" placeholder="Enter category" value={this.state.category} onChange={(e) => this.handleChange(e)} />
+          <FormGroup controlId="apiurl">
+            <FormLabel>API URL</FormLabel>
+            <FormControl type="text" placeholder="Enter API URL" value={this.state.apiurl} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="type">
-            <FormLabel>Type of component (e.g. RTDS, VILLASnode, ...)</FormLabel>
-            <FormControl type="text" placeholder="Enter type" value={this.state.type} onChange={(e) => this.handleChange(e)} />
+          <FormGroup controlId="location">
+            <FormLabel>Location</FormLabel>
+            <FormControl type="text" placeholder="Enter Location" value={this.state.location} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="description">
+            <FormLabel>Description</FormLabel>
+            <FormControl type="text" placeholder="Enter Description" value={this.state.description} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="uuid" valid={this.validateForm('uuid')}>

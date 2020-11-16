@@ -16,9 +16,9 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel, FormCheck } from 'react-bootstrap';
 import _ from 'lodash';
-
+import {Collapse} from 'react-collapse';
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
 
@@ -30,10 +30,14 @@ class EditICDialog extends React.Component {
 
     this.state = {
       name: '',
-      host: '',
+      websocketurl: '',
+      apiurl: '',
+      location: '',
+      description: '',
       type: '',
       category: '',
-      properties: {},
+      managedexternally: false,
+      startParameterScheme: {},
     };
   }
 
@@ -46,8 +50,20 @@ class EditICDialog extends React.Component {
           data.name = this.state.name;
         }
 
-        if (this.state.host != null && this.state.host !== "" && this.state.host !== "http://" && this.state.host !== this.props.ic.host) {
-          data.host = this.state.host;
+        if (this.state.websocketurl != null && this.state.websocketurl !== "" && this.state.websocketurl !== "http://" && this.state.websocketurl !== this.props.ic.websocketurl) {
+          data.websocketurl = this.state.websocketurl;
+        }
+
+        if (this.state.apiurl != null && this.state.apiurl !== "" && this.state.apiurl !== "http://" && this.state.apiurl !== this.props.ic.apiurl) {
+          data.apiurl = this.state.apiurl;
+        }
+
+        if (this.state.location != null && this.state.location !== this.props.ic.location) {
+          data.location = this.state.location;
+        }
+
+        if (this.state.description != null && this.state.description !== this.props.ic.description) {
+          data.description = this.state.description;
         }
 
         if (this.state.type != null && this.state.type !== "" && this.state.type !== this.props.ic.type) {
@@ -57,37 +73,70 @@ class EditICDialog extends React.Component {
         if (this.state.category != null && this.state.category !== "" && this.state.category !== this.props.ic.category) {
           data.category = this.state.category;
         }
-        if (this.state.properties !== {}) {
-          data.properties = this.state.properties
+        if (this.state.startParameterScheme !== {}) {
+          data.startParameterScheme = this.state.startParameterScheme
         }
+
+        data.managedexternally = this.state.managedexternally;
 
 
         this.props.onClose(data);
+        this.setState({managedexternally: false});
       }
     } else {
       this.props.onClose();
+      this.setState({managedexternally: false});
     }
   }
 
   handleChange(e) {
+    if(e.target.id === "managedexternally"){
+      this.setState({ managedexternally : !this.state.managedexternally});
+    }
+    else{
     this.setState({ [e.target.id]: e.target.value });
+    }
   }
 
-  handlePropertiesChange(data) {
-    this.setState({ properties: data });
+  handleStartParameterSchemeChange(data) {
+    this.setState({ startParameterScheme: data });
   }
 
   resetState() {
     this.setState({
       name: this.props.ic.name,
-      host: this.props.ic.host,
+      websocketurl: this.props.ic.websocketurl,
+      apiurl: this.props.ic.apiurl,
       type: this.props.ic.type,
+      location: this.props.ic.location,
+      description: this.props.ic.description,
       category: this.props.ic.category,
-      properties: _.merge({}, _.get(this.props.ic, 'rawProperties'), _.get(this.props.ic, 'properties'))
+      managedexternally: false,
+      startParameterScheme: this.props.ic.startParameterScheme,
     });
   }
 
   render() {
+    let typeOptions = [];
+    switch(this.state.category){
+      case "simulator":
+        typeOptions = ["dummy","generic","dpsim","rtlab","rscad"];
+        break;
+      case "controller":
+        typeOptions = ["kubernetes","villas-controller"];
+        break;
+      case "gateway":
+        typeOptions = ["villas-node","villas-relay"];
+        break;
+      case "service":
+        typeOptions = ["ems","custom"];
+        break;
+      case "equipment":
+        typeOptions = ["chroma-emulator","chroma-loads","sma-sunnyboy","fleps","sonnenbatterie"];
+        break;
+      default:
+        typeOptions =[];
+    }
     return (
       <Dialog
         show={this.props.show}
@@ -105,27 +154,51 @@ class EditICDialog extends React.Component {
             <FormControl type="text" placeholder={this.props.ic.name} value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="host">
-            <FormLabel column={false}>Host</FormLabel>
-            <FormControl type="text" placeholder={this.props.ic.host} value={this.state.host || 'http://' } onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
           <FormGroup controlId="category">
-            <FormLabel column={false}>Category (e.g. Simulator, Gateway, ...)</FormLabel>
-            <FormControl type="text" placeholder={this.props.ic.category} value={this.state.category} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
+            <FormLabel column={false}>Category</FormLabel>
+            <FormControl as="select" value={this.state.category} onChange={(e) => this.handleChange(e)}>
+              <option>simulator</option>
+              <option>controller</option>
+              <option>service</option>
+              <option>gateway</option>
+              <option>equipment</option>
+            </FormControl>
           </FormGroup>
           <FormGroup controlId="type">
-            <FormLabel column={false}>Type (e.g. RTDS, VILLASnode, ...)</FormLabel>
-            <FormControl type="text" placeholder={this.props.ic.type} value={this.state.type} onChange={(e) => this.handleChange(e)} />
+            <FormLabel column={false}>Type</FormLabel>
+            <FormControl as="select" value={this.state.type} onChange={(e) => this.handleChange(e)}>
+              <option default>Select type</option>
+              {typeOptions.map((name,index) => (
+                <option key={index}>{name}</option>
+              ))}
+            </FormControl>
+          </FormGroup>
+          <FormGroup controlId="websocketurl">
+            <FormLabel column={false}>Websocket URL</FormLabel>
+            <FormControl type="text" placeholder={this.props.ic.websocketurl} value={this.state.websocketurl || 'http://' } onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId='properties'>
-            <FormLabel column={false}>Properties</FormLabel>
+          <FormGroup controlId="apiurl">
+            <FormLabel column={false}>API URL</FormLabel>
+            <FormControl type="text" placeholder={this.props.ic.apiurl} value={this.state.apiurl || 'http://' } onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="location">
+            <FormLabel column={false}>Location</FormLabel>
+            <FormControl type="text" placeholder={this.props.ic.location} value={this.state.location || '' } onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="description">
+            <FormLabel column={false}>Description</FormLabel>
+            <FormControl type="text" placeholder={this.props.ic.description} value={this.state.description || '' } onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId='startParameterScheme'>
+            <FormLabel column={false}>Start parameter scheme of IC</FormLabel>
             <ParametersEditor
-              content={this.state.properties}
+              content={this.state.startParameterScheme}
               disabled={false}
-              onChange={(data) => this.handlePropertiesChange(data)}
+              onChange={(data) => this.handleStartParameterSchemeChange(data)}
             />
           </FormGroup>
         </form>

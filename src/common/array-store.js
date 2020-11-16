@@ -98,6 +98,7 @@ class ArrayStore extends ReduceStore {
         return state;
 
       case this.type + '/added':
+        if(typeof action.data.managedexternally !== "undefined" && action.data.managedexternally === true ) return state;
         return this.updateElements(state, [action.data]);
 
       case this.type + '/add-error':

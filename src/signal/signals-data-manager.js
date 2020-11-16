@@ -18,6 +18,7 @@
 import RestDataManager from '../common/data-managers/rest-data-manager';
 import RestAPI from "../common/api/rest-api";
 import AppDispatcher from "../common/app-dispatcher";
+import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
 
 class SignalsDataManager extends RestDataManager{
 
@@ -33,6 +34,152 @@ class SignalsDataManager extends RestDataManager{
         data: response.config
       });
     });
+
+  }
+
+  startAutoConfig(url, socketname, token, configID){
+    // This function queries the VILLASnode API to obtain the configuration of the VILLASnode located at url
+    // Endpoint: http[s]://server:port/api/v1 (to be generated based on IC API URL, port 4000)
+    // data contains the request data: { action, id, (request)}
+    // See documentation of VILLASnode API: https://villas.fein-aachen.org/doc/node-dev-api-node.html
+
+    RestAPI.get(url, null).then(response => {
+      AppDispatcher.dispatch({
+        type: 'signals/autoconfig-loaded',
+        data: response,
+        token: token,
+        socketname: socketname,
+        configID: configID
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'signals/autoconfig-error',
+        error: error
+      })
+    })
+  }
+
+  saveSignals(nodes, token, configID, socketname){
+
+    if(nodes.length === 0){
+      const SIGNAL_AUTOCONF_ERROR_NOTIFICATION = {
+        title: 'Failed to load nodes ',
+        message: 'VILLASnode returned empty response',
+        level: 'error'
+      };
+      NotificationsDataManager.addNotification(SIGNAL_AUTOCONF_ERROR_NOTIFICATION);
+      return;
+    }
+
+    let configured = false;
+    let error = false;
+    for(let nodeConfig of nodes){
+      console.log("parsing node config: ", nodeConfig)
+      if(!nodeConfig.hasOwnProperty("name")){
+        console.warn("Could not parse the following node config because it lacks a name parameter:", nodeConfig);
+      } else if(nodeConfig.name === socketname){
+        if(configured){
+          const SIGNAL_AUTOCONF_WARNING_NOTIFICATION = {
+            title: 'There might be a problem with the signal auto-config',
+            message: 'VILLASnode returned multiple node configurations for the websocket ' + socketname + '. This is a problem of the VILLASnode.',
+            level: 'warning'
+          };
+          NotificationsDataManager.addNotification(SIGNAL_AUTOCONF_WARNING_NOTIFICATION);
+          continue;
+        }
+        // signals are not yet configured:
+        let index_in = 1
+        let index_out = 1
+
+        if(!nodeConfig.in.hasOwnProperty("signals")){
+          const SIGNAL_AUTOCONF_ERROR_NOTIFICATION = {
+            title: 'Failed to load in signal config ',
+            message: 'No field for in signals contained in response.',
+            level: 'error'
+          };
+          NotificationsDataManager.addNotification(SIGNAL_AUTOCONF_ERROR_NOTIFICATION);
+          error = true;
+        } else{
+
+          // add all in signals
+          for(let inSig of nodeConfig.in.signals) {
+
+            if (inSig.enabled) {
+              console.log("adding input signal:", inSig);
+
+              let newSignal = {
+                configID: configID,
+                direction: 'in',
+                name: inSig.hasOwnProperty("name") ? inSig.name : "in_" + String(index_in),
+                unit: inSig.hasOwnProperty("unit") ? inSig.unit : '-',
+                index: index_in,
+                scalingFactor: 1.0
+              };
+
+              AppDispatcher.dispatch({
+                type: 'signals/start-add',
+                data: newSignal,
+                token: token
+              });
+
+              index_in++;
+            }
+          }
+        }
+
+        if(!nodeConfig.out.hasOwnProperty("signals")){
+          const SIGNAL_AUTOCONF_ERROR_NOTIFICATION = {
+            title: 'Failed to load out signal config ',
+            message: 'No field for out signals contained in response.',
+            level: 'error'
+          };
+          NotificationsDataManager.addNotification(SIGNAL_AUTOCONF_ERROR_NOTIFICATION);
+          error=true;
+        }else {
+
+          // add all out signals
+
+          for (let outSig of nodeConfig.out.signals) {
+
+            if (outSig.enabled) {
+              console.log("adding output signal:", outSig);
+              let newSignal = {
+                configID: configID,
+                direction: 'out',
+                name: outSig.hasOwnProperty("name") ? outSig.name : "out_" + String(index_out),
+                unit: outSig.hasOwnProperty("unit") ? outSig.unit : '-',
+                index: index_out,
+                scalingFactor: 1.0
+              };
+
+              AppDispatcher.dispatch({
+                type: 'signals/start-add',
+                data: newSignal,
+                token: token
+              });
+
+              index_out++;
+            }
+          }
+        }
+
+        console.log("Configured", index_in-1, "input signals and", index_out-1, "output signals");
+        configured=true;
+      } else {
+        console.log("ignoring node with name ",nodeConfig.name, " expecting ", socketname )
+      }
+
+
+    }
+
+    if(!error) {
+      const SIGNAL_AUTOCONF_INFO_NOTIFICATION = {
+        title: 'Signal configuration loaded successfully.',
+        message: '',
+        level: 'info'
+      };
+      NotificationsDataManager.addNotification(SIGNAL_AUTOCONF_INFO_NOTIFICATION);
+    }
 
   }
 

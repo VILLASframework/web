@@ -75,7 +75,7 @@ villas node webdemo.conf
 
 ### Visualize real-time data in VILLASweb Dashboards
 1. Use the VILLASweb frontend to create a new infrastructure component for the VILLASnode gateway from above (Admin user required).
-2. Set the `host` parameter of the component to the target you used as the `web.destinations` parameter in the configuration from above.
+2. Set the `websocketurl` parameter of the component to the target you used as the `web.destinations` parameter in the configuration from above.
 3. Create a new scenario in VILLASweb and within that scenario create a new component configuration that uses the infrastructure component you created under 2.
 4. WIP: Use the signal auto-configure function to retrieve the signal configuration of the VILLASnode automatically. 
 5. Create a new dashboard with widgets of your choice and link these widgets to the signals received from the infrastructure component.

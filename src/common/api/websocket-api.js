@@ -16,19 +16,19 @@
  ******************************************************************************/
 
 class WebsocketAPI {
-  constructor(host, callbacks) {
-    this.host = host;
+  constructor(websocketurl, callbacks) {
+    this.websocketurl = websocketurl;
     this.callbacks = callbacks;
 
     this.wasConnected = false;
     this.isClosing = false;
 
-    this.connect(host, callbacks);
+    this.connect(websocketurl, callbacks);
   }
 
-  connect(host, callbacks) {
+  connect(websocketurl, callbacks) {
     // create web socket client
-    this.socket = new WebSocket(WebsocketAPI.getURL(host), 'live');
+    this.socket = new WebSocket(WebsocketAPI.getURL(websocketurl), 'live');
     this.socket.binaryType = 'arraybuffer';
     this.socket.onclose = this.onClose;
     this.socket.onopen = this.onOpen;
@@ -40,12 +40,12 @@ class WebsocketAPI {
   }
 
   reconnect() {
-    //console.log("Reconnecting: " + this.host);
-    this.connect(this.host, this.callbacks);
+    //console.log("Reconnecting: " + this.websocketurl);
+    this.connect(this.websocketurl, this.callbacks);
   }
 
   get url() {
-    return WebsocketAPI.getURL(this.host);
+    return WebsocketAPI.getURL(this.websocketurl);
   }
 
   send(data) {
@@ -58,7 +58,7 @@ class WebsocketAPI {
   }
 
   onError = e => {
-    console.error('Error on WebSocket connection to: ' + this.host + ':', e);
+    console.error('Error on WebSocket connection to: ' + this.websocketurl + ':', e);
 
     if ('onError' in this.callbacks)
       this.callbacks.onError(e);
@@ -78,16 +78,16 @@ class WebsocketAPI {
     }
     else {
       if (this.wasConnected) {
-        console.log("Connection to " + this.host + " dropped. Attempt reconnect in 1 sec");
+        console.log("Connection to " + this.websocketurl + " dropped. Attempt reconnect in 1 sec");
         window.setTimeout(() => { this.reconnect(); }, 1000);
       }
     }
   }
 
-  static getURL(host) {
+  static getURL(websocketurl) {
     // create an anchor element (note: no need to append this element to the document)
     var link = document.createElement('a');
-    link.href = host;
+    link.href = websocketurl;
 
     if (link.protocol === 'https:')
       link.protocol = 'wss:';

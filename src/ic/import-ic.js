@@ -30,7 +30,7 @@ class ImportICDialog extends React.Component {
 
     this.state = {
       name: '',
-      host: '',
+      websocketurl: '',
       uuid: ''
     };
   }
@@ -45,8 +45,8 @@ class ImportICDialog extends React.Component {
           uuid: this.state.uuid
         };
 
-        if (this.state.host != null && this.state.host !== "" && this.state.host !== 'http://') {
-          data.host = this.state.host;
+        if (this.state.websocketurl != null && this.state.websocketurl !== "" && this.state.websocketurl !== 'http://') {
+          data.websocketurl = this.state.websocketurl;
         }
 
         this.props.onClose(data);
@@ -61,7 +61,7 @@ class ImportICDialog extends React.Component {
   }
 
   resetState() {
-    this.setState({ name: '', host: 'http://', uuid: '' });
+    this.setState({ name: '', websocketurl: 'http://', uuid: '' });
   }
 
   loadFile(fileList) {
@@ -81,7 +81,7 @@ class ImportICDialog extends React.Component {
       self.imported = true;
       self.setState({
         name: _.get(ic, 'properties.name') || _.get(ic, 'rawProperties.name'),
-        host: _.get(ic, 'host'),
+        websocketurl: _.get(ic, 'websocketurl'),
         uuid: ic.uuid
       });
     };
@@ -123,9 +123,9 @@ class ImportICDialog extends React.Component {
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="host">
-            <FormLabel>Host</FormLabel>
-            <FormControl type="text" placeholder="Enter host" value={this.state.host} onChange={(e) => this.handleChange(e)} />
+          <FormGroup controlId="websocketurl">
+            <FormLabel>Websocket URL</FormLabel>
+            <FormControl type="text" placeholder="Enter websocketurl" value={this.state.websocketurl} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="uuid" validationState={this.validateForm('uuid')}>

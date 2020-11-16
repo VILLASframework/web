@@ -44,6 +44,7 @@ import EditSignalMapping from "../signal/edit-signal-mapping";
 import FileStore from "../file/file-store"
 import WidgetStore from "../widget/widget-store";
 import { Redirect } from 'react-router-dom';
+import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
 
 class Scenario extends React.Component {
 
@@ -494,6 +495,43 @@ class Scenario extends React.Component {
     // TODO do we need this if the dispatches happen in the dialog?
   }
 
+  signalsAutoConf(index){
+    let componentConfig = this.state.configs[index];
+    // determine apiurl of infrastructure component
+    let ic = this.state.ics.find(ic => ic.id === componentConfig.icID)
+    if(!ic.type.includes("villas-node")){
+      let message = "Cannot autoconfigure signals for IC type " + ic.type + " of category " + ic.category + ". This is only possible for gateway ICs of type 'VILLASnode'."
+      console.warn(message);
+
+      const SIGNAL_AUTOCONF_WARN_NOTIFICATION = {
+        title: 'Failed to load signal config for IC ' + ic.name,
+        message: message,
+        level: 'warning'
+      };
+      NotificationsDataManager.addNotification(SIGNAL_AUTOCONF_WARN_NOTIFICATION);
+      return;
+    }
+
+    let splitWebsocketURL = ic.websocketurl.split("/")
+
+    AppDispatcher.dispatch({
+      type: 'signals/start-autoconfig',
+      url: ic.apiurl+"/nodes",
+      socketname: splitWebsocketURL[splitWebsocketURL.length -1],
+      token: this.state.sessionToken,
+      configID: componentConfig.id
+    });
+
+  }
+
+  uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      // eslint-disable-next-line
+      var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
   /* ##############################################
   * File modification methods
   ############################################## */
@@ -534,12 +572,12 @@ class Scenario extends React.Component {
       console.warn("There is more than one CIM file selected in this component configuration. I will open them all in a separate tab.")
     }
 
-    let base_host = 'aaa.bbb.ccc.ddd/api/v2/files/'
+    let baseURL = 'aaa.bbb.ccc.ddd/api/v2/files/'
     for (let file of files) {
       // endpoint param serves for download and upload of CIM file, token is required for authentication
       let params = {
         token: this.state.sessionToken,
-        endpoint: base_host + String(file.id),
+        endpoint: baseURL + String(file.id),
       }
 
       // TODO start Pintura for editing CIM/ XML file from here
@@ -620,6 +658,11 @@ class Scenario extends React.Component {
           dataKey='inputLength'
           editButton
           onEdit={index => this.setState({ editInputSignalsModal: true, modalConfigData: this.state.configs[index], modalConfigIndex: index })}
+        />
+        <TableColumn
+          title='Signal AutoConf'
+          exportButton
+          onExport={(index) => this.signalsAutoConf(index)}
         />
         <TableColumn title='Infrastructure Component' dataKey='icID' modifier={(icID) => this.getICName(icID)} />
         <TableColumn

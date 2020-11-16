@@ -103,8 +103,9 @@ class CustomTable extends Component {
 
     // add buttons
     if (child.props.editButton) {
-      cell.push(<OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"edit"}`}> Edit </Tooltip>} >
-      <Button variant='table-control-button' onClick={() => child.props.onEdit(index)} disabled={child.props.onEdit == null}><Icon icon='edit' /></Button></OverlayTrigger>);
+      let disable = (typeof data.managedexternally !== "undefined" && data.managedexternally); 
+      cell.push(<OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"edit"}`}>{disable? "Externally managed ICs cannot be edited" : "edit"} </Tooltip>} >
+      <Button variant='table-control-button' onClick={() => child.props.onEdit(index)} disabled={disable || child.props.onEdit == null}><Icon icon='edit' /></Button></OverlayTrigger>);
     }
 
     if (child.props.deleteButton) {
