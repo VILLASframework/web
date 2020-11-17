@@ -27,6 +27,12 @@ class WidgetContextMenu extends React.Component {
     }
   };
 
+  duplicateWidget = event => {
+    if (this.props.onDuplicate != null) {
+      this.props.onDuplicate(this.props.widget);
+    }
+  };
+
   deleteWidget = event => {
     if (this.props.onDelete != null) {
       this.props.onDelete(this.props.widget, this.props.index);
@@ -92,6 +98,7 @@ class WidgetContextMenu extends React.Component {
     const ContextMenu = () => (
       <Menu id={'widgetMenu'+ this.props.index} style={{zIndex: 1000, display: 'inline-block'}}>
       <Item disabled={isLocked} onClick={this.editWidget}>Edit</Item>
+      <Item disabled={isLocked} onClick={this.duplicateWidget}>Duplicate</Item>
       <Item disabled={isLocked} onClick={this.deleteWidget}>Delete</Item>
 
       <Separator />

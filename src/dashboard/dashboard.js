@@ -268,6 +268,19 @@ class Dashboard extends Component {
     this.setState({ editModal: true, modalData: widget, modalIndex: index });
   };
 
+  duplicateWidget(widget) {
+    let widgetCopy = JSON.parse(JSON.stringify(widget));
+    delete widgetCopy.id;
+    widgetCopy.x = widgetCopy.x + 50;
+    widgetCopy.y = widgetCopy.y + 50;
+
+    AppDispatcher.dispatch({
+      type: 'widgets/start-add',
+      token: this.state.sessionToken,
+      data: widgetCopy
+    });
+  };
+
   startEditFiles() {
     let tempFiles = [];
     this.state.files.forEach(file => {
@@ -505,6 +518,7 @@ class Dashboard extends Component {
                   index={parseInt(widgetKey, 10)}
                   widget={this.state.widgets[widgetKey]}
                   onEdit={this.editWidget.bind(this)}
+                  onDuplicate={this.duplicateWidget.bind(this)}
                   onDelete={this.deleteWidget.bind(this)}
                   onChange={this.widgetChange.bind(this)}
 
