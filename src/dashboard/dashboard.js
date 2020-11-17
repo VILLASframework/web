@@ -544,6 +544,7 @@ class Dashboard extends Component {
                     index={parseInt(widgetKey, 10)}
                     widget={this.state.widgets[widgetKey]}
                     onEdit={this.editWidget.bind(this)}
+                    onDuplicate={this.duplicateWidget.bind(this)}
                     onDelete={this.deleteWidget.bind(this)}
                     onChange={this.widgetChange.bind(this)}
 
