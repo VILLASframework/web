@@ -1,7 +1,7 @@
 variables:
   GIT_SUBMODULE_STRATEGY: normal
-  DOCKER_IMAGE_DEV: node:12.2
-  DOCKER_IMAGE: ${CI_REGISTRY}/acs/public/villas/web
+  DOCKER_TAG: ${CI_COMMIT_SHORT_SHA}
+  DOCKER_IMAGE: ${CI_REGISTRY_IMAGE}
 
 cache:
   untracked: true
@@ -18,39 +18,32 @@ stages:
 
 build:
   stage: build
+  image: node:12.2
   before_script:
     - mkdir -p build
   script:
     - npm install
     - npm run build
-  image: ${DOCKER_IMAGE_DEV}
   artifacts:
     paths:
       - build/
     expire_in: 1 week
-  tags:
-    - docker
 
-#test:
-#  stage: test
-#  script:
-#    - npm test
-#  image: ${DOCKER_IMAGE_DEV}
-#  dependencies:
-#    - build
-#  tags:
-#    - docker
-
-deploy:docker:
+deploy:
   stage: deploy
-  before_script:
-    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [ "" ]
   script:
-    - docker build -t ${DOCKER_IMAGE}:${CI_COMMIT_SHORT_SHA} .
-    - docker push ${DOCKER_IMAGE}:${CI_COMMIT_SHORT_SHA}
-  tags:
-    - shell
-    - linux
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context ${CI_PROJECT_DIR}
+      --dockerfile ${CI_PROJECT_DIR}/Dockerfile
+      --destination ${DOCKER_IMAGE}:${DOCKER_TAG}
+      --snapshotMode=redo
+      --cache=true
+      --cache-ttl=12h
   only:
    refs:
      - master
