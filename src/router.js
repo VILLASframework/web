@@ -1,8 +1,4 @@
 /**
- * File: router.js
- * Author: Markus Grigull <mgrigull@eonerc.rwth-aachen.de>
- * Date: 02.03.2017
- *
  * This file is part of VILLASweb.
  *
  * VILLASweb is free software: you can redistribute it and/or modify
@@ -22,9 +18,16 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import App from './containers/app';
-import Login from './containers/login';
-import Logout from './containers/logout';
+import App from './app';
+import Login from './user/login';
+import Logout from './user/logout';
+import Home from './common/home';
+import Scenarios from './scenario/scenarios';
+import Scenario from './scenario/scenario';
+import Dashboard from './dashboard/dashboard'
+import InfrastructureComponents from './ic/ics';
+import Users from './user/users';
+import User from "./user/user";
 
 class Root extends React.Component {
   render() {
@@ -34,6 +37,14 @@ class Root extends React.Component {
           <Route path='/login' component={Login} />
           <Route path='/logout' component={Logout} />
           <Route path='/' component={App} />
+          <Route path='/home' component={Home} />
+          <Route path='/scenarios' component={Scenarios} />
+          <Route path='/scenarios/:scenario' component={Scenario} />
+          <Route path='/dashboards/:dashboard' component={Dashboard} />
+          <Route path='/infrastructure' component={InfrastructureComponents} />
+          <Route path='/users' component={Users} />
+          <Route path='/account' component={User} />
+
         </Switch>
       </BrowserRouter>
     );

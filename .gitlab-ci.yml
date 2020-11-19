@@ -1,7 +1,7 @@
 variables:
   GIT_SUBMODULE_STRATEGY: normal
-  DOCKER_TAG: ${CI_COMMIT_REF_NAME}
-  DOCKER_IMAGE_DEV: villas/web-dev:${CI_COMMIT_REF_NAME}
+  DOCKER_TAG: ${CI_COMMIT_SHORT_SHA}
+  DOCKER_IMAGE: ${CI_REGISTRY_IMAGE}
 
 cache:
   untracked: true
@@ -13,54 +13,38 @@ cache:
     - .yarn
 
 stages:
-  - prepare
   - build
-  - test
-#  - deploy
-  
-prepare:
-  stage: prepare
-  script:
-    - docker build -t ${DOCKER_IMAGE_DEV} -f packaging/docker/Dockerfile.dev .
-  tags:
-    - linux
-    - shell
+  - deploy
 
-build_job:
+build:
   stage: build
+  image: node:12.2
   before_script:
     - mkdir -p build
   script:
     - npm install
     - npm run build
-  image: ${DOCKER_IMAGE_DEV}
   artifacts:
     paths:
       - build/
     expire_in: 1 week
-  tags:
-    - docker
 
-test_job:
-  stage: test
+deploy:
+  stage: deploy
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [ "" ]
   script:
-    - npm test
-  image: ${DOCKER_IMAGE_DEV}
-  dependencies:
-    - build_job
-  tags:
-    - docker
-
-#deploy:docker:
-#  stage: deploy
-#  script:
-#    - docker build -t ${DOCKER_IMAGE} -f packaging/docker/Dockerfile .
-#    - docker tag villas/web:${DOCKER_TAG} villas/web:latest
-#    - docker push villas/web:${DOCKER_TAG}
-#    - docker push villas/web:latest
-#  tags:
-#    - shell
-#    - linux
-#  only:
-#    refs:
-#      - master
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context ${CI_PROJECT_DIR}
+      --dockerfile ${CI_PROJECT_DIR}/Dockerfile
+      --destination ${DOCKER_IMAGE}:${DOCKER_TAG}
+      --snapshotMode=redo
+      --cache=true
+      --cache-ttl=12h
+  only:
+   refs:
+     - master
+     - develop
