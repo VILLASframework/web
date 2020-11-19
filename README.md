@@ -1,4 +1,6 @@
 # <img src="doc/pictures/villas_web.png" width=40 /> VILLASweb
+[![pipeline status](https://git.rwth-aachen.de/acs/public/villas/web/badges/master/pipeline.svg)](https://git.rwth-aachen.de/acs/public/villas/web/-/commits/master) 
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 This is VILLASweb, the website to configure real-time co-simulations and display simulation real-time data in the web browser.
 The term **frontend** refers to this project, the actual website.
