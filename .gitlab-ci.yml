@@ -47,4 +47,3 @@ deploy:
   only:
    refs:
      - master
-     - develop
