@@ -24,6 +24,7 @@ import moment from 'moment'
 
 import AppDispatcher from '../common/app-dispatcher';
 import InfrastructureComponentStore from './ic-store';
+import ICAPIStore from './ic-api-store';
 
 import Icon from '../common/icon';
 import Table from '../common/table';
@@ -38,7 +39,7 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 
 class InfrastructureComponents extends Component {
   static getStores() {
-    return [ InfrastructureComponentStore ];
+    return [ InfrastructureComponentStore, ICAPIStore ];
   }
 
   static statePrio(state) {
@@ -73,11 +74,15 @@ class InfrastructureComponents extends Component {
         return a.stateUpdatedAt < b.stateUpdatedAt;
       }
     });
+    
+     const icInfo = ICAPIStore.getState();
 
     return {
       sessionToken: localStorage.getItem("token"),
       ics: ics,
+      icInfo: icInfo,
       modalIC: {},
+      modalICStatus: {},
       deleteModal: false,
       icModal: false,
       selectedICs: [],
@@ -90,11 +95,11 @@ class InfrastructureComponents extends Component {
       type: 'ics/start-load',
       token: this.state.sessionToken,
     });
-
-    // Start timer for periodic refresh
+    
+   // Start timer for periodic refresh
     this.timer = window.setInterval(() => this.refresh(), 10000);
   }
-
+  
   componentWillUnmount() {
     window.clearInterval(this.timer);
   }
@@ -109,6 +114,19 @@ class InfrastructureComponents extends Component {
         type: 'ics/start-load',
         token: this.state.sessionToken,
       });
+
+      this.state.ics.forEach(ic => {
+        if (ic.type === "villas-node" || ic.type === "villas-relay") {
+          let splitWebsocketURL = ic.websocketurl.split("/");
+          AppDispatcher.dispatch({
+            type: 'ic-api/get-status',
+            url: ic.apiurl + "/status",
+            socketname: splitWebsocketURL[splitWebsocketURL.length - 1],
+            token: this.state.sessionToken,
+            icid: ic.id,
+          });
+        }
+      })
     }
   }
 
@@ -320,10 +338,16 @@ class InfrastructureComponents extends Component {
     let ic = this.state.ics.find(ic => ic.name === name);
     let index = this.state.ics.indexOf(ic);
     if(ic.type === "villas-node" || ic.type === "villas-relay"){
-      return <Button variant="link" onClick={() => this.setState({ icModal: true, modalIC: ic, modalIndex: index })}>{name}</Button>    }
+      return <Button variant="link" onClick={(ic) => this.openICStatus(ic)}>{name}</Button>    }
     else{
       return <span>{name}</span>
     }
+  }
+
+  openICStatus(ic){
+    let index = this.state.ics.indexOf(ic);
+    let icStatus = this.state.icInfo.find(info => info.icID === ic.id);
+    this.setState({ icModal: true, modalIC: ic, modalICStatus: icStatus, modalIndex: index })
   }
 
   render() {
@@ -396,7 +420,7 @@ class InfrastructureComponents extends Component {
         <NewICDialog show={this.state.newModal} onClose={data => this.closeNewModal(data)} />
         <EditICDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} ic={this.state.modalIC} />
         <ImportICDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} />
-        <ICDialog show={this.state.icModal} onClose={data => this.closeICModal(data)} ic={this.state.modalIC} token={this.state.sessionToken} />
+        <ICDialog show={this.state.icModal} onClose={data => this.closeICModal(data)} ic={this.state.modalIC} token={this.state.sessionToken} icStatus={this.state.modalICStatus} />
 
         <DeleteDialog title="infrastructure-component" name={this.state.modalIC.name || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
       </div>

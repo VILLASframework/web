@@ -17,6 +17,7 @@
 
 import WebsocketAPI from '../common/api/websocket-api';
 import AppDispatcher from '../common/app-dispatcher';
+import RestAPI from "../common/api/rest-api";
 
 const OFFSET_TYPE = 2;
 const OFFSET_VERSION = 4;
@@ -41,6 +42,23 @@ class IcDataDataManager {
         this._sockets[identifier] = new WebsocketAPI(websocketurl, { onOpen: (event) => this.onOpen(event, identifier, false), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier), onError: (error) => this.onError(error, identifier) });
       }
     }
+  }
+
+  getStatus(url,socketname,token,icid){
+    RestAPI.get(url, null).then(response => {
+      AppDispatcher.dispatch({
+        type: 'ic-api/status-received',
+        data: response,
+        token: token,
+        socketname: socketname,
+        icid: icid,
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'ic-api/status-error',
+        error: error
+      })
+    })
   }
 
   closeAll() {
