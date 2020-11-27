@@ -40,6 +40,16 @@ class ICAPIStore extends ArrayStore {
         console.log("status error");
         return super.reduce(state, action);
 
+      case 'ic-api/get-graph':
+        ICDataDataManager.getGraph(action.url, action.socketname, action.token);
+        return super.reduce(state, action);
+
+      case 'ic-api/graph-received':
+        return super.reduce(state, action);
+
+      case 'ic-api/graph-error':
+        return super.reduce(state, action);
+
       default:
         return super.reduce(state, action);
     }

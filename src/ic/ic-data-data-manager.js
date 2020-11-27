@@ -61,6 +61,22 @@ class IcDataDataManager {
     })
   }
 
+  getGraph(url,socketname,token){
+    RestAPI.apiDownload(url, null).then(response => {
+      AppDispatcher.dispatch({
+        type: 'ic-api/status-received',
+        data: response,
+        token: token,
+        socketname: socketname,
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'ic-api/status-error',
+        error: error
+      })
+    })
+  }
+
   closeAll() {
     // close every open socket
     for (var identifier in this._sockets) {

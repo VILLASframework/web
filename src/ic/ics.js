@@ -125,6 +125,13 @@ class InfrastructureComponents extends Component {
             token: this.state.sessionToken,
             icid: ic.id,
           });
+
+          AppDispatcher.dispatch({
+            type: 'ic-api/get-graph',
+            url: ic.apiurl + "/graph.svg",
+            socketname: splitWebsocketURL[splitWebsocketURL.length - 1],
+            token: this.state.sessionToken,
+          });
         }
       })
     }
