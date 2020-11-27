@@ -512,7 +512,7 @@ class Dashboard extends Component {
         {!draggable ? (
           <WidgetArea widgets={this.state.widgets} dropZoneHeight={dropZoneHeight} editing={this.state.editing} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
             {this.state.widgets != null && Object.keys(this.state.widgets).map(widgetKey => (
-              <WidgetContainer widget={this.state.widgets[widgetKey]}>
+              <WidgetContainer widget={this.state.widgets[widgetKey]} key={widgetKey}>
                 <WidgetContextMenu
                   key={widgetKey}
                   index={parseInt(widgetKey, 10)}
@@ -536,6 +536,7 @@ class Dashboard extends Component {
               {this.state.widgets != null && Object.keys(this.state.widgets).map(widgetKey => (
                 <EditableWidgetContainer
                   widget={this.state.widgets[widgetKey]}
+                  key={widgetKey}
                   grid={grid}
                   index={parseInt(widgetKey, 10)}
                   onWidgetChange={this.widgetChange.bind(this)}>
