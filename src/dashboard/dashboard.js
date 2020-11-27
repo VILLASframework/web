@@ -352,11 +352,19 @@ class Dashboard extends Component {
           data: widget
         });
       }
+      else if (widget.type === 'Image'){
+        widget.customProperties.update = true;
+      }
     });
     this.setState({ editing: true, widgetOrigIDs: originalIDs });
   };
 
   saveEditing() {
+    this.state.widgets.forEach(widget => {
+      if (widget.type === 'Image'){
+        widget.customProperties.update = true;
+      }
+    });
     // Provide the callback so it can be called when state change is applied
     // TODO: Check if callback is needed
     AppDispatcher.dispatch({
@@ -391,6 +399,9 @@ class Dashboard extends Component {
   cancelEditing() {
     //raw widget has no id -> cannot be deleted in its original form
     this.state.widgets.forEach(widget => {
+      if (widget.type === 'Image'){
+        widget.customProperties.update = true;
+      }
       let tempID = this.state.widgetOrigIDs.find(element => element === widget.id);
       if (typeof tempID === 'undefined') {
         AppDispatcher.dispatch({
