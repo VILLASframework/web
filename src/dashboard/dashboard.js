@@ -249,12 +249,6 @@ class Dashboard extends Component {
 
   };
 
-
-  widgetStatusChange(updated_widget, key) {
-    // Widget changed internally, make changes effective then save them
-    this.widgetChange(updated_widget, key, this.saveChanges);
-  }
-
   widgetChange(widget, index, callback = null) {
     let temp = this.state.widgetChangeData;
     temp.push(widget);
@@ -382,19 +376,6 @@ class Dashboard extends Component {
     });
     this.setState({ editing: false, widgetChangeData: [] });
   };
-
-  saveChanges() {
-    // Transform to a list
-    const dashboard = Object.assign({}, this.state.dashboard.toJS(), {
-      widgets: this.transformToWidgetsList(this.state.widgets)
-    });
-
-    AppDispatcher.dispatch({
-      type: 'dashboards/start-edit',
-      data: dashboard,
-      token: this.state.sessionToken
-    });
-  }
 
   cancelEditing() {
     //raw widget has no id -> cannot be deleted in its original form
@@ -534,7 +515,6 @@ class Dashboard extends Component {
                   onChange={this.widgetChange.bind(this)}
 
                   onWidgetChange={this.widgetChange.bind(this)}
-                  onWidgetStatusChange={this.widgetStatusChange.bind(this)}
                   editing={this.state.editing}
                   grid={grid}
                   paused={this.state.paused}
@@ -561,7 +541,6 @@ class Dashboard extends Component {
                     onChange={this.widgetChange.bind(this)}
 
                     onWidgetChange={this.widgetChange.bind(this)}
-                    onWidgetStatusChange={this.widgetStatusChange.bind(this)}
                     editing={this.state.editing}
                     paused={this.state.paused}
                   />

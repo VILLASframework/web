@@ -191,7 +191,6 @@ class Widget extends React.Component {
       return <WidgetSlider
         widget={widget}
         editing={this.props.editing}
-        onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) }
         onInputChanged={(value, controlID, controlValue) => this.inputDataChanged(widget, value, controlID, controlValue)}
         signals={this.state.signals}
       />
