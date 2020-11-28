@@ -24,7 +24,8 @@ import moment from 'moment'
 
 import AppDispatcher from '../common/app-dispatcher';
 import InfrastructureComponentStore from './ic-store';
-import ICAPIStore from './ic-api-store';
+import ICStatusStore from './ic-status-store';
+import ICGraphStore from './ic-graph-store';
 
 import Icon from '../common/icon';
 import Table from '../common/table';
@@ -39,7 +40,7 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 
 class InfrastructureComponents extends Component {
   static getStores() {
-    return [ InfrastructureComponentStore, ICAPIStore ];
+    return [ InfrastructureComponentStore, ICStatusStore, ICGraphStore ];
   }
 
   static statePrio(state) {
@@ -75,14 +76,17 @@ class InfrastructureComponents extends Component {
       }
     });
     
-     const icInfo = ICAPIStore.getState();
-
+     const icStatus = ICStatusStore.getState();
+     const icGraph = ICGraphStore.getState();
+     
     return {
       sessionToken: localStorage.getItem("token"),
       ics: ics,
-      icInfo: icInfo,
+      icStatus: icStatus,
+      icGraph: icGraph,
       modalIC: {},
       modalICStatus: {},
+      modalICGraph: {},
       deleteModal: false,
       icModal: false,
       selectedICs: [],
@@ -119,7 +123,7 @@ class InfrastructureComponents extends Component {
         if (ic.type === "villas-node" || ic.type === "villas-relay") {
           let splitWebsocketURL = ic.websocketurl.split("/");
           AppDispatcher.dispatch({
-            type: 'ic-api/get-status',
+            type: 'ic-status/get-status',
             url: ic.apiurl + "/status",
             socketname: splitWebsocketURL[splitWebsocketURL.length - 1],
             token: this.state.sessionToken,
@@ -127,10 +131,11 @@ class InfrastructureComponents extends Component {
           });
 
           AppDispatcher.dispatch({
-            type: 'ic-api/get-graph',
+            type: 'ic-graph/get-graph',
             url: ic.apiurl + "/graph.svg",
             socketname: splitWebsocketURL[splitWebsocketURL.length - 1],
             token: this.state.sessionToken,
+            icid: ic.id,
           });
         }
       })
@@ -343,18 +348,21 @@ class InfrastructureComponents extends Component {
 
   modifyNameColumn(name){
     let ic = this.state.ics.find(ic => ic.name === name);
-    let index = this.state.ics.indexOf(ic);
+  
     if(ic.type === "villas-node" || ic.type === "villas-relay"){
-      return <Button variant="link" onClick={(ic) => this.openICStatus(ic)}>{name}</Button>    }
+      return <Button variant="link" onClick={() => this.openICStatus(ic)}>{name}</Button>    }
     else{
       return <span>{name}</span>
     }
   }
 
   openICStatus(ic){
+    
     let index = this.state.ics.indexOf(ic);
-    let icStatus = this.state.icInfo.find(info => info.icID === ic.id);
-    this.setState({ icModal: true, modalIC: ic, modalICStatus: icStatus, modalIndex: index })
+    let icStatus = this.state.icStatus.find(status => status.icID === ic.id);
+    let icGraph = this.state.icGraph.find(graph => graph.icID === ic.id);
+  
+    this.setState({ icModal: true, modalIC: ic, modalICStatus: icStatus, modalICGraph: icGraph, modalIndex: index })
   }
 
   render() {
@@ -427,7 +435,7 @@ class InfrastructureComponents extends Component {
         <NewICDialog show={this.state.newModal} onClose={data => this.closeNewModal(data)} />
         <EditICDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} ic={this.state.modalIC} />
         <ImportICDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} />
-        <ICDialog show={this.state.icModal} onClose={data => this.closeICModal(data)} ic={this.state.modalIC} token={this.state.sessionToken} icStatus={this.state.modalICStatus} />
+        <ICDialog show={this.state.icModal} onClose={data => this.closeICModal(data)} ic={this.state.modalIC} token={this.state.sessionToken} icStatus={this.state.modalICStatus} icGraph={this.state.modalICGraph} />
 
         <DeleteDialog title="infrastructure-component" name={this.state.modalIC.name || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
       </div>

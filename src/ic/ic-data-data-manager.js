@@ -47,7 +47,7 @@ class IcDataDataManager {
   getStatus(url,socketname,token,icid){
     RestAPI.get(url, null).then(response => {
       AppDispatcher.dispatch({
-        type: 'ic-api/status-received',
+        type: 'ic-status/status-received',
         data: response,
         token: token,
         socketname: socketname,
@@ -55,23 +55,24 @@ class IcDataDataManager {
       });
     }).catch(error => {
       AppDispatcher.dispatch({
-        type: 'ic-api/status-error',
+        type: 'ic-status/status-error',
         error: error
       })
     })
   }
 
-  getGraph(url,socketname,token){
+  getGraph(url,socketname,token,icid){
     RestAPI.apiDownload(url, null).then(response => {
       AppDispatcher.dispatch({
-        type: 'ic-api/status-received',
+        type: 'ic-graph/graph-received',
         data: response,
         token: token,
         socketname: socketname,
+        icid: icid,
       });
     }).catch(error => {
       AppDispatcher.dispatch({
-        type: 'ic-api/status-error',
+        type: 'ic-graph/graph-error',
         error: error
       })
     })

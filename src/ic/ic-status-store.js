@@ -18,36 +18,26 @@
 import ArrayStore from '../common/array-store';
 import ICDataDataManager from './ic-data-data-manager';
 
-class ICAPIStore extends ArrayStore {
+class ICStatusStore extends ArrayStore {
   constructor() {
-    super('ic-api', ICDataDataManager);
+    super('ic-status', ICDataDataManager);
   }
 
 
   reduce(state, action) {
     switch(action.type) {
 
-      case 'ic-api/get-status':
+      case 'ic-status/get-status':
         ICDataDataManager.getStatus(action.url, action.socketname, action.token,action.icid);
         return super.reduce(state, action);
 
-      case 'ic-api/status-received':
+      case 'ic-status/status-received':
         let tempData = action.data;
-        tempData.icId = action.icid;
+        tempData.icID = action.icid;
         return this.updateElements(state, [tempData]);
 
-      case 'ic-api/status-error':
+      case 'ic-status/status-error':
         console.log("status error");
-        return super.reduce(state, action);
-
-      case 'ic-api/get-graph':
-        ICDataDataManager.getGraph(action.url, action.socketname, action.token);
-        return super.reduce(state, action);
-
-      case 'ic-api/graph-received':
-        return super.reduce(state, action);
-
-      case 'ic-api/graph-error':
         return super.reduce(state, action);
 
       default:
@@ -56,4 +46,4 @@ class ICAPIStore extends ArrayStore {
   }
 }
 
-export default new ICAPIStore();
+export default new ICStatusStore();

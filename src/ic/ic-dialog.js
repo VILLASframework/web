@@ -29,7 +29,16 @@ class ICDialog extends React.Component {
     this.setState({[key]: !this.state[key]});
   }
 
+  graphError(e){
+    console.log("graph error");
+  }
+
   render() {
+
+    let objectURL=''
+    if(typeof this.props.icGraph !== "undefined") {
+      objectURL = this.props.icGraph.objectURL
+    }
     
     return (
       <Dialog
@@ -73,6 +82,14 @@ class ICDialog extends React.Component {
               (<div>{statusKey + ": " + this.props.icStatus[statusKey]}</div>)
             ))
           }
+          <div>Graph:</div>
+          <div>
+            {objectURL !== '' ? (
+              <img onError={(e) => this.graphError(e)} alt={"Error"} src={objectURL} />
+            ) : (
+                <img alt="Error" />
+              )}
+          </div>
         </form>
       </Dialog>
     );
