@@ -13,19 +13,8 @@ class ICDialog extends React.Component {
     super(props);
 
     this.state = {
-      timezone: false,
-      kernel: false,
-      system: false,
     };
   }
-
-/*  static getDerivedStateFromProps(props, state){
-    let icStatus = props.icStatus;
-    return {
-      icStatus: icStatus,
-      ic: props.ic,
-    };
-  }*/
 
   onClose(canceled) {
     this.props.onClose();
@@ -36,17 +25,8 @@ class ICDialog extends React.Component {
   }
 
   showFurtherInfo(key){
-    switch(key){
-      case 'timezone':
-        this.setState({timezone: !this.state.timezone});
-        return;
-      case 'kernel':
-        this.setState({kernel: !this.state.kernel});
-        return;
-      case 'system':
-        this.setState({system: !this.state.system});
-        return;
-    }
+    if(typeof this.state[key] === 'undefined') this.setState({[key]: false});
+    this.setState({[key]: !this.state[key]});
   }
 
   render() {
@@ -68,13 +48,25 @@ class ICDialog extends React.Component {
               (<div>
                 <Button variant="light" onClick={() => this.showFurtherInfo(statusKey)}  >{statusKey}
                 <Icon icon='chevron-down' style={{color: '#007bff'}}/></Button>
-                <Collapse isOpened={this.state[statusKey]} >
-                  {
-                    Object.keys(this.props.icStatus[statusKey]).map(key => (
-                      <div>{key + ": " + this.props.icStatus[statusKey][key]}</div>
-                    ))
-                  }
-                </Collapse>
+                  <Collapse isOpened={this.state[statusKey]} >
+                    {
+                      Object.keys(this.props.icStatus[statusKey]).map(key => (
+                        typeof this.props.icStatus[statusKey][key] === 'object' ?
+                          (<div>
+                            <Button variant="light" onClick={() => this.showFurtherInfo(key)}  >{key}
+                              <Icon icon='chevron-down' style={{ color: '#007bff' }} /></Button>
+                            <Collapse isOpened={this.state[key]} >
+
+                              {Object.keys(this.props.icStatus[statusKey][key]).map(index => (
+                                <div>{index + ": " + this.props.icStatus[statusKey][key][index]}</div>
+                              ))}
+                            </Collapse>
+                          </div>)
+                          :
+                          (<div>{key + ": " + this.props.icStatus[statusKey][key]}</div>)
+                      ))
+                    }
+                  </Collapse>
 
               </div>) 
               :
