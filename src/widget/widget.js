@@ -39,6 +39,7 @@ import WidgetGauge from './widgets/gauge';
 import WidgetBox from './widgets/box';
 import WidgetTopology from './widgets/topology';
 import WidgetLine from './widgets/line';
+import WidgetTimeOffset from './widgets/time-offset'
 //import WidgetHTML from './widgets/html';
 
 
@@ -222,6 +223,10 @@ class Widget extends React.Component {
       return <WidgetLine
         widget={widget}
         editing={this.props.editing}
+      />
+    } else if (widget.type === 'TimeOffset') {
+      return <WidgetTimeOffset
+        widget={widget}
       />
     }
 
