@@ -365,6 +365,10 @@ class InfrastructureComponents extends Component {
     this.setState({ icModal: true, modalIC: ic, modalICStatus: icStatus, modalICGraph: icGraph, modalIndex: index })
   }
 
+  sendControlCommand(command){
+    console.log(command);
+  }
+
   render() {
     const buttonStyle = {
       marginLeft: '10px'
@@ -435,7 +439,7 @@ class InfrastructureComponents extends Component {
         <NewICDialog show={this.state.newModal} onClose={data => this.closeNewModal(data)} />
         <EditICDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} ic={this.state.modalIC} />
         <ImportICDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} />
-        <ICDialog show={this.state.icModal} onClose={data => this.closeICModal(data)} ic={this.state.modalIC} token={this.state.sessionToken} icStatus={this.state.modalICStatus} icGraph={this.state.modalICGraph} />
+        <ICDialog show={this.state.icModal} onClose={data => this.closeICModal(data)} ic={this.state.modalIC} token={this.state.sessionToken} icStatus={this.state.modalICStatus} icGraph={this.state.modalICGraph} sendControlCommand={(command) => this.sendControlCommand(command)}/>
 
         <DeleteDialog title="infrastructure-component" name={this.state.modalIC.name || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
       </div>

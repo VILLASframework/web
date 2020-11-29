@@ -3,6 +3,7 @@ import {FormLabel, Button} from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
 import {Collapse} from 'react-collapse';
 import Icon from "../common/icon";
+import ConfirmCommand from './confirm-command';
 
 
 
@@ -13,6 +14,8 @@ class ICDialog extends React.Component {
     super(props);
 
     this.state = {
+      confirmCommand: false,
+      command: '',
     };
   }
 
@@ -33,6 +36,15 @@ class ICDialog extends React.Component {
     console.log("graph error");
   }
 
+  closeConfirmModal(canceled){
+    if(!canceled){
+      this.props.sendControlCommand(this.state.command);
+    }
+
+    this.setState({confirmCommand: false, command: ''});
+  }
+
+  
   render() {
 
     let objectURL=''
@@ -91,7 +103,15 @@ class ICDialog extends React.Component {
               )}
           </div>
         </form>
+        
+        <div>Controls</div>
+        <Button onClick={() => this.setState({ confirmCommand: true, command: 'restart' })}>Restart</Button>
+        <Button onClick={() => this.setState({ confirmCommand: true, command: 'shutdown' })}>Shutdown</Button>
+
+        <ConfirmCommand show={this.state.confirmCommand} command={this.state.command} name={this.props.ic.name} onClose={c => this.closeConfirmModal(c)} />
+
       </Dialog>
+      
     );
   }
 }
