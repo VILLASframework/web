@@ -24,23 +24,42 @@ class WidgetTimeOffset extends Component {
     super(props);
 
     this.state = {
-        redOn: false,
-        yellowOn: false,
-        greenOn: true,
+        timeOffset: '',
+        icID: ''
     };
   }
 
   static getDerivedStateFromProps(props, state){
+
+    if(typeof props.widget.customProperties.icID !== "undefined" && state.icID !== props.widget.customProperties.icID){
+      return {icID: props.widget.customProperties.icID};
+    }
+
+    if (props.data == null
+      || props.data[state.icID] == null
+      || props.data[state.icID].output == null
+      || props.data[state.icID].output.timestamp == null) {
+      return {timeOffset: ''};
+    }
+
+    let serverTime = props.data[state.icID].output.timestamp;
+    let localTime = Date.now();
+    let absoluteOffset = Math.abs(serverTime - localTime);
+    return {timeOffset: Number.parseFloat(absoluteOffset/1000).toPrecision(5)};
   }
 
   render() {
 
     return (
+      <div>
         <TrafficLight
-        RedOn={this.state.redOn}
-        YellowOn={this.state.yellowOn}
-        GreenOn={this.state.greenOn}
+        RedOn={this.props.widget.customProperties.threshold_red <= this.state.timeOffset}
+        YellowOn={(this.props.widget.customProperties.threshold_yellow <= this.state.timeOffset) && (this.state.timeOffset < this.props.widget.customProperties.threshold_red)}
+        GreenOn={this.state.timeOffset < this.props.widget.customProperties.threshold_yellow}
       />
+      <div>Time offset:</div>
+      <strong>{this.state.timeOffset}s</strong>
+      </div>
     );
   }
 }

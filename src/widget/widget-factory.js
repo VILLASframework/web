@@ -202,7 +202,7 @@ class WidgetFactory {
                 widget.height = 100;
                 widget.customProperties.threshold_yellow = 1;
                 widget.customProperties.threshold_red = 2;
-                widget.customProperties.ic = 1;
+                widget.customProperties.icID = 1;
 
             default:
                 widget.width = 100;

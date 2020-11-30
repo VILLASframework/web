@@ -227,6 +227,7 @@ class Widget extends React.Component {
     } else if (widget.type === 'TimeOffset') {
       return <WidgetTimeOffset
         widget={widget}
+        data={this.state.icData}
       />
     }
 
