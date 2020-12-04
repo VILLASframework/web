@@ -141,6 +141,11 @@ class EditWidgetDialog extends React.Component {
         customProperty ? changeObject[parts[0]][parts[1]]= 'default' : changeObject[e.target.id] = 'default';
       }
       changeObject = this.setMaxWidth(changeObject);
+    } else if (parts[1]= 'horizontal'){
+      customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value ;
+      let tempWidth = changeObject.width;
+      changeObject.width = changeObject.height;
+      changeObject.height = tempWidth;
     } else {
       customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value ;
     }

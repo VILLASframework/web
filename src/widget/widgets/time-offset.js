@@ -52,7 +52,8 @@ class WidgetTimeOffset extends Component {
 
     return (
       <div className="time-offset">
-        <TrafficLight Horizontal={this.props.widget.customProperties.horizontal}
+        <span>IC: {this.state.icID}</span>
+        <TrafficLight Horizontal={this.props.widget.customProperties.horizontal} width={this.props.widget.width} height={this.props.widget.height}
         RedOn={this.props.widget.customProperties.threshold_red <= this.state.timeOffset}
         YellowOn={(this.props.widget.customProperties.threshold_yellow <= this.state.timeOffset) && (this.state.timeOffset < this.props.widget.customProperties.threshold_red)}
         GreenOn={this.state.timeOffset < this.props.widget.customProperties.threshold_yellow}
