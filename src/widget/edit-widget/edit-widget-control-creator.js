@@ -31,9 +31,10 @@ import EditWidgetCheckboxControl from './edit-widget-checkbox-control';
 import EditWidgetColorZonesControl from './edit-widget-color-zones-control';
 import EditWidgetMinMaxControl from './edit-widget-min-max-control';
 import EditWidgetParametersControl from './edit-widget-parameters-control';
+import EditWidgetICControl from './edit-widget-ic-control';
 //import EditWidgetHTMLContent from './edit-widget-html-content';
 
-export default function CreateControls(widgetType = null, widget = null, sessionToken = null, files = null, signals, handleChange) {
+export default function CreateControls(widgetType = null, widget = null, sessionToken = null, files = null,ics = null, signals, handleChange) {
     // Use a list to concatenate the controls according to the widget type
     var DialogControls = [];
 
@@ -160,6 +161,7 @@ export default function CreateControls(widgetType = null, widget = null, session
 
         case 'TimeOffset':
             DialogControls.push(
+                <EditWidgetICControl key={0} widget={widget} controlId={'customProperties.icID'} input ics={ics} handleChange={(e) => handleChange(e)}/>,
                 <EditWidgetNumberControl key={1} widget={widget} controlId={'customProperties.threshold_yellow'} label={'Threshold yellow'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetNumberControl key={2} widget={widget} controlId={'customProperties.threshold_red'} label={'Threshold red'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={3} widget={widget} controlId={'customProperties.horizontal'} input text="Horizontal" handleChange={e => handleChange(e)} />,

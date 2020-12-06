@@ -39,7 +39,7 @@ class WidgetTimeOffset extends Component {
       || props.data[state.icID] == null
       || props.data[state.icID].output == null
       || props.data[state.icID].output.timestamp == null) {
-      return {timeOffset: ''};
+      return {timeOffset: -1};
     }
 
     let serverTime = props.data[state.icID].output.timestamp;
@@ -49,20 +49,21 @@ class WidgetTimeOffset extends Component {
   }
 
   render() {
-
     return (
       <div className="time-offset">
-        <span>IC: {this.state.icID}</span>
+      {this.props.widget.customProperties.icID !== -1 ? 
+      (<span>IC: {this.state.icID}</span>) : (<span>no IC</span>)
+      }        
         <TrafficLight Horizontal={this.props.widget.customProperties.horizontal} width={this.props.widget.width} height={this.props.widget.height}
         RedOn={this.props.widget.customProperties.threshold_red <= this.state.timeOffset}
         YellowOn={(this.props.widget.customProperties.threshold_yellow <= this.state.timeOffset) && (this.state.timeOffset < this.props.widget.customProperties.threshold_red)}
         GreenOn={this.state.timeOffset < this.props.widget.customProperties.threshold_yellow}
       />
-      {this.props.widget.customProperties.showOffset ? 
+      {this.props.widget.customProperties.showOffset && this.props.widget.customProperties.icID !== -1 ? 
       (
       <span>{this.state.timeOffset}s</span>)
       :
-      (<div></div>)
+      (<span>selected</span>)
       }
       </div>
     );
