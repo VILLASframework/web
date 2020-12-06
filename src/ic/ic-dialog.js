@@ -38,7 +38,7 @@ class ICDialog extends React.Component {
 
   closeConfirmModal(canceled){
     if(!canceled){
-      this.props.sendControlCommand(this.state.command);
+      this.props.sendControlCommand(this.state.command,this.props.ic);
     }
 
     this.setState({confirmCommand: false, command: ''});

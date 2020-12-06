@@ -28,7 +28,7 @@ class ICStatusStore extends ArrayStore {
     switch(action.type) {
 
       case 'ic-status/get-status':
-        ICDataDataManager.getStatus(action.url, action.socketname, action.token,action.icid);
+        ICDataDataManager.getStatus(action.url, action.socketname, action.token, action.icid);
         return super.reduce(state, action);
 
       case 'ic-status/status-received':
@@ -38,7 +38,29 @@ class ICStatusStore extends ArrayStore {
 
       case 'ic-status/status-error':
         console.log("status error");
-        return super.reduce(state, action);
+        return state;
+
+      case 'ic-status/restart':
+        ICDataDataManager.restart(action.url, action.socketname, action.token);
+        return state;
+
+      case 'ic-status/restart-successful':
+        return state;
+
+      case 'ic-status/restart-error':
+        console.log("restart error");
+        return state;
+
+      case 'ic-status/shutdown':
+        ICDataDataManager.shutdown(action.url, action.socketname, action.token);
+        return state;
+
+      case 'ic-status/shutdown-successful':
+        return state;
+
+      case 'ic-status/shutdown-error':
+        console.log("shutdown error");
+        return state;
 
       default:
         return super.reduce(state, action);

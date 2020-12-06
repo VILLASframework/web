@@ -78,6 +78,40 @@ class IcDataDataManager {
     })
   }
 
+  restart(url,socketname,token){
+    RestAPI.post(url, null).then(response => {
+      AppDispatcher.dispatch({
+        type: 'ic-status/restart-successful',
+        data: response,
+        token: token,
+        socketname: socketname,
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'ic-status/restart-error',
+        error: error
+      })
+    })
+  }
+
+  shutdown(url,socketname,token){
+    RestAPI.post(url, null).then(response => {
+      AppDispatcher.dispatch({
+        type: 'ic-status/shutdown-successful',
+        data: response,
+        token: token,
+        socketname: socketname,
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'ic-status/shutdown-error',
+        error: error
+      })
+    })
+  }
+
+
+
   closeAll() {
     // close every open socket
     for (var identifier in this._sockets) {
