@@ -20,6 +20,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import App from './app';
 import Login from './user/login';
+import LoginSelect from './user/login-select';
 import Logout from './user/logout';
 import Home from './common/home';
 import Scenarios from './scenario/scenarios';
@@ -34,7 +35,8 @@ class Root extends React.Component {
     return (
       <BrowserRouter>
         <Switch>
-          <Route path='/login' component={Login} />
+          <Route path='/login' component={LoginSelect} />
+          <Route path='/login-villas' component={Login} />
           <Route path='/logout' component={Logout} />
           <Route path='/' component={App} />
           <Route path='/home' component={Home} />
