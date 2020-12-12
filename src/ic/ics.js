@@ -119,26 +119,6 @@ class InfrastructureComponents extends Component {
         token: this.state.sessionToken,
       });
 
-      this.state.ics.forEach(ic => {
-        if (ic.type === "villas-node" || ic.type === "villas-relay") {
-          let splitWebsocketURL = ic.websocketurl.split("/");
-          AppDispatcher.dispatch({
-            type: 'ic-status/get-status',
-            url: ic.apiurl + "/status",
-            socketname: splitWebsocketURL[splitWebsocketURL.length - 1],
-            token: this.state.sessionToken,
-            icid: ic.id,
-          });
-
-          AppDispatcher.dispatch({
-            type: 'ic-graph/get-graph',
-            url: ic.apiurl + "/graph.svg",
-            socketname: splitWebsocketURL[splitWebsocketURL.length - 1],
-            token: this.state.sessionToken,
-            icid: ic.id,
-          });
-        }
-      })
     }
   }
 

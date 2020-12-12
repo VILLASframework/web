@@ -19,6 +19,7 @@ import ArrayStore from '../common/array-store';
 import ICsDataManager from './ics-data-manager';
 import ICDataDataManager from './ic-data-data-manager';
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
+import AppDispatcher from '../common/app-dispatcher';
 
 class InfrastructureComponentStore extends ArrayStore {
   constructor() {
@@ -28,6 +29,26 @@ class InfrastructureComponentStore extends ArrayStore {
   reduce(state, action) {
     switch(action.type) {
       case 'ics/loaded':
+        action.data.forEach(ic => {
+          if (ic.type === "villas-node" || ic.type === "villas-relay") {
+            let splitWebsocketURL = ic.websocketurl.split("/");
+            AppDispatcher.dispatch({
+              type: 'ic-status/get-status',
+              url: ic.apiurl + "/status",
+              socketname: splitWebsocketURL[splitWebsocketURL.length - 1],
+              token: action.token,
+              icid: ic.id,
+            });
+  
+            AppDispatcher.dispatch({
+              type: 'ic-graph/get-graph',
+              url: ic.apiurl + "/graph.svg",
+              socketname: splitWebsocketURL[splitWebsocketURL.length - 1],
+              token: action.token,
+              icid: ic.id,
+            });
+          }
+        })
 
         return super.reduce(state, action);
 
