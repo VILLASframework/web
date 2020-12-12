@@ -1,5 +1,5 @@
 import React from 'react';
-import {FormLabel, Button} from 'react-bootstrap';
+import {Button, Row, Col} from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
 import {Collapse} from 'react-collapse';
 import Icon from "../common/icon";
@@ -47,6 +47,9 @@ class ICDialog extends React.Component {
   
   render() {
 
+    let icStatus = this.props.icStatus;
+    delete icStatus['icID'];
+
     let objectURL=''
     if(typeof this.props.icGraph !== "undefined") {
       objectURL = this.props.icGraph.objectURL
@@ -55,46 +58,52 @@ class ICDialog extends React.Component {
     return (
       <Dialog
         show={this.props.show}
-        title="Infos and Controls"
-        buttonTitle="Save"
+        title="Status and Controls"
+        buttonTitle="Close"
         onClose={(c) => this.onClose(c)}
         valid={true}
-        size='lg'
+        size='xl'
+        blendOutCancel = {true}
       >
         <form>
-          <FormLabel>Status</FormLabel>
+        <Row>
+        <Col>
+          <h5>Status:</h5>
           {
-            typeof this.props.icStatus !== "undefined" && Object.keys(this.props.icStatus).map(statusKey => (
-              typeof this.props.icStatus[statusKey] === 'object' ?
+            typeof icStatus !== "undefined" && Object.keys(icStatus).map(statusKey => (
+              typeof icStatus[statusKey] === 'object' ?
               (<div>
                 <Button variant="light" onClick={() => this.showFurtherInfo(statusKey)}  >{statusKey}
                 <Icon icon='chevron-down' style={{color: '#007bff'}}/></Button>
                   <Collapse isOpened={this.state[statusKey]} >
                     {
-                      Object.keys(this.props.icStatus[statusKey]).map(key => (
-                        typeof this.props.icStatus[statusKey][key] === 'object' ?
+                      Object.keys(icStatus[statusKey]).map(key => (
+                        typeof icStatus[statusKey][key] === 'object' ?
                           (<div>
                             <Button variant="light" onClick={() => this.showFurtherInfo(key)}  >{key}
                               <Icon icon='chevron-down' style={{ color: '#007bff' }} /></Button>
                             <Collapse isOpened={this.state[key]} >
 
-                              {Object.keys(this.props.icStatus[statusKey][key]).map(index => (
-                                <div>{index + ": " + this.props.icStatus[statusKey][key][index]}</div>
+                              {Object.keys(icStatus[statusKey][key]).map(index => (
+                                <div>{index + ": " + icStatus[statusKey][key][index]}</div>
                               ))}
                             </Collapse>
                           </div>)
                           :
-                          (<div>{key + ": " + this.props.icStatus[statusKey][key]}</div>)
+                          (<div>{key + ": " + icStatus[statusKey][key]}</div>)
                       ))
                     }
                   </Collapse>
 
               </div>) 
               :
-              (<div>{statusKey + ": " + this.props.icStatus[statusKey]}</div>)
+              (<div>{statusKey + ": " + icStatus[statusKey]}</div>)
             ))
           }
-          <div>Graph:</div>
+          </Col>
+          
+          <Col>
+          <h5>Graph:</h5>
           <div>
             {objectURL !== '' ? (
               <img onError={(e) => this.graphError(e)} alt={"Error"} src={objectURL} />
@@ -102,14 +111,18 @@ class ICDialog extends React.Component {
                 <img alt="Error" />
               )}
           </div>
-        </form>
         
-        <div>Controls</div>
-        <Button onClick={() => this.setState({ confirmCommand: true, command: 'restart' })}>Restart</Button>
-        <Button onClick={() => this.setState({ confirmCommand: true, command: 'shutdown' })}>Shutdown</Button>
+        
+        <h5>Controls:</h5>
+        <div>
+        <Button style={{ margin: '5px' }} size='lg' onClick={() => this.setState({ confirmCommand: true, command: 'restart' })}>Restart</Button>
+        <Button style={{ margin: '5px' }} size='lg' onClick={() => this.setState({ confirmCommand: true, command: 'shutdown' })}>Shutdown</Button>
+        </div>
 
         <ConfirmCommand show={this.state.confirmCommand} command={this.state.command} name={this.props.ic.name} onClose={c => this.closeConfirmModal(c)} />
-
+        </Col>
+        </Row>
+        </form>
       </Dialog>
       
     );
