@@ -49,6 +49,7 @@ class WidgetTimeOffset extends Component {
   }
 
   render() {
+    let bottomText = this.props.widget.customProperties.icID !== -1 ? "" : "selected";
     return (
       <div className="time-offset">
       {this.props.widget.customProperties.icID !== -1 ? 
@@ -63,7 +64,7 @@ class WidgetTimeOffset extends Component {
       (
       <span>{this.state.timeOffset}s</span>)
       :
-      (<span>selected</span>)
+      (<span>{bottomText}</span>)
       }
       </div>
     );
