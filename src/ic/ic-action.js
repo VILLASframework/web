@@ -76,7 +76,7 @@ class ICAction extends React.Component {
             onChange={this.setDelayForAction}
           />
           <ButtonToolbar>
-            <DropdownButton title={this.state.selectedAction != null ? this.state.selectedAction.title : ''} id="action-dropdown" onSelect={this.setAction}>
+            <DropdownButton variant="secondary" title={this.state.selectedAction != null ? this.state.selectedAction.title : ''} id="action-dropdown" onSelect={this.setAction}>
               {actionList}
             </DropdownButton>
 
