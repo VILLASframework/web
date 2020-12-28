@@ -80,7 +80,7 @@ class ICAction extends React.Component {
               {actionList}
             </DropdownButton>
 
-            <Button style={{ marginLeft: '5px' }} disabled={sendCommandDisabled} onClick={() => this.props.runAction(this.state.selectedAction, this.state.selectedDelay)}>Send command</Button>
+            <Button style={{ marginLeft: '5px', backgroundColor: '#527984', borderColor: '#527984' }} disabled={sendCommandDisabled} onClick={() => this.props.runAction(this.state.selectedAction, this.state.selectedDelay)}>Send command</Button>
 
           </ButtonToolbar>
         </div>;

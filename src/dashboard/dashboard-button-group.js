@@ -25,11 +25,13 @@ class DashboardButtonGroup extends React.Component {
     const buttonStyle = {
       marginLeft: '12px',
       height: '44px', 
-      width : '35px'
+      width : '35px',
+      borderColor: '#ffffff',
+      backgroundColor: '#ffffff'
     };
 
     const iconStyle = {
-      color: '#007bff',
+      color: '#527984',
       height: '25px', 
       width : '25px'
     }

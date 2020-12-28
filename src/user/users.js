@@ -146,7 +146,7 @@ class Users extends Component {
           <TableColumn width='200' editButton deleteButton onEdit={index => this.setState({ editModal: true, modalData: this.state.users[index] })} onDelete={index => this.setState({ deleteModal: true, modalData: this.state.users[index] })} />
         </Table>
 
-        <Button onClick={() => this.setState({ newModal: true })}><Icon icon='plus' /> User</Button>
+        <Button style={{backgroundColor: '#527984', borderColor: '#527984'}} onClick={() => this.setState({ newModal: true })}><Icon icon='plus' /> User</Button>
 
         <NewUserDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
         <EditUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />

@@ -478,7 +478,7 @@ class Dashboard extends Component {
     return <div className={boxClasses} >
       <div className='section-header box-header'>
         <div className="section-title">
-          <span>{this.state.dashboard.name}</span>
+          <h2>{this.state.dashboard.name}</h2>
         </div>
 
         <DashboardButtonGroup

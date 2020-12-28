@@ -236,7 +236,9 @@ class Scenarios extends Component {
 
   render() {
     const buttonStyle = {
-      marginLeft: '10px'
+      marginLeft: '10px',
+      backgroundColor: '#527984', 
+      borderColor: '#527984'
     };
 
     return (

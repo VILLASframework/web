@@ -596,15 +596,23 @@ class Scenario extends React.Component {
     }
 
     const buttonStyle = {
-      marginLeft: '10px'
+      marginLeft: '10px',
+      backgroundColor: '#527984', 
+      borderColor: '#527984'
     };
+
+    const altButtonStyle = {
+      marginLeft: '10px',
+      backgroundColor: '#ffffff',
+      borderColor: 'ffffff'
+    }
 
     const tableHeadingStyle = {
       paddingTop: '30px'
     }
 
     const iconStyle = {
-      color: '#007bff',
+      color: '#527984',
       height: '25px',
       width: '25px'
     }
@@ -616,7 +624,7 @@ class Scenario extends React.Component {
     return <div className='section'>
       <div className='section-buttons-group-right'>
         <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete files of scenario </Tooltip>} >
-          <Button key={0} variant='light' size="lg" onClick={this.onEditFiles.bind(this)} style={buttonStyle}>
+          <Button key={0} variant='light' size="lg" onClick={this.onEditFiles.bind(this)} style={altButtonStyle}>
             <Icon icon="file" style={iconStyle} />
           </Button>
         </OverlayTrigger>
@@ -785,6 +793,7 @@ class Scenario extends React.Component {
           <InputGroup.Append>
             <Button
               type="submit"
+              style={buttonStyle}
               onClick={() => this.addUser()}>
               Add User
             </Button>
