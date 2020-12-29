@@ -16,7 +16,16 @@ class ICDialog extends React.Component {
     this.state = {
       confirmCommand: false,
       command: '',
+      icStatus: {}
     };
+  }
+
+  static getDerivedStateFromProps(props, state){
+    if(typeof props.icStatus !== 'undefined'){
+      return {icStatus: props.icStatus}
+    } else {
+      return {}
+    }
   }
 
   onClose(canceled) {
@@ -47,7 +56,7 @@ class ICDialog extends React.Component {
   
   render() {
 
-    let icStatus = this.props.icStatus;
+    let icStatus = this.state.icStatus;
     delete icStatus['icID'];
 
     let objectURL=''
@@ -72,32 +81,32 @@ class ICDialog extends React.Component {
           {
             typeof icStatus !== "undefined" && Object.keys(icStatus).map(statusKey => (
               typeof icStatus[statusKey] === 'object' ?
-              (<div>
+              (<div key={statusKey}>
                 <Button variant="light" onClick={() => this.showFurtherInfo(statusKey)}  >{statusKey}
                 <Icon icon='chevron-down' style={{color: '#007bff'}}/></Button>
                   <Collapse isOpened={this.state[statusKey]} >
                     {
                       Object.keys(icStatus[statusKey]).map(key => (
                         typeof icStatus[statusKey][key] === 'object' ?
-                          (<div>
+                          (<div key={key}>
                             <Button variant="light" onClick={() => this.showFurtherInfo(key)}  >{key}
                               <Icon icon='chevron-down' style={{ color: '#007bff' }} /></Button>
                             <Collapse isOpened={this.state[key]} >
 
                               {Object.keys(icStatus[statusKey][key]).map(index => (
-                                <div>{index + ": " + icStatus[statusKey][key][index]}</div>
+                                <div key={index}>{index + ": " + icStatus[statusKey][key][index]}</div>
                               ))}
                             </Collapse>
                           </div>)
                           :
-                          (<div>{key + ": " + icStatus[statusKey][key]}</div>)
+                          (<div key={key}>{key + ": " + icStatus[statusKey][key]}</div>)
                       ))
                     }
                   </Collapse>
 
               </div>) 
               :
-              (<div>{statusKey + ": " + icStatus[statusKey]}</div>)
+              (<div key={statusKey}>{statusKey + ": " + icStatus[statusKey]}</div>)
             ))
           }
           </Col>
