@@ -25,7 +25,8 @@ class WidgetTimeOffset extends Component {
 
     this.state = {
         timeOffset: '',
-        icID: ''
+        icID: '',
+        websocketOpen: false
     };
   }
 
@@ -42,13 +43,28 @@ class WidgetTimeOffset extends Component {
       return {timeOffset: -1};
     }
 
+    let ic = props.ics.find(ic => ic.id === parseInt(state.icID, 10));
+    let websocket = props.websockets.find(ws => ws.url === ic.websocketurl);
+
     let serverTime = props.data[state.icID].output.timestamp;
     let localTime = Date.now();
     let absoluteOffset = Math.abs(serverTime - localTime);
-    return {timeOffset: Number.parseFloat(absoluteOffset/1000).toPrecision(5)};
+    
+    if(typeof websocket === 'undefined'){
+      return {timeOffset: Number.parseFloat(absoluteOffset/1000).toPrecision(5)}
+    }
+    return {timeOffset: Number.parseFloat(absoluteOffset/1000).toPrecision(5), websocketOpen: websocket.connected};
   }
 
   render() {
+
+    let icSelected = " ";
+    if(!this.state.websocketOpen){
+      icSelected = "no connection";
+    } else if (this.props.widget.customProperties.showOffset){
+      icSelected = this.state.timeOffset + 's';
+    }
+
     let bottomText = this.props.widget.customProperties.icID !== -1 ? "" : "selected";
     return (
       <div className="time-offset">
@@ -56,15 +72,15 @@ class WidgetTimeOffset extends Component {
       (<span>IC: {this.state.icID}</span>) : (<span>no IC</span>)
       }        
         <TrafficLight Horizontal={this.props.widget.customProperties.horizontal} width={this.props.widget.width} height={this.props.widget.height}
-        RedOn={this.props.widget.customProperties.threshold_red <= this.state.timeOffset}
-        YellowOn={(this.props.widget.customProperties.threshold_yellow <= this.state.timeOffset) && (this.state.timeOffset < this.props.widget.customProperties.threshold_red)}
-        GreenOn={this.state.timeOffset < this.props.widget.customProperties.threshold_yellow}
+        RedOn={(this.props.widget.customProperties.threshold_red <= this.state.timeOffset) || !this.state.websocketOpen}
+        YellowOn={(this.props.widget.customProperties.threshold_yellow <= this.state.timeOffset) && (this.state.timeOffset < this.props.widget.customProperties.threshold_red) && this.state.websocketOpen}
+        GreenOn={(this.state.timeOffset < this.props.widget.customProperties.threshold_yellow) && this.state.websocketOpen}
       />
-      {this.props.widget.customProperties.showOffset && this.props.widget.customProperties.icID !== -1 ? 
+      {this.props.widget.customProperties.icID !== -1 ? 
       (
-      <span>{this.state.timeOffset}s</span>)
+      <span>{icSelected}</span>)
       :
-      (<span>{bottomText}</span>)
+      (<span>"selected"</span>)
       }
       </div>
     );
