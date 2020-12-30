@@ -82,7 +82,7 @@ class EditWidgetColorControl extends Component {
     }
 
     let tooltipText = "Change color and opacity";
-    if(this.state.widget.type === "Box" && parts[1] === "border_color" || this.state.widget.type === "Button" && (parts[1] === "border_color" || parts[1] === "font_color")){
+    if(this.props.disableOpacity){
       tooltipText = "Change border color";
     }
 
@@ -99,7 +99,7 @@ class EditWidgetColorControl extends Component {
         </OverlayTrigger>
         </div>
 
-        <ColorPicker show={this.state.showColorPicker} onClose={(data) => this.closeEditModal(data)} widget={this.state.widget} controlId={this.props.controlId} />
+        <ColorPicker show={this.state.showColorPicker} onClose={(data) => this.closeEditModal(data)} widget={this.state.widget} controlId={this.props.controlId} disableOpacity={this.props.disableOpacity}/>
       </FormGroup>
 
     )

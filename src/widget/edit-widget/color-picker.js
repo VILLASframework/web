@@ -85,7 +85,7 @@ class ColorPicker extends React.Component {
   };
 
   render() {
-    let disableOpacity = false;
+
     let hexColor;
     let opacity = 1;
     let parts = this.props.controlId.split('.');
@@ -94,9 +94,6 @@ class ColorPicker extends React.Component {
       isCustomProperty = false;
     }
 
-    if((this.state.widget.type === "Box" && parts[1] === "border_color") || this.props.controlId === 'strokeStyle' || this.state.widget.type === "Button" && (parts[1] === "border_color" || parts[1] === "font_color")){
-      disableOpacity = true;
-    }
     if(this.props.controlId === 'strokeStyle'){
       if(typeof this.state.widget.customProperties.zones[this.props.zoneIndex] !== 'undefined'){
     hexColor = this.state.widget.customProperties.zones[this.props.zoneIndex]['strokeStyle'];
@@ -117,7 +114,7 @@ class ColorPicker extends React.Component {
           <form>
               <SketchPicker
                   color={rgbColor}
-                  disableAlpha={disableOpacity} 
+                  disableAlpha={this.props.disableOpacity} 
                   onChangeComplete={ this.handleChangeComplete }
                   width={"300"}
               />
