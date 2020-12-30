@@ -140,12 +140,12 @@ class User extends Component {
           <form>
 
             <Row>
-              <FormGroup as={Col} sm={2} controlId="username">
+              <FormGroup as={Col} sm={2} controlId="details">
                 <div style={{ alignItems: 'right' }}>Username:</div>
                 <div style={{ alignItems: 'right' }}>E-mail:</div>
                 <div style={{ alignItems: 'right' }}>Role:</div>
               </FormGroup>
-              <FormGroup as={Col} sm={3} constrolId="whatever" >
+              <FormGroup as={Col} sm={3} controlId="information" >
                 <div> {this.state.currentUser.username}</div>
                 <div>{this.state.currentUser.mail}</div>
                 <div>{this.state.currentUser.role}</div>

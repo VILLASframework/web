@@ -388,3 +388,7 @@ body {
 .badge-outdated {
   opacity: 0.4;
 }
+
+a:link, a:active, a:visited , a:hover {
+  color: #047cab  ;
+}

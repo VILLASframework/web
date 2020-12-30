@@ -320,7 +320,7 @@ class InfrastructureComponents extends Component {
     let ic = this.state.ics.find(ic => ic.name === name);
     let index = this.state.ics.indexOf(ic);
     if(ic.type === "villas-node" || ic.type === "villas-relay"){
-      return <Button variant="link" onClick={() => this.setState({ icModal: true, modalIC: ic, modalIndex: index })}>{name}</Button>    }
+      return <Button variant="link" style={{color: '#047cab'}} onClick={() => this.setState({ icModal: true, modalIC: ic, modalIndex: index })}>{name}</Button>    }
     else{
       return <span>{name}</span>
     }

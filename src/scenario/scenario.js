@@ -604,7 +604,7 @@ class Scenario extends React.Component {
     const altButtonStyle = {
       marginLeft: '10px',
       backgroundColor: '#ffffff',
-      borderColor: 'ffffff'
+      borderColor: '#ffffff'
     }
 
     const tableHeadingStyle = {

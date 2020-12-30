@@ -118,7 +118,7 @@ class ImportICDialog extends React.Component {
             <FormControl type="file" onChange={(e) => this.loadFile(e.target.files)} />
           </FormGroup>
 
-          <FormGroup controlId="name" validationState={this.validateForm('name')}>
+          <FormGroup controlId="name" valid={this.validateForm('name')}>
             <FormLabel>Name</FormLabel>
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
@@ -128,7 +128,7 @@ class ImportICDialog extends React.Component {
             <FormControl type="text" placeholder="Enter websocketurl" value={this.state.websocketurl} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="uuid" validationState={this.validateForm('uuid')}>
+          <FormGroup controlId="uuid" valid={this.validateForm('uuid')}>
             <FormLabel>UUID</FormLabel>
             <FormControl type="text" placeholder="Enter uuid" value={this.state.uuid} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />

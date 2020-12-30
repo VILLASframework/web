@@ -42,7 +42,7 @@ class DeleteDialog extends React.Component {
             </Modal.Body>
 
             <Modal.Footer>
-                <Button onClick={() => this.props.onClose(false)}>Cancel</Button>
+                <Button style={{backgroundColor: '#527984', borderColor: '#527984'}} onClick={() => this.props.onClose(false)}>Cancel</Button>
                 <Button variant="danger" onClick={() => this.props.onClose(true)}>Delete</Button>
             </Modal.Footer>
         </Modal>;
