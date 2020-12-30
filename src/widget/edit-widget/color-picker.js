@@ -94,7 +94,7 @@ class ColorPicker extends React.Component {
       isCustomProperty = false;
     }
 
-    if((this.state.widget.type === "Box" && parts[1] === "border_color") || this.props.controlId === 'strokeStyle'){
+    if((this.state.widget.type === "Box" && parts[1] === "border_color") || this.props.controlId === 'strokeStyle' || this.state.widget.type === "Button" && (parts[1] === "border_color" || parts[1] === "font_color")){
       disableOpacity = true;
     }
     if(this.props.controlId === 'strokeStyle'){

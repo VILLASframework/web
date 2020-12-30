@@ -82,7 +82,7 @@ class EditWidgetColorControl extends Component {
     }
 
     let tooltipText = "Change color and opacity";
-    if(this.state.widget.type === "Box" && parts[1] === "border_color"){
+    if(this.state.widget.type === "Box" && parts[1] === "border_color" || this.state.widget.type === "Button" && (parts[1] === "border_color" || parts[1] === "font_color")){
       tooltipText = "Change border color";
     }
 

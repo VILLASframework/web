@@ -59,10 +59,19 @@ class WidgetButton extends Component {
   }
 
   render() {
+
+    const buttonStyle = {
+      backgroundColor: this.props.widget.customProperties.background_color, 
+      borderColor: this.props.widget.customProperties.border_color,
+      color: this.props.widget.customProperties.font_color,
+      opacity: this.props.widget.customProperties.background_color_opacity
+    };
+
     return (
       <div className="button-widget full">
           <Button
             className="full"
+            style={buttonStyle}
             active={ this.state.pressed }
             disabled={ this.props.editing }
             onMouseDown={ (e) => this.onPress(e) }

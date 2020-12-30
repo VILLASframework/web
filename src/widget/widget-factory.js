@@ -122,8 +122,10 @@ class WidgetFactory {
                 widget.minHeight = 50;
                 widget.width = 100;
                 widget.height = 100;
-                widget.customProperties.background_color = '#4287f5';
+                widget.customProperties.background_color = '#527984';
                 widget.customProperties.font_color = '#4287f5';
+                widget.customProperties.border_color = '#4287f5';
+                widget.customProperties.background_color_opacity = 1;
                 widget.customProperties.on_value = 1;
                 widget.customProperties.off_value = 0;
                 widget.customProperties.toggle = false;

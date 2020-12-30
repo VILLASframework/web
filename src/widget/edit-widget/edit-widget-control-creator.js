@@ -115,7 +115,10 @@ export default function CreateControls(widgetType = null, widget = null, session
                 <EditWidgetSignalControl key={1} widget={widget} controlId={'signalIDs'} input signals={signals} handleChange={(e) => handleChange(e)} direction={'in'}/>,
                 <EditWidgetCheckboxControl key={2} widget={widget} controlId={'customProperties.toggle'} input text="Toggle" handleChange={e => handleChange(e)} />,
                 <EditWidgetNumberControl key={3} widget={widget} controlId={'customProperties.on_value'} label={'On Value'} defaultValue={1} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetNumberControl key={4} widget={widget} controlId={'customProperties.off_value'} label={'Off Value'} defaultValue={0} handleChange={(e) => handleChange(e)} />
+                <EditWidgetNumberControl key={4} widget={widget} controlId={'customProperties.off_value'} label={'Off Value'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetColorControl key={5} widget={widget} controlId={'customProperties.background_color'} label={'Background Color and Opacity'} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetColorControl key={6} widget={widget} controlId={'customProperties.border_color'} label={'Border Color'} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetColorControl key={7} widget={widget} controlId={'customProperties.font_color'} label={'Font Color'} handleChange={(e) => handleChange(e)} />,
             );
             break;
         case 'Box':
