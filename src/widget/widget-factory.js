@@ -89,6 +89,7 @@ class WidgetFactory {
                 widget.customProperties.yMin = 0;
                 widget.customProperties.yMax = 10;
                 widget.customProperties.yUseMinMax = false;
+                widget.customProperties.lineColors = [];
                 break;
             case 'Table':
                 widget.minWidth = 200;
