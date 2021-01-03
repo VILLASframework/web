@@ -17,6 +17,7 @@
 
 import React, { Component } from 'react';
 import TrafficLight from 'react-trafficlight';
+import {OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 
 class WidgetTimeOffset extends Component {
@@ -26,6 +27,7 @@ class WidgetTimeOffset extends Component {
     this.state = {
         timeOffset: '',
         icID: '',
+        icName: '',
         websocketOpen: false
     };
   }
@@ -53,7 +55,7 @@ class WidgetTimeOffset extends Component {
     if(typeof websocket === 'undefined'){
       return {timeOffset: Number.parseFloat(absoluteOffset/1000).toPrecision(5)}
     }
-    return {timeOffset: Number.parseFloat(absoluteOffset/1000).toPrecision(5), websocketOpen: websocket.connected};
+    return {timeOffset: Number.parseFloat(absoluteOffset/1000).toPrecision(5), websocketOpen: websocket.connected, icName: ic.name};
   }
 
   render() {
@@ -64,23 +66,29 @@ class WidgetTimeOffset extends Component {
     } else if (this.props.widget.customProperties.showOffset){
       icSelected = this.state.timeOffset + 's';
     }
-
-    let bottomText = this.props.widget.customProperties.icID !== -1 ? "" : "selected";
+    
     return (
       <div className="time-offset">
       {this.props.widget.customProperties.icID !== -1 ? 
-      (<span>IC: {this.state.icID}</span>) : (<span>no IC</span>)
-      }        
+      (<span></span>) : (<span>no IC</span>)
+      }  
+      <OverlayTrigger key={0} placement={'left'} overlay={<Tooltip id={`tooltip-${"traffic-light"}`}>
+      {this.props.widget.customProperties.icID !== -1 ? 
+      (<span>{this.state.icName}<br></br>Offset: {this.state.timeOffset + "s"}</span>) 
+      : 
+      (<span>Please select Infrastructure Component</span>)}
+      </Tooltip>}>      
         <TrafficLight Horizontal={this.props.widget.customProperties.horizontal} width={this.props.widget.width} height={this.props.widget.height}
         RedOn={(this.props.widget.customProperties.threshold_red <= this.state.timeOffset) || !this.state.websocketOpen}
         YellowOn={(this.props.widget.customProperties.threshold_yellow <= this.state.timeOffset) && (this.state.timeOffset < this.props.widget.customProperties.threshold_red) && this.state.websocketOpen}
         GreenOn={(this.state.timeOffset < this.props.widget.customProperties.threshold_yellow) && this.state.websocketOpen}
       />
+      </OverlayTrigger>
       {this.props.widget.customProperties.icID !== -1 ? 
       (
       <span>{icSelected}</span>)
       :
-      (<span>"selected"</span>)
+      (<span>selected</span>)
       }
       </div>
     );
