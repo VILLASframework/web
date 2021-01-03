@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Button, ButtonToolbar, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Button, ButtonToolbar, Dropdown } from 'react-bootstrap';
 import TimePicker from 'react-bootstrap-time-picker'
 
 class ICAction extends React.Component {
@@ -76,9 +76,12 @@ class ICAction extends React.Component {
             onChange={this.setDelayForAction}
           />
           <ButtonToolbar>
-            <DropdownButton variant="secondary" title={this.state.selectedAction != null ? this.state.selectedAction.title : ''} id="action-dropdown" onSelect={this.setAction}>
-              {actionList}
-            </DropdownButton>
+           <Dropdown onSelect={this.setAction}>
+             <Dropdown.Toggle id={'action-dropdown'} style={{backgroundColor: '#527984', borderColor: '#527984'}}> {this.state.selectedAction != null ? this.state.selectedAction.title : ''}</Dropdown.Toggle>
+             <Dropdown.Menu>
+             {actionList}
+             </Dropdown.Menu>
+           </Dropdown>
 
             <Button style={{ marginLeft: '5px', backgroundColor: '#527984', borderColor: '#527984' }} disabled={sendCommandDisabled} onClick={() => this.props.runAction(this.state.selectedAction, this.state.selectedDelay)}>Send command</Button>
 

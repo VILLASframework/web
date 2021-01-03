@@ -145,6 +145,7 @@ class EditFilesDialog extends React.Component {
 
           <FormGroup as={Col} >
             <Button
+              style={{ backgroundColor: '#527984', borderColor: '#527984'}}
               disabled={this.state.uploadFile === null}
               onClick={() => this.startFileUpload()}>
               Upload
