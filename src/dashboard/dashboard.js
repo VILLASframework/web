@@ -557,6 +557,7 @@ class Dashboard extends Component {
           widget={this.state.modalData}
           signals={this.state.signals}
           files={this.state.files}
+          ics={this.state.ics}
         />
 
         <EditFiles

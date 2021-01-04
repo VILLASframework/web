@@ -164,6 +164,7 @@ class WidgetToolbox extends React.Component {
       <ToolboxItem name='Lamp' type='widget' icon = 'plus' />
       <ToolboxItem name='Gauge' type='widget' icon = 'plus'/>
       <ToolboxItem name='Topology' type='widget' disabled={thereIsTopologyWidget} title={topologyItemMsg} icon = 'plus'/>
+      <ToolboxItem name='TimeOffset' type='widget' icon = 'plus' />
       <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"?"}`}> Drag and drop widgets onto the dashboard </Tooltip>} >
       <Button disabled={true} variant="light" size="sm" key={0}  >
           <Icon icon="question" />
