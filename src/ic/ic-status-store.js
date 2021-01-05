@@ -34,6 +34,10 @@ class ICStatusStore extends ArrayStore {
       case 'ic-status/status-received':
         let tempData = action.data;
         tempData.icID = action.icid;
+
+        // TODO: edit state (e.g. running) of IC according to received state (only for ICs that are NOT managed externally)
+        // TODO: playback state info to backend using start-edit dispatch for IC
+
         return this.updateElements(state, [tempData]);
 
       case 'ic-status/status-error':
