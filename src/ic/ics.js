@@ -302,9 +302,9 @@ class InfrastructureComponents extends Component {
   }
 
   stateUpdateModifier(updatedAt) {
-    let dateFormat = 'ddd, DD MMM YYYY HH:mm:ss';
-    let dateTime = moment.utc(updatedAt, dateFormat);
-    return dateTime.toLocaleString('de-DE');
+    let dateFormat = 'DD MMM YYYY HH:mm:ss';
+    let dateTime = moment(updatedAt, dateFormat);
+    return dateTime.fromNow()
   }
 
   modifyManagedExternallyColumn(managedExternally){

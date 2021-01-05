@@ -23,6 +23,8 @@ import ICDataStore from '../ic/ic-data-store';
 import ConfigsStore from '../componentconfig/config-store';
 import FileStore from '../file/file-store';
 import SignalStore from '../signal/signal-store'
+import WebsocketStore from './websocket-store'
+import ICStore from '../ic/ic-store';
 
 import WidgetCustomAction from './widgets/custom-action';
 import WidgetAction from './widgets/action';
@@ -39,6 +41,7 @@ import WidgetGauge from './widgets/gauge';
 import WidgetBox from './widgets/box';
 import WidgetTopology from './widgets/topology';
 import WidgetLine from './widgets/line';
+import WidgetTimeOffset from './widgets/time-offset'
 //import WidgetHTML from './widgets/html';
 
 
@@ -46,10 +49,13 @@ import '../styles/widgets.css';
 
 class Widget extends React.Component {
   static getStores() {
-    return [ ICDataStore, ConfigsStore, FileStore, SignalStore];
+    return [ ICDataStore, ConfigsStore, FileStore, SignalStore, WebsocketStore, ICStore];
   }
 
   static calculateState(prevState, props) {
+
+    let websockets = WebsocketStore.getState();
+    let ics = ICStore.getState();
 
     let icData = {};
 
@@ -78,6 +84,8 @@ class Widget extends React.Component {
     }
 
     return {
+      ics: ics,
+      websockets: websockets,
       icData: icData,
       signals: signals,
       icIDs: icIDs,
@@ -191,7 +199,6 @@ class Widget extends React.Component {
       return <WidgetSlider
         widget={widget}
         editing={this.props.editing}
-        onWidgetChange={(w) => this.props.onWidgetStatusChange(w, this.props.index) }
         onInputChanged={(value, controlID, controlValue) => this.inputDataChanged(widget, value, controlID, controlValue)}
         signals={this.state.signals}
       />
@@ -223,6 +230,13 @@ class Widget extends React.Component {
       return <WidgetLine
         widget={widget}
         editing={this.props.editing}
+      />
+    } else if (widget.type === 'TimeOffset') {
+      return <WidgetTimeOffset
+        widget={widget}
+        data={this.state.icData}
+        websockets={this.state.websockets}
+        ics={this.state.ics}
       />
     }
 

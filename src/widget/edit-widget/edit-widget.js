@@ -52,9 +52,9 @@ class EditWidgetDialog extends React.Component {
     const file = this.props.files.find(element => element.id === fileId);
 
     // scale width to match aspect
-    if(file.dimensions){
-    const aspectRatio = file.dimensions.width / file.dimensions.height;
-    changeObject.width = this.state.temporal.height * aspectRatio;
+    if(file.imageWidth && file.imageHeight){
+    const aspectRatio = file.imageWidth / file.imageHeight;
+    changeObject.width = parseInt(this.state.temporal.height * aspectRatio,10);
     }
 
     return changeObject;
@@ -72,13 +72,14 @@ class EditWidgetDialog extends React.Component {
   setMaxWidth(changeObject){
     if(changeObject.type === 'Label'){
       changeObject.customProperties.maxWidth = Math.ceil(this.getTextWidth(changeObject.name, changeObject.customProperties.textSize));
+      changeObject.width = changeObject.customProperties.maxWidth;
     }
     /*else if (changeObject.type === 'Value'){
       changeObject.customProperties.maxWidth = Math.ceil(this.getTextWidth(changeObject.name, changeObject.customProperties.textSize));
-    }*/
+    }
     if(this.state.temporal.width > changeObject.customProperties.maxWidth){
       changeObject.width = changeObject.customProperties.maxWidth;
-    }
+    }*/
     return changeObject;
   }
 
@@ -118,14 +119,12 @@ class EditWidgetDialog extends React.Component {
       {
         customProperty ? changeObject[parts[0]][parts[1]] = -1 : changeObject[e.target.id] = -1;
       } else {
+        if(this.state.temporal.customProperties.lockAspect){
+          changeObject = this.assignAspectRatio(changeObject, e.target.value);
+        }
         customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value;
       }
 
-      // get file and update size (if it's an image)
-      /*if ((changeObject.customProperties.file !== -1)&&('lockAspect' in this.state.temporal && this.state.temporal.lockAspect)) {
-        // TODO this if condition requires changes to work!!!
-        changeObject = this.assignAspectRatio(changeObject, e.target.value);
-      }*/
     } else if (parts[1] === 'textSize'){
       changeObject[parts[0]][parts[1]] = Number(e.target.value);
       changeObject = this.setMaxWidth(changeObject);
@@ -142,6 +141,11 @@ class EditWidgetDialog extends React.Component {
         customProperty ? changeObject[parts[0]][parts[1]]= 'default' : changeObject[e.target.id] = 'default';
       }
       changeObject = this.setMaxWidth(changeObject);
+    } else if (parts[1] === 'horizontal'){
+      customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value ;
+      let tempWidth = changeObject.width;
+      changeObject.width = changeObject.height;
+      changeObject.height = tempWidth;
     } else {
       customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value ;
     }
@@ -164,6 +168,7 @@ class EditWidgetDialog extends React.Component {
             this.state.temporal,
             this.props.sessionToken,
             this.props.files,
+            this.props.ics,
             this.props.signals,
             (e) => this.handleChange(e));
     }

@@ -73,7 +73,7 @@ class EditDashboardDialog extends React.Component {
     return (
       <Dialog show={this.props.show} title="Edit Dashboard" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
         <form>
-          <FormGroup controlId="name" validationState={this.validateForm('name')}>
+          <FormGroup controlId="name" validationstate={this.validateForm('name')}>
             <FormLabel>Name</FormLabel>
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
