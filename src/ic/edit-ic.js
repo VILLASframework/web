@@ -120,7 +120,7 @@ class EditICDialog extends React.Component {
     let typeOptions = [];
     switch(this.state.category){
       case "simulator":
-        typeOptions = ["dummy","generic","dpsim","rtlab","rscad"];
+        typeOptions = ["dummy","generic","dpsim","rtlab","rscad", "opalrt"];
         break;
       case "controller":
         typeOptions = ["kubernetes","villas-controller"];
