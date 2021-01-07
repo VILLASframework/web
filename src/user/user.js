@@ -25,6 +25,7 @@ import UsersStore from './users-store';
 import Icon from '../common/icon';
 import EditOwnUserDialog from './edit-own-user'
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager"
+import NotificationsFactory from "../common/data-managers/notifications-factory";
 
 class User extends Component {
   static getStores() {
@@ -81,12 +82,7 @@ class User extends Component {
       updatedData.password = data.password;
       updatedData.oldPassword = data.oldPassword;
     } else if (data.password !== '' && data.password !== data.confirmpassword) {
-      const USER_UPDATE_ERROR_NOTIFICATION = {
-        title: 'Update Error ',
-        message: 'New password not correctly confirmed',
-        level: 'error'
-      };
-      NotificationsDataManager.addNotification(USER_UPDATE_ERROR_NOTIFICATION);
+      NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR('New password not correctly confirmed'));
       return
     }
 
@@ -102,12 +98,7 @@ class User extends Component {
         token: this.state.token
       });
     } else {
-      const USER_UPDATE_WARNING_NOTIFICATION = {
-        title: 'Update Warning ',
-        message: 'No update requested, no input data',
-        level: 'warning'
-      };
-      NotificationsDataManager.addNotification(USER_UPDATE_WARNING_NOTIFICATION);
+      NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_WARNING('No update requested, no input data'));
     }
   }
   }

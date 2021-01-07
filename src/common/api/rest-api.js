@@ -18,19 +18,8 @@
 import request from 'superagent/lib/client';
 import Promise from 'es6-promise';
 import NotificationsDataManager from '../data-managers/notifications-data-manager';
+import NotificationsFactory from "../data-managers/notifications-factory";
 
-// TODO: Add this to a central pool of notifications
-const SERVER_NOT_REACHABLE_NOTIFICATION = {
-          title: 'Server not reachable',
-          message: 'The server could not be reached. Please try again later.',
-          level: 'error'
-        };
-
-const REQUEST_TIMEOUT_NOTIFICATION = {
-          title: 'Request timeout',
-          message: 'Request timed out. Please try again later.',
-          level: 'error'
-        };
 
 // Check if the error was due to network failure, timeouts, etc.
 // Can be used for the rest of requests
@@ -41,7 +30,7 @@ function isNetworkError(err) {
   if (err.status == null || err.status === 500 || err.response == null) {
     result = true;
 
-    let notification = err.timeout? REQUEST_TIMEOUT_NOTIFICATION : SERVER_NOT_REACHABLE_NOTIFICATION;
+    let notification = err.timeout? NotificationsFactory.REQUEST_TIMEOUT : NotificationsFactory.SERVER_NOT_REACHABLE;
     NotificationsDataManager.addNotification(notification);
   }
   return result;

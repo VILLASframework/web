@@ -15,6 +15,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 import NotificationsDataManager from "../data-managers/notifications-data-manager";
+import NotificationsFactory from "../data-managers/notifications-factory";
 import AppDispatcher from '../app-dispatcher';
 
 class WebsocketAPI {
@@ -70,7 +71,7 @@ class WebsocketAPI {
     AppDispatcher.dispatch({
       type: 'websocket/connected',
       data: this.websocketurl,
-    });    
+    });
     this.wasConnected = true;
 
     if ('onOpen' in this.callbacks)
@@ -88,12 +89,8 @@ class WebsocketAPI {
           type: 'websocket/connection-error',
           data: this.websocketurl,
         });
-        const IC_WEBSOCKET_CONNECTION_ERROR = {
-          title: 'Websocket connection warning',
-          message: "Connection to " + this.websocketurl + " dropped. Attempt reconnect in 1 sec",
-          level: 'warning'
-        };
-        NotificationsDataManager.addNotification(IC_WEBSOCKET_CONNECTION_ERROR);
+
+        NotificationsDataManager.addNotification(NotificationsFactory.WEBSOCKET_CONNECTION_WARN(this.websocketurl));
         console.log("Connection to " + this.websocketurl + " dropped. Attempt reconnect in 1 sec");
         window.setTimeout(() => { this.reconnect(); }, 1000);
       }

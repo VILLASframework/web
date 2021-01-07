@@ -19,6 +19,7 @@ import ArrayStore from '../common/array-store';
 import ICsDataManager from './ics-data-manager';
 import ICDataDataManager from './ic-data-data-manager';
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
+import NotificationsFactory from "../common/data-managers/notifications-factory";
 
 class InfrastructureComponentStore extends ArrayStore {
   constructor() {
@@ -47,14 +48,7 @@ class InfrastructureComponentStore extends ArrayStore {
           if (ic.websocketurl	!= null && ic.websocketurl !== '') {
             ICDataDataManager.open(ic.websocketurl, ic.id);
           } else {
-
-            // TODO add to pool of notifications
-            const IC_WEBSOCKET_URL_ERROR = {
-              title: 'Websocket connection warning',
-              message: "Websocket URL parameter not available for IC " + ic.name + "(" + ic.uuid + "), connection not possible",
-              level: 'warning'
-            };
-            NotificationsDataManager.addNotification(IC_WEBSOCKET_URL_ERROR);
+            NotificationsDataManager.addNotification(NotificationsFactory.WEBSOCKET_URL_WARN(ic.name, ic.uuid));
           }
         }
         return super.reduce(state, action);
