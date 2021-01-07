@@ -26,18 +26,18 @@ class NotificationsFactory {
       };
   }
 
-  static get SERVER_NOT_REACHABLE() {
+  static SERVER_NOT_REACHABLE(url) {
     return {
       title: 'Server not reachable',
-      message: 'The server could not be reached. Please try again later.',
+      message: 'The url ' + url +' could not be reached. Please try again later.',
       level: 'error'
     };
   }
 
-  static get REQUEST_TIMEOUT() {
+  static REQUEST_TIMEOUT(url) {
     return {
       title: 'Request timeout',
-      message: 'Request timed out. Please try again later.',
+      message: 'Request to ' + url + ' timed out. Please try again later.',
       level: 'error'
     };
   }

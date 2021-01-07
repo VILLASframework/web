@@ -23,14 +23,14 @@ import NotificationsFactory from "../data-managers/notifications-factory";
 
 // Check if the error was due to network failure, timeouts, etc.
 // Can be used for the rest of requests
-function isNetworkError(err) {
+function isNetworkError(err, url) {
   let result = false;
 
   // If not status nor response fields, it is a network error. TODO: Handle timeouts
   if (err.status == null || err.status === 500 || err.response == null) {
     result = true;
 
-    let notification = err.timeout? NotificationsFactory.REQUEST_TIMEOUT : NotificationsFactory.SERVER_NOT_REACHABLE;
+    let notification = err.timeout? NotificationsFactory.REQUEST_TIMEOUT : NotificationsFactory.SERVER_NOT_REACHABLE(url);
     NotificationsDataManager.addNotification(notification);
   }
   return result;
@@ -49,7 +49,7 @@ class RestAPI {
 
       req.end(function (error, res) {
         if (res == null || res.status !== 200) {
-          if (req.url !== prevURL) error.handled = isNetworkError(error);
+          if (req.url !== prevURL) error.handled = isNetworkError(error, url);
           prevURL = req.url;
           reject(error);
         } else {
