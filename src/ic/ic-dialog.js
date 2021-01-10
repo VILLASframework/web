@@ -121,12 +121,15 @@ class ICDialog extends React.Component {
               )}
           </div>
         
-        
+        {this.props.userRole === "Admin"? (
+        <div>
         <h5>Controls:</h5>
         <div>
         <Button style={{ margin: '5px' }} size='lg' onClick={() => this.setState({ confirmCommand: true, command: 'restart' })}>Restart</Button>
         <Button style={{ margin: '5px' }} size='lg' onClick={() => this.setState({ confirmCommand: true, command: 'shutdown' })}>Shutdown</Button>
         </div>
+        </div> )
+        : (<div></div>) }
 
         <ConfirmCommand show={this.state.confirmCommand} command={this.state.command} name={this.props.ic.name} onClose={c => this.closeConfirmModal(c)} />
         </Col>
