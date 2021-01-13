@@ -134,6 +134,10 @@ class EditSignalMapping extends React.Component {
 
   };
 
+  handleRemove = () => {
+
+  }
+
   handleAdd = (configID = null) => {
 
     if(typeof this.props.configs !== "undefined"){
@@ -173,6 +177,10 @@ class EditSignalMapping extends React.Component {
       this.setState({signals: signals})
   }
 
+  onSignalChecked(index, signal) {
+    console.log(index);
+  }
+
   render() {
 
       const buttonStyle = {
@@ -185,7 +193,7 @@ class EditSignalMapping extends React.Component {
           show={this.props.show}
           title="Edit Signal Mapping"
           buttonTitle="Save"
-          blendOutCancel = {true}
+          blendOutCancel = {false}
           onClose={(c) => this.onClose(c)}
           onReset={() => this.resetState()}
           valid={true}
@@ -194,7 +202,8 @@ class EditSignalMapping extends React.Component {
           <FormGroup>
               <FormLabel>{this.props.direction} Mapping</FormLabel>
               <FormText>Click <i>Index</i>, <i>Name</i> or <i>Unit</i> cell to edit</FormText>
-              <Table data={this.state.signals}>
+              <Table checkbox onChecked={(index, event) => this.onSignalChecked(index, event)} data={this.state.signals}>
+                  <TableColumn checkbox onChecked={(index, event) => this.onSignalChecked(index, event)} width='30' />
                   <TableColumn title='Index' dataKey='index' inlineEditable inputType='number' onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
                   <TableColumn title='Name' dataKey='name' inlineEditable inputType='text' onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
                   <TableColumn title='Unit' dataKey='unit' inlineEditable inputType='text' onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
@@ -202,8 +211,9 @@ class EditSignalMapping extends React.Component {
                   <TableColumn title='Remove' deleteButton onDelete={(index) => this.handleDelete(index)} />
               </Table>
 
-              <div style={{ float: 'right' }}>
-                <Button key={50} onClick={() => this.handleAdd()} style={buttonStyle}><Icon icon="plus" /> Signal</Button>
+              <div >
+                <Button key={50} style={{ float: 'left' }} onClick={() => this.handleRemove()} style={buttonStyle}> Remove </Button>
+                <Button key={51} style={{ float: 'right' }} onClick={() => this.handleAdd()} style={buttonStyle}><Icon icon="plus" /> Signal </Button>
               </div>
               <div>
                 <Collapse isOpened={this.state.openCollapse}>
