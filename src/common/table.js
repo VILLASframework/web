@@ -114,11 +114,6 @@ class CustomTable extends Component {
         <Button variant='table-control-button' onClick={() => child.props.onEdit(index)} disabled={disable || child.props.onEdit == null}><Icon icon='edit' /></Button></OverlayTrigger>);
     }
 
-    if (child.props.deleteButton) {
-      cell.push(<OverlayTrigger key={1} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"delete"}`}> Delete </Tooltip>} >
-        <Button variant='table-control-button' onClick={() => child.props.onDelete(index)} disabled={child.props.onDelete == null}><Icon icon='trash' /></Button></OverlayTrigger>);
-    }
-
     if (child.props.checkbox) {
       const checkboxKey = child.props.checkboxKey;
 
@@ -126,18 +121,28 @@ class CustomTable extends Component {
     }
 
     if (child.props.exportButton) {
-      cell.push(<OverlayTrigger key={2} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"export"}`}> Export </Tooltip>} >
+      cell.push(<OverlayTrigger key={1} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"export"}`}> Export </Tooltip>} >
         <Button variant='table-control-button' onClick={() => child.props.onExport(index)} disabled={child.props.onExport == null}><Icon icon='download' /></Button></OverlayTrigger>);
     }
 
     if (child.props.duplicateButton) {
-      cell.push(<OverlayTrigger key={3} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"duplicate"}`}> Duplicate </Tooltip>} >
+      cell.push(<OverlayTrigger key={2} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"duplicate"}`}> Duplicate </Tooltip>} >
         <Button variant='table-control-button' onClick={() => child.props.onDuplicate(index)} disabled={child.props.onDuplicate == null}><Icon icon='copy' /></Button></OverlayTrigger>);
+    }
+
+    if (child.props.addRemoveFilesButton) {
+      cell.push(<OverlayTrigger key={3} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"export"}`}>Add/remove File(s)</Tooltip>} >
+        <Button variant='table-control-button' onClick={() => child.props.onAddRemove(index)} disabled={child.props.onAddRemove == null}><Icon icon='file' /></Button></OverlayTrigger>);
     }
 
     if (child.props.downloadAllButton) {
       cell.push(<OverlayTrigger key={4} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"export"}`}>Download All Files</Tooltip>} >
         <Button variant='table-control-button' onClick={() => child.props.onDownloadAll(index)} disabled={child.props.onDownloadAll == null}><Icon icon='file-download' /></Button></OverlayTrigger>);
+    }
+
+    if (child.props.deleteButton) {
+      cell.push(<OverlayTrigger key={5} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"delete"}`}> Delete </Tooltip>} >
+        <Button variant='table-control-button' onClick={() => child.props.onDelete(index)} disabled={child.props.onDelete == null}><Icon icon='trash' /></Button></OverlayTrigger>);
     }
 
     return cell;
