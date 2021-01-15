@@ -39,6 +39,7 @@ import EditFiles from '../file/edit-files'
 import NewResultDialog from '../result/new-result';
 import EditResultDialog from '../result/edit-result'
 
+
 import ICAction from '../ic/ic-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
 import EditConfigDialog from "../componentconfig/edit-config";
@@ -112,6 +113,7 @@ class Scenario extends React.Component {
       modalResultsData: {},
       modalResultsIndex: 0,
       newResultModal: false,
+      editFilesModal: false,
 
       editOutputSignalsModal: prevState.editOutputSignalsModal || false,
       editInputSignalsModal: prevState.editInputSignalsModal || false,
@@ -596,8 +598,18 @@ class Scenario extends React.Component {
     console.log(index);
   }
 
-  closeDeleteResultsModal(e) {
+  closeDeleteResultsModal(confirmDelete) {
+    this.setState({ deleteResultsModal: false });
 
+    if (confirmDelete === false) {
+      return;
+    }
+
+    AppDispatcher.dispatch({
+      type: 'results/start-remove',
+      data: this.state.modalResultsData,
+      token: this.state.sessionToken,
+    });
   }
 
   startPintura(configIndex) {
@@ -662,9 +674,7 @@ class Scenario extends React.Component {
 
     let resulttable;
     if (this.state.results && this.state.results.length > 0) {
-      resulttable = <div>
-        <h2 style={tableHeadingStyle}>Results</h2>
-        <div>
+      resulttable = <div>     
           <Table data={this.state.results}>
             <TableColumn title='Result No.' dataKey='id' />
             <TableColumn title='Description' dataKey='description' />
@@ -679,19 +689,21 @@ class Scenario extends React.Component {
             />
             <TableColumn
               title='Options'
-              width='200'
+              width='300'
               editButton
+              addRemoveFilesButton
               downloadAllButton
               deleteButton
               onEdit={index => this.setState({ editResultsModal: true, modalResultsData: this.state.results[index], modalResultsIndex: index })}
+              onAddRemove={(index) => this.setState({ editFilesModal: true, modalResultsData: this.state.results[index], modalResultsIndex: index})}
               onDownloadAll={(index) => this.downloadData(this.state.results[index])}
               onDelete={(index) => this.setState({ deleteResultsModal: true, modalResultsData: this.state.results[index], modalResultsIndex: index })}
             />
           </Table>
 
           <EditResultDialog show={this.state.editResultsModal} result={this.state.modalResultsData} onClose={data => this.closeEditResultsModal(data)} />
-          <DeleteDialog title="results" name={this.state.modalDashboardData.name} show={this.state.deleteResultsModal} onClose={(e) => this.closeDeleteResultsModal(e)} />
-        </div></div>
+          <DeleteDialog title="result" name={this.state.modalResultsData.id} show={this.state.deleteResultsModal} onClose={(e) => this.closeDeleteResultsModal(e)} />
+        </div>
     }
 
     return <div className='section'>
@@ -842,10 +854,18 @@ class Scenario extends React.Component {
       <DeleteDialog title="dashboard" name={this.state.modalDashboardData.name} show={this.state.deleteDashboardModal} onClose={(e) => this.closeDeleteDashboardModal(e)} />
 
       {/*Result table*/}
+      <div>
+        <h2 style={tableHeadingStyle}>Results
+        <Button onClick={() => this.setState({ newResultModal: true })} style={buttonStyle}><Icon icon="plus" /></Button>
+        </h2>
+        
+      </div>
       {resulttable}
+      {/*
       <div style={{ float: 'right' }}>
         <Button onClick={() => this.setState({ newResultModal: true })} style={buttonStyle}><Icon icon="plus" /> Result</Button>
       </div>
+      */}
       <NewResultDialog show={this.state.newResultModal} onClose={data => this.closeNewResultModal(data)} />
 
       {/*Scenario Users table*/}
