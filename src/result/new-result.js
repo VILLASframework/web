@@ -35,17 +35,13 @@ class NewResultDialog extends React.Component {
   onClose(canceled) {
       console.log("on close new result");
     if (canceled === false) {
-      //if (this.valid) {
         this.props.onClose(this.state);
-     // }
     } else {
       this.props.onClose();
     }
   }
 
   handleChange(e) {
-      console.log("handle change, e:");
-      console.log(e);
     this.setState({ [e.target.id]: e.target.value });
   }
 

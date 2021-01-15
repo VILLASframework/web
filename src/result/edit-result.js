@@ -32,6 +32,7 @@ class EditResultDialog extends React.Component {
       configSnapshots: '',
       description: '',
       resultFileIDs: [],
+      id:0,
     };
   }
 
@@ -50,22 +51,14 @@ class EditResultDialog extends React.Component {
 
   handleChange = event => {
     this.setState({ [event.target.id]: event.target.value });
-
-    let description = true;
-
-    if (this.state.description === '') {
-      description = false;
-    }
-
-    this.valid = description;
-
   };
 
   resetState = () => {
     this.setState({
       configSnapshots: this.props.configSnapshots,
-      description: this.props.configSnapshots,
+      description: this.props.description,
       resultFileIDs: this.props.resultFileIDs,
+      id: this.props.id,
     });
   };
 
@@ -94,7 +87,7 @@ class EditResultDialog extends React.Component {
   }
 
   render() {
-    return <Dialog show={this.props.show} title={'Edit Result No. '+this.state.no} buttonTitle='Save' onClose={this.onClose} onReset={this.resetState} valid={true}>
+    return <Dialog show={this.props.show} title={'Edit Result No. '+this.state.id} buttonTitle='Save' onClose={this.onClose} onReset={this.resetState} valid={true}>
       <form>
         <FormGroup as={Col} controlId='description'>
           <FormLabel column={false}>Description</FormLabel>
