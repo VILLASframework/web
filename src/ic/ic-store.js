@@ -38,6 +38,7 @@ class InfrastructureComponentStore extends ArrayStore {
               socketname: splitWebsocketURL[splitWebsocketURL.length - 1],
               token: action.token,
               icid: ic.id,
+              ic: ic
             });
   
             AppDispatcher.dispatch({

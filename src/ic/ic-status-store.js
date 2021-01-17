@@ -28,7 +28,7 @@ class ICStatusStore extends ArrayStore {
     switch(action.type) {
 
       case 'ic-status/get-status':
-        ICDataDataManager.getStatus(action.url, action.socketname, action.token, action.icid);
+        ICDataDataManager.getStatus(action.url, action.socketname, action.token, action.icid, action.ic);
         return super.reduce(state, action);
 
       case 'ic-status/status-received':

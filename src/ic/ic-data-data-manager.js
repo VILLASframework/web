@@ -44,15 +44,25 @@ class IcDataDataManager {
     }
   }
 
-  getStatus(url,socketname,token,icid){
+  getStatus(url,socketname,token,icid,ic){
     RestAPI.get(url, null).then(response => {
+      let tempIC = ic;
+      tempIC.state = response.state;
       AppDispatcher.dispatch({
         type: 'ic-status/status-received',
         data: response,
         token: token,
         socketname: socketname,
         icid: icid,
+        ic: ic
       });
+      if(!ic.managedexternally){  
+        AppDispatcher.dispatch({
+          type: 'ics/start-edit',
+          data: tempIC,
+          token: token,
+        });
+      }
     }).catch(error => {
       AppDispatcher.dispatch({
         type: 'ic-status/status-error',
