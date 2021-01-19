@@ -24,8 +24,83 @@ class ResultStore extends ArrayStore {
     super('results', ResultsDataManager);
   }
 
+  saveFile(state, action){
+
+    let fileID = parseInt(action.id)
+    state.forEach((element, index, array) => {
+         if (element.id === fileID) {
+           // save blob object
+           array[index]["data"] = new Blob([action.data.data], {type: action.data.type});
+           // update file type
+           array[index]["type"] = action.data.type;
+
+           if (array[index]["objectURL"] !== ''){
+             // free memory of previously generated object URL
+             URL.revokeObjectURL(array[index]["objectURL"]);
+           }
+           // create an object URL for the file
+           array[index]["objectURL"] = URL.createObjectURL(array[index]["data"])
+        }
+    });
+
+    // announce change to listeners
+    this.__emitChange();
+    return state
+  }
+
+  simplify(timestamp) {
+    let parts = timestamp.split("T");
+    let datestr = parts[0];
+    let time = parts[1].split(".");
+
+    return datestr + ', ' + time[0];;
+  }
+
+  simplifyTimestamps(data) {
+    data.forEach((result) => {
+      result.createdAt = this.simplify(result.createdAt);
+      result.updatedAt = this.simplify(result.updatedAt);
+    });
+  }
+
   reduce(state, action) {
-    return super.reduce(state, action);
+    switch (action.type) {
+      case 'results/loaded':
+        this.simplifyTimestamps(action.data);
+        return super.reduce(state, action);
+
+      case 'resultfiles/start-download':
+        ResultsDataManager.download(action)
+        return state
+
+      case 'resultfiles/start-upload':
+        ResultsDataManager.upload(action.data, action.resultID, action.token, action.progressCallback, action.finishedCallback, action.scenarioID);
+        return state;
+
+      case 'resultfiles/uploaded':
+        return state;
+
+      case 'resultfiles/upload-error':
+        console.log(action.error);
+        return state;
+
+      case 'resultfiles/downloaded':
+        // in this case a file is contained in the response (no JSON)
+        return this.saveFile(state, action);
+
+      case 'resultfiles/start-edit':
+        ResultsDataManager.update(action.data, action.token, action.id);
+        return state;
+
+      case 'resultfiles/edited':
+          return this.updateElements(state, [action.data]);
+
+      case 'resultfiles/edit-error':
+        return state;
+
+      default:
+        return super.reduce(state, action);
+    }
   }
 
 }

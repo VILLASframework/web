@@ -16,7 +16,9 @@
  ******************************************************************************/
 
 import React from 'react';
-import {FormGroup, FormControl, FormLabel, Col} from 'react-bootstrap';
+import {FormGroup, FormControl, FormLabel, Col, Button, ProgressBar} from 'react-bootstrap';
+import AppDispatcher from "../common/app-dispatcher";
+
 import Table from "../common/table";
 
 import Dialog from '../common/dialogs/dialog';
@@ -29,10 +31,10 @@ class EditResultDialog extends React.Component {
     super(props);
 
     this.state = {
-      configSnapshots: '',
+      id: 0,
       description: '',
-      resultFileIDs: [],
-      id:0,
+      uploadFile: null,
+      uploadProgress: 0,
     };
   }
 
@@ -55,10 +57,9 @@ class EditResultDialog extends React.Component {
 
   resetState = () => {
     this.setState({
-      configSnapshots: this.props.configSnapshots,
-      description: this.props.description,
-      resultFileIDs: this.props.resultFileIDs,
-      id: this.props.id,
+      id: this.props.result.id,
+      description: this.props.result.description,
+      result: this.props.result,
     });
   };
 
@@ -66,28 +67,46 @@ class EditResultDialog extends React.Component {
     this.setState({ startParameters });
   };
 
-  // TODO: file reading necessary? or can it just be saved?
-  loadFile = event => {
-    // get file
-    const file = event.target.files[0];
-  
-    // create file reader
-    let reader = new FileReader();
-    let self = this;
+  selectUploadFile(event) {
+    this.setState({ uploadFile: event.target.files[0] });
+  };
 
-    reader.onload = event => {
-      const config = JSON.parse(event.target.result);
+  startFileUpload(){
+    // upload file
+    const formData = new FormData();
+    formData.append("file", this.state.uploadFile);
+    //console.log("formData: ");
+    //console.log(formData);
 
-      self.imported = true;
-      self.valid = true;
-      this.setState({filename: config.name, file: config });
-    };
+    AppDispatcher.dispatch({
+      type: 'resultfiles/start-upload',
+      data: formData,
+      resultID: this.state.id,
+      token: this.props.sessionToken,
+      progressCallback: this.updateUploadProgress,
+      finishedCallback: this.clearProgress,
+      scenarioID: this.props.scenarioID,
+    });
 
-    reader.readAsBinaryString(file);
-  }
+    this.setState({ uploadFile: null });
+  };
+
+  clearProgress = (newFileID) => {
+    this.setState({ uploadProgress: 0 });
+  };
+
+  updateUploadProgress = (event) => {
+    this.setState({ uploadProgress: parseInt(event.percent.toFixed(), 10) });
+  };
 
   render() {
-    return <Dialog show={this.props.show} title={'Edit Result No. '+this.state.id} buttonTitle='Save' onClose={this.onClose} onReset={this.resetState} valid={true}>
+    return <Dialog show={this.props.show}
+                  title={'Edit Result No. '+this.state.id}
+                  buttonTitle='Save'
+                  onClose={this.onClose}
+                  onReset={this.resetState}
+                  valid={true}>
+
       <form>
         <FormGroup as={Col} controlId='description'>
           <FormLabel column={false}>Description</FormLabel>
@@ -95,12 +114,27 @@ class EditResultDialog extends React.Component {
           <FormControl.Feedback />
         </FormGroup>
 
-        
-
         <FormGroup controlId='resultfile'>
             <FormLabel>Add Result File</FormLabel>
-            <FormControl type='file' onChange={this.loadFile} />
+            <FormControl type='file' onChange={(event) => this.selectUploadFile(event)} />
         </FormGroup>
+
+          <FormGroup as={Col} >
+            <Button
+              disabled={this.state.uploadFile === null}
+              onClick={() => this.startFileUpload()}>
+              Upload
+            </Button>
+          </FormGroup>
+
+          <FormGroup as={Col} >
+            <ProgressBar
+              striped={true}
+              animated={true}
+              now={this.state.uploadProgress}
+              label={this.state.uploadProgress + '%'}
+            />
+          </FormGroup>
       
       </form>
     </Dialog>;

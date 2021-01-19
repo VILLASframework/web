@@ -572,8 +572,6 @@ class Scenario extends React.Component {
   ############################################## */
 
   closeNewResultModal(data) {
-    console.log(this.state.results);
-    console.log(data);
     this.setState({ newResultModal: false });
     if (data) {
       data["scenarioID"] = this.state.scenario.id;
@@ -691,17 +689,20 @@ class Scenario extends React.Component {
               title='Options'
               width='300'
               editButton
-              addRemoveFilesButton
               downloadAllButton
               deleteButton
               onEdit={index => this.setState({ editResultsModal: true, modalResultsData: this.state.results[index], modalResultsIndex: index })}
-              onAddRemove={(index) => this.setState({ editFilesModal: true, modalResultsData: this.state.results[index], modalResultsIndex: index})}
               onDownloadAll={(index) => this.downloadData(this.state.results[index])}
               onDelete={(index) => this.setState({ deleteResultsModal: true, modalResultsData: this.state.results[index], modalResultsIndex: index })}
             />
           </Table>
 
-          <EditResultDialog show={this.state.editResultsModal} result={this.state.modalResultsData} onClose={data => this.closeEditResultsModal(data)} />
+          <EditResultDialog
+            sessionToken={this.state.sessionToken}
+            show={this.state.editResultsModal} 
+            result={this.state.modalResultsData}
+            scenarioID={this.state.scenario.id}
+            onClose={data => this.closeEditResultsModal(data)} />
           <DeleteDialog title="result" name={this.state.modalResultsData.id} show={this.state.deleteResultsModal} onClose={(e) => this.closeDeleteResultsModal(e)} />
         </div>
     }
