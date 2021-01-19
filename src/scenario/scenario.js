@@ -85,7 +85,7 @@ class Scenario extends React.Component {
       modalConfigIndex = index;
     }
 
-    let results = ResultStore.getState().filter(result => result.scenarioID === parseInt(props.match.params.scenario, 10)); 
+    let results = ResultStore.getState().filter(result => result.scenarioID === parseInt(props.match.params.scenario, 10));
 
     return {
       scenario,
@@ -359,7 +359,7 @@ class Scenario extends React.Component {
       }
 
       // Unix time stamp + delay
-      action.data.when = Date.now() / 1000.0 + delay
+      action.data.when = Math.round(Date.now() / 1000.0 + delay)
 
       console.log("Sending action: ", action.data)
 
@@ -641,7 +641,7 @@ class Scenario extends React.Component {
     }
   }
 
-  
+
   /* ##############################################
   * Render method
   ############################################## */
@@ -672,7 +672,7 @@ class Scenario extends React.Component {
 
     let resulttable;
     if (this.state.results && this.state.results.length > 0) {
-      resulttable = <div>     
+      resulttable = <div>
           <Table data={this.state.results}>
             <TableColumn title='Result No.' dataKey='id' />
             <TableColumn title='Description' dataKey='description' />
@@ -859,7 +859,7 @@ class Scenario extends React.Component {
         <h2 style={tableHeadingStyle}>Results
         <Button onClick={() => this.setState({ newResultModal: true })} style={buttonStyle}><Icon icon="plus" /></Button>
         </h2>
-        
+
       </div>
       {resulttable}
       {/*
