@@ -69,6 +69,10 @@ class ResultStore extends ArrayStore {
         this.simplifyTimestamps(action.data);
         return super.reduce(state, action);
 
+      case 'results/added':
+        this.simplifyTimestamps([action.data]);
+        return super.reduce(state, action);
+
       case 'resultfiles/start-download':
         ResultsDataManager.download(action)
         return state
