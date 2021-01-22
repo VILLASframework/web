@@ -1,9 +1,9 @@
 import React from 'react';
 import {Button, Row, Col} from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
-import {Collapse} from 'react-collapse';
 import Icon from "../common/icon";
 import ConfirmCommand from './confirm-command';
+import JsonView from 'react-json-view';
 
 
 
@@ -72,76 +72,55 @@ class ICDialog extends React.Component {
     return (
       <Dialog
         show={this.props.show}
-        title="Status and Controls"
+        title={this.props.ic.name}
         buttonTitle="Close"
         onClose={(c) => this.onClose(c)}
         valid={true}
         size='xl'
-        blendOutCancel = {true}
+        blendOutCancel={true}
       >
         <form>
-        <Row>
-        <Col>
-          <h5>Status:</h5>
-          {
-            typeof icStatus !== "undefined" && Object.keys(icStatus).map(statusKey => (
-              typeof icStatus[statusKey] === 'object' ?
-              (<div key={statusKey}>
-                <Button variant="light" style={{backgroundColor: '#ffffff', borderColor: '#ffffff'}} onClick={() => this.showFurtherInfo(statusKey)}  >{statusKey}
-                <Icon icon='chevron-down' style={{color: '#007bff'}}/></Button>
-                  <Collapse isOpened={this.state[statusKey]} >
-                    {
-                      Object.keys(icStatus[statusKey]).map(key => (
-                        typeof icStatus[statusKey][key] === 'object' ?
-                          (<div key={key}>
-                            <Button variant="light" onClick={() => this.showFurtherInfo(key)}  >{key}
-                              <Icon icon='chevron-down' style={{ color: '#007bff' }} /></Button>
-                            <Collapse isOpened={this.state[key]} >
+          <Row>
+            <Col>
+              <h5>Status:</h5>
 
-                              {Object.keys(icStatus[statusKey][key]).map(index => (
-                                <div key={index}> <span style={spanStyle}>{index + ":"}</span>{icStatus[statusKey][key][index]}</div>
-                              ))}
-                            </Collapse>
-                          </div>)
-                          :
-                          (<div key={key}> <span style={spanStyle}>{key + ":"}</span>{icStatus[statusKey][key]}</div>)
-                      ))
-                    }
-                  </Collapse>
+              <JsonView
+                src={icStatus}
+                name={false}
+                displayDataTypes={false}
+                displayObjectSize={false}
+                enableClipboard={false}
+                collapsed={true}
+              />
 
-              </div>) 
-              :
-              (<div key={statusKey}> <span style={spanStyle }>{statusKey + ":"}</span>{icStatus[statusKey]}</div>)
-            ))
-          }
-          </Col>
-          
-          <Col>
-          <h5>Graph:</h5>
-          <div>
-            {objectURL !== '' ? (
-              <img onError={(e) => this.graphError(e)} alt={"Error"} src={objectURL} />
-            ) : (
-                <img alt="Error" />
-              )}
-          </div>
-        
-        {this.props.userRole === "Admin"? (
-        <div>
-        <h5>Controls:</h5>
-        <div>
-        <Button style={{ margin: '5px' }} size='lg' onClick={() => this.setState({ confirmCommand: true, command: 'restart' })}>Restart</Button>
-        <Button style={{ margin: '5px' }} size='lg' onClick={() => this.setState({ confirmCommand: true, command: 'shutdown' })}>Shutdown</Button>
-        </div>
-        </div> )
-        : (<div></div>) }
+            </Col>
 
-        <ConfirmCommand show={this.state.confirmCommand} command={this.state.command} name={this.props.ic.name} onClose={c => this.closeConfirmModal(c)} />
-        </Col>
-        </Row>
+            <Col>
+              <h5>Graph:</h5>
+              <div>
+                {objectURL !== '' ? (
+                  <img onError={(e) => this.graphError(e)} alt={"Error"} src={objectURL} />
+                ) : (
+                    <img alt="Error" />
+                  )}
+              </div>
+
+              {this.props.userRole === "Admin" ? (
+                <div>
+                  <h5>Controls:</h5>
+                  <div>
+                    <Button style={{ margin: '5px' }} size='lg' onClick={() => this.setState({ confirmCommand: true, command: 'restart' })}>Restart</Button>
+                    <Button style={{ margin: '5px' }} size='lg' onClick={() => this.setState({ confirmCommand: true, command: 'shutdown' })}>Shutdown</Button>
+                  </div>
+                </div>)
+                : (<div></div>)}
+
+              <ConfirmCommand show={this.state.confirmCommand} command={this.state.command} name={this.props.ic.name} onClose={c => this.closeConfirmModal(c)} />
+            </Col>
+          </Row>
         </form>
       </Dialog>
-      
+
     );
   }
 }
