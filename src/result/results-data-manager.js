@@ -25,16 +25,23 @@ class ResultsDataManager extends RestDataManager{
     super('result', '/results');
   }
 
-  upload(file, resultID, token = null, progressCallback = null, finishedCallback = null, scenarioID) {
+  uploadFile(file, resultID, token = null, progressCallback = null, finishedCallback = null, scenarioID) {
     RestAPI.upload(this.makeURL(this.url + '/' + resultID + '/file') , file, token, progressCallback, scenarioID).then(response => {
 
       AppDispatcher.dispatch({
-        type: 'resultfiles/uploaded',
+        type: 'files/uploaded',
+      });
+
+      // Trigger a results reload
+      AppDispatcher.dispatch({
+        type: 'results/start-load',
+        param: '?scenarioID=' + scenarioID,
+        token: token
       });
 
       // Trigger a files reload
       AppDispatcher.dispatch({
-        type: 'results/start-load',
+        type: 'files/start-load',
         param: '?scenarioID=' + scenarioID,
         token: token
       });
@@ -44,7 +51,7 @@ class ResultsDataManager extends RestDataManager{
       }
     }).catch(error => {
       AppDispatcher.dispatch({
-        type: 'resultfiles/upload-error',
+        type: 'files/upload-error',
         error
       });
     });

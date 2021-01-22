@@ -18,11 +18,13 @@
 import React from 'react';
 import {FormGroup, FormControl, FormLabel, Col, Button, ProgressBar} from 'react-bootstrap';
 import AppDispatcher from "../common/app-dispatcher";
+import FileStore from "../file/file-store"
+
 
 import Table from "../common/table";
+import TableColumn from "../common/table-column";
 
 import Dialog from '../common/dialogs/dialog';
-import ParametersEditor from '../common/parameters-editor';
 
 class EditResultDialog extends React.Component {
   valid = true;
@@ -35,6 +37,9 @@ class EditResultDialog extends React.Component {
       description: '',
       uploadFile: null,
       uploadProgress: 0,
+      fileIDs: [],
+      files: null,
+      resultChanged: false,
     };
   }
 
@@ -60,6 +65,8 @@ class EditResultDialog extends React.Component {
       id: this.props.result.id,
       description: this.props.result.description,
       result: this.props.result,
+      fileIDs: this.props.result.resultFileIDs,
+      files: FileStore.getState().filter(file => this.props.result.resultFileIDs.includes(file.id)),
     });
   };
 
@@ -72,11 +79,8 @@ class EditResultDialog extends React.Component {
   };
 
   startFileUpload(){
-    // upload file
     const formData = new FormData();
     formData.append("file", this.state.uploadFile);
-    //console.log("formData: ");
-    //console.log(formData);
 
     AppDispatcher.dispatch({
       type: 'resultfiles/start-upload',
@@ -99,20 +103,46 @@ class EditResultDialog extends React.Component {
     this.setState({ uploadProgress: parseInt(event.percent.toFixed(), 10) });
   };
 
+  deleteFile(index){
+    let file = this.state.files[index]
+    AppDispatcher.dispatch({
+      type: 'files/start-remove',
+      data: file,
+      token: this.props.sessionToken
+    });
+  }
+
   render() {
+    if (this.props.show) {
+    }
     return <Dialog show={this.props.show}
                   title={'Edit Result No. '+this.state.id}
                   buttonTitle='Save'
                   onClose={this.onClose}
                   onReset={this.resetState}
-                  valid={true}>
+                  valid={true}
+                  size = 'lg'>
 
-      <form>
+
+      <div>
         <FormGroup as={Col} controlId='description'>
           <FormLabel column={false}>Description</FormLabel>
           <FormControl type='text' placeholder='Enter description' value={this.state.description} onChange={this.handleChange} />
           <FormControl.Feedback />
         </FormGroup>
+
+        <Table data={this.state.files}>
+            <TableColumn title='ID' dataKey='id'/>
+            <TableColumn title='Name' dataKey='name'/>
+            <TableColumn title='Size (bytes)' dataKey='size'/>
+            <TableColumn title='Type' dataKey='type'/>
+            <TableColumn
+              title=''
+              deleteButton
+              onDelete={(index) => this.deleteFile(index)}
+            />
+          </Table>
+
 
         <FormGroup controlId='resultfile'>
             <FormLabel>Add Result File</FormLabel>
@@ -136,23 +166,9 @@ class EditResultDialog extends React.Component {
             />
           </FormGroup>
       
-      </form>
+      </div>
     </Dialog>;
   }
 }
 
 export default EditResultDialog;
-
-/*
-<Table data={this.props.files}>
-            <TableColumn title='Name' dataKey='name'/>
-            <TableColumn title='Size (bytes)' dataKey='size'/>
-            <TableColumn title='Type' dataKey='type'/>
-            <TableColumn
-              title=''
-              deleteButton
-              onDelete={(index) => this.deleteFile(index)}
-            />
-          </Table>
-
-          '*/

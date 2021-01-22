@@ -18,6 +18,7 @@
 
 import ArrayStore from '../common/array-store';
 import ResultsDataManager from './results-data-manager';
+import FilesDataManager from '../file/files-data-manager'
 
 class ResultStore extends ArrayStore {
   constructor() {
@@ -74,11 +75,11 @@ class ResultStore extends ArrayStore {
         return super.reduce(state, action);
 
       case 'resultfiles/start-download':
-        ResultsDataManager.download(action)
+        //FilesDataManager.download(action)
         return state
 
       case 'resultfiles/start-upload':
-        ResultsDataManager.upload(action.data, action.resultID, action.token, action.progressCallback, action.finishedCallback, action.scenarioID);
+        ResultsDataManager.uploadFile(action.data, action.resultID, action.token, action.progressCallback, action.finishedCallback, action.scenarioID);
         return state;
 
       case 'resultfiles/uploaded':

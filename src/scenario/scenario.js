@@ -50,6 +50,8 @@ import ResultStore from "../result/result-store"
 import { Redirect } from 'react-router-dom';
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
 
+var JSZip = require("jszip");
+
 class Scenario extends React.Component {
 
   static getStores() {
@@ -114,6 +116,7 @@ class Scenario extends React.Component {
       modalResultsIndex: 0,
       newResultModal: false,
       editFilesModal: false,
+      filesToDownload: [],
 
       editOutputSignalsModal: prevState.editOutputSignalsModal || false,
       editInputSignalsModal: prevState.editInputSignalsModal || false,
@@ -152,6 +155,33 @@ class Scenario extends React.Component {
       type: 'ics/start-load',
       token: this.state.sessionToken
     });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // check whether file data has been loaded
+    if (this.state.filesToDownload.length > 0  ) { // todo: for download all - wait until data for all has arrived
+      console.log(this.state.files);
+      if (this.state.filesToDownload.length === 1) {
+        let fileToDownload = FileStore.getState().filter(file => file.id === this.state.filesToDownload[0])
+        if (fileToDownload.length === 1 && fileToDownload[0].data) {
+          const blob = new Blob([fileToDownload[0].data], {type: fileToDownload[0].type});
+          FileSaver.saveAs(blob, fileToDownload[0].name);
+          this.setState({ filesToDownload: [] });
+        }
+      } else { // zip and save several files
+        let filesToDownload = FileStore.getState().filter(file => this.state.filesToDownload.includes(file.id) && file.data);
+        if (filesToDownload.length === this.state.filesToDownload.length) { // all requested files have been loaded
+          var zip = new JSZip();
+          filesToDownload.forEach(file => {
+            zip.file(file.name, file.data);
+          });
+          zip.generateAsync({type: "blob"}).then(function(content) {
+            saveAs(content, "results.zip");
+          });
+          this.setState({ filesToDownload: [] });
+        }
+      }
+    }
   }
 
   /* ##############################################
@@ -592,8 +622,24 @@ class Scenario extends React.Component {
     }
   }
 
-  downloadData(index) {
-    console.log(index);
+  downloadResultData(param) {
+    let toDownload = [];
+
+    if (typeof(param) === 'object') {
+      toDownload = param.resultFileIDs;
+    } else {
+      toDownload.push(param);
+    }
+
+    toDownload.forEach(fileid => {
+      AppDispatcher.dispatch({
+        type: 'files/start-download',
+        data: fileid,
+        token: this.state.sessionToken
+      });
+    });
+
+    this.setState({ filesToDownload: toDownload });
   }
 
   closeDeleteResultsModal(confirmDelete) {
@@ -683,7 +729,7 @@ class Scenario extends React.Component {
               dataKey='resultFileIDs'
               linkKey='filebuttons'
               width='300'
-              onDownload={(index) => this.downloadData(index)}
+              onDownload={(index) => this.downloadResultData(index)}
             />
             <TableColumn
               title='Options'
@@ -692,7 +738,7 @@ class Scenario extends React.Component {
               downloadAllButton
               deleteButton
               onEdit={index => this.setState({ editResultsModal: true, modalResultsData: this.state.results[index], modalResultsIndex: index })}
-              onDownloadAll={(index) => this.downloadData(this.state.results[index])}
+              onDownloadAll={(index) => this.downloadResultData(this.state.results[index])}
               onDelete={(index) => this.setState({ deleteResultsModal: true, modalResultsData: this.state.results[index], modalResultsIndex: index })}
             />
           </Table>

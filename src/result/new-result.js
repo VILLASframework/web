@@ -56,13 +56,7 @@ class NewResultDialog extends React.Component {
   render() {
     return (
       <Dialog show={this.props.show} title="New Result" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={true}>
-        <form>
-          <FormGroup controlId="ConfigSnapshots">
-            <FormLabel>Config Snapshots</FormLabel>
-            <FormControl type="text" placeholder="Enter config snapshots" value={this.state.ConfigSnapshots} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-
+        <form>      
           <FormGroup controlId="Description">
             <FormLabel>Description</FormLabel>
             <FormControl type="text" placeholder="Enter description" value={this.state.Description} onChange={(e) => this.handleChange(e)} />
