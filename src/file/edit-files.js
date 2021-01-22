@@ -40,7 +40,7 @@ class EditFilesDialog extends React.Component {
   }
 
   onClose() {
-    
+
     this.props.onClose();
   }
 
@@ -66,7 +66,12 @@ class EditFilesDialog extends React.Component {
   };
 
   updateUploadProgress = (event) => {
-    this.setState({ uploadProgress: parseInt(event.percent.toFixed(), 10) });
+    if (event.hasOwnProperty("percent")){
+      this.setState({ uploadProgress: parseInt(event.percent.toFixed(), 10) });
+    } else {
+      this.setState({ uploadProgress: 0 });
+    }
+
   };
 
   clearProgress = (newFileID) => {
@@ -83,7 +88,7 @@ class EditFilesDialog extends React.Component {
   };
 
   closeEditModal(){
-   
+
   this.setState({editModal: false});
   }
 
@@ -167,7 +172,7 @@ class EditFilesDialog extends React.Component {
          </div>
       </Dialog>
 
-      
+
     );
   }
 }
