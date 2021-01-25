@@ -144,7 +144,7 @@ class RestAPI {
 
       let completeURL = url + "/" + fileID;
       if (token != null){
-        completeURL = completeURL + "?token=" + action.token
+        completeURL = completeURL + "?token=" + token
       }
       let req = request.get(completeURL).buffer(true).responseType("blob")
       // use blob response type and buffer
