@@ -75,10 +75,10 @@ class InfrastructureComponents extends Component {
         return a.stateUpdatedAt < b.stateUpdatedAt;
       }
     });
-    
+
      const icStatus = ICStatusStore.getState();
      const icGraph = ICGraphStore.getState();
-     
+
     return {
       sessionToken: localStorage.getItem("token"),
       ics: ics,
@@ -99,11 +99,11 @@ class InfrastructureComponents extends Component {
       type: 'ics/start-load',
       token: this.state.sessionToken,
     });
-    
+
    // Start timer for periodic refresh
     this.timer = window.setInterval(() => this.refresh(), 10000);
   }
-  
+
   componentWillUnmount() {
     window.clearInterval(this.timer);
   }
@@ -228,12 +228,12 @@ class InfrastructureComponents extends Component {
   }
 
   static isICOutdated(component) {
-    if (!component.stateUpdatedAt)
+    if (!component.stateUpdateAt)
       return true;
 
     const fiveMinutes = 5 * 60 * 1000;
 
-    return Date.now() - new Date(component.stateUpdatedAt) > fiveMinutes;
+    return Date.now() - new Date(component.stateUpdateAt) > fiveMinutes;
   }
 
   stateLabelStyle(state, component){
@@ -312,7 +312,7 @@ class InfrastructureComponents extends Component {
     if(managedExternally){
       return <Icon icon='check' />
     } else {
-      return <Icon icon='times' />
+      return ""
     }
 
   }
@@ -328,7 +328,7 @@ class InfrastructureComponents extends Component {
 
   modifyNameColumn(name){
     let ic = this.state.ics.find(ic => ic.name === name);
-  
+
     if(ic.type === "villas-node" || ic.type === "villas-relay"){
       return <Button variant="link" onClick={() => this.openICStatus(ic)}>{name}</Button>    }
     else{
@@ -337,17 +337,17 @@ class InfrastructureComponents extends Component {
   }
 
   openICStatus(ic){
-    
+
     let index = this.state.ics.indexOf(ic);
     let icStatus = this.state.icStatus.find(status => status.icID === ic.id);
     let icGraph = this.state.icGraph.find(graph => graph.icID === ic.id);
-  
+
     this.setState({ icModal: true, modalIC: ic, modalICStatus: icStatus, modalICGraph: icGraph, modalIndex: index })
   }
 
   sendControlCommand(command,ic){
     let splitWebsocketURL = ic.websocketurl.split("/");
-    
+
     if(command === "restart"){
       AppDispatcher.dispatch({
         type: 'ic-status/restart',
