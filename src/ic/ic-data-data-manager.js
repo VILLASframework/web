@@ -17,6 +17,7 @@
 
 import WebsocketAPI from '../common/api/websocket-api';
 import AppDispatcher from '../common/app-dispatcher';
+import RestAPI from "../common/api/rest-api";
 
 const OFFSET_TYPE = 2;
 const OFFSET_VERSION = 4;
@@ -42,6 +43,84 @@ class IcDataDataManager {
       }
     }
   }
+
+  getStatus(url,socketname,token,icid,ic){
+    RestAPI.get(url, null).then(response => {
+      let tempIC = ic;
+      tempIC.state = response.state;
+      AppDispatcher.dispatch({
+        type: 'ic-status/status-received',
+        data: response,
+        token: token,
+        socketname: socketname,
+        icid: icid,
+        ic: ic
+      });
+      if(!ic.managedexternally){  
+        AppDispatcher.dispatch({
+          type: 'ics/start-edit',
+          data: tempIC,
+          token: token,
+        });
+      }
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'ic-status/status-error',
+        error: error
+      })
+    })
+  }
+
+  getGraph(url,socketname,token,icid){
+    RestAPI.apiDownload(url, null).then(response => {
+      AppDispatcher.dispatch({
+        type: 'ic-graph/graph-received',
+        data: response,
+        token: token,
+        socketname: socketname,
+        icid: icid,
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'ic-graph/graph-error',
+        error: error
+      })
+    })
+  }
+
+  restart(url,socketname,token){
+    RestAPI.post(url, null).then(response => {
+      AppDispatcher.dispatch({
+        type: 'ic-status/restart-successful',
+        data: response,
+        token: token,
+        socketname: socketname,
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'ic-status/restart-error',
+        error: error
+      })
+    })
+  }
+
+  shutdown(url,socketname,token){
+    RestAPI.post(url, null).then(response => {
+      AppDispatcher.dispatch({
+        type: 'ic-status/shutdown-successful',
+        data: response,
+        token: token,
+        socketname: socketname,
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'ic-status/shutdown-error',
+        error: error
+      })
+    })
+  }
+
+
 
   closeAll() {
     // close every open socket

@@ -159,6 +159,28 @@ class RestAPI {
     });
   }
 
+  apiDownload(url, token) {
+    return new Promise(function (resolve, reject) {
+      var req = request.get(url).buffer(true).responseType("blob");
+
+      if (token != null) {
+        req.set('Authorization', "Bearer " + token);
+      }
+
+      req.end(function (error, res) {
+        if (res == null || res.status !== 200) {
+          if (req.url !== prevURL) error.handled = isNetworkError(error);
+          prevURL = req.url;
+          reject(error);
+        } else {
+          let parts = url.split("/");
+          resolve({data: res.body, type: res.type, id: parts[parts.length-1]})
+        }
+      });
+    });
+  }
+
+
 }
 
 export default new RestAPI();
