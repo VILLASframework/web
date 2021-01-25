@@ -302,7 +302,7 @@ class InfrastructureComponents extends Component {
   }
 
   stateUpdateModifier(updatedAt) {
-    let dateFormat = 'DD MMM YYYY HH:mm:ss';
+    let dateFormat = 'ddd, DD MMM YYYY HH:mm:ss zz';
     let dateTime = moment(updatedAt, dateFormat);
     return dateTime.fromNow()
   }
