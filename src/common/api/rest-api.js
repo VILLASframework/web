@@ -41,7 +41,8 @@ let prevURL = null;
 class RestAPI {
   get(url, token) {
     return new Promise(function (resolve, reject) {
-      var req = request.get(url);
+
+      let req = request.get(url);
 
       if (token != null) {
         req.set('Authorization', "Bearer " + token);
@@ -61,7 +62,7 @@ class RestAPI {
 
   post(url, body, token) {
     return new Promise(function (resolve, reject) {
-      var req = request.post(url).send(body).timeout({ response: 5000 }); // Simple response start timeout (3s)
+      let req = request.post(url).send(body).timeout({ response: 5000 }); // Simple response start timeout (3s)
 
       if (token != null) {
         req.set('Authorization', "Bearer " + token);
@@ -82,7 +83,7 @@ class RestAPI {
 
   delete(url, token) {
     return new Promise(function (resolve, reject) {
-      var req = request.delete(url);
+      let req = request.delete(url);
 
       if (token != null) {
         req.set('Authorization', "Bearer " + token);
@@ -101,7 +102,7 @@ class RestAPI {
 
   put(url, body, token) {
     return new Promise(function (resolve, reject) {
-      var req = request.put(url).send(body);
+      let req = request.put(url).send(body);
 
       if (token != null) {
         req.set('Authorization', "Bearer " + token);
@@ -140,11 +141,14 @@ class RestAPI {
 
   download(url, token, fileID) {
     return new Promise(function (resolve, reject) {
-      let req = request.get(url + "/" + fileID).buffer(true).responseType("blob")
-      // use blob response type and buffer
-      if (token != null) {
-        req.set('Authorization', "Bearer " + token);
+
+      let completeURL = url + "/" + fileID;
+      if (token != null){
+        completeURL = completeURL + "?token=" + action.token
       }
+      let req = request.get(completeURL).buffer(true).responseType("blob")
+      // use blob response type and buffer
+      // Do not use auth header for file download
 
       req.end(function (error, res) {
         if (error !== null || res.status !== 200) {
@@ -161,7 +165,7 @@ class RestAPI {
 
   apiDownload(url, token) {
     return new Promise(function (resolve, reject) {
-      var req = request.get(url).buffer(true).responseType("blob");
+      let req = request.get(url).buffer(true).responseType("blob");
 
       if (token != null) {
         req.set('Authorization', "Bearer " + token);
