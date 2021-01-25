@@ -37,12 +37,10 @@ class ICGraphStore extends ArrayStore {
     state.forEach((element, index, array) => {
       newElements = newElements.filter((updateElement, newIndex) => {
         if (element.icID === updateElement.icID) {
-          console.log("Updating graph:", icGraph.icID)
           // update each property
           for (var key in updateElement) {
             if (updateElement.hasOwnProperty(key) && key === "objectURL") {
               URL.revokeObjectURL(array[index][key]);
-              console.log("revoked objectURL", array[index][key])
             } else if (updateElement.hasOwnProperty(key)){
               array[index][key] = updateElement[key];
             }
