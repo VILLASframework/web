@@ -31,7 +31,8 @@ class InfrastructureComponentStore extends ArrayStore {
     switch(action.type) {
       case 'ics/loaded':
         action.data.forEach(ic => {
-          if (ic.type === "villas-node" || ic.type === "villas-relay") {
+          if ((ic.type === "villas-node" || ic.type === "villas-relay")
+            && ic.apiurl !== '' && ic.apiurl !== undefined && ic.apiurl !== null) {
             let splitWebsocketURL = ic.websocketurl.split("/");
             AppDispatcher.dispatch({
               type: 'ic-status/get-status',

@@ -46,8 +46,6 @@ class IcDataDataManager {
 
   getStatus(url,socketname,token,icid,ic){
     RestAPI.get(url, null).then(response => {
-      let tempIC = ic;
-      tempIC.state = response.state;
       AppDispatcher.dispatch({
         type: 'ic-status/status-received',
         data: response,
@@ -56,7 +54,9 @@ class IcDataDataManager {
         icid: icid,
         ic: ic
       });
-      if(!ic.managedexternally){  
+      if(!ic.managedexternally){
+        let tempIC = ic;
+        tempIC.state = response.state;
         AppDispatcher.dispatch({
           type: 'ics/start-edit',
           data: tempIC,
