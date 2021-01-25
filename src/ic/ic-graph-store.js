@@ -25,19 +25,46 @@ class ICGraphStore extends ArrayStore {
 
   saveGraph(state, action){
 
-    let icID = parseInt(action.icid);    
-    const dublicate = state.some(element => element.icID === icID);
-    if(dublicate){
-        return state
-    }
     let icGraph = {};
-    icGraph["icID"] = icID;
+    icGraph["icID"] = action.icid;
     icGraph["data"] = new Blob([action.data.data], {type: action.data.type});
     icGraph["type"] = action.data.type;
     icGraph["objectURL"] = URL.createObjectURL(icGraph["data"]);
-    
+
+    let newElements = [icGraph]
+
+    // search for existing element to update
+    state.forEach((element, index, array) => {
+      newElements = newElements.filter((updateElement, newIndex) => {
+        if (element.icID === updateElement.icID) {
+          console.log("Updating graph:", icGraph.icID)
+          // update each property
+          for (var key in updateElement) {
+            if (updateElement.hasOwnProperty(key) && key === "objectURL") {
+              URL.revokeObjectURL(array[index][key]);
+              console.log("revoked objectURL", array[index][key])
+            } else if (updateElement.hasOwnProperty(key)){
+              array[index][key] = updateElement[key];
+            }
+
+          }
+
+          // remove updated element from update list
+          return false;
+        }
+
+        return true;
+      });
+    });
+
+    // all elements still in the list will just be added
+    state = state.concat(newElements);
+
+    // announce change to listeners
     this.__emitChange();
-    return this.updateElements(state, [icGraph]);
+
+    return state;
+
   }
 
   reduce(state, action) {
