@@ -76,14 +76,11 @@ class InfrastructureComponents extends Component {
       }
     });
 
-     const icStatus = ICStatusStore.getState();
-     const icGraph = ICGraphStore.getState();
-
     return {
       sessionToken: localStorage.getItem("token"),
       ics: ics,
-      icStatus: icStatus,
-      icGraph: icGraph,
+      icStatus: ICStatusStore.getState(),
+      icGraph: ICGraphStore.getState(),
       modalIC: {},
       modalICStatus: {},
       modalICGraph: {},
@@ -326,7 +323,7 @@ class InfrastructureComponents extends Component {
   }
 
   stateUpdateModifier(updatedAt) {
-    let dateFormat = 'ddd, DD MMM YYYY HH:mm:ss zz';
+    let dateFormat = 'ddd, DD MMM YYYY HH:mm:ss ZZ';
     let dateTime = moment(updatedAt, dateFormat);
     return dateTime.fromNow()
   }
@@ -460,7 +457,15 @@ class InfrastructureComponents extends Component {
         <NewICDialog show={this.state.newModal} onClose={data => this.closeNewModal(data)} />
         <EditICDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} ic={this.state.modalIC} />
         <ImportICDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} />
-        <ICDialog show={this.state.icModal} onClose={data => this.closeICModal(data)} ic={this.state.modalIC} token={this.state.sessionToken} userRole={this.state.currentUser.role} icStatus={this.state.modalICStatus} icGraph={this.state.modalICGraph} sendControlCommand={(command, ic) => this.sendControlCommand(command, ic)}/>
+        <ICDialog
+          show={this.state.icModal}
+          onClose={data => this.closeICModal(data)}
+          ic={this.state.modalIC}
+          token={this.state.sessionToken}
+          userRole={this.state.currentUser.role}
+          icStatus={this.state.modalICStatus}
+          icGraph={this.state.modalICGraph}
+          sendControlCommand={(command, ic) => this.sendControlCommand(command, ic)}/>
 
         <DeleteDialog title="infrastructure-component" name={this.state.modalIC.name || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
       </div>
