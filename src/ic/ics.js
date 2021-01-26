@@ -25,7 +25,6 @@ import moment from 'moment'
 import AppDispatcher from '../common/app-dispatcher';
 import InfrastructureComponentStore from './ic-store';
 import ICStatusStore from './ic-status-store';
-import ICGraphStore from './ic-graph-store';
 
 import Icon from '../common/icon';
 import Table from '../common/table';
@@ -40,7 +39,7 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 
 class InfrastructureComponents extends Component {
   static getStores() {
-    return [ InfrastructureComponentStore, ICStatusStore, ICGraphStore ];
+    return [ InfrastructureComponentStore, ICStatusStore];
   }
 
   static statePrio(state) {
@@ -80,10 +79,8 @@ class InfrastructureComponents extends Component {
       sessionToken: localStorage.getItem("token"),
       ics: ics,
       icStatus: ICStatusStore.getState(),
-      icGraph: ICGraphStore.getState(),
       modalIC: {},
       modalICStatus: {},
-      modalICGraph: {},
       deleteModal: false,
       icModal: false,
       selectedICs: [],
@@ -116,7 +113,7 @@ class InfrastructureComponents extends Component {
         token: this.state.sessionToken,
       });
 
-      // get status and graph of VILLASnode and VILLASrelay ICs
+      // get status of VILLASnode and VILLASrelay ICs
       this.state.ics.forEach(ic => {
         if ((ic.type === "villas-node" || ic.type === "villas-relay")
           && ic.apiurl !== '' && ic.apiurl !== undefined && ic.apiurl !== null) {
@@ -128,14 +125,6 @@ class InfrastructureComponents extends Component {
             token: this.state.sessionToken,
             icid: ic.id,
             ic: ic
-          });
-
-          AppDispatcher.dispatch({
-            type: 'ic-graph/get-graph',
-            url: ic.apiurl + "/graph.svg",
-            socketname: splitWebsocketURL[splitWebsocketURL.length - 1],
-            token: this.state.sessionToken,
-            icid: ic.id,
           });
         }
       })
@@ -361,9 +350,8 @@ class InfrastructureComponents extends Component {
 
     let index = this.state.ics.indexOf(ic);
     let icStatus = this.state.icStatus.find(status => status.icID === ic.id);
-    let icGraph = this.state.icGraph.find(graph => graph.icID === ic.id);
 
-    this.setState({ icModal: true, modalIC: ic, modalICStatus: icStatus, modalICGraph: icGraph, modalIndex: index })
+    this.setState({ icModal: true, modalIC: ic, modalICStatus: icStatus, modalIndex: index })
   }
 
   sendControlCommand(command,ic){
@@ -464,7 +452,6 @@ class InfrastructureComponents extends Component {
           token={this.state.sessionToken}
           userRole={this.state.currentUser.role}
           icStatus={this.state.modalICStatus}
-          icGraph={this.state.modalICGraph}
           sendControlCommand={(command, ic) => this.sendControlCommand(command, ic)}/>
 
         <DeleteDialog title="infrastructure-component" name={this.state.modalIC.name || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />

@@ -3,7 +3,7 @@ import {Button, Row, Col} from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
 import Icon from "../common/icon";
 import ConfirmCommand from './confirm-command';
-import JsonView from 'react-json-view';
+import ReactJson from 'react-json-view';
 import FileSaver from 'file-saver';
 
 
@@ -33,16 +33,12 @@ class ICDialog extends React.Component {
   }
 
   handleChange(e) {
-    
+
   }
 
   showFurtherInfo(key){
     if(typeof this.state[key] === 'undefined') this.setState({[key]: false});
     this.setState({[key]: !this.state[key]});
-  }
-
-  graphError(e){
-    console.log("graph error");
   }
 
   closeConfirmModal(canceled){
@@ -53,21 +49,24 @@ class ICDialog extends React.Component {
     this.setState({confirmCommand: false, command: ''});
   }
 
-  downloadGraph(url){
-    FileSaver.saveAs(url, this.props.ic.name + ".svg");    
-}
+  async downloadGraph(url) {
 
-  
+    let blob = await fetch(url).then(r => r.blob())
+    FileSaver.saveAs(blob, this.props.ic.name + ".svg");
+  }
+
+
   render() {
 
     let icStatus = this.state.icStatus;
     delete icStatus['icID'];
 
-    let objectURL=''
-    if(typeof this.props.icGraph !== "undefined") {
-      objectURL = this.props.icGraph.objectURL
+    let graphURL = ""
+    if (this.props.ic.apiurl !== ""){
+      graphURL = this.props.ic.apiurl + "/graph.svg"
     }
-    
+
+
     return (
       <Dialog
         show={this.props.show}
@@ -83,28 +82,24 @@ class ICDialog extends React.Component {
             <Col>
               <h5>Status:</h5>
 
-              <JsonView
+              <ReactJson
                 src={icStatus}
                 name={false}
                 displayDataTypes={false}
                 displayObjectSize={false}
                 enableClipboard={false}
-                collapsed={true}
+                collapsed={1}
               />
 
             </Col>
 
             <Col>
               <div className='section-buttons-group-right'>
-                <Button style={{ margin: '5px' }} size='sm' onClick={() => this.downloadGraph(objectURL)}><Icon icon="download" /></Button>
+                <Button style={{ margin: '5px' }} size='sm' onClick={() => this.downloadGraph(graphURL)}><Icon icon="download" /></Button>
               </div>
               <h5>Graph:</h5>
               <div>
-                {objectURL !== '' ? (
-                  <img onError={(e) => this.graphError(e)} alt={"Error"} src={objectURL} />
-                ) : (
-                    <img alt="Error" />
-                  )}
+                  <img alt={"Graph image download failed and/or incorrect image URL"} src={graphURL} />
               </div>
 
               {this.props.userRole === "Admin" ? (

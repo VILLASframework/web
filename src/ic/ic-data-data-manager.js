@@ -71,23 +71,6 @@ class IcDataDataManager {
     })
   }
 
-  getGraph(url,socketname,token,icid){
-    RestAPI.apiDownload(url, null).then(response => {
-      AppDispatcher.dispatch({
-        type: 'ic-graph/graph-received',
-        data: response,
-        token: token,
-        socketname: socketname,
-        icid: icid,
-      });
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: 'ic-graph/graph-error',
-        error: error
-      })
-    })
-  }
-
   restart(url,socketname,token){
     RestAPI.post(url, null).then(response => {
       AppDispatcher.dispatch({
