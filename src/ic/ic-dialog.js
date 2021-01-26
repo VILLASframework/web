@@ -16,16 +16,7 @@ class ICDialog extends React.Component {
     this.state = {
       confirmCommand: false,
       command: '',
-      icStatus: {}
     };
-  }
-
-  static getDerivedStateFromProps(props, state){
-    if(typeof props.icStatus !== 'undefined'){
-      return {icStatus: props.icStatus}
-    } else {
-      return {}
-    }
   }
 
   onClose(canceled) {
@@ -58,9 +49,6 @@ class ICDialog extends React.Component {
 
   render() {
 
-    let icStatus = this.state.icStatus;
-    delete icStatus['icID'];
-
     let graphURL = ""
     if (this.props.ic.apiurl !== ""){
       graphURL = this.props.ic.apiurl + "/graph.svg"
@@ -83,7 +71,7 @@ class ICDialog extends React.Component {
               <h5>Status:</h5>
 
               <ReactJson
-                src={icStatus}
+                src={this.props.icStatus}
                 name={false}
                 displayDataTypes={false}
                 displayObjectSize={false}
