@@ -115,8 +115,8 @@ class InfrastructureComponents extends Component {
 
       // get status of VILLASnode and VILLASrelay ICs
       this.state.ics.forEach(ic => {
-        if ((ic.type === "villas-node" || ic.type === "villas-relay")
-          && ic.apiurl !== '' && ic.apiurl !== undefined && ic.apiurl !== null) {
+        if ((ic.type === "villas-node" || ic.type === "villas-relay" )
+          && ic.apiurl !== '' && ic.apiurl !== undefined && ic.apiurl !== null && !ic.managedexternally) {
           let splitWebsocketURL = ic.websocketurl.split("/");
           AppDispatcher.dispatch({
             type: 'ic-status/get-status',
