@@ -58,7 +58,7 @@ class ICDialog extends React.Component {
     return (
       <Dialog
         show={this.props.show}
-        title={this.props.ic.name}
+        title={this.props.ic.name + " ( " + this.props.ic.uuid + " )"}
         buttonTitle="Close"
         onClose={(c) => this.onClose(c)}
         valid={true}
