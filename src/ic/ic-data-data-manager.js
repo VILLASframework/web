@@ -44,67 +44,6 @@ class IcDataDataManager {
     }
   }
 
-  getStatus(url,socketname,token,icid,ic){
-    RestAPI.get(url, null).then(response => {
-      AppDispatcher.dispatch({
-        type: 'ic-status/status-received',
-        data: response,
-        token: token,
-        socketname: socketname,
-        icid: icid,
-        ic: ic
-      });
-      if(!ic.managedexternally){
-        let tempIC = ic;
-        tempIC.state = response.state;
-        AppDispatcher.dispatch({
-          type: 'ics/start-edit',
-          data: tempIC,
-          token: token,
-        });
-      }
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: 'ic-status/status-error',
-        error: error
-      })
-    })
-  }
-
-  restart(url,socketname,token){
-    RestAPI.post(url, null).then(response => {
-      AppDispatcher.dispatch({
-        type: 'ic-status/restart-successful',
-        data: response,
-        token: token,
-        socketname: socketname,
-      });
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: 'ic-status/restart-error',
-        error: error
-      })
-    })
-  }
-
-  shutdown(url,socketname,token){
-    RestAPI.post(url, null).then(response => {
-      AppDispatcher.dispatch({
-        type: 'ic-status/shutdown-successful',
-        data: response,
-        token: token,
-        socketname: socketname,
-      });
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: 'ic-status/shutdown-error',
-        error: error
-      })
-    })
-  }
-
-
-
   closeAll() {
     // close every open socket
     for (var identifier in this._sockets) {

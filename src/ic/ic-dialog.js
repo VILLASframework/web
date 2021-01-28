@@ -16,16 +16,7 @@ class ICDialog extends React.Component {
     this.state = {
       confirmCommand: false,
       command: '',
-      icStatus: {}
     };
-  }
-
-  static getDerivedStateFromProps(props, state){
-    if(typeof props.icStatus !== 'undefined'){
-      return {icStatus: props.icStatus}
-    } else {
-      return {}
-    }
   }
 
   onClose(canceled) {
@@ -58,9 +49,6 @@ class ICDialog extends React.Component {
 
   render() {
 
-    let icStatus = this.state.icStatus;
-    delete icStatus['icID'];
-
     let graphURL = ""
     if (this.props.ic.apiurl !== ""){
       graphURL = this.props.ic.apiurl + "/graph.svg"
@@ -70,7 +58,7 @@ class ICDialog extends React.Component {
     return (
       <Dialog
         show={this.props.show}
-        title={this.props.ic.name}
+        title={this.props.ic.name + " ( " + this.props.ic.uuid + " )"}
         buttonTitle="Close"
         onClose={(c) => this.onClose(c)}
         valid={true}
@@ -83,7 +71,7 @@ class ICDialog extends React.Component {
               <h5>Status:</h5>
 
               <ReactJson
-                src={icStatus}
+                src={this.props.ic.statusupdateraw}
                 name={false}
                 displayDataTypes={false}
                 displayObjectSize={false}
@@ -93,27 +81,35 @@ class ICDialog extends React.Component {
 
             </Col>
 
-            <Col>
-              <div className='section-buttons-group-right'>
-                <Button style={{ margin: '5px' }} size='sm' onClick={() => this.downloadGraph(graphURL)}><Icon icon="download" /></Button>
-              </div>
-              <h5>Graph:</h5>
-              <div>
-                  <img alt={"Graph image download failed and/or incorrect image URL"} src={graphURL} />
-              </div>
-
-              {this.props.userRole === "Admin" ? (
+            {this.props.ic.type === "villas-node" || this.props.ic.type === "villas-relay" ? (
+              <Col>
+                <div className='section-buttons-group-right'>
+                  <Button style={{margin: '5px'}} size='sm' onClick={() => this.downloadGraph(graphURL)}><Icon
+                    icon="download"/></Button>
+                </div>
+                <h5>Graph:</h5>
                 <div>
-                  <h5>Controls:</h5>
-                  <div>
-                    <Button style={{ margin: '5px' }} size='lg' onClick={() => this.setState({ confirmCommand: true, command: 'restart' })}>Restart</Button>
-                    <Button style={{ margin: '5px' }} size='lg' onClick={() => this.setState({ confirmCommand: true, command: 'shutdown' })}>Shutdown</Button>
-                  </div>
-                </div>)
-                : (<div></div>)}
+                  <img alt={"Graph image download failed and/or incorrect image URL"} src={graphURL}/>
+                </div>
 
-              <ConfirmCommand show={this.state.confirmCommand} command={this.state.command} name={this.props.ic.name} onClose={c => this.closeConfirmModal(c)} />
-            </Col>
+                {this.props.userRole === "Admin" ? (
+                    <div>
+                      <h5>Controls:</h5>
+                      <div>
+                        <Button style={{margin: '5px'}} size='lg'
+                                onClick={() => this.setState({confirmCommand: true, command: 'restart'})}>Restart</Button>
+                        <Button style={{margin: '5px'}} size='lg' onClick={() => this.setState({
+                          confirmCommand: true,
+                          command: 'shutdown'
+                        })}>Shutdown</Button>
+                      </div>
+                    </div>)
+                  : (<div/>)}
+
+                <ConfirmCommand show={this.state.confirmCommand} command={this.state.command} name={this.props.ic.name}
+                                onClose={c => this.closeConfirmModal(c)}/>
+              </Col>
+            ): (<div/>)}
           </Row>
         </form>
       </Dialog>

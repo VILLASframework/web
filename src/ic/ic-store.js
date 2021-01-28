@@ -76,6 +76,51 @@ class InfrastructureComponentStore extends ArrayStore {
         console.log(action.error);
         return state;
 
+      case 'ics/get-status':
+        ICsDataManager.getStatus(action.url, action.token, action.ic);
+        return super.reduce(state, action);
+
+      case 'ics/status-received':
+        let tempIC = action.ic;
+        if(!tempIC.managedexternally){
+          tempIC.state = action.data.state;
+          tempIC.statusupdateraw = action.data;
+          AppDispatcher.dispatch({
+            type: 'ics/start-edit',
+            data: tempIC,
+            token: action.token,
+          });
+        }
+        return super.reduce(state, action);
+
+      case 'ics/status-error':
+        console.log("status error:", action.error);
+        return super.reduce(state, action);
+
+      case 'ics/restart':
+        ICsDataManager.restart(action.url, action.token);
+        return super.reduce(state, action);
+
+      case 'ics/restart-successful':
+        console.log("restart response:", action.data);
+        return super.reduce(state, action);
+
+      case 'ics/restart-error':
+        console.log("restart error:", action.error);
+        return super.reduce(state, action);
+
+      case 'ics/shutdown':
+        ICsDataManager.shutdown(action.url, action.token);
+        return super.reduce(state, action);
+
+      case 'ics/shutdown-successful':
+        console.log("shutdown response:", action.data);
+        return super.reduce(state, action);
+
+      case 'ics/shutdown-error':
+        console.log("shutdown error:", action.error);
+        return super.reduce(state, action);
+
       default:
         return super.reduce(state, action);
     }
