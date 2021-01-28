@@ -22,7 +22,10 @@ const config = {
     admin: {
       name: 'Institute for Automation of Complex Power Systems (ACS), RWTH Aachen University, Germany',
       mail: 'stvogel@eonerc.rwth-aachen.de'
-    }
+    },
+    externalAuth: true,
+    loginURL: 'http://localhost:4180/oauth2/start',
+    provider: 'KeyCloak'
 };
 
 export default config

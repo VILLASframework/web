@@ -19,6 +19,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 
 import AppDispatcher from '../common/app-dispatcher';
+import Config from '../config.js';
 
 class Logout extends React.Component {
   componentDidMount() {
@@ -34,9 +35,15 @@ class Logout extends React.Component {
   }
 
   render() {
-    return (
-      <Redirect to="/login" />
-    );
+    if (Config.externalAuth) {
+      return (
+        <Redirect to="/login" />
+      );
+    } else {
+      return (
+        <Redirect to="/villaslogin" />
+      );
+    }
   }
 }
 

@@ -29,14 +29,21 @@ import Dashboard from './dashboard/dashboard'
 import InfrastructureComponents from './ic/ics';
 import Users from './user/users';
 import User from "./user/user";
+import Config from './config.js';
+
 
 class Root extends React.Component {
   render() {
     return (
       <BrowserRouter>
         <Switch>
-          <Route path='/login' component={LoginSelect} />
-          <Route path='/login-villas' component={Login} />
+          <Route
+            path='/login'
+            render={(props) => (
+              <LoginSelect loginURL={Config.loginURL} provider={Config.provider}/>
+            )}
+          />
+          <Route path='/villaslogin' component={Login} />
           <Route path='/logout' component={Logout} />
           <Route path='/' component={App} />
           <Route path='/home' component={Home} />

@@ -17,8 +17,6 @@
 
 import React, { Component } from 'react';
 import { Form, Button, FormGroup, FormControl, FormLabel, Col } from 'react-bootstrap';
-//import RecoverPassword from './recover-password'
-//import AppDispatcher from '../common/app-dispatcher';
 import Header from '../common/header';
 import Footer from '../common/footer';
 import { withRouter } from 'react-router-dom';
@@ -26,26 +24,11 @@ import { withRouter } from 'react-router-dom';
 
 
 class LoginSelect extends Component {
-  constructor(props) {
-    super(props);
 
-    
-
-    this.state = {
-      standardlogin: true,
-      keycloaklogin: true,
-      jupyterlogin: false
-    }
-  }
 
   villaswebLogin = e => {
-    this.props.history.replace('/login-villas');
+    this.props.history.replace('/villaslogin');
   }
-
-  jupyterLogin() {
-
-  }
-
 
   render() {
 
@@ -56,9 +39,7 @@ class LoginSelect extends Component {
           <Form>
             <Button variant="primary" block onClick={this.villaswebLogin}>VillasWeb login</Button>
             <br />
-            <Button variant="primary" block onClick={e => window.location = "https://keycloak.192.168.49.2.nip.io/auth"}>KeyCloak login</Button>
-            <br />
-            <Button variant="primary" block onClick={() => this.jupyterLogin()}>Jupyter Login</Button>
+            <Button variant="primary" block onClick={e => window.location = this.props.loginURL }>{this.props.provider} login</Button>
           </Form>
         </div>
 
