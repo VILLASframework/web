@@ -20,23 +20,69 @@ import RestAPI from '../common/api/rest-api';
 import AppDispatcher from '../common/app-dispatcher';
 
 class IcsDataManager extends RestDataManager {
-    constructor() {
-        super('ic', '/ic');
-    }
+  constructor() {
+      super('ic', '/ic');
+  }
 
-    doActions(ic, action, token = null) {
-        RestAPI.post(this.makeURL(this.url + '/' + ic.id + '/action'), action, token).then(response => {
-            AppDispatcher.dispatch({
-                type: 'ics/action-started',
-                data: response
-            });
-        }).catch(error => {
-            AppDispatcher.dispatch({
-                type: 'ics/action-error',
-                error
-            });
-        });
-    }
+  doActions(ic, action, token = null) {
+      RestAPI.post(this.makeURL(this.url + '/' + ic.id + '/action'), action, token).then(response => {
+          AppDispatcher.dispatch({
+              type: 'ics/action-started',
+              data: response
+          });
+      }).catch(error => {
+          AppDispatcher.dispatch({
+              type: 'ics/action-error',
+              error
+          });
+      });
+  }
+
+  getStatus(url,token,ic){
+    RestAPI.get(url, null).then(response => {
+      AppDispatcher.dispatch({
+        type: 'ics/status-received',
+        data: response,
+        token: token,
+        ic: ic
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'ics/status-error',
+        error: error
+      })
+    })
+  }
+
+  restart(url,token){
+    RestAPI.post(url, null).then(response => {
+      AppDispatcher.dispatch({
+        type: 'ics/restart-successful',
+        data: response,
+        token: token,
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'ics/restart-error',
+        error: error
+      })
+    })
+  }
+
+  shutdown(url,token){
+    RestAPI.post(url, null).then(response => {
+      AppDispatcher.dispatch({
+        type: 'ics/shutdown-successful',
+        data: response,
+        token: token,
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'ics/shutdown-error',
+        error: error
+      })
+    })
+  }
 }
 
 export default new IcsDataManager();
