@@ -1,6 +1,10 @@
 import React from 'react';
-import {FormLabel} from 'react-bootstrap';
+import {Button, Row, Col} from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
+import Icon from "../common/icon";
+import ConfirmCommand from './confirm-command';
+import ReactJson from 'react-json-view';
+import FileSaver from 'file-saver';
 
 
 class ICDialog extends React.Component {
@@ -10,7 +14,8 @@ class ICDialog extends React.Component {
     super(props);
 
     this.state = {
-      ic: props.ic
+      confirmCommand: false,
+      command: '',
     };
   }
 
@@ -19,25 +24,96 @@ class ICDialog extends React.Component {
   }
 
   handleChange(e) {
-    
+
+  }
+
+  showFurtherInfo(key){
+    if(typeof this.state[key] === 'undefined') this.setState({[key]: false});
+    this.setState({[key]: !this.state[key]});
+  }
+
+  closeConfirmModal(canceled){
+    if(!canceled){
+      this.props.sendControlCommand(this.state.command,this.props.ic);
+    }
+
+    this.setState({confirmCommand: false, command: ''});
+  }
+
+  async downloadGraph(url) {
+
+    let blob = await fetch(url).then(r => r.blob())
+    FileSaver.saveAs(blob, this.props.ic.name + ".svg");
   }
 
 
   render() {
-    
+
+    let graphURL = ""
+    if (this.props.ic.apiurl !== ""){
+      graphURL = this.props.ic.apiurl + "/graph.svg"
+    }
+
+
     return (
       <Dialog
         show={this.props.show}
-        title="Infos and Controls"
-        buttonTitle="Save"
+        title={this.props.ic.name + " ( " + this.props.ic.uuid + " )"}
+        buttonTitle="Close"
         onClose={(c) => this.onClose(c)}
         valid={true}
-        size='lg'
+        size='xl'
+        blendOutCancel={true}
       >
         <form>
-          <FormLabel>Infos and Controls</FormLabel>
+          <Row>
+            <Col>
+              <h5>Status:</h5>
+
+              <ReactJson
+                src={this.props.ic.statusupdateraw}
+                name={false}
+                displayDataTypes={false}
+                displayObjectSize={false}
+                enableClipboard={false}
+                collapsed={1}
+              />
+
+            </Col>
+
+            {this.props.ic.type === "villas-node" || this.props.ic.type === "villas-relay" ? (
+              <Col>
+                <div className='section-buttons-group-right'>
+                  <Button style={{margin: '5px'}} size='sm' onClick={() => this.downloadGraph(graphURL)}><Icon
+                    icon="download"/></Button>
+                </div>
+                <h5>Graph:</h5>
+                <div>
+                  <img alt={"Graph image download failed and/or incorrect image URL"} src={graphURL}/>
+                </div>
+
+                {this.props.userRole === "Admin" ? (
+                    <div>
+                      <h5>Controls:</h5>
+                      <div>
+                        <Button style={{margin: '5px'}} size='lg'
+                                onClick={() => this.setState({confirmCommand: true, command: 'restart'})}>Restart</Button>
+                        <Button style={{margin: '5px'}} size='lg' onClick={() => this.setState({
+                          confirmCommand: true,
+                          command: 'shutdown'
+                        })}>Shutdown</Button>
+                      </div>
+                    </div>)
+                  : (<div/>)}
+
+                <ConfirmCommand show={this.state.confirmCommand} command={this.state.command} name={this.props.ic.name}
+                                onClose={c => this.closeConfirmModal(c)}/>
+              </Col>
+            ): (<div/>)}
+          </Row>
         </form>
       </Dialog>
+
     );
   }
 }

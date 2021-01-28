@@ -38,7 +38,7 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 
 class InfrastructureComponents extends Component {
   static getStores() {
-    return [ InfrastructureComponentStore ];
+    return [ InfrastructureComponentStore];
   }
 
   static statePrio(state) {
@@ -91,7 +91,7 @@ class InfrastructureComponents extends Component {
       token: this.state.sessionToken,
     });
 
-    // Start timer for periodic refresh
+   // Start timer for periodic refresh
     this.timer = window.setInterval(() => this.refresh(), 10000);
   }
 
@@ -109,6 +109,20 @@ class InfrastructureComponents extends Component {
         type: 'ics/start-load',
         token: this.state.sessionToken,
       });
+
+      // get status of VILLASnode and VILLASrelay ICs
+      this.state.ics.forEach(ic => {
+        if ((ic.type === "villas-node" || ic.type === "villas-relay")
+          && ic.apiurl !== '' && ic.apiurl !== undefined && ic.apiurl !== null && !ic.managedexternally) {
+          AppDispatcher.dispatch({
+            type: 'ics/get-status',
+            url: ic.apiurl + "/status",
+            token: this.state.sessionToken,
+            ic: ic
+          });
+        }
+      })
+
     }
   }
 
@@ -218,12 +232,12 @@ class InfrastructureComponents extends Component {
   }
 
   static isICOutdated(component) {
-    if (!component.stateUpdatedAt)
+    if (!component.stateUpdateAt)
       return true;
 
     const fiveMinutes = 5 * 60 * 1000;
 
-    return Date.now() - new Date(component.stateUpdatedAt) > fiveMinutes;
+    return Date.now() - new Date(component.stateUpdateAt) > fiveMinutes;
   }
 
   stateLabelStyle(state, component){
@@ -292,7 +306,7 @@ class InfrastructureComponents extends Component {
   }
 
   stateUpdateModifier(updatedAt) {
-    let dateFormat = 'DD MMM YYYY HH:mm:ss';
+    let dateFormat = 'ddd, DD MMM YYYY HH:mm:ss ZZ';
     let dateTime = moment(updatedAt, dateFormat);
     return dateTime.fromNow()
   }
@@ -302,7 +316,7 @@ class InfrastructureComponents extends Component {
     if(managedExternally){
       return <Icon icon='check' />
     } else {
-      return <Icon icon='times' />
+      return ""
     }
 
   }
@@ -318,12 +332,37 @@ class InfrastructureComponents extends Component {
 
   modifyNameColumn(name){
     let ic = this.state.ics.find(ic => ic.name === name);
-    let index = this.state.ics.indexOf(ic);
-    if(ic.type === "villas-node" || ic.type === "villas-relay"){
-      return <Button variant="link" onClick={() => this.setState({ icModal: true, modalIC: ic, modalIndex: index })}>{name}</Button>    }
+
+    if(ic.type === "villas-node" || ic.type === "villas-relay" || ic.managedexternally){
+      return <Button variant="link" onClick={() => this.openICStatus(ic)}>{name}</Button>    }
     else{
       return <span>{name}</span>
     }
+  }
+
+  openICStatus(ic){
+
+    let index = this.state.ics.indexOf(ic);
+
+    this.setState({ icModal: true, modalIC: ic, modalIndex: index })
+  }
+
+  sendControlCommand(command,ic){
+
+    if(command === "restart"){
+      AppDispatcher.dispatch({
+        type: 'ics/restart',
+        url: ic.apiurl + "/restart",
+        token: this.state.sessionToken,
+      });
+    }else if(command === "shutdown"){
+      AppDispatcher.dispatch({
+        type: 'ics/shutdown',
+        url: ic.apiurl + "/shutdown",
+        token: this.state.sessionToken,
+      });
+    }
+
   }
 
   render() {
@@ -396,7 +435,13 @@ class InfrastructureComponents extends Component {
         <NewICDialog show={this.state.newModal} onClose={data => this.closeNewModal(data)} />
         <EditICDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} ic={this.state.modalIC} />
         <ImportICDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} />
-        <ICDialog show={this.state.icModal} onClose={data => this.closeICModal(data)} ic={this.state.modalIC} token={this.state.sessionToken} />
+        <ICDialog
+          show={this.state.icModal}
+          onClose={data => this.closeICModal(data)}
+          ic={this.state.modalIC}
+          token={this.state.sessionToken}
+          userRole={this.state.currentUser.role}
+          sendControlCommand={(command, ic) => this.sendControlCommand(command, ic)}/>
 
         <DeleteDialog title="infrastructure-component" name={this.state.modalIC.name || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
       </div>

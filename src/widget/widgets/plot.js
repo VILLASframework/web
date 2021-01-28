@@ -103,9 +103,11 @@ class WidgetPlot extends React.Component {
           yUseMinMax={this.props.widget.customProperties.yUseMinMax}
           paused={this.props.paused}
           yLabel={this.props.widget.customProperties.ylabel}
+          lineColors={this.props.widget.customProperties.lineColors}
+          signalIDs={this.props.widget.signalIDs}
         />
       </div>
-      <PlotLegend signals={this.state.signals} />
+      <PlotLegend signals={this.state.signals} lineColors={this.props.widget.customProperties.lineColors} />
     </div>;
   }
 }

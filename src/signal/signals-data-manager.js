@@ -19,6 +19,7 @@ import RestDataManager from '../common/data-managers/rest-data-manager';
 import RestAPI from "../common/api/rest-api";
 import AppDispatcher from "../common/app-dispatcher";
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
+import NotificationsFactory from "../common/data-managers/notifications-factory";
 
 class SignalsDataManager extends RestDataManager{
 
@@ -62,12 +63,8 @@ class SignalsDataManager extends RestDataManager{
   saveSignals(nodes, token, configID, socketname){
 
     if(nodes.length === 0){
-      const SIGNAL_AUTOCONF_ERROR_NOTIFICATION = {
-        title: 'Failed to load nodes ',
-        message: 'VILLASnode returned empty response',
-        level: 'error'
-      };
-      NotificationsDataManager.addNotification(SIGNAL_AUTOCONF_ERROR_NOTIFICATION);
+      NotificationsDataManager.addNotification(
+        NotificationsFactory.AUTOCONF_ERROR('Failed to load nodes, VILLASnode returned empty response'));
       return;
     }
 
@@ -79,12 +76,9 @@ class SignalsDataManager extends RestDataManager{
         console.warn("Could not parse the following node config because it lacks a name parameter:", nodeConfig);
       } else if(nodeConfig.name === socketname){
         if(configured){
-          const SIGNAL_AUTOCONF_WARNING_NOTIFICATION = {
-            title: 'There might be a problem with the signal auto-config',
-            message: 'VILLASnode returned multiple node configurations for the websocket ' + socketname + '. This is a problem of the VILLASnode.',
-            level: 'warning'
-          };
-          NotificationsDataManager.addNotification(SIGNAL_AUTOCONF_WARNING_NOTIFICATION);
+          NotificationsDataManager.addNotification(
+            NotificationsFactory.AUTOCONF_WARN('VILLASnode returned multiple node configurations for the websocket ' +
+              socketname + '. This is a problem of the VILLASnode.'));
           continue;
         }
         // signals are not yet configured:
@@ -92,12 +86,8 @@ class SignalsDataManager extends RestDataManager{
         let index_out = 1
 
         if(!nodeConfig.in.hasOwnProperty("signals")){
-          const SIGNAL_AUTOCONF_ERROR_NOTIFICATION = {
-            title: 'Failed to load in signal config ',
-            message: 'No field for in signals contained in response.',
-            level: 'error'
-          };
-          NotificationsDataManager.addNotification(SIGNAL_AUTOCONF_ERROR_NOTIFICATION);
+          NotificationsDataManager.addNotification(
+            NotificationsFactory.AUTOCONF_ERROR('Failed to load in signal config, no field for in signals contained in response.'));
           error = true;
         } else{
 
@@ -128,12 +118,8 @@ class SignalsDataManager extends RestDataManager{
         }
 
         if(!nodeConfig.out.hasOwnProperty("signals")){
-          const SIGNAL_AUTOCONF_ERROR_NOTIFICATION = {
-            title: 'Failed to load out signal config ',
-            message: 'No field for out signals contained in response.',
-            level: 'error'
-          };
-          NotificationsDataManager.addNotification(SIGNAL_AUTOCONF_ERROR_NOTIFICATION);
+          NotificationsDataManager.addNotification(
+            NotificationsFactory.AUTOCONF_ERROR('Failed to load out signal config, no field for out signals contained in response.'));
           error=true;
         }else {
 
@@ -173,12 +159,7 @@ class SignalsDataManager extends RestDataManager{
     }
 
     if(!error) {
-      const SIGNAL_AUTOCONF_INFO_NOTIFICATION = {
-        title: 'Signal configuration loaded successfully.',
-        message: '',
-        level: 'info'
-      };
-      NotificationsDataManager.addNotification(SIGNAL_AUTOCONF_INFO_NOTIFICATION);
+      NotificationsDataManager.addNotification(NotificationsFactory.AUTOCONF_INFO());
     }
 
   }

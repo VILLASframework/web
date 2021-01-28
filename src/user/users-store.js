@@ -18,6 +18,7 @@
 import ArrayStore from '../common/array-store';
 import UsersDataManager from './users-data-manager';
 import NotificationsDataManager from '../common/data-managers/notifications-data-manager';
+import NotificationsFactory from "../common/data-managers/notifications-factory";
 
 class UsersStore extends ArrayStore {
   constructor() {
@@ -30,12 +31,8 @@ class UsersStore extends ArrayStore {
       case this.type + '/add-error':
         if (action.error && !action.error.handled && action.error.response) {
           // If it was an error and hasn't been handled, user could not be added
-          const USER_ADD_ERROR_NOTIFICATION = {
-            title: 'Failed to add new user',
-            message: action.error.response.body.message,
-            level: 'error'
-          };
-          NotificationsDataManager.addNotification(USER_ADD_ERROR_NOTIFICATION);
+          NotificationsDataManager.addNotification(
+            NotificationsFactory.ADD_ERROR('Failed to add new user: ' + action.error.response.body.message));
 
         }
         return super.reduce(state, action);
@@ -43,12 +40,8 @@ class UsersStore extends ArrayStore {
       case this.type + '/edit-error':
         if (action.error && !action.error.handled && action.error.response) {
           // If it was an error and hasn't been handled, user couldn't not be updated
-          const USER_EDIT_ERROR_NOTIFICATION = {
-            title: 'Failed to edit user',
-            message: action.error.response.body.message,
-            level: 'error'
-          };
-          NotificationsDataManager.addNotification(USER_EDIT_ERROR_NOTIFICATION);
+          NotificationsDataManager.addNotification(
+            NotificationsFactory.UPDATE_ERROR('Failed to edit user: ' + action.error.response.body.message));
 
         }
         return super.reduce(state, action);
