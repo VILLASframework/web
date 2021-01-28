@@ -339,7 +339,7 @@ class InfrastructureComponents extends Component {
   modifyNameColumn(name){
     let ic = this.state.ics.find(ic => ic.name === name);
 
-    if(ic.type === "villas-node" || ic.type === "villas-relay"){
+    if(ic.type === "villas-node" || ic.type === "villas-relay" || ic.managedexternally){
       return <Button variant="link" onClick={() => this.openICStatus(ic)}>{name}</Button>    }
     else{
       return <span>{name}</span>
