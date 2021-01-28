@@ -33,7 +33,6 @@ class NewResultDialog extends React.Component {
   }
 
   onClose(canceled) {
-      console.log("on close new result");
     if (canceled === false) {
         this.props.onClose(this.state);
     } else {

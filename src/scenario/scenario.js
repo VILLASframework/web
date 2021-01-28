@@ -111,11 +111,10 @@ class Scenario extends React.Component {
       filesEditModal: prevState.filesEditModal || false,
       filesEditSaveState: prevState.filesEditSaveState || [],
 
-      editResultsModal: false,
+      editResultsModal: prevState.editResultsModal || false,
       modalResultsData: {},
       modalResultsIndex: 0,
       newResultModal: false,
-      editFilesModal: false,
       filesToDownload: [],
 
       editOutputSignalsModal: prevState.editOutputSignalsModal || false,
@@ -159,8 +158,7 @@ class Scenario extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     // check whether file data has been loaded
-    if (this.state.filesToDownload.length > 0  ) { // todo: for download all - wait until data for all has arrived
-      console.log(this.state.files);
+    if (this.state.filesToDownload.length > 0  ) {
       if (this.state.filesToDownload.length === 1) {
         let fileToDownload = FileStore.getState().filter(file => file.id === this.state.filesToDownload[0])
         if (fileToDownload.length === 1 && fileToDownload[0].data) {
@@ -613,13 +611,14 @@ class Scenario extends React.Component {
     }
   }
 
-  closeEditResultsModal(data) {
-    console.log(data);
+  closeEditResultsModal() {
     this.setState({ editResultsModal: false });
 
-    if (data) {
-
-    }
+    AppDispatcher.dispatch({
+      type: 'results/start-load',
+      token: this.state.sessionToken,
+      param: '?scenarioID=' + this.state.scenario.id
+    })
   }
 
   downloadResultData(param) {
@@ -745,10 +744,11 @@ class Scenario extends React.Component {
 
           <EditResultDialog
             sessionToken={this.state.sessionToken}
-            show={this.state.editResultsModal} 
+            show={this.state.editResultsModal}
+            files={this.state.files}
             result={this.state.modalResultsData}
             scenarioID={this.state.scenario.id}
-            onClose={data => this.closeEditResultsModal(data)} />
+            onClose={this.closeEditResultsModal.bind(this)} />
           <DeleteDialog title="result" name={this.state.modalResultsData.id} show={this.state.deleteResultsModal} onClose={(e) => this.closeDeleteResultsModal(e)} />
         </div>
     }

@@ -37,22 +37,15 @@ class EditResultDialog extends React.Component {
       description: '',
       uploadFile: null,
       uploadProgress: 0,
-      fileIDs: [],
       files: null,
-      resultChanged: false,
+      result: null,
+      resultExists: false,
     };
   }
 
-  onClose = canceled => {
-    if (canceled) {
-      if (this.props.onClose != null) {
-        this.props.onClose();
-      }
-      return;
-    }
-
-    if (this.valid && this.props.onClose != null) {
-      this.props.onClose(this.state);
+  onClose() {
+    if (this.props.onClose != null) {
+      this.props.onClose();
     }
   };
 
@@ -60,19 +53,20 @@ class EditResultDialog extends React.Component {
     this.setState({ [event.target.id]: event.target.value });
   };
 
-  resetState = () => {
-    this.setState({
-      id: this.props.result.id,
-      description: this.props.result.description,
-      result: this.props.result,
-      fileIDs: this.props.result.resultFileIDs,
-      files: FileStore.getState().filter(file => this.props.result.resultFileIDs.includes(file.id)),
-    });
-  };
-
-  handleStartParametersChange = startParameters => {
-    this.setState({ startParameters });
-  };
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.resultExists && this.props.files != prevProps.files) {
+      this.setState({files: FileStore.getState().filter(file => this.state.result.resultFileIDs.includes(file.id))});
+    }
+    if (this.props.result != prevProps.result && Object.keys(this.props.result).length != 0) {
+      this.setState({
+        id: this.props.result.id,
+        description: this.props.result.description,
+        result: this.props.result,
+        resultExists: true,
+        files: FileStore.getState().filter(file => this.props.result.resultFileIDs.includes(file.id)),
+      })
+    }
+  }
 
   selectUploadFile(event) {
     this.setState({ uploadFile: event.target.files[0] });
@@ -104,7 +98,7 @@ class EditResultDialog extends React.Component {
   };
 
   deleteFile(index){
-    let file = this.state.files[index]
+    let file = this.state.files[index];
     AppDispatcher.dispatch({
       type: 'files/start-remove',
       data: file,
@@ -113,13 +107,12 @@ class EditResultDialog extends React.Component {
   }
 
   render() {
-    if (this.props.show) {
-    }
+
     return <Dialog show={this.props.show}
                   title={'Edit Result No. '+this.state.id}
-                  buttonTitle='Save'
-                  onClose={this.onClose}
-                  onReset={this.resetState}
+                  buttonTitle='Close'
+                  onClose={() => this.onClose()}
+                  blendOutCancel = {true}
                   valid={true}
                   size = 'lg'>
 
@@ -141,7 +134,7 @@ class EditResultDialog extends React.Component {
               deleteButton
               onDelete={(index) => this.deleteFile(index)}
             />
-          </Table>
+        </Table>
 
 
         <FormGroup controlId='resultfile'>

@@ -74,33 +74,8 @@ class ResultStore extends ArrayStore {
         this.simplifyTimestamps([action.data]);
         return super.reduce(state, action);
 
-      case 'resultfiles/start-download':
-        //FilesDataManager.download(action)
-        return state
-
       case 'resultfiles/start-upload':
         ResultsDataManager.uploadFile(action.data, action.resultID, action.token, action.progressCallback, action.finishedCallback, action.scenarioID);
-        return state;
-
-      case 'resultfiles/uploaded':
-        return state;
-
-      case 'resultfiles/upload-error':
-        console.log(action.error);
-        return state;
-
-      case 'resultfiles/downloaded':
-        // in this case a file is contained in the response (no JSON)
-        return this.saveFile(state, action);
-
-      case 'resultfiles/start-edit':
-        ResultsDataManager.update(action.data, action.token, action.id);
-        return state;
-
-      case 'resultfiles/edited':
-          return this.updateElements(state, [action.data]);
-
-      case 'resultfiles/edit-error':
         return state;
 
       default:
