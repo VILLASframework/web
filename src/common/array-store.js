@@ -19,6 +19,7 @@ import { ReduceStore } from 'flux/utils';
 
 import AppDispatcher from './app-dispatcher';
 import NotificationsDataManager from '../common/data-managers/notifications-data-manager';
+import NotificationsFactory from "./data-managers/notifications-factory";
 
 class ArrayStore extends ReduceStore {
   constructor(type, dataManager) {
@@ -83,13 +84,7 @@ class ArrayStore extends ReduceStore {
       case this.type + '/load-error':
         if (action.error && !action.error.handled && action.error.response) {
 
-          const USER_LOAD_ERROR_NOTIFICATION = {
-            title: 'Failed to load',
-            message: action.error.response.body.message,
-            level: 'error'
-          };
-          NotificationsDataManager.addNotification(USER_LOAD_ERROR_NOTIFICATION);
-
+          NotificationsDataManager.addNotification(NotificationsFactory.LOAD_ERROR(action.error.response.body.message));
         }
         return super.reduce(state, action);
 
@@ -120,17 +115,10 @@ class ArrayStore extends ReduceStore {
             return (item.id !== action.data);
           });
         }
-        
+
       case this.type + '/remove-error':
         if (action.error && !action.error.handled && action.error.response) {
-
-          const USER_REMOVE_ERROR_NOTIFICATION = {
-            title: 'Failed to add remove ',
-            message: action.error.response.body.message,
-            level: 'error'
-          };
-          NotificationsDataManager.addNotification(USER_REMOVE_ERROR_NOTIFICATION);
-
+          NotificationsDataManager.addNotification(NotificationsFactory.DELETE_ERROR(action.error.response.body.message));
         }
         return super.reduce(state, action);
 

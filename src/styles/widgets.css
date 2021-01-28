@@ -395,3 +395,18 @@ div[class*="-widget"] label {
     border: 2px solid lightgray;
 }
 /* End box widget */
+
+/* Begin time offset widget */
+.time-offset {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+}
+
+.time-offset span {
+    text-align: center;
+    font-size: 1em;
+    font-weight: 600;
+}
+/* End time offset widget */

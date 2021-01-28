@@ -30,6 +30,7 @@ import EditUserDialog from './edit-user';
 
 import DeleteDialog from '../common/dialogs/delete-dialog';
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
+import NotificationsFactory from "../common/data-managers/notifications-factory";
 
 class Users extends Component {
   static getStores() {
@@ -97,12 +98,8 @@ class Users extends Component {
           token: this.state.token
         });
       } else{
-        const USER_UPDATE_ERROR_NOTIFICATION = {
-          title: 'Update Error ',
-          message: 'New password not correctly confirmed',
-          level: 'error'
-        };
-        NotificationsDataManager.addNotification(USER_UPDATE_ERROR_NOTIFICATION)
+
+        NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR("New password not correctly confirmed"))
       }
     }
   }

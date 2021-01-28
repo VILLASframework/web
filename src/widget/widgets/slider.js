@@ -76,27 +76,6 @@ class WidgetSlider extends Component {
     }
   }
 
-  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-    // Check if the orientation changed, update the size if it did
-    // this part didn't work -> dimensions and constraints are now handled by the edit orientation component
-    if (this.props.widget.customProperties.orientation !== prevProps.widget.customProperties.orientation) {
-      let baseWidget = this.props.widget;
-
-      // Exchange dimensions and constraints
-      let newWidget = Object.assign({}, baseWidget, {
-        width: baseWidget.height,
-        height: baseWidget.width,
-        minWidth: baseWidget.minHeight,
-        minHeight: baseWidget.minWidth,
-        maxWidth: baseWidget.customProperties.maxHeight,
-        maxHeight: baseWidget.customProperties.maxWidth
-      });
-
-      this.props.onWidgetChange(newWidget);
-    }
-
-  }
-
   valueIsChanging(newValue) {
     this.props.widget.customProperties.value = newValue;
     if (this.props.widget.customProperties.continous_update)

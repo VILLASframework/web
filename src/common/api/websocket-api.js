@@ -14,6 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
+import NotificationsDataManager from "../data-managers/notifications-data-manager";
+import NotificationsFactory from "../data-managers/notifications-factory";
+import AppDispatcher from '../app-dispatcher';
 
 class WebsocketAPI {
   constructor(websocketurl, callbacks) {
@@ -65,6 +68,10 @@ class WebsocketAPI {
   }
 
   onOpen = e => {
+    AppDispatcher.dispatch({
+      type: 'websocket/connected',
+      data: this.websocketurl,
+    });
     this.wasConnected = true;
 
     if ('onOpen' in this.callbacks)
@@ -78,6 +85,12 @@ class WebsocketAPI {
     }
     else {
       if (this.wasConnected) {
+        AppDispatcher.dispatch({
+          type: 'websocket/connection-error',
+          data: this.websocketurl,
+        });
+
+        NotificationsDataManager.addNotification(NotificationsFactory.WEBSOCKET_CONNECTION_WARN(this.websocketurl));
         console.log("Connection to " + this.websocketurl + " dropped. Attempt reconnect in 1 sec");
         window.setTimeout(() => { this.reconnect(); }, 1000);
       }

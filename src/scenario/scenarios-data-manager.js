@@ -108,6 +108,12 @@ class ScenariosDataManager extends RestDataManager {
         token: token,
         param: '?scenarioID=' + scenario.id,
       });
+
+      AppDispatcher.dispatch({
+        type: 'results/start-load',
+        token: token,
+        param: '?scenarioID=' + scenario.id
+      })
     }
   }
 }

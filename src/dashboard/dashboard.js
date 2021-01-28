@@ -249,12 +249,6 @@ class Dashboard extends Component {
 
   };
 
-
-  widgetStatusChange(updated_widget, key) {
-    // Widget changed internally, make changes effective then save them
-    this.widgetChange(updated_widget, key, this.saveChanges);
-  }
-
   widgetChange(widget, index, callback = null) {
     let temp = this.state.widgetChangeData;
     temp.push(widget);
@@ -352,11 +346,19 @@ class Dashboard extends Component {
           data: widget
         });
       }
+      else if (widget.type === 'Image'){
+        widget.customProperties.update = true;
+      }
     });
     this.setState({ editing: true, widgetOrigIDs: originalIDs });
   };
 
   saveEditing() {
+    this.state.widgets.forEach(widget => {
+      if (widget.type === 'Image'){
+        widget.customProperties.update = true;
+      }
+    });
     // Provide the callback so it can be called when state change is applied
     // TODO: Check if callback is needed
     AppDispatcher.dispatch({
@@ -375,22 +377,12 @@ class Dashboard extends Component {
     this.setState({ editing: false, widgetChangeData: [] });
   };
 
-  saveChanges() {
-    // Transform to a list
-    const dashboard = Object.assign({}, this.state.dashboard.toJS(), {
-      widgets: this.transformToWidgetsList(this.state.widgets)
-    });
-
-    AppDispatcher.dispatch({
-      type: 'dashboards/start-edit',
-      data: dashboard,
-      token: this.state.sessionToken
-    });
-  }
-
   cancelEditing() {
     //raw widget has no id -> cannot be deleted in its original form
     this.state.widgets.forEach(widget => {
+      if (widget.type === 'Image'){
+        widget.customProperties.update = true;
+      }
       let tempID = this.state.widgetOrigIDs.find(element => element === widget.id);
       if (typeof tempID === 'undefined') {
         AppDispatcher.dispatch({
@@ -512,7 +504,7 @@ class Dashboard extends Component {
         {!draggable ? (
           <WidgetArea widgets={this.state.widgets} dropZoneHeight={dropZoneHeight} editing={this.state.editing} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
             {this.state.widgets != null && Object.keys(this.state.widgets).map(widgetKey => (
-              <WidgetContainer widget={this.state.widgets[widgetKey]}>
+              <WidgetContainer widget={this.state.widgets[widgetKey]} key={widgetKey}>
                 <WidgetContextMenu
                   key={widgetKey}
                   index={parseInt(widgetKey, 10)}
@@ -523,7 +515,6 @@ class Dashboard extends Component {
                   onChange={this.widgetChange.bind(this)}
 
                   onWidgetChange={this.widgetChange.bind(this)}
-                  onWidgetStatusChange={this.widgetStatusChange.bind(this)}
                   editing={this.state.editing}
                   grid={grid}
                   paused={this.state.paused}
@@ -536,6 +527,7 @@ class Dashboard extends Component {
               {this.state.widgets != null && Object.keys(this.state.widgets).map(widgetKey => (
                 <EditableWidgetContainer
                   widget={this.state.widgets[widgetKey]}
+                  key={widgetKey}
                   grid={grid}
                   index={parseInt(widgetKey, 10)}
                   onWidgetChange={this.widgetChange.bind(this)}>
@@ -549,7 +541,6 @@ class Dashboard extends Component {
                     onChange={this.widgetChange.bind(this)}
 
                     onWidgetChange={this.widgetChange.bind(this)}
-                    onWidgetStatusChange={this.widgetStatusChange.bind(this)}
                     editing={this.state.editing}
                     paused={this.state.paused}
                   />
@@ -566,6 +557,7 @@ class Dashboard extends Component {
           widget={this.state.modalData}
           signals={this.state.signals}
           files={this.state.files}
+          ics={this.state.ics}
         />
 
         <EditFiles

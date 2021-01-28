@@ -191,7 +191,7 @@ class EditWidgetColorZonesControl extends React.Component {
     }
     
     return <FormGroup>
-      <FormLabel>Color zones</FormLabel>
+      <FormLabel>Color Zones</FormLabel>
       <Button  onClick={this.addZone} style={{marginBottom: '10px', marginLeft: '120px'}} disabled={!this.props.widget.customProperties.colorZones}><Icon size='xs' icon="plus" /></Button>
 
     <div>
@@ -205,8 +205,6 @@ class EditWidgetColorZonesControl extends React.Component {
               height: '40px'
             }
             
-
-
             return (<Button
               style={style} key={idx} onClick={i => this.editColorZone(idx)} disabled={!this.props.widget.customProperties.colorZones}><Icon icon="pen" /></Button>
             )

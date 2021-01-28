@@ -55,6 +55,9 @@ class ColorPicker extends React.Component {
     if(this.props.controlId === 'strokeStyle'){
       temp.customProperties.zones[this.props.zoneIndex]['strokeStyle'] = color.hex;
     }
+    else if(this.props.controlId === 'lineColor'){
+      temp.customProperties.lineColors[this.props.lineIndex] = color.hex;
+    }
     else{
     let parts = this.props.controlId.split('.');
     let isCustomProperty = true;
@@ -85,7 +88,7 @@ class ColorPicker extends React.Component {
   };
 
   render() {
-    let disableOpacity = false;
+
     let hexColor;
     let opacity = 1;
     let parts = this.props.controlId.split('.');
@@ -94,12 +97,14 @@ class ColorPicker extends React.Component {
       isCustomProperty = false;
     }
 
-    if((this.state.widget.type === "Box" && parts[1] === "border_color") || this.props.controlId === 'strokeStyle'){
-      disableOpacity = true;
-    }
     if(this.props.controlId === 'strokeStyle'){
       if(typeof this.state.widget.customProperties.zones[this.props.zoneIndex] !== 'undefined'){
-    hexColor = this.state.widget.customProperties.zones[this.props.zoneIndex]['strokeStyle'];
+        hexColor = this.state.widget.customProperties.zones[this.props.zoneIndex]['strokeStyle'];
+      }
+    }
+    else if(this.props.controlId === 'lineColor'){
+      if(typeof this.state.widget.customProperties.lineColors[this.props.lineIndex] !== 'undefined'){
+        hexColor = this.state.widget.customProperties.lineColors[this.props.lineIndex];
       }
     }
     else{
@@ -117,7 +122,7 @@ class ColorPicker extends React.Component {
           <form>
               <SketchPicker
                   color={rgbColor}
-                  disableAlpha={disableOpacity} 
+                  disableAlpha={this.props.disableOpacity} 
                   onChangeComplete={ this.handleChangeComplete }
                   width={"300"}
               />

@@ -20,23 +20,21 @@ import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 
 import Dialog from '../common/dialogs/dialog';
 
-class EditDashboardDialog extends React.Component {
-  valid = true;
+class NewResultDialog extends React.Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      name: '',
-      id: ''
+        ConfigSnapshots: '',
+        Description: '',
+        ResultFileIDs: [],
     }
   }
 
   onClose(canceled) {
     if (canceled === false) {
-      if (this.valid) {
         this.props.onClose(this.state);
-      }
     } else {
       this.props.onClose();
     }
@@ -47,35 +45,20 @@ class EditDashboardDialog extends React.Component {
   }
 
   resetState() {
-    this.setState({
-      name: this.props.dashboard.name,
-      id: this.props.dashboard.id
-    });
-  }
-
-  validateForm(target) {
-    // check all controls
-    var name = true;
-
-    if (this.state.name === '') {
-      name = false;
-    }
-
-    this.valid = name;
-
-    // return state to control
-    if (target === 'name') return name ? "success" : "error";
-
-    return "success";
+    this.setState({ 
+        ConfigSnapshots: '',
+        Description: '',
+        ResultFileIDs: [],
+     });
   }
 
   render() {
     return (
-      <Dialog show={this.props.show} title="Edit Dashboard" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
-        <form>
-          <FormGroup controlId="name" validationstate={this.validateForm('name')}>
-            <FormLabel>Name</FormLabel>
-            <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+      <Dialog show={this.props.show} title="New Result" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={true}>
+        <form>      
+          <FormGroup controlId="Description">
+            <FormLabel>Description</FormLabel>
+            <FormControl type="text" placeholder="Enter description" value={this.state.Description} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
         </form>
@@ -84,4 +67,4 @@ class EditDashboardDialog extends React.Component {
   }
 }
 
-export default EditDashboardDialog;
+export default NewResultDialog;

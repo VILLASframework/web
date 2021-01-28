@@ -203,14 +203,21 @@ class Plot extends React.Component {
 
     // generate paths from data
     const sparkLine = line().x(p => xScale(p.x)).y(p => yScale(p.y));
-    const lineColor = scaleOrdinal(schemeCategory10);
+    const newLineColor = scaleOrdinal(schemeCategory10);
 
-    const lines = this.state.data.map((values, index) => <path d={sparkLine(values)} key={index} style={{ fill: 'none', stroke: lineColor(index) }} />);
+    const lines = this.state.data.map((values, index) => {
+      let signalID = this.props.signalIDs[index];
+      if (typeof this.props.lineColors[signalID] === "undefined") {
+        this.props.lineColors[signalID] = newLineColor(signalID);
+      }
+      return <path d={sparkLine(values)} key={index} style={{ fill: 'none', stroke: this.props.lineColors[signalID] }} />
+    });
 
     this.setState({ lines, xAxis, yAxis });
   }
 
   render() {
+
     const yLabelPos = {
       x: 12,
       y: this.props.height / 2
