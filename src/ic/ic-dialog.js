@@ -71,7 +71,7 @@ class ICDialog extends React.Component {
               <h5>Status:</h5>
 
               <ReactJson
-                src={this.props.icStatus}
+                src={this.props.ic.statusupdateraw}
                 name={false}
                 displayDataTypes={false}
                 displayObjectSize={false}

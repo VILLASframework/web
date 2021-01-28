@@ -24,7 +24,6 @@ import moment from 'moment'
 
 import AppDispatcher from '../common/app-dispatcher';
 import InfrastructureComponentStore from './ic-store';
-import ICStatusStore from './ic-status-store';
 
 import Icon from '../common/icon';
 import Table from '../common/table';
@@ -39,7 +38,7 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 
 class InfrastructureComponents extends Component {
   static getStores() {
-    return [ InfrastructureComponentStore, ICStatusStore];
+    return [ InfrastructureComponentStore];
   }
 
   static statePrio(state) {
@@ -78,9 +77,7 @@ class InfrastructureComponents extends Component {
     return {
       sessionToken: localStorage.getItem("token"),
       ics: ics,
-      icStatus: ICStatusStore.getState(),
       modalIC: {},
-      modalICStatus: {},
       deleteModal: false,
       icModal: false,
       selectedICs: [],
@@ -117,13 +114,10 @@ class InfrastructureComponents extends Component {
       this.state.ics.forEach(ic => {
         if ((ic.type === "villas-node" || ic.type === "villas-relay")
           && ic.apiurl !== '' && ic.apiurl !== undefined && ic.apiurl !== null) {
-          let splitWebsocketURL = ic.websocketurl.split("/");
           AppDispatcher.dispatch({
-            type: 'ic-status/get-status',
+            type: 'ics/get-status',
             url: ic.apiurl + "/status",
-            socketname: splitWebsocketURL[splitWebsocketURL.length - 1],
             token: this.state.sessionToken,
-            icid: ic.id,
             ic: ic
           });
         }
@@ -349,26 +343,22 @@ class InfrastructureComponents extends Component {
   openICStatus(ic){
 
     let index = this.state.ics.indexOf(ic);
-    let icStatus = this.state.icStatus.find(status => status.icID === ic.id);
 
-    this.setState({ icModal: true, modalIC: ic, modalICStatus: icStatus, modalIndex: index })
+    this.setState({ icModal: true, modalIC: ic, modalIndex: index })
   }
 
   sendControlCommand(command,ic){
-    let splitWebsocketURL = ic.websocketurl.split("/");
 
     if(command === "restart"){
       AppDispatcher.dispatch({
-        type: 'ic-status/restart',
+        type: 'ics/restart',
         url: ic.apiurl + "/restart",
-        socketname: splitWebsocketURL[splitWebsocketURL.length - 1],
         token: this.state.sessionToken,
       });
     }else if(command === "shutdown"){
       AppDispatcher.dispatch({
-        type: 'ic-status/shutdown',
+        type: 'ics/shutdown',
         url: ic.apiurl + "/shutdown",
-        socketname: splitWebsocketURL[splitWebsocketURL.length - 1],
         token: this.state.sessionToken,
       });
     }
@@ -451,7 +441,6 @@ class InfrastructureComponents extends Component {
           ic={this.state.modalIC}
           token={this.state.sessionToken}
           userRole={this.state.currentUser.role}
-          icStatus={this.state.modalICStatus}
           sendControlCommand={(command, ic) => this.sendControlCommand(command, ic)}/>
 
         <DeleteDialog title="infrastructure-component" name={this.state.modalIC.name || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
