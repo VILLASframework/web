@@ -80,15 +80,15 @@ class InfrastructureComponentStore extends ArrayStore {
         ICsDataManager.getStatus(action.url, action.token, action.ic);
         return super.reduce(state, action);
 
-      case 'ics/received-status':
+      case 'ics/status-received':
         let tempIC = action.ic;
         if(!tempIC.managedexternally){
-          tempIC.state = response.state;
-          tempIC.statusupdateraw = response
+          tempIC.state = action.data.state;
+          tempIC.statusupdateraw = action.data;
           AppDispatcher.dispatch({
             type: 'ics/start-edit',
             data: tempIC,
-            token: token,
+            token: action.token,
           });
         }
         return super.reduce(state, action);
