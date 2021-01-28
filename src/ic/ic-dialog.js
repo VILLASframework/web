@@ -81,27 +81,35 @@ class ICDialog extends React.Component {
 
             </Col>
 
-            <Col>
-              <div className='section-buttons-group-right'>
-                <Button style={{ margin: '5px' }} size='sm' onClick={() => this.downloadGraph(graphURL)}><Icon icon="download" /></Button>
-              </div>
-              <h5>Graph:</h5>
-              <div>
-                  <img alt={"Graph image download failed and/or incorrect image URL"} src={graphURL} />
-              </div>
-
-              {this.props.userRole === "Admin" ? (
+            {this.props.ic.type === "villas-node" || this.props.ic.type === "villas-relay" ? (
+              <Col>
+                <div className='section-buttons-group-right'>
+                  <Button style={{margin: '5px'}} size='sm' onClick={() => this.downloadGraph(graphURL)}><Icon
+                    icon="download"/></Button>
+                </div>
+                <h5>Graph:</h5>
                 <div>
-                  <h5>Controls:</h5>
-                  <div>
-                    <Button style={{ margin: '5px' }} size='lg' onClick={() => this.setState({ confirmCommand: true, command: 'restart' })}>Restart</Button>
-                    <Button style={{ margin: '5px' }} size='lg' onClick={() => this.setState({ confirmCommand: true, command: 'shutdown' })}>Shutdown</Button>
-                  </div>
-                </div>)
-                : (<div></div>)}
+                  <img alt={"Graph image download failed and/or incorrect image URL"} src={graphURL}/>
+                </div>
 
-              <ConfirmCommand show={this.state.confirmCommand} command={this.state.command} name={this.props.ic.name} onClose={c => this.closeConfirmModal(c)} />
-            </Col>
+                {this.props.userRole === "Admin" ? (
+                    <div>
+                      <h5>Controls:</h5>
+                      <div>
+                        <Button style={{margin: '5px'}} size='lg'
+                                onClick={() => this.setState({confirmCommand: true, command: 'restart'})}>Restart</Button>
+                        <Button style={{margin: '5px'}} size='lg' onClick={() => this.setState({
+                          confirmCommand: true,
+                          command: 'shutdown'
+                        })}>Shutdown</Button>
+                      </div>
+                    </div>)
+                  : (<div/>)}
+
+                <ConfirmCommand show={this.state.confirmCommand} command={this.state.command} name={this.props.ic.name}
+                                onClose={c => this.closeConfirmModal(c)}/>
+              </Col>
+            ): (<div/>)}
           </Row>
         </form>
       </Dialog>
