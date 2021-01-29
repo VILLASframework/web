@@ -57,40 +57,6 @@ class ResultsDataManager extends RestDataManager{
     });
   }
 
-  download(action){
-    RestAPI.download(this.makeURL(this.url), action.token, action.data).then(response => {
-      AppDispatcher.dispatch({
-        type: 'resultfiles/downloaded',
-        data: response,
-        id: action.data,
-        token: action.token
-      });
-
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: 'resultfiles/load-error',
-        error: error
-      });
-    });
-  }
-
-  /* only update file ids
-  update(file, token, id) {
-
-    RestAPI.put(this.makeURL(this.url + '/' + id), file, token).then(response => {
-        AppDispatcher.dispatch({
-          type: 'resultfiles/edited',
-          data: response[this.type]
-        });
-      }).catch(error => {
-        AppDispatcher.dispatch({
-          type: 'resultfiles/edit-error',
-          error: error
-        });
-      });
-    }
-  }*/
-
 }
 
 export default new ResultsDataManager();

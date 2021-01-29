@@ -111,11 +111,10 @@ class Scenario extends React.Component {
       filesEditModal: prevState.filesEditModal || false,
       filesEditSaveState: prevState.filesEditSaveState || [],
 
-      editResultsModal: false,
+      editResultsModal: prevState.editResultsModal || false,
       modalResultsData: {},
       modalResultsIndex: 0,
       newResultModal: false,
-      editFilesModal: false,
       filesToDownload: [],
 
       editOutputSignalsModal: prevState.editOutputSignalsModal || false,
@@ -159,8 +158,7 @@ class Scenario extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     // check whether file data has been loaded
-    if (this.state.filesToDownload.length > 0  ) { // todo: for download all - wait until data for all has arrived
-      console.log(this.state.files);
+    if (this.state.filesToDownload.length > 0  ) {
       if (this.state.filesToDownload.length === 1) {
         let fileToDownload = FileStore.getState().filter(file => file.id === this.state.filesToDownload[0])
         if (fileToDownload.length === 1 && fileToDownload[0].data) {
@@ -613,13 +611,14 @@ class Scenario extends React.Component {
     }
   }
 
-  closeEditResultsModal(data) {
-    console.log(data);
+  closeEditResultsModal() {
     this.setState({ editResultsModal: false });
 
-    if (data) {
-
-    }
+    AppDispatcher.dispatch({
+      type: 'results/start-load',
+      token: this.state.sessionToken,
+      param: '?scenarioID=' + this.state.scenario.id
+    })
   }
 
   downloadResultData(param) {
@@ -745,10 +744,11 @@ class Scenario extends React.Component {
 
           <EditResultDialog
             sessionToken={this.state.sessionToken}
-            show={this.state.editResultsModal} 
+            show={this.state.editResultsModal}
+            files={this.state.files}
             result={this.state.modalResultsData}
             scenarioID={this.state.scenario.id}
-            onClose={data => this.closeEditResultsModal(data)} />
+            onClose={this.closeEditResultsModal.bind(this)} />
           <DeleteDialog title="result" name={this.state.modalResultsData.id} show={this.state.deleteResultsModal} onClose={(e) => this.closeDeleteResultsModal(e)} />
         </div>
     }
@@ -775,7 +775,10 @@ class Scenario extends React.Component {
 
 
       {/*Component Configurations table*/}
-      <h2 style={tableHeadingStyle}>Component Configurations</h2>
+      <h2 style={tableHeadingStyle}>Component Configurations
+        <Button onClick={() => this.addConfig()} style={buttonStyle}><Icon icon="plus" /></Button>
+        <Button onClick={() => this.setState({ importConfigModal: true })} style={buttonStyle}><Icon icon="upload" /></Button>
+      </h2>
       <Table data={this.state.configs}>
         <TableColumn checkbox onChecked={(index, event) => this.onConfigChecked(index, event)} width='30' />
         <TableColumn title='Name' dataKey='name' />
@@ -832,11 +835,6 @@ class Scenario extends React.Component {
           ]} />
       </div>
 
-      <div style={{ float: 'right' }}>
-        <Button onClick={() => this.addConfig()} style={buttonStyle}><Icon icon="plus" /> Component Configuration</Button>
-        <Button onClick={() => this.setState({ importConfigModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
-      </div>
-
       <div style={{ clear: 'both' }} />
 
       <EditConfigDialog
@@ -869,7 +867,10 @@ class Scenario extends React.Component {
       />
 
       {/*Dashboard table*/}
-      <h2 style={tableHeadingStyle}>Dashboards</h2>
+      <h2 style={tableHeadingStyle}>Dashboards
+        <Button onClick={() => this.setState({ newDashboardModal: true })} style={buttonStyle}><Icon icon="plus" /></Button>
+        <Button onClick={() => this.setState({ importDashboardModal: true })} style={buttonStyle}><Icon icon="upload" /></Button>
+      </h2>
       <Table data={this.state.dashboards}>
         <TableColumn title='Name' dataKey='name' link='/dashboards/' linkKey='id' />
         <TableColumn title='Grid' dataKey='grid' />
@@ -887,13 +888,6 @@ class Scenario extends React.Component {
         />
       </Table>
 
-      <div style={{ float: 'right' }}>
-        <Button onClick={() => this.setState({ newDashboardModal: true })} style={buttonStyle}><Icon icon="plus" /> Dashboard</Button>
-        <Button onClick={() => this.setState({ importDashboardModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
-      </div>
-
-      <div style={{ clear: 'both' }} />
-
       <NewDashboardDialog show={this.state.newDashboardModal} onClose={data => this.closeNewDashboardModal(data)} />
       <EditDashboardDialog show={this.state.dashboardEditModal} dashboard={this.state.modalDashboardData} onClose={data => this.closeEditDashboardModal(data)} />
       <ImportDashboardDialog show={this.state.importDashboardModal} onClose={data => this.closeImportDashboardModal(data)} />
@@ -901,18 +895,10 @@ class Scenario extends React.Component {
       <DeleteDialog title="dashboard" name={this.state.modalDashboardData.name} show={this.state.deleteDashboardModal} onClose={(e) => this.closeDeleteDashboardModal(e)} />
 
       {/*Result table*/}
-      <div>
-        <h2 style={tableHeadingStyle}>Results
+      <h2 style={tableHeadingStyle}>Results
         <Button onClick={() => this.setState({ newResultModal: true })} style={buttonStyle}><Icon icon="plus" /></Button>
-        </h2>
-
-      </div>
+      </h2>
       {resulttable}
-      {/*
-      <div style={{ float: 'right' }}>
-        <Button onClick={() => this.setState({ newResultModal: true })} style={buttonStyle}><Icon icon="plus" /> Result</Button>
-      </div>
-      */}
       <NewResultDialog show={this.state.newResultModal} onClose={data => this.closeNewResultModal(data)} />
 
       {/*Scenario Users table*/}
