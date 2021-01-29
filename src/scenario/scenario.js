@@ -775,7 +775,10 @@ class Scenario extends React.Component {
 
 
       {/*Component Configurations table*/}
-      <h2 style={tableHeadingStyle}>Component Configurations</h2>
+      <h2 style={tableHeadingStyle}>Component Configurations
+        <Button onClick={() => this.addConfig()} style={buttonStyle}><Icon icon="plus" /></Button>
+        <Button onClick={() => this.setState({ importConfigModal: true })} style={buttonStyle}><Icon icon="upload" /></Button>
+      </h2>
       <Table data={this.state.configs}>
         <TableColumn checkbox onChecked={(index, event) => this.onConfigChecked(index, event)} width='30' />
         <TableColumn title='Name' dataKey='name' />
@@ -832,11 +835,6 @@ class Scenario extends React.Component {
           ]} />
       </div>
 
-      <div style={{ float: 'right' }}>
-        <Button onClick={() => this.addConfig()} style={buttonStyle}><Icon icon="plus" /> Component Configuration</Button>
-        <Button onClick={() => this.setState({ importConfigModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
-      </div>
-
       <div style={{ clear: 'both' }} />
 
       <EditConfigDialog
@@ -869,7 +867,10 @@ class Scenario extends React.Component {
       />
 
       {/*Dashboard table*/}
-      <h2 style={tableHeadingStyle}>Dashboards</h2>
+      <h2 style={tableHeadingStyle}>Dashboards
+        <Button onClick={() => this.setState({ newDashboardModal: true })} style={buttonStyle}><Icon icon="plus" /></Button>
+        <Button onClick={() => this.setState({ importDashboardModal: true })} style={buttonStyle}><Icon icon="upload" /></Button>
+      </h2>
       <Table data={this.state.dashboards}>
         <TableColumn title='Name' dataKey='name' link='/dashboards/' linkKey='id' />
         <TableColumn title='Grid' dataKey='grid' />
@@ -887,13 +888,6 @@ class Scenario extends React.Component {
         />
       </Table>
 
-      <div style={{ float: 'right' }}>
-        <Button onClick={() => this.setState({ newDashboardModal: true })} style={buttonStyle}><Icon icon="plus" /> Dashboard</Button>
-        <Button onClick={() => this.setState({ importDashboardModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
-      </div>
-
-      <div style={{ clear: 'both' }} />
-
       <NewDashboardDialog show={this.state.newDashboardModal} onClose={data => this.closeNewDashboardModal(data)} />
       <EditDashboardDialog show={this.state.dashboardEditModal} dashboard={this.state.modalDashboardData} onClose={data => this.closeEditDashboardModal(data)} />
       <ImportDashboardDialog show={this.state.importDashboardModal} onClose={data => this.closeImportDashboardModal(data)} />
@@ -901,18 +895,10 @@ class Scenario extends React.Component {
       <DeleteDialog title="dashboard" name={this.state.modalDashboardData.name} show={this.state.deleteDashboardModal} onClose={(e) => this.closeDeleteDashboardModal(e)} />
 
       {/*Result table*/}
-      <div>
-        <h2 style={tableHeadingStyle}>Results
+      <h2 style={tableHeadingStyle}>Results
         <Button onClick={() => this.setState({ newResultModal: true })} style={buttonStyle}><Icon icon="plus" /></Button>
-        </h2>
-
-      </div>
+      </h2>
       {resulttable}
-      {/*
-      <div style={{ float: 'right' }}>
-        <Button onClick={() => this.setState({ newResultModal: true })} style={buttonStyle}><Icon icon="plus" /> Result</Button>
-      </div>
-      */}
       <NewResultDialog show={this.state.newResultModal} onClose={data => this.closeNewResultModal(data)} />
 
       {/*Scenario Users table*/}
