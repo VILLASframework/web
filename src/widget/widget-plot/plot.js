@@ -207,6 +207,11 @@ class Plot extends React.Component {
 
     const lines = this.state.data.map((values, index) => {
       let signalID = this.props.signalIDs[index];
+
+      if(this.props.lineColors === undefined || this.props.lineColors === null){
+        this.props.lineColors = [] // for backwards compatibility
+      }
+
       if (typeof this.props.lineColors[signalID] === "undefined") {
         this.props.lineColors[signalID] = newLineColor(signalID);
       }
