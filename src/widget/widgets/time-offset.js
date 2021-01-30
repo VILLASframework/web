@@ -71,7 +71,10 @@ class WidgetTimeOffset extends Component {
       <div className="time-offset">
       {this.props.widget.customProperties.icID !== -1 ? 
       (<span></span>) : (<span>no IC</span>)
-      }  
+      }
+      {this.props.widget.customProperties.icID !== -1 && this.props.widget.customProperties.showName ? 
+      (<span>{this.state.icName}</span>) : (<span></span>)
+      }    
       <OverlayTrigger key={0} placement={'left'} overlay={<Tooltip id={`tooltip-${"traffic-light"}`}>
       {this.props.widget.customProperties.icID !== -1 ? 
       (<span>{this.state.icName}<br></br>Offset: {this.state.timeOffset + "s"}</span>) 

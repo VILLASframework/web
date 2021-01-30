@@ -209,6 +209,7 @@ class WidgetFactory {
                 widget.customProperties.horizontal = true;
                 widget.customProperties.showOffset = true;
                 widget.customProperties.lockAspect = true;
+                widget.customProperties.showName = true;
                 break;
 
             default:
