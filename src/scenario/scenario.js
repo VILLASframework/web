@@ -36,6 +36,9 @@ import ImportDashboardDialog from "../dashboard/import-dashboard";
 import NewDashboardDialog from "../dashboard/new-dashboard";
 import EditDashboardDialog from '../dashboard/edit-dashboard';
 import EditFiles from '../file/edit-files'
+import NewResultDialog from '../result/new-result';
+import EditResultDialog from '../result/edit-result'
+
 
 import ICAction from '../ic/ic-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
@@ -43,13 +46,16 @@ import EditConfigDialog from "../componentconfig/edit-config";
 import EditSignalMapping from "../signal/edit-signal-mapping";
 import FileStore from "../file/file-store"
 import WidgetStore from "../widget/widget-store";
+import ResultStore from "../result/result-store"
 import { Redirect } from 'react-router-dom';
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
+
+var JSZip = require("jszip");
 
 class Scenario extends React.Component {
 
   static getStores() {
-    return [ScenarioStore, ConfigStore, DashboardStore, ICStore, SignalStore, FileStore, WidgetStore];
+    return [ScenarioStore, ConfigStore, DashboardStore, ICStore, SignalStore, FileStore, WidgetStore, ResultStore];
   }
 
   static calculateState(prevState, props) {
@@ -68,7 +74,6 @@ class Scenario extends React.Component {
       });
     }
 
-
     // obtain all component configurations of a scenario
     let configs = ConfigStore.getState().filter(config => config.scenarioID === parseInt(props.match.params.scenario, 10));
     let editConfigModal = prevState.editConfigModal || false;
@@ -82,8 +87,11 @@ class Scenario extends React.Component {
       modalConfigIndex = index;
     }
 
+    let results = ResultStore.getState().filter(result => result.scenarioID === parseInt(props.match.params.scenario, 10));
+
     return {
       scenario,
+      results,
       sessionToken,
       configs,
       editConfigModal,
@@ -102,6 +110,12 @@ class Scenario extends React.Component {
       selectedConfigs: [],
       filesEditModal: prevState.filesEditModal || false,
       filesEditSaveState: prevState.filesEditSaveState || [],
+
+      editResultsModal: prevState.editResultsModal || false,
+      modalResultsData: {},
+      modalResultsIndex: 0,
+      newResultModal: false,
+      filesToDownload: [],
 
       editOutputSignalsModal: prevState.editOutputSignalsModal || false,
       editInputSignalsModal: prevState.editInputSignalsModal || false,
@@ -140,6 +154,32 @@ class Scenario extends React.Component {
       type: 'ics/start-load',
       token: this.state.sessionToken
     });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // check whether file data has been loaded
+    if (this.state.filesToDownload.length > 0  ) {
+      if (this.state.filesToDownload.length === 1) {
+        let fileToDownload = FileStore.getState().filter(file => file.id === this.state.filesToDownload[0])
+        if (fileToDownload.length === 1 && fileToDownload[0].data) {
+          const blob = new Blob([fileToDownload[0].data], {type: fileToDownload[0].type});
+          FileSaver.saveAs(blob, fileToDownload[0].name);
+          this.setState({ filesToDownload: [] });
+        }
+      } else { // zip and save several files
+        let filesToDownload = FileStore.getState().filter(file => this.state.filesToDownload.includes(file.id) && file.data);
+        if (filesToDownload.length === this.state.filesToDownload.length) { // all requested files have been loaded
+          var zip = new JSZip();
+          filesToDownload.forEach(file => {
+            zip.file(file.name, file.data);
+          });
+          zip.generateAsync({type: "blob"}).then(function(content) {
+            saveAs(content, "results.zip");
+          });
+          this.setState({ filesToDownload: [] });
+        }
+      }
+    }
   }
 
   /* ##############################################
@@ -347,7 +387,7 @@ class Scenario extends React.Component {
       }
 
       // Unix time stamp + delay
-      action.data.when = Date.now() / 1000.0 + delay
+      action.data.when = Math.round(Date.now() / 1000.0 + delay)
 
       console.log("Sending action: ", action.data)
 
@@ -375,6 +415,7 @@ class Scenario extends React.Component {
   closeNewDashboardModal(data) {
     this.setState({ newDashboardModal: false });
     if (data) {
+      // TODO: 'newDashboard' not used, check this
       let newDashboard = data;
       // add default grid value and scenarioID
       newDashboard["grid"] = 15;
@@ -495,11 +536,11 @@ class Scenario extends React.Component {
     // TODO do we need this if the dispatches happen in the dialog?
   }
 
-  signalsAutoConf(index){
+  signalsAutoConf(index) {
     let componentConfig = this.state.configs[index];
     // determine apiurl of infrastructure component
     let ic = this.state.ics.find(ic => ic.id === componentConfig.icID)
-    if(!ic.type.includes("villas-node")){
+    if (!ic.type.includes("villas-node")) {
       let message = "Cannot autoconfigure signals for IC type " + ic.type + " of category " + ic.category + ". This is only possible for gateway ICs of type 'VILLASnode'."
       console.warn(message);
 
@@ -516,8 +557,8 @@ class Scenario extends React.Component {
 
     AppDispatcher.dispatch({
       type: 'signals/start-autoconfig',
-      url: ic.apiurl+"/nodes",
-      socketname: splitWebsocketURL[splitWebsocketURL.length -1],
+      url: ic.apiurl + "/nodes",
+      socketname: splitWebsocketURL[splitWebsocketURL.length - 1],
       token: this.state.sessionToken,
       configID: componentConfig.id
     });
@@ -525,7 +566,7 @@ class Scenario extends React.Component {
   }
 
   uuidv4() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
       // eslint-disable-next-line
       var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
@@ -552,6 +593,66 @@ class Scenario extends React.Component {
       }
     }
     return fileList;
+  }
+
+  /* ##############################################
+  * Result modification methods
+  ############################################## */
+
+  closeNewResultModal(data) {
+    this.setState({ newResultModal: false });
+    if (data) {
+      data["scenarioID"] = this.state.scenario.id;
+      AppDispatcher.dispatch({
+        type: 'results/start-add',
+        data,
+        token: this.state.sessionToken,
+      });
+    }
+  }
+
+  closeEditResultsModal() {
+    this.setState({ editResultsModal: false });
+
+    AppDispatcher.dispatch({
+      type: 'results/start-load',
+      token: this.state.sessionToken,
+      param: '?scenarioID=' + this.state.scenario.id
+    })
+  }
+
+  downloadResultData(param) {
+    let toDownload = [];
+
+    if (typeof(param) === 'object') {
+      toDownload = param.resultFileIDs;
+    } else {
+      toDownload.push(param);
+    }
+
+    toDownload.forEach(fileid => {
+      AppDispatcher.dispatch({
+        type: 'files/start-download',
+        data: fileid,
+        token: this.state.sessionToken
+      });
+    });
+
+    this.setState({ filesToDownload: toDownload });
+  }
+
+  closeDeleteResultsModal(confirmDelete) {
+    this.setState({ deleteResultsModal: false });
+
+    if (confirmDelete === false) {
+      return;
+    }
+
+    AppDispatcher.dispatch({
+      type: 'results/start-remove',
+      data: this.state.modalResultsData,
+      token: this.state.sessionToken,
+    });
   }
 
   startPintura(configIndex) {
@@ -585,6 +686,7 @@ class Scenario extends React.Component {
     }
   }
 
+
   /* ##############################################
   * Render method
   ############################################## */
@@ -613,12 +715,50 @@ class Scenario extends React.Component {
 
     const iconStyle = {
       color: '#527984',
-      height: '25px',
-      width: '25px'
+      height: '30px',
+      width: '30px'
     }
 
     if (this.state.scenario === undefined) {
       return <h1>Loading Scenario...</h1>;
+    }
+
+    let resulttable;
+    if (this.state.results && this.state.results.length > 0) {
+      resulttable = <div>
+          <Table data={this.state.results}>
+            <TableColumn title='Result No.' dataKey='id' />
+            <TableColumn title='Description' dataKey='description' />
+            <TableColumn title='Created at' dataKey='createdAt' />
+            <TableColumn title='Last update' dataKey='updatedAt' />
+            <TableColumn
+              title='Files/Data'
+              dataKey='resultFileIDs'
+              linkKey='filebuttons'
+              width='300'
+              onDownload={(index) => this.downloadResultData(index)}
+            />
+            <TableColumn
+              title='Options'
+              width='300'
+              editButton
+              downloadAllButton
+              deleteButton
+              onEdit={index => this.setState({ editResultsModal: true, modalResultsData: this.state.results[index], modalResultsIndex: index })}
+              onDownloadAll={(index) => this.downloadResultData(this.state.results[index])}
+              onDelete={(index) => this.setState({ deleteResultsModal: true, modalResultsData: this.state.results[index], modalResultsIndex: index })}
+            />
+          </Table>
+
+          <EditResultDialog
+            sessionToken={this.state.sessionToken}
+            show={this.state.editResultsModal}
+            files={this.state.files}
+            result={this.state.modalResultsData}
+            scenarioID={this.state.scenario.id}
+            onClose={this.closeEditResultsModal.bind(this)} />
+          <DeleteDialog title="result" name={this.state.modalResultsData.id} show={this.state.deleteResultsModal} onClose={(e) => this.closeDeleteResultsModal(e)} />
+        </div>
     }
 
     return <div className='section'>
@@ -643,7 +783,10 @@ class Scenario extends React.Component {
 
 
       {/*Component Configurations table*/}
-      <h2 style={tableHeadingStyle}>Component Configurations</h2>
+      <h2 style={tableHeadingStyle}>Component Configurations
+        <Button onClick={() => this.addConfig()} style={altButtonStyle}><Icon icon="plus" style={iconStyle} /></Button>
+        <Button onClick={() => this.setState({ importConfigModal: true })} style={altButtonStyle}><Icon icon="upload" style={iconStyle}/></Button>
+      </h2>
       <Table data={this.state.configs}>
         <TableColumn checkbox onChecked={(index, event) => this.onConfigChecked(index, event)} width='30' />
         <TableColumn title='Name' dataKey='name' />
@@ -700,11 +843,6 @@ class Scenario extends React.Component {
           ]} />
       </div>
 
-      <div style={{ float: 'right' }}>
-        <Button onClick={() => this.addConfig()} style={buttonStyle}><Icon icon="plus" /> Component Configuration</Button>
-        <Button onClick={() => this.setState({ importConfigModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
-      </div>
-
       <div style={{ clear: 'both' }} />
 
       <EditConfigDialog
@@ -737,7 +875,10 @@ class Scenario extends React.Component {
       />
 
       {/*Dashboard table*/}
-      <h2 style={tableHeadingStyle}>Dashboards</h2>
+      <h2 style={tableHeadingStyle}>Dashboards
+        <Button onClick={() => this.setState({ newDashboardModal: true })} style={altButtonStyle}><Icon icon="plus" style={iconStyle} /></Button>
+        <Button onClick={() => this.setState({ importDashboardModal: true })} style={altButtonStyle}><Icon icon="upload" style={iconStyle} /></Button>
+      </h2>
       <Table data={this.state.dashboards}>
         <TableColumn title='Name' dataKey='name' link='/dashboards/' linkKey='id' />
         <TableColumn title='Grid' dataKey='grid' />
@@ -755,19 +896,18 @@ class Scenario extends React.Component {
         />
       </Table>
 
-      <div style={{ float: 'right' }}>
-        <Button onClick={() => this.setState({ newDashboardModal: true })} style={buttonStyle}><Icon icon="plus" /> Dashboard</Button>
-        <Button onClick={() => this.setState({ importDashboardModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
-      </div>
-
-      <div style={{ clear: 'both' }} />
-
       <NewDashboardDialog show={this.state.newDashboardModal} onClose={data => this.closeNewDashboardModal(data)} />
       <EditDashboardDialog show={this.state.dashboardEditModal} dashboard={this.state.modalDashboardData} onClose={data => this.closeEditDashboardModal(data)} />
       <ImportDashboardDialog show={this.state.importDashboardModal} onClose={data => this.closeImportDashboardModal(data)} />
 
       <DeleteDialog title="dashboard" name={this.state.modalDashboardData.name} show={this.state.deleteDashboardModal} onClose={(e) => this.closeDeleteDashboardModal(e)} />
 
+      {/*Result table*/}
+      <h2 style={tableHeadingStyle}>Results
+        <Button onClick={() => this.setState({ newResultModal: true })} style={altButtonStyle}><Icon icon="plus" style={iconStyle} /></Button>
+      </h2>
+      {resulttable}
+      <NewResultDialog show={this.state.newResultModal} onClose={data => this.closeNewResultModal(data)} />
 
       {/*Scenario Users table*/}
       <h2 style={tableHeadingStyle}>Users sharing this scenario</h2>
@@ -793,9 +933,9 @@ class Scenario extends React.Component {
           <InputGroup.Append>
             <Button
               type="submit"
-              style={buttonStyle}
+              style={altButtonStyle}
               onClick={() => this.addUser()}>
-              Add User
+              <Icon icon="plus" style={iconStyle} />
             </Button>
           </InputGroup.Append>
         </InputGroup><br /><br />

@@ -38,7 +38,7 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 
 class InfrastructureComponents extends Component {
   static getStores() {
-    return [ InfrastructureComponentStore ];
+    return [ InfrastructureComponentStore];
   }
 
   static statePrio(state) {
@@ -91,7 +91,7 @@ class InfrastructureComponents extends Component {
       token: this.state.sessionToken,
     });
 
-    // Start timer for periodic refresh
+   // Start timer for periodic refresh
     this.timer = window.setInterval(() => this.refresh(), 10000);
   }
 
@@ -109,6 +109,20 @@ class InfrastructureComponents extends Component {
         type: 'ics/start-load',
         token: this.state.sessionToken,
       });
+
+      // get status of VILLASnode and VILLASrelay ICs
+      this.state.ics.forEach(ic => {
+        if ((ic.type === "villas-node" || ic.type === "villas-relay")
+          && ic.apiurl !== '' && ic.apiurl !== undefined && ic.apiurl !== null && !ic.managedexternally) {
+          AppDispatcher.dispatch({
+            type: 'ics/get-status',
+            url: ic.apiurl + "/status",
+            token: this.state.sessionToken,
+            ic: ic
+          });
+        }
+      })
+
     }
   }
 
@@ -218,12 +232,12 @@ class InfrastructureComponents extends Component {
   }
 
   static isICOutdated(component) {
-    if (!component.stateUpdatedAt)
+    if (!component.stateUpdateAt)
       return true;
 
     const fiveMinutes = 5 * 60 * 1000;
 
-    return Date.now() - new Date(component.stateUpdatedAt) > fiveMinutes;
+    return Date.now() - new Date(component.stateUpdateAt) > fiveMinutes;
   }
 
   stateLabelStyle(state, component){
@@ -292,7 +306,7 @@ class InfrastructureComponents extends Component {
   }
 
   stateUpdateModifier(updatedAt) {
-    let dateFormat = 'DD MMM YYYY HH:mm:ss';
+    let dateFormat = 'ddd, DD MMM YYYY HH:mm:ss ZZ';
     let dateTime = moment(updatedAt, dateFormat);
     return dateTime.fromNow()
   }
@@ -302,7 +316,7 @@ class InfrastructureComponents extends Component {
     if(managedExternally){
       return <Icon icon='check' />
     } else {
-      return <Icon icon='times' />
+      return ""
     }
 
   }
@@ -326,16 +340,58 @@ class InfrastructureComponents extends Component {
     }
   }
 
+  openICStatus(ic){
+
+    let index = this.state.ics.indexOf(ic);
+
+    this.setState({ icModal: true, modalIC: ic, modalIndex: index })
+  }
+
+  sendControlCommand(command,ic){
+
+    if(command === "restart"){
+      AppDispatcher.dispatch({
+        type: 'ics/restart',
+        url: ic.apiurl + "/restart",
+        token: this.state.sessionToken,
+      });
+    }else if(command === "shutdown"){
+      AppDispatcher.dispatch({
+        type: 'ics/shutdown',
+        url: ic.apiurl + "/shutdown",
+        token: this.state.sessionToken,
+      });
+    }
+
+  }
+
   render() {
+  
     const buttonStyle = {
       marginLeft: '10px',
-      backgroundColor: '#527984',
-      borderColor: '#527984'
-    };
+      backgroundColor: '#ffffff',
+      borderColor: '#ffffff'
+    }
+
+    const iconStyle = {
+      color: '#527984',
+      height: '30px',
+      width: '30px'
+    }
+
 
     return (
       <div className='section'>
-        <h1>Infrastructure Components</h1>
+        <h1>Infrastructure Components
+        {this.state.currentUser.role === "Admin" ?
+          <span>
+            <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" style={iconStyle} /></Button>
+            <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" style={iconStyle} /></Button>
+          </span>
+          :
+          <span> </span>
+        }
+        </h1>
 
         <Table data={this.state.ics}>
           <TableColumn checkbox onChecked={(index, event) => this.onICChecked(index, event)} width='30' />
@@ -384,21 +440,18 @@ class InfrastructureComponents extends Component {
           <div> </div>
         }
 
-        {this.state.currentUser.role === "Admin" ?
-          <div style={{ float: 'right' }}>
-            <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" /> Infrastructure Component</Button>
-            <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
-          </div>
-          :
-          <div> </div>
-        }
-
         <div style={{ clear: 'both' }} />
 
         <NewICDialog show={this.state.newModal} onClose={data => this.closeNewModal(data)} />
         <EditICDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} ic={this.state.modalIC} />
         <ImportICDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} />
-        <ICDialog show={this.state.icModal} onClose={data => this.closeICModal(data)} ic={this.state.modalIC} token={this.state.sessionToken} />
+        <ICDialog
+          show={this.state.icModal}
+          onClose={data => this.closeICModal(data)}
+          ic={this.state.modalIC}
+          token={this.state.sessionToken}
+          userRole={this.state.currentUser.role}
+          sendControlCommand={(command, ic) => this.sendControlCommand(command, ic)}/>
 
         <DeleteDialog title="infrastructure-component" name={this.state.modalIC.name || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
       </div>

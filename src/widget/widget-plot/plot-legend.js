@@ -20,13 +20,17 @@ import { scaleOrdinal} from 'd3-scale';
 import {schemeCategory10} from 'd3-scale-chromatic'
 
 function Legend(props){
+
   const signal = props.sig;
   const hasScalingFactor = (signal.scalingFactor !== 1);
 
+  const newLineColor = scaleOrdinal(schemeCategory10);
+
+  let color = typeof props.lineColor === "undefined" ? newLineColor(signal.id) : props.lineColor;
 
   if(hasScalingFactor){
     return (
-      <li key={signal.id} className="signal-legend" style={{ color: props.colorScale(signal.id) }}>
+      <li key={signal.id} className="signal-legend" style={{ color: color }}>
       <span className="signal-legend-name">{signal.name}</span>
       <span style={{ marginLeft: '0.3em' }} className="signal-unit">{signal.unit}</span>
       <span style={{ marginLeft: '0.3em' }} className="signal-scale">{signal.scalingFactor}</span>
@@ -34,7 +38,7 @@ function Legend(props){
     )
   } else {
     return (
-      <li key={signal.id} className="signal-legend" style={{ color: props.colorScale(signal.id) }}>
+      <li key={signal.id} className="signal-legend" style={{ color: color }}>
         <span className="signal-legend-name">{signal.name}</span>
         <span style={{ marginLeft: '0.3em' }} className="signal-unit">{signal.unit}</span>
       </li>
@@ -45,14 +49,18 @@ function Legend(props){
 
 class PlotLegend extends React.Component {
   render() {
-    const colorScale = scaleOrdinal(schemeCategory10);
 
     return <div className="plot-legend">
       <ul>
-        {
+        { this.props.lineColors !== undefined && this.props.lineColors != null ? (
           this.props.signals.map( signal =>
-             <Legend key={signal.id} sig={signal} colorScale={colorScale}/>
-        )}
+             <Legend key={signal.id} sig={signal} lineColor={this.props.lineColors[signal.id]}/>
+        )) : (
+          this.props.signals.map( signal =>
+            <Legend key={signal.id} sig={signal} lineColor={"undefined"}/>
+          ))
+        }
+
       </ul>
     </div>;
   }

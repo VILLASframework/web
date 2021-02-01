@@ -19,6 +19,7 @@
 import ScenariosDataManager from './scenarios-data-manager';
 import ArrayStore from '../common/array-store';
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
+import NotificationsFactory from "../common/data-managers/notifications-factory";
 
 
 class ScenarioStore extends ArrayStore{
@@ -89,14 +90,7 @@ class ScenarioStore extends ArrayStore{
 
       case 'scenarios/users-error':
         if (action.error && !action.error.handled && action.error.response) {
-
-          const SCENARIO_USERS_ERROR_NOTIFICATION = {
-            title: 'Failed to modify scenario users ',
-            message: action.error.response.body.message,
-            level: 'error'
-          };
-          NotificationsDataManager.addNotification(SCENARIO_USERS_ERROR_NOTIFICATION);
-
+          NotificationsDataManager.addNotification(NotificationsFactory.SCENARIO_USERS_ERROR(action.error.response.body.message));
         }
         return super.reduce(state, action);
 

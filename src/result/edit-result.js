@@ -16,32 +16,56 @@
  ******************************************************************************/
 
 import React from 'react';
-import {FormGroup, FormControl, Button, Col, ProgressBar} from 'react-bootstrap';
-import Dialog from '../common/dialogs/dialog';
+import {FormGroup, FormControl, FormLabel, Col, Button, ProgressBar} from 'react-bootstrap';
 import AppDispatcher from "../common/app-dispatcher";
+import FileStore from "../file/file-store"
+
+
 import Table from "../common/table";
 import TableColumn from "../common/table-column";
-import EditFileContent from  "./edit-file-content";
 
+import Dialog from '../common/dialogs/dialog';
 
-class EditFilesDialog extends React.Component {
+class EditResultDialog extends React.Component {
   valid = true;
-
 
   constructor(props) {
     super(props);
 
     this.state = {
+      id: 0,
+      description: '',
       uploadFile: null,
       uploadProgress: 0,
-      editModal: false,
-      modalFile: {}
+      files: null,
+      result: null,
+      resultExists: false,
     };
   }
 
   onClose() {
+    if (this.props.onClose != null) {
+      this.props.onClose();
+    }
+  };
 
-    this.props.onClose();
+  handleChange = event => {
+    this.setState({ [event.target.id]: event.target.value });
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.resultExists && this.props.files != prevProps.files) {
+      this.setState({files: FileStore.getState().filter(file => this.state.result.resultFileIDs.includes(file.id))});
+    }
+    if (this.props.result != prevProps.result && Object.keys(this.props.result).length != 0) {
+      this.setState({
+        id: this.props.result.id,
+        description: this.props.result.description,
+        result: this.props.result,
+        resultExists: true,
+        files: FileStore.getState().filter(file => this.props.result.resultFileIDs.includes(file.id)),
+      })
+    }
   }
 
   selectUploadFile(event) {
@@ -49,13 +73,13 @@ class EditFilesDialog extends React.Component {
   };
 
   startFileUpload(){
-    // upload file
     const formData = new FormData();
     formData.append("file", this.state.uploadFile);
 
     AppDispatcher.dispatch({
-      type: 'files/start-upload',
+      type: 'resultfiles/start-upload',
       data: formData,
+      resultID: this.state.id,
       token: this.props.sessionToken,
       progressCallback: this.updateUploadProgress,
       finishedCallback: this.clearProgress,
@@ -65,36 +89,16 @@ class EditFilesDialog extends React.Component {
     this.setState({ uploadFile: null });
   };
 
-  updateUploadProgress = (event) => {
-    if (event.hasOwnProperty("percent")){
-      this.setState({ uploadProgress: parseInt(event.percent.toFixed(), 10) });
-    } else {
-      this.setState({ uploadProgress: 0 });
-    }
-
-  };
-
   clearProgress = (newFileID) => {
-    /*if (this.props.onChange != null) {
-      let event = {}
-      event["target"] = {}
-      event.target["value"] = newFileID
-      this.props.onChange(event);
-    }
-    */
     this.setState({ uploadProgress: 0 });
-
-
   };
 
-  closeEditModal(){
-
-  this.setState({editModal: false});
-  }
+  updateUploadProgress = (event) => {
+    this.setState({ uploadProgress: parseInt(event.percent.toFixed(), 10) });
+  };
 
   deleteFile(index){
-
-    let file = this.props.files[index]
+    let file = this.state.files[index];
     AppDispatcher.dispatch({
       type: 'files/start-remove',
       data: file,
@@ -102,32 +106,25 @@ class EditFilesDialog extends React.Component {
     });
   }
 
-
   render() {
 
-    let fileOptions = [];
-    if (this.props.files.length > 0){
-      fileOptions.push(
-        <option key = {0} default>Select image file</option>
-        )
-      fileOptions.push(this.props.files.map((file, index) => (
-        <option key={index+1} value={file.id}>{file.name}</option>
-      )))
-    } else {
-      fileOptions = <option disabled value style={{ display: 'none' }}>No files found, please upload one first.</option>
-    }
-
-    const progressBarStyle = {
-      marginLeft: '100px',
-      marginTop: '-40px'
-    };
+    return <Dialog show={this.props.show}
+                  title={'Edit Result No. '+this.state.id}
+                  buttonTitle='Close'
+                  onClose={() => this.onClose()}
+                  blendOutCancel = {true}
+                  valid={true}
+                  size = 'lg'>
 
 
-    return (
-      <Dialog show={this.props.show} title="Edit Files of scenario" buttonTitle="Close" onClose={() => this.onClose()} blendOutCancel = {true} valid={true} size = 'lg'>
-        <div>
+      <div>
+        <FormGroup as={Col} controlId='description'>
+          <FormLabel column={false}>Description</FormLabel>
+          <FormControl type='text' placeholder='Enter description' value={this.state.description} onChange={this.handleChange} />
+          <FormControl.Feedback />
+        </FormGroup>
 
-          <Table data={this.props.files}>
+        <Table data={this.state.files}>
             <TableColumn title='ID' dataKey='id'/>
             <TableColumn title='Name' dataKey='name'/>
             <TableColumn title='Size (bytes)' dataKey='size'/>
@@ -136,21 +133,17 @@ class EditFilesDialog extends React.Component {
               title=''
               deleteButton
               onDelete={(index) => this.deleteFile(index)}
-              editButton
-              onEdit={index => this.setState({ editModal: true, modalFile: this.props.files[index] })}
             />
-          </Table>
+        </Table>
 
-          <FormGroup as={Col} >
-            <FormControl
-              disabled={this.props.disabled}
-              type='file'
-              onChange={(event) => this.selectUploadFile(event)} />
-          </FormGroup>
+
+        <FormGroup controlId='resultfile'>
+            <FormLabel>Add Result File</FormLabel>
+            <FormControl type='file' onChange={(event) => this.selectUploadFile(event)} />
+        </FormGroup>
 
           <FormGroup as={Col} >
             <Button
-              style={{ backgroundColor: '#527984', borderColor: '#527984'}}
               disabled={this.state.uploadFile === null}
               onClick={() => this.startFileUpload()}>
               Upload
@@ -163,19 +156,12 @@ class EditFilesDialog extends React.Component {
               animated={true}
               now={this.state.uploadProgress}
               label={this.state.uploadProgress + '%'}
-              style={progressBarStyle}
             />
           </FormGroup>
-          <div style={{ clear: 'both' }} />
-
-          <EditFileContent show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} sessionToken={this.props.sessionToken} file={this.state.modalFile} />
-
-         </div>
-      </Dialog>
-
-
-    );
+      
+      </div>
+    </Dialog>;
   }
 }
 
-export default EditFilesDialog;
+export default EditResultDialog;

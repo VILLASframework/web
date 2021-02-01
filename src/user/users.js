@@ -30,6 +30,7 @@ import EditUserDialog from './edit-user';
 
 import DeleteDialog from '../common/dialogs/delete-dialog';
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
+import NotificationsFactory from "../common/data-managers/notifications-factory";
 
 class Users extends Component {
   static getStores() {
@@ -97,12 +98,8 @@ class Users extends Component {
           token: this.state.token
         });
       } else{
-        const USER_UPDATE_ERROR_NOTIFICATION = {
-          title: 'Update Error ',
-          message: 'New password not correctly confirmed',
-          level: 'error'
-        };
-        NotificationsDataManager.addNotification(USER_UPDATE_ERROR_NOTIFICATION)
+
+        NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR("New password not correctly confirmed"))
       }
     }
   }
@@ -133,9 +130,23 @@ class Users extends Component {
 
   render() {
 
+    const buttonStyle = {
+      marginLeft: '10px',
+      backgroundColor: '#ffffff',
+      borderColor: '#ffffff'
+    }
+
+    const iconStyle = {
+      color: '#527984',
+      height: '30px',
+      width: '30px'
+    }
+
     return (
       <div>
-        <h1>Users</h1>
+        <h1>Users
+        <Button style={buttonStyle} onClick={() => this.setState({ newModal: true })}><Icon icon='plus' style={iconStyle} /></Button>
+        </h1>
 
         <Table data={this.state.users}>
           <TableColumn title='Username' width='150' dataKey='username' />
@@ -145,8 +156,6 @@ class Users extends Component {
           <TableColumn title='Active' dataKey='active' modifier={(active) => this.modifyActiveColumn(active)} />
           <TableColumn width='200' editButton deleteButton onEdit={index => this.setState({ editModal: true, modalData: this.state.users[index] })} onDelete={index => this.setState({ deleteModal: true, modalData: this.state.users[index] })} />
         </Table>
-
-        <Button style={{backgroundColor: '#527984', borderColor: '#527984'}} onClick={() => this.setState({ newModal: true })}><Icon icon='plus' /> User</Button>
 
         <NewUserDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
         <EditUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />

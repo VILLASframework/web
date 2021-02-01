@@ -217,8 +217,6 @@ class EditWidgetColorZonesControl extends React.Component {
               height: '40px'
             }
             
-
-
             return (<Button
               style={style} key={idx} onClick={i => this.editColorZone(idx)} disabled={!this.props.widget.customProperties.colorZones}><Icon icon="pen" /></Button>
             )

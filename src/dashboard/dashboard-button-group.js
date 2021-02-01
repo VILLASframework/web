@@ -39,15 +39,15 @@ class DashboardButtonGroup extends React.Component {
     const buttons = [];
     let key = 0;
 
-    if (this.props.fullscreen) {
+    /*if (this.props.fullscreen) {
       return null;
-    }
+    }*/
 
     if (this.props.editing) {
       buttons.push(
         <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"save"}`}> Save changes </Tooltip>} >
         <Button variant= 'light' size="lg" key={key} onClick={this.props.onSave} style={buttonStyle}>
-          <Icon icon="save" style={iconStyle} /> 
+          <Icon icon="save" style={iconStyle} />
         </Button>
         </OverlayTrigger>,
         <OverlayTrigger key={key++}  placement={'bottom'} overlay={<Tooltip id={`tooltip-${"cancel"}`}> Discard changes </Tooltip>} >
@@ -61,8 +61,16 @@ class DashboardButtonGroup extends React.Component {
         buttons.push(
           <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"expand"}`}> Change to fullscreen view </Tooltip>} >
           <Button key={key} variant= 'light' size="lg" onClick={this.props.onFullscreen} style={buttonStyle}>
-            <Icon icon="expand" style={iconStyle}/> 
+            <Icon icon="expand" style={iconStyle}/>
           </Button>
+          </OverlayTrigger>
+        );
+      } else {
+        buttons.push(
+          <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"compress"}`}> Back to normal view </Tooltip>} >
+            <Button key={key} variant= 'light' size="lg" onClick={this.props.onFullscreen} style={buttonStyle}>
+              <Icon icon="compress" style={iconStyle}/>
+            </Button>
           </OverlayTrigger>
         );
       }
@@ -71,7 +79,7 @@ class DashboardButtonGroup extends React.Component {
         buttons.push(
           <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"play"}`}> Continue simulation </Tooltip>} >
           <Button key={key} variant= 'light' size="lg" onClick={this.props.onUnpause} style={buttonStyle}>
-            <Icon icon="play" style={iconStyle}/> 
+            <Icon icon="play" style={iconStyle}/>
           </Button>
           </OverlayTrigger>
         );
@@ -79,44 +87,49 @@ class DashboardButtonGroup extends React.Component {
         buttons.push(
           <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"pause"}`}> Pause simulation </Tooltip>} >
           <Button key={key} variant= 'light' size="lg" onClick={this.props.onPause} style={buttonStyle}>
-            <Icon icon="pause" style={iconStyle}/> 
+            <Icon icon="pause" style={iconStyle}/>
           </Button>
           </OverlayTrigger>
         );
       }
 
-      buttons.push(
-        <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete files of scenario </Tooltip>} >
-        <Button key={key} variant= 'light' size="lg" onClick={this.props.onEditFiles} style={buttonStyle}>
-          <Icon icon="file" style={iconStyle}/>
-        </Button>
-        </OverlayTrigger>
-      );
+      if (this.props.fullscreen !== true) {
+        buttons.push(
+          <OverlayTrigger key={key++} placement={'bottom'}
+                          overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete files of scenario </Tooltip>}>
+            <Button key={key} variant='light' size="lg" onClick={this.props.onEditFiles} style={buttonStyle}>
+              <Icon icon="file" style={iconStyle}/>
+            </Button>
+          </OverlayTrigger>
+        );
 
-      buttons.push(
-        <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete input signals </Tooltip>} >
-        <Button key={key} variant= 'light' size="lg" onClick={this.props.onEditInputSignals} style={buttonStyle}>
-          <Icon icon="sign-in-alt" style={iconStyle}/>
-        </Button>
-        </OverlayTrigger>
-      );
+        buttons.push(
+          <OverlayTrigger key={key++} placement={'bottom'}
+                          overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete input signals </Tooltip>}>
+            <Button key={key} variant='light' size="lg" onClick={this.props.onEditInputSignals} style={buttonStyle}>
+              <Icon icon="sign-in-alt" style={iconStyle}/>
+            </Button>
+          </OverlayTrigger>
+        );
 
-      buttons.push(
-        <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete output signals </Tooltip>} >
-        <Button key={key} variant= 'light' size="lg" onClick={this.props.onEditOutputSignals} style={buttonStyle}>
-          <Icon icon="sign-out-alt" style={iconStyle}/>
-        </Button>
-        </OverlayTrigger>
-      );
+        buttons.push(
+          <OverlayTrigger key={key++} placement={'bottom'}
+                          overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete output signals </Tooltip>}>
+            <Button key={key} variant='light' size="lg" onClick={this.props.onEditOutputSignals} style={buttonStyle}>
+              <Icon icon="sign-out-alt" style={iconStyle}/>
+            </Button>
+          </OverlayTrigger>
+        );
 
-      buttons.push(
-        <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"layout"}`}> Add widgets and edit layout </Tooltip>} >
-        <Button key={key} variant= 'light' size="lg" onClick={this.props.onEdit} style={buttonStyle}>
-          <Icon icon="pen" style={iconStyle} /> 
-        </Button>
-        </OverlayTrigger>
-      );
-
+        buttons.push(
+          <OverlayTrigger key={key++} placement={'bottom'}
+                          overlay={<Tooltip id={`tooltip-${"layout"}`}> Add widgets and edit layout </Tooltip>}>
+            <Button key={key} variant='light' size="lg" onClick={this.props.onEdit} style={buttonStyle}>
+              <Icon icon="pen" style={iconStyle}/>
+            </Button>
+          </OverlayTrigger>
+        );
+      }
     }
 
     return <div className='section-buttons-group-right'>

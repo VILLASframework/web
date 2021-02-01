@@ -89,6 +89,7 @@ class WidgetFactory {
                 widget.customProperties.yMin = 0;
                 widget.customProperties.yMax = 10;
                 widget.customProperties.yUseMinMax = false;
+                widget.customProperties.lineColors = [];
                 break;
             case 'Table':
                 widget.minWidth = 200;
@@ -122,8 +123,10 @@ class WidgetFactory {
                 widget.minHeight = 50;
                 widget.width = 100;
                 widget.height = 100;
-                widget.customProperties.background_color = '#4287f5';
+                widget.customProperties.background_color = '#527984';
                 widget.customProperties.font_color = '#4287f5';
+                widget.customProperties.border_color = '#4287f5';
+                widget.customProperties.background_color_opacity = 1;
                 widget.customProperties.on_value = 1;
                 widget.customProperties.off_value = 0;
                 widget.customProperties.toggle = false;
@@ -165,6 +168,7 @@ class WidgetFactory {
                 widget.customProperties.valueMin = 0;
                 widget.customProperties.valueMax = 1;
                 widget.customProperties.valueUseMinMax = false;
+                widget.customProperties.lockAspect = true;
                 break;
             case 'Box':
                 widget.minWidth = 50;
@@ -193,6 +197,20 @@ class WidgetFactory {
                 widget.customProperties.border_width = 2;
                 widget.customProperties.rotation = 0;
                 widget.customProperties.lockAspect = true;
+                break;
+
+            case 'TimeOffset':
+                widget.minWidth = 20;
+                widget.minHeight = 20;
+                widget.width = 100;
+                widget.height = 40;
+                widget.customProperties.threshold_yellow = 1;
+                widget.customProperties.threshold_red = 2;
+                widget.customProperties.icID = -1;
+                widget.customProperties.horizontal = true;
+                widget.customProperties.showOffset = true;
+                widget.customProperties.lockAspect = true;
+                widget.customProperties.showName = true;
                 break;
 
             default:

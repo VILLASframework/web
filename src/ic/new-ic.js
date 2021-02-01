@@ -28,10 +28,13 @@ class NewICDialog extends React.Component {
     this.state = {
       name: '',
       websocketurl: '',
+      apiurl: '',
       uuid: '',
       type: '',
       category: '',
       managedexternally: false,
+      description: '',
+      location: ''
     };
   }
 
@@ -44,10 +47,16 @@ class NewICDialog extends React.Component {
           category: this.state.category,
           uuid: this.state.uuid,
           managedexternally: this.state.managedexternally,
+          location: this.state.location,
+          description: this.state.description
         };
 
         if (this.state.websocketurl != null && this.state.websocketurl !== "" && this.state.websocketurl !== 'http://') {
           data.websocketurl = this.state.websocketurl;
+        }
+
+        if (this.state.apiurl != null && this.state.apiurl !== "" && this.state.apiurl !== 'http://') {
+          data.apiurl = this.state.apiurl;
         }
 
         this.props.onClose(data);
@@ -69,7 +78,7 @@ class NewICDialog extends React.Component {
   }
 
   resetState() {
-    this.setState({ name: '', websocketurl: 'http://', uuid: this.uuidv4(), type: '', category: '', managedexternally: false});
+    this.setState({ name: '', websocketurl: 'http://', apiurl: 'http://', uuid: this.uuidv4(), type: '', category: '', managedexternally: false, description: '', location: ''});
   }
 
   validateForm(target) {
@@ -120,7 +129,7 @@ class NewICDialog extends React.Component {
     let typeOptions = [];
     switch(this.state.category){
       case "simulator":
-        typeOptions = ["dummy","generic","dpsim","rtlab","rscad"];
+        typeOptions = ["dummy","generic","dpsim","rtlab","rscad","opalrt"];
           break;
       case "controller":
         typeOptions = ["kubernetes","villas-controller"];
