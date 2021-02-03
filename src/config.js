@@ -24,8 +24,9 @@ const config = {
       mail: 'stvogel@eonerc.rwth-aachen.de'
     },
     externalAuth: true,
-    loginURL: 'http://localhost:4180/oauth2/start',
-    provider: 'KeyCloak'
+    loginURL: 'http://localhost:4180/oauth2/start?rd=http://localhost:3000/login/complete',
+    provider: 'KeyCloak',
+    disableVillasLogin: false,
 };
 
 export default config

@@ -29,7 +29,8 @@ import Dashboard from './dashboard/dashboard'
 import InfrastructureComponents from './ic/ics';
 import Users from './user/users';
 import User from "./user/user";
-import Config from './config.js';
+import Config from './config';
+import LoginComplete from './user/login-complete'
 
 
 class Root extends React.Component {
@@ -37,10 +38,11 @@ class Root extends React.Component {
     return (
       <BrowserRouter>
         <Switch>
+          <Route path='/login/complete' component={LoginComplete} />
           <Route
             path='/login'
             render={(props) => (
-              <LoginSelect loginURL={Config.loginURL} provider={Config.provider}/>
+              <LoginSelect loginURL={Config.loginURL} provider={Config.provider} disableVillasLogin={Config.disableVillasLogin}/>
             )}
           />
           <Route path='/villaslogin' component={Login} />

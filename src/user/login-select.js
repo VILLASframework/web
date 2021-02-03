@@ -37,7 +37,7 @@ class LoginSelect extends Component {
         <Header />
         <div className="login-select">
           <Form>
-            <Button variant="primary" block onClick={this.villaswebLogin}>VillasWeb login</Button>
+            <Button variant="primary" block onClick={this.villaswebLogin} disabled={this.props.disableVillasLogin}>VillasWeb login</Button>
             <br />
             <Button variant="primary" block onClick={e => window.location = this.props.loginURL }>{this.props.provider} login</Button>
           </Form>

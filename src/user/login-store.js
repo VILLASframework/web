@@ -40,6 +40,10 @@ class LoginStore extends ReduceStore {
         UsersDataManager.login(action.username, action.password);
         return Object.assign({}, state, { loginMessage: null });
 
+      case 'users/extlogin':
+        UsersDataManager.login();
+        return Object.assign({}, state, { loginMessage: null });
+
       case 'users/logout':
         // disconnect from all infrastructure components
         ICDataDataManager.closeAll();
