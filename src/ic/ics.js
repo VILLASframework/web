@@ -74,9 +74,18 @@ class InfrastructureComponents extends Component {
       }
     });
 
+    let externalICs = ics.find(ic => ic.managedexternally === true)
+
+    let numberOfExternalICs = 0
+    if (externalICs !== undefined && !Array.isArray(externalICs)) {
+      externalICs = [externalICs];
+      numberOfExternalICs = externalICs.length;
+    }
+
     return {
       sessionToken: localStorage.getItem("token"),
       ics: ics,
+      numberOfExternalICs,
       modalIC: {},
       deleteModal: false,
       icModal: false,
@@ -305,13 +314,13 @@ class InfrastructureComponents extends Component {
     return style.join(' ')
   }
 
-  stateUpdateModifier(updatedAt) {
+  stateUpdateModifier(updatedAt, component) {
     let dateFormat = 'ddd, DD MMM YYYY HH:mm:ss ZZ';
     let dateTime = moment(updatedAt, dateFormat);
     return dateTime.fromNow()
   }
 
-  modifyManagedExternallyColumn(managedExternally){
+  modifyManagedExternallyColumn(managedExternally, component){
 
     if(managedExternally){
       return <Icon icon='check' />
@@ -321,7 +330,7 @@ class InfrastructureComponents extends Component {
 
   }
 
-  modifyUptimeColumn(uptime){
+  modifyUptimeColumn(uptime, component){
     if(uptime >= 0){
       return <span>{uptime + "s"}</span>
     }
@@ -330,20 +339,13 @@ class InfrastructureComponents extends Component {
     }
   }
 
-  modifyNameColumn(name){
-    let ic = this.state.ics.find(ic => ic.name === name);
-
-    if(ic.type === "villas-node" || ic.type === "villas-relay" || ic.managedexternally){
-      return <Button variant="link" onClick={() => this.openICStatus(ic)}>{name}</Button>    }
-    else{
-      return <span>{name}</span>
-    }
+  modifyNameColumn(name, component){
+    let index = this.state.ics.indexOf(component);
+    return <Button variant="link" style={{color: '#047cab'}} onClick={() => this.openICStatus(component)}>{name}</Button>
   }
 
   openICStatus(ic){
-
     let index = this.state.ics.indexOf(ic);
-
     this.setState({ icModal: true, modalIC: ic, modalIndex: index })
   }
 
@@ -366,36 +368,70 @@ class InfrastructureComponents extends Component {
   }
 
   render() {
+
     const buttonStyle = {
       marginLeft: '10px'
     };
 
     return (
       <div className='section'>
-        <h1>Infrastructure Components</h1>
-
+        <h1>Infrastructure Components
+          {this.state.currentUser.role === "Admin" ?
+            (<span>
+              <Button onClick={() => this.setState({newModal: true})} style={buttonStyle}><Icon icon="plus"
+                                                                                                /></Button>
+              <Button onClick={() => this.setState({importModal: true})} style={buttonStyle}><Icon icon="upload"
+                                                                                                   /></Button>
+              </span>)
+            :
+            (<span> </span>)
+          }
+        </h1>
         <Table data={this.state.ics}>
-          <TableColumn checkbox onChecked={(index, event) => this.onICChecked(index, event)} width='30' />
-          <TableColumn title='Name' dataKeys={['name', 'rawProperties.name']} modifier={(name) => this.modifyNameColumn(name)}/>
-          <TableColumn title='State' labelKey='state' tooltipKey='error' labelStyle={(state, component) => this.stateLabelStyle(state, component)} />
-          <TableColumn title='Category' dataKeys={['category', 'rawProperties.category']} />
-          <TableColumn title='Type' dataKeys={['type', 'rawProperties.type']} />
-          <TableColumn title='Managed externally' dataKey='managedexternally' modifier={(managedexternally) => this.modifyManagedExternallyColumn(managedexternally)} width='105' />
-          <TableColumn title='Uptime' dataKey='uptime' modifier={(uptime) => this.modifyUptimeColumn(uptime)}/>
-          <TableColumn title='Location' dataKey='location' />
-          {/* <TableColumn title='Realm' dataKeys={['properties.realm', 'rawProperties.realm']} /> */}
-          <TableColumn title='WebSocket URL' dataKey='websocketurl' />
-          <TableColumn title='API URL' dataKey='apiurl' />
-          <TableColumn title='Last Update' dataKey='stateUpdateAt' modifier={(stateUpdateAt) => this.stateUpdateModifier(stateUpdateAt)} />
+          <TableColumn
+            checkbox
+            onChecked={(index, event) => this.onICChecked(index, event)}
+            width='30'
+          />
+          <TableColumn
+            title='Name'
+            dataKeys={['name']}
+            modifier={(name, component) => this.modifyNameColumn(name, component)}
+          />
+          <TableColumn
+            title='State'
+            labelKey='state'
+            tooltipKey='error'
+            labelStyle={(state, component) => this.stateLabelStyle(state, component)}
+          />
+          <TableColumn
+            title='Category'
+            dataKeys={['category']}
+          />
+          <TableColumn
+            title='Type'
+            dataKeys={['type']}
+          />
+          <TableColumn
+            title='Uptime'
+            dataKey='uptime'
+            modifier={(uptime, component) => this.modifyUptimeColumn(uptime, component)}
+          />
+          <TableColumn
+            title='Last Update'
+            dataKey='stateUpdateAt'
+            modifier={(stateUpdateAt, component) => this.stateUpdateModifier(stateUpdateAt, component)}
+          />
+
           {this.state.currentUser.role === "Admin" ?
           <TableColumn
             width='200'
             editButton
             exportButton
             deleteButton
-            onEdit={index => this.setState({ editModal: true, modalIC: this.state.ics[index], modalIndex: index })}
+            onEdit={index => this.setState({editModal: true, modalIC: this.state.ics[index], modalIndex: index})}
             onExport={index => this.exportIC(index)}
-            onDelete={index => this.setState({ deleteModal: true, modalIC: this.state.ics[index], modalIndex: index })}
+            onDelete={index => this.setState({deleteModal: true, modalIC: this.state.ics[index], modalIndex: index})}
           />
           :
           <TableColumn
@@ -405,29 +441,21 @@ class InfrastructureComponents extends Component {
           />
           }
         </Table>
-        {this.state.currentUser.role === "Admin" ?
-          <div style={{ float: 'left' }}>
+
+        {this.state.currentUser.role === "Admin" && this.state.numberOfExternalICs > 0 ?
+          <div style={{float: 'left'}}>
             <ICAction
               runDisabled={this.state.selectedICs.length === 0}
               runAction={action => this.runAction(action)}
               actions={[
-                { id: '-1', title: 'Select command', data: { action: 'none' } },
-                { id: '0', title: 'Reset', data: { action: 'reset' } },
-                { id: '1', title: 'Shutdown', data: { action: 'shutdown' } },
-                ]}
+                {id: '-1', title: 'Select command', data: {action: 'none'}},
+                {id: '0', title: 'Reset', data: {action: 'reset'}},
+                {id: '1', title: 'Shutdown', data: {action: 'shutdown'}},
+              ]}
             />
           </div>
           :
-          <div> </div>
-        }
-
-        {this.state.currentUser.role === "Admin" ?
-          <div style={{ float: 'right' }}>
-            <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" /> Infrastructure Component</Button>
-            <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
-          </div>
-          :
-          <div> </div>
+          <div/>
         }
 
         <div style={{ clear: 'both' }} />
