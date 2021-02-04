@@ -116,12 +116,15 @@ class CustomTable extends Component {
 
     if (child.props.checkbox) {
       const checkboxKey = child.props.checkboxKey;
-
+      let isDisabled = false;
+      if (child.props.checkboxDisabled != null){
+        isDisabled = !child.props.checkboxDisabled(index)
+      }
       cell.push(
         <FormCheck
           className="table-control-checkbox"
           inline
-          disabled = {!data.managedexternally}
+          disabled = {isDisabled}
           checked={checkboxKey ? data[checkboxKey] : null}
           onChange={e => child.props.onChecked(index, e)}
         />);

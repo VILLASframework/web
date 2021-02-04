@@ -372,6 +372,11 @@ class InfrastructureComponents extends Component {
 
   }
 
+  isExternalIC(index){
+    let ic = this.state.ics[index]
+    return ic.managedexternally
+  }
+
   render() {
 
     const buttonStyle = {
@@ -395,6 +400,7 @@ class InfrastructureComponents extends Component {
         <Table data={this.state.ics}>
           <TableColumn
             checkbox
+            checkboxDisabled={(index) => this.isExternalIC(index)}
             onChecked={(index, event) => this.onICChecked(index, event)}
             width='30'
           />

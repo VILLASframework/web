@@ -103,6 +103,7 @@ class Scenario extends React.Component {
       files: FileStore.getState().filter(file => file.scenarioID === parseInt(props.match.params.scenario, 10)),
 
       ics: ICStore.getState(),
+      ExternalICInUse: false,
 
       deleteConfigModal: false,
       importConfigModal: false,
@@ -359,6 +360,29 @@ class Scenario extends React.Component {
 
     selectedConfigs.push(index);
     this.setState({ selectedConfigs: selectedConfigs });
+  }
+
+  usesExternalIC(index){
+    let icID = this.state.configs[index].icID;
+
+    let ic = null;
+    for (let component of this.state.ics) {
+      if (component.id === this.state.configs[index].icID) {
+        ic = component;
+      }
+    }
+
+    if (ic == null) {
+      return false;
+    }
+
+    if (ic.managedexternally === true){
+      this.setState({ExternalICInUse: true})
+      return true
+    }
+
+    return false
+
   }
 
   runAction(action, delay) {
@@ -780,7 +804,11 @@ class Scenario extends React.Component {
         <Button onClick={() => this.setState({ importConfigModal: true })} style={buttonStyle}><Icon icon="upload" /></Button>
       </h2>
       <Table data={this.state.configs}>
-        <TableColumn checkbox onChecked={(index, event) => this.onConfigChecked(index, event)} width='30' />
+        <TableColumn
+          checkbox
+          checkboxDisabled={(index) => this.usesExternalIC(index)}
+          onChecked={(index, event) => this.onConfigChecked(index, event)}
+          width='30' />
         <TableColumn title='Name' dataKey='name' />
         <TableColumn title='Configuration file(s)' dataKey='fileIDs' modifier={(fileIDs) => this.getListOfFiles(fileIDs, ['json', 'JSON'])} />
         <TableColumn
@@ -822,19 +850,21 @@ class Scenario extends React.Component {
         />
       </Table>
 
-      <div style={{ float: 'left' }}>
-        <ICAction
-          runDisabled={this.state.selectedConfigs.length === 0}
-          runAction={(action, delay) => this.runAction(action, delay)}
-          actions={[
-            { id: '-1', title: 'Select command', data: { action: 'none' } },
-            { id: '0', title: 'Start', data: { action: 'start' } },
-            { id: '1', title: 'Stop', data: { action: 'stop' } },
-            { id: '2', title: 'Pause', data: { action: 'pause' } },
-            { id: '3', title: 'Resume', data: { action: 'resume' } }
-          ]} />
-      </div>
-
+      { this.state.ExternalICInUse ? (
+        <div style={{float: 'left'}}>
+          <ICAction
+            runDisabled={this.state.selectedConfigs.length === 0}
+            runAction={(action, delay) => this.runAction(action, delay)}
+            actions={[
+              {id: '-1', title: 'Select command', data: {action: 'none'}},
+              {id: '0', title: 'Start', data: {action: 'start'}},
+              {id: '1', title: 'Stop', data: {action: 'stop'}},
+              {id: '2', title: 'Pause', data: {action: 'pause'}},
+              {id: '3', title: 'Resume', data: {action: 'resume'}}
+            ]}/>
+        </div>
+        ) : (<div/>)
+      }
       <div style={{ clear: 'both' }} />
 
       <EditConfigDialog
