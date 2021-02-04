@@ -84,6 +84,7 @@ class InfrastructureComponentStore extends ArrayStore {
         let tempIC = action.ic;
         if(!tempIC.managedexternally){
           tempIC.state = action.data.state;
+          tempIC.uptime = action.data.time_now - action.data.time_started;
           tempIC.statusupdateraw = action.data;
           AppDispatcher.dispatch({
             type: 'ics/start-edit',
