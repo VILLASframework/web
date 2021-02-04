@@ -29,6 +29,7 @@
     "libcimsvg": "git+https://git.rwth-aachen.de/acs/public/cim/pintura-npm-package.git",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
+    "moment-duration-format": "^2.3.2",
     "multiselect-react-dropdown": "^1.6.2",
     "node-sass": "^4.14.1",
     "popper.js": "^1.16.1",

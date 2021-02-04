@@ -22,6 +22,7 @@ import FileSaver from 'file-saver';
 import _ from 'lodash';
 import moment from 'moment'
 
+
 import AppDispatcher from '../common/app-dispatcher';
 import InfrastructureComponentStore from './ic-store';
 
@@ -332,7 +333,11 @@ class InfrastructureComponents extends Component {
 
   modifyUptimeColumn(uptime, component){
     if(uptime >= 0){
-      return <span>{uptime + "s"}</span>
+      let momentDurationFormatSetup = require("moment-duration-format");
+      momentDurationFormatSetup(moment)
+
+      let timeString = moment.duration(uptime, "seconds").format();
+      return <span>{timeString}</span>
     }
     else{
       return <Badge variant="secondary">Unknown</Badge>
