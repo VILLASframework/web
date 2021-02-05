@@ -64,7 +64,8 @@ class LoginComplete extends React.Component {
   }
 
   componentDidUnmount() {
-    clearInterval(this.timer);
+    console.log("component unmounting");
+    //clearInterval(this.timer);
   }
 
   startTimer() {
@@ -75,8 +76,9 @@ class LoginComplete extends React.Component {
   }
 
   countDown() {
-    console.log("count down");
+    console.log("count down, seconds:");
     let seconds = this.state.secondsToWait - 1;
+    console.log(seconds);
     this.setState({secondsToWait: seconds});
 
     // waiting time over, stop counting down
@@ -86,6 +88,8 @@ class LoginComplete extends React.Component {
   }
 
   render() {
+    console.log("render, seconds to wait:");
+    console.log(this.state.secondsToWait);
     if (this.state.currentUser !== null && this.state.currentUser !== "") {
       return (<Redirect to="/home" />);
     }
