@@ -26,7 +26,7 @@ class UsersDataManager extends RestDataManager {
 
   login(username, password) {
     if (username && password) {
-      RestAPI.post(this.makeURL('/authenticate'), { username: username, password: password }).then(response => {
+      RestAPI.post(this.makeURL('/authenticate/internal'), { username: username, password: password }).then(response => {
         AppDispatcher.dispatch({
           type: 'users/logged-in',
           token: response.token,
@@ -39,7 +39,7 @@ class UsersDataManager extends RestDataManager {
         });
       });
     } else { // external authentication
-      RestAPI.post(this.makeURL('/authenticate'),).then(response => {
+      RestAPI.post(this.makeURL('/authenticate/external'),).then(response => {
         AppDispatcher.dispatch({
           type: 'users/logged-in',
           token: response.token,
