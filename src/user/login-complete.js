@@ -28,6 +28,7 @@ import NotificationsFactory from "../common/data-managers/notifications-factory"
 
 class LoginComplete extends React.Component {
   constructor(props) {
+    console.log("LoginComplete constructor");
     super(props);
     
     AppDispatcher.dispatch({
@@ -38,7 +39,7 @@ class LoginComplete extends React.Component {
       loginMessage: '',
       token: '',
       currentUser: '',
-      secondsToWait: 5,
+      secondsToWait: 99,
     }
 
     this.timer = 0;
@@ -46,7 +47,12 @@ class LoginComplete extends React.Component {
     this.countDown = this.countDown.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
 
+    
+  }
+
+  componentDidMount() {
     this.startTimer();
+    this.setState({secondsToWait: 5});
   }
 
 
