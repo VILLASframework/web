@@ -63,9 +63,9 @@ class LoginComplete extends React.Component {
     }
   }
 
-  componentDidUnmount() {
+  stopTimer() {
     console.log("component unmounting");
-    //clearInterval(this.timer);
+    clearInterval(this.timer);
   }
 
   startTimer() {
@@ -93,13 +93,15 @@ class LoginComplete extends React.Component {
     if (this.state.currentUser && this.state.currentUser !== "") {
       console.log("user:");
       console.log(this.state.currentUser);
+      this.stopTimer();
       return (<Redirect to="/home" />);
     }
-    else if (this.state.secondsToWait > 0) {
-      return (<p>Authenticating.. {this.state.secondsToWait}</p>);
-    } else { // authenticating failed
-      //NotificationsFactory.LOAD_ERROR('Backend did not return user after external auth');
+    else if (this.state.secondsToWait == 0) {
+      this.stopTimer();
       return (<Redirect to="/login" />);
+    } else { // authenticating failed
+      //NotificationsFactory.LOAD_ERROR('Backend did not return user after external auth');    
+      return (<p>Authenticating.. {this.state.secondsToWait}</p>);
     }
   }
 }

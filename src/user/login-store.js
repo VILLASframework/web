@@ -58,6 +58,8 @@ class LoginStore extends ReduceStore {
         console.log(action);
         localStorage.setItem('token', action.token);
         localStorage.setItem('currentUser', JSON.stringify(action.currentUser));
+        console.log(localStorage.getItem('token'));
+        console.log(localStorage.getItem("currentUser"));
 
         return Object.assign({}, state, { token: action.token, currentUser: action.currentUser});
 
