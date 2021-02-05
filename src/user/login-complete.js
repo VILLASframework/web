@@ -44,6 +44,7 @@ class LoginComplete extends React.Component {
     this.timer = 0;
     this.startTimer = this.startTimer.bind(this);
     this.countDown = this.countDown.bind(this);
+    this.stopTimer = this.stopTimer.bind(this);
 
     this.startTimer();
   }
@@ -64,7 +65,7 @@ class LoginComplete extends React.Component {
   }
 
   stopTimer() {
-    console.log("component unmounting");
+    console.log("stop timer");
     clearInterval(this.timer);
   }
 
