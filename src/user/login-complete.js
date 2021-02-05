@@ -90,7 +90,9 @@ class LoginComplete extends React.Component {
   render() {
     console.log("render, seconds to wait:");
     console.log(this.state.secondsToWait);
-    if (this.state.currentUser !== null && this.state.currentUser !== "") {
+    if (this.state.currentUser && this.state.currentUser !== "") {
+      console.log("user:");
+      console.log(this.state.currentUser);
       return (<Redirect to="/home" />);
     }
     else if (this.state.secondsToWait > 0) {

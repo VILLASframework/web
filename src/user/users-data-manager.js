@@ -40,6 +40,7 @@ class UsersDataManager extends RestDataManager {
       });
     } else { // external authentication
       RestAPI.post(this.makeURL('/authenticate/external'),).then(response => {
+        console.log(response);
         AppDispatcher.dispatch({
           type: 'users/logged-in',
           token: response.token,

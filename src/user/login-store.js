@@ -55,6 +55,7 @@ class LoginStore extends ReduceStore {
 
       case 'users/logged-in':
         // save login in local storage
+        console.log(action);
         localStorage.setItem('token', action.token);
         localStorage.setItem('currentUser', JSON.stringify(action.currentUser));
 
