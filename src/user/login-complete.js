@@ -19,6 +19,8 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import AppDispatcher from '../common/app-dispatcher';
 import LoginStore from './login-store'
+import { Container } from 'flux/utils';
+
 import NotificationsDataManager from '../common/data-managers/notifications-data-manager';
 import NotificationsFactory from "../common/data-managers/notifications-factory";
 
@@ -97,4 +99,5 @@ class LoginComplete extends React.Component {
   }
 }
 
+let fluxContainerConverter = require('../common/FluxContainerConverter');
 export default Container.create(fluxContainerConverter.convert(LoginComplete));
