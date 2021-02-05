@@ -86,7 +86,6 @@ class LoginComplete extends React.Component {
   }
 
   render() {
-    const { user } = this.state.currentUser;
     if (this.state.currentUser !== null && this.state.currentUser !== "") {
       return (<Redirect to="/home" />);
     }
