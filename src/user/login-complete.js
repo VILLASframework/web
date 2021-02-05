@@ -20,6 +20,7 @@ import { Redirect } from 'react-router-dom';
 import AppDispatcher from '../common/app-dispatcher';
 import LoginStore from './login-store'
 import NotificationsDataManager from '../common/data-managers/notifications-data-manager';
+import NotificationsFactory from "../common/data-managers/notifications-factory";
 
 
 
@@ -35,8 +36,16 @@ class LoginComplete extends React.Component {
       loginMessage: '',
       token: '',
       currentUser: '',
+      secondsToWait: 5,
     }
+
+    this.timer = 0;
+    this.startTimer = this.startTimer.bind(this);
+    this.countDown = this.countDown.bind(this);
+
+    this.startTimer();
   }
+
 
   static getStores(){
     return [LoginStore]
@@ -52,8 +61,26 @@ class LoginComplete extends React.Component {
     }
   }
 
-  componentDidMount() {
-    NotificationsDataManager.setSystem(this.refs.notificationSystem);
+  componentDidUnmount() {
+    clearInterval(this.timer);
+  }
+
+  startTimer() {
+    if (this.timer == 0 && this.state.secondsToWait > 0) {
+      // call function 'countDown' every 1000ms
+      this.timer = setInterval(this.countDown, 1000);
+    }
+  }
+
+  countDown() {
+    console.log("count down");
+    let seconds = this.state.secondsToWait - 1;
+    this.setState({secondsToWait: seconds});
+
+    // waiting time over, stop counting down
+    if (seconds == 0) {
+      clearInterval(this.timer);
+    }
   }
 
   render() {
@@ -61,10 +88,13 @@ class LoginComplete extends React.Component {
     if (this.state.currentUser !== null && this.state.currentUser !== "") {
       return (<Redirect to="/home" />);
     }
-    else {
-      return (<p>Authenticating..</p>);
+    else if (this.state.secondsToWait > 0) {
+      return (<p>Authenticating.. {this.state.secondsToWait}</p>);
+    } else { // authenticating failed
+      //NotificationsFactory.LOAD_ERROR('Backend did not return user after external auth');
+      return (<Redirect to="/login" />);
     }
   }
 }
 
-export default LoginComplete;
+export default Container.create(fluxContainerConverter.convert(LoginComplete));
