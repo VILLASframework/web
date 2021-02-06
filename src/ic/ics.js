@@ -136,7 +136,6 @@ class InfrastructureComponents extends Component {
     }
   }
 
-
   closeNewModal(data) {
     this.setState({ newModal : false });
 
@@ -230,8 +229,10 @@ class InfrastructureComponents extends Component {
     this.setState({ selectedICs: selectedICs });
   }
 
-  runAction(action) {
+  runAction(action, when) {
     for (let index of this.state.selectedICs) {
+      action.when = when;
+
       AppDispatcher.dispatch({
         type: 'ics/start-action',
         ic: this.state.ics[index],
@@ -251,7 +252,6 @@ class InfrastructureComponents extends Component {
   }
 
   stateLabelStyle(state, component){
-
     var style = [ 'badge' ];
 
     if (InfrastructureComponents.isICOutdated(component) && state !== 'shutdown') {
@@ -296,7 +296,6 @@ class InfrastructureComponents extends Component {
       default:
         style.push('badge-default');
 
-
         /* Possible states of ICs
         *   'error':        ['resetting', 'error'],
             'idle':         ['resetting', 'error', 'idle', 'starting', 'shuttingdown'],
@@ -322,13 +321,11 @@ class InfrastructureComponents extends Component {
   }
 
   modifyManagedExternallyColumn(managedExternally, component){
-
     if(managedExternally){
       return <Icon icon='check' />
     } else {
       return ""
     }
-
   }
 
   modifyUptimeColumn(uptime, component){
@@ -336,7 +333,7 @@ class InfrastructureComponents extends Component {
       let momentDurationFormatSetup = require("moment-duration-format");
       momentDurationFormatSetup(moment)
 
-      let timeString = moment.duration(uptime, "seconds").format();
+      let timeString = moment.duration(uptime, "seconds").humanize();
       return <span>{timeString}</span>
     }
     else{
@@ -355,7 +352,6 @@ class InfrastructureComponents extends Component {
   }
 
   sendControlCommand(command,ic){
-
     if(command === "restart"){
       AppDispatcher.dispatch({
         type: 'ics/restart',
@@ -369,7 +365,6 @@ class InfrastructureComponents extends Component {
         token: this.state.sessionToken,
       });
     }
-
   }
 
   isExternalIC(index){
@@ -378,7 +373,6 @@ class InfrastructureComponents extends Component {
   }
 
   render() {
-
     const buttonStyle = {
       marginLeft: '10px'
     };
@@ -457,9 +451,9 @@ class InfrastructureComponents extends Component {
           <div style={{float: 'left'}}>
             <ICAction
               runDisabled={this.state.selectedICs.length === 0}
-              runAction={action => this.runAction(action)}
+              runAction={(action, when) => this.runAction(action, when)}
               actions={[
-                {id: '-1', title: 'Select command', data: {action: 'none'}},
+                {id: '-1', title: 'Action', data: {action: 'none'}},
                 {id: '0', title: 'Reset', data: {action: 'reset'}},
                 {id: '1', title: 'Shutdown', data: {action: 'shutdown'}},
               ]}
