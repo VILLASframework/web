@@ -33,6 +33,7 @@ class SidebarMenu extends React.Component {
           }
           <li><NavLink to="/account" title="Account">Account</NavLink></li>
           <li><NavLink to="/logout" title="Logout">Logout</NavLink></li>
+          <li><NavLink to="/api" title="API Browser">API Browser</NavLink></li>
         </ul>
       </div>
     );

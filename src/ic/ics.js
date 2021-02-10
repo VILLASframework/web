@@ -17,7 +17,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Badge } from 'react-bootstrap';
+import {Button, Badge, Tooltip, OverlayTrigger} from 'react-bootstrap';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 import moment from 'moment'
@@ -388,10 +388,20 @@ class InfrastructureComponents extends Component {
         <h1>Infrastructure Components
           {this.state.currentUser.role === "Admin" ?
             (<span>
-              <Button onClick={() => this.setState({newModal: true})} style={buttonStyle}><Icon icon="plus"
+              <OverlayTrigger
+                key={1}
+                placement={'top'}
+                overlay={<Tooltip id={`tooltip-${"add"}`}> Add Infrastructure Component </Tooltip>} >
+                <Button onClick={() => this.setState({newModal: true})} style={buttonStyle}><Icon icon="plus"
                                                                                                 /></Button>
-              <Button onClick={() => this.setState({importModal: true})} style={buttonStyle}><Icon icon="upload"
+              </OverlayTrigger>
+              <OverlayTrigger
+                key={2}
+                placement={'top'}
+                overlay={<Tooltip id={`tooltip-${"import"}`}> Import Infrastructure Component </Tooltip>} >
+                <Button onClick={() => this.setState({importModal: true})} style={buttonStyle}><Icon icon="upload"
                                                                                                    /></Button>
+              </OverlayTrigger>
               </span>)
             :
             (<span> </span>)

@@ -801,8 +801,18 @@ class Scenario extends React.Component {
 
       {/*Component Configurations table*/}
       <h2 style={tableHeadingStyle}>Component Configurations
-        <Button onClick={() => this.addConfig()} style={buttonStyle}><Icon icon="plus" /></Button>
-        <Button onClick={() => this.setState({ importConfigModal: true })} style={buttonStyle}><Icon icon="upload" /></Button>
+        <OverlayTrigger
+          key={1}
+          placement={'top'}
+          overlay={<Tooltip id={`tooltip-${"add"}`}> Add Component Configuration </Tooltip>} >
+          <Button onClick={() => this.addConfig()} style={buttonStyle}><Icon icon="plus" /></Button>
+        </OverlayTrigger>
+        <OverlayTrigger
+          key={2}
+          placement={'top'}
+          overlay={<Tooltip id={`tooltip-${"import"}`}> Import Component Configuration </Tooltip>} >
+          <Button onClick={() => this.setState({ importConfigModal: true })} style={buttonStyle}><Icon icon="upload" /></Button>
+        </OverlayTrigger>
       </h2>
       <Table data={this.state.configs}>
         <TableColumn
@@ -899,8 +909,18 @@ class Scenario extends React.Component {
 
       {/*Dashboard table*/}
       <h2 style={tableHeadingStyle}>Dashboards
-        <Button onClick={() => this.setState({ newDashboardModal: true })} style={buttonStyle}><Icon icon="plus" /></Button>
-        <Button onClick={() => this.setState({ importDashboardModal: true })} style={buttonStyle}><Icon icon="upload" /></Button>
+        <OverlayTrigger
+          key={1}
+          placement={'top'}
+          overlay={<Tooltip id={`tooltip-${"add"}`}> Add Dashboard </Tooltip>} >
+          <Button onClick={() => this.setState({ newDashboardModal: true })} style={buttonStyle}><Icon icon="plus" /></Button>
+        </OverlayTrigger>
+        <OverlayTrigger
+          key={2}
+          placement={'top'}
+          overlay={<Tooltip id={`tooltip-${"import"}`}> Import Dashboard </Tooltip>} >
+          <Button onClick={() => this.setState({ importDashboardModal: true })} style={buttonStyle}><Icon icon="upload" /></Button>
+        </OverlayTrigger>
       </h2>
       <Table data={this.state.dashboards}>
         <TableColumn title='Name' dataKey='name' link='/dashboards/' linkKey='id' />
@@ -927,7 +947,12 @@ class Scenario extends React.Component {
 
       {/*Result table*/}
       <h2 style={tableHeadingStyle}>Results
-        <Button onClick={() => this.setState({ newResultModal: true })} style={buttonStyle}><Icon icon="plus" /></Button>
+        <OverlayTrigger
+          key={1}
+          placement={'top'}
+          overlay={<Tooltip id={`tooltip-${"add"}`}> Add Result </Tooltip>} >
+          <Button onClick={() => this.setState({ newResultModal: true })} style={buttonStyle}><Icon icon="plus" /></Button>
+        </OverlayTrigger>
       </h2>
       {resulttable}
       <NewResultDialog show={this.state.newResultModal} onClose={data => this.closeNewResultModal(data)} />
