@@ -114,7 +114,7 @@ class Scenario extends React.Component {
 
       editResultsModal: prevState.editResultsModal || false,
       modalResultsData: {},
-      modalResultsIndex: 0,
+      modalResultsIndex: prevState.modalResultsIndex,
       newResultModal: false,
       filesToDownload: [],
 
@@ -760,7 +760,7 @@ class Scenario extends React.Component {
               editButton
               downloadAllButton
               deleteButton
-              onEdit={index => this.setState({ editResultsModal: true, modalResultsData: this.state.results[index], modalResultsIndex: index })}
+              onEdit={index => this.setState({ editResultsModal: true, modalResultsIndex: index })}
               onDownloadAll={(index) => this.downloadResultData(this.state.results[index])}
               onDelete={(index) => this.setState({ deleteResultsModal: true, modalResultsData: this.state.results[index], modalResultsIndex: index })}
             />
@@ -770,7 +770,8 @@ class Scenario extends React.Component {
             sessionToken={this.state.sessionToken}
             show={this.state.editResultsModal}
             files={this.state.files}
-            result={this.state.modalResultsData}
+            results={this.state.results}
+            resultId={this.state.modalResultsIndex}
             scenarioID={this.state.scenario.id}
             onClose={this.closeEditResultsModal.bind(this)} />
           <DeleteDialog title="result" name={this.state.modalResultsData.id} show={this.state.deleteResultsModal} onClose={(e) => this.closeDeleteResultsModal(e)} />

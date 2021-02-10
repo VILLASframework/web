@@ -19,24 +19,24 @@ import RestDataManager from '../common/data-managers/rest-data-manager';
 import RestAPI from '../common/api/rest-api';
 import AppDispatcher from '../common/app-dispatcher';
 
-class ResultsDataManager extends RestDataManager{
+class ResultsDataManager extends RestDataManager {
 
   constructor() {
     super('result', '/results');
   }
 
   uploadFile(file, resultID, token = null, progressCallback = null, finishedCallback = null, scenarioID) {
-    RestAPI.upload(this.makeURL(this.url + '/' + resultID + '/file') , file, token, progressCallback, scenarioID).then(response => {
+    RestAPI.upload(this.makeURL(this.url + '/' + resultID + '/file'), file, token, progressCallback, scenarioID).then(response => {
 
       AppDispatcher.dispatch({
         type: 'files/uploaded',
       });
 
-      // Trigger a results reload
+      // Trigger a result reload
       AppDispatcher.dispatch({
         type: 'results/start-load',
-        param: '?scenarioID=' + scenarioID,
-        token: token
+        data: resultID,
+        token: token,
       });
 
       // Trigger a files reload
@@ -57,6 +57,24 @@ class ResultsDataManager extends RestDataManager{
     });
   }
 
+  removeFile(resultID, fileID, scenarioID, token) {
+    RestAPI.delete(this.makeURL(this.url + '/' + resultID + '/file/' + fileID), token).then(response => {
+      // reload result
+      AppDispatcher.dispatch({
+        type: 'results/start-load',
+        data: resultID,
+        token: token,
+      });
+
+      // update files
+      AppDispatcher.dispatch({
+        type: 'files/removed',
+        data: fileID,
+        token: token,
+      });
+      console.log(response);
+    });
+  }
 }
 
 export default new ResultsDataManager();

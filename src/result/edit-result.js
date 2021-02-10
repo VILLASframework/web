@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import {FormGroup, FormControl, FormLabel, Col, Button, ProgressBar} from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel, Col, Button, ProgressBar } from 'react-bootstrap';
 import AppDispatcher from "../common/app-dispatcher";
 import FileStore from "../file/file-store"
 
@@ -53,26 +53,38 @@ class EditResultDialog extends React.Component {
     this.setState({ [event.target.id]: event.target.value });
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.resultExists && this.props.files != prevProps.files) {
-      this.setState({files: FileStore.getState().filter(file => this.state.result.resultFileIDs.includes(file.id))});
+  static isEmpty(val) {
+    return (val === undefined || val == null || val.length <= 0);
+  };
+
+  static getDerivedStateFromProps(props, state) {
+    let result = props.results[props.resultId];
+
+    if (result && Object.keys(result).length != 0) {
+      let hasFiles = !EditResultDialog.isEmpty(result.resultFileIDs);
+      if (hasFiles) {
+        return {
+          id: result.id,
+          description: result.description,
+          files: FileStore.getState().filter(file => result.resultFileIDs.includes(file.id)),
+        }
+      } else {
+        return {
+          id: result.id,
+          description: result.description,
+          files: null,
+        }
+      }
+    } else {
+      return {}
     }
-    if (this.props.result != prevProps.result && Object.keys(this.props.result).length != 0) {
-      this.setState({
-        id: this.props.result.id,
-        description: this.props.result.description,
-        result: this.props.result,
-        resultExists: true,
-        files: FileStore.getState().filter(file => this.props.result.resultFileIDs.includes(file.id)),
-      })
-    }
-  }
+  };
 
   selectUploadFile(event) {
     this.setState({ uploadFile: event.target.files[0] });
   };
 
-  startFileUpload(){
+  startFileUpload() {
     const formData = new FormData();
     formData.append("file", this.state.uploadFile);
 
@@ -97,24 +109,27 @@ class EditResultDialog extends React.Component {
     this.setState({ uploadProgress: parseInt(event.percent.toFixed(), 10) });
   };
 
-  deleteFile(index){
+  deleteFile(index) {
     let file = this.state.files[index];
     AppDispatcher.dispatch({
-      type: 'files/start-remove',
-      data: file,
+      type: 'resultfiles/start-remove',
+      resultID: this.state.id,
+      fileID: file.id,
+      scenarioID: this.props.scenarioID,
       token: this.props.sessionToken
     });
+
   }
 
   render() {
 
     return <Dialog show={this.props.show}
-                  title={'Edit Result No. '+this.state.id}
-                  buttonTitle='Close'
-                  onClose={() => this.onClose()}
-                  blendOutCancel = {true}
-                  valid={true}
-                  size = 'lg'>
+      title={'Edit Result No. ' + this.state.id}
+      buttonTitle='Close'
+      onClose={() => this.onClose()}
+      blendOutCancel={true}
+      valid={true}
+      size='lg'>
 
 
       <div>
@@ -125,40 +140,40 @@ class EditResultDialog extends React.Component {
         </FormGroup>
 
         <Table data={this.state.files}>
-            <TableColumn title='ID' dataKey='id'/>
-            <TableColumn title='Name' dataKey='name'/>
-            <TableColumn title='Size (bytes)' dataKey='size'/>
-            <TableColumn title='Type' dataKey='type'/>
-            <TableColumn
-              title=''
-              deleteButton
-              onDelete={(index) => this.deleteFile(index)}
-            />
+          <TableColumn title='ID' dataKey='id' />
+          <TableColumn title='Name' dataKey='name' />
+          <TableColumn title='Size (bytes)' dataKey='size' />
+          <TableColumn title='Type' dataKey='type' />
+          <TableColumn
+            title=''
+            deleteButton
+            onDelete={(index) => this.deleteFile(index)}
+          />
         </Table>
 
 
         <FormGroup controlId='resultfile'>
-            <FormLabel>Add Result File</FormLabel>
-            <FormControl type='file' onChange={(event) => this.selectUploadFile(event)} />
+          <FormLabel>Add Result File</FormLabel>
+          <FormControl type='file' onChange={(event) => this.selectUploadFile(event)} />
         </FormGroup>
 
-          <FormGroup as={Col} >
-            <Button
-              disabled={this.state.uploadFile === null}
-              onClick={() => this.startFileUpload()}>
-              Upload
+        <FormGroup as={Col} >
+          <Button
+            disabled={this.state.uploadFile === null}
+            onClick={() => this.startFileUpload()}>
+            Upload
             </Button>
-          </FormGroup>
+        </FormGroup>
 
-          <FormGroup as={Col} >
-            <ProgressBar
-              striped={true}
-              animated={true}
-              now={this.state.uploadProgress}
-              label={this.state.uploadProgress + '%'}
-            />
-          </FormGroup>
-      
+        <FormGroup as={Col} >
+          <ProgressBar
+            striped={true}
+            animated={true}
+            now={this.state.uploadProgress}
+            label={this.state.uploadProgress + '%'}
+          />
+        </FormGroup>
+
       </div>
     </Dialog>;
   }

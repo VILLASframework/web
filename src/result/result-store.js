@@ -25,30 +25,6 @@ class ResultStore extends ArrayStore {
     super('results', ResultsDataManager);
   }
 
-  saveFile(state, action){
-
-    let fileID = parseInt(action.id)
-    state.forEach((element, index, array) => {
-         if (element.id === fileID) {
-           // save blob object
-           array[index]["data"] = new Blob([action.data.data], {type: action.data.type});
-           // update file type
-           array[index]["type"] = action.data.type;
-
-           if (array[index]["objectURL"] !== ''){
-             // free memory of previously generated object URL
-             URL.revokeObjectURL(array[index]["objectURL"]);
-           }
-           // create an object URL for the file
-           array[index]["objectURL"] = URL.createObjectURL(array[index]["data"])
-        }
-    });
-
-    // announce change to listeners
-    this.__emitChange();
-    return state
-  }
-
   simplify(timestamp) {
     let parts = timestamp.split("T");
     let datestr = parts[0];
@@ -67,7 +43,11 @@ class ResultStore extends ArrayStore {
   reduce(state, action) {
     switch (action.type) {
       case 'results/loaded':
-        this.simplifyTimestamps(action.data);
+        if (Array.isArray(action.data)) {
+          this.simplifyTimestamps(action.data);
+        } else {
+          this.simplifyTimestamps([action.data]);
+        }
         return super.reduce(state, action);
 
       case 'results/added':
@@ -76,6 +56,10 @@ class ResultStore extends ArrayStore {
 
       case 'resultfiles/start-upload':
         ResultsDataManager.uploadFile(action.data, action.resultID, action.token, action.progressCallback, action.finishedCallback, action.scenarioID);
+        return state;
+
+      case 'resultfiles/start-remove':
+        ResultsDataManager.removeFile(action.resultID, action.fileID, action.scenarioID, action.token);
         return state;
 
       default:
