@@ -18,28 +18,10 @@
 import React from 'react';
 
 import config from '../config';
-import {Redirect} from "react-router-dom";
+import { Redirect } from "react-router-dom";
+import { NavLink } from 'react-router-dom';
 
 class Home extends React.Component {
-  constructor(props) {
-    super(props);
-
-    // create url for API documentation, distinguish between localhost and production deployment
-    let docs_url = "";
-    let docs_location = "/swagger/index.html";
-    let base_url = window.location.origin;
-    if (base_url.search("localhost") === -1){
-      docs_url = base_url + docs_location;
-    } else {
-      // useful for local testing, replace port 3000 with port 4000 (port of backend)
-      docs_url = base_url.replace("3000", "4000") + docs_location;
-    }
-
-    this.state = {
-      docs_url: docs_url
-    };
-
-  }
 
   getCounts(type) {
     if (this.state.hasOwnProperty('counts'))
@@ -68,9 +50,8 @@ class Home extends React.Component {
         </p>
 
         <p>
-          An interactive documentation of the VILLASweb API is available <a href={this.state.docs_url} target="_blank" rel="noopener noreferrer">here</a>.
+          An interactive documentation of the VILLASweb API is available <NavLink to="/api">here</NavLink>.
         </p>
-
 
         <h3>Data Model</h3>
         <img height={400} src={require('../img/datamodel.png').default} alt="Datamodel VILLASweb" />
@@ -102,8 +83,6 @@ class Home extends React.Component {
             <li>A collection of component configurations and dashboards for a specific experiment</li>
             <li>Users can have access to multiple scenarios</li>
           </ul>
-
-
 
         <h3>Credits</h3>
         <p>VILLASweb is developed by the <a href="http://acs.eonerc.rwth-aachen.de">Institute for Automation of Complex Power Systems</a> at the <a href="https;//www.rwth-aachen.de">RWTH Aachen University</a>.</p>

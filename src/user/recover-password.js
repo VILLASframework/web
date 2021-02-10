@@ -17,7 +17,7 @@
 
 import React from 'react';
 import Dialog from '../common/dialogs/dialog';
-import Config from '../config.js';
+import Config from '../config';
 
 
 class RecoverPassword extends React.Component {
@@ -29,12 +29,9 @@ class RecoverPassword extends React.Component {
     }
   }
 
-
   onClose() {
       this.props.onClose();
   }
-
-
 
   render() {
     return (
@@ -43,7 +40,7 @@ class RecoverPassword extends React.Component {
         <div>Please contact:</div>
         <div>{this.state.admin.name}</div>
         <div>E-Mail:</div>
-        <a href={`mailto:${this.state.admin.mail}`}>{this.state.admin.mail}</a>          
+        <a href={`mailto:${this.state.admin.mail}`}>{this.state.admin.mail}</a>
       </div>
       </Dialog>
     );

@@ -70,14 +70,14 @@ class LoginForm extends Component {
         <FormGroup controlId="username">
           <FormLabel column={true}>Username</FormLabel>
           <Col>
-            <FormControl type="text" placeholder="Username" onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder="Username" autoComplete="username" onChange={(e) => this.handleChange(e)} />
           </Col>
         </FormGroup>
 
         <FormGroup controlId="password">
           <FormLabel column={true}>Password</FormLabel>
           <Col >
-            <FormControl type="password" placeholder="Password" onChange={(e) => this.handleChange(e)} />
+            <FormControl type="password" placeholder="Password" autoComplete="current-password" onChange={(e) => this.handleChange(e)} />
           </Col>
         </FormGroup>
 
@@ -95,11 +95,11 @@ class LoginForm extends Component {
             <Button variant="link" size="sm" style={{marginLeft: 85}} onClick={() => this.openRecoverPassword()}>Forgot your password?</Button>
           </Col>
         </FormGroup>
-        
+
         <RecoverPassword show={this.state.forgottenPassword} onClose={() => this.closeRecoverPassword()} sessionToken={this.props.sessionToken} />
 
       </Form>
-      
+
     );
   }
 }
