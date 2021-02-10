@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, FormLabel, Col, Button, ProgressBar } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel, Col, Row, Button, ProgressBar } from 'react-bootstrap';
 import AppDispatcher from "../common/app-dispatcher";
 import FileStore from "../file/file-store"
 
@@ -38,8 +38,6 @@ class EditResultDialog extends React.Component {
       uploadFile: null,
       uploadProgress: 0,
       files: null,
-      result: null,
-      resultExists: false,
     };
   }
 
@@ -53,31 +51,31 @@ class EditResultDialog extends React.Component {
     this.setState({ [event.target.id]: event.target.value });
   };
 
-  static isEmpty(val) {
+  isEmpty(val) {
     return (val === undefined || val == null || val.length <= 0);
-  };
+  }; 
 
-  static getDerivedStateFromProps(props, state) {
-    let result = props.results[props.resultId];
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.resultId != prevProps.resultId || this.props.results != prevProps.results) {
+      let result = this.props.results[this.props.resultId];
 
-    if (result && Object.keys(result).length != 0) {
-      let hasFiles = !EditResultDialog.isEmpty(result.resultFileIDs);
-      if (hasFiles) {
-        return {
-          id: result.id,
-          description: result.description,
-          files: FileStore.getState().filter(file => result.resultFileIDs.includes(file.id)),
-        }
-      } else {
-        return {
-          id: result.id,
-          description: result.description,
-          files: null,
+      if (result && Object.keys(result).length != 0) {
+        let hasFiles = !this.isEmpty(result.resultFileIDs);
+        if (hasFiles) {
+          this.setState({
+            id: result.id,
+            description: result.description,
+            files: FileStore.getState().filter(file => result.resultFileIDs.includes(file.id)),
+          })
+        } else {
+          this.setState({
+            id: result.id,
+            description: result.description,
+            files: null,
+          })
         }
       }
-    } else {
-      return {}
-    }
+    } 
   };
 
   selectUploadFile(event) {
@@ -121,6 +119,18 @@ class EditResultDialog extends React.Component {
 
   }
 
+  submitDescription() {  
+    let result = this.props.results[this.props.resultId];
+    if (!this.isEmpty(result)) {
+      result.description = this.state.description;
+      AppDispatcher.dispatch({
+        type: 'results/start-edit',
+        data: result,
+        token: this.props.sessionToken
+      });
+    }
+  }
+
   render() {
 
     return <Dialog show={this.props.show}
@@ -134,9 +144,25 @@ class EditResultDialog extends React.Component {
 
       <div>
         <FormGroup as={Col} controlId='description'>
-          <FormLabel column={false}>Description</FormLabel>
-          <FormControl type='text' placeholder='Enter description' value={this.state.description} onChange={this.handleChange} />
-          <FormControl.Feedback />
+
+          <Row style={{ float: 'center' }} >
+            <Col xs="auto">
+              <FormLabel>Description</FormLabel>
+            </Col>
+            <Col xs="auto">
+              <FormControl type='text' placeholder={this.state.description} value={this.state.description} onChange={this.handleChange} />
+              <FormControl.Feedback />
+            </Col>
+            <Col xs="auto">
+              <Button
+                type="submit"
+                onClick={() => this.submitDescription()}>
+                Save
+            </Button>
+            </Col>
+          </Row>
+
+
         </FormGroup>
 
         <Table data={this.state.files}>
