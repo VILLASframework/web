@@ -131,8 +131,8 @@ class NewICDialog extends React.Component {
       case "simulator":
         typeOptions = ["dummy","generic","dpsim","rtlab","rscad","opalrt"];
           break;
-      case "controller":
-        typeOptions = ["kubernetes","villas-controller"];
+      case "manager":
+        typeOptions = ["villas-node","villas-relay","generic"];
         break;
       case "gateway":
         typeOptions = ["villas-node","villas-relay"];
@@ -150,7 +150,7 @@ class NewICDialog extends React.Component {
       <Dialog show={this.props.show} title="New Infrastructure Component" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.validateForm()}>
         <form>
           <FormGroup controlId="managedexternally">
-            <OverlayTrigger key="3" placement={'left'} overlay={<Tooltip id={`tooltip-${"me"}`}>An externally managed component will show up in the list only after a VILLAScontroller for the component type has created the component and cannot be edited by users</Tooltip>} >
+            <OverlayTrigger key="3" placement={'left'} overlay={<Tooltip id={`tooltip-${"me"}`}>An externally managed component will show up in the list only after a manager for the component type has created the component and cannot be edited by users</Tooltip>} >
               <FormCheck type={"checkbox"} label={"Managed externally"} defaultChecked={this.state.managedexternally} onChange={e => this.handleChange(e)}>
               </FormCheck>
             </OverlayTrigger>
@@ -169,7 +169,7 @@ class NewICDialog extends React.Component {
             <FormControl as="select" value={this.state.category} onChange={(e) => this.handleChange(e)}>
               <option default>Select category</option>
               <option>simulator</option>
-              <option>controller</option>
+              <option>manager</option>
               <option>service</option>
               <option>gateway</option>
               <option>equipment</option>
