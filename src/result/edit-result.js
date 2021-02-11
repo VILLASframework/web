@@ -113,7 +113,6 @@ class EditResultDialog extends React.Component {
       type: 'resultfiles/start-remove',
       resultID: this.state.id,
       fileID: file.id,
-      scenarioID: this.props.scenarioID,
       token: this.props.sessionToken
     });
 

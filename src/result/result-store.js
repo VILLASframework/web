@@ -61,7 +61,7 @@ class ResultStore extends ArrayStore {
         return state;
 
       case 'resultfiles/start-remove':
-        ResultsDataManager.removeFile(action.resultID, action.fileID, action.scenarioID, action.token);
+        ResultsDataManager.removeFile(action.resultID, action.fileID, action.token);
         return state;
 
       default:

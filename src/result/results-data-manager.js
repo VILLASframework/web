@@ -57,7 +57,7 @@ class ResultsDataManager extends RestDataManager {
     });
   }
 
-  removeFile(resultID, fileID, scenarioID, token) {
+  removeFile(resultID, fileID, token) {
     RestAPI.delete(this.makeURL(this.url + '/' + resultID + '/file/' + fileID), token).then(response => {
       // reload result
       AppDispatcher.dispatch({
@@ -72,7 +72,6 @@ class ResultsDataManager extends RestDataManager {
         data: fileID,
         token: token,
       });
-      console.log(response);
     });
   }
 }
