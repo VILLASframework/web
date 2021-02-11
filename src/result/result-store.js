@@ -15,10 +15,8 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-
 import ArrayStore from '../common/array-store';
 import ResultsDataManager from './results-data-manager';
-import FilesDataManager from '../file/files-data-manager'
 
 class ResultStore extends ArrayStore {
   constructor() {
@@ -51,6 +49,10 @@ class ResultStore extends ArrayStore {
         return super.reduce(state, action);
 
       case 'results/added':
+        this.simplifyTimestamps([action.data]);
+        return super.reduce(state, action);
+
+      case 'results/edited':
         this.simplifyTimestamps([action.data]);
         return super.reduce(state, action);
 
