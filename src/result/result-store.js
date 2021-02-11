@@ -17,6 +17,7 @@
 
 import ArrayStore from '../common/array-store';
 import ResultsDataManager from './results-data-manager';
+import AppDispatcher from '../common/app-dispatcher';
 
 class ResultStore extends ArrayStore {
   constructor() {
@@ -54,6 +55,16 @@ class ResultStore extends ArrayStore {
 
       case 'results/edited':
         this.simplifyTimestamps([action.data]);
+        return super.reduce(state, action);
+
+      case 'results/removed':
+        // Remove files from filestore
+        action.data.resultFileIDs.forEach(fileid => {
+          AppDispatcher.dispatch({
+            type: 'files/removed',
+            data: fileid
+          });
+        });
         return super.reduce(state, action);
 
       case 'resultfiles/start-upload':
