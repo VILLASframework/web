@@ -154,6 +154,16 @@ class NewICDialog extends React.Component {
       default:
         typeOptions =[];
     }
+
+    let managerOptions = [];
+    managerOptions.push(<option default>Select manager</option>);
+    for (let m of this.props.managers) {
+      managerOptions.push (
+        <option key={m.id} value={m.uuid}>{m.name}</option>
+      );
+    }
+
+
     return (
       <Dialog show={this.props.show} title="New Infrastructure Component" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.validateForm()}>
         <form>
@@ -171,9 +181,7 @@ class NewICDialog extends React.Component {
                     <FormLabel>Manager to create new IC *</FormLabel>
                   </OverlayTrigger>
                   <FormControl as="select" value={this.state.manager} onChange={(e) => this.handleChange(e)}>
-                    {this.props.managers.map((m) => (
-                      <option key={m.id} value={m.uuid}>{m.name}</option>
-                    ))}
+                    {managerOptions}
                   </FormControl>
                 </FormGroup>
                 : <div/>
