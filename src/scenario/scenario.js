@@ -390,9 +390,7 @@ class Scenario extends React.Component {
 
   }
 
-  runAction(action, delay) {
-    // delay in seconds
-
+  runAction(action, when) {
     if (action.data.action === 'none') {
       console.warn("No command selected. Nothing was sent.");
       return;
@@ -415,8 +413,7 @@ class Scenario extends React.Component {
         action.data.parameters = this.state.configs[index].startParameters;
       }
 
-      // Unix time stamp + delay
-      action.data.when = Math.round(Date.now() / 1000.0 + delay)
+      action.data.when = when;
 
       console.log("Sending action: ", action.data)
 
@@ -798,8 +795,6 @@ class Scenario extends React.Component {
         scenarioID={this.state.scenario.id}
       />
 
-
-
       {/*Component Configurations table*/}
       <h2 style={tableHeadingStyle}>Component Configurations
         <OverlayTrigger
@@ -866,9 +861,9 @@ class Scenario extends React.Component {
         <div style={{float: 'left'}}>
           <ICAction
             runDisabled={this.state.selectedConfigs.length === 0}
-            runAction={(action, delay) => this.runAction(action, delay)}
+            runAction={(action, when) => this.runAction(action, when)}
             actions={[
-              {id: '-1', title: 'Select command', data: {action: 'none'}},
+              {id: '-1', title: 'Action', data: {action: 'none'}},
               {id: '0', title: 'Start', data: {action: 'start'}},
               {id: '1', title: 'Stop', data: {action: 'stop'}},
               {id: '2', title: 'Pause', data: {action: 'pause'}},

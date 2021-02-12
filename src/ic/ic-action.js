@@ -16,75 +16,93 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Button, ButtonToolbar, DropdownButton, Dropdown } from 'react-bootstrap';
-import TimePicker from 'react-bootstrap-time-picker'
+import { Button, ButtonToolbar, DropdownButton, Dropdown, InputGroup, FormControl } from 'react-bootstrap';
 
 class ICAction extends React.Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            selectedAction: null,
-            selectedDelay: 0
-        };
+    let t = new Date()
+
+    Number.prototype.pad = function(size) {
+        var s = String(this);
+        while (s.length < (size || 2)) {s = "0" + s;}
+        return s;
     }
 
-    static getDerivedStateFromProps(props, state){
-      if (state.selectedAction == null) {
-        if (props.actions != null && props.actions.length > 0) {
-          return{
-            selectedAction: props.actions[0]
-          };
-        }
-      }
-      return null
-    }
+    let time = new Date();
+    time.setMinutes(5 * Math.round(time.getMinutes() / 5 + 1))
 
-    setAction = id => {
-        // search action
-        for (let action of this.props.actions) {
-            if (action.id === id) {
-                this.setState({ selectedAction: action });
-            }
-        }
+    this.state = {
+      selectedAction: null,
+      time: time
     };
+  }
 
-    setDelayForAction = time => {
-      // time in int format: (hours * 3600 + minutes * 60 + seconds)
-      this.setState({selectedDelay: time})
+  static getDerivedStateFromProps(props, state) {
+    if (state.selectedAction == null) {
+      if (props.actions != null && props.actions.length > 0) {
+        return {
+          selectedAction: props.actions[0]
+        };
+      }
     }
+    return null
+  }
 
-    render() {
-
-      let sendCommandDisabled = this.props.runDisabled || this.state.selectedAction == null || this.state.selectedAction.id === "-1"
-
-        const actionList = this.props.actions.map(action => (
-            <Dropdown.Item key={action.id} eventKey={action.id} active={this.state.selectedAction === action.id}>
-                {action.title}
-            </Dropdown.Item>
-        ));
-
-        return <div>
-          {"Select delay for command execution (Format hh:mm, max 1h):"}
-          <TimePicker
-            format={24}
-            initialValue={this.state.selectedDelay}
-            value={this.state.selectedDelay}
-            start={"00:00"}
-            end={"01:00"}
-            step={1}
-            onChange={this.setDelayForAction}
-          />
-          <ButtonToolbar>
-            <DropdownButton title={this.state.selectedAction != null ? this.state.selectedAction.title : ''} id="action-dropdown" onSelect={this.setAction}>
-              {actionList}
-            </DropdownButton>
-
-            <Button style={{ marginLeft: '5px' }} disabled={sendCommandDisabled} onClick={() => this.props.runAction(this.state.selectedAction, this.state.selectedDelay)}>Send command</Button>
-
-          </ButtonToolbar>
-        </div>;
+  setAction = id => {
+    // search action
+    for (let action of this.props.actions) {
+      if (action.id === id) {
+        this.setState({ selectedAction: action });
+      }
     }
+  };
+
+  setTimeForAction = (time) => {
+    this.setState({ time: new Date(time) })
+  }
+
+  render() {
+
+    let sendCommandDisabled = this.props.runDisabled || this.state.selectedAction == null || this.state.selectedAction.id === "-1"
+
+    let time = this.state.time.getFullYear().pad(4) + '-' +
+               this.state.time.getMonth().pad(2) + '-' +
+               this.state.time.getDay().pad(2) + 'T' +
+               this.state.time.getHours().pad(2) + ':' +
+               this.state.time.getMinutes().pad(2);
+
+    const actionList = this.props.actions.map(action => (
+      <Dropdown.Item key={action.id} eventKey={action.id} active={this.state.selectedAction === action.id}>
+        {action.title}
+      </Dropdown.Item>
+    ));
+
+    return <div>
+      <InputGroup>
+        <InputGroup.Prepend>
+          <DropdownButton
+            variant="outline-secondary"
+            title={this.state.selectedAction != null ? this.state.selectedAction.title : ''}
+            id="action-dropdown"
+            onSelect={this.setAction}>
+            {actionList}
+          </DropdownButton>
+          <FormControl
+            type="datetime-local"
+            variant="outline-secondary"
+            value={time}
+            onChange={this.setTimeForAction} />
+        </InputGroup.Prepend>
+        <Button
+          variant="outline-secondary"
+          disabled={sendCommandDisabled}
+          onClick={() => this.props.runAction(this.state.selectedAction, this.state.time)}>Run</Button>
+      </InputGroup>
+      <small className="text-muted">Select time for synced command execution</small>
+    </div>;
+  }
 }
 
 export default ICAction;
