@@ -126,7 +126,7 @@ class CustomTable extends Component {
           inline
           disabled = {isDisabled}
           checked={checkboxKey ? data[checkboxKey] : null}
-          onChange={e => child.props.onChecked(index, e)}
+          onChange={e => child.props.onChecked(data, e)}
         />);
     }
 
