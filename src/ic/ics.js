@@ -75,17 +75,26 @@ class InfrastructureComponents extends Component {
       }
     });
 
-    let externalICs = ics.find(ic => ic.managedexternally === true)
+    // collect number of external ICs
+    let externalICs = ics.filter(ic => ic.managedexternally === true)
+    let numberOfExternalICs = externalICs.length;
 
-    let numberOfExternalICs = 0
-    if (externalICs !== undefined && !Array.isArray(externalICs)) {
-      externalICs = [externalICs];
-      numberOfExternalICs = externalICs.length;
-    }
+    // collect all IC categories
+    let managers = ics.filter(ic => ic.category === "manager")
+    let gateways = ics.filter(ic => ic.category === "gateway")
+    let simulators = ics.filter(ic => ic.category === "simulator")
+    let services = ics.filter(ic => ic.category === "service")
+    let equipment = ics.filter(ic => ic.category === "equipment")
+
 
     return {
       sessionToken: localStorage.getItem("token"),
       ics: ics,
+      managers: managers,
+      gateways: gateways,
+      simulators: simulators,
+      services: services,
+      equipment: equipment,
       numberOfExternalICs,
       modalIC: {},
       deleteModal: false,
@@ -205,7 +214,9 @@ class InfrastructureComponents extends Component {
     }
   }
 
-  onICChecked(index, event) {
+  onICChecked(ic, event) {
+
+    let index = this.state.ics.indexOf(ic);
     const selectedICs = Object.assign([], this.state.selectedICs);
     for (let key in selectedICs) {
       if (selectedICs[key] === index) {
@@ -377,11 +388,79 @@ class InfrastructureComponents extends Component {
     return ic.managedexternally
   }
 
+  getICCategoryTable(ics, editable, title){
+    if (ics && ics.length > 0) {
+      return (<div>
+        <h2>{title}</h2>
+        <Table data={ics}>
+          <TableColumn
+            checkbox
+            checkboxDisabled={(index) => this.isExternalIC(index)}
+            onChecked={(ic, event) => this.onICChecked(ic, event)}
+            width='30'
+          />
+          <TableColumn
+            title='Name'
+            dataKeys={['name']}
+            modifier={(name, component) => this.modifyNameColumn(name, component)}
+          />
+          <TableColumn
+            title='State'
+            labelKey='state'
+            tooltipKey='error'
+            labelStyle={(state, component) => this.stateLabelStyle(state, component)}
+          />
+          <TableColumn
+            title='Type'
+            dataKeys={['type']}
+          />
+          <TableColumn
+            title='Uptime'
+            dataKey='uptime'
+            modifier={(uptime, component) => this.modifyUptimeColumn(uptime, component)}
+          />
+          <TableColumn
+            title='Last Update'
+            dataKey='stateUpdateAt'
+            modifier={(stateUpdateAt, component) => this.stateUpdateModifier(stateUpdateAt, component)}
+          />
+
+          {this.state.currentUser.role === "Admin" && editable ?
+            <TableColumn
+              width='200'
+              editButton
+              exportButton
+              deleteButton
+              onEdit={index => this.setState({editModal: true, modalIC: ics[index], modalIndex: index})}
+              onExport={index => this.exportIC(index)}
+              onDelete={index => this.setState({deleteModal: true, modalIC: ics[index], modalIndex: index})}
+            />
+            :
+            <TableColumn
+              width='100'
+              exportButton
+              onExport={index => this.exportIC(index)}
+            />
+          }
+        </Table>
+      </div>);
+    } else {
+      return <div/>
+    }
+
+  }
+
   render() {
 
     const buttonStyle = {
       marginLeft: '10px'
     };
+
+    let managerTable = this.getICCategoryTable(this.state.managers, false, "IC Managers")
+    let simulatorTable = this.getICCategoryTable(this.state.simulators, true, "Simulators")
+    let gatewayTable = this.getICCategoryTable(this.state.gateways, true, "Gateways")
+    let serviceTable = this.getICCategoryTable(this.state.services, true, "Services")
+    let equipmentTable = this.getICCategoryTable(this.state.equipment, true, "Equipment")
 
     return (
       <div className='section'>
@@ -407,61 +486,12 @@ class InfrastructureComponents extends Component {
             (<span> </span>)
           }
         </h1>
-        <Table data={this.state.ics}>
-          <TableColumn
-            checkbox
-            checkboxDisabled={(index) => this.isExternalIC(index)}
-            onChecked={(index, event) => this.onICChecked(index, event)}
-            width='30'
-          />
-          <TableColumn
-            title='Name'
-            dataKeys={['name']}
-            modifier={(name, component) => this.modifyNameColumn(name, component)}
-          />
-          <TableColumn
-            title='State'
-            labelKey='state'
-            tooltipKey='error'
-            labelStyle={(state, component) => this.stateLabelStyle(state, component)}
-          />
-          <TableColumn
-            title='Category'
-            dataKeys={['category']}
-          />
-          <TableColumn
-            title='Type'
-            dataKeys={['type']}
-          />
-          <TableColumn
-            title='Uptime'
-            dataKey='uptime'
-            modifier={(uptime, component) => this.modifyUptimeColumn(uptime, component)}
-          />
-          <TableColumn
-            title='Last Update'
-            dataKey='stateUpdateAt'
-            modifier={(stateUpdateAt, component) => this.stateUpdateModifier(stateUpdateAt, component)}
-          />
 
-          {this.state.currentUser.role === "Admin" ?
-          <TableColumn
-            width='200'
-            editButton
-            exportButton
-            deleteButton
-            onEdit={index => this.setState({editModal: true, modalIC: this.state.ics[index], modalIndex: index})}
-            onExport={index => this.exportIC(index)}
-            onDelete={index => this.setState({deleteModal: true, modalIC: this.state.ics[index], modalIndex: index})}
-          />
-          :
-          <TableColumn
-            width='100'
-            exportButton
-            onExport={index => this.exportIC(index)}
-          />
-          }
-        </Table>
+        {managerTable}
+        {simulatorTable}
+        {gatewayTable}
+        {serviceTable}
+        {equipmentTable}
 
         {this.state.currentUser.role === "Admin" && this.state.numberOfExternalICs > 0 ?
           <div style={{float: 'left'}}>
@@ -481,9 +511,10 @@ class InfrastructureComponents extends Component {
 
         <div style={{ clear: 'both' }} />
 
-        <NewICDialog show={this.state.newModal} onClose={data => this.closeNewModal(data)} />
+        <NewICDialog show={this.state.newModal} onClose={data => this.closeNewModal(data)} managers={this.state.managers} />
         <EditICDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} ic={this.state.modalIC} />
         <ImportICDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} />
+        <DeleteDialog title="infrastructure-component" name={this.state.modalIC.name || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
         <ICDialog
           show={this.state.icModal}
           onClose={data => this.closeICModal(data)}
@@ -492,8 +523,8 @@ class InfrastructureComponents extends Component {
           userRole={this.state.currentUser.role}
           sendControlCommand={(command, ic) => this.sendControlCommand(command, ic)}/>
 
-        <DeleteDialog title="infrastructure-component" name={this.state.modalIC.name || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
       </div>
+
     );
   }
 }

@@ -158,10 +158,10 @@ class EditICDialog extends React.Component {
             <FormLabel column={false}>Category</FormLabel>
             <FormControl as="select" value={this.state.category} onChange={(e) => this.handleChange(e)}>
               <option>simulator</option>
-              <option>manager</option>
               <option>service</option>
               <option>gateway</option>
               <option>equipment</option>
+              <option>manager</option>
             </FormControl>
           </FormGroup>
           <FormGroup controlId="type">
