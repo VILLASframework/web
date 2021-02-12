@@ -168,6 +168,7 @@ class WidgetFactory {
                 widget.customProperties.valueMin = 0;
                 widget.customProperties.valueMax = 1;
                 widget.customProperties.valueUseMinMax = false;
+                widget.customProperties.lockAspect = true;
                 break;
             case 'Box':
                 widget.minWidth = 50;
@@ -209,6 +210,7 @@ class WidgetFactory {
                 widget.customProperties.horizontal = true;
                 widget.customProperties.showOffset = true;
                 widget.customProperties.lockAspect = true;
+                widget.customProperties.showName = true;
                 break;
 
             default:

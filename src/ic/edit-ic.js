@@ -122,8 +122,8 @@ class EditICDialog extends React.Component {
       case "simulator":
         typeOptions = ["dummy","generic","dpsim","rtlab","rscad", "opalrt"];
         break;
-      case "controller":
-        typeOptions = ["kubernetes","villas-controller"];
+      case "manager":
+        typeOptions = ["villas-node","villas-relay","generic"];
         break;
       case "gateway":
         typeOptions = ["villas-node","villas-relay"];
@@ -158,10 +158,10 @@ class EditICDialog extends React.Component {
             <FormLabel column={false}>Category</FormLabel>
             <FormControl as="select" value={this.state.category} onChange={(e) => this.handleChange(e)}>
               <option>simulator</option>
-              <option>controller</option>
               <option>service</option>
               <option>gateway</option>
               <option>equipment</option>
+              <option>manager</option>
             </FormControl>
           </FormGroup>
           <FormGroup controlId="type">

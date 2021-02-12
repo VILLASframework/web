@@ -37,7 +37,7 @@ class DeleteDialog extends React.Component {
             <Modal.Body>
                 Are you sure you want to delete the {this.props.title} <strong>'{this.props.name}'</strong>?
                 <Collapse isOpened={this.props.managedexternally} >
-                    <FormLabel size="sm">The IC will be deleted if the respective VILLAScontroller sends "gone" state and no component config is using the IC anymore</FormLabel>
+                    <FormLabel size="sm">The IC will be deleted if the respective manager sends "gone" state and no component config is using the IC anymore</FormLabel>
                 </Collapse>
             </Modal.Body>
 

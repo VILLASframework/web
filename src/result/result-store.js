@@ -15,38 +15,12 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-
 import ArrayStore from '../common/array-store';
 import ResultsDataManager from './results-data-manager';
-import FilesDataManager from '../file/files-data-manager'
 
 class ResultStore extends ArrayStore {
   constructor() {
     super('results', ResultsDataManager);
-  }
-
-  saveFile(state, action){
-
-    let fileID = parseInt(action.id)
-    state.forEach((element, index, array) => {
-         if (element.id === fileID) {
-           // save blob object
-           array[index]["data"] = new Blob([action.data.data], {type: action.data.type});
-           // update file type
-           array[index]["type"] = action.data.type;
-
-           if (array[index]["objectURL"] !== ''){
-             // free memory of previously generated object URL
-             URL.revokeObjectURL(array[index]["objectURL"]);
-           }
-           // create an object URL for the file
-           array[index]["objectURL"] = URL.createObjectURL(array[index]["data"])
-        }
-    });
-
-    // announce change to listeners
-    this.__emitChange();
-    return state
   }
 
   simplify(timestamp) {
@@ -67,15 +41,27 @@ class ResultStore extends ArrayStore {
   reduce(state, action) {
     switch (action.type) {
       case 'results/loaded':
-        this.simplifyTimestamps(action.data);
+        if (Array.isArray(action.data)) {
+          this.simplifyTimestamps(action.data);
+        } else {
+          this.simplifyTimestamps([action.data]);
+        }
         return super.reduce(state, action);
 
       case 'results/added':
         this.simplifyTimestamps([action.data]);
         return super.reduce(state, action);
 
+      case 'results/edited':
+        this.simplifyTimestamps([action.data]);
+        return super.reduce(state, action);
+
       case 'resultfiles/start-upload':
         ResultsDataManager.uploadFile(action.data, action.resultID, action.token, action.progressCallback, action.finishedCallback, action.scenarioID);
+        return state;
+
+      case 'resultfiles/start-remove':
+        ResultsDataManager.removeFile(action.resultID, action.fileID, action.token);
         return state;
 
       default:

@@ -26,10 +26,13 @@ import NotificationsFactory from "../data-managers/notifications-factory";
 function isNetworkError(err, url) {
   let result = false;
 
-  // If not status nor response fields, it is a network error. TODO: Handle timeouts
-  if (err.status == null || err.status === 500 || err.response == null) {
-    result = true;
 
+  if (err.status === 500 && err.response != null){
+    let notification = NotificationsFactory.INTERNAL_SERVER_ERROR(err.response)
+    NotificationsDataManager.addNotification(notification);
+  } else if (err.status == null || err.status === 500 || err.response == null) {
+    // If not status nor response fields, it is a network error. TODO: Handle timeouts
+    result = true;
     let notification = err.timeout? NotificationsFactory.REQUEST_TIMEOUT : NotificationsFactory.SERVER_NOT_REACHABLE(url);
     NotificationsDataManager.addNotification(notification);
   }

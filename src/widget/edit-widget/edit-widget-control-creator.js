@@ -170,7 +170,8 @@ export default function CreateControls(widgetType = null, widget = null, session
                 <EditWidgetNumberControl key={1} widget={widget} controlId={'customProperties.threshold_yellow'} label={'Threshold yellow'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetNumberControl key={2} widget={widget} controlId={'customProperties.threshold_red'} label={'Threshold red'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={3} widget={widget} controlId={'customProperties.horizontal'} input text="Horizontal" handleChange={e => handleChange(e)} />,
-                <EditWidgetCheckboxControl key={4} widget={widget} controlId={'customProperties.showOffset'} input text="showOffset" handleChange={e => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={4} widget={widget} controlId={'customProperties.showName'} input text="showName" handleChange={e => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={5} widget={widget} controlId={'customProperties.showOffset'} input text="showOffset" handleChange={e => handleChange(e)} />,
             );
             break;
 

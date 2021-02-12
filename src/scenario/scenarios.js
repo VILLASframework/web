@@ -17,7 +17,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button } from 'react-bootstrap';
+import {Button, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import FileSaver from 'file-saver';
 
 import AppDispatcher from '../common/app-dispatcher';
@@ -241,7 +241,20 @@ class Scenarios extends Component {
 
     return (
       <div className='section'>
-        <h1>Scenarios</h1>
+        <h1>Scenarios
+          <OverlayTrigger
+            key={1}
+            placement={'top'}
+            overlay={<Tooltip id={`tooltip-${"add"}`}> Add Scenario </Tooltip>} >
+              <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" /></Button>
+          </OverlayTrigger>
+          <OverlayTrigger
+            key={2}
+            placement={'top'}
+            overlay={<Tooltip id={`tooltip-${"import"}`}> Import Scenario </Tooltip>} >
+          <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" /></Button>
+          </OverlayTrigger>
+        </h1>
 
         <Table data={this.state.scenarios}>
           <TableColumn title='Name' dataKey='name' link='/scenarios/' linkKey='id' />
@@ -259,13 +272,6 @@ class Scenarios extends Component {
             onDuplicate={index => this.duplicateScenario(index)}
           />
         </Table>
-
-        <div style={{ float: 'right' }}>
-          <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" /> Scenario</Button>
-          <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" /> Import</Button>
-        </div>
-
-        <div style={{ clear: 'both' }} />
 
         <NewScenarioDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
         <EditScenarioDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} scenario={this.state.modalScenario} />

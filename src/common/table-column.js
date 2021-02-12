@@ -35,6 +35,7 @@ class TableColumn extends Component {
     labelKey: null,
     checkbox: false,
     checkboxKey: '',
+    checkboxDisabled: null,
     labelStyle: null,
     labelModifier: null
 
