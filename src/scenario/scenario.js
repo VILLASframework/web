@@ -114,9 +114,11 @@ class Scenario extends React.Component {
 
       editResultsModal: prevState.editResultsModal || false,
       modalResultsData: {},
-      modalResultsIndex: 0,
+      modalResultsIndex: prevState.modalResultsIndex,
       newResultModal: false,
-      filesToDownload: [],
+      filesToDownload: prevState.filesToDownload,
+      zipfiles: prevState.zipfiles || false,
+      resultNodl: prevState.resultNodl,
 
       editOutputSignalsModal: prevState.editOutputSignalsModal || false,
       editInputSignalsModal: prevState.editInputSignalsModal || false,
@@ -159,25 +161,28 @@ class Scenario extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     // check whether file data has been loaded
-    if (this.state.filesToDownload.length > 0  ) {
-      if (this.state.filesToDownload.length === 1) {
-        let fileToDownload = FileStore.getState().filter(file => file.id === this.state.filesToDownload[0])
-        if (fileToDownload.length === 1 && fileToDownload[0].data) {
-          const blob = new Blob([fileToDownload[0].data], {type: fileToDownload[0].type});
-          FileSaver.saveAs(blob, fileToDownload[0].name);
-          this.setState({ filesToDownload: [] });
-        }
-      } else { // zip and save several files
-        let filesToDownload = FileStore.getState().filter(file => this.state.filesToDownload.includes(file.id) && file.data);
-        if (filesToDownload.length === this.state.filesToDownload.length) { // all requested files have been loaded
-          var zip = new JSZip();
-          filesToDownload.forEach(file => {
-            zip.file(file.name, file.data);
-          });
-          zip.generateAsync({type: "blob"}).then(function(content) {
-            saveAs(content, "results.zip");
-          });
-          this.setState({ filesToDownload: [] });
+    if (this.state.filesToDownload && this.state.filesToDownload.length > 0  ) {
+      if (this.state.files != prevState.files) {
+        if (!this.state.zipfiles) {
+          let fileToDownload = FileStore.getState().filter(file => file.id === this.state.filesToDownload[0])
+          if (fileToDownload.length === 1 && fileToDownload[0].data) {
+            const blob = new Blob([fileToDownload[0].data], {type: fileToDownload[0].type});
+            FileSaver.saveAs(blob, fileToDownload[0].name);
+            this.setState({ filesToDownload: [] });
+          }
+        } else { // zip and save one or more files (download all button)
+          let filesToDownload = FileStore.getState().filter(file => this.state.filesToDownload.includes(file.id) && file.data);
+          if (filesToDownload.length === this.state.filesToDownload.length) { // all requested files have been loaded
+            var zip = new JSZip();
+            filesToDownload.forEach(file => {
+              zip.file(file.name, file.data);
+            });
+            let zipname = "result_" + this.state.resultNodl + "_" + Date.now();
+            zip.generateAsync({type: "blob"}).then(function(content) {
+              saveAs(content, zipname);
+            });
+            this.setState({ filesToDownload: [] });
+          }
         }
       }
     }
@@ -637,21 +642,19 @@ class Scenario extends React.Component {
 
   closeEditResultsModal() {
     this.setState({ editResultsModal: false });
-
-    AppDispatcher.dispatch({
-      type: 'results/start-load',
-      token: this.state.sessionToken,
-      param: '?scenarioID=' + this.state.scenario.id
-    })
   }
 
   downloadResultData(param) {
     let toDownload = [];
+    let zip = false;
 
-    if (typeof(param) === 'object') {
+    if (typeof(param) === 'object') { // download all files
       toDownload = param.resultFileIDs;
-    } else {
+      zip = true;
+      this.setState({ filesToDownload: toDownload, zipfiles: zip, resultNodl: param.id });
+    } else { // download one file
       toDownload.push(param);
+      this.setState({ filesToDownload: toDownload, zipfiles: zip});
     }
 
     toDownload.forEach(fileid => {
@@ -661,8 +664,6 @@ class Scenario extends React.Component {
         token: this.state.sessionToken
       });
     });
-
-    this.setState({ filesToDownload: toDownload });
   }
 
   closeDeleteResultsModal(confirmDelete) {
@@ -760,7 +761,7 @@ class Scenario extends React.Component {
               editButton
               downloadAllButton
               deleteButton
-              onEdit={index => this.setState({ editResultsModal: true, modalResultsData: this.state.results[index], modalResultsIndex: index })}
+              onEdit={index => this.setState({ editResultsModal: true, modalResultsIndex: index })}
               onDownloadAll={(index) => this.downloadResultData(this.state.results[index])}
               onDelete={(index) => this.setState({ deleteResultsModal: true, modalResultsData: this.state.results[index], modalResultsIndex: index })}
             />
@@ -770,7 +771,8 @@ class Scenario extends React.Component {
             sessionToken={this.state.sessionToken}
             show={this.state.editResultsModal}
             files={this.state.files}
-            result={this.state.modalResultsData}
+            results={this.state.results}
+            resultId={this.state.modalResultsIndex}
             scenarioID={this.state.scenario.id}
             onClose={this.closeEditResultsModal.bind(this)} />
           <DeleteDialog title="result" name={this.state.modalResultsData.id} show={this.state.deleteResultsModal} onClose={(e) => this.closeDeleteResultsModal(e)} />
