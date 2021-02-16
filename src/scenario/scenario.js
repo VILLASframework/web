@@ -749,6 +749,7 @@ class Scenario extends React.Component {
               title='Files/Data'
               dataKey='resultFileIDs'
               linkKey='filebuttons'
+              data={this.state.files}
               width='300'
               onDownload={(index) => this.downloadResultData(index)}
             />
