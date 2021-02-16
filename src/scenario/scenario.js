@@ -177,7 +177,7 @@ class Scenario extends React.Component {
             filesToDownload.forEach(file => {
               zip.file(file.name, file.data);
             });
-            let zipname = "result_" + this.state.resultNodl + "_" + Date.now();
+            let zipname = "result_" + this.state.resultNodl + "_" + (new Date()).toISOString();
             zip.generateAsync({type: "blob"}).then(function(content) {
               saveAs(content, zipname);
             });
