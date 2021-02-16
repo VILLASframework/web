@@ -700,11 +700,19 @@ class Scenario extends React.Component {
   }
 
   openResultConfigSnaphots(result) {
-    this.setState({
-      modalResultConfigs: JSON.parse(result.configSnapshots),
-      modalResultConfigsIndex: result.id,
-      resultConfigsModal: true
-    });
+    if (!result.configSnapshots || result.configSnapshots == "") {
+      this.setState({
+        modalResultConfigs: {"configs": []},
+        modalResultConfigsIndex: result.id,
+        resultConfigsModal: true
+      });
+    } else {
+      this.setState({
+        modalResultConfigs: JSON.parse(result.configSnapshots),
+        modalResultConfigsIndex: result.id,
+        resultConfigsModal: true
+      });
+    }
   }
 
   closeResultConfigSnapshots() {
