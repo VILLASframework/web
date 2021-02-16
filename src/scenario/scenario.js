@@ -181,7 +181,7 @@ class Scenario extends React.Component {
             filesToDownload.forEach(file => {
               zip.file(file.name, file.data);
             });
-            let zipname = "result_" + this.state.resultNodl + "_" + Date.now();
+            let zipname = "result_" + this.state.resultNodl + "_" + (new Date()).toISOString();
             zip.generateAsync({ type: "blob" }).then(function (content) {
               saveAs(content, zipname);
             });
@@ -791,6 +791,7 @@ class Scenario extends React.Component {
             title='Files/Data'
             dataKey='resultFileIDs'
             linkKey='filebuttons'
+            data={this.state.files}
             width='300'
             onDownload={(index) => this.downloadResultData(index)}
           />
@@ -905,18 +906,18 @@ class Scenario extends React.Component {
         />
       </Table>
 
-      { this.state.ExternalICInUse ? (
+      {this.state.ExternalICInUse ? (
         <div style={{ float: 'left' }}>
           <ICAction
             runDisabled={this.state.selectedConfigs.length === 0}
             runAction={(action, when) => this.runAction(action, when)}
             actions={[
-              {id: '-1', title: 'Action', data: {action: 'none'}},
-              {id: '0', title: 'Start', data: {action: 'start'}},
-              {id: '1', title: 'Stop', data: {action: 'stop'}},
-              {id: '2', title: 'Pause', data: {action: 'pause'}},
-              {id: '3', title: 'Resume', data: {action: 'resume'}}
-            ]}/>
+              { id: '-1', title: 'Action', data: { action: 'none' } },
+              { id: '0', title: 'Start', data: { action: 'start' } },
+              { id: '1', title: 'Stop', data: { action: 'stop' } },
+              { id: '2', title: 'Pause', data: { action: 'pause' } },
+              { id: '3', title: 'Resume', data: { action: 'resume' } }
+            ]} />
         </div>
       ) : (<div />)
       }

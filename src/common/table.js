@@ -52,6 +52,13 @@ class CustomTable extends Component {
           break;
         }
       }
+    } else if ('data' in child.props && 'dataKey' in child.props) {
+      content = new Map();
+      let keys = _.get(data, child.props.dataKey);
+      let filteredData = child.props.data.filter(data => keys.includes(data.id))
+      filteredData.forEach(file => {
+        content.set(_.get(file, 'id'), _.get(file, 'name'));
+      })
     } else if ('dataKey' in child.props) {
       content = _.get(data, child.props.dataKey);
     }
@@ -63,8 +70,6 @@ class CustomTable extends Component {
 
     let cell = [];
     if (content != null) {
-      //content = content.toString();
-
       // check if cell should be a link
       const linkKey = child.props.linkKey;
       if (linkKey && data[linkKey] != null) {
@@ -72,9 +77,9 @@ class CustomTable extends Component {
       } else if (child.props.clickable) {
         cell.push(<Button variant="link" onClick={() => child.props.onClick(index)}>{content}</Button>);
       } else if (linkKey === 'filebuttons') {
-        content.forEach(element => {
-          cell.push(<OverlayTrigger key={element} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"export"}`}>Download {element}</Tooltip>} >
-          <Button variant='table-control-button' onClick={() => child.props.onDownload(element)} disabled={child.props.onDownload == null}>{element + ' ' }
+        content.forEach((contentvalue, contentkey) => {
+          cell.push(<OverlayTrigger key={contentkey} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"export"}`}>Download {contentvalue}</Tooltip>} >
+          <Button variant='table-control-button' onClick={() => child.props.onDownload(contentkey)} disabled={child.props.onDownload == null}>{contentkey + ' ' }
             <Icon icon='file-download' /></Button></OverlayTrigger>);
         });
       } else {
