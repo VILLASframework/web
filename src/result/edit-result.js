@@ -53,7 +53,7 @@ class EditResultDialog extends React.Component {
 
   isEmpty(val) {
     return (val === undefined || val == null || val.length <= 0);
-  }; 
+  };
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.resultId != prevProps.resultId || this.props.results != prevProps.results) {
@@ -75,7 +75,7 @@ class EditResultDialog extends React.Component {
           })
         }
       }
-    } 
+    }
   };
 
   selectUploadFile(event) {
@@ -118,7 +118,7 @@ class EditResultDialog extends React.Component {
 
   }
 
-  submitDescription() {  
+  submitDescription() {
     let result = this.props.results[this.props.resultId];
     if (!this.isEmpty(result)) {
       result.description = this.state.description;
@@ -143,16 +143,15 @@ class EditResultDialog extends React.Component {
 
       <div>
         <FormGroup as={Col} controlId='description'>
-
           <Row style={{ float: 'center' }} >
-            <Col xs="auto">
+            <Col xs lg="2">
               <FormLabel>Description</FormLabel>
             </Col>
-            <Col xs="auto">
+            <Col xs lg="4">
               <FormControl type='text' placeholder={this.state.description} value={this.state.description} onChange={this.handleChange} />
               <FormControl.Feedback />
             </Col>
-            <Col xs="auto">
+            <Col xs lg="2">
               <Button
                 type="submit"
                 onClick={() => this.submitDescription()}>
@@ -160,8 +159,6 @@ class EditResultDialog extends React.Component {
             </Button>
             </Col>
           </Row>
-
-
         </FormGroup>
 
         <Table data={this.state.files}>
@@ -176,19 +173,23 @@ class EditResultDialog extends React.Component {
           />
         </Table>
 
-
-        <FormGroup controlId='resultfile'>
-          <FormLabel>Add Result File</FormLabel>
-          <FormControl type='file' onChange={(event) => this.selectUploadFile(event)} />
-        </FormGroup>
-
-        <FormGroup as={Col} >
-          <Button
-            disabled={this.state.uploadFile === null}
-            onClick={() => this.startFileUpload()}>
-            Upload
+        <div style={{ float: 'center' }}>
+          <h5>Add result file</h5>
+          <Row>
+            <Col xs lg="4">
+              <FormControl type='file' onChange={(event) => this.selectUploadFile(event)} />
+            </Col>
+            <Col xs lg="2">
+              <Button
+                disabled={this.state.uploadFile === null}
+                onClick={() => this.startFileUpload()}>
+                Upload
             </Button>
-        </FormGroup>
+            </Col>
+          </Row>
+        </div>
+
+        <br></br>
 
         <FormGroup as={Col} >
           <ProgressBar
