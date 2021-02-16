@@ -200,10 +200,10 @@ class WidgetFactory {
                 break;
 
             case 'TimeOffset':
-                widget.minWidth = 20;
-                widget.minHeight = 20;
-                widget.width = 100;
-                widget.height = 40;
+                widget.minWidth = 200;
+                widget.minHeight = 80;
+                widget.width = 200;
+                widget.height = 80;
                 widget.customProperties.threshold_yellow = 1;
                 widget.customProperties.threshold_red = 2;
                 widget.customProperties.icID = -1;
