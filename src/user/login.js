@@ -26,6 +26,7 @@ import Header from '../common/header';
 import Footer from '../common/footer';
 import NotificationsDataManager from '../common/data-managers/notifications-data-manager';
 import LoginStore from './login-store'
+import AppDispatcher from '../common/app-dispatcher';
 
 class Login extends Component {
 
@@ -36,11 +37,17 @@ class Login extends Component {
   static calculateState(prevState, props) {
     // We need to work with the login store here to trigger the re-render upon state change after login
     // Upon successful login, the token and currentUser are stored in the local storage as strings
+    const config = LoginStore.getState().config;
+    if (config === null) {
+      AppDispatcher.dispatch({
+        type: 'config/load',
+      });
+    }
     return {
       loginMessage: LoginStore.getState().loginMessage,
       token: LoginStore.getState().token,
       currentUser: LoginStore.getState().currentUser,
-      config: LoginStore.getState().config,
+      config: config,
     }
   }
 

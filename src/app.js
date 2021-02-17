@@ -48,11 +48,6 @@ class App extends React.Component {
     this.state = {
       showSidebarMenu: false,
     }
-
-    // load config from backend
-    AppDispatcher.dispatch({
-      type: 'config/load',
-    });
   }
 
   componentDidMount() {
