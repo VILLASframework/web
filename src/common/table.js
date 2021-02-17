@@ -34,7 +34,8 @@ class CustomTable extends Component {
   }
 
   static defaultProps = {
-    width: null
+    width: null,
+    checked: true
   };
 
   onClick(event, row, column) {

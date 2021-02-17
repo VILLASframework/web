@@ -17,7 +17,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button, FormGroup, FormLabel, FormText} from 'react-bootstrap';
+import {Button, FormGroup, FormLabel, FormText, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import {Collapse} from 'react-collapse';
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
@@ -63,6 +63,11 @@ class EditSignalMapping extends React.Component {
       signals = signals.concat(temp);
     }
   }
+
+  signals.forEach(signal => {
+    if(signal.checked == undefined) signal.checked = false
+  });
+
 
     return {
       signals: signals,
@@ -134,6 +139,21 @@ class EditSignalMapping extends React.Component {
 
   };
 
+  handleRemove = () => {
+
+    let checkedSignals = this.state.signals.filter(signal => signal.checked === true);
+
+    checkedSignals.forEach(signal => {
+      AppDispatcher.dispatch({
+        type: 'signals/start-remove',
+        data: signal,
+        token: this.props.sessionToken
+      });
+  
+    })
+
+  }
+
   handleAdd = (configID = null) => {
 
     if(typeof this.props.configs !== "undefined"){
@@ -173,6 +193,34 @@ class EditSignalMapping extends React.Component {
       this.setState({signals: signals})
   }
 
+  onSignalChecked(signal) {
+    let tempSignals = this.state.signals;
+    const index = tempSignals.indexOf(signal);
+    
+    tempSignals[index].checked = !tempSignals[index].checked;
+
+    this.setState({signals: tempSignals});
+    
+  }
+
+  checkAll(){
+    let tempSignals = this.state.signals;
+    let allChecked = true;
+
+    tempSignals.forEach(signal =>
+      { 
+        if(signal.checked === false){
+        signal.checked = true;
+        allChecked = false;
+      }
+      });
+
+    if(allChecked){
+      tempSignals.forEach(signal => signal.checked = false);
+    }
+    this.setState({signals: tempSignals});
+  }
+
   render() {
 
       const buttonStyle = {
@@ -185,7 +233,7 @@ class EditSignalMapping extends React.Component {
           show={this.props.show}
           title="Edit Signal Mapping"
           buttonTitle="Save"
-          blendOutCancel = {true}
+          blendOutCancel = {false}
           onClose={(c) => this.onClose(c)}
           onReset={() => this.resetState()}
           valid={true}
@@ -194,7 +242,8 @@ class EditSignalMapping extends React.Component {
           <FormGroup>
               <FormLabel>{this.props.direction} Mapping</FormLabel>
               <FormText>Click <i>Index</i>, <i>Name</i> or <i>Unit</i> cell to edit</FormText>
-              <Table data={this.state.signals}>
+              <Table checkbox onChecked={(signal) => this.onSignalChecked(signal)} data={this.state.signals}>
+                  <TableColumn checkbox onChecked={(index, event) => this.onSignalChecked(index, event)} checkboxKey='checked' width='30' />
                   <TableColumn title='Index' dataKey='index' inlineEditable inputType='number' onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
                   <TableColumn title='Name' dataKey='name' inlineEditable inputType='text' onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
                   <TableColumn title='Unit' dataKey='unit' inlineEditable inputType='text' onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
@@ -202,8 +251,12 @@ class EditSignalMapping extends React.Component {
                   <TableColumn title='Remove' deleteButton onDelete={(index) => this.handleDelete(index)} />
               </Table>
 
-              <div style={{ float: 'right' }}>
-                <Button key={50} onClick={() => this.handleAdd()} style={buttonStyle}><Icon icon="plus" /> Signal</Button>
+              <div >
+              <OverlayTrigger key={0} placement={'left'} overlay={<Tooltip id={`tooltip-${"check"}`}> Check/Uncheck All </Tooltip>} >
+                <Button key={50} style={{ float: 'left' }} onClick={() => this.checkAll()} style={buttonStyle}> <Icon icon="check" />  </Button>
+              </OverlayTrigger>
+                <Button key={51} style={{ float: 'left' }} onClick={() => this.handleRemove()} style={buttonStyle}> Remove </Button>
+                <Button key={52} style={{ float: 'right' }} onClick={() => this.handleAdd()} style={buttonStyle}><Icon icon="plus" /> Signal </Button>
               </div>
               <div>
                 <Collapse isOpened={this.state.openCollapse}>
