@@ -40,6 +40,7 @@ class Login extends Component {
       loginMessage: LoginStore.getState().loginMessage,
       token: LoginStore.getState().token,
       currentUser: LoginStore.getState().currentUser,
+      config: LoginStore.getState().config,
     }
   }
 
@@ -62,7 +63,7 @@ class Login extends Component {
         <div className="login-container">
           <NavbarBrand>Login</NavbarBrand>
 
-          <LoginForm loginMessage={this.state.loginMessage} />
+          <LoginForm loginMessage={this.state.loginMessage} config={this.state.config}/>
         </div>
 
         <Footer />

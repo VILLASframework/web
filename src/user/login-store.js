@@ -20,6 +20,7 @@ import { ReduceStore } from 'flux/utils';
 import AppDispatcher from '../common/app-dispatcher';
 import UsersDataManager from './users-data-manager';
 import ICDataDataManager from '../ic/ic-data-data-manager';
+import ConfigReader from '../config-reader';
 
 class LoginStore extends ReduceStore {
   constructor() {
@@ -31,11 +32,23 @@ class LoginStore extends ReduceStore {
       currentUser: null,
       token: null,
       loginMessage: null,
+      config: null,
     };
   }
 
   reduce(state, action) {
     switch (action.type) {
+      case 'config/load':
+        ConfigReader.loadConfig();
+        return state;
+
+      case 'config/loaded':
+        return Object.assign({}, state, { config: action.data });
+
+      case 'config/load-error':
+        console.log("config load error");
+        return Object.assign({}, state, { config: null });
+
       case 'users/login':
         UsersDataManager.login(action.username, action.password);
         return Object.assign({}, state, { loginMessage: null });
@@ -55,11 +68,8 @@ class LoginStore extends ReduceStore {
 
       case 'users/logged-in':
         // save login in local storage
-        console.log(action);
         localStorage.setItem('token', action.token);
         localStorage.setItem('currentUser', JSON.stringify(action.currentUser));
-        console.log(localStorage.getItem('token'));
-        console.log(localStorage.getItem("currentUser"));
 
         return Object.assign({}, state, { token: action.token, currentUser: action.currentUser});
 

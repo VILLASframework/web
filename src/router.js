@@ -20,7 +20,6 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import App from './app';
 import Login from './user/login';
-import LoginSelect from './user/login-select';
 import Logout from './user/logout';
 import Home from './common/home';
 import Scenarios from './scenario/scenarios';
@@ -29,7 +28,6 @@ import Dashboard from './dashboard/dashboard'
 import InfrastructureComponents from './ic/ics';
 import Users from './user/users';
 import User from "./user/user";
-import Config from './config';
 import LoginComplete from './user/login-complete'
 
 
@@ -39,13 +37,7 @@ class Root extends React.Component {
       <BrowserRouter>
         <Switch>
           <Route path='/login/complete' component={LoginComplete} />
-          <Route
-            path='/login'
-            render={(props) => (
-              <LoginSelect loginURL={Config.loginURL} provider={Config.provider} disableVillasLogin={Config.disableVillasLogin}/>
-            )}
-          />
-          <Route path='/villaslogin' component={Login} />
+          <Route path='/login' component={Login} />
           <Route path='/logout' component={Logout} />
           <Route path='/' component={App} />
           <Route path='/home' component={Home} />
