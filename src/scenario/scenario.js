@@ -539,11 +539,21 @@ class Scenario extends React.Component {
   ############################################## */
 
   closeEditSignalsModal(direction) {
+
+    // reload the config
+    AppDispatcher.dispatch({
+      type: 'configs/start-load',
+      data: this.state.modalConfigData.id,
+      token: this.state.sessionToken
+    });
+
     if (direction === "in") {
       this.setState({ editInputSignalsModal: false });
     } else if (direction === "out") {
       this.setState({ editOutputSignalsModal: false });
     }
+
+
   }
 
   onEditFiles() {

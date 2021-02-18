@@ -27,9 +27,9 @@ class SignalsDataManager extends RestDataManager{
     super('signal', '/signals');
   }
 
-  reloadConfig(token, data){
+  reloadConfig(token, id){
     // request in signals
-    RestAPI.get(this.makeURL('/configs/' + data.configID), token).then(response => {
+    RestAPI.get(this.makeURL('/configs/' + id), token).then(response => {
       AppDispatcher.dispatch({
         type: 'configs/edited',
         data: response.config

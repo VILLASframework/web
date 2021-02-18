@@ -27,11 +27,9 @@ class SignalStore extends  ArrayStore{
 
   reduce(state, action) {
     switch (action.type) {
+
       case 'signals/added':
-        this.dataManager.reloadConfig(action.token, action.data);
-        return super.reduce(state, action);
-      case 'signals/removed':
-        this.dataManager.reloadConfig(action.token, action.data);
+        this.dataManager.reloadConfig(action.token, action.data.configID);
         return super.reduce(state, action);
 
       case 'signals/start-autoconfig':
@@ -41,7 +39,6 @@ class SignalStore extends  ArrayStore{
       case 'signals/autoconfig-loaded':
         console.log("AutoConfig Loaded: ", action.data)
         this.dataManager.saveSignals(action.data, action.token, action.configID, action.socketname);
-
         return super.reduce(state, action);
 
       case 'signals/autoconfig-error':
