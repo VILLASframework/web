@@ -46,8 +46,7 @@ class LoginStore extends ReduceStore {
         return Object.assign({}, state, { config: action.data });
 
       case 'config/load-error':
-        console.log("config load error");
-        return Object.assign({}, state, { config: null });
+        return Object.assign({}, state, { config: null});
 
       case 'users/login':
         UsersDataManager.login(action.username, action.password);

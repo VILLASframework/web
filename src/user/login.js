@@ -29,25 +29,28 @@ import LoginStore from './login-store'
 import AppDispatcher from '../common/app-dispatcher';
 
 class Login extends Component {
+  constructor(props) {
+    super(props);
 
-  static getStores(){
+    // load config in case the user goes directly to /login
+    // otherwise it will be loaded in app constructor
+    AppDispatcher.dispatch({
+      type: 'config/load',
+    });
+  }
+
+  static getStores() {
     return [LoginStore]
   }
 
   static calculateState(prevState, props) {
     // We need to work with the login store here to trigger the re-render upon state change after login
     // Upon successful login, the token and currentUser are stored in the local storage as strings
-    const config = LoginStore.getState().config;
-    if (config === null) {
-      AppDispatcher.dispatch({
-        type: 'config/load',
-      });
-    }
     return {
       loginMessage: LoginStore.getState().loginMessage,
       token: LoginStore.getState().token,
       currentUser: LoginStore.getState().currentUser,
-      config: config,
+      config: LoginStore.getState().config,
     }
   }
 
