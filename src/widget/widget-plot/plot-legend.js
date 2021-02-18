@@ -20,7 +20,7 @@ import { scaleOrdinal} from 'd3-scale';
 import {schemeCategory10} from 'd3-scale-chromatic'
 
 function Legend(props){
- 
+
   const signal = props.sig;
   const hasScalingFactor = (signal.scalingFactor !== 1);
 
@@ -52,10 +52,15 @@ class PlotLegend extends React.Component {
 
     return <div className="plot-legend">
       <ul>
-        {
+        { this.props.lineColors !== undefined && this.props.lineColors != null ? (
           this.props.signals.map( signal =>
              <Legend key={signal.id} sig={signal} lineColor={this.props.lineColors[signal.id]}/>
-        )}
+        )) : (
+          this.props.signals.map( signal =>
+            <Legend key={signal.id} sig={signal} lineColor={"undefined"}/>
+          ))
+        }
+
       </ul>
     </div>;
   }

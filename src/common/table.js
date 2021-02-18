@@ -52,29 +52,34 @@ class CustomTable extends Component {
           break;
         }
       }
+    } else if ('data' in child.props && 'dataKey' in child.props) {
+      content = new Map();
+      let keys = _.get(data, child.props.dataKey);
+      let filteredData = child.props.data.filter(data => keys.includes(data.id))
+      filteredData.forEach(file => {
+        content.set(_.get(file, 'id'), _.get(file, 'name'));
+      })
     } else if ('dataKey' in child.props) {
       content = _.get(data, child.props.dataKey);
     }
 
     const modifier = child.props.modifier;
     if (modifier && content != null) {
-      content = modifier(content);
+      content = modifier(content, data);
     }
 
     let cell = [];
     if (content != null) {
-      //content = content.toString();
-
       // check if cell should be a link
       const linkKey = child.props.linkKey;
       if (linkKey && data[linkKey] != null) {
         cell.push(<Link to={child.props.link + data[linkKey]}>{content}</Link>);
       } else if (child.props.clickable) {
         cell.push(<Button variant="link" onClick={() => child.props.onClick(index)}>{content}</Button>);
-      } else if (linkKey == 'filebuttons') {
-        content.forEach(element => {
-          cell.push(<OverlayTrigger key={element} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"export"}`}>Download {element}</Tooltip>} >
-          <Button variant='table-control-button' onClick={() => child.props.onDownload(element)} disabled={child.props.onDownload == null}>{element + ' ' }
+      } else if (linkKey === 'filebuttons') {
+        content.forEach((contentvalue, contentkey) => {
+          cell.push(<OverlayTrigger key={contentkey} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"export"}`}>Download {contentvalue}</Tooltip>} >
+          <Button variant='table-control-button' onClick={() => child.props.onDownload(contentkey)} disabled={child.props.onDownload == null}>{contentkey + ' ' }
             <Icon icon='file-download' /></Button></OverlayTrigger>);
         });
       } else {
@@ -116,8 +121,18 @@ class CustomTable extends Component {
 
     if (child.props.checkbox) {
       const checkboxKey = child.props.checkboxKey;
-
-      cell.push(<FormCheck className="table-control-checkbox" inline checked={checkboxKey ? data[checkboxKey] : null} onChange={e => child.props.onChecked(index, e)} />);
+      let isDisabled = false;
+      if (child.props.checkboxDisabled != null){
+        isDisabled = !child.props.checkboxDisabled(index)
+      }
+      cell.push(
+        <FormCheck
+          className="table-control-checkbox"
+          inline
+          disabled = {isDisabled}
+          checked={checkboxKey ? data[checkboxKey] : null}
+          onChange={e => child.props.onChecked(data, e)}
+        />);
     }
 
     if (child.props.exportButton) {

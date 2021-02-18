@@ -42,6 +42,14 @@ class NotificationsFactory {
     };
   }
 
+  static INTERNAL_SERVER_ERROR(response) {
+    return {
+      title: 'Internal server error',
+      message: response.message,
+      level: 'error'
+    };
+  }
+
   static ADD_ERROR(message) {
     return {
       title: "Add Error",

@@ -24,8 +24,14 @@ class IcsDataManager extends RestDataManager {
       super('ic', '/ic');
   }
 
-  doActions(ic, action, token = null) {
-      RestAPI.post(this.makeURL(this.url + '/' + ic.id + '/action'), action, token).then(response => {
+  doActions(ic, actions, token = null) {
+      for (let action of actions) {
+        if (action.when)
+          // Send timestamp as Unix Timestamp
+          action.when = Math.round(action.when.getTime() / 1000);
+      }
+
+      RestAPI.post(this.makeURL(this.url + '/' + ic.id + '/action'), actions, token).then(response => {
           AppDispatcher.dispatch({
               type: 'ics/action-started',
               data: response

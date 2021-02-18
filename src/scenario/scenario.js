@@ -103,6 +103,7 @@ class Scenario extends React.Component {
       files: FileStore.getState().filter(file => file.scenarioID === parseInt(props.match.params.scenario, 10)),
 
       ics: ICStore.getState(),
+      ExternalICInUse: false,
 
       deleteConfigModal: false,
       importConfigModal: false,
@@ -113,9 +114,11 @@ class Scenario extends React.Component {
 
       editResultsModal: prevState.editResultsModal || false,
       modalResultsData: {},
-      modalResultsIndex: 0,
+      modalResultsIndex: prevState.modalResultsIndex,
       newResultModal: false,
-      filesToDownload: [],
+      filesToDownload: prevState.filesToDownload,
+      zipfiles: prevState.zipfiles || false,
+      resultNodl: prevState.resultNodl,
 
       editOutputSignalsModal: prevState.editOutputSignalsModal || false,
       editInputSignalsModal: prevState.editInputSignalsModal || false,
@@ -158,25 +161,28 @@ class Scenario extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     // check whether file data has been loaded
-    if (this.state.filesToDownload.length > 0  ) {
-      if (this.state.filesToDownload.length === 1) {
-        let fileToDownload = FileStore.getState().filter(file => file.id === this.state.filesToDownload[0])
-        if (fileToDownload.length === 1 && fileToDownload[0].data) {
-          const blob = new Blob([fileToDownload[0].data], {type: fileToDownload[0].type});
-          FileSaver.saveAs(blob, fileToDownload[0].name);
-          this.setState({ filesToDownload: [] });
-        }
-      } else { // zip and save several files
-        let filesToDownload = FileStore.getState().filter(file => this.state.filesToDownload.includes(file.id) && file.data);
-        if (filesToDownload.length === this.state.filesToDownload.length) { // all requested files have been loaded
-          var zip = new JSZip();
-          filesToDownload.forEach(file => {
-            zip.file(file.name, file.data);
-          });
-          zip.generateAsync({type: "blob"}).then(function(content) {
-            saveAs(content, "results.zip");
-          });
-          this.setState({ filesToDownload: [] });
+    if (this.state.filesToDownload && this.state.filesToDownload.length > 0  ) {
+      if (this.state.files != prevState.files) {
+        if (!this.state.zipfiles) {
+          let fileToDownload = FileStore.getState().filter(file => file.id === this.state.filesToDownload[0])
+          if (fileToDownload.length === 1 && fileToDownload[0].data) {
+            const blob = new Blob([fileToDownload[0].data], {type: fileToDownload[0].type});
+            FileSaver.saveAs(blob, fileToDownload[0].name);
+            this.setState({ filesToDownload: [] });
+          }
+        } else { // zip and save one or more files (download all button)
+          let filesToDownload = FileStore.getState().filter(file => this.state.filesToDownload.includes(file.id) && file.data);
+          if (filesToDownload.length === this.state.filesToDownload.length) { // all requested files have been loaded
+            var zip = new JSZip();
+            filesToDownload.forEach(file => {
+              zip.file(file.name, file.data);
+            });
+            let zipname = "result_" + this.state.resultNodl + "_" + (new Date()).toISOString();
+            zip.generateAsync({type: "blob"}).then(function(content) {
+              saveAs(content, zipname);
+            });
+            this.setState({ filesToDownload: [] });
+          }
         }
       }
     }
@@ -361,9 +367,30 @@ class Scenario extends React.Component {
     this.setState({ selectedConfigs: selectedConfigs });
   }
 
-  runAction(action, delay) {
-    // delay in seconds
+  usesExternalIC(index){
+    let icID = this.state.configs[index].icID;
 
+    let ic = null;
+    for (let component of this.state.ics) {
+      if (component.id === this.state.configs[index].icID) {
+        ic = component;
+      }
+    }
+
+    if (ic == null) {
+      return false;
+    }
+
+    if (ic.managedexternally === true){
+      this.setState({ExternalICInUse: true})
+      return true
+    }
+
+    return false
+
+  }
+
+  runAction(action, when) {
     if (action.data.action === 'none') {
       console.warn("No command selected. Nothing was sent.");
       return;
@@ -386,8 +413,7 @@ class Scenario extends React.Component {
         action.data.parameters = this.state.configs[index].startParameters;
       }
 
-      // Unix time stamp + delay
-      action.data.when = Math.round(Date.now() / 1000.0 + delay)
+      action.data.when = when;
 
       console.log("Sending action: ", action.data)
 
@@ -613,21 +639,19 @@ class Scenario extends React.Component {
 
   closeEditResultsModal() {
     this.setState({ editResultsModal: false });
-
-    AppDispatcher.dispatch({
-      type: 'results/start-load',
-      token: this.state.sessionToken,
-      param: '?scenarioID=' + this.state.scenario.id
-    })
   }
 
   downloadResultData(param) {
     let toDownload = [];
+    let zip = false;
 
-    if (typeof(param) === 'object') {
+    if (typeof(param) === 'object') { // download all files
       toDownload = param.resultFileIDs;
-    } else {
+      zip = true;
+      this.setState({ filesToDownload: toDownload, zipfiles: zip, resultNodl: param.id });
+    } else { // download one file
       toDownload.push(param);
+      this.setState({ filesToDownload: toDownload, zipfiles: zip});
     }
 
     toDownload.forEach(fileid => {
@@ -637,8 +661,6 @@ class Scenario extends React.Component {
         token: this.state.sessionToken
       });
     });
-
-    this.setState({ filesToDownload: toDownload });
   }
 
   closeDeleteResultsModal(confirmDelete) {
@@ -727,6 +749,7 @@ class Scenario extends React.Component {
               title='Files/Data'
               dataKey='resultFileIDs'
               linkKey='filebuttons'
+              data={this.state.files}
               width='300'
               onDownload={(index) => this.downloadResultData(index)}
             />
@@ -736,7 +759,7 @@ class Scenario extends React.Component {
               editButton
               downloadAllButton
               deleteButton
-              onEdit={index => this.setState({ editResultsModal: true, modalResultsData: this.state.results[index], modalResultsIndex: index })}
+              onEdit={index => this.setState({ editResultsModal: true, modalResultsIndex: index })}
               onDownloadAll={(index) => this.downloadResultData(this.state.results[index])}
               onDelete={(index) => this.setState({ deleteResultsModal: true, modalResultsData: this.state.results[index], modalResultsIndex: index })}
             />
@@ -746,7 +769,8 @@ class Scenario extends React.Component {
             sessionToken={this.state.sessionToken}
             show={this.state.editResultsModal}
             files={this.state.files}
-            result={this.state.modalResultsData}
+            results={this.state.results}
+            resultId={this.state.modalResultsIndex}
             scenarioID={this.state.scenario.id}
             onClose={this.closeEditResultsModal.bind(this)} />
           <DeleteDialog title="result" name={this.state.modalResultsData.id} show={this.state.deleteResultsModal} onClose={(e) => this.closeDeleteResultsModal(e)} />
@@ -772,15 +796,27 @@ class Scenario extends React.Component {
         scenarioID={this.state.scenario.id}
       />
 
-
-
       {/*Component Configurations table*/}
       <h2 style={tableHeadingStyle}>Component Configurations
-        <Button onClick={() => this.addConfig()} style={buttonStyle}><Icon icon="plus" /></Button>
-        <Button onClick={() => this.setState({ importConfigModal: true })} style={buttonStyle}><Icon icon="upload" /></Button>
+        <OverlayTrigger
+          key={1}
+          placement={'top'}
+          overlay={<Tooltip id={`tooltip-${"add"}`}> Add Component Configuration </Tooltip>} >
+          <Button onClick={() => this.addConfig()} style={buttonStyle}><Icon icon="plus" /></Button>
+        </OverlayTrigger>
+        <OverlayTrigger
+          key={2}
+          placement={'top'}
+          overlay={<Tooltip id={`tooltip-${"import"}`}> Import Component Configuration </Tooltip>} >
+          <Button onClick={() => this.setState({ importConfigModal: true })} style={buttonStyle}><Icon icon="upload" /></Button>
+        </OverlayTrigger>
       </h2>
       <Table data={this.state.configs}>
-        <TableColumn checkbox onChecked={(index, event) => this.onConfigChecked(index, event)} width='30' />
+        <TableColumn
+          checkbox
+          checkboxDisabled={(index) => this.usesExternalIC(index)}
+          onChecked={(index, event) => this.onConfigChecked(index, event)}
+          width='30' />
         <TableColumn title='Name' dataKey='name' />
         <TableColumn title='Configuration file(s)' dataKey='fileIDs' modifier={(fileIDs) => this.getListOfFiles(fileIDs, ['json', 'JSON'])} />
         <TableColumn
@@ -822,19 +858,21 @@ class Scenario extends React.Component {
         />
       </Table>
 
-      <div style={{ float: 'left' }}>
-        <ICAction
-          runDisabled={this.state.selectedConfigs.length === 0}
-          runAction={(action, delay) => this.runAction(action, delay)}
-          actions={[
-            { id: '-1', title: 'Select command', data: { action: 'none' } },
-            { id: '0', title: 'Start', data: { action: 'start' } },
-            { id: '1', title: 'Stop', data: { action: 'stop' } },
-            { id: '2', title: 'Pause', data: { action: 'pause' } },
-            { id: '3', title: 'Resume', data: { action: 'resume' } }
-          ]} />
-      </div>
-
+      { this.state.ExternalICInUse ? (
+        <div style={{float: 'left'}}>
+          <ICAction
+            runDisabled={this.state.selectedConfigs.length === 0}
+            runAction={(action, when) => this.runAction(action, when)}
+            actions={[
+              {id: '-1', title: 'Action', data: {action: 'none'}},
+              {id: '0', title: 'Start', data: {action: 'start'}},
+              {id: '1', title: 'Stop', data: {action: 'stop'}},
+              {id: '2', title: 'Pause', data: {action: 'pause'}},
+              {id: '3', title: 'Resume', data: {action: 'resume'}}
+            ]}/>
+        </div>
+        ) : (<div/>)
+      }
       <div style={{ clear: 'both' }} />
 
       <EditConfigDialog
@@ -868,8 +906,18 @@ class Scenario extends React.Component {
 
       {/*Dashboard table*/}
       <h2 style={tableHeadingStyle}>Dashboards
-        <Button onClick={() => this.setState({ newDashboardModal: true })} style={buttonStyle}><Icon icon="plus" /></Button>
-        <Button onClick={() => this.setState({ importDashboardModal: true })} style={buttonStyle}><Icon icon="upload" /></Button>
+        <OverlayTrigger
+          key={1}
+          placement={'top'}
+          overlay={<Tooltip id={`tooltip-${"add"}`}> Add Dashboard </Tooltip>} >
+          <Button onClick={() => this.setState({ newDashboardModal: true })} style={buttonStyle}><Icon icon="plus" /></Button>
+        </OverlayTrigger>
+        <OverlayTrigger
+          key={2}
+          placement={'top'}
+          overlay={<Tooltip id={`tooltip-${"import"}`}> Import Dashboard </Tooltip>} >
+          <Button onClick={() => this.setState({ importDashboardModal: true })} style={buttonStyle}><Icon icon="upload" /></Button>
+        </OverlayTrigger>
       </h2>
       <Table data={this.state.dashboards}>
         <TableColumn title='Name' dataKey='name' link='/dashboards/' linkKey='id' />
@@ -896,7 +944,12 @@ class Scenario extends React.Component {
 
       {/*Result table*/}
       <h2 style={tableHeadingStyle}>Results
-        <Button onClick={() => this.setState({ newResultModal: true })} style={buttonStyle}><Icon icon="plus" /></Button>
+        <OverlayTrigger
+          key={1}
+          placement={'top'}
+          overlay={<Tooltip id={`tooltip-${"add"}`}> Add Result </Tooltip>} >
+          <Button onClick={() => this.setState({ newResultModal: true })} style={buttonStyle}><Icon icon="plus" /></Button>
+        </OverlayTrigger>
       </h2>
       {resulttable}
       <NewResultDialog show={this.state.newResultModal} onClose={data => this.closeNewResultModal(data)} />

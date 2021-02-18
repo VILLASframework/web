@@ -19,6 +19,8 @@ import React, { Component } from 'react';
 import { FormGroup, OverlayTrigger, Tooltip , FormLabel, Button } from 'react-bootstrap';
 import ColorPicker from './color-picker'
 import Icon from "../../common/icon";
+import {scaleOrdinal} from "d3-scale";
+import {schemeCategory10} from "d3-scale-chromatic";
 
 // schemeCategory20 no longer available in d3
 
@@ -36,8 +38,20 @@ class EditWidgetPlotColorsControl extends Component {
   }
 
   static getDerivedStateFromProps(props, state){
+
+    let widget = props.widget;
+    if(widget.customProperties.lineColors === undefined || widget.customProperties.lineColors === null){
+      // for backwards compatibility with old plots
+      widget.customProperties.lineColors = []
+
+      const newLineColor = scaleOrdinal(schemeCategory10);
+      for (let signalID of widget.signalIDs){
+        widget.customProperties.lineColors.push(newLineColor(signalID))
+      }
+    }
+
     return {
-      widget: props.widget
+      widget: widget
     };
   }
 
@@ -62,9 +76,9 @@ class EditWidgetPlotColorsControl extends Component {
           this.setState({selectedIndex: null});
         }
   }
-  
+
   render() {
-   
+
     return (
       <FormGroup>
         <FormLabel>Line Colors</FormLabel>
@@ -81,7 +95,7 @@ class EditWidgetPlotColorsControl extends Component {
                         }
 
                         let signal = this.props.signals.find(signal => signal.id === signalID);
-                      
+
                         return (<OverlayTrigger key={idx} placement={'bottom'} overlay={<Tooltip id={'tooltip-${"signal name"}'}>{signal.name}</Tooltip>}>
                           <Button
                             style={style} key={idx} onClick={i => this.editLineColor(signalID)} ><Icon icon="pen" /></Button>

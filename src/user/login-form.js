@@ -72,14 +72,14 @@ class LoginForm extends Component {
         <FormGroup controlId="username">
           <FormLabel column={true}>Username</FormLabel>
           <Col>
-            <FormControl type="text" placeholder="Username" onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder="Username" autoComplete="username" onChange={(e) => this.handleChange(e)} />
           </Col>
         </FormGroup>
 
         <FormGroup controlId="password">
           <FormLabel column={true}>Password</FormLabel>
           <Col >
-            <FormControl type="password" placeholder="Password" onChange={(e) => this.handleChange(e)} />
+            <FormControl type="password" placeholder="Password" autoComplete="current-password" onChange={(e) => this.handleChange(e)} />
           </Col>
         </FormGroup>
 
