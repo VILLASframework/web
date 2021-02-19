@@ -431,11 +431,11 @@ class Scenario extends React.Component {
       });
     }
 
-    if (configs != 0) { //create result (only if command was 'start')
+    if (configs.length !== 0) { //create result (only if command was 'start')
       let componentConfigs = {};
       componentConfigs["configs"] = configs;
       let data = {};
-      data["Description"] = "created by start cmd";
+      data["Description"] = "Run " + this.state.scenario.name; // default description, to be change by user later
       data["ResultFileIDs"] = [];
       data["scenarioID"] = this.state.scenario.id;
       data["ConfigSnapshots"] = JSON.stringify(componentConfigs, null, 2);
