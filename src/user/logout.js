@@ -17,28 +17,11 @@
 
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { Container } from 'flux/utils';
-
 import AppDispatcher from '../common/app-dispatcher';
-import LoginStore from './login-store'
 
 class Logout extends React.Component {
 
-  static getStores() {
-    return [LoginStore]
-  }
-
-  static calculateState(prevState, props) {
-    return {
-      config: LoginStore.getState().config,
-    }
-  }
-
   componentDidMount() {
-    this.resetValues();
-  }
-
-  resetValues() {
     AppDispatcher.dispatch({
       type: 'users/logout'
     });
@@ -51,18 +34,10 @@ class Logout extends React.Component {
   }
 
   render() {
-    if (this.state.config) {
-      let logout_url = _.get(this.props.config, ['authentication', 'logout_url'])
-      if (logout_url) {
-        this.resetValues();
-        window.location = logout_url;
-      }
-    }
     return (
       <Redirect to="/login" />
     );
   }
 }
 
-let fluxContainerConverter = require('../common/FluxContainerConverter');
-export default Container.create(fluxContainerConverter.convert(Logout));
+export default Logout;

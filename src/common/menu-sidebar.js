@@ -17,9 +17,73 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { Container } from 'flux/utils';
+import LoginStore from '../user/login-store';
+import AppDispatcher from './app-dispatcher';
+
 
 class SidebarMenu extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      externalAuth: false,
+      logoutLink: "",
+    }
+  }
+
+  static getStores() {
+    return [LoginStore]
+  }
+
+  static calculateState(prevState, props) {
+    let config = LoginStore.getState().config;
+    let logout_url = _.get(config, ['authentication', 'logout_url']);
+
+    if (logout_url) {
+      return {
+        externalAuth: true,
+        logoutLink: logout_url,
+      }
+    }
+
+    return {
+      externalAuth: false,
+      logoutLink: "/logout",
+    }
+  }
+
+  logout() {
+    AppDispatcher.dispatch({
+      type: 'users/logout'
+    });
+    // The Login Store is deleted automatically
+
+    // discard login token and current User
+    localStorage.setItem('token', '');
+    localStorage.setItem('currentUser', '');
+  }
+
   render() {
+    if (this.state.externalAuth) {
+      return (
+        <div className="menu-sidebar">
+          <h2>Menu</h2>
+          <ul>
+            <li><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
+            <li><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
+            <li><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure Components">Infrastructure Components</NavLink></li>
+            { this.props.currentRole === 'Admin' ?
+                <li><NavLink to="/users" activeClassName="active" title="User Management">User Management</NavLink></li> : ''
+            }
+            <li><NavLink to="/account" title="Account">Account</NavLink></li>
+            <a onClick={this.logout.bind(this)} href={this.state.logoutLink}>Logout</a>
+            <li><NavLink to="/api" title="API Browser">API Browser</NavLink></li>
+          </ul>
+        </div>
+      );
+    }
+
     return (
       <div className="menu-sidebar">
         <h2>Menu</h2>
@@ -32,7 +96,7 @@ class SidebarMenu extends React.Component {
               <li><NavLink to="/users" activeClassName="active" title="User Management">User Management</NavLink></li> : ''
           }
           <li><NavLink to="/account" title="Account">Account</NavLink></li>
-          <li><NavLink to="/logout" title="Logout">Logout</NavLink></li>
+          <li><NavLink to={this.state.logoutLink} title="Logout">Logout</NavLink></li>
           <li><NavLink to="/api" title="API Browser">API Browser</NavLink></li>
         </ul>
       </div>
@@ -40,4 +104,5 @@ class SidebarMenu extends React.Component {
   }
 }
 
-export default SidebarMenu;
+let fluxContainerConverter = require('../common/FluxContainerConverter');
+export default Container.create(fluxContainerConverter.convert(SidebarMenu));
