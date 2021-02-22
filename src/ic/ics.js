@@ -240,18 +240,7 @@ class InfrastructureComponents extends Component {
     this.setState({ selectedICs: selectedICs });
   }
 
-  runAction(action, when) {
-    for (let index of this.state.selectedICs) {
-      action.when = when;
 
-      AppDispatcher.dispatch({
-        type: 'ics/start-action',
-        ic: this.state.ics[index],
-        data: action.data,
-        token: this.state.sessionToken,
-      });
-    }
-  }
 
   static isICOutdated(component) {
     if (!component.stateUpdateAt)
@@ -420,19 +409,19 @@ class InfrastructureComponents extends Component {
             modifier={(stateUpdateAt, component) => this.stateUpdateModifier(stateUpdateAt, component)}
           />
 
-          {this.state.currentUser.role === "Admin" && editable ?
+          {this.state.currentUser.role === "Admin" ?
             <TableColumn
-              width='200'
-              editButton
+              width='150'
+              editButton = {(index) => !this.isExternalIC(index)}
               exportButton
-              deleteButton
+              deleteButton = {(index) => !this.isExternalIC(index)}
               onEdit={index => this.setState({editModal: true, modalIC: ics[index], modalIndex: index})}
               onExport={index => this.exportIC(index)}
               onDelete={index => this.setState({deleteModal: true, modalIC: ics[index], modalIndex: index})}
             />
             :
             <TableColumn
-              width='100'
+              width='50'
               exportButton
               onExport={index => this.exportIC(index)}
             />
@@ -496,12 +485,15 @@ class InfrastructureComponents extends Component {
         {this.state.currentUser.role === "Admin" && this.state.numberOfExternalICs > 0 ?
           <div style={{float: 'left'}}>
             <ICAction
-              runDisabled={this.state.selectedICs.length === 0}
-              runAction={(action, when) => this.runAction(action, when)}
+              hasConfigs = {false}
+              ics={this.state.ics}
+              selectedICs={this.state.selectedICs}
+              token={this.state.sessionToken}
               actions={[
                 {id: '-1', title: 'Action', data: {action: 'none'}},
                 {id: '0', title: 'Reset', data: {action: 'reset'}},
                 {id: '1', title: 'Shutdown', data: {action: 'shutdown'}},
+                {id: '2', title: 'Delete', data: {action: 'delete'}}
               ]}
             />
           </div>

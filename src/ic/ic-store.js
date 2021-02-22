@@ -66,15 +66,40 @@ class InfrastructureComponentStore extends ArrayStore {
         return state;
 
       case 'ics/start-action':
-        if (!Array.isArray(action.data))
-          action.data = [ action.data ]
+        if (!Array.isArray(action.action))
+          action.action = [ action.action ]
 
-        ICsDataManager.doActions(action.ic, action.data, action.token);
+        ICsDataManager.doActions(action.icid, action.action, action.token, action.result);
         return state;
 
       case 'ics/action-error':
         console.log(action.error);
         return state;
+
+      case 'ics/action-result-added':
+
+        for (let a of action.actions){
+          let icid = Object.assign({}, a.icid)
+
+          if (a.results !== undefined && a.results != null){
+            // adapt URL for newly created result ID
+            a.results.url = a.results.url.replace("RESULTID", action.data.result.id);
+            a.results.url = ICsDataManager.makeURL(a.results.url);
+            a.results.url = window.location.host + a.results.url;
+          }
+          if (a.model !== undefined && a.model != null) {
+            // adapt URL for model file
+            a.model.url = ICsDataManager.makeURL(a.model.url);
+            a.model.url = window.location.host + a.model.url;
+          }
+          delete a.icid
+          ICsDataManager.doActions(icid, [a], action.token)
+        }
+        return state;
+
+      case 'ics/action-result-add-error':
+        console.log(action.error);
+        return state
 
       case 'ics/get-status':
         ICsDataManager.getStatus(action.url, action.token, action.ic);

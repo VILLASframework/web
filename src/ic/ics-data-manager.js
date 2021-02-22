@@ -24,24 +24,79 @@ class IcsDataManager extends RestDataManager {
       super('ic', '/ic');
   }
 
-  doActions(ic, actions, token = null) {
+  doActions(icid, actions, token = null, result=null) {
       for (let action of actions) {
         if (action.when)
           // Send timestamp as Unix Timestamp
           action.when = Math.round(action.when.getTime() / 1000);
       }
 
-      RestAPI.post(this.makeURL(this.url + '/' + ic.id + '/action'), actions, token).then(response => {
+      if (icid !== undefined && icid != null) {
+
+        console.log("doActions, icid:", icid)
+        // sending action to a specific IC via IC list
+
+        RestAPI.post(this.makeURL(this.url + '/' + icid + '/action'), actions, token).then(response => {
           AppDispatcher.dispatch({
-              type: 'ics/action-started',
-              data: response
+            type: 'ics/action-started',
+            data: response
           });
-      }).catch(error => {
+        }).catch(error => {
           AppDispatcher.dispatch({
-              type: 'ics/action-error',
+            type: 'ics/action-error',
+            error
+          });
+        });
+      } else {
+        // sending the same action to multiple ICs via scenario controls
+
+        // distinguish between "start" action and any other
+
+        if (actions[0].action !== "start"){
+          for (let a of actions){
+            console.log("doActions, a.icid:", a.icid)
+            icid = JSON.parse(JSON.stringify(a.icid))
+            delete a.icid
+            console.log("doActions, icid:", icid)
+            // sending action to a specific IC via IC list
+
+            RestAPI.post(this.makeURL(this.url + '/' + icid + '/action'), [a], token).then(response => {
+              AppDispatcher.dispatch({
+                type: 'ics/action-started',
+                data: response
+              });
+            }).catch(error => {
+              AppDispatcher.dispatch({
+                type: 'ics/action-error',
+                error
+              });
+            });
+
+          }
+        } else{
+          // for start actions procedure is different
+          // first a result needs to be created, then the start actions can be sent
+
+          RestAPI.post(this.makeURL( '/results'), result, token).then(response => {
+            AppDispatcher.dispatch({
+              type: 'ics/action-result-added',
+              data: response,
+              actions: actions,
+              token: token,
+            });
+          }).catch(error => {
+            AppDispatcher.dispatch({
+              type: 'ics/action-result-add-error',
               error
+            });
           });
-      });
+
+
+        }
+
+
+
+      }
   }
 
   getStatus(url,token,ic){
