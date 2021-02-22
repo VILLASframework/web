@@ -132,12 +132,9 @@ class Users extends Component {
 
     const buttonStyle = {
       marginLeft: '10px',
-      backgroundColor: '#ffffff',
-      borderColor: '#ffffff'
     }
 
     const iconStyle = {
-      color: '#527984',
       height: '30px',
       width: '30px'
     }
@@ -145,7 +142,9 @@ class Users extends Component {
     return (
       <div>
         <h1>Users
-        <Button style={buttonStyle} onClick={() => this.setState({ newModal: true })}><Icon icon='plus' style={iconStyle} /></Button>
+        <span className='icon-button'>
+        <Button variant='light' style={buttonStyle} onClick={() => this.setState({ newModal: true })}><Icon icon='plus' classname='icon-color' style={iconStyle} /></Button>
+        </span>
         </h1>
 
         <Table data={this.state.users}>

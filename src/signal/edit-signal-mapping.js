@@ -177,8 +177,6 @@ class EditSignalMapping extends React.Component {
 
       const buttonStyle = {
         marginLeft: '10px',
-        backgroundColor: '#527984', 
-        borderColor: '#527984'
       };
 
       return(
@@ -204,16 +202,16 @@ class EditSignalMapping extends React.Component {
                   <TableColumn title='Remove' deleteButton onDelete={(index) => this.handleDelete(index)} />
               </Table>
 
-              <div style={{ float: 'right' }}>
-                <Button key={50} onClick={() => this.handleAdd()} style={buttonStyle}><Icon icon="plus" /> Signal</Button>
+              <div className='solid-button' style={{ float: 'right' }}>
+                <Button variant='secondary' key={50} onClick={() => this.handleAdd()} style={buttonStyle}><Icon icon="plus" /> Signal</Button>
               </div>
               <div>
                 <Collapse isOpened={this.state.openCollapse}>
                 <h6>Choose a Component Configuration to add the signal to: </h6>
-                <div>
+                <div className='solid-button'>
                 {typeof this.props.configs !== "undefined" && this.props.configs.map(config => (
 
-                  <Button key ={config.id} onClick={() => this.handleAdd(config.id)} style={buttonStyle}>{config.name}</Button>
+                  <Button variant='secondary' key ={config.id} onClick={() => this.handleAdd(config.id)} style={buttonStyle}>{config.name}</Button>
 
                 ))}
                 </div>

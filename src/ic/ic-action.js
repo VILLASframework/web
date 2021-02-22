@@ -75,17 +75,17 @@ class ICAction extends React.Component {
             step={1}
             onChange={this.setDelayForAction}
           />
+          <div className='solid-button'>
           <ButtonToolbar>
            <Dropdown onSelect={this.setAction}>
-             <Dropdown.Toggle id={'action-dropdown'} style={{backgroundColor: '#527984', borderColor: '#527984'}}> {this.state.selectedAction != null ? this.state.selectedAction.title : ''}</Dropdown.Toggle>
+             <Dropdown.Toggle variant='secondary' id={'action-dropdown'}> {this.state.selectedAction != null ? this.state.selectedAction.title : ''}</Dropdown.Toggle>
              <Dropdown.Menu>
              {actionList}
              </Dropdown.Menu>
            </Dropdown>
-
-            <Button style={{ marginLeft: '5px', backgroundColor: '#527984', borderColor: '#527984' }} disabled={sendCommandDisabled} onClick={() => this.props.runAction(this.state.selectedAction, this.state.selectedDelay)}>Send command</Button>
-
+            <Button variant='secondary' style={{ marginLeft: '5px', }} disabled={sendCommandDisabled} onClick={() => this.props.runAction(this.state.selectedAction, this.state.selectedDelay)}>Send command</Button>
           </ButtonToolbar>
+          </div>
         </div>;
     }
 }

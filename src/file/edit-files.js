@@ -149,12 +149,14 @@ class EditFilesDialog extends React.Component {
           </FormGroup>
 
           <FormGroup as={Col} >
+          <span className='solid-button'>
             <Button
-              style={{ backgroundColor: '#527984', borderColor: '#527984'}}
+              variant='secondary'
               disabled={this.state.uploadFile === null}
               onClick={() => this.startFileUpload()}>
               Upload
             </Button>
+          </span>
           </FormGroup>
 
           <FormGroup as={Col} >

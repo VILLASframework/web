@@ -178,12 +178,9 @@ class EditWidgetColorZonesControl extends React.Component {
     const buttonStyle = {
       marginBottom: '10px', 
       marginLeft: '120px',
-      borderColor: '#ffffff',
-      backgroundColor: '#ffffff'
     };
 
     const iconStyle = {
-      color: '#527984',
       height: '25px', 
       width : '25px'
     }
@@ -204,8 +201,9 @@ class EditWidgetColorZonesControl extends React.Component {
     
     return <FormGroup>
       <FormLabel>Color zones</FormLabel>
-      <Button  onClick={this.addZone} style={buttonStyle} disabled={!this.props.widget.customProperties.colorZones}><Icon icon="plus" style={iconStyle} /></Button>
-
+      <span className='icon-button'>
+      <Button variant='light' onClick={this.addZone} style={buttonStyle} disabled={!this.props.widget.customProperties.colorZones}><Icon icon="plus" className='icon-color' style={iconStyle} /></Button>
+      </span>
     <div>
       {
           this.state.widget.customProperties.zones.map((zone, idx) => {
@@ -255,7 +253,9 @@ class EditWidgetColorZonesControl extends React.Component {
           </tr>
         </tbody>
       </Table>
-      <Button  onClick={this.removeZones} style={{borderColor: '#ffffff', backgroundColor: '#ffffff'}} ><Icon style={iconStyle} icon="trash-alt" /></Button>
+      <span className='icon-button'>
+      <Button variant='light' onClick={this.removeZones} ><Icon style={iconStyle} classname='icon-color' icon="trash-alt" /></Button>
+      </span>
       </Collapse>
       
       <ColorPicker show={this.state.showColorPicker} onClose={(data) => this.closeEditModal(data)} widget={this.state.widget} zoneIndex={this.state.selectedIndex} controlId={'strokeStyle'} />

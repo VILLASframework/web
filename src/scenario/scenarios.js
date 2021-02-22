@@ -237,12 +237,9 @@ class Scenarios extends Component {
   render() {
     const buttonStyle = {
       marginLeft: '10px',
-      backgroundColor: '#ffffff',
-      borderColor: '#ffffff'
     };
 
     const iconStyle = {
-      color: '#527984',
       height: '30px',
       width: '30px'
     }
@@ -250,8 +247,10 @@ class Scenarios extends Component {
     return (
       <div className='section'>
         <h1>Scenarios
-          <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" style={iconStyle} /></Button>
-          <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" style={iconStyle} /></Button>
+        <span className='icon-button'>
+          <Button variant='light' onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" classname='icon-color' style={iconStyle} /></Button>
+          <Button variant='light' onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" classname='icon-color' style={iconStyle} /></Button>
+        </span>
         </h1>
 
         <Table data={this.state.scenarios}>

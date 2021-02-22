@@ -334,7 +334,7 @@ class InfrastructureComponents extends Component {
     let ic = this.state.ics.find(ic => ic.name === name);
     let index = this.state.ics.indexOf(ic);
     if(ic.type === "villas-node" || ic.type === "villas-relay"){
-      return <Button variant="link" style={{color: '#047cab'}} onClick={() => this.setState({ icModal: true, modalIC: ic, modalIndex: index })}>{name}</Button>    }
+      return <Button variant="link" onClick={() => this.setState({ icModal: true, modalIC: ic, modalIndex: index })}>{name}</Button>    }
     else{
       return <span>{name}</span>
     }
@@ -369,12 +369,9 @@ class InfrastructureComponents extends Component {
   
     const buttonStyle = {
       marginLeft: '10px',
-      backgroundColor: '#ffffff',
-      borderColor: '#ffffff'
     }
 
     const iconStyle = {
-      color: '#527984',
       height: '30px',
       width: '30px'
     }
@@ -384,9 +381,9 @@ class InfrastructureComponents extends Component {
       <div className='section'>
         <h1>Infrastructure Components
         {this.state.currentUser.role === "Admin" ?
-          <span>
-            <Button onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" style={iconStyle} /></Button>
-            <Button onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" style={iconStyle} /></Button>
+          <span className='icon-button'>
+            <Button variant='light' onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" classname='icon-color' style={iconStyle} /></Button>
+            <Button variant='light' onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" classname='icon-color' style={iconStyle} /></Button>
           </span>
           :
           <span> </span>

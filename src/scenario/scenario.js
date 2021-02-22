@@ -697,16 +697,8 @@ class Scenario extends React.Component {
       return (<Redirect to="/scenarios" />);
     }
 
-    const buttonStyle = {
-      marginLeft: '10px',
-      backgroundColor: '#527984', 
-      borderColor: '#527984'
-    };
-
     const altButtonStyle = {
       marginLeft: '10px',
-      backgroundColor: '#ffffff',
-      borderColor: '#ffffff'
     }
 
     const tableHeadingStyle = {
@@ -714,7 +706,6 @@ class Scenario extends React.Component {
     }
 
     const iconStyle = {
-      color: '#527984',
       height: '30px',
       width: '30px'
     }
@@ -764,8 +755,8 @@ class Scenario extends React.Component {
     return <div className='section'>
       <div className='section-buttons-group-right'>
         <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete files of scenario </Tooltip>} >
-          <Button key={0} variant='light' size="lg" onClick={this.onEditFiles.bind(this)} style={altButtonStyle}>
-            <Icon icon="file" style={iconStyle} />
+          <Button variant='light' key={0} size="lg" onClick={this.onEditFiles.bind(this)}>
+            <Icon icon="file" classname={'icon-color'} style={iconStyle}/>
           </Button>
         </OverlayTrigger>
       </div>
@@ -784,8 +775,10 @@ class Scenario extends React.Component {
 
       {/*Component Configurations table*/}
       <h2 style={tableHeadingStyle}>Component Configurations
-        <Button onClick={() => this.addConfig()} style={altButtonStyle}><Icon icon="plus" style={iconStyle} /></Button>
-        <Button onClick={() => this.setState({ importConfigModal: true })} style={altButtonStyle}><Icon icon="upload" style={iconStyle}/></Button>
+      <span className='icon-button'>
+        <Button variant='light' onClick={() => this.addConfig()} style={altButtonStyle}><Icon icon="plus" classname={'icon-color'} style={iconStyle} /></Button>
+        <Button variant='light' onClick={() => this.setState({ importConfigModal: true })} style={altButtonStyle}><Icon icon="upload" classname={'icon-color'} style={iconStyle}/></Button>
+      </span>
       </h2>
       <Table data={this.state.configs}>
         <TableColumn checkbox onChecked={(index, event) => this.onConfigChecked(index, event)} width='30' />
@@ -876,8 +869,10 @@ class Scenario extends React.Component {
 
       {/*Dashboard table*/}
       <h2 style={tableHeadingStyle}>Dashboards
-        <Button onClick={() => this.setState({ newDashboardModal: true })} style={altButtonStyle}><Icon icon="plus" style={iconStyle} /></Button>
-        <Button onClick={() => this.setState({ importDashboardModal: true })} style={altButtonStyle}><Icon icon="upload" style={iconStyle} /></Button>
+      <span className='icon-button'>
+        <Button variant='light' onClick={() => this.setState({ newDashboardModal: true })} style={altButtonStyle}><Icon icon="plus" classname={'icon-color'} style={iconStyle} /></Button>
+        <Button variant='light' onClick={() => this.setState({ importDashboardModal: true })} style={altButtonStyle}><Icon icon="upload" classname={'icon-color'} style={iconStyle} /></Button>
+      </span>
       </h2>
       <Table data={this.state.dashboards}>
         <TableColumn title='Name' dataKey='name' link='/dashboards/' linkKey='id' />
@@ -904,7 +899,9 @@ class Scenario extends React.Component {
 
       {/*Result table*/}
       <h2 style={tableHeadingStyle}>Results
-        <Button onClick={() => this.setState({ newResultModal: true })} style={altButtonStyle}><Icon icon="plus" style={iconStyle} /></Button>
+      <span className='icon-button'>
+        <Button variant='light' onClick={() => this.setState({ newResultModal: true })} style={altButtonStyle}><Icon icon="plus" classname={'icon-color'} style={iconStyle} /></Button>
+      </span>
       </h2>
       {resulttable}
       <NewResultDialog show={this.state.newResultModal} onClose={data => this.closeNewResultModal(data)} />
@@ -931,12 +928,15 @@ class Scenario extends React.Component {
             type="text"
           />
           <InputGroup.Append>
+          <span className='icon-button'>
             <Button
+              variant='light'
               type="submit"
               style={altButtonStyle}
               onClick={() => this.addUser()}>
-              <Icon icon="plus" style={iconStyle} />
+              <Icon icon="plus" classname={'icon-color'} style={iconStyle} />
             </Button>
+            </span>
           </InputGroup.Append>
         </InputGroup><br /><br />
       </div>

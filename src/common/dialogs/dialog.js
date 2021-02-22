@@ -45,11 +45,6 @@ class Dialog extends React.Component {
   }
 
   render() {
-    const buttonStyle = {
-      backgroundColor: '#527984', 
-      borderColor: '#527984'
-    };
-
 
     return (
       <Modal size={this.props.size || 'sm'} keyboard show={this.props.show} onEnter={this.props.onReset} onHide={this.cancelModal} onKeyPress={this.onKeyPress}>
@@ -62,8 +57,10 @@ class Dialog extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
-         {this.props.blendOutCancel? <div></div>:  <Button style={buttonStyle} onClick={this.cancelModal}>Cancel</Button>}
-          <Button style={buttonStyle} onClick={this.closeModal} disabled={!this.props.valid}>{this.props.buttonTitle}</Button>
+        <span className='solid-button'>
+         {this.props.blendOutCancel? <div></div>:  <Button variant='secondary' onClick={this.cancelModal}>Cancel</Button>}
+          <Button variant='secondary' onClick={this.closeModal} disabled={!this.props.valid}>{this.props.buttonTitle}</Button>
+        </span>
         </Modal.Footer>
       </Modal>
     );

@@ -112,15 +112,6 @@ class User extends Component {
 
 
   render() {
-    const iconStyle = {
-      color: '#527984',
-    }
-
-    const buttonStyle = {
-      margin: '10px',  
-      borderColor: '#ffffff',
-      backgroundColor: '#ffffff'
-    }
 
     return (
       <div>
@@ -140,7 +131,9 @@ class User extends Component {
                 <div> {this.state.currentUser.username}</div>
                 <div>{this.state.currentUser.mail}</div>
                 <div>{this.state.currentUser.role}</div>
-                <Button size='lg' style={buttonStyle} onClick={() => this.setState({ editModal: true })}><Icon size='lg' style={iconStyle} icon='edit' /> </Button>
+                <span className='icon-button'>
+                <Button variant='light' size='lg' variant='light' style={{margin: '10px'}} onClick={() => this.setState({ editModal: true })}><Icon size='lg' classname='icon-color' icon='edit' /> </Button>
+                </span>
               </FormGroup>
             </Row>
 
