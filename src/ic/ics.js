@@ -354,7 +354,7 @@ class InfrastructureComponents extends Component {
 
   modifyNameColumn(name, component){
     let index = this.state.ics.indexOf(component);
-    return <Button variant="link" style={{color: '#047cab'}} onClick={() => this.openICStatus(component)}>{name}</Button>
+    return <Button variant="link" onClick={() => this.openICStatus(component)}>{name}</Button>
   }
 
   openICStatus(ic){
@@ -451,6 +451,11 @@ class InfrastructureComponents extends Component {
       marginLeft: '10px'
     };
 
+    const iconStyle = {
+      height: '30px',
+      width: '30px'
+    }
+
     let managerTable = this.getICCategoryTable(this.state.managers, false, "IC Managers")
     let simulatorTable = this.getICCategoryTable(this.state.simulators, true, "Simulators")
     let gatewayTable = this.getICCategoryTable(this.state.gateways, true, "Gateways")
@@ -461,19 +466,19 @@ class InfrastructureComponents extends Component {
       <div className='section'>
         <h1>Infrastructure Components
           {this.state.currentUser.role === "Admin" ?
-            (<span>
+            (<span className='icon-button'>
               <OverlayTrigger
                 key={1}
                 placement={'top'}
                 overlay={<Tooltip id={`tooltip-${"add"}`}> Add Infrastructure Component </Tooltip>} >
-                <Button onClick={() => this.setState({newModal: true})} style={buttonStyle}><Icon icon="plus"
+                <Button variant='light' onClick={() => this.setState({newModal: true})} style={buttonStyle}><Icon icon="plus" classname='icon-color' style={iconStyle}
                                                                                                 /></Button>
               </OverlayTrigger>
               <OverlayTrigger
                 key={2}
                 placement={'top'}
                 overlay={<Tooltip id={`tooltip-${"import"}`}> Import Infrastructure Component </Tooltip>} >
-                <Button onClick={() => this.setState({importModal: true})} style={buttonStyle}><Icon icon="upload"
+                <Button variant='light' onClick={() => this.setState({importModal: true})} style={buttonStyle}><Icon icon="upload" classname='icon-color' style={iconStyle}
                                                                                                    /></Button>
               </OverlayTrigger>
               </span>)

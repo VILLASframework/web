@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Button, ButtonToolbar, DropdownButton, Dropdown, InputGroup, FormControl } from 'react-bootstrap';
+import { Button, DropdownButton, Dropdown, InputGroup, FormControl } from 'react-bootstrap';
 
 class ICAction extends React.Component {
   constructor(props) {
@@ -79,11 +79,11 @@ class ICAction extends React.Component {
       </Dropdown.Item>
     ));
 
-    return <div>
+    return <div className='solid-button'>
       <InputGroup>
         <InputGroup.Prepend>
           <DropdownButton
-            variant="outline-secondary"
+            variant="secondary"
             title={this.state.selectedAction != null ? this.state.selectedAction.title : ''}
             id="action-dropdown"
             onSelect={this.setAction}>
@@ -96,7 +96,7 @@ class ICAction extends React.Component {
             onChange={this.setTimeForAction} />
         </InputGroup.Prepend>
         <Button
-          variant="outline-secondary"
+          variant="secondary"
           disabled={sendCommandDisabled}
           onClick={() => this.props.runAction(this.state.selectedAction, this.state.time)}>Run</Button>
       </InputGroup>

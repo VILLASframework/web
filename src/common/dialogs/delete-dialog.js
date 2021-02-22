@@ -42,7 +42,9 @@ class DeleteDialog extends React.Component {
             </Modal.Body>
 
             <Modal.Footer>
-                <Button onClick={() => this.props.onClose(false)}>Cancel</Button>
+            <span className='solid-button'>
+                <Button variant='secondary' onClick={() => this.props.onClose(false)}>Cancel</Button>
+            </span>
                 <Button variant="danger" onClick={() => this.props.onClose(true)}>Delete</Button>
             </Modal.Footer>
         </Modal>;

@@ -17,7 +17,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import {Button, Col, Row} from 'react-bootstrap';
+import {Button, Col, Row, FormGroup} from 'react-bootstrap';
 
 import AppDispatcher from '../common/app-dispatcher';
 import UsersStore from './users-store';
@@ -112,6 +112,7 @@ class User extends Component {
 
 
   render() {
+
     return (
       <div>
         <h1>Your User Account</h1>
@@ -119,27 +120,25 @@ class User extends Component {
         {this.state.currentUser !== undefined && this.state.currentUser !== null ?
 
           <form>
+
             <Row>
-              <Col xs={3}>Username: </Col>
-              <Col xs={3}> {this.state.currentUser.username} </Col>
+              <FormGroup as={Col} sm={2} controlId="details">
+                <div style={{ alignItems: 'right' }}>Username:</div>
+                <div style={{ alignItems: 'right' }}>E-mail:</div>
+                <div style={{ alignItems: 'right' }}>Role:</div>
+              </FormGroup>
+              <FormGroup as={Col} sm={3} controlId="information" >
+                <div> {this.state.currentUser.username}</div>
+                <div>{this.state.currentUser.mail}</div>
+                <div>{this.state.currentUser.role}</div>
+                <span className='icon-button'>
+                <Button variant='light' size='lg' variant='light' style={{margin: '10px'}} onClick={() => this.setState({ editModal: true })}><Icon size='lg' classname='icon-color' icon='edit' /> </Button>
+                </span>
+              </FormGroup>
             </Row>
-
-
-            <Row as={Col}>
-              <Col xs={3}>E-mail: </Col>
-              <Col xs={3}> {this.state.currentUser.mail} </Col>
-            </Row>
-
-            <Row as={Col}>
-              <Col xs={3}>Role: </Col>
-              <Col xs={3}> {this.state.currentUser.role} </Col>
-            </Row>
-
-
-            <Button onClick={() => this.setState({editModal: true})}><Icon icon='edit'/> Edit</Button>
 
             <EditOwnUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)}
-                               user={this.state.currentUser}/>
+              user={this.state.currentUser} />
 
           </form> : "Loading user data..."
         }
@@ -147,9 +146,6 @@ class User extends Component {
     );
   }
 }
-
-
-
 
 let fluxContainerConverter = require('../common/FluxContainerConverter');
 export default Container.create(fluxContainerConverter.convert(User));

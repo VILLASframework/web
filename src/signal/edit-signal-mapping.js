@@ -65,7 +65,7 @@ class EditSignalMapping extends React.Component {
   }
 
   signals.forEach(signal => {
-    if(signal.checked == undefined) signal.checked = false
+    if(signal.checked === undefined) signal.checked = false
   });
 
 
@@ -149,7 +149,7 @@ class EditSignalMapping extends React.Component {
         data: signal,
         token: this.props.sessionToken
       });
-  
+
     })
 
   }
@@ -196,11 +196,11 @@ class EditSignalMapping extends React.Component {
   onSignalChecked(signal) {
     let tempSignals = this.state.signals;
     const index = tempSignals.indexOf(signal);
-    
+
     tempSignals[index].checked = !tempSignals[index].checked;
 
     this.setState({signals: tempSignals});
-    
+
   }
 
   checkAll(){
@@ -208,7 +208,7 @@ class EditSignalMapping extends React.Component {
     let allChecked = true;
 
     tempSignals.forEach(signal =>
-      { 
+      {
         if(signal.checked === false){
         signal.checked = true;
         allChecked = false;
@@ -224,7 +224,7 @@ class EditSignalMapping extends React.Component {
   render() {
 
       const buttonStyle = {
-        marginLeft: '10px'
+        marginLeft: '10px',
       };
 
       return(
@@ -251,24 +251,24 @@ class EditSignalMapping extends React.Component {
                   <TableColumn title='Remove' deleteButton onDelete={(index) => this.handleDelete(index)} />
               </Table>
 
-              <div >
+              <div className='solid-button' style={{ float: 'right' }}>
               <OverlayTrigger key={0} placement={'left'} overlay={<Tooltip id={`tooltip-${"check"}`}> Check/Uncheck All </Tooltip>} >
-                <Button key={50} style={{ float: 'left' }} onClick={() => this.checkAll()} style={buttonStyle}> <Icon icon="check" />  </Button>
+                <Button  variant='secondary' key={50} onClick={() => this.checkAll()} style={buttonStyle}> <Icon icon="check" />  </Button>
               </OverlayTrigger>
-                <Button key={51} style={{ float: 'left' }} onClick={() => this.handleRemove()} style={buttonStyle}> Remove </Button>
-                <Button key={52} style={{ float: 'right' }} onClick={() => this.handleAdd()} style={buttonStyle}><Icon icon="plus" /> Signal </Button>
+                <Button  variant='secondary' key={51} onClick={() => this.handleRemove()} style={buttonStyle}> Remove </Button>
+                <Button  variant='secondary' key={52} onClick={() => this.handleAdd()} style={buttonStyle}><Icon icon="plus" /> Signal </Button>
               </div>
               <div>
                 <Collapse isOpened={this.state.openCollapse}>
                 <h6>Choose a Component Configuration to add the signal to: </h6>
-                <div>
+                <div className='solid-button'>
                 {typeof this.props.configs !== "undefined" && this.props.configs.map(config => (
 
-                  <Button key ={config.id} onClick={() => this.handleAdd(config.id)} style={buttonStyle}>{config.name}</Button>
+                  <Button variant='secondary' key ={config.id} onClick={() => this.handleAdd(config.id)} style={buttonStyle}>{config.name}</Button>
 
                 ))}
                 </div>
-                </Collapse> 
+                </Collapse>
               </div>
           </FormGroup>
         </Dialog>

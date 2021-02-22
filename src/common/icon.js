@@ -28,7 +28,7 @@ library.add(fas);
 class Icon extends React.Component {
 
   render() {
-    return <FontAwesomeIcon size={this.props.size} style={this.props.style} icon={this.props.icon} />
+    return <FontAwesomeIcon className={this.props.classname} size={this.props.size} style={this.props.style} icon={this.props.icon} />
   }
 }
 
