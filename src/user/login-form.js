@@ -110,7 +110,7 @@ class LoginForm extends Component {
     if (this.props.config) {
       let externalLogin = _.get(this.props.config, ['authentication', 'external', 'enabled'])
       let provider = _.get(this.props.config, ['authentication', 'external', 'provider_name'])
-      let url = _.get(this.props.config, ['authentication', 'external', 'authorize_url'])
+      let url = _.get(this.props.config, ['authentication', 'external', 'authorize_url']) + "?rd=/login/complete"
 
       if (externalLogin && provider && url) {
         return [
