@@ -36,6 +36,8 @@ import ICDialog from './ic-dialog';
 
 import ICAction from './ic-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
+import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
+import NotificationsFactory from "../common/data-managers/notifications-factory";
 
 class InfrastructureComponents extends Component {
   static getStores() {
@@ -149,11 +151,35 @@ class InfrastructureComponents extends Component {
     this.setState({ newModal : false });
 
     if (data) {
-      AppDispatcher.dispatch({
-        type: 'ics/start-add',
-        data,
-        token: this.state.sessionToken,
-      });
+      if (!data.managedexternally) {
+        AppDispatcher.dispatch({
+          type: 'ics/start-add',
+          data,
+          token: this.state.sessionToken,
+        });
+      } else {
+        // externally managed IC: dispatch create action to selected manager
+        let newAction = {};
+        newAction["action"] = "create";
+        newAction["parameters"] = data;
+        newAction["when"] = new Date()
+
+        // find the manager IC
+        let managerIC = this.state.ics.find(ic => ic.uuid === data.manager)
+        if (managerIC === null || managerIC === undefined){
+          NotificationsDataManager.addNotification(NotificationsFactory.ADD_ERROR("Could not find manager IC with UUID " + data.manager));
+          return;
+        }
+
+        AppDispatcher.dispatch({
+          type: 'ics/start-action',
+          icid: managerIC.id,
+          action: newAction,
+          result: null,
+          token: this.state.sessionToken
+        });
+
+      }
     }
   }
 

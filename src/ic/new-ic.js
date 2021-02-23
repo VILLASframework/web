@@ -170,7 +170,7 @@ class NewICDialog extends React.Component {
           {this.props.managers.length > 0 ?
             <>
               <FormGroup controlId="managedexternally">
-                <OverlayTrigger key="3" placement={'left'} overlay={<Tooltip id={`tooltip-${"me"}`}>An externally managed component is created and managed by an IC manager via AMQP</Tooltip>} >
+                <OverlayTrigger key="-1" placement={'left'} overlay={<Tooltip id={`tooltip-${"me"}`}>An externally managed component is created and managed by an IC manager via AMQP</Tooltip>} >
                   <FormCheck type={"checkbox"} label={"Managed externally"} defaultChecked={this.state.managedexternally} onChange={e => this.handleChange(e)}>
                   </FormCheck>
                 </OverlayTrigger>

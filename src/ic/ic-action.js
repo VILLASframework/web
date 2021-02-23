@@ -103,7 +103,6 @@ class ICAction extends React.Component {
             }
           }
           if (managerIC == null){
-            console.log("DELETE action", newAction);
             NotificationsDataManager.addNotification(NotificationsFactory.DELETE_ERROR("Could not find manager IC with UUID " + ic.manager));
             continue;
           }
