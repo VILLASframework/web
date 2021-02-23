@@ -21,10 +21,6 @@ import AppDispatcher from '../common/app-dispatcher';
 import LoginStore from './login-store'
 import { Container } from 'flux/utils';
 
-import NotificationsDataManager from '../common/data-managers/notifications-data-manager';
-import NotificationsFactory from "../common/data-managers/notifications-factory";
-
-
 
 class LoginComplete extends React.Component {
   constructor(props) {
@@ -83,9 +79,7 @@ class LoginComplete extends React.Component {
   }
 
   countDown() {
-    console.log("count down, seconds:");
     let seconds = this.state.secondsToWait - 1;
-    console.log(seconds);
     this.setState({secondsToWait: seconds});
 
     // waiting time over, stop counting down
@@ -95,20 +89,16 @@ class LoginComplete extends React.Component {
   }
 
   render() {
-    console.log("render, seconds to wait:");
-    console.log(this.state.secondsToWait);
     if (this.state.currentUser && this.state.currentUser !== "") {
-      console.log("user:");
-      console.log(this.state.currentUser);
       this.stopTimer();
       return (<Redirect to="/home" />);
     }
     else if (this.state.secondsToWait == 0) {
       this.stopTimer();
       return (<Redirect to="/login" />);
-    } else { // authenticating failed
-      //NotificationsFactory.LOAD_ERROR('Backend did not return user after external auth');    
-      return (<p>Authenticating.. {this.state.secondsToWait}</p>);
+    } else {
+      return (<div class="verticalhorizontal">
+        <img style={{height: 300}}src={require('../img/dog-waiting-bw.jpg').default} alt="Waiting Dog" /></div>);
     }
   }
 }
