@@ -25,15 +25,16 @@ class IcsDataManager extends RestDataManager {
   }
 
   doActions(icid, actions, token = null, result=null) {
-      for (let action of actions) {
-        if (action.when)
-          // Send timestamp as Unix Timestamp
-          action.when = Math.round(action.when.getTime() / 1000);
-      }
 
-      if (icid !== undefined && icid != null) {
 
-        console.log("doActions, icid:", icid)
+      if (icid !== undefined && icid != null && JSON.stringify(icid) !== JSON.stringify({})) {
+
+        for (let action of actions) {
+          if (action.when) {
+            // Send timestamp as Unix Timestamp
+            action.when = Math.round(action.when.getTime() / 1000);
+          }
+        }
         // sending action to a specific IC via IC list
 
         RestAPI.post(this.makeURL(this.url + '/' + icid + '/action'), actions, token).then(response => {
@@ -54,13 +55,14 @@ class IcsDataManager extends RestDataManager {
 
         if (actions[0].action !== "start"){
           for (let a of actions){
-            console.log("doActions, a.icid:", a.icid)
-            icid = JSON.parse(JSON.stringify(a.icid))
-            delete a.icid
-            console.log("doActions, icid:", icid)
-            // sending action to a specific IC via IC list
 
-            RestAPI.post(this.makeURL(this.url + '/' + icid + '/action'), [a], token).then(response => {
+            // sending action to a specific IC via IC list
+            if (a.when) {
+              // Send timestamp as Unix Timestamp
+              a.when = Math.round(a.when.getTime() / 1000);
+            }
+
+            RestAPI.post(this.makeURL(this.url + '/' + a.icid + '/action'), [a], token).then(response => {
               AppDispatcher.dispatch({
                 type: 'ics/action-started',
                 data: response
@@ -83,6 +85,11 @@ class IcsDataManager extends RestDataManager {
               data: response,
               actions: actions,
               token: token,
+            });
+
+            AppDispatcher.dispatch({
+              type: "results/added",
+              data: response.result,
             });
           }).catch(error => {
             AppDispatcher.dispatch({

@@ -302,7 +302,6 @@ class Scenario extends React.Component {
   }
 
   copyConfig(index) {
-    console.log("index", index, "copyConfig: ", this.state.configs[index])
     let config = JSON.parse(JSON.stringify(this.state.configs[index]));
 
     let signals = JSON.parse(JSON.stringify(SignalStore.getState().filter(s => s.configID === parseInt(config.id, 10))));
@@ -665,7 +664,7 @@ class Scenario extends React.Component {
       });
     } else {
       this.setState({
-        modalResultConfigs: JSON.parse(result.configSnapshots),
+        modalResultConfigs: result.configSnapshots,
         modalResultConfigsIndex: result.id,
         resultConfigsModal: true
       });
@@ -873,7 +872,7 @@ class Scenario extends React.Component {
         />
       </Table>
 
-      {/*{this.state.ExternalICInUse ? (*/}
+      {this.state.ExternalICInUse ? (
         <div style={{ float: 'left' }}>
           <ICAction
             hasConfigs={true}
@@ -890,8 +889,8 @@ class Scenario extends React.Component {
               { id: '3', title: 'Resume', data: { action: 'resume' } }
             ]} />
         </div>
-      {/*) : (<div />)*/}
-      {/*}*/}
+      ) : (<div />)
+      }
 
       < div style={{ clear: 'both' }} />
 

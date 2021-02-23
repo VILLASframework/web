@@ -79,7 +79,6 @@ class InfrastructureComponentStore extends ArrayStore {
       case 'ics/action-result-added':
 
         for (let a of action.actions){
-          let icid = Object.assign({}, a.icid)
 
           if (a.results !== undefined && a.results != null){
             // adapt URL for newly created result ID
@@ -87,13 +86,12 @@ class InfrastructureComponentStore extends ArrayStore {
             a.results.url = ICsDataManager.makeURL(a.results.url);
             a.results.url = window.location.host + a.results.url;
           }
-          if (a.model !== undefined && a.model != null) {
+          if (a.model !== undefined && a.model != null && JSON.stringify(a.model) !== JSON.stringify({})) {
             // adapt URL for model file
             a.model.url = ICsDataManager.makeURL(a.model.url);
             a.model.url = window.location.host + a.model.url;
           }
-          delete a.icid
-          ICsDataManager.doActions(icid, [a], action.token)
+          ICsDataManager.doActions(a.icid, [a], action.token)
         }
         return state;
 

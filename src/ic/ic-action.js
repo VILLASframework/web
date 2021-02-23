@@ -54,13 +54,6 @@ class ICAction extends React.Component {
 
   runAction(action, when) {
 
-    console.log("configs", this.props.configs)
-    console.log("selectedConfigs", this.props.selectedConfigs)
-    console.log("ics", this.props.ics)
-    console.log("selectedICs", this.props.selectedICs)
-    console.log("action", action)
-    console.log("when", when)
-
     if (action.data.action === 'none') {
       console.warn("No command selected. Nothing was sent.");
       return;
@@ -169,9 +162,10 @@ class ICAction extends React.Component {
 
         if (newAction.action === 'start') {
           newAction["parameters"] = config.startParameters;
-          newAction["model"] = {}
+
 
           if (config.fileIDs.length > 0){
+            newAction["model"] = {}
             newAction.model["type"] = "url"
             newAction.model["token"] = this.props.token
             // TODO do not default to the first file of the config
@@ -187,7 +181,6 @@ class ICAction extends React.Component {
 
         // add the new action
         newActions.push(newAction);
-        console.log("New actions in loop", newAction, newActions)
 
       } // end for loop over selected configs
 
@@ -204,7 +197,7 @@ class ICAction extends React.Component {
         }
 
         // create new result for new run
-        newResult.result["description"] = "Placeholder for description"
+        newResult.result["description"] = "Start at " + when;
         newResult.result["scenarioID"] = this.props.selectedConfigs[0].scenarioID
         newResult.result["configSnapshots"] = configSnapshots
       }
