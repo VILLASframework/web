@@ -394,60 +394,6 @@ class Scenario extends React.Component {
 
   }
 
-  runAction(action, when) {
-    if (action.data.action === 'none') {
-      console.warn("No command selected. Nothing was sent.");
-      return;
-    }
-
-    let configs = [];
-    for (let index of this.state.selectedConfigs) {
-      // get IC for component config
-      let ic = null;
-      for (let component of this.state.ics) {
-        if (component.id === this.state.configs[index].icID) {
-          ic = component;
-        }
-      }
-
-      if (ic == null) {
-        continue;
-      }
-
-      if (action.data.action === 'start') {
-        configs.push(this.copyConfig(index));
-        action.data.parameters = this.state.configs[index].startParameters;
-      }
-
-      action.data.when = when;
-
-      console.log("Sending action: ", action.data)
-
-      AppDispatcher.dispatch({
-        type: 'ics/start-action',
-        ic: ic,
-        data: action.data,
-        token: this.state.sessionToken
-      });
-    }
-
-    if (configs.length !== 0) { //create result (only if command was 'start')
-      let componentConfigs = {};
-      componentConfigs["configs"] = configs;
-      let data = {};
-      data["Description"] = "Run " + this.state.scenario.name; // default description, to be change by user later
-      data["ResultFileIDs"] = [];
-      data["scenarioID"] = this.state.scenario.id;
-      data["ConfigSnapshots"] = JSON.stringify(componentConfigs, null, 2);
-      AppDispatcher.dispatch({
-        type: 'results/start-add',
-        data,
-        token: this.state.sessionToken,
-      })
-    }
-
-  };
-
   getICName(icID) {
     for (let ic of this.state.ics) {
       if (ic.id === icID) {
@@ -710,7 +656,7 @@ class Scenario extends React.Component {
   }
 
   openResultConfigSnaphots(result) {
-    if (!result.configSnapshots || result.configSnapshots == "") {
+    if (result.configSnapshots === null || result.configSnapshots === undefined) {
       this.setState({
         modalResultConfigs: {"configs": []},
         modalResultConfigsIndex: result.id,
@@ -718,7 +664,7 @@ class Scenario extends React.Component {
       });
     } else {
       this.setState({
-        modalResultConfigs: JSON.parse(result.configSnapshots),
+        modalResultConfigs: result.configSnapshots,
         modalResultConfigsIndex: result.id,
         resultConfigsModal: true
       });
@@ -928,8 +874,12 @@ class Scenario extends React.Component {
       {this.state.ExternalICInUse ? (
         <div style={{ float: 'left' }}>
           <ICAction
-            runDisabled={this.state.selectedConfigs.length === 0}
-            runAction={(action, when) => this.runAction(action, when)}
+            hasConfigs={true}
+            ics={this.state.ics}
+            configs={this.state.configs}
+            selectedConfigs = {this.state.selectedConfigs}
+            snapshotConfig = {(index) => this.copyConfig(index)}
+            token = {this.state.sessionToken}
             actions={[
               { id: '-1', title: 'Action', data: { action: 'none' } },
               { id: '0', title: 'Start', data: { action: 'start' } },

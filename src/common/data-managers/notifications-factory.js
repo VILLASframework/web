@@ -138,6 +138,14 @@ class NotificationsFactory {
     };
   }
 
+  static ACTION_INFO() {
+    return {
+      title: 'Action successfully requested',
+      level: 'info'
+    };
+  }
+
+
 }
 
 export default NotificationsFactory;
