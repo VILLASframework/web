@@ -72,6 +72,10 @@ class InfrastructureComponentStore extends ArrayStore {
         ICsDataManager.doActions(action.icid, action.action, action.token, action.result);
         return state;
 
+      case 'ics/action-started':
+        NotificationsDataManager.addNotification(NotificationsFactory.ACTION_INFO());
+        return state;
+
       case 'ics/action-error':
         console.log(action.error);
         return state;
