@@ -97,23 +97,24 @@ class EditSignalMapping extends React.Component {
     let signals = this.state.signals;
     let modifiedSignals = this.state.modifiedSignalIDs;
 
-
-      if (column === 1) { // Name change
+    console.log("HandleMappingChange", row, column)
+      if (column === 2) { // Name change
         signals[row].name = event.target.value;
         if (modifiedSignals.find(id => id === signals[row].id) === undefined){
           modifiedSignals.push(signals[row].id);
         }
-      } else if (column === 2) { // unit change
+      } else if (column === 3) { // unit change
         signals[row].unit = event.target.value;
         if (modifiedSignals.find(id => id === signals[row].id) === undefined){
           modifiedSignals.push(signals[row].id);
         }
-      } else if (column === 3) { // scaling factor change
+      } else if (column === 4) { // scaling factor change
         signals[row].scalingFactor = parseFloat(event.target.value);
         if (modifiedSignals.find(id => id === signals[row].id) === undefined){
           modifiedSignals.push(signals[row].id);
         }
-      } else if (column === 0) { //index change
+      } else if (column === 1) { //index change
+        console.log("Index change")
         signals[row].index =parseInt(event.target.value, 10);
         if (modifiedSignals.find(id => id === signals[row].id) === undefined){
           modifiedSignals.push(signals[row].id);
