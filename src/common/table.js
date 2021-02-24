@@ -124,7 +124,7 @@ class CustomTable extends Component {
     }
 
     // add buttons
-    if (child.props.editButton) {
+    if (child.props.editButton === true) {
       cell.push(
         <OverlayTrigger
           key={0}
@@ -215,7 +215,7 @@ class CustomTable extends Component {
         </OverlayTrigger>);
     }
 
-    if (child.props.deleteButton) {
+    if (child.props.deleteButton === true) {
       cell.push(
         <OverlayTrigger
           key={5}
