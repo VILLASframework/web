@@ -405,7 +405,7 @@ class InfrastructureComponents extends Component {
         <Table data={ics}>
           <TableColumn
             checkbox
-            checkboxDisabled={(index) => this.isExternalIC(index, ics)}
+            checkboxDisabled={(index) => this.isExternalIC(index, ics) === true}
             onChecked={(ic, event) => this.onICChecked(ic, event)}
             width='30'
           />
@@ -438,9 +438,9 @@ class InfrastructureComponents extends Component {
           {this.state.currentUser.role === "Admin" ?
             <TableColumn
               width='150'
-              editButton = {(index) => !this.isExternalIC(index, ics)}
+              editButton = {(index) => this.isExternalIC(index, ics) !== true}
               exportButton
-              deleteButton = {(index) => !this.isExternalIC(index, ics)}
+              deleteButton = {(index) => this.isExternalIC(index, ics) !== true}
               onEdit={index => this.setState({editModal: true, modalIC: ics[index], modalIndex: index})}
               onExport={index => this.exportIC(index)}
               onDelete={index => this.setState({deleteModal: true, modalIC: ics[index], modalIndex: index})}
