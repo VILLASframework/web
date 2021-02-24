@@ -91,9 +91,14 @@ class InfrastructureComponentStore extends ArrayStore {
             a.results.url = window.location.host + a.results.url;
           }
           if (a.model !== undefined && a.model != null && JSON.stringify(a.model) !== JSON.stringify({})) {
-            // adapt URL for model file
-            a.model.url = ICsDataManager.makeURL(a.model.url);
-            a.model.url = window.location.host + a.model.url;
+            // adapt URL(s) for model file
+            let modelURLs = []
+            for (let url of a.model.url){
+              let modifiedURL = ICsDataManager.makeURL(url);
+              modifiedURL = window.location.host + modifiedURL;
+              modelURLs.push(modifiedURL)
+            }
+            a.model.url = modelURLs
           }
           ICsDataManager.doActions(a.icid, [a], action.token)
         }

@@ -182,8 +182,12 @@ class ICAction extends React.Component {
             newAction["model"] = {}
             newAction.model["type"] = "url"
             newAction.model["token"] = this.props.token
-            // TODO do not default to the first file of the config
-            newAction.model["url"] = "/files/" + config.fileIDs[0].toString()
+
+            let fileURLs = []
+            for (let fileID of config.fileIDs){
+              fileURLs.push("/files/" + fileID.toString())
+            }
+            newAction.model["url"] = fileURLs
           }
 
           newAction["results"] = {}
