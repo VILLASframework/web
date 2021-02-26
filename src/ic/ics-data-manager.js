@@ -97,17 +97,12 @@ class IcsDataManager extends RestDataManager {
               error
             });
           });
-
-
         }
-
-
-
       }
   }
 
   getStatus(url,token,ic){
-    RestAPI.get(url, null).then(response => {
+    RestAPI.get(url + "/status", null).then(response => {
       AppDispatcher.dispatch({
         type: 'ics/status-received',
         data: response,
@@ -120,6 +115,25 @@ class IcsDataManager extends RestDataManager {
         error: error
       })
     })
+
+    // get name of websocket
+    /*let ws_api = ic.websocketurl.split("/")
+    let ws_name = ws_api[ws_api.length-1] // websocket name is the last element in the websocket url
+
+    RestAPI.get(url + "/node/" + ws_name + "/stats", null).then(response => {
+      AppDispatcher.dispatch({
+        type: 'ics/nodestats-received',
+        data: response,
+        token: token,
+        ic: ic
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'ics/nodestats-error',
+        error: error
+      })
+    })*/
+
   }
 
   restart(url,token){

@@ -137,7 +137,7 @@ class InfrastructureComponents extends Component {
           && ic.apiurl !== '' && ic.apiurl !== undefined && ic.apiurl !== null && !ic.managedexternally) {
           AppDispatcher.dispatch({
             type: 'ics/get-status',
-            url: ic.apiurl + "/status",
+            url: ic.apiurl,
             token: this.state.sessionToken,
             ic: ic
           });

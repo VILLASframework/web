@@ -117,7 +117,12 @@ class InfrastructureComponentStore extends ArrayStore {
         if(!tempIC.managedexternally){
           tempIC.state = action.data.state;
           tempIC.uptime = action.data.time_now - action.data.time_started;
-          tempIC.statusupdateraw = action.data;
+          if (tempIC.statusupdateraw === null || tempIC.statusupdateraw === undefined){
+            tempIC.statusupdateraw = {};
+            tempIC.statusupdateraw["status"] = action.data;
+          } else {
+            tempIC.statusupdateraw["status"] = action.data;
+          }
           AppDispatcher.dispatch({
             type: 'ics/start-edit',
             data: tempIC,
@@ -128,6 +133,27 @@ class InfrastructureComponentStore extends ArrayStore {
 
       case 'ics/status-error':
         console.log("status error:", action.error);
+        return super.reduce(state, action);
+
+      case 'ics/nodestats-received':
+        let tempIC2 = action.ic;
+        if(!tempIC2.managedexternally){
+          if (tempIC2.statusupdateraw === null || tempIC2.statusupdateraw === undefined){
+            tempIC2.statusupdateraw = {};
+            tempIC2.statusupdateraw["statistics"] = action.data;
+          } else {
+            tempIC2.statusupdateraw["statistics"] = action.data;
+          }
+          AppDispatcher.dispatch({
+            type: 'ics/start-edit',
+            data: tempIC2,
+            token: action.token,
+          });
+        }
+        return super.reduce(state, action);
+
+      case 'ics/nodestats-error':
+        console.log("nodestats error:", action.error);
         return super.reduce(state, action);
 
       case 'ics/restart':
