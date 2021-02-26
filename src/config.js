@@ -22,7 +22,11 @@ const config = {
     admin: {
       name: 'Institute for Automation of Complex Power Systems (ACS), RWTH Aachen University, Germany',
       mail: 'stvogel@eonerc.rwth-aachen.de'
-    }
+    },
+    externalAuth: true,
+    loginURL: '/oauth2/start?rd=/login/complete',
+    provider: 'Jupyter',
+    disableVillasLogin: false,
 };
 
 export default config

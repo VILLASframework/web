@@ -25,18 +25,34 @@ class UsersDataManager extends RestDataManager {
   }
 
   login(username, password) {
-    RestAPI.post(this.makeURL('/authenticate'), { username: username, password: password }).then(response => {
-      AppDispatcher.dispatch({
-        type: 'users/logged-in',
-        token: response.token,
-        currentUser: response.user,
+    if (username && password) {
+      RestAPI.post(this.makeURL('/authenticate/internal'), { username: username, password: password }).then(response => {
+        AppDispatcher.dispatch({
+          type: 'users/logged-in',
+          token: response.token,
+          currentUser: response.user,
+        });
+      }).catch(error => {
+        AppDispatcher.dispatch({
+          type: 'users/login-error',
+          error: error
+        });
       });
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: 'users/login-error',
-        error: error
+    } else { // external authentication
+      RestAPI.post(this.makeURL('/authenticate/external'),).then(response => {
+        console.log(response);
+        AppDispatcher.dispatch({
+          type: 'users/logged-in',
+          token: response.token,
+          currentUser: response.user,
+        });
+      }).catch(error => {
+        AppDispatcher.dispatch({
+          type: 'users/login-error',
+          error: error
+        });
       });
-    });
+    }
   }
 }
 

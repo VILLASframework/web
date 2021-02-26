@@ -15,29 +15,29 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
-import { Redirect } from 'react-router-dom';
-import AppDispatcher from '../common/app-dispatcher';
+import RestDataManager from './common/data-managers/rest-data-manager';
+import RestAPI from './common/api/rest-api';
+import AppDispatcher from './common/app-dispatcher';
 
-class Logout extends React.Component {
 
-  componentDidMount() {
-    AppDispatcher.dispatch({
-      type: 'users/logout'
+class ConfigReader extends RestDataManager {
+  constructor() {
+    super('config', '/config');
+  }
+
+  loadConfig() {
+    RestAPI.get(this.makeURL('/config'), null).then(response => {
+      AppDispatcher.dispatch({
+        type: 'config/loaded',
+        data: response,
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'config/load-error',
+        error: error,
+      });
     });
-
-    // The Login Store is deleted automatically
-
-    // discard login token and current User
-    localStorage.setItem('token', '');
-    localStorage.setItem('currentUser', '');
   }
+};
 
-  render() {
-    return (
-      <Redirect to="/login" />
-    );
-  }
-}
-
-export default Logout;
+export default new ConfigReader();

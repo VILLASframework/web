@@ -26,10 +26,20 @@ import Header from '../common/header';
 import Footer from '../common/footer';
 import NotificationsDataManager from '../common/data-managers/notifications-data-manager';
 import LoginStore from './login-store'
+import AppDispatcher from '../common/app-dispatcher';
 
 class Login extends Component {
+  constructor(props) {
+    super(props);
 
-  static getStores(){
+    // load config in case the user goes directly to /login
+    // otherwise it will be loaded in app constructor
+    AppDispatcher.dispatch({
+      type: 'config/load',
+    });
+  }
+
+  static getStores() {
     return [LoginStore]
   }
 
@@ -40,6 +50,7 @@ class Login extends Component {
       loginMessage: LoginStore.getState().loginMessage,
       token: LoginStore.getState().token,
       currentUser: LoginStore.getState().currentUser,
+      config: LoginStore.getState().config,
     }
   }
 
@@ -62,7 +73,7 @@ class Login extends Component {
         <div className="login-container">
           <NavbarBrand>Login</NavbarBrand>
 
-          <LoginForm loginMessage={this.state.loginMessage} />
+          <LoginForm loginMessage={this.state.loginMessage} config={this.state.config}/>
         </div>
 
         <Footer />
