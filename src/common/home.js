@@ -17,9 +17,11 @@
 
 import React from 'react';
 
-import config from '../config';
 import { Redirect } from "react-router-dom";
 import { NavLink } from 'react-router-dom';
+import Branding from '../branding/branding';
+
+const images = require.context('../img', true)
 
 class Home extends React.Component {
 
@@ -38,49 +40,18 @@ class Home extends React.Component {
       return (<Redirect to="/logout" />);
     }
 
+    const brand = Branding.instance.brand;
+
     return (
       <div className="home-container">
-        <img style={{height: 120, float: 'right'}} src={require('../img/villas_web.svg').default} alt="Logo VILLASweb" />
+        <img style={{height: 120, float: 'right'}} src={images("./" + brand.logo).default} alt="Logo VILLASweb" />
         <h1>Home</h1>
         <p>
-          {/*Welcome to <b>{config.instance}</b>  hosted by  <a href={"mailto:" + config.admin.mail}>{config.admin.name}</a>!<br />*/}
-          Welcome to <b>{config.instance}</b>!
+          Welcome to <b>{Branding.instance.brand.title}</b>!
         </p>
         <p>
         You are logged in as user <b>{currentUser.username}</b> with <b>ID {currentUser.id}</b> and role <b>{currentUser.role}</b>.
         </p>
-
-
-        {/*<h3>Data Model</h3>
-        <img height={400} src={require('../img/datamodel.png').default} alt="Datamodel VILLASweb" />
-
-        <h3>Terminology </h3>
-
-        <h5>Infrastructure Component</h5>
-          <ul>
-            <li>A component of research infrastructure</li>
-            <li>Category: for example simulator, gateway, amplifier, database, etc.</li>
-            <li>Type: for example RTDS, OpalRT, VILLASnode, Cassandra</li>
-          </ul>
-
-        <h5>Component Configuration</h5>
-          <ul>
-            <li>Input signals: Signals that can be modified in VILLASweb</li>
-            <li>Output signals: Signals that can be visualized on dashboards of VILLASweb</li>
-            <li>Parameters: Further configuration parameters of the infrastructure component</li>
-          </ul>
-
-        <h5>Dashboard</h5>
-          <ul>
-            <li>Visualize ongoing experiments in real-time</li>
-            <li>Interact with ongoing experiments in real-time</li>
-          </ul>
-
-        <h5>Scenario</h5>
-          <ul>
-            <li>A collection of component configurations and dashboards for a specific experiment</li>
-            <li>Users can have access to multiple scenarios</li>
-          </ul>*/}
 
         <h3>Credits</h3>
         <p>VILLASweb is an open source project developed by the <a href="http://acs.eonerc.rwth-aachen.de">Institute for Automation of Complex Power Systems</a> at <a href="https;//www.rwth-aachen.de">RWTH Aachen University</a>.</p>

@@ -17,24 +17,53 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import Branding from '../branding/branding';
+
 
 class SidebarMenu extends React.Component {
   render() {
+    const brand = Branding.instance.brand;
+    console.log(brand.links)
+    let links = []
+
+    /*++++
+    for (var key of Object.keys(brand.links) ) {
+      console.log(`${key}: ${brand.links[key]}`);
+      links.push(<li><a href={brand.links[key]} title={key}>{key}</a></li>);
+    }*/
+
+    if (brand.links) {
+      Object.keys(brand.links).forEach(key => {
+        console.log(`${key}: ${brand.links[key]}`);
+        links.push(<li><a href={brand.links[key]} title={key}>{key}</a></li>);
+      })
+    }
+
+
     return (
       <div className="menu-sidebar">
         <h2>Menu</h2>
 
         <ul>
-          <li><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
-          <li><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
-          <li><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure Components">Infrastructure Components</NavLink></li>
-          { this.props.currentRole === 'Admin' ?
-              <li><NavLink to="/users" activeClassName="active" title="User Management">User Management</NavLink></li> : ''
+          <li hidden={!brand.pages.home}><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
+          <li hidden={!brand.pages.scenarios}><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
+          <li hidden={!brand.pages.infrastructure}><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure Components">Infrastructure Components</NavLink></li>
+          {this.props.currentRole === 'Admin' ?
+            <li><NavLink to="/users" activeClassName="active" title="User Management">User Management</NavLink></li> : ''
           }
-          <li><NavLink to="/account" title="Account">Account</NavLink></li>
+          <li hidden={!brand.pages.account}><NavLink to="/account" title="Account">Account</NavLink></li>
           <li><NavLink to="/logout" title="Logout">Logout</NavLink></li>
-          <li><NavLink to="/api" title="API Browser">API Browser</NavLink></li>
+          <li hidden={!brand.pages.api}><NavLink to="/api" title="API Browser">API Browser</NavLink></li>
         </ul>
+        {
+          links.length > 0 ?
+            <div>
+              <br></br>
+              <h4> Links</h4>
+              <ul> {links} </ul>
+            </div>
+            : ''
+        }
       </div>
     );
   }

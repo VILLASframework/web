@@ -15,13 +15,23 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-const config = {
-  publicPathBase: 'public/',
-  admin: {
-    name: 'Institute for Automation of Complex Power Systems (ACS), RWTH Aachen University, Germany',
-    mail: 'stvogel@eonerc.rwth-aachen.de'
-  },
-  branding: 'slew',
-}
+import brands from './brands'
+import config from '../config'
+import _ from 'lodash';
 
-export default config
+class Branding {
+    constructor(chosenbrand) {
+        var brand = _.get(brands, [chosenbrand]);
+        if (!brand) {
+            console.error("Branding '" + chosenbrand + "' not available, will use 'villasweb' branding");
+            brand = _.get(brands, ['villasweb']);
+        }
+
+        this.brand = brand;
+    }
+
+    static instance = Branding.instance || new Branding(config.branding);
+};
+
+
+export default Branding;

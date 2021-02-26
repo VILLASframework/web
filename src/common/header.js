@@ -19,14 +19,14 @@ import React from 'react';
 import { Col, Button } from 'react-bootstrap';
 import { Hidden } from 'react-grid-system'
 import Icon from './icon';
-import config from '../config';
+import Branding from '../branding/branding';
 
 class Header extends React.Component {
   render() {
     return (
       <header className="app-header">
         <Col xs={{span: 10}} sm={{span: 8, offset: 2}}>
-          <h1>{config.instance} - {config.subtitle}</h1>
+          <h1>{Branding.instance.brand.title} - {Branding.instance.brand.subtitle}</h1>
         </Col>
         <Hidden sm md lg xl>
           <Col xs={2} style={{ paddingLeft: 'auto', paddingRight: 0 }}>
