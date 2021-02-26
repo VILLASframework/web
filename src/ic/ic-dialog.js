@@ -113,10 +113,10 @@ class ICDialog extends React.Component {
                   {this.props.userRole === "Admin" ? (
                       <div>
                         <h5>Controls:</h5>
-                        <div>
-                          <Button style={{margin: '5px'}} size='lg'
+                        <div className='solid-button'>
+                          <Button variant='secondary' style={{margin: '5px'}} size='lg'
                                   onClick={() => this.setState({confirmCommand: true, command: 'restart'})}>Restart</Button>
-                          <Button style={{margin: '5px'}} size='lg' onClick={() => this.setState({
+                          <Button variant='secondary' style={{margin: '5px'}} size='lg' onClick={() => this.setState({
                             confirmCommand: true,
                             command: 'shutdown'
                           })}>Shutdown</Button>

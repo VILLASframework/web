@@ -93,8 +93,10 @@ class LoginForm extends Component {
 
         <FormGroup style={{ paddingTop: 15, paddingBottom: 5 }}>
           <Col>
-            <Button style={{ width: 90 }} type="submit" disabled={this.state.disableLogin} onClick={e => this.login(e)}>Login</Button>
-            <Button variant="link" size="sm" style={{ marginLeft: 85 }} onClick={() => this.openRecoverPassword()}>Forgot your password?</Button>
+          <span className='solid-button'>
+            <Button variant='secondary' style={{width: 90}} type="submit" disabled={this.state.disableLogin} onClick={e => this.login(e)}>Login</Button>
+          </span>
+            <Button variant="link" size="sm" style={{marginLeft: 85}} onClick={() => this.openRecoverPassword()}>Forgot your password?</Button>
           </Col>
         </FormGroup>
 

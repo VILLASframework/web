@@ -131,20 +131,25 @@ class Users extends Component {
   render() {
 
     const buttonStyle = {
-      marginLeft: '10px'
+      marginLeft: '10px',
     };
+
+    const iconStyle = {
+      height: '30px',
+      width: '30px'
+    }
 
     return (
       <div>
         <h1>Users
-
+          <span className='icon-button'>
           <OverlayTrigger
             key={1}
             placement={'top'}
             overlay={<Tooltip id={`tooltip-${"add"}`}> Add User </Tooltip>} >
-            <Button style={buttonStyle} onClick={() => this.setState({ newModal: true })}><Icon icon='plus' /> </Button>
+            <Button variant='light' style={buttonStyle} onClick={() => this.setState({ newModal: true })}><Icon icon='plus' classname='icon-color' style={iconStyle} /> </Button>
           </OverlayTrigger>
-
+        </span>
         </h1>
 
         <Table data={this.state.users}>
@@ -155,8 +160,6 @@ class Users extends Component {
           <TableColumn title='Active' dataKey='active' modifier={(active) => this.modifyActiveColumn(active)} />
           <TableColumn width='200' editButton deleteButton onEdit={index => this.setState({ editModal: true, modalData: this.state.users[index] })} onDelete={index => this.setState({ deleteModal: true, modalData: this.state.users[index] })} />
         </Table>
-
-
 
         <NewUserDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
         <EditUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />
