@@ -17,10 +17,15 @@
 import React from 'react';
 
 
-export function slew_home() {
+export function slew_home(title) {
 
     return (
-        <div>
+        <div className="home-container">
+            <img style={{ height: 120, float: 'right' }} src={require('./img/slew-logo.png').default} alt="Logo VILLASweb" />
+            <h1>Home</h1>
+            <p>
+                Welcome to <b>{title}</b>!
+            </p>
             <p>SLEW is a learning platform for running experiments in a virtual power engineering world.
                 The platform enables to interact with the experiments in real time and perform analyses on the experimental results.</p>
 
@@ -35,6 +40,13 @@ export function slew_home() {
             <p>The platform is based on the real-time simulation tool DPsim developed in RWTH,
             which is available as open-source software project to the power engineering community. Besides, it integrates the interactive
                     computing environment Jupyter for further analysis of experimental results.</p>
+
+            <h3>Contacts</h3>
+            <ul>
+              <li><a href="mailto:jdinkelbach@eonerc.rwth-aachen.de">Jan Dinkelbach</a></li>
+              <li><a href="mailto:mmirz@eonerc.rwth-aachen.de">Markus Mirz</a></li>
+              <li><a href="mailto:stvogel@eonerc.rwth-aachen.de">Steffen Vogel</a></li>
+            </ul>
         </div>)
 
 }

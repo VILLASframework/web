@@ -28,12 +28,6 @@ const brands = {
          account: true,
          api: true,
       },
-      links: {
-         "VILLASframework project": "http://fein-aachen.org/projects/villas-framework/",
-         "VILLASweb Documentation": "https://villas.fein-aachen.org/doc/web.html",
-         "VILLASweb frontend source": "https://git.rwth-aachen.de/acs/public/villas/web",
-         "VILLASweb backend source":"https://git.rwth-aachen.de/acs/public/villas/web-backend-go",
-      }
    },
    slew: {
       title: 'SLEW',

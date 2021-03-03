@@ -20,8 +20,6 @@ import React from 'react';
 import { Redirect } from "react-router-dom";
 import Branding from '../branding/branding';
 
-// Logo is dynamically loaded from img folder, therefore the whole folder is required at this point
-const images = require.context('../img', true)
 
 class Home extends React.Component {
 
@@ -33,7 +31,6 @@ class Home extends React.Component {
   }
 
   render() {
-
     let currentUser = JSON.parse(localStorage.getItem("currentUser"));
     if (currentUser == null) {
       console.log("HOME redirecting to logout/ login")
@@ -43,9 +40,7 @@ class Home extends React.Component {
     const branding = Branding.instance;
 
     return (
-      <div className="home-container">
-        <img style={{ height: 120, float: 'right' }} src={images("./" + branding.brand.logo).default} alt="Logo VILLASweb" />
-        <h1>Home</h1>
+      <div>
         {branding.getHome(currentUser.username, currentUser.id, currentUser.role)}
         </div>
         );

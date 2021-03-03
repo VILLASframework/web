@@ -45,7 +45,7 @@ class Branding {
                 homepage = villasweb_home(this.brand.title, username, userid, role);
                 break;
             case 'slew':
-                homepage = slew_home();
+                homepage = slew_home(this.brand.title);
                 break;
             default:
                 homepage = villasweb_home();
