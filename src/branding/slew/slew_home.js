@@ -15,6 +15,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 import React from 'react';
+import './slew.css'
 
 
 export function slew_home(title) {
@@ -47,6 +48,13 @@ export function slew_home(title) {
               <li><a href="mailto:mmirz@eonerc.rwth-aachen.de">Markus Mirz</a></li>
               <li><a href="mailto:stvogel@eonerc.rwth-aachen.de">Steffen Vogel</a></li>
             </ul>
+
+            <h3>Credits</h3>
+              <div>
+                <img id="images" height={70} src={require('./img/eonerc_rwth.svg').default} alt="Logo EONERC"/>
+                <img id="images" height={70} src={require('./img/erigrid2.png').default} alt="Logo Erigrid"/>
+                <img id="images" height={70} src={require('./img/european_commission.svg').default} alt="Logo EU"/>
+              </div>
         </div>)
 
 }
