@@ -46,6 +46,11 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
+
+    AppDispatcher.dispatch({
+      type: 'config/load',
+    });
+
     this.state = {
       showSidebarMenu: false,
     }

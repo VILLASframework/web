@@ -79,9 +79,19 @@ class CustomTable extends Component {
         cell.push(<Button variant="link" onClick={() => child.props.onClick(index)}>{content}</Button>);
       } else if (linkKey === 'filebuttons') {
         content.forEach((contentvalue, contentkey) => {
-          cell.push(<OverlayTrigger key={contentkey} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"export"}`}>Download {contentvalue}</Tooltip>} >
-          <Button variant='table-control-button' onClick={() => child.props.onDownload(contentkey)} disabled={child.props.onDownload == null}>{contentkey + ' ' }
-            <Icon icon='file-download' /></Button></OverlayTrigger>);
+          cell.push(
+            <OverlayTrigger
+              key={contentkey}
+              placement={'bottom'}
+              overlay={<Tooltip id={`tooltip-${"export"}`}>Download {contentvalue}</Tooltip>} >
+              <Button
+                variant='table-control-button'
+                onClick={() => child.props.onDownload(contentkey)}
+                disabled={child.props.onDownload == null}>
+                {contentkey + ' ' }
+                <Icon icon='file-download' />
+              </Button>
+            </OverlayTrigger>);
         });
       } else {
         cell.push(content);
@@ -114,17 +124,34 @@ class CustomTable extends Component {
     }
 
     // add buttons
-    if (child.props.editButton) {
-      let disable = (typeof data.managedexternally !== "undefined" && data.managedexternally);
-      cell.push(<OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"edit"}`}>{disable ? "Externally managed ICs cannot be edited" : "edit"} </Tooltip>} >
-        <Button variant='table-control-button' onClick={() => child.props.onEdit(index)} disabled={disable || child.props.onEdit == null}><Icon icon='edit' /></Button></OverlayTrigger>);
+    let showEditButton = true
+    if (child.props.showEditButton !== null)
+    {
+      showEditButton = child.props.showEditButton(index)
     }
+    if(showEditButton){
+      if (child.props.editButton) {
+        cell.push(
+          <OverlayTrigger
+            key={0}
+            placement={'bottom'}
+            overlay={<Tooltip id={`tooltip-${"edit"}`}> Edit </Tooltip>}>
+            <Button
+              variant='table-control-button'
+              onClick={() => child.props.onEdit(index)}
+              disabled={child.props.onEdit == null} >
+              <Icon icon='edit' />
+            </Button>
+          </OverlayTrigger>);
+      }
+    }
+
 
     if (child.props.checkbox) {
       const checkboxKey = child.props.checkboxKey;
       let isDisabled = false;
       if (child.props.checkboxDisabled != null){
-        isDisabled = !child.props.checkboxDisabled(index)
+        isDisabled = child.props.checkboxDisabled(index)
       }
       cell.push(
         <FormCheck
@@ -137,29 +164,88 @@ class CustomTable extends Component {
     }
 
     if (child.props.exportButton) {
-      cell.push(<OverlayTrigger key={1} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"export"}`}> Export </Tooltip>} >
-        <Button variant='table-control-button' onClick={() => child.props.onExport(index)} disabled={child.props.onExport == null}><Icon icon='download' /></Button></OverlayTrigger>);
+      cell.push(
+        <OverlayTrigger
+          key={1}
+          placement={'bottom'}
+          overlay={<Tooltip id={`tooltip-${"export"}`}> Export </Tooltip>} >
+          <Button
+            variant='table-control-button'
+            onClick={() => child.props.onExport(index)}
+            disabled={child.props.onExport == null}>
+            <Icon icon='download' />
+          </Button>
+        </OverlayTrigger>);
     }
 
     if (child.props.duplicateButton) {
-      cell.push(<OverlayTrigger key={2} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"duplicate"}`}> Duplicate </Tooltip>} >
-        <Button variant='table-control-button' onClick={() => child.props.onDuplicate(index)} disabled={child.props.onDuplicate == null}><Icon icon='copy' /></Button></OverlayTrigger>);
+      cell.push(
+        <OverlayTrigger
+          key={2}
+          placement={'bottom'}
+          overlay={<Tooltip id={`tooltip-${"duplicate"}`}> Duplicate </Tooltip>} >
+          <Button
+            variant='table-control-button'
+            onClick={() => child.props.onDuplicate(index)}
+            disabled={child.props.onDuplicate == null}>
+            <Icon icon='copy' />
+          </Button>
+        </OverlayTrigger>);
     }
 
     if (child.props.addRemoveFilesButton) {
-      cell.push(<OverlayTrigger key={3} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"export"}`}>Add/remove File(s)</Tooltip>} >
-        <Button variant='table-control-button' onClick={() => child.props.onAddRemove(index)} disabled={child.props.onAddRemove == null}><Icon icon='file' /></Button></OverlayTrigger>);
+      cell.push(
+        <OverlayTrigger
+          key={3}
+          placement={'bottom'}
+          overlay={<Tooltip id={`tooltip-${"export"}`}>Add/remove File(s)</Tooltip>} >
+          <Button
+            variant='table-control-button'
+            onClick={() => child.props.onAddRemove(index)}
+            disabled={child.props.onAddRemove == null}>
+            <Icon icon='file' />
+          </Button>
+        </OverlayTrigger>);
     }
 
     if (child.props.downloadAllButton) {
-      cell.push(<OverlayTrigger key={4} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"export"}`}>Download All Files</Tooltip>} >
-        <Button variant='table-control-button' onClick={() => child.props.onDownloadAll(index)} disabled={child.props.onDownloadAll == null}><Icon icon='file-download' /></Button></OverlayTrigger>);
+      cell.push(
+        <OverlayTrigger
+          key={4}
+          placement={'bottom'}
+          overlay={<Tooltip id={`tooltip-${"export"}`}>Download All Files</Tooltip>} >
+          <Button
+            variant='table-control-button'
+            onClick={() => child.props.onDownloadAll(index)}
+            disabled={child.props.onDownloadAll == null}>
+            <Icon icon='file-download' />
+          </Button>
+        </OverlayTrigger>);
     }
 
-    if (child.props.deleteButton) {
-      cell.push(<OverlayTrigger key={5} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"delete"}`}> Delete </Tooltip>} >
-        <Button variant='table-control-button' onClick={() => child.props.onDelete(index)} disabled={child.props.onDelete == null}><Icon icon='trash' /></Button></OverlayTrigger>);
+    let showDeleteButton = true;
+    if (child.props.showDeleteButton !== null){
+      showDeleteButton = child.props.showDeleteButton(index)
     }
+
+    if (showDeleteButton){
+      if (child.props.deleteButton) {
+        cell.push(
+          <OverlayTrigger
+            key={5}
+            placement={'bottom'}
+            overlay={<Tooltip id={`tooltip-${"delete"}`}> Delete </Tooltip>} >
+            <Button
+              variant='table-control-button'
+              onClick={() => child.props.onDelete(index)}
+              disabled={child.props.onDelete == null}>
+              <Icon icon='trash' />
+            </Button>
+          </OverlayTrigger>);
+      }
+    }
+
+
 
     return cell;
   } // addCell
@@ -244,9 +330,19 @@ class CustomTable extends Component {
                         onCellBlur: () => { }
                       };
 
-                    return (<td key={cellIndex} tabIndex={tabIndex} onClick={evtHdls.onCellClick} onFocus={evtHdls.onCellFocus} onBlur={evtHdls.onCellBlur}>
+                    return (<td
+                      key={cellIndex}
+                      tabIndex={tabIndex}
+                      onClick={evtHdls.onCellClick}
+                      onFocus={evtHdls.onCellFocus}
+                      onBlur={evtHdls.onCellBlur}>
                       {(this.state.editCell[0] === cellIndex && this.state.editCell[1] === rowIndex) ? (
-                        <FormControl as='input' type={children[cellIndex].props.inputType} value={cell} onChange={(event) => children[cellIndex].props.onInlineChange(event, rowIndex, cellIndex)} ref={ref => { this.activeInput = ref; }} />
+                        <FormControl
+                          as='input'
+                          type={children[cellIndex].props.inputType}
+                          value={cell}
+                          onChange={(event) => children[cellIndex].props.onInlineChange(event, rowIndex, cellIndex)}
+                          ref={ref => { this.activeInput = ref; }} />
                       ) : (
                           <span>
                             {cell.map((element, elementIndex) => (

@@ -19,6 +19,8 @@ import React, { Component } from 'react';
 import { Form, Button, FormGroup, FormControl, FormLabel, Col } from 'react-bootstrap';
 import RecoverPassword from './recover-password'
 import AppDispatcher from '../common/app-dispatcher';
+import _ from 'lodash';
+
 
 class LoginForm extends Component {
   constructor(props) {
@@ -56,17 +58,17 @@ class LoginForm extends Component {
     this.setState({ [event.target.id]: event.target.value, disableLogin });
   }
 
-  openRecoverPassword(){
-    this.setState({forgottenPassword: true});
+  openRecoverPassword() {
+    this.setState({ forgottenPassword: true });
   }
 
-  closeRecoverPassword(){
-    this.setState({forgottenPassword: false});
+  closeRecoverPassword() {
+    this.setState({ forgottenPassword: false });
   }
 
-  render() {
+  villaslogin() {
     return (
-      <Form>
+      <Form key="login_a">
         <FormGroup controlId="username">
           <FormLabel column={true}>Username</FormLabel>
           <Col>
@@ -89,7 +91,7 @@ class LoginForm extends Component {
           </div>
         }
 
-        <FormGroup style={{paddingTop: 15, paddingBottom: 5}}>
+        <FormGroup style={{ paddingTop: 15, paddingBottom: 5 }}>
           <Col>
           <span className='solid-button'>
             <Button variant='secondary' style={{width: 90}} type="submit" disabled={this.state.disableLogin} onClick={e => this.login(e)}>Login</Button>
@@ -101,8 +103,27 @@ class LoginForm extends Component {
         <RecoverPassword show={this.state.forgottenPassword} onClose={() => this.closeRecoverPassword()} sessionToken={this.props.sessionToken} />
 
       </Form>
-
     );
+  }
+
+  render() {
+    let villasLogin = this.villaslogin();
+
+    if (this.props.config) {
+      let externalLogin = _.get(this.props.config, ['authentication', 'external', 'enabled'])
+      let provider = _.get(this.props.config, ['authentication', 'external', 'provider_name'])
+      let url = _.get(this.props.config, ['authentication', 'external', 'authorize_url']) + "?rd=/login/complete"
+
+      if (externalLogin && provider && url) {
+        return [
+          villasLogin,
+          <hr key="login_b"/>,
+          <Button key="login_c" onClick={e => window.location = url } block>Sign in with {provider}</Button>
+        ];
+      }
+    }
+
+    return villasLogin;
   }
 }
 

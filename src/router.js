@@ -28,6 +28,8 @@ import Dashboard from './dashboard/dashboard'
 import InfrastructureComponents from './ic/ics';
 import Users from './user/users';
 import User from "./user/user";
+import LoginComplete from './user/login-complete'
+
 
 
 class Root extends React.Component {
@@ -35,6 +37,7 @@ class Root extends React.Component {
     return (
       <BrowserRouter>
         <Switch>
+          <Route path='/login/complete' component={LoginComplete} />
           <Route path='/login' component={Login} />
           <Route path='/logout' component={Logout} />
           <Route path='/' component={App} />

@@ -18,19 +18,57 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import Branding from '../branding/branding';
+import { Container } from 'flux/utils';
+import LoginStore from '../user/login-store';
+import AppDispatcher from './app-dispatcher';
 
 
 class SidebarMenu extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      externalAuth: false,
+      logoutLink: "",
+    }
+  }
+
+  static getStores() {
+    return [LoginStore]
+  }
+
+  static calculateState(prevState, props) {
+    let config = LoginStore.getState().config;
+    let logout_url = _.get(config, ['authentication', 'logout_url']);
+
+    if (logout_url) {
+      return {
+        externalAuth: true,
+        logoutLink: logout_url,
+      }
+    }
+
+    return {
+      externalAuth: false,
+      logoutLink: "/logout",
+    }
+  }
+
+  logout() {
+    AppDispatcher.dispatch({
+      type: 'users/logout'
+    });
+    // The Login Store is deleted automatically
+
+    // discard login token and current User
+    localStorage.setItem('token', '');
+    localStorage.setItem('currentUser', '');
+  }
+
   render() {
     const brand = Branding.instance.brand;
     console.log(brand.links)
     let links = []
-
-    /*++++
-    for (var key of Object.keys(brand.links) ) {
-      console.log(`${key}: ${brand.links[key]}`);
-      links.push(<li><a href={brand.links[key]} title={key}>{key}</a></li>);
-    }*/
 
     if (brand.links) {
       Object.keys(brand.links).forEach(key => {
@@ -39,6 +77,33 @@ class SidebarMenu extends React.Component {
       })
     }
 
+    if (this.state.externalAuth) {
+      return (
+        <div className="menu-sidebar">
+          <h2>Menu</h2>
+          <ul>
+            <li hidden={!brand.pages.home}><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
+            <li hidden={!brand.pages.scenarios}><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
+            <li hidden={!brand.pages.infrastructure}><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure Components">Infrastructure Components</NavLink></li>
+            { this.props.currentRole === 'Admin' ?
+                <li><NavLink to="/users" activeClassName="active" title="User Management">User Management</NavLink></li> : ''
+            }
+            <li hidden={!brand.pages.account}><NavLink to="/account" title="Account">Account</NavLink></li>
+            <a onClick={this.logout.bind(this)} href={this.state.logoutLink}>Logout</a>
+            <li hidden={!brand.pages.api}><NavLink to="/api" title="API Browser">API Browser</NavLink></li>
+          </ul>
+          {
+          links.length > 0 ?
+            <div>
+              <br></br>
+              <h4> Links</h4>
+              <ul> {links} </ul>
+            </div>
+            : ''
+        }
+        </div>
+      );
+    }
 
     return (
       <div className="menu-sidebar">
@@ -52,7 +117,7 @@ class SidebarMenu extends React.Component {
             <li><NavLink to="/users" activeClassName="active" title="User Management">User Management</NavLink></li> : ''
           }
           <li hidden={!brand.pages.account}><NavLink to="/account" title="Account">Account</NavLink></li>
-          <li><NavLink to="/logout" title="Logout">Logout</NavLink></li>
+          <li><NavLink to={this.state.logoutLink} title="Logout">Logout</NavLink></li>
           <li hidden={!brand.pages.api}><NavLink to="/api" title="API Browser">API Browser</NavLink></li>
         </ul>
         {
@@ -69,4 +134,5 @@ class SidebarMenu extends React.Component {
   }
 }
 
-export default SidebarMenu;
+let fluxContainerConverter = require('../common/FluxContainerConverter');
+export default Container.create(fluxContainerConverter.convert(SidebarMenu));

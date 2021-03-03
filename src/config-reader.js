@@ -15,41 +15,29 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
+import RestDataManager from './common/data-managers/rest-data-manager';
+import RestAPI from './common/api/rest-api';
+import AppDispatcher from './common/app-dispatcher';
 
-class TableColumn extends Component {
-  static defaultProps = {
-    title: '',
-    modifier: null,
-    width: null,
-    editButton: false,
-    showEditButton: null,
-    deleteButton: false,
-    showDeleteButton: null,
-    exportButton: false,
-    duplicateButton: false,
-    link: '/',
-    linkKey: '',
-    dataIndex: false,
-    inlineEditable: false,
-    inputType: 'text',
-    clickable: false,
-    labelKey: null,
-    checkbox: false,
-    checkboxKey: '',
-    checkboxDisabled: null,
-    labelStyle: null,
-    labelModifier: null
 
-  };
-
-  render() {
-    return (
-      <th width={this.props.width}>
-        {this.props.title}
-      </th>
-    );
+class ConfigReader extends RestDataManager {
+  constructor() {
+    super('config', '/config');
   }
-}
 
-export default TableColumn;
+  loadConfig() {
+    RestAPI.get(this.makeURL('/config'), null).then(response => {
+      AppDispatcher.dispatch({
+        type: 'config/loaded',
+        data: response,
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'config/load-error',
+        error: error,
+      });
+    });
+  }
+};
+
+export default new ConfigReader();
