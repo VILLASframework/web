@@ -16,12 +16,11 @@
  ******************************************************************************/
 
 const config = {
-  publicPathBase: 'public/',
   admin: {
     name: 'Institute for Automation of Complex Power Systems (ACS), RWTH Aachen University, Germany',
     mail: 'stvogel@eonerc.rwth-aachen.de'
   },
-  branding: 'slew',
+  branding: 'villasweb',
 }
 
 export default config

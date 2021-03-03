@@ -19,18 +19,40 @@ import brands from './brands'
 import config from '../config'
 import _ from 'lodash';
 
+import {villasweb_home} from './villasweb/villasweb-home';
+import {slew_home} from './slew/slew_home';
+
+
 class Branding {
     constructor(chosenbrand) {
         var brand = _.get(brands, [chosenbrand]);
         if (!brand) {
             console.error("Branding '" + chosenbrand + "' not available, will use 'villasweb' branding");
             brand = _.get(brands, ['villasweb']);
+            chosenbrand = 'villasweb'
         }
 
         this.brand = brand;
+        this.name = chosenbrand;
     }
 
     static instance = Branding.instance || new Branding(config.branding);
+
+    getHome(username = '' , userid = '', role = '') {
+        var homepage = '';
+        switch(this.name) {
+            case 'villasweb':
+                homepage = villasweb_home(this.brand.title, username, userid, role);
+                break;
+            case 'slew':
+                homepage = slew_home();
+                break;
+            default:
+                homepage = villasweb_home();
+                break;
+        }
+        return homepage;
+    }
 };
 
 
