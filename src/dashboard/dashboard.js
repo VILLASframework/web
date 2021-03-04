@@ -475,14 +475,11 @@ class Dashboard extends Component {
     const boxClasses = classNames('section', 'box', { 'fullscreen-padding': this.props.isFullscreen });
     let draggable = this.state.editing;
     let dropZoneHeight = this.state.dashboard.height;
-
-
-    return (
-      <div className={boxClasses} >
-        <div className='section-header box-header'>
-          <div className="section-title">
-          <span>{this.state.dashboard.name}</span>
-          </div>
+    return (<div className={boxClasses} >
+      <div className='section-header box-header'>
+        <div className="section-title">
+          <h2>{this.state.dashboard.name}</h2>
+        </div>
 
           <DashboardButtonGroup
             editing={this.state.editing}

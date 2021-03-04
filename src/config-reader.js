@@ -15,21 +15,29 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
+import RestDataManager from './common/data-managers/rest-data-manager';
+import RestAPI from './common/api/rest-api';
+import AppDispatcher from './common/app-dispatcher';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-//import '@fortawesome/free-regular-svg-icons';
-
-library.add(fas);
-
-class Icon extends React.Component {
-
-  render() {
-    return <FontAwesomeIcon className={this.props.classname} size={this.props.size} style={this.props.style} icon={this.props.icon} />
+class ConfigReader extends RestDataManager {
+  constructor() {
+    super('config', '/config');
   }
-}
 
-export default Icon;
+  loadConfig() {
+    RestAPI.get(this.makeURL('/config'), null).then(response => {
+      AppDispatcher.dispatch({
+        type: 'config/loaded',
+        data: response,
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'config/load-error',
+        error: error,
+      });
+    });
+  }
+};
+
+export default new ConfigReader();

@@ -66,19 +66,21 @@ class WidgetTimeOffset extends Component {
     } else if (this.props.widget.customProperties.showOffset){
       icSelected = this.state.timeOffset + 's';
     }
-    
     return (
       <div className="time-offset">
       {this.props.widget.customProperties.icID !== -1 ? 
       (<span></span>) : (<span>no IC</span>)
-      }  
+      }
+      {this.props.widget.customProperties.icID !== -1 && this.props.widget.customProperties.showName ? 
+      (<span>{this.state.icName}</span>) : (<span></span>)
+      }    
       <OverlayTrigger key={0} placement={'left'} overlay={<Tooltip id={`tooltip-${"traffic-light"}`}>
       {this.props.widget.customProperties.icID !== -1 ? 
       (<span>{this.state.icName}<br></br>Offset: {this.state.timeOffset + "s"}</span>) 
       : 
       (<span>Please select Infrastructure Component</span>)}
       </Tooltip>}>      
-        <TrafficLight Horizontal={this.props.widget.customProperties.horizontal} width={this.props.widget.width} height={this.props.widget.height}
+        <TrafficLight Horizontal={this.props.widget.customProperties.horizontal} width={this.props.widget.width - 40} height={this.props.widget.height - 40}
         RedOn={(this.props.widget.customProperties.threshold_red <= this.state.timeOffset) || !this.state.websocketOpen}
         YellowOn={(this.props.widget.customProperties.threshold_yellow <= this.state.timeOffset) && (this.state.timeOffset < this.props.widget.customProperties.threshold_red) && this.state.websocketOpen}
         GreenOn={(this.state.timeOffset < this.props.widget.customProperties.threshold_yellow) && this.state.websocketOpen}

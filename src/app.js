@@ -38,6 +38,7 @@ import Scenarios from './scenario/scenarios';
 import Scenario from './scenario/scenario';
 import Users from './user/users';
 import User from './user/user';
+import APIBrowser from './common/api-browser';
 
 import './styles/app.css';
 
@@ -45,6 +46,11 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
+
+    AppDispatcher.dispatch({
+      type: 'config/load',
+    });
+
     this.state = {
       showSidebarMenu: false,
     }
@@ -117,6 +123,7 @@ class App extends React.Component {
                 <Route path="/infrastructure" component={InfrastructureComponents} />
                 <Route path="/account" component={User} />
                 <Route path="/users" component={Users} />
+                <Route path="/api" component={APIBrowser} />
               </div>
             </div>
 

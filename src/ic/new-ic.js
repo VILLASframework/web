@@ -34,7 +34,8 @@ class NewICDialog extends React.Component {
       category: '',
       managedexternally: false,
       description: '',
-      location: ''
+      location: '',
+      manager: ''
     };
   }
 
@@ -48,7 +49,8 @@ class NewICDialog extends React.Component {
           uuid: this.state.uuid,
           managedexternally: this.state.managedexternally,
           location: this.state.location,
-          description: this.state.description
+          description: this.state.description,
+          manager: this.state.manager
         };
 
         if (this.state.websocketurl != null && this.state.websocketurl !== "" && this.state.websocketurl !== 'http://') {
@@ -88,6 +90,7 @@ class NewICDialog extends React.Component {
     let websocketurl = true;
     let type = true;
     let category = true;
+    let manager = true;
 
     if (this.state.name === '') {
       name = false;
@@ -95,6 +98,10 @@ class NewICDialog extends React.Component {
 
     if (!this.state.managedexternally && this.state.uuid === '') {
       uuid = false;
+    }
+
+    if(this.state.managedexternally && manager === ''){
+      manager = false;
     }
 
     if (this.state.type === '') {
@@ -105,7 +112,7 @@ class NewICDialog extends React.Component {
       category = false;
     }
 
-    this.valid = name && uuid && websocketurl && type && category;
+    this.valid = name && uuid && websocketurl && type && category && manager;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
@@ -113,6 +120,7 @@ class NewICDialog extends React.Component {
     if (target === 'websocketurl') return websocketurl ? "success" : "error";
     if (target === 'type') return type ? "success" : "error";
     if (target === 'category') return category ? "success" : "error";
+    if (target === 'manager') return manager ? "success" : "error";
 
     return this.valid;
   }
@@ -131,8 +139,8 @@ class NewICDialog extends React.Component {
       case "simulator":
         typeOptions = ["dummy","generic","dpsim","rtlab","rscad","opalrt"];
           break;
-      case "controller":
-        typeOptions = ["kubernetes","villas-controller"];
+      case "manager":
+        typeOptions = ["villas-node","villas-relay","generic"];
         break;
       case "gateway":
         typeOptions = ["villas-node","villas-relay"];
@@ -146,33 +154,60 @@ class NewICDialog extends React.Component {
       default:
         typeOptions =[];
     }
+
+    let managerOptions = [];
+    managerOptions.push(<option default>Select manager</option>);
+    for (let m of this.props.managers) {
+      managerOptions.push (
+        <option key={m.id} value={m.uuid}>{m.name}</option>
+      );
+    }
+
+
     return (
       <Dialog show={this.props.show} title="New Infrastructure Component" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.validateForm()}>
         <form>
-          <FormGroup controlId="managedexternally">
-            <OverlayTrigger key="3" placement={'left'} overlay={<Tooltip id={`tooltip-${"me"}`}>An externally managed component will show up in the list only after a VILLAScontroller for the component type has created the component and cannot be edited by users</Tooltip>} >
-              <FormCheck type={"checkbox"} label={"Managed externally"} defaultChecked={this.state.managedexternally} onChange={e => this.handleChange(e)}>
-              </FormCheck>
-            </OverlayTrigger>
-          </FormGroup>
+          {this.props.managers.length > 0 ?
+            <>
+              <FormGroup controlId="managedexternally">
+                <OverlayTrigger key="-1" placement={'left'} overlay={<Tooltip id={`tooltip-${"me"}`}>An externally managed component is created and managed by an IC manager via AMQP</Tooltip>} >
+                  <FormCheck type={"checkbox"} label={"Managed externally"} defaultChecked={this.state.managedexternally} onChange={e => this.handleChange(e)}>
+                  </FormCheck>
+                </OverlayTrigger>
+              </FormGroup>
+              {this.state.managedexternally === true ?
+                <FormGroup controlId="manager" valid={this.validateForm('manager')}>
+                  <OverlayTrigger key="0" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
+                    <FormLabel>Manager to create new IC *</FormLabel>
+                  </OverlayTrigger>
+                  <FormControl as="select" value={this.state.manager} onChange={(e) => this.handleChange(e)}>
+                    {managerOptions}
+                  </FormControl>
+                </FormGroup>
+                : <div/>
+
+              }
+            </>
+            : <div/>
+          }
           <FormGroup controlId="name" valid={this.validateForm('name')}>
-          <OverlayTrigger key="0" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
+          <OverlayTrigger key="1" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
             <FormLabel>Name *</FormLabel>
           </OverlayTrigger>
             <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="category" valid={this.validateForm('category')}>
-            <OverlayTrigger key="1" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
+            <OverlayTrigger key="2" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
               <FormLabel>Category of component *</FormLabel>
             </OverlayTrigger>
             <FormControl as="select" value={this.state.category} onChange={(e) => this.handleChange(e)}>
               <option default>Select category</option>
               <option>simulator</option>
-              <option>controller</option>
               <option>service</option>
               <option>gateway</option>
               <option>equipment</option>
+              <option>manager</option>
             </FormControl>
           </FormGroup>
           <FormGroup controlId="type" valid={this.validateForm('type')}>
@@ -206,11 +241,15 @@ class NewICDialog extends React.Component {
             <FormControl type="text" placeholder="Enter Description" value={this.state.description} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="uuid" valid={this.validateForm('uuid')}>
-            <FormLabel>UUID</FormLabel>
-            <FormControl type="text" placeholder="Enter uuid" value={this.state.uuid} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
+          {this.state.managedexternally === false ?
+            <FormGroup controlId="uuid" valid={this.validateForm('uuid')}>
+              <FormLabel>UUID</FormLabel>
+              <FormControl type="text" placeholder="Enter uuid" value={this.state.uuid}
+                           onChange={(e) => this.handleChange(e)}/>
+              <FormControl.Feedback/>
+            </FormGroup>
+            : <div/>
+          }
         </form>
       </Dialog>
     );

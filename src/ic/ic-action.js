@@ -16,75 +16,280 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Button, ButtonToolbar, DropdownButton, Dropdown } from 'react-bootstrap';
-import TimePicker from 'react-bootstrap-time-picker'
+import { Button, DropdownButton, Dropdown, InputGroup, FormControl } from 'react-bootstrap';
+import AppDispatcher from "../common/app-dispatcher";
+import NotificationsFactory from "../common/data-managers/notifications-factory";
+import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
 
 class ICAction extends React.Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            selectedAction: null,
-            selectedDelay: 0
-        };
+    let t = new Date()
+
+    Number.prototype.pad = function(size) {
+        var s = String(this);
+        while (s.length < (size || 2)) {s = "0" + s;}
+        return s;
     }
 
-    static getDerivedStateFromProps(props, state){
-      if (state.selectedAction == null) {
-        if (props.actions != null && props.actions.length > 0) {
-          return{
-            selectedAction: props.actions[0]
-          };
-        }
-      }
-      return null
-    }
+    let time = new Date();
+    time.setMinutes(5 * Math.round(time.getMinutes() / 5 + 1))
 
-    setAction = id => {
-        // search action
-        for (let action of this.props.actions) {
-            if (action.id === id) {
-                this.setState({ selectedAction: action });
-            }
-        }
+    this.state = {
+      selectedAction: null,
+      time: time
     };
+  }
 
-    setDelayForAction = time => {
-      // time in int format: (hours * 3600 + minutes * 60 + seconds)
-      this.setState({selectedDelay: time})
+  static getDerivedStateFromProps(props, state) {
+    if (state.selectedAction == null) {
+      if (props.actions != null && props.actions.length > 0) {
+        return {
+          selectedAction: props.actions[0]
+        };
+      }
     }
 
-    render() {
+    return null
+  }
 
-      let sendCommandDisabled = this.props.runDisabled || this.state.selectedAction == null || this.state.selectedAction.id === "-1"
+  runAction(action, when) {
 
-        const actionList = this.props.actions.map(action => (
-            <Dropdown.Item key={action.id} eventKey={action.id} active={this.state.selectedAction === action.id}>
-                {action.title}
-            </Dropdown.Item>
-        ));
-
-        return <div>
-          {"Select delay for command execution (Format hh:mm, max 1h):"}
-          <TimePicker
-            format={24}
-            initialValue={this.state.selectedDelay}
-            value={this.state.selectedDelay}
-            start={"00:00"}
-            end={"01:00"}
-            step={1}
-            onChange={this.setDelayForAction}
-          />
-          <ButtonToolbar>
-            <DropdownButton title={this.state.selectedAction != null ? this.state.selectedAction.title : ''} id="action-dropdown" onSelect={this.setAction}>
-              {actionList}
-            </DropdownButton>
-
-            <Button style={{ marginLeft: '5px' }} disabled={sendCommandDisabled} onClick={() => this.props.runAction(this.state.selectedAction, this.state.selectedDelay)}>Send command</Button>
-
-          </ButtonToolbar>
-        </div>;
+    if (action.data.action === 'none') {
+      console.warn("No command selected. Nothing was sent.");
+      return;
     }
+
+    if (!this.props.hasConfigs){
+      let newAction = {};
+      newAction["action"] = action.data.action
+      newAction["when"] = when
+
+      for (let index of this.props.selectedICs) {
+        let ic = this.props.ics[index];
+        let icID = ic.id;
+
+        /* VILLAScontroller protocol
+        see: https://villas.fein-aachen.org/doc/controller-protocol.html
+
+        RESET SHUTDOWN
+        {
+          "action": "reset/shutdown/stop/pause/resume"
+          "when": "1234567"
+        }
+
+        DELETE
+        {
+          "action": "delete"
+          "parameters":{
+            "uuid": "uuid-of-the-manager-for-this-IC"
+          }
+          "when": "1234567"
+        }
+
+        CREATE is not possible within ICAction (see add IC)
+        */
+
+        if (newAction.action === "delete"){
+          // prepare parameters for delete incl. correct IC id
+          newAction["parameters"] = {};
+          newAction.parameters["uuid"] = ic.uuid;
+          // get the ID of the manager IC
+          let managerIC = null;
+          for (let i of this.props.ics){
+            if (i.uuid === ic.manager){
+              managerIC = i;
+            }
+          }
+          if (managerIC == null){
+            NotificationsDataManager.addNotification(NotificationsFactory.DELETE_ERROR("Could not find manager IC with UUID " + ic.manager));
+            continue;
+          }
+
+          icID = managerIC.id; // send delete action to manager of IC
+        }
+
+        AppDispatcher.dispatch({
+          type: 'ics/start-action',
+          icid: icID,
+          action: newAction,
+          result: null,
+          token: this.props.token
+        });
+
+      } // end for loop over selected ICs
+    } else {
+
+      /*VILLAScontoller protocol
+      see: https://villas.fein-aachen.org/doc/controller-protocol.html
+      *
+      * STOP PAUSE RESUME
+        {
+          "action": "reset/shutdown/stop/pause/resume"
+          "when": "1234567"
+        }
+      *
+      * START
+        {
+          "action": "start"
+          "when": 1234567
+          "parameters": {
+            Start parameters for this IC as configured in the component config
+          }
+          "model": {
+            "type": "url"
+            "url": "https://villas.k8s.eonerc.rwth-aachen.de/api/v2/files/{fileID}" where fileID is the model file configured in the component config
+            "token": "asessiontoken"
+          }
+          "results":{
+            "type": "url"
+            "url" : "https://villas.k8s.eonerc.rwth-aachen.de/api/v2/results/{resultID}/file" where resultID is the ID of the result created for this run
+            "token": "asessiontoken"
+          }
+        }
+       *
+      *
+      * */
+
+
+      let newActions = [];
+      for (let config of this.props.selectedConfigs) {
+        let newAction = {}
+        newAction["action"] = action.data.action
+        newAction["when"] = when
+
+        // get IC for component config
+        let ic = null;
+        for (let component of this.props.ics) {
+          if (component.id === config.icID) {
+            ic = component;
+          }
+        }
+
+        if (ic == null) {
+          continue;
+        }
+
+        // the following is not required by the protocol; it is an internal help
+        newAction["icid"] = ic.id
+
+        if (newAction.action === 'start') {
+          newAction["parameters"] = config.startParameters;
+
+
+          if (config.fileIDs.length > 0){
+            newAction["model"] = {}
+            newAction.model["type"] = "url"
+            newAction.model["token"] = this.props.token
+
+            let fileURLs = []
+            for (let fileID of config.fileIDs){
+              fileURLs.push("/files/" + fileID.toString())
+            }
+            newAction.model["url"] = fileURLs
+          }
+
+          newAction["results"] = {}
+          newAction.results["type"] = "url"
+          newAction.results["token"] = this.props.token
+          newAction.results["url"] = "/results/RESULTID/file" // RESULTID serves as placeholder and is replaced later
+
+        }
+
+        // add the new action
+        newActions.push(newAction);
+
+      } // end for loop over selected configs
+
+
+      let newResult = {}
+      newResult["result"] = {}
+      if (action.data.action === 'start') {
+
+        let configSnapshots = [];
+        // create config snapshots in case action is start
+        for (let config of this.props.selectedConfigs) {
+          let index = this.props.configs.indexOf(config)
+          configSnapshots.push(this.props.snapshotConfig(index));
+        }
+
+        // create new result for new run
+        newResult.result["description"] = "Start at " + when;
+        newResult.result["scenarioID"] = this.props.selectedConfigs[0].scenarioID
+        newResult.result["configSnapshots"] = configSnapshots
+      }
+
+
+      console.log("Dispatching actions for configs", newActions, newResult)
+      AppDispatcher.dispatch({
+        type: 'ics/start-action',
+        action: newActions,
+        result: newResult,
+        token: this.props.token
+      });
+    }
+  }
+
+  setAction = id => {
+    // search action
+    for (let action of this.props.actions) {
+      if (action.id === id) {
+        this.setState({ selectedAction: action });
+      }
+    }
+  };
+
+  setTimeForAction = (time) => {
+    this.setState({ time: new Date(time) })
+  }
+
+  render() {
+
+    let sendCommandDisabled = false;
+    if (!this.props.hasConfigs && this.props.selectedICs.length === 0 || this.state.selectedAction == null || this.state.selectedAction.id === "-1"){
+      sendCommandDisabled = true;
+    }
+    if (this.props.hasConfigs && this.props.selectedConfigs.length === 0|| this.state.selectedAction == null || this.state.selectedAction.id === "-1"){
+      sendCommandDisabled = true;
+    }
+
+    let time = this.state.time.getFullYear().pad(4) + '-' +
+               this.state.time.getMonth().pad(2) + '-' +
+               this.state.time.getDay().pad(2) + 'T' +
+               this.state.time.getHours().pad(2) + ':' +
+               this.state.time.getMinutes().pad(2);
+
+    const actionList = this.props.actions.map(action => (
+      <Dropdown.Item key={action.id} eventKey={action.id} active={this.state.selectedAction === action.id}>
+        {action.title}
+      </Dropdown.Item>
+    ));
+
+    return <div className='solid-button'>
+      <InputGroup>
+        <InputGroup.Prepend>
+          <DropdownButton
+            variant="secondary"
+            title={this.state.selectedAction != null ? this.state.selectedAction.title : ''}
+            id="action-dropdown"
+            onSelect={this.setAction}>
+            {actionList}
+          </DropdownButton>
+          <FormControl
+            type="datetime-local"
+            variant="outline-secondary"
+            value={time}
+            onChange={this.setTimeForAction} />
+        </InputGroup.Prepend>
+        <Button
+          variant="secondary"
+          disabled={sendCommandDisabled}
+          onClick={() => this.runAction(this.state.selectedAction, this.state.time)}>Run</Button>
+      </InputGroup>
+      <small className="text-muted">Select time for synced command execution</small>
+    </div>;
+  }
 }
 
 export default ICAction;

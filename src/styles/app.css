@@ -112,6 +112,13 @@ body {
   }
 }
 
+.verticalhorizontal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 800px;
+}
+
 /**
  * Menus
  */
@@ -219,6 +226,26 @@ body {
   background-color: white;
 }
 
+/**
+ * Login select
+ */
+ .login-select {
+  position: sticky;
+  width: 300px;
+  height: 150px;
+  top: 50%;
+  left: 50%;
+  margin-top: 50px;
+  margin-bottom: 100px;
+  transform: translate(-50%);
+
+
+  padding: 20px 20px;
+
+  background-color: #a8c7cf;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
+              0 9px 18px 0 rgba(0, 0, 0, 0.1);
+}
 
 /**
  * Login form
@@ -232,6 +259,13 @@ body {
   background-color: #fff;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
               0 9px 18px 0 rgba(0, 0, 0, 0.1);
+}
+
+hr {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border:0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /**
@@ -323,6 +357,7 @@ body {
   display: -webkit-flex;
   display: flex;
   flex-direction: column;
+  background-color: #FFFFFF;
 }
 
 .box-header {
@@ -368,6 +403,18 @@ body {
   height: auto !important;
   padding: 5px;
   float: right;
+  border-color: #ffffff;
+  background-color: #ffffff;
+}
+
+.section-buttons-group-right .btn{
+  border-color: #ffffff;
+  background-color: #ffffff;
+}
+
+.section-buttons-group-right .btn:hover{
+  border-color: #e3e3e3;
+  background-color: #e3e3e3;
 }
 
 .section-buttons-group-left {
@@ -376,8 +423,58 @@ body {
   float: left;
 }
 
+.section-buttons-group-left .btn{
+  background-color: #527984; 
+  border-color: #527984;
+}
+
+.section-buttons-group-left .btn:hover{
+  background-color: #31484f; 
+  border-color: #31484f;
+}
+
+.drag-and-drop .btn{
+  color: #527984;
+  border-color: #527984;
+}
+
+.drag-and-drop .btn:hover{
+  color: #527984;
+  border-color: #527984;
+}
+
+
 .section-buttons-group-right .rc-slider {
   margin-left: 12px;
+}
+
+.solid-button .btn{
+  background-color: #527984; 
+  border-color: #527984;
+}
+
+.solid-button .btn:hover{
+  background-color: #31484f; 
+  border-color: #31484f;
+}
+
+.solid-button .btn:disabled{
+  background-color: #527984; 
+  border-color: #527984;
+}
+
+.icon-button .btn{
+  border-color: #ffffff;
+  background-color: #ffffff;
+}
+
+.icon-button .btn:hover{
+  border-color: #e3e3e3;
+  background-color: #e3e3e3;
+}
+
+.icon-color {
+  color: #527984;
 }
 
 .form-horizontal .form-group {

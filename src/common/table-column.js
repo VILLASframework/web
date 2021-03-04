@@ -23,7 +23,9 @@ class TableColumn extends Component {
     modifier: null,
     width: null,
     editButton: false,
+    showEditButton: null,
     deleteButton: false,
+    showDeleteButton: null,
     exportButton: false,
     duplicateButton: false,
     link: '/',
@@ -35,6 +37,7 @@ class TableColumn extends Component {
     labelKey: null,
     checkbox: false,
     checkboxKey: '',
+    checkboxDisabled: null,
     labelStyle: null,
     labelModifier: null
 

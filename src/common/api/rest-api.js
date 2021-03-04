@@ -26,10 +26,13 @@ import NotificationsFactory from "../data-managers/notifications-factory";
 function isNetworkError(err, url) {
   let result = false;
 
-  // If not status nor response fields, it is a network error. TODO: Handle timeouts
-  if (err.status == null || err.status === 500 || err.response == null) {
-    result = true;
 
+  if (err.status === 500 && err.response != null){
+    let notification = NotificationsFactory.INTERNAL_SERVER_ERROR(err.response)
+    NotificationsDataManager.addNotification(notification);
+  } else if (err.status == null || err.status === 500 || err.response == null) {
+    // If not status nor response fields, it is a network error. TODO: Handle timeouts
+    result = true;
     let notification = err.timeout? NotificationsFactory.REQUEST_TIMEOUT : NotificationsFactory.SERVER_NOT_REACHABLE(url);
     NotificationsDataManager.addNotification(notification);
   }
@@ -41,7 +44,8 @@ let prevURL = null;
 class RestAPI {
   get(url, token) {
     return new Promise(function (resolve, reject) {
-      var req = request.get(url);
+
+      let req = request.get(url);
 
       if (token != null) {
         req.set('Authorization', "Bearer " + token);
@@ -61,7 +65,7 @@ class RestAPI {
 
   post(url, body, token) {
     return new Promise(function (resolve, reject) {
-      var req = request.post(url).send(body).timeout({ response: 5000 }); // Simple response start timeout (3s)
+      let req = request.post(url).send(body).timeout({ response: 5000 }); // Simple response start timeout (3s)
 
       if (token != null) {
         req.set('Authorization', "Bearer " + token);
@@ -82,7 +86,7 @@ class RestAPI {
 
   delete(url, token) {
     return new Promise(function (resolve, reject) {
-      var req = request.delete(url);
+      let req = request.delete(url);
 
       if (token != null) {
         req.set('Authorization', "Bearer " + token);
@@ -101,7 +105,7 @@ class RestAPI {
 
   put(url, body, token) {
     return new Promise(function (resolve, reject) {
-      var req = request.put(url).send(body);
+      let req = request.put(url).send(body);
 
       if (token != null) {
         req.set('Authorization', "Bearer " + token);
@@ -140,11 +144,14 @@ class RestAPI {
 
   download(url, token, fileID) {
     return new Promise(function (resolve, reject) {
-      let req = request.get(url + "/" + fileID).buffer(true).responseType("blob")
-      // use blob response type and buffer
-      if (token != null) {
-        req.set('Authorization', "Bearer " + token);
+
+      let completeURL = url + "/" + fileID;
+      if (token != null){
+        completeURL = completeURL + "?token=" + token
       }
+      let req = request.get(completeURL).buffer(true).responseType("blob")
+      // use blob response type and buffer
+      // Do not use auth header for file download
 
       req.end(function (error, res) {
         if (error !== null || res.status !== 200) {
@@ -158,6 +165,28 @@ class RestAPI {
       });
     });
   }
+
+  apiDownload(url, token) {
+    return new Promise(function (resolve, reject) {
+      let req = request.get(url).buffer(true).responseType("blob");
+
+      if (token != null) {
+        req.set('Authorization', "Bearer " + token);
+      }
+
+      req.end(function (error, res) {
+        if (res == null || res.status !== 200) {
+          if (req.url !== prevURL) error.handled = isNetworkError(error);
+          prevURL = req.url;
+          reject(error);
+        } else {
+          let parts = url.split("/");
+          resolve({data: res.body, type: res.type, id: parts[parts.length-1]})
+        }
+      });
+    });
+  }
+
 
 }
 

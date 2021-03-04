@@ -14,37 +14,51 @@
  * You should have received a copy of the GNU General Public License
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-
 import React from 'react';
 import Dialog from '../common/dialogs/dialog';
-import Config from '../config';
+import ReactJson from 'react-json-view';
 
 
-class RecoverPassword extends React.Component {
+class ResultConfigDialog extends React.Component {
+  valid = true;
+
   constructor(props) {
     super(props);
 
     this.state = {
-      admin: Config.admin
-    }
+      confirmCommand: false,
+      command: '',
+    };
   }
 
-  onClose() {
-      this.props.onClose();
+  onClose(canceled) {
+    this.props.onClose();
   }
 
   render() {
     return (
-      <Dialog show={this.props.show} title="Recover password" buttonTitle="Close" onClose={(c) => this.onClose(c)} blendOutCancel = {true} valid={true} size = 'lg'>
-        <div>
-        <div>Please contact:</div>
-        <div>{this.state.admin.name}</div>
-        <div>E-Mail:</div>
-        <a href={`mailto:${this.state.admin.mail}`}>{this.state.admin.mail}</a>
-      </div>
+      <Dialog
+        show={this.props.show}
+        title={"Component Configurations for Result No. " + this.props.resultNo}
+        buttonTitle="Close"
+        onClose={(c) => this.onClose(c)}
+        valid={true}
+        size="lg"
+        blendOutCancel={true}
+      >
+        <form>
+            <ReactJson
+              src={this.props.configs}
+              name={false}
+              displayDataTypes={false}
+              displayObjectSize={false}
+              enableClipboard={false}
+              collapsed={false}
+            />
+        </form>
       </Dialog>
     );
   }
 }
 
-export default RecoverPassword;
+export default ResultConfigDialog;

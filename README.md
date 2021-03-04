@@ -2,39 +2,15 @@
 [![pipeline status](https://git.rwth-aachen.de/acs/public/villas/web/badges/master/pipeline.svg)](https://git.rwth-aachen.de/acs/public/villas/web/-/commits/master) 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-This is VILLASweb, the website to configure real-time co-simulations and display simulation real-time data in the web browser.
-The term **frontend** refers to this project, the actual website.
-The frontend connects to **two** backends: [VILLASweb-backend-go](https://git.rwth-aachen.de/acs/public/villas/web-backend-go) and [VILLASnode](https://git.rwth-aachen.de/acs/public/villas/node).
-VILLASnode provides actual simulation data via websockets. VILLASweb-backend-go provides any other data such as user accounts, infrastructure components and configurations, dashboards etc.
-For more information on the backends see their repositories.
+VILLASweb is a tool to configure real-time co-simulations and display simulation real-time data in the web browser.
 
-## Frameworks
-The frontend is build upon [ReactJS](https://facebook.github.io/react/) and [Flux](https://facebook.github.io/flux/).
-React is responsible for rendering the UI and Flux for handling the data and communication with the backends. For more information also have a look at REACT.md
-Additional libraries are used, for a complete list see the file `package.json`.
 
-## Data model
-![Datamodel](src/img/datamodel.png)
 
-## Quick start
-```bash
-$ git clone --recursive https://git.rwth-aachen.de/acs/public/villas/web.git
-$ cd web
-$ npm install
-$ npm start
-```
-We recommend to start the VILLASweb-backend-go before the frontend.
-If you want to use test data (including some test users), you can start the backend with the parameter `-mode=test`.
-Please check the repository of the VILLASweb-backend-go to find information on the test user login names and passwords.
-The testing mode is NOT intended for production deployments.
+
 
 ## Documentation
 
-More details on the setup and usage of VILLASweb is available here:
-- [Requirements](doc/Requirements.md)
-- [Structure and datamodel](doc/Structure.md)
-- [Development setup](doc/development.md)
-- [Production setup](doc/Production.md)
+More details on the setup and usage of VILLASweb is available [in the VILLAS documentation](https://villas.fein-aachen.org/doc/web.html).
 
 ## Copyright
 
@@ -70,7 +46,7 @@ For other licensing options please consult [Prof. Antonello Monti](mailto:amonti
 
 [![EONERC ACS Logo](doc/pictures/eonerc_logo.png)](http://www.acs.eonerc.rwth-aachen.de)
 
- - Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ - Steffen Vogel <svogel2@eonerc.rwth-aachen.de>
  - Sonja Happ <sonja.happ@eonerc.rwth-aachen.de>
 
 [Institute for Automation of Complex Power Systems (ACS)](http://www.acs.eonerc.rwth-aachen.de)  

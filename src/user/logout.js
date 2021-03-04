@@ -17,10 +17,10 @@
 
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-
 import AppDispatcher from '../common/app-dispatcher';
 
 class Logout extends React.Component {
+
   componentDidMount() {
     AppDispatcher.dispatch({
       type: 'users/logout'

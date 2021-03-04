@@ -20,6 +20,7 @@ import ICsDataManager from './ics-data-manager';
 import ICDataDataManager from './ic-data-data-manager';
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
 import NotificationsFactory from "../common/data-managers/notifications-factory";
+import AppDispatcher from '../common/app-dispatcher';
 
 class InfrastructureComponentStore extends ArrayStore {
   constructor() {
@@ -65,15 +66,119 @@ class InfrastructureComponentStore extends ArrayStore {
         return state;
 
       case 'ics/start-action':
-        if (!Array.isArray(action.data))
-          action.data = [ action.data ]
+        if (!Array.isArray(action.action))
+          action.action = [ action.action ]
 
-        ICsDataManager.doActions(action.ic, action.data, action.token);
+        ICsDataManager.doActions(action.icid, action.action, action.token, action.result);
+        return state;
+
+      case 'ics/action-started':
+        NotificationsDataManager.addNotification(NotificationsFactory.ACTION_INFO());
         return state;
 
       case 'ics/action-error':
         console.log(action.error);
         return state;
+
+      case 'ics/action-result-added':
+
+        for (let a of action.actions){
+
+          if (a.results !== undefined && a.results != null){
+            // adapt URL for newly created result ID
+            a.results.url = a.results.url.replace("RESULTID", action.data.result.id);
+            a.results.url = ICsDataManager.makeURL(a.results.url);
+            a.results.url = window.location.host + a.results.url;
+          }
+          if (a.model !== undefined && a.model != null && JSON.stringify(a.model) !== JSON.stringify({})) {
+            // adapt URL(s) for model file
+            let modelURLs = []
+            for (let url of a.model.url){
+              let modifiedURL = ICsDataManager.makeURL(url);
+              modifiedURL = window.location.host + modifiedURL;
+              modelURLs.push(modifiedURL)
+            }
+            a.model.url = modelURLs
+          }
+          ICsDataManager.doActions(a.icid, [a], action.token)
+        }
+        return state;
+
+      case 'ics/action-result-add-error':
+        console.log(action.error);
+        return state
+
+      case 'ics/get-status':
+        ICsDataManager.getStatus(action.url, action.token, action.ic);
+        return super.reduce(state, action);
+
+      case 'ics/status-received':
+        let tempIC = action.ic;
+        if(!tempIC.managedexternally){
+          tempIC.state = action.data.state;
+          tempIC.uptime = action.data.time_now - action.data.time_started;
+          if (tempIC.statusupdateraw === null || tempIC.statusupdateraw === undefined){
+            tempIC.statusupdateraw = {};
+            tempIC.statusupdateraw["status"] = action.data;
+          } else {
+            tempIC.statusupdateraw["status"] = action.data;
+          }
+          AppDispatcher.dispatch({
+            type: 'ics/start-edit',
+            data: tempIC,
+            token: action.token,
+          });
+        }
+        return super.reduce(state, action);
+
+      case 'ics/status-error':
+        console.log("status error:", action.error);
+        return super.reduce(state, action);
+
+      case 'ics/nodestats-received':
+        let tempIC2 = action.ic;
+        if(!tempIC2.managedexternally){
+          if (tempIC2.statusupdateraw === null || tempIC2.statusupdateraw === undefined){
+            tempIC2.statusupdateraw = {};
+            tempIC2.statusupdateraw["statistics"] = action.data;
+          } else {
+            tempIC2.statusupdateraw["statistics"] = action.data;
+          }
+          AppDispatcher.dispatch({
+            type: 'ics/start-edit',
+            data: tempIC2,
+            token: action.token,
+          });
+        }
+        return super.reduce(state, action);
+
+      case 'ics/nodestats-error':
+        console.log("nodestats error:", action.error);
+        return super.reduce(state, action);
+
+      case 'ics/restart':
+        ICsDataManager.restart(action.url, action.token);
+        return super.reduce(state, action);
+
+      case 'ics/restart-successful':
+        console.log("restart response:", action.data);
+        return super.reduce(state, action);
+
+      case 'ics/restart-error':
+        console.log("restart error:", action.error);
+        return super.reduce(state, action);
+
+      case 'ics/shutdown':
+        ICsDataManager.shutdown(action.url, action.token);
+        return super.reduce(state, action);
+
+      case 'ics/shutdown-successful':
+        console.log("shutdown response:", action.data);
+        return super.reduce(state, action);
+
+      case 'ics/shutdown-error':
+        console.log("shutdown error:", action.error);
+        return super.reduce(state, action);
 
       default:
         return super.reduce(state, action);

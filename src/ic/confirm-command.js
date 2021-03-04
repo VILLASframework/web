@@ -16,10 +16,9 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Button, Modal, FormLabel } from 'react-bootstrap';
-import {Collapse} from 'react-collapse';
+import { Button, Modal} from 'react-bootstrap';
 
-class DeleteDialog extends React.Component {
+class ConfirmCommand extends React.Component {
     onModalKeyPress = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -31,24 +30,19 @@ class DeleteDialog extends React.Component {
     render() {
         return <Modal keyboard show={this.props.show} onHide={() => this.props.onClose(false)} onKeyPress={this.onModalKeyPress}>
             <Modal.Header>
-                <Modal.Title>Delete {this.props.title}</Modal.Title>
+                <Modal.Title>Confirm {this.props.command}</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
-                Are you sure you want to delete the {this.props.title} <strong>'{this.props.name}'</strong>?
-                <Collapse isOpened={this.props.managedexternally} >
-                    <FormLabel size="sm">The IC will be deleted if the respective manager sends "gone" state and no component config is using the IC anymore</FormLabel>
-                </Collapse>
+                Are you sure you want to {this.props.command} <strong>'{this.props.name}'</strong>?
             </Modal.Body>
 
             <Modal.Footer>
-            <span className='solid-button'>
-                <Button variant='secondary' onClick={() => this.props.onClose(false)}>Cancel</Button>
-            </span>
-                <Button variant="danger" onClick={() => this.props.onClose(true)}>Delete</Button>
+                <Button onClick={() => this.props.onClose(true)}>Cancel</Button>
+                <Button onClick={() => this.props.onClose(false)}>Confirm</Button>
             </Modal.Footer>
         </Modal>;
     }
 }
 
-export default DeleteDialog;
+export default ConfirmCommand;
