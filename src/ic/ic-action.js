@@ -61,7 +61,7 @@ class ICAction extends React.Component {
       return;
     }
 
-    if (!this.props.hasConfigs){
+    if (!this.props.hasConfigs) {
       let newAction = {};
       newAction["action"] = action.data.action
       newAction["when"] = when
@@ -71,38 +71,22 @@ class ICAction extends React.Component {
         let icID = ic.id;
 
         /* VILLAScontroller protocol
-        see: https://villas.fein-aachen.org/doc/controller-protocol.html
+         * see: https://villas.fein-aachen.org/doc/controller-protocol.html
+         */
 
-        RESET SHUTDOWN
-        {
-          "action": "reset/shutdown/stop/pause/resume"
-          "when": "1234567"
-        }
-
-        DELETE
-        {
-          "action": "delete"
-          "parameters":{
-            "uuid": "uuid-of-the-manager-for-this-IC"
-          }
-          "when": "1234567"
-        }
-
-        CREATE is not possible within ICAction (see add IC)
-        */
-
-        if (newAction.action === "delete"){
+        if (newAction.action === "delete") {
           // prepare parameters for delete incl. correct IC id
           newAction["parameters"] = {};
           newAction.parameters["uuid"] = ic.uuid;
           // get the ID of the manager IC
           let managerIC = null;
-          for (let i of this.props.ics){
-            if (i.uuid === ic.manager){
+          for (let i of this.props.ics) {
+            if (i.uuid === ic.manager) {
               managerIC = i;
             }
           }
-          if (managerIC == null){
+
+          if (managerIC == null) {
             NotificationsDataManager.addNotification(NotificationsFactory.DELETE_ERROR("Could not find manager IC with UUID " + ic.manager));
             continue;
           }
@@ -120,38 +104,9 @@ class ICAction extends React.Component {
 
       } // end for loop over selected ICs
     } else {
-
-      /*VILLAScontoller protocol
-      see: https://villas.fein-aachen.org/doc/controller-protocol.html
-      *
-      * STOP PAUSE RESUME
-        {
-          "action": "reset/shutdown/stop/pause/resume"
-          "when": "1234567"
-        }
-      *
-      * START
-        {
-          "action": "start"
-          "when": 1234567
-          "parameters": {
-            Start parameters for this IC as configured in the component config
-          }
-          "model": {
-            "type": "url"
-            "url": "https://villas.k8s.eonerc.rwth-aachen.de/api/v2/files/{fileID}" where fileID is the model file configured in the component config
-            "token": "asessiontoken"
-          }
-          "results":{
-            "type": "url"
-            "url" : "https://villas.k8s.eonerc.rwth-aachen.de/api/v2/results/{resultID}/file" where resultID is the ID of the result created for this run
-            "token": "asessiontoken"
-          }
-        }
-       *
-      *
-      * */
-
+      /* VILLAScontoller protocol
+       * see: https://villas.fein-aachen.org/doc/controller-protocol.html
+       */
 
       let newActions = [];
       for (let config of this.props.selectedConfigs) {
@@ -177,14 +132,13 @@ class ICAction extends React.Component {
         if (newAction.action === 'start') {
           newAction["parameters"] = config.startParameters;
 
-
-          if (config.fileIDs.length > 0){
+          if (config.fileIDs && config.fileIDs.length > 0) {
             newAction["model"] = {}
-            newAction.model["type"] = "url"
+            newAction.model["type"] = "url-list"
             newAction.model["token"] = this.props.token
 
             let fileURLs = []
-            for (let fileID of config.fileIDs){
+            for (let fileID of config.fileIDs) {
               fileURLs.push("/files/" + fileID.toString())
             }
             newAction.model["url"] = fileURLs
@@ -194,7 +148,6 @@ class ICAction extends React.Component {
           newAction.results["type"] = "url"
           newAction.results["token"] = this.props.token
           newAction.results["url"] = "/results/RESULTID/file" // RESULTID serves as placeholder and is replaced later
-
         }
 
         // add the new action
@@ -202,11 +155,10 @@ class ICAction extends React.Component {
 
       } // end for loop over selected configs
 
-
       let newResult = {}
       newResult["result"] = {}
-      if (action.data.action === 'start') {
 
+      if (action.data.action === 'start') {
         let configSnapshots = [];
         // create config snapshots in case action is start
         for (let config of this.props.selectedConfigs) {
@@ -219,7 +171,6 @@ class ICAction extends React.Component {
         newResult.result["scenarioID"] = this.props.selectedConfigs[0].scenarioID
         newResult.result["configSnapshots"] = configSnapshots
       }
-
 
       console.log("Dispatching actions for configs", newActions, newResult)
       AppDispatcher.dispatch({
@@ -247,10 +198,10 @@ class ICAction extends React.Component {
   render() {
 
     let sendCommandDisabled = false;
-    if (!this.props.hasConfigs && this.props.selectedICs.length === 0 || this.state.selectedAction == null || this.state.selectedAction.id === "-1"){
+    if (!this.props.hasConfigs && this.props.selectedICs.length === 0 || this.state.selectedAction == null || this.state.selectedAction.id === "-1") {
       sendCommandDisabled = true;
     }
-    if (this.props.hasConfigs && this.props.selectedConfigs.length === 0|| this.state.selectedAction == null || this.state.selectedAction.id === "-1"){
+    if (this.props.hasConfigs && this.props.selectedConfigs.length === 0|| this.state.selectedAction == null || this.state.selectedAction.id === "-1") {
       sendCommandDisabled = true;
     }
 
