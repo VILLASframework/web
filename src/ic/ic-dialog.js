@@ -5,6 +5,7 @@ import Icon from "../common/icon";
 import ConfirmCommand from './confirm-command';
 import ReactJson from 'react-json-view';
 import FileSaver from 'file-saver';
+import moment from 'moment';
 
 class ICDialog extends React.Component {
   valid = true;
