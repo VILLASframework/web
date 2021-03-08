@@ -514,7 +514,8 @@ class InfrastructureComponents extends Component {
                 {id: '-1', title: 'Action', data: {action: 'none'}},
                 {id: '0', title: 'Reset', data: {action: 'reset'}},
                 {id: '1', title: 'Shutdown', data: {action: 'shutdown'}},
-                {id: '2', title: 'Delete', data: {action: 'delete'}}
+                {id: '2', title: 'Delete', data: {action: 'delete'}},
+                {id: '3', title: 'Recreate', data: {action: 'create'}},
               ]}
             />
           </div>

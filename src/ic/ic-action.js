@@ -73,10 +73,17 @@ class ICAction extends React.Component {
          * see: https://villas.fein-aachen.org/doc/controller-protocol.html
          */
 
-        if (newAction.action === "delete") {
+        if (newAction.action == "create" || newAction.action === "delete") {
           // prepare parameters for delete incl. correct IC id
           newAction["parameters"] = {};
-          newAction.parameters["uuid"] = ic.uuid;
+
+          if (newAction.action == "delete") {
+            newAction.parameters["uuid"] = ic.uuid;
+          }
+          else if (newAction.action == "create") {
+            newAction.parameters = ic.statusupdateraw.properties;
+          }
+
           // get the ID of the manager IC
           let managerIC = null;
           for (let i of this.props.ics) {
