@@ -63,6 +63,7 @@ class Scenario extends React.Component {
     if (prevState == null) {
       prevState = {};
     }
+
     // get selected scenario
     const sessionToken = localStorage.getItem("token");
 

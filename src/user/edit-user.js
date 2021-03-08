@@ -57,8 +57,8 @@ class EditUserDialog extends React.Component {
     var mail = true;
     var pw = true;
     var active = true;
-    var confirmpassword = true;
-    var oldPW = true;
+    var confirmPassword = true;
+    var oldPassword = true;
 
     if (this.state.username === '') {
       username = false;
@@ -68,29 +68,28 @@ class EditUserDialog extends React.Component {
       role = false;
     }
 
-    if(this.state.mail === ''){
+    if (this.state.mail === '') {
       mail = false;
     }
 
-    if(this.state.password === ''){
+    if (this.state.password === '') {
       pw = false;
     }
 
-    if(this.state.active === ''){
+    if (this.state.active === '') {
       active = false;
     }
 
-    if(this.state.confirmpassword === ''){
-      confirmpassword = false;
+    if (this.state.confirmPassword === '') {
+      confirmPassword = false;
     }
 
-    if(this.state.oldPassword === ''){
-      oldPW = false;
+    if (this.state.oldPassword === '') {
+      oldPassword = false;
     }
 
     // form is valid if any of the fields contain somethig
-    this.valid = username || role || mail || pw || active || confirmpassword || oldPW;
-
+    this.valid = username || role || mail || pw || active || confirmPassword || oldPassword;
   }
 
   resetState() {

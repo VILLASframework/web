@@ -38,7 +38,6 @@ class Users extends Component {
   }
 
   static calculateState(prevState, props) {
-
     let token = localStorage.getItem("token");
 
     // If there is a token available and this method was called as a result of loading users
@@ -90,24 +89,17 @@ class Users extends Component {
     this.setState({ editModal: false });
 
     if (data) {
-      if(data.password === data.confirmpassword) {
+      if(data.password === data.confirmPassword) {
 
         AppDispatcher.dispatch({
           type: 'users/start-edit',
           data: data,
           token: this.state.token
         });
-      } else{
-
+      } else {
         NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR("New password not correctly confirmed"))
       }
     }
-  }
-
-  getHumanRoleName(role_key) {
-    const HUMAN_ROLE_NAMES = {Admin: 'Administrator', User: 'User', Guest: 'Guest'};
-
-    return HUMAN_ROLE_NAMES.hasOwnProperty(role_key)? HUMAN_ROLE_NAMES[role_key] : '';
   }
 
   onModalKeyPress = (event) => {
@@ -118,14 +110,8 @@ class Users extends Component {
     }
   };
 
-  modifyActiveColumn(active){
-
-    if(active){
-      return <Icon icon='check' />
-    } else {
-      return <Icon icon='times' />
-    }
-
+  modifyActiveColumn(active) {
+    return <Icon icon={active ? 'check' : 'times'} />
   }
 
   render() {
@@ -142,13 +128,24 @@ class Users extends Component {
       <div>
         <h1>Users
           <span className='icon-button'>
-          <OverlayTrigger
-            key={1}
-            placement={'top'}
-            overlay={<Tooltip id={`tooltip-${"add"}`}> Add User </Tooltip>} >
-            <Button variant='light' style={buttonStyle} onClick={() => this.setState({ newModal: true })}><Icon icon='plus' classname='icon-color' style={iconStyle} /> </Button>
-          </OverlayTrigger>
-        </span>
+            <OverlayTrigger
+              key={1}
+              placement='top'
+              overlay={<Tooltip id={`tooltip-${"add"}`}> Add User </Tooltip>}
+            >
+              <Button
+                variant='light'
+                style={buttonStyle}
+                onClick={() => this.setState({ newModal: true })}
+              >
+                <Icon
+                  icon='plus'
+                  classname='icon-color'
+                  style={iconStyle}
+                />
+              </Button>
+            </OverlayTrigger>
+          </span>
         </h1>
 
         <Table data={this.state.users}>
@@ -169,7 +166,6 @@ class Users extends Component {
           <TableColumn
             title='Role'
             dataKey='role'
-            modifier={(role) => this.getHumanRoleName(role)}
           />
           <TableColumn
             title='Active'

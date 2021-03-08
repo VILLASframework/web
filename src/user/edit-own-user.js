@@ -55,7 +55,7 @@ class EditOwnUserDialog extends React.Component {
     let mail = true;
     let pw = true;
     let oldPassword = true;
-    let confirmpassword = true;
+    let confirmPassword = true;
 
     if (this.state.username === '') {
       username = false;
@@ -73,12 +73,12 @@ class EditOwnUserDialog extends React.Component {
       oldPassword = false;
     }
 
-    if (this.state.confirmpassword === '') {
-      confirmpassword = false;
+    if (this.state.confirmPassword === '') {
+      confirmPassword = false;
     }
 
     // form is valid if the following condition is met
-    this.valid = username || mail || (oldPassword &&  pw && confirmpassword);
+    this.valid = username || mail || (oldPassword &&  pw && confirmPassword);
   }
 
   resetState() {
@@ -86,7 +86,7 @@ class EditOwnUserDialog extends React.Component {
       username: '',
       mail: '',
       oldPassword: '',
-      confirmpassword: '',
+      confirmPassword: '',
       password: '',
       id: this.props.user.id,
     });

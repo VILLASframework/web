@@ -56,9 +56,7 @@ class User extends Component {
   }
 
   closeEditModal(data) {
-    this.setState({
-      editModal: false
-    });
+    this.setState({ editModal: false });
 
     let updatedData = {}
     updatedData.id = this.state.currentUser.id;
@@ -66,52 +64,41 @@ class User extends Component {
     let hasChanged = false;
     let pwChanged = false;
 
-    if(data){
-    if (data.username !== ''){
-      hasChanged = true;
-      updatedData.username = data.username;
-      updatedUser.username = data.username
-    }
-    if (data.mail !== ''){
-      hasChanged = true;
-      updatedData.mail = data.mail;
-      updatedUser.mail = data.mail;
-    }
-    if (data.password !== '' && data.oldPassword !== '' && data.password === data.confirmpassword ){
-      pwChanged = true;
-      updatedData.password = data.password;
-      updatedData.oldPassword = data.oldPassword;
-    } else if (data.password !== '' && data.password !== data.confirmpassword) {
-      NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR('New password not correctly confirmed'));
-      return
-    }
-
-    if (hasChanged || pwChanged) {
-      if (hasChanged){
-        this.setState({currentUser: updatedUser})
+    if (data) {
+      if (data.username !== '') {
+        hasChanged = true;
+        updatedData.username = data.username;
+        updatedUser.username = data.username
+      }
+      if (data.mail !== '') {
+        hasChanged = true;
+        updatedData.mail = data.mail;
+        updatedUser.mail = data.mail;
+      }
+      if (data.password !== '' && data.oldPassword !== '' && data.password === data.confirmPassword ) {
+        pwChanged = true;
+        updatedData.password = data.password;
+        updatedData.oldPassword = data.oldPassword;
+      } else if (data.password !== '' && data.password !== data.confirmPassword) {
+        NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR('New password not correctly confirmed'));
+        return
       }
 
-      AppDispatcher.dispatch({
-        type: 'users/start-edit',
-        data: updatedData,
-        token: this.state.token
-      });
-    } else {
-      NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_WARNING('No update requested, no input data'));
+      if (hasChanged || pwChanged) {
+        if (hasChanged){
+          this.setState({ currentUser: updatedUser })
+        }
+
+        AppDispatcher.dispatch({
+          type: 'users/start-edit',
+          data: updatedData,
+          token: this.state.token
+        });
+      } else {
+        NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_WARNING('No update requested, no input data'));
+      }
     }
   }
-  }
-
-  getHumanRoleName(role_key) {
-    const HUMAN_ROLE_NAMES = {
-      Admin: 'Administrator',
-      User: 'User',
-      Guest: 'Guest'
-    };
-
-    return HUMAN_ROLE_NAMES.hasOwnProperty(role_key)? HUMAN_ROLE_NAMES[role_key] : '';
-  }
-
 
   render() {
 

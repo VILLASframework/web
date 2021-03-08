@@ -119,49 +119,47 @@ class CustomTable extends Component {
       );
     }
 
-
     if (child.props.dataIndex) {
       cell.push(index);
     }
 
     // add buttons
-    let showEditButton = true
-    if (child.props.showEditButton !== null)
-    {
-      showEditButton = child.props.showEditButton(index)
-    }
-    if(showEditButton){
-      if (child.props.editButton) {
-        cell.push(
-          <OverlayTrigger
-            key={0}
-            placement={'bottom'}
-            overlay={<Tooltip id={`tooltip-${"edit"}`}> Edit </Tooltip>}>
-            <Button
-              variant='table-control-button'
-              onClick={() => child.props.onEdit(index)}
-              disabled={child.props.onEdit == null} >
-              <Icon icon='edit' />
-            </Button>
-          </OverlayTrigger>);
-      }
-    }
+    let showEditButton = child.props.showEditButton !== null
+      ? child.props.showEditButton(index)
+      : true;
 
+    if (child.props.editButton && showEditButton) {
+      cell.push(
+        <OverlayTrigger
+          key={0}
+          placement={'bottom'}
+          overlay={<Tooltip id={`tooltip-${"edit"}`}> Edit </Tooltip>}
+        >
+          <Button
+            variant='table-control-button'
+            onClick={() => child.props.onEdit(index)}
+            disabled={child.props.onEdit == null} >
+            <Icon icon='edit' />
+          </Button>
+        </OverlayTrigger>
+      );
+    }
 
     if (child.props.checkbox) {
       const checkboxKey = child.props.checkboxKey;
-      let isDisabled = false;
-      if (child.props.checkboxDisabled != null){
-        isDisabled = child.props.checkboxDisabled(index)
-      }
+      let isDisabled = child.props.checkboxDisabled != null
+        ? child.props.checkboxDisabled(index)
+        : false;
+
       cell.push(
         <FormCheck
           className="table-control-checkbox"
           inline
-          disabled = {isDisabled}
+          disabled={isDisabled}
           checked={checkboxKey ? data[checkboxKey] : null}
           onChange={e => child.props.onChecked(data, e)}
-        />);
+        />
+      );
     }
 
     if (child.props.exportButton) {
@@ -225,29 +223,28 @@ class CustomTable extends Component {
             disabled={child.props.onDownloadAll == null}>
             <Icon icon='file-download' />
           </Button>
-        </OverlayTrigger>);
+        </OverlayTrigger>
+      );
     }
 
-    let showDeleteButton = true;
-    if (child.props.showDeleteButton !== null){
-      showDeleteButton = child.props.showDeleteButton(index)
-    }
+    let showDeleteButton = child.props.showDeleteButton !== null
+      ? child.props.showDeleteButton(index)
+      : true;
 
-    if (showDeleteButton){
-      if (child.props.deleteButton) {
-        cell.push(
-          <OverlayTrigger
-            key={5}
-            placement={'bottom'}
-            overlay={<Tooltip id={`tooltip-${"delete"}`}> Delete </Tooltip>} >
-            <Button
-              variant='table-control-button'
-              onClick={() => child.props.onDelete(index)}
-              disabled={child.props.onDelete == null}>
-              <Icon icon='trash' />
-            </Button>
-          </OverlayTrigger>);
-      }
+    if (child.props.deleteButton && showDeleteButton) {
+      cell.push(
+        <OverlayTrigger
+          key={5}
+          placement={'bottom'}
+          overlay={<Tooltip id={`tooltip-${"delete"}`}> Delete </Tooltip>} >
+          <Button
+            variant='table-control-button'
+            onClick={() => child.props.onDelete(index)}
+            disabled={child.props.onDelete == null}>
+            <Icon icon='trash' />
+          </Button>
+        </OverlayTrigger>
+      );
     }
 
     return cell;
