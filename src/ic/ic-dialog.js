@@ -76,9 +76,9 @@ class ICDialog extends React.Component {
               <h5>Description: {this.props.ic.description}</h5>
               <h5>Websocket URL: {this.props.ic.websocketurl}</h5>
               <h5>API URL: {this.props.ic.apiurl}</h5>
-              <h5>Start parameter scheme:</h5>
+              <h5>Start parameter schema:</h5>
               <ReactJson
-                src={this.props.ic.startParameterScheme}
+                src={this.props.ic.startParameterSchema}
                 name={false}
                 displayDataTypes={false}
                 displayObjectSize={false}

@@ -37,7 +37,7 @@ class EditICDialog extends React.Component {
       type: '',
       category: '',
       managedexternally: false,
-      startParameterScheme: {},
+      startParameterSchema: {},
     };
   }
 
@@ -73,8 +73,8 @@ class EditICDialog extends React.Component {
         if (this.state.category != null && this.state.category !== "" && this.state.category !== this.props.ic.category) {
           data.category = this.state.category;
         }
-        if (this.state.startParameterScheme !== {}) {
-          data.startParameterScheme = this.state.startParameterScheme
+        if (this.state.startParameterSchema !== {}) {
+          data.startParameterSchema = this.state.startParameterSchema
         }
 
         data.managedexternally = this.state.managedexternally;
@@ -98,8 +98,8 @@ class EditICDialog extends React.Component {
     }
   }
 
-  handleStartParameterSchemeChange(data) {
-    this.setState({ startParameterScheme: data });
+  handleStartParameterSchemaChange(data) {
+    this.setState({ startParameterSchema: data });
   }
 
   resetState() {
@@ -112,7 +112,7 @@ class EditICDialog extends React.Component {
       description: this.props.ic.description,
       category: this.props.ic.category,
       managedexternally: false,
-      startParameterScheme: this.props.ic.startParameterScheme,
+      startParameterSchema: this.props.ic.startParameterSchema,
     });
   }
 
@@ -193,12 +193,12 @@ class EditICDialog extends React.Component {
             <FormControl type="text" placeholder={this.props.ic.description} value={this.state.description || '' } onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId='startParameterScheme'>
-            <FormLabel column={false}>Start parameter scheme of IC</FormLabel>
+          <FormGroup controlId='startParameterSchema'>
+            <FormLabel column={false}>Start parameter schema of IC</FormLabel>
             <ParametersEditor
-              content={this.state.startParameterScheme}
+              content={this.state.startParameterSchema}
               disabled={false}
-              onChange={(data) => this.handleStartParameterSchemeChange(data)}
+              onChange={(data) => this.handleStartParameterSchemaChange(data)}
             />
           </FormGroup>
         </form>
