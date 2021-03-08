@@ -248,13 +248,13 @@ hr {
 /**
  * Tables
  */
+.table th,td {
+  padding: 0.5em 0.5em !important;
+}
+
 .table th {
   background-color: #527984;
   color: #fff;
-}
-
-.table td {
-  padding: 0.5em 0.5em !important;
 }
 
 /**
