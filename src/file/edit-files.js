@@ -27,7 +27,6 @@ import EditFileContent from  "./edit-file-content";
 class EditFilesDialog extends React.Component {
   valid = true;
 
-
   constructor(props) {
     super(props);
 
@@ -40,7 +39,6 @@ class EditFilesDialog extends React.Component {
   }
 
   onClose() {
-
     this.props.onClose();
   }
 
@@ -71,29 +69,17 @@ class EditFilesDialog extends React.Component {
     } else {
       this.setState({ uploadProgress: 0 });
     }
-
   };
 
   clearProgress = (newFileID) => {
-    /*if (this.props.onChange != null) {
-      let event = {}
-      event["target"] = {}
-      event.target["value"] = newFileID
-      this.props.onChange(event);
-    }
-    */
     this.setState({ uploadProgress: 0 });
-
-
   };
 
-  closeEditModal(){
-
-  this.setState({editModal: false});
+  closeEditModal() {
+    this.setState({editModal: false});
   }
 
   deleteFile(index){
-
     let file = this.props.files[index]
     AppDispatcher.dispatch({
       type: 'files/start-remove',
@@ -102,9 +88,7 @@ class EditFilesDialog extends React.Component {
     });
   }
 
-
   render() {
-
     let fileOptions = [];
     if (this.props.files.length > 0){
       fileOptions.push(
@@ -122,7 +106,6 @@ class EditFilesDialog extends React.Component {
       marginTop: '-40px'
     };
 
-
     return (
       <Dialog show={this.props.show} title="Edit Files of scenario" buttonTitle="Close" onClose={() => this.onClose()} blendOutCancel = {true} valid={true} size = 'lg'>
         <div>
@@ -135,9 +118,18 @@ class EditFilesDialog extends React.Component {
               />
               : <></>
             }
-            <TableColumn title='Name' dataKey='name'/>
-            <TableColumn title='Size (bytes)' dataKey='size'/>
-            <TableColumn title='Type' dataKey='type'/>
+            <TableColumn
+              title='Name'
+              dataKey='name'
+            />
+            <TableColumn
+              title='Size (bytes)'
+              dataKey='size'
+            />
+            <TableColumn
+              title='Type'
+              dataKey='type'
+            />
             <TableColumn
               title=''
               deleteButton
@@ -151,18 +143,19 @@ class EditFilesDialog extends React.Component {
             <FormControl
               disabled={this.props.disabled}
               type='file'
-              onChange={(event) => this.selectUploadFile(event)} />
+              onChange={(event) => this.selectUploadFile(event)}
+            />
           </FormGroup>
 
           <FormGroup as={Col} >
-          <span className='solid-button'>
-            <Button
-              variant='secondary'
-              disabled={this.state.uploadFile === null}
-              onClick={() => this.startFileUpload()}>
-              Upload
-            </Button>
-          </span>
+            <span className='solid-button'>
+              <Button
+                variant='secondary'
+                disabled={this.state.uploadFile === null}
+                onClick={() => this.startFileUpload()}>
+                Upload
+              </Button>
+            </span>
           </FormGroup>
 
           <FormGroup as={Col} >
@@ -176,12 +169,14 @@ class EditFilesDialog extends React.Component {
           </FormGroup>
           <div style={{ clear: 'both' }} />
 
-          <EditFileContent show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} sessionToken={this.props.sessionToken} file={this.state.modalFile} />
-
+          <EditFileContent
+            show={this.state.editModal}
+            onClose={(data) => this.closeEditModal(data)}
+            sessionToken={this.props.sessionToken}
+            file={this.state.modalFile}
+          />
          </div>
       </Dialog>
-
-
     );
   }
 }

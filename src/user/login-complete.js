@@ -94,8 +94,12 @@ class LoginComplete extends React.Component {
       this.stopTimer();
       return (<Redirect to="/login" />);
     } else {
-      return (<div class="verticalhorizontal">
-        <img style={{height: 300}}src={require('../img/dog-waiting-bw.jpg').default} alt="Waiting Dog" /></div>);
+      return <div class="verticalhorizontal">
+        <img
+          style={{height: 300}}
+          src={require('../img/dog-waiting-bw.jpg').default}
+          alt="Waiting Dog" />
+      </div>;
     }
   }
 }

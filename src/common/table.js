@@ -39,7 +39,7 @@ class CustomTable extends Component {
   };
 
   onClick(event, row, column) {
-    this.setState({ editCell: [column, row] });  // x, y
+    this.setState({ editCell: [column, row] }); // x, y
   }
 
   static addCell(data, index, child) {

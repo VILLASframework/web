@@ -228,12 +228,8 @@ class Scenarios extends Component {
   }
 
   modifyRunningColumn(running){
-
-    if(running){
-      return <Icon icon='check' />
-    } else {
-      return <Icon icon='times' />
-    }
+    return <Icon icon={ running ? 'check' : 'times' } />
+  }
 
   render() {
     return <div className='section'>

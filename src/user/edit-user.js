@@ -64,7 +64,7 @@ class EditUserDialog extends React.Component {
       username = false;
     }
 
-    if (this.state.role === ''){
+    if (this.state.role === '') {
       role = false;
     }
 

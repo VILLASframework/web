@@ -90,8 +90,7 @@ class Users extends Component {
     this.setState({ editModal: false });
 
     if (data) {
-      if(data.password === data.confirmPassword) {
-
+      if (data.password === data.confirmPassword) {
         AppDispatcher.dispatch({
           type: 'users/start-edit',
           data: data,
@@ -129,15 +128,17 @@ class Users extends Component {
         </h1>
 
         <Table data={this.state.users}>
+          {this.state.currentUser.role === "Admin" ?
+            <TableColumn
+              title='ID'
+              dataKey='id'
+            />
+            : <></>
+          }
           <TableColumn
             title='Username'
             width='150'
             dataKey='username'
-          />
-          <TableColumn
-            title='ID'
-            width='150'
-            dataKey='id'
           />
           <TableColumn
             title='E-mail'

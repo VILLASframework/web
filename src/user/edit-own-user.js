@@ -78,7 +78,7 @@ class EditOwnUserDialog extends React.Component {
     }
 
     // form is valid if the following condition is met
-    this.valid = username || mail || (oldPassword &&  pw && confirmPassword);
+    this.valid = username || mail || (oldPassword && pw && confirmPassword);
   }
 
   resetState() {
