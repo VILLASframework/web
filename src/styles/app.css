@@ -108,7 +108,7 @@ body {
 
 @media (min-width: 768px) {
   .app-content-margin-left {
-    margin-left: 275px !important;
+    margin-left: 195px !important;
   }
 }
 
@@ -123,9 +123,8 @@ body {
  * Menus
  */
 .menu-sidebar {
-  /*display: inline-table;*/
   padding: 20px 25px 20px 25px;
-  width: 250px;
+  width: 160px;
   float: left;
 
   background-color: #fff;
@@ -148,8 +147,12 @@ body {
 
 .menu-sidebar ul {
   padding-top: 10px;
+  margin-bottom: 0;
   list-style: none;
   white-space: nowrap;
+}
+.menu-sidebar li {
+  margin: 5px 0;
 }
 
 .menu-sidebar a::after {
