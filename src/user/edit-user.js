@@ -60,7 +60,6 @@ class EditUserDialog extends React.Component {
     var confirmpassword = true;
     var oldPW = true;
 
-
     if (this.state.username === '') {
       username = false;
     }

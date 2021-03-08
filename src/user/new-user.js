@@ -54,7 +54,6 @@ class NewUserDialog extends React.Component {
     let mail = this.state.mail !== '';
 
     this.valid =  username && password && role && mail;
-
   }
 
   resetState() {

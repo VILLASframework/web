@@ -169,14 +169,16 @@ class CustomTable extends Component {
         <OverlayTrigger
           key={1}
           placement={'bottom'}
-          overlay={<Tooltip id={`tooltip-${"export"}`}> Export </Tooltip>} >
+          overlay={<Tooltip id={`tooltip-${"export"}`}> Export </Tooltip>}
+        >
           <Button
             variant='table-control-button'
             onClick={() => child.props.onExport(index)}
             disabled={child.props.onExport == null}>
             <Icon icon='download' />
           </Button>
-        </OverlayTrigger>);
+        </OverlayTrigger>
+      );
     }
 
     if (child.props.duplicateButton) {
@@ -191,7 +193,8 @@ class CustomTable extends Component {
             disabled={child.props.onDuplicate == null}>
             <Icon icon='copy' />
           </Button>
-        </OverlayTrigger>);
+        </OverlayTrigger>
+      );
     }
 
     if (child.props.addRemoveFilesButton) {
@@ -206,7 +209,8 @@ class CustomTable extends Component {
             disabled={child.props.onAddRemove == null}>
             <Icon icon='file' />
           </Button>
-        </OverlayTrigger>);
+        </OverlayTrigger>
+      );
     }
 
     if (child.props.downloadAllButton) {
@@ -245,8 +249,6 @@ class CustomTable extends Component {
           </OverlayTrigger>);
       }
     }
-
-
 
     return cell;
   } // addCell
@@ -312,26 +314,24 @@ class CustomTable extends Component {
         </thead>
         <tbody>
           {
-            this.state.rows.map((row, rowIndex) => (
+            this.state.rows.map((row, rowIndex) =>
               <tr key={rowIndex}>
                 {
                   row.map((cell, cellIndex) => {
 
                     let isCellInlineEditable = children[cellIndex].props.inlineEditable === true;
-
                     let tabIndex = isCellInlineEditable ? 0 : -1;
-
                     let evtHdls = isCellInlineEditable ? {
                       onCellClick: (event) => this.onClick(event, rowIndex, cellIndex),
                       onCellFocus: () => this.onCellFocus({ cell: cellIndex, row: rowIndex }),
                       onCellBlur: () => this.cellLostFocus()
                     } : {
-                        onCellClick: () => { },
-                        onCellFocus: () => { },
-                        onCellBlur: () => { }
-                      };
+                      onCellClick: () => { },
+                      onCellFocus: () => { },
+                      onCellBlur: () => { }
+                    };
 
-                    return (<td
+                    return <td
                       key={cellIndex}
                       tabIndex={tabIndex}
                       onClick={evtHdls.onCellClick}
@@ -344,17 +344,18 @@ class CustomTable extends Component {
                           value={cell}
                           onChange={(event) => children[cellIndex].props.onInlineChange(event, rowIndex, cellIndex)}
                           ref={ref => { this.activeInput = ref; }} />
-                      ) : (
-                          <span>
-                            {cell.map((element, elementIndex) => (
+                      : <span>
+                          {
+                            cell.map((element, elementIndex) =>
                               <span key={elementIndex}>{element}</span>
-                            ))}
-                          </span>
-                        )}
-                    </td>)
+                            )
+                          }
+                        </span>
+                        }
+                    </td>
                   })
                 }
-              </tr>))
+              </tr>)
           }
         </tbody>
       </Table>

@@ -46,7 +46,6 @@ class User extends Component {
   }
 
   componentDidMount() {
-
     let currentUserID = JSON.parse(localStorage.getItem("currentUser")).id;
 
     AppDispatcher.dispatch({
@@ -54,12 +53,13 @@ class User extends Component {
       data: parseInt(currentUserID, 10),
       token: this.state.token
     });
-
   }
 
   closeEditModal(data) {
+    this.setState({
+      editModal: false
+    });
 
-    this.setState({ editModal: false });
     let updatedData = {}
     updatedData.id = this.state.currentUser.id;
     let updatedUser = this.state.currentUser;
@@ -87,8 +87,7 @@ class User extends Component {
     }
 
     if (hasChanged || pwChanged) {
-
-      if(hasChanged){
+      if (hasChanged){
         this.setState({currentUser: updatedUser})
       }
 
@@ -103,9 +102,12 @@ class User extends Component {
   }
   }
 
-
   getHumanRoleName(role_key) {
-    const HUMAN_ROLE_NAMES = {Admin: 'Administrator', User: 'User', Guest: 'Guest'};
+    const HUMAN_ROLE_NAMES = {
+      Admin: 'Administrator',
+      User: 'User',
+      Guest: 'Guest'
+    };
 
     return HUMAN_ROLE_NAMES.hasOwnProperty(role_key)? HUMAN_ROLE_NAMES[role_key] : '';
   }

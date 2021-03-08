@@ -129,7 +129,6 @@ class Users extends Component {
   }
 
   render() {
-
     const buttonStyle = {
       marginLeft: '10px',
     };
@@ -153,17 +152,47 @@ class Users extends Component {
         </h1>
 
         <Table data={this.state.users}>
-          <TableColumn title='Username' width='150' dataKey='username' />
-          <TableColumn title='ID' width='150' dataKey='id' />
-          <TableColumn title='E-mail' dataKey='mail'  />
-          <TableColumn title='Role' dataKey='role'  modifier={(role) => this.getHumanRoleName(role)} />
-          <TableColumn title='Active' dataKey='active' modifier={(active) => this.modifyActiveColumn(active)} />
-          <TableColumn width='200' editButton deleteButton onEdit={index => this.setState({ editModal: true, modalData: this.state.users[index] })} onDelete={index => this.setState({ deleteModal: true, modalData: this.state.users[index] })} />
+          <TableColumn
+            title='Username'
+            width='150'
+            dataKey='username'
+          />
+          <TableColumn
+            title='ID'
+            width='150'
+            dataKey='id'
+          />
+          <TableColumn
+            title='E-mail'
+            dataKey='mail'
+          />
+          <TableColumn
+            title='Role'
+            dataKey='role'
+            modifier={(role) => this.getHumanRoleName(role)}
+          />
+          <TableColumn
+            title='Active'
+            dataKey='active'
+            modifier={(active) => this.modifyActiveColumn(active)}
+          />
+          <TableColumn
+            width='200'
+            editButton
+            deleteButton
+            onEdit={index => this.setState({
+              editModal: true,
+              modalData: this.state.users[index]
+            })}
+            onDelete={index => this.setState({
+              deleteModal: true,
+              modalData: this.state.users[index]
+            })}
+          />
         </Table>
 
         <NewUserDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
         <EditUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />
-
         <DeleteDialog title="user" name={this.state.modalData.username} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
       </div>
     );

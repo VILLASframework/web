@@ -37,8 +37,6 @@ class EditOwnUserDialog extends React.Component {
     }
   }
 
-
-
   onClose(canceled) {
     if (canceled === false) {
       if (this.valid) {
@@ -48,8 +46,6 @@ class EditOwnUserDialog extends React.Component {
       this.props.onClose();
     }
   }
-
-
 
   handleChange(e) {
     this.setState({ [e.target.id]: e.target.value });
@@ -65,26 +61,24 @@ class EditOwnUserDialog extends React.Component {
       username = false;
     }
 
-    if(this.state.mail === ''){
+    if (this.state.mail === '') {
       mail = false;
     }
 
-    if(this.state.password === ''){
+    if (this.state.password === '') {
       pw = false;
     }
 
-    if(this.state.oldPassword === ''){
+    if (this.state.oldPassword === '') {
       oldPassword = false;
     }
 
-    if(this.state.confirmpassword === ''){
+    if (this.state.confirmpassword === '') {
       confirmpassword = false;
     }
 
-
     // form is valid if the following condition is met
     this.valid = username || mail || (oldPassword &&  pw && confirmpassword);
-
   }
 
   resetState() {

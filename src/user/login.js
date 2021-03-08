@@ -32,7 +32,7 @@ class Login extends Component {
   constructor(props) {
     super(props);
 
-    // load config in case the user goes directly to /login
+    // Load config in case the user goes directly to /login
     // otherwise it will be loaded in app constructor
     AppDispatcher.dispatch({
       type: 'config/load',
