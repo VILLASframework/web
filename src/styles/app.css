@@ -265,8 +265,8 @@ hr {
   line-height: 1em !important;
 }
 
-.table-control-button:hover {
-  color: #888;
+.btn-table-control-button:hover {
+  color: #888 !important;
 }
 
 .table-control-checkbox input {
