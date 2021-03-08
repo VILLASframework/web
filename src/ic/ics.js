@@ -17,7 +17,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import {Button, Badge, Tooltip, OverlayTrigger} from 'react-bootstrap';
+import { Button, Badge } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 import moment from 'moment'
@@ -38,6 +38,7 @@ import ICAction from './ic-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
 import NotificationsFactory from "../common/data-managers/notifications-factory";
+import IconButton from '../common/icon-button';
 
 class InfrastructureComponents extends Component {
   static getStores() {
@@ -242,7 +243,6 @@ class InfrastructureComponents extends Component {
   }
 
   onICChecked(ic, event) {
-
     let index = this.state.ics.indexOf(ic);
     const selectedICs = Object.assign([], this.state.selectedICs);
     for (let key in selectedICs) {
@@ -488,22 +488,22 @@ class InfrastructureComponents extends Component {
 
     return (
       <div className='section'>
-        <h1>Infrastructure Components
+        <h1>Infrastructure
           {this.state.currentUser.role === "Admin" ?
             <span className='icon-button'>
-              <OverlayTrigger
-                key={1}
-                placement={'top'}
-                overlay={<Tooltip id={`tooltip-${"add"}`}> Add Infrastructure Component </Tooltip>} >
-                <Button variant='light' onClick={() => this.setState({newModal: true})} style={buttonStyle}><Icon icon="plus" classname='icon-color' style={iconStyle}/></Button>
-              </OverlayTrigger>
-              <OverlayTrigger
-                key={2}
-                placement={'top'}
-                overlay={<Tooltip id={`tooltip-${"import"}`}> Import Infrastructure Component </Tooltip>} >
-                <Button variant='light' onClick={() => this.setState({importModal: true})} style={buttonStyle}><Icon icon="upload" classname='icon-color' style={iconStyle}/></Button>
-              </OverlayTrigger>
-              </span>
+              <IconButton
+                alt={1}
+                tooltip='Add Infrastructure Component'
+                onClick={() => this.setState({newModal: true})}
+                icon='plus'
+              />
+              <IconButton
+                alt={1}
+                tooltip='Import Infrastructure Component'
+                onClick={() => this.setState({importModal: true})}
+                icon='upload'
+              />
+            </span>
             : <span/>
           }
         </h1>

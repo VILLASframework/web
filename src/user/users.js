@@ -17,12 +17,12 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import {Button, OverlayTrigger, Tooltip} from 'react-bootstrap';
 
 import AppDispatcher from '../common/app-dispatcher';
 import UsersStore from './users-store';
 
 import Icon from '../common/icon';
+import IconButton from '../common/icon-button';
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
 import NewUserDialog from './new-user';
@@ -55,7 +55,8 @@ class Users extends Component {
       newModal: false,
       editModal: false,
       deleteModal: false,
-      modalData: {}
+      modalData: {},
+      currentUser: JSON.parse(localStorage.getItem("currentUser"))
     };
   }
 
@@ -115,36 +116,15 @@ class Users extends Component {
   }
 
   render() {
-    const buttonStyle = {
-      marginLeft: '10px',
-    };
-
-    const iconStyle = {
-      height: '30px',
-      width: '30px'
-    }
-
-    return (
-      <div>
+    return <div>
         <h1>Users
           <span className='icon-button'>
-            <OverlayTrigger
-              key={1}
-              placement='top'
-              overlay={<Tooltip id={`tooltip-${"add"}`}> Add User </Tooltip>}
-            >
-              <Button
-                variant='light'
-                style={buttonStyle}
-                onClick={() => this.setState({ newModal: true })}
-              >
-                <Icon
-                  icon='plus'
-                  classname='icon-color'
-                  style={iconStyle}
-                />
-              </Button>
-            </OverlayTrigger>
+            <IconButton
+              key={0}
+              tooltip='Add User'
+              onClick={() => this.setState({ newModal: true })}
+              icon='plus'
+            />
           </span>
         </h1>
 
@@ -190,8 +170,7 @@ class Users extends Component {
         <NewUserDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
         <EditUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />
         <DeleteDialog title="user" name={this.state.modalData.username} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
-      </div>
-    );
+      </div>;
   }
 }
 

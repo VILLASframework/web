@@ -17,7 +17,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button, InputGroup, FormControl, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Button, InputGroup, FormControl } from 'react-bootstrap';
 
 import FileSaver from 'file-saver';
 
@@ -31,6 +31,7 @@ import AppDispatcher from '../common/app-dispatcher';
 import Icon from '../common/icon';
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
+import IconButton from '../common/icon-button';
 import ImportConfigDialog from '../componentconfig/import-config';
 import ImportDashboardDialog from "../dashboard/import-dashboard";
 import NewDashboardDialog from "../dashboard/new-dashboard";
@@ -736,11 +737,12 @@ class Scenario extends React.Component {
 
     return <div className='section'>
       <div className='section-buttons-group-right'>
-        <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete files of scenario </Tooltip>} >
-          <Button variant='light' key={0} size="lg" onClick={this.onEditFiles.bind(this)}>
-            <Icon icon="file" classname={'icon-color'} style={iconStyle}/>
-          </Button>
-        </OverlayTrigger>
+        <IconButton
+          key="0"
+          tooltip="Add, edit or delete files of scenario"
+          onClick={this.onEditFiles.bind(this)}
+          icon="file"
+        />
       </div>
       <h1>{this.state.scenario.name}</h1>
 
@@ -756,19 +758,19 @@ class Scenario extends React.Component {
       {/*Component Configurations table*/}
       <h2 style={tableHeadingStyle}>Component Configurations
         <span className='icon-button'>
-        <OverlayTrigger
-          key={1}
-          placement={'top'}
-          overlay={<Tooltip id={`tooltip-${"add"}`}> Add Component Configuration </Tooltip>} >
-          <Button variant='light' onClick={() => this.addConfig()} style={altButtonStyle}><Icon icon="plus"  classname={'icon-color'} style={iconStyle} /></Button>
-        </OverlayTrigger>
-        <OverlayTrigger
-          key={2}
-          placement={'top'}
-          overlay={<Tooltip id={`tooltip-${"import"}`}> Import Component Configuration </Tooltip>} >
-          <Button variant='light' onClick={() => this.setState({ importConfigModal: true })} style={altButtonStyle}><Icon icon="upload" classname={'icon-color'} style={iconStyle}/></Button>
-        </OverlayTrigger>
-          </span>
+          <IconButton
+            key={0}
+            tooltip='Add Component Configuration'
+            onClick={() => this.addConfig()}
+            icon='plus'
+          />
+          <IconButton
+            key={1}
+            tooltip='Import Component Configuration'
+            onClick={() => this.setState({ importConfigModal: true })}
+            icon='upload'
+          />
+        </span>
       </h2>
       <Table data={this.state.configs}>
         <TableColumn
@@ -882,19 +884,19 @@ class Scenario extends React.Component {
       {/*Dashboard table*/}
       <h2 style={tableHeadingStyle}>Dashboards
         <span className='icon-button'>
-        <OverlayTrigger
-          key={1}
-          placement={'top'}
-          overlay={<Tooltip id={`tooltip-${"add"}`}> Add Dashboard </Tooltip>} >
-          <Button variant='light' onClick={() => this.setState({ newDashboardModal: true })} style={altButtonStyle}><Icon icon="plus" classname={'icon-color'} style={iconStyle} /></Button>
-        </OverlayTrigger>
-        <OverlayTrigger
-          key={2}
-          placement={'top'}
-          overlay={<Tooltip id={`tooltip-${"import"}`}> Import Dashboard </Tooltip>} >
-          <Button variant='light' onClick={() => this.setState({ importDashboardModal: true })} style={altButtonStyle}><Icon icon="upload" classname={'icon-color'} style={iconStyle} /></Button>
-        </OverlayTrigger>
-          </span>
+          <IconButton
+            key={0}
+            tooltip='Add Dashboard'
+            onClick={() => this.setState({ newDashboardModal: true })}
+            icon='plus'
+          />
+          <IconButton
+            key={1}
+            tooltip='Import Dashboard'
+            onClick={() => this.setState({ importDashboardModal: true })}
+            icon='upload'
+          />
+        </span>
       </h2>
       <Table data={this.state.dashboards}>
         {this.state.currentUser.role === "Admin" ?
@@ -936,13 +938,13 @@ class Scenario extends React.Component {
       {/*Result table*/}
       <h2 style={tableHeadingStyle}>Results
         <span className='icon-button'>
-        <OverlayTrigger
-          key={1}
-          placement={'top'}
-          overlay={<Tooltip id={`tooltip-${"add"}`}> Add Result </Tooltip>} >
-          <Button variant='light' onClick={() => this.setState({ newResultModal: true })} style={altButtonStyle}><Icon icon="plus" classname={'icon-color'} style={iconStyle} /></Button>
-        </OverlayTrigger>
-          </span>
+          <IconButton
+            key={1}
+            tooltip='Add Result'
+            onClick={() => this.setState({ newResultModal: true })}
+            icon='plus'
+          />
+        </span>
       </h2>
 
       <Table data={this.state.results}>
