@@ -791,12 +791,6 @@ class Scenario extends React.Component {
           dataKey='name'
         />
         <TableColumn
-          title='Files'
-          dataKey='fileIDs'
-          modifier={(fileIDs) => this.getListOfFiles(this.state.files, fileIDs)}
-          onEdit={(index) => this.startPintura(index)}
-        />
-        <TableColumn
           title='# Output Signals'
           dataKey='outputLength'
           editButton
@@ -931,11 +925,25 @@ class Scenario extends React.Component {
         />
       </Table>
 
-      <NewDashboardDialog show={this.state.newDashboardModal} onClose={data => this.closeNewDashboardModal(data)} />
-      <EditDashboardDialog show={this.state.dashboardEditModal} dashboard={this.state.modalDashboardData} onClose={data => this.closeEditDashboardModal(data)} />
-      <ImportDashboardDialog show={this.state.importDashboardModal} onClose={data => this.closeImportDashboardModal(data)} />
-
-      <DeleteDialog title="dashboard" name={this.state.modalDashboardData.name} show={this.state.deleteDashboardModal} onClose={(e) => this.closeDeleteDashboardModal(e)} />
+      <NewDashboardDialog
+        show={this.state.newDashboardModal}
+        onClose={data => this.closeNewDashboardModal(data)}
+      />
+      <EditDashboardDialog
+        show={this.state.dashboardEditModal}
+        dashboard={this.state.modalDashboardData}
+        onClose={data => this.closeEditDashboardModal(data)}
+      />
+      <ImportDashboardDialog
+        show={this.state.importDashboardModal}
+        onClose={data => this.closeImportDashboardModal(data)}
+      />
+      <DeleteDialog
+        title="dashboard"
+        name={this.state.modalDashboardData.name}
+        show={this.state.deleteDashboardModal}
+        onClose={(e) => this.closeDeleteDashboardModal(e)}
+      />
 
       {/*Result table*/}
       <h2 style={tableHeadingStyle}>Results
@@ -972,7 +980,6 @@ class Scenario extends React.Component {
           dataKey='resultFileIDs'
           linkKey='filebuttons'
           data={this.state.files}
-          width='300'
           onDownload={(index) => this.downloadResultData(index)}
         />
         <TableColumn
@@ -1023,34 +1030,34 @@ class Scenario extends React.Component {
           />
           : <></>
         }
-          <TableColumn
-            title='Name'
-            dataKey='username'
-          />
-          <TableColumn
-            title='Mail'
-            dataKey='mail'
-          />
-          <TableColumn
-            title=''
-            width='200'
-            deleteButton
-            onDelete={(index) => this.setState({
-              deleteUserModal: true,
-              deleteUserName: this.state.scenario.users[index].username,
-              modalUserIndex: index
-            })}
-          />
-        </Table>
+        <TableColumn
+          title='Name'
+          dataKey='username'
+        />
+        <TableColumn
+          title='Role'
+          dataKey='role'
+        />
+        <TableColumn
+          title=''
+          width='200'
+          deleteButton
+          onDelete={(index) => this.setState({
+            deleteUserModal: true,
+            deleteUserName: this.state.scenario.users[index].username,
+            modalUserIndex: index
+          })}
+        />
+      </Table>
 
-        <InputGroup style={{ width: 400, float: 'right' }}>
-          <FormControl
-            placeholder="Username"
-            onChange={(e) => this.onUserInputChange(e)}
-            value={this.state.userToAdd}
-            type="text"
-          />
-          <InputGroup.Append>
+      <InputGroup style={{ width: 400, float: 'right' }}>
+        <Form.Control
+          placeholder="Username"
+          onChange={(e) => this.onUserInputChange(e)}
+          value={this.state.userToAdd}
+          type="text"
+        />
+        <InputGroup.Append>
           <span className='icon-button'>
             <Button
               variant='light'
@@ -1059,12 +1066,17 @@ class Scenario extends React.Component {
               onClick={() => this.addUser()}>
               <Icon icon="plus" classname={'icon-color'} style={iconStyle} />
             </Button>
-            </span>
-          </InputGroup.Append>
-        </InputGroup><br /><br />
-      </div>
+          </span>
+        </InputGroup.Append>
+      </InputGroup>
+      <br />
 
-      <DeleteDialog title="user from scenario:" name={this.state.deleteUserName} show={this.state.deleteUserModal} onClose={(c) => this.closeDeleteUserModal(c)} />
+      <DeleteDialog
+        title="Delete user from scenario"
+        name={this.state.deleteUserName}
+        show={this.state.deleteUserModal}
+        onClose={(c) => this.closeDeleteUserModal(c)}
+      />
     </div>;
   }
 }

@@ -587,8 +587,6 @@ class Dashboard extends Component {
           configs={this.state.configs}
           sessionToken={this.state.sessionToken}
         />
-
-
       </div>
     </div>;
   }

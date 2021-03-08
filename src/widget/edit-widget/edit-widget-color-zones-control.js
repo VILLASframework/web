@@ -20,7 +20,7 @@ import { Form, Table, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import ColorPicker from './color-picker'
 
 import Icon from '../../common/icon';
-import {Collapse} from 'react-collapse';
+import { Collapse } from 'react-collapse';
 
 class EditWidgetColorZonesControl extends React.Component {
   constructor(props) {
@@ -51,8 +51,8 @@ class EditWidgetColorZonesControl extends React.Component {
     // add row
     const widget = this.state.widget;
     widget.customProperties.zones.push({ strokeStyle: '#d3cbcb', min: 0, max: 100 });
-    
-    if(widget.customProperties.zones.length > 0){      
+
+    if(widget.customProperties.zones.length > 0){
     let length = widget.customProperties.zones.length
 
     for(let i= 0 ; i < length; i++){
@@ -67,14 +67,14 @@ class EditWidgetColorZonesControl extends React.Component {
   }
 
   removeZones = () => {
-    
+
     let temp = this.state.widget;
 
     temp.customProperties.zones.splice(this.state.selectedIndex, 1);
 
-    if(temp.customProperties.zones.length > 0){      
+    if(temp.customProperties.zones.length > 0){
       let length = temp.customProperties.zones.length
-  
+
       for(let i= 0 ; i < length; i++){
       temp.customProperties.zones[i].min = i* 100/length;
       temp.customProperties.zones[i].max = (i+1)* 100/length;
@@ -111,8 +111,8 @@ class EditWidgetColorZonesControl extends React.Component {
     }
   }
 
-  openColorPicker = () =>{
-    
+  openColorPicker = () => {
+
     let color = this.state.selectedZone.strokeStyle;
 
     this.setState({showColorPicker: true, originalColor: color});
@@ -124,7 +124,7 @@ class EditWidgetColorZonesControl extends React.Component {
 
       let temp = this.state.selectedZone;
       temp.strokeStyle = this.state.originalColor;
-      
+
       this.setState({ selectedZone : temp });
     }
   }
@@ -155,7 +155,7 @@ class EditWidgetColorZonesControl extends React.Component {
     if(this.state.selectedIndex !== this.state.widget.customProperties.zones.length -1){
       temp.customProperties.zones[this.state.selectedIndex + 1]['min'] = e.target.value
     }
-    
+
     this.setState({ widget: temp });
     }
 
@@ -171,17 +171,17 @@ class EditWidgetColorZonesControl extends React.Component {
     this.props.handleChange(event);
   }
 
-  
+
 
   render() {
 
     const buttonStyle = {
-      marginBottom: '10px', 
+      marginBottom: '10px',
       marginLeft: '120px',
     };
 
     const iconStyle = {
-      height: '25px', 
+      height: '25px',
       width : '25px'
     }
 
@@ -194,7 +194,7 @@ class EditWidgetColorZonesControl extends React.Component {
 
     let pickerStyle = {
       backgroundColor: tempColor,
-      width: '260px', 
+      width: '260px',
       height: '40px',
       marginTop: '20px'
     }
@@ -213,21 +213,18 @@ class EditWidgetColorZonesControl extends React.Component {
       </span>
     <div>
       {
-          this.state.widget.customProperties.zones.map((zone, idx) => {
-            let color = zone.strokeStyle;
-            let width = (zone.max - zone.min)*(260/100);
-            let style = {
-              backgroundColor: color,
-              width: width,
-              height: '40px'
-            }
-            
-            return (<Button
-              style={style} key={idx} onClick={i => this.editColorZone(idx)} disabled={!this.props.widget.customProperties.colorZones}><Icon icon="pen" /></Button>
-            )
+        this.state.widget.customProperties.zones.map((zone, idx) => {
+          let color = zone.strokeStyle;
+          let width = (zone.max - zone.min)*(260/100);
+          let style = {
+            backgroundColor: color,
+            width: width,
+            height: '40px'
           }
+          return (<Button
+            style={style} key={idx} onClick={i => this.editColorZone(idx)} disabled={!this.props.widget.customProperties.colorZones}><Icon icon="pen" /></Button>
           )
-
+        })
       }
     </div>
       <Collapse isOpened={collapse}>

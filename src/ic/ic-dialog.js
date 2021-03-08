@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Row, Col} from 'react-bootstrap';
+import { Button, Row, Col } from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
 import Icon from "../common/icon";
 import ConfirmCommand from './confirm-command';

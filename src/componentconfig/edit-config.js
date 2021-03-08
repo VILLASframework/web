@@ -17,6 +17,7 @@
 
 import React from 'react';
 import { Form } from 'react-bootstrap';
+import { Multiselect } from 'multiselect-react-dropdown'
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
 

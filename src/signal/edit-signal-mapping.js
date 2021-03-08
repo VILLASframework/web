@@ -18,6 +18,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Collapse } from 'react-collapse';
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
 import Dialog from "../common/dialogs/dialog";
@@ -30,12 +31,11 @@ class EditSignalMapping extends React.Component {
     super(props);
 
     let dir = "";
-    if ( this.props.direction === "Output"){
+    if ( this.props.direction === "Output") {
       dir = "out";
-    } else if ( this.props.direction === "Input" ){
+    } else if ( this.props.direction === "Input" ) {
       dir = "in";
     }
-
 
     this.state = {
       dir,
@@ -45,38 +45,37 @@ class EditSignalMapping extends React.Component {
     };
   }
 
-  static getDerivedStateFromProps(props, state){
+  static getDerivedStateFromProps(props, state) {
 
     // filter all signals by configID and direction
     let signals = [];
-    if(props.signalID != null || typeof props.configs === "undefined"){
+    if (props.signalID != null || typeof props.configs === "undefined") {
       signals = props.signals.filter((sig) => {
         return (sig.configID === props.configID) && (sig.direction === state.dir);
       });
     }
-    else{
-      for(let i = 0; i < props.configs.length; i++){
+    else {
+      for (let i = 0; i < props.configs.length; i++) {
         let temp = props.signals.filter((sig) => {
           return (sig.configID === props.configs[i].id) && (sig.direction === state.dir);
         })
-      signals = signals.concat(temp);
+        signals = signals.concat(temp);
+      }
     }
-  }
 
-  signals.forEach(signal => {
-    if(signal.checked === undefined) signal.checked = false
-  });
-
+    signals.forEach(signal => {
+      if (signal.checked === undefined) {
+        signal.checked = false;
+      }
+    });
 
     return {
       signals: signals,
     };
   }
 
-
   onClose(canceled) {
-
-    for (let signalID of this.state.modifiedSignalIDs){
+    for (let signalID of this.state.modifiedSignalIDs) {
 
       let sig = this.state.signals.find(s => s.id === signalID);
 
@@ -99,23 +98,23 @@ class EditSignalMapping extends React.Component {
     console.log("HandleMappingChange", row, column)
       if (column === 2) { // Name change
         signals[row].name = event.target.value;
-        if (modifiedSignals.find(id => id === signals[row].id) === undefined){
+        if (modifiedSignals.find(id => id === signals[row].id) === undefined) {
           modifiedSignals.push(signals[row].id);
         }
       } else if (column === 3) { // unit change
         signals[row].unit = event.target.value;
-        if (modifiedSignals.find(id => id === signals[row].id) === undefined){
+        if (modifiedSignals.find(id => id === signals[row].id) === undefined) {
           modifiedSignals.push(signals[row].id);
         }
       } else if (column === 4) { // scaling factor change
         signals[row].scalingFactor = parseFloat(event.target.value);
-        if (modifiedSignals.find(id => id === signals[row].id) === undefined){
+        if (modifiedSignals.find(id => id === signals[row].id) === undefined) {
           modifiedSignals.push(signals[row].id);
         }
       } else if (column === 1) { //index change
         console.log("Index change")
         signals[row].index =parseInt(event.target.value, 10);
-        if (modifiedSignals.find(id => id === signals[row].id) === undefined){
+        if (modifiedSignals.find(id => id === signals[row].id) === undefined) {
           modifiedSignals.push(signals[row].id);
         }
       }
@@ -124,11 +123,9 @@ class EditSignalMapping extends React.Component {
         signals: signals,
         modifiedSignalIDs: modifiedSignals
       })
-
   };
 
   handleDelete = (index) => {
-
     let data = this.state.signals[index]
 
     AppDispatcher.dispatch({
@@ -136,11 +133,9 @@ class EditSignalMapping extends React.Component {
       data: data,
       token: this.props.sessionToken
     });
-
   };
 
   handleRemove = () => {
-
     let checkedSignals = this.state.signals.filter(signal => signal.checked === true);
 
     checkedSignals.forEach(signal => {
@@ -149,23 +144,20 @@ class EditSignalMapping extends React.Component {
         data: signal,
         token: this.props.sessionToken
       });
-
     })
-
   }
 
   handleAdd = (configID = null) => {
-
-    if(typeof this.props.configs !== "undefined"){
-
-      if(configID === null){
+    if (typeof this.props.configs !== "undefined") {
+      if (configID === null) {
         this.setState({openCollapse: true});
-        return
-        }
+        return;
       }
-      else{
-        configID = this.props.configID;
-      }
+    }
+    else {
+      configID = this.props.configID;
+    }
+
     let newSignal = {
       configID: configID,
       direction: this.state.dir,
@@ -185,7 +177,6 @@ class EditSignalMapping extends React.Component {
   };
 
   resetState() {
-
       let signals = this.props.signals.filter((sig) => {
         return (sig.configID === this.props.configID) && (sig.direction === this.state.dir);
       });
@@ -200,29 +191,27 @@ class EditSignalMapping extends React.Component {
     tempSignals[index].checked = !tempSignals[index].checked;
 
     this.setState({signals: tempSignals});
-
   }
 
-  checkAll(){
+  checkAll() {
     let tempSignals = this.state.signals;
     let allChecked = true;
 
-    tempSignals.forEach(signal =>
-      {
-        if(signal.checked === false){
+    tempSignals.forEach(signal => {
+      if (signal.checked === false) {
         signal.checked = true;
         allChecked = false;
       }
-      });
+    });
 
-    if(allChecked){
+    if (allChecked) {
       tempSignals.forEach(signal => signal.checked = false);
     }
+
     this.setState({signals: tempSignals});
   }
 
   render() {
-
       const buttonStyle = {
         marginLeft: '10px',
       };

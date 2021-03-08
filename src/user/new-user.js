@@ -67,7 +67,14 @@ class NewUserDialog extends React.Component {
 
   render() {
     return (
-      <Dialog show={this.props.show} title="New user" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog
+        show={this.props.show}
+        title="New User"
+        buttonTitle="Add"
+        onClose={(c) => this.onClose(c)}
+        onReset={() => this.resetState()}
+        valid={this.valid}
+      >
         <Form>
           <Form.Group as={Col} controlId="username">
             <Form.Label>Username</Form.Label>

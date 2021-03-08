@@ -17,6 +17,7 @@
 
 import React from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
+import { Collapse } from 'react-collapse';
 
 class DeleteDialog extends React.Component {
     onModalKeyPress = (event) => {

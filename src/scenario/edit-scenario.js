@@ -53,13 +53,11 @@ class EditScenarioDialog extends React.Component {
     this.setState({ [event.target.id]: event.target.value });
 
     let name = true;
-
     if (this.state.name === '') {
       name = false;
     }
 
     this.valid = name;
-
   };
 
   resetState = () => {

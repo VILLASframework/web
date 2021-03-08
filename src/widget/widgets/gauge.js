@@ -17,7 +17,6 @@
 
 import React, { Component } from 'react';
 import { Gauge } from 'gaugeJS';
-//import {update} from "immutable";
 
 class WidgetGauge extends Component {
   constructor(props) {
@@ -70,7 +69,6 @@ class WidgetGauge extends Component {
         this.gauge.set(this.state.value);
         this.updateLabels(this.state.minValue, this.state.maxValue)
     }
-
   }
 
   static getDerivedStateFromProps(props, state){
@@ -79,12 +77,12 @@ class WidgetGauge extends Component {
       return{ value: 0, minValue: 0, maxValue: 10};
     }
 
-    // get the signal with the selected signal ID
+    // Get the signal with the selected signal ID
     let signalID = props.widget.signalIDs[0];
     let signal = props.signals.filter(s => s.id === signalID)
 
     if(signal.length > 0) {
-      // determine ID of infrastructure component related to signal[0] (there is only one signal for a lamp widget)
+      // Determine ID of infrastructure component related to signal[0] (there is only one signal for a lamp widget)
       let icID = props.icIDs[signal[0].id];
 
       let returnState = {}
@@ -100,9 +98,9 @@ class WidgetGauge extends Component {
         returnState["scalingFactor"] = signal[0].scalingFactor;
       }
 
-      // update value
+      // Update value
 
-      // check if data available
+      // Check if data available
       if (props.data == null
         || props.data[icID] == null
         || props.data[icID].output == null
@@ -114,12 +112,12 @@ class WidgetGauge extends Component {
         return returnState;
       }
 
-      // memorize if min or max value is updated
+      // Memorize if min or max value is updated
       let updateValue = false;
       let updateMinValue = false;
       let updateMaxValue = false;
 
-      // check if value has changed
+      // Check if value has changed
       const data = props.data[icID].output.values[signal[0].index - 1];
       // Take just 3 decimal positions
       // Note: Favor this method over Number.toFixed(n) in order to avoid a type conversion, since it returns a String
@@ -129,10 +127,10 @@ class WidgetGauge extends Component {
         let maxValue = null;
 
         if ((state.value !== value && value != null) || props.widget.customProperties.valueUseMinMax || state.useMinMaxChange) {
-          //value has changed
+          // Value has changed
           updateValue = true;
 
-          // update min-max if needed
+          // Update min-max if needed
           let updateLabels = false;
 
           minValue = state.minValue;
@@ -157,7 +155,6 @@ class WidgetGauge extends Component {
             maxValue = props.widget.customProperties.valueMax;
             updateMaxValue = true;
             updateLabels = true;
-
           }
 
           if (updateLabels === false && state.gauge) {
@@ -178,7 +175,7 @@ class WidgetGauge extends Component {
           returnState["useMinMax"] = props.widget.customProperties.valueUseMinMax;
         }
 
-        // prepare returned state
+        // Prepare returned state
         if (updateValue === true) {
           returnState["value"] = value;
         }
@@ -190,7 +187,7 @@ class WidgetGauge extends Component {
         }
 
 
-      } // if there is signal data
+      } // If there is signal data
 
       if (JSON.stringify(returnState) !== JSON.stringify({})) {
         return returnState;
@@ -198,8 +195,8 @@ class WidgetGauge extends Component {
         return null;
       }
     }
-    return null;
 
+    return null;
   }
 
   updateLabels(minValue, maxValue, force) {
@@ -223,17 +220,17 @@ class WidgetGauge extends Component {
       });
     }
 
-    if(this.state.signalID !== ''){
-    this.gauge.setOptions({
-      staticLabels: {
-        font: '10px "Helvetica Neue"',
-        labels,
-        color: "#000000",
-        fractionDigits: 1
-      },
-      staticZones: zones
-    });
-  }
+    if (this.state.signalID !== '') {
+      this.gauge.setOptions({
+        staticLabels: {
+          font: '10px "Helvetica Neue"',
+          labels,
+          color: "#000000",
+          fractionDigits: 1
+        },
+        staticZones: zones
+      });
+    }
   }
 
   computeGaugeOptions(widget) {
@@ -267,8 +264,6 @@ class WidgetGauge extends Component {
           <canvas ref={node => this.gaugeCanvas = node} />
           <div className="gauge-unit">{this.state.unit + scaleText}</div>
           <div className="gauge-value">{this.state.value}</div>
-
-
       </div>
     );
   }

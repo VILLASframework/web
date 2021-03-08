@@ -23,7 +23,6 @@ import CreateControls from './edit-widget-control-creator';
 class EditWidgetDialog extends React.Component {
   valid = true;
 
-
   constructor(props) {
     super(props);
 
@@ -37,7 +36,6 @@ class EditWidgetDialog extends React.Component {
       temporal: props.widget
     };
   }
-
 
   onClose(canceled) {
     if (canceled === false) {
@@ -53,9 +51,9 @@ class EditWidgetDialog extends React.Component {
     const file = this.props.files.find(element => element.id === fileId);
 
     // scale width to match aspect
-    if(file.imageWidth && file.imageHeight){
-    const aspectRatio = file.imageWidth / file.imageHeight;
-    changeObject.width = parseInt(this.state.temporal.height * aspectRatio,10);
+    if (file.imageWidth && file.imageHeight) {
+      const aspectRatio = file.imageWidth / file.imageHeight;
+      changeObject.width = parseInt(this.state.temporal.height * aspectRatio,10);
     }
 
     return changeObject;
@@ -70,26 +68,21 @@ class EditWidgetDialog extends React.Component {
     return metrics.width;
   }
 
-  setMaxWidth(changeObject){
-    if(changeObject.type === 'Label'){
+  setMaxWidth(changeObject) {
+    if (changeObject.type === 'Label') {
       changeObject.customProperties.maxWidth = Math.ceil(this.getTextWidth(changeObject.name, changeObject.customProperties.textSize));
       changeObject.width = changeObject.customProperties.maxWidth;
     }
-    /*else if (changeObject.type === 'Value'){
-      changeObject.customProperties.maxWidth = Math.ceil(this.getTextWidth(changeObject.name, changeObject.customProperties.textSize));
-    }
-    if(this.state.temporal.width > changeObject.customProperties.maxWidth){
-      changeObject.width = changeObject.customProperties.maxWidth;
-    }*/
+
     return changeObject;
   }
 
-  setNewLockRestrictions(changeObject){
-    if(changeObject.customProperties.orientation === 0){
+  setNewLockRestrictions(changeObject) {
+    if (changeObject.customProperties.orientation === 0) {
       changeObject.customProperties.resizeTopBottomLock = true;
       changeObject.customProperties.resizeRightLeftLock = false;
     }
-    else if(changeObject.customProperties.orientation === 1){
+    else if (changeObject.customProperties.orientation === 1) {
       changeObject.customProperties.resizeTopBottomLock = false;
       changeObject.customProperties.resizeRightLeftLock = true;
     }
@@ -97,7 +90,6 @@ class EditWidgetDialog extends React.Component {
   }
 
   handleChange(e) {
-
     // TODO: check what we really need in this function. Can we reduce its complexity?
     let parts = e.target.id.split('.');
     let changeObject = this.state.temporal;

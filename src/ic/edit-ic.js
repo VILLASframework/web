@@ -18,7 +18,6 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
 import _ from 'lodash';
-import {Collapse} from 'react-collapse';
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
 
