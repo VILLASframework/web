@@ -253,15 +253,16 @@ hr {
   color: #fff;
 }
 
+.table td {
+  padding: 0.5em 0.5em !important;
+}
+
 /**
  * Buttons
  */
-.table-control-button {
-  border: none;
-
-  background: none;
-
-  padding: 0 5px;
+.btn-table-control-button {
+  padding: 0 0.5em !important;
+  line-height: 1em !important;
 }
 
 .table-control-button:hover {
