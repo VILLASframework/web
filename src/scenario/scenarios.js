@@ -271,6 +271,7 @@ class Scenarios extends Component {
           />
           <TableColumn
             width='200'
+            align='right'
             editButton
             deleteButton
             exportButton

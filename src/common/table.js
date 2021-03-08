@@ -250,7 +250,7 @@ class CustomTable extends Component {
     }
 
     return cell;
-  } // addCell
+  }
 
   static getDerivedStateFromProps(props, state) {
     const rows = CustomTable.getRows(props);
@@ -329,9 +329,13 @@ class CustomTable extends Component {
                       onCellFocus: () => { },
                       onCellBlur: () => { }
                     };
+                    let cellStyle = {
+                      textAlign: children[cellIndex].props.align
+                    };
 
                     return <td
                       key={cellIndex}
+                      style={cellStyle}
                       tabIndex={tabIndex}
                       onClick={evtHdls.onCellClick}
                       onFocus={evtHdls.onCellFocus}

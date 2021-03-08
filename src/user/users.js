@@ -155,6 +155,7 @@ class Users extends Component {
           />
           <TableColumn
             width='200'
+            align='right'
             editButton
             deleteButton
             onEdit={index => this.setState({

@@ -132,6 +132,7 @@ class EditFilesDialog extends React.Component {
             />
             <TableColumn
               title=''
+              align='right'
               deleteButton
               onDelete={(index) => this.deleteFile(index)}
               editButton

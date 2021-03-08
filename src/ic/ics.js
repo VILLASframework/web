@@ -445,6 +445,7 @@ class InfrastructureComponents extends Component {
           {this.state.currentUser.role === "Admin" ?
             <TableColumn
               width='150'
+              align='right'
               editButton
               showEditButton ={(index) => this.isLocalIC(index, ics)}
               exportButton

@@ -821,6 +821,7 @@ class Scenario extends React.Component {
         <TableColumn
           title=''
           width='200'
+          align='right'
           editButton
           deleteButton
           exportButton
@@ -918,6 +919,7 @@ class Scenario extends React.Component {
         <TableColumn
           title=''
           width='200'
+          align='right'
           editButton
           deleteButton
           exportButton
@@ -974,7 +976,8 @@ class Scenario extends React.Component {
           onDownload={(index) => this.downloadResultData(index)}
         />
         <TableColumn
-          width='300'
+          width='200'
+          align='right'
           editButton
           downloadAllButton
           deleteButton
