@@ -376,7 +376,7 @@ class Scenario extends React.Component {
 
     let ic = null;
     for (let component of this.state.ics) {
-      if (component.id === this.state.configs[index].icID) {
+      if (component.id === icID) {
         ic = component;
       }
     }
@@ -391,7 +391,6 @@ class Scenario extends React.Component {
     }
 
     return false
-
   }
 
   getICName(icID) {

@@ -50,13 +50,8 @@ class EditICDialog extends React.Component {
           data.name = this.state.name;
         }
 
-
         data.websocketurl = this.state.websocketurl;
-
-
-
         data.apiurl = this.state.apiurl;
-
 
         if (this.state.location != null && this.state.location !== this.props.ic.location) {
           data.location = this.state.location;
@@ -78,7 +73,6 @@ class EditICDialog extends React.Component {
         }
 
         data.managedexternally = this.state.managedexternally;
-
 
         this.props.onClose(data);
         this.setState({managedexternally: false});

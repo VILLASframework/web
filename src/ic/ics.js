@@ -88,7 +88,6 @@ class InfrastructureComponents extends Component {
     let services = ics.filter(ic => ic.category === "service")
     let equipment = ics.filter(ic => ic.category === "equipment")
 
-
     return {
       sessionToken: localStorage.getItem("token"),
       ics: ics,
@@ -112,7 +111,7 @@ class InfrastructureComponents extends Component {
       token: this.state.sessionToken,
     });
 
-   // Start timer for periodic refresh
+    // Start timer for periodic refresh
     this.timer = window.setInterval(() => this.refresh(), 10000);
   }
 
@@ -121,7 +120,6 @@ class InfrastructureComponents extends Component {
   }
 
   refresh() {
-
     if (this.state.editModal || this.state.deleteModal || this.state.icModal){
       // do nothing since a dialog is open at the moment
     }
@@ -160,6 +158,7 @@ class InfrastructureComponents extends Component {
       } else {
         // externally managed IC: dispatch create action to selected manager
         let newAction = {};
+
         newAction["action"] = "create";
         newAction["parameters"] = data;
         newAction["when"] = new Date()
@@ -178,7 +177,6 @@ class InfrastructureComponents extends Component {
           result: null,
           token: this.state.sessionToken
         });
-
       }
     }
   }
@@ -266,8 +264,6 @@ class InfrastructureComponents extends Component {
     this.setState({ selectedICs: selectedICs });
   }
 
-
-
   static isICOutdated(component) {
     if (!component.stateUpdateAt)
       return true;
@@ -323,18 +319,18 @@ class InfrastructureComponents extends Component {
         style.push('badge-default');
 
         /* Possible states of ICs
-        *   'error':        ['resetting', 'error'],
-            'idle':         ['resetting', 'error', 'idle', 'starting', 'shuttingdown'],
-            'starting':     ['resetting', 'error', 'running'],
-            'running':      ['resetting', 'error', 'pausing', 'stopping'],
-            'pausing':      ['resetting', 'error', 'paused'],
-            'paused':       ['resetting', 'error', 'resuming', 'stopping'],
-            'resuming':     ['resetting', 'error', 'running'],
-            'stopping':     ['resetting', 'error', 'idle'],
-            'resetting':    ['resetting', 'error', 'idle'],
-            'shuttingdown': ['shutdown', 'error'],
-            'shutdown':     ['starting', 'error']
-        * */
+         *  'error':        ['resetting', 'error'],
+         *  'idle':         ['resetting', 'error', 'idle', 'starting', 'shuttingdown'],
+         *  'starting':     ['resetting', 'error', 'running'],
+         *  'running':      ['resetting', 'error', 'pausing', 'stopping'],
+         *  'pausing':      ['resetting', 'error', 'paused'],
+         *  'paused':       ['resetting', 'error', 'resuming', 'stopping'],
+         *  'resuming':     ['resetting', 'error', 'running'],
+         *  'stopping':     ['resetting', 'error', 'idle'],
+         *  'resetting':    ['resetting', 'error', 'idle'],
+         *  'shuttingdown': ['shutdown', 'error'],
+         *  'shutdown':     ['starting', 'error']
+         */
     }
 
     return style.join(' ')
@@ -483,24 +479,21 @@ class InfrastructureComponents extends Component {
       <div className='section'>
         <h1>Infrastructure Components
           {this.state.currentUser.role === "Admin" ?
-            (<span className='icon-button'>
+            <span className='icon-button'>
               <OverlayTrigger
                 key={1}
                 placement={'top'}
                 overlay={<Tooltip id={`tooltip-${"add"}`}> Add Infrastructure Component </Tooltip>} >
-                <Button variant='light' onClick={() => this.setState({newModal: true})} style={buttonStyle}><Icon icon="plus" classname='icon-color' style={iconStyle}
-                                                                                                /></Button>
+                <Button variant='light' onClick={() => this.setState({newModal: true})} style={buttonStyle}><Icon icon="plus" classname='icon-color' style={iconStyle}/></Button>
               </OverlayTrigger>
               <OverlayTrigger
                 key={2}
                 placement={'top'}
                 overlay={<Tooltip id={`tooltip-${"import"}`}> Import Infrastructure Component </Tooltip>} >
-                <Button variant='light' onClick={() => this.setState({importModal: true})} style={buttonStyle}><Icon icon="upload" classname='icon-color' style={iconStyle}
-                                                                                                   /></Button>
+                <Button variant='light' onClick={() => this.setState({importModal: true})} style={buttonStyle}><Icon icon="upload" classname='icon-color' style={iconStyle}/></Button>
               </OverlayTrigger>
-              </span>)
-            :
-            (<span> </span>)
+              </span>
+            : <span/>
           }
         </h1>
 
@@ -525,8 +518,7 @@ class InfrastructureComponents extends Component {
               ]}
             />
           </div>
-          :
-          <div/>
+          : <div/>
         }
 
         <div style={{ clear: 'both' }} />

@@ -75,7 +75,7 @@ class NewICDialog extends React.Component {
       this.setState({ managedexternally : !this.state.managedexternally});
     }
     else{
-    this.setState({ [e.target.id]: e.target.value });
+      this.setState({ [e.target.id]: e.target.value });
     }
   }
 
@@ -163,7 +163,6 @@ class NewICDialog extends React.Component {
       );
     }
 
-
     return (
       <Dialog show={this.props.show} title="New Infrastructure Component" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.validateForm()}>
         <form>
@@ -185,7 +184,6 @@ class NewICDialog extends React.Component {
                   </FormControl>
                 </FormGroup>
                 : <div/>
-
               }
             </>
             : <div/>

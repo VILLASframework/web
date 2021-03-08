@@ -6,7 +6,6 @@ import ConfirmCommand from './confirm-command';
 import ReactJson from 'react-json-view';
 import FileSaver from 'file-saver';
 
-
 class ICDialog extends React.Component {
   valid = true;
 
@@ -46,14 +45,12 @@ class ICDialog extends React.Component {
     FileSaver.saveAs(blob, this.props.ic.name + ".svg");
   }
 
-
   render() {
 
     let graphURL = ""
     if (this.props.ic.apiurl !== ""){
       graphURL = this.props.ic.apiurl + "/graph.svg"
     }
-
 
     return (
       <Dialog
@@ -88,7 +85,6 @@ class ICDialog extends React.Component {
             </Col>
 
             <Col>
-
               <h5>Raw Status:</h5>
               <ReactJson
                 src={this.props.ic.statusupdateraw}
@@ -110,29 +106,29 @@ class ICDialog extends React.Component {
                     <img alt={"Graph image download failed and/or incorrect image API URL"} src={graphURL}/>
                   </div>
 
-                  {this.props.userRole === "Admin" ? (
-                      <div>
-                        <h5>Controls:</h5>
-                        <div className='solid-button'>
-                          <Button variant='secondary' style={{margin: '5px'}} size='lg'
-                                  onClick={() => this.setState({confirmCommand: true, command: 'restart'})}>Restart</Button>
-                          <Button variant='secondary' style={{margin: '5px'}} size='lg' onClick={() => this.setState({
-                            confirmCommand: true,
-                            command: 'shutdown'
-                          })}>Shutdown</Button>
-                        </div>
-                      </div>)
-                    : (<div/>)}
-
+                  {this.props.userRole === "Admin" ?
+                    <div>
+                      <h5>Controls:</h5>
+                      <div className='solid-button'>
+                        <Button variant='secondary' style={{margin: '5px'}} size='lg'
+                                onClick={() => this.setState({confirmCommand: true, command: 'restart'})}>Restart</Button>
+                        <Button variant='secondary' style={{margin: '5px'}} size='lg' onClick={() => this.setState({
+                          confirmCommand: true,
+                          command: 'shutdown'
+                        })}>Shutdown</Button>
+                      </div>
+                    </div>
+                    : <div/>
+                  }
                   <ConfirmCommand show={this.state.confirmCommand} command={this.state.command} name={this.props.ic.name}
                                   onClose={c => this.closeConfirmModal(c)}/>
-
-                </>) : (<div/>)}
+                </>
+                : <div/>
+              }
             </Col>
           </Row>
         </form>
       </Dialog>
-
     );
   }
 }

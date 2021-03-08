@@ -55,7 +55,6 @@ class ICAction extends React.Component {
   }
 
   runAction(action, when) {
-
     if (action.data.action === 'none') {
       console.warn("No command selected. Nothing was sent.");
       return;
