@@ -72,7 +72,7 @@ class SidebarMenu extends React.Component {
           <ul>
             <li><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
             <li><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
-            <li><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure Components">Infrastructure Components</NavLink></li>
+            <li><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure">Infrastructure</NavLink></li>
             { this.props.currentRole === 'Admin' ?
                 <li><NavLink to="/users" activeClassName="active" title="Users">Users</NavLink></li> : ''
             }
@@ -91,7 +91,7 @@ class SidebarMenu extends React.Component {
         <ul>
           <li><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
           <li><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
-          <li><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure Components">Infrastructure Components</NavLink></li>
+          <li><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure">Infrastructure</NavLink></li>
           { this.props.currentRole === 'Admin' ?
               <li><NavLink to="/users" activeClassName="active" title="Users">Users</NavLink></li> : ''
           }
