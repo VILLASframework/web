@@ -580,22 +580,18 @@ class Scenario extends React.Component {
   * File modification methods
   ############################################## */
 
-  getListOfFiles(fileIDs, types) {
-
-    let fileList = '';
+  getListOfFiles(files, fileIDs) {
+    let fileList = [];
 
     for (let id of fileIDs) {
-      for (let file of this.state.files) {
-        if (file.id === id && types.some(e => file.type.includes(e))) {
-          if (fileList === '') {
-            fileList = file.name
-          } else {
-            fileList = fileList + ';' + file.name;
-          }
+      for (let file of files) {
+        if (file.id === id) {
+          fileList.push(file.name)
         }
       }
     }
-    return fileList;
+
+    return fileList.join(';');
   }
 
   /* ##############################################
@@ -837,13 +833,14 @@ class Scenario extends React.Component {
           checkboxDisabled={(index) => !this.usesExternalIC(index)}
           onChecked={(index, event) => this.onConfigChecked(index, event)}
           width='30' />
-        <TableColumn title='Name' dataKey='name' />
-        <TableColumn title='Configuration file(s)' dataKey='fileIDs' modifier={(fileIDs) => this.getListOfFiles(fileIDs, ['json', 'JSON'])} />
         <TableColumn
-          title='Model file(s)'
+          title='Name'
+          dataKey='name'
+        />
+        <TableColumn
+          title='Files'
           dataKey='fileIDs'
-          modifier={(fileIDs) => this.getListOfFiles(fileIDs, ['xml'])}
-          editButton
+          modifier={(fileIDs) => this.getListOfFiles(this.state.files, fileIDs)}
           onEdit={(index) => this.startPintura(index)}
         />
         <TableColumn
