@@ -16,7 +16,7 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, FormLabel } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import ParametersEditor from '../../common/parameters-editor';
 
 class EditWidgetParametersControl extends Component {
@@ -45,10 +45,13 @@ class EditWidgetParametersControl extends Component {
 
   render() {
     return (
-        <FormGroup controlId={this.props.controlId}>
-          <FormLabel>{this.props.label}</FormLabel>
-          <ParametersEditor content={this.state.widget[this.props.controlId] || {}} onChange={(v)=> this.handleChange(v)} />
-        </FormGroup>
+        <Form.Group controlId={this.props.controlId}>
+          <Form.Label>{this.props.label}</Form.Label>
+          <ParametersEditor
+            content={this.state.widget[this.props.controlId] || {}}
+            onChange={(v)=> this.handleChange(v)}
+          />
+        </Form.Group>
     );
   }
 }

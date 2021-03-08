@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, Table, FormLabel, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Form, Table, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import ColorPicker from './color-picker'
 
 import Icon from '../../common/icon';
@@ -198,11 +198,18 @@ class EditWidgetColorZonesControl extends React.Component {
       height: '40px',
       marginTop: '20px'
     }
-    
-    return <FormGroup>
-      <FormLabel>Color zones</FormLabel>
+
+    return <Form.Group>
+      <Form.Label>Color Zones</Form.Label>
       <span className='icon-button'>
-      <Button variant='light' onClick={this.addZone} style={buttonStyle} disabled={!this.props.widget.customProperties.colorZones}><Icon icon="plus" className='icon-color' style={iconStyle} /></Button>
+        <Button
+          variant='light'
+          onClick={this.addZone}
+          style={buttonStyle}
+          disabled={!this.props.widget.customProperties.colorZones}
+        >
+          <Icon icon="plus" className='icon-color' style={iconStyle} />
+        </Button>
       </span>
     <div>
       {
@@ -222,44 +229,43 @@ class EditWidgetColorZonesControl extends React.Component {
           )
 
       }
-      </div>
-      <Collapse isOpened={collapse} >
-      <OverlayTrigger key={0} placement={'right'} overlay={<Tooltip id={`tooltip-${"color"}`}>Change color</Tooltip>} >
-        <Button key={0} style={pickerStyle} onClick={this.openColorPicker.bind(this)}  >
-          <Icon icon="paint-brush"/>
-        </Button>
-        </OverlayTrigger>
-        <Table>
-        <tbody>
-          <tr>
-            <td>
-              Min:
-              <FormControl
-                type="number"
-                step="any"
-                placeholder="Min"
-                value={this.state.minValue}
-                onChange={e => this.handleMinChange(e)} />
-            </td>
-            <td>
-              Max:
-              <FormControl
-                type="number"
-                step="any"
-                placeholder="Max"
-                value={ this.state.maxValue}
-                onChange={e => this.handleMaxChange(e)} />
-            </td>
-          </tr>
-        </tbody>
-      </Table>
-      <span className='icon-button'>
-      <Button variant='light' onClick={this.removeZones} ><Icon style={iconStyle} classname='icon-color' icon="trash-alt" /></Button>
-      </span>
+    </div>
+      <Collapse isOpened={collapse}>
+        <OverlayTrigger key={0} placement={'right'} overlay={<Tooltip id={`tooltip-${"color"}`}>Change color</Tooltip>} >
+          <Button key={0} style={pickerStyle} onClick={this.openColorPicker.bind(this)}  >
+            <Icon icon="paint-brush"/>
+          </Button>
+          </OverlayTrigger>
+          <Table>
+          <tbody>
+            <tr>
+              <td>
+                Min:
+                <Form.Control
+                  type="number"
+                  step="any"
+                  placeholder="Min"
+                  value={this.state.minValue}
+                  onChange={e => this.handleMinChange(e)} />
+              </td>
+              <td>
+                Max:
+                <Form.Control
+                  type="number"
+                  step="any"
+                  placeholder="Max"
+                  value={ this.state.maxValue}
+                  onChange={e => this.handleMaxChange(e)} />
+              </td>
+            </tr>
+          </tbody>
+        </Table>
+        <span className='icon-button'>
+          <Button variant='light' onClick={this.removeZones} ><Icon style={iconStyle} classname='icon-color' icon="trash-alt" /></Button>
+        </span>
       </Collapse>
-      
       <ColorPicker show={this.state.showColorPicker} onClose={(data) => this.closeEditModal(data)} widget={this.state.widget} zoneIndex={this.state.selectedIndex} controlId={'strokeStyle'} />
-    </FormGroup>;
+    </Form.Group>;
   }
 }
 

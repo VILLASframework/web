@@ -15,6 +15,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 import React from 'react';
+import { Form } from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
 import ReactJson from 'react-json-view';
 
@@ -46,16 +47,16 @@ class ResultConfigDialog extends React.Component {
         size="lg"
         blendOutCancel={true}
       >
-        <form>
-            <ReactJson
-              src={this.props.configs}
-              name={false}
-              displayDataTypes={false}
-              displayObjectSize={false}
-              enableClipboard={false}
-              collapsed={false}
-            />
-        </form>
+        <Form>
+          <ReactJson
+            src={this.props.configs}
+            name={false}
+            displayDataTypes={false}
+            displayObjectSize={false}
+            enableClipboard={false}
+            collapsed={false}
+          />
+        </Form>
       </Dialog>
     );
   }

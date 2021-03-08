@@ -16,6 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
+import { Form } from 'react-bootstrap';
 import Dialog from '../../common/dialogs/dialog';
 import CreateControls from './edit-widget-control-creator';
 
@@ -174,10 +175,17 @@ class EditWidgetDialog extends React.Component {
     }
 
     return (
-      <Dialog show={this.props.show} title="Edit Widget" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
-        <form encType='multipart/form-data'>
+      <Dialog
+        show={this.props.show}
+        title="Edit Widget"
+        buttonTitle="Save"
+        onClose={(c) => this.onClose(c)}
+        onReset={() => this.resetState()}
+        valid={this.valid}
+      >
+        <Form encType='multipart/form-data'>
           { controls || '' }
-        </form>
+        </Form>
       </Dialog>
     );
   }

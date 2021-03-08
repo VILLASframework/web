@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import {FormGroup, FormControl, FormLabel, Col} from 'react-bootstrap';
+import { Form, Col } from 'react-bootstrap';
 
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
@@ -76,20 +76,26 @@ class EditScenarioDialog extends React.Component {
   };
 
   render() {
-    return <Dialog show={this.props.show} title='Edit Scenario' buttonTitle='Save' onClose={this.onClose} onReset={this.resetState} valid={true}>
-      <form>
-        <FormGroup as={Col} controlId='name'>
-          <FormLabel column={false}>Name</FormLabel>
-          <FormControl type='text' placeholder='Enter name' value={this.state.name} onChange={this.handleChange} />
-          <FormControl.Feedback />
-        </FormGroup>
+    return <Dialog
+      show={this.props.show}
+      title='Edit Scenario'
+      buttonTitle='Save'
+      onClose={this.onClose}
+      onReset={this.resetState}
+      valid={true}
+    >
+      <Form>
+        <Form.Group as={Col} controlId='name'>
+          <Form.Label column={false}>Name</Form.Label>
+          <Form.Control type='text' placeholder='Enter name' value={this.state.name} onChange={this.handleChange} />
+          <Form.Control.Feedback />
+        </Form.Group>
 
-        <FormGroup as={Col} controlId='startParameters'>
-          <FormLabel column={false}>Start Parameters</FormLabel>
-
+        <Form.Group as={Col} controlId='startParameters'>
+          <Form.Label column={false}>Start Parameters</Form.Label>
           <ParametersEditor content={this.state.startParameters} onChange={this.handleStartParametersChange} />
-        </FormGroup>
-      </form>
+        </Form.Group>
+      </Form>
     </Dialog>;
   }
 }

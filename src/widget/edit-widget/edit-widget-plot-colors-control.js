@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, OverlayTrigger, Tooltip , FormLabel, Button } from 'react-bootstrap';
+import { OverlayTrigger, Tooltip , Button } from 'react-bootstrap';
 import ColorPicker from './color-picker'
 import Icon from "../../common/icon";
 import {scaleOrdinal} from "d3-scale";
@@ -80,33 +80,40 @@ class EditWidgetPlotColorsControl extends Component {
   render() {
 
     return (
-      <FormGroup>
-        <FormLabel>Line Colors</FormLabel>
+      <Form.Group>
+        <Form.Label>Line Colors</Form.Label>
+          <div>
+              {
+                this.state.widget.signalIDs.map((signalID, idx) => {
+                  let color = this.state.widget.customProperties.lineColors[signalID];
+                  let width = 260 / this.state.widget.signalIDs.length;
+                  let style = {
+                      backgroundColor: color,
+                      width: width,
+                      height: '40px'
+                  }
 
-            <div>
-                {
-                    this.state.widget.signalIDs.map((signalID, idx) => {
-                        let color = this.state.widget.customProperties.lineColors[signalID];
-                        let width = 260 / this.state.widget.signalIDs.length;
-                        let style = {
-                            backgroundColor: color,
-                            width: width,
-                            height: '40px'
-                        }
+                  let signal = this.props.signals.find(signal => signal.id === signalID);
 
-                        let signal = this.props.signals.find(signal => signal.id === signalID);
-
-                        return (<OverlayTrigger key={idx} placement={'bottom'} overlay={<Tooltip id={'tooltip-${"signal name"}'}>{signal.name}</Tooltip>}>
-                          <Button
-                            style={style} key={idx} onClick={i => this.editLineColor(signalID)} ><Icon icon="pen" /></Button>
-                            </OverlayTrigger>
-                        )
-                    })
-                }
+                  return <OverlayTrigger
+                    key={idx}
+                    placement={'bottom'}
+                    overlay={<Tooltip id={'tooltip-${"signal name"}'}>{signal.name}</Tooltip>}
+                  >
+                    <Button
+                      style={style}
+                      key={idx}
+                      onClick={i => this.editLineColor(signalID)}
+                    >
+                      <Icon icon="pen" />
+                    </Button>
+                  </OverlayTrigger>;
+                })
+              }
             </div>
 
         <ColorPicker show={this.state.showColorPicker} onClose={(data) => this.closeEditModal(data)} widget={this.state.widget} lineIndex={this.state.selectedIndex} controlId={'lineColor'} disableOpacity={true}/>
-      </FormGroup>
+      </Form.Group>
 
     )
   }

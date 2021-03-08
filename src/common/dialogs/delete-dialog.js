@@ -16,8 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Button, Modal, FormLabel } from 'react-bootstrap';
-import {Collapse} from 'react-collapse';
+import { Button, Modal, Form } from 'react-bootstrap';
 
 class DeleteDialog extends React.Component {
     onModalKeyPress = (event) => {
@@ -37,7 +36,7 @@ class DeleteDialog extends React.Component {
             <Modal.Body>
                 Are you sure you want to delete the {this.props.title} <strong>'{this.props.name}'</strong>?
                 <Collapse isOpened={this.props.managedexternally} >
-                    <FormLabel size="sm">The IC will be deleted if the respective manager sends "gone" state and no component config is using the IC anymore</FormLabel>
+                    <Form.Label size="sm">The IC will be deleted if the respective manager sends "gone" state and no component config is using the IC anymore</Form.Label>
                 </Collapse>
             </Modal.Body>
 

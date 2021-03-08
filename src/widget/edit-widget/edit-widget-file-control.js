@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import {FormGroup, FormControl, FormLabel} from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 class EditFileWidgetControl extends React.Component {
 
@@ -59,13 +59,13 @@ class EditFileWidgetControl extends React.Component {
     }
 
     return <div>
-      <FormGroup controlId="file">
-        <FormLabel>File</FormLabel>
-        <FormControl
+      <Form.Group controlId="file">
+        <Form.Label>File</Form.Label>
+        <Form.Control
           as="select"
           value={isCustomProperty ? this.props.widget[parts[0]][parts[1]] : this.props.widget[this.props.controlId]}
-          onChange={(e) => this.handleFileChange(e)}>{fileOptions} </FormControl>
-      </FormGroup>
+          onChange={(e) => this.handleFileChange(e)}>{fileOptions} </Form.Control>
+      </Form.Group>
     </div>;
   }
 }

@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Form, SplitButton, Dropdown, FormControl } from 'react-bootstrap';
+import { Form, SplitButton, Dropdown } from 'react-bootstrap';
 import AppDispatcher from "../common/app-dispatcher";
 import NotificationsFactory from "../common/data-managers/notifications-factory";
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
@@ -228,10 +228,11 @@ class ICAction extends React.Component {
 
     return <div>
             <Form inline>
-              <FormControl
+              <Form.Control
                 type="datetime-local"
                 value={time}
-                onChange={this.setTimeForAction} />
+                onChange={this.setTimeForAction}
+              />
               <SplitButton
                   style={splitButtonStyle}
                   title={this.state.selectedAction != null ? this.state.selectedAction.title : ''}

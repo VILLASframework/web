@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, FormLabel, Col, Row, Button, ProgressBar } from 'react-bootstrap';
+import { Form, Col, Row, Button, ProgressBar } from 'react-bootstrap';
 import AppDispatcher from "../common/app-dispatcher";
 import FileStore from "../file/file-store"
 
@@ -131,76 +131,88 @@ class EditResultDialog extends React.Component {
   }
 
   render() {
-
-    return <Dialog show={this.props.show}
+    return <Dialog
+      show={this.props.show}
       title={'Edit Result No. ' + this.state.id}
       buttonTitle='Close'
       onClose={() => this.onClose()}
       blendOutCancel={true}
       valid={true}
-      size='lg'>
+    >
+      <Form.Group as={Col} controlId='description'>
+        <Row style={{ float: 'center' }} >
+          <Col xs lg="2">
+            <Form.Label>Description</Form.Label>
+          </Col>
+          <Col xs lg="4">
+            <Form.Control
+              type='text'
+              placeholder={this.state.description}
+              value={this.state.description}
+              onChange={this.handleChange}
+            />
+            <Form.Control.Feedback />
+          </Col>
+          <Col xs lg="2">
+            <Button
+              type="submit"
+              onClick={() => this.submitDescription()}>
+              Save
+          </Button>
+          </Col>
+        </Row>
+      </Form.Group>
 
+      <Table data={this.state.files}>
+        <TableColumn
+          title='ID'
+          dataKey='id'
+        />
+        <TableColumn
+          title='Name'
+          dataKey='name'
+        />
+        <TableColumn
+          title='Size (bytes)'
+          dataKey='size'
+        />
+        <TableColumn
+          title='Type'
+          dataKey='type'
+        />
+        <TableColumn
+          title=''
+          deleteButton
+          onDelete={(index) => this.deleteFile(index)}
+        />
+      </Table>
 
-      <div>
-        <FormGroup as={Col} controlId='description'>
-          <Row style={{ float: 'center' }} >
-            <Col xs lg="2">
-              <FormLabel>Description</FormLabel>
-            </Col>
-            <Col xs lg="4">
-              <FormControl type='text' placeholder={this.state.description} value={this.state.description} onChange={this.handleChange} />
-              <FormControl.Feedback />
-            </Col>
-            <Col xs lg="2">
-              <Button
-                type="submit"
-                onClick={() => this.submitDescription()}>
-                Save
-            </Button>
-            </Col>
-          </Row>
-        </FormGroup>
-
-        <Table data={this.state.files}>
-          <TableColumn title='ID' dataKey='id' />
-          <TableColumn title='Name' dataKey='name' />
-          <TableColumn title='Size (bytes)' dataKey='size' />
-          <TableColumn title='Type' dataKey='type' />
-          <TableColumn
-            title=''
-            deleteButton
-            onDelete={(index) => this.deleteFile(index)}
-          />
-        </Table>
-
-        <div style={{ float: 'center' }}>
-          <h5>Add result file</h5>
-          <Row>
-            <Col xs lg="4">
-              <FormControl type='file' onChange={(event) => this.selectUploadFile(event)} />
-            </Col>
-            <Col xs lg="2">
-              <Button
-                disabled={this.state.uploadFile === null}
-                onClick={() => this.startFileUpload()}>
-                Upload
-            </Button>
-            </Col>
-          </Row>
-        </div>
-
-        <br></br>
-
-        <FormGroup as={Col} >
-          <ProgressBar
-            striped={true}
-            animated={true}
-            now={this.state.uploadProgress}
-            label={this.state.uploadProgress + '%'}
-          />
-        </FormGroup>
-
+      <div style={{ float: 'center' }}>
+        <h5>Add result file</h5>
+        <Row>
+          <Col xs lg="4">
+            <Form.Control type='file' onChange={(event) => this.selectUploadFile(event)} />
+          </Col>
+          <Col xs lg="2">
+            <Button
+              disabled={this.state.uploadFile === null}
+              onClick={() => this.startFileUpload()}>
+              Upload
+          </Button>
+          </Col>
+        </Row>
       </div>
+
+      <br />
+
+      <Form.Group as={Col} >
+        <ProgressBar
+          striped={true}
+          animated={true}
+          now={this.state.uploadProgress}
+          label={this.state.uploadProgress + '%'}
+        />
+      </Form.Group>
     </Dialog>;
   }
 }

@@ -17,8 +17,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button, FormGroup, FormLabel, FormText, OverlayTrigger, Tooltip} from 'react-bootstrap';
-import {Collapse} from 'react-collapse';
+import { Button, Form, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
 import Dialog from "../common/dialogs/dialog";
@@ -228,52 +227,107 @@ class EditSignalMapping extends React.Component {
         marginLeft: '10px',
       };
 
-      return(
+      return <Dialog
+        show={this.props.show}
+        title="Edit Signal Mapping"
+        buttonTitle="Save"
+        blendOutCancel = {false}
+        onClose={(c) => this.onClose(c)}
+        onReset={() => this.resetState()}
+        valid={true}
+      >
+        <Form.Group>
+          <Form.Label>{this.props.direction} Mapping</Form.Label>
+          <Form.Text>Click <i>Index</i>, <i>Name</i> or <i>Unit</i> cell to edit</Form.Text>
+          <Table checkbox onChecked={(signal) => this.onSignalChecked(signal)} data={this.state.signals}>
+              <TableColumn
+                checkbox
+                onChecked={(index, event) => this.onSignalChecked(index, event)}
+                checkboxKey='checked'
+                width='30'
+              />
+              <TableColumn
+                title='Index'
+                dataKey='index'
+                inlineEditable
+                inputType='number'
+                onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)}
+              />
+              <TableColumn
+                title='Name'
+                dataKey='name'
+                inlineEditable
+                inputType='text'
+                onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)}
+              />
+              <TableColumn
+                title='Unit'
+                dataKey='unit'
+                inlineEditable
+                inputType='text'
+                onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)}
+              />
+              <TableColumn
+                title='Scaling Factor'
+                dataKey='scalingFactor'
+                inlineEditable
+                inputType='number'
+                onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)}
+              />
+              <TableColumn
+                title='Remove'
+                deleteButton
+                onDelete={(index) => this.handleDelete(index)}
+              />
+          </Table>
 
-        <Dialog
-          show={this.props.show}
-          title="Edit Signal Mapping"
-          buttonTitle="Save"
-          blendOutCancel = {false}
-          onClose={(c) => this.onClose(c)}
-          onReset={() => this.resetState()}
-          valid={true}
-          size='lg'>
-
-          <FormGroup>
-              <FormLabel>{this.props.direction} Mapping</FormLabel>
-              <FormText>Click <i>Index</i>, <i>Name</i> or <i>Unit</i> cell to edit</FormText>
-              <Table checkbox onChecked={(signal) => this.onSignalChecked(signal)} data={this.state.signals}>
-                  <TableColumn checkbox onChecked={(index, event) => this.onSignalChecked(index, event)} checkboxKey='checked' width='30' />
-                  <TableColumn title='Index' dataKey='index' inlineEditable inputType='number' onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
-                  <TableColumn title='Name' dataKey='name' inlineEditable inputType='text' onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
-                  <TableColumn title='Unit' dataKey='unit' inlineEditable inputType='text' onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
-                  <TableColumn title='Scaling Factor' dataKey='scalingFactor' inlineEditable inputType='number' onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)} />
-                  <TableColumn title='Remove' deleteButton onDelete={(index) => this.handleDelete(index)} />
-              </Table>
-
-              <div className='solid-button' style={{ float: 'right' }}>
-              <OverlayTrigger key={0} placement={'left'} overlay={<Tooltip id={`tooltip-${"check"}`}> Check/Uncheck All </Tooltip>} >
-                <Button  variant='secondary' key={50} onClick={() => this.checkAll()} style={buttonStyle}> <Icon icon="check" />  </Button>
-              </OverlayTrigger>
-                <Button  variant='secondary' key={51} onClick={() => this.handleRemove()} style={buttonStyle}> Remove </Button>
-                <Button  variant='secondary' key={52} onClick={() => this.handleAdd()} style={buttonStyle}><Icon icon="plus" /> Signal </Button>
+          <div className='solid-button' style={{ float: 'right' }}>
+            <OverlayTrigger
+              key={0}
+              placement='left'
+              overlay={<Tooltip id={`tooltip-${"check"}`}> Check/Uncheck All </Tooltip>}
+            >
+              <Button
+                variant='secondary'
+                key={50}
+                onClick={() => this.checkAll()}
+                style={buttonStyle}
+              >
+                <Icon icon="check" />
+              </Button>
+            </OverlayTrigger>
+            <Button
+              variant='secondary'
+              key={51}
+              onClick={() => this.handleRemove()} style={buttonStyle}>
+              <Icon icon="minus" />Remove
+            </Button>
+            <Button
+              variant='secondary'
+              key={52}
+              onClick={() => this.handleAdd()} style={buttonStyle}>
+                <Icon icon="plus" /> Signal
+            </Button>
+          </div>
+          <div>
+            <Collapse isOpened={this.state.openCollapse}>
+              <h6>Choose a Component Configuration to add the signal to: </h6>
+              <div className='solid-button'>
+              {typeof this.props.configs !== "undefined" && this.props.configs.map(config => (
+                <Button
+                  variant='secondary'
+                  key={config.id}
+                  onClick={() => this.handleAdd(config.id)}
+                  style={buttonStyle}
+                >
+                  {config.name}
+                </Button>
+              ))}
               </div>
-              <div>
-                <Collapse isOpened={this.state.openCollapse}>
-                <h6>Choose a Component Configuration to add the signal to: </h6>
-                <div className='solid-button'>
-                {typeof this.props.configs !== "undefined" && this.props.configs.map(config => (
-
-                  <Button variant='secondary' key ={config.id} onClick={() => this.handleAdd(config.id)} style={buttonStyle}>{config.name}</Button>
-
-                ))}
-                </div>
-                </Collapse>
-              </div>
-          </FormGroup>
-        </Dialog>
-  );
+            </Collapse>
+          </div>
+        </Form.Group>
+      </Dialog>;
   }
 }
 

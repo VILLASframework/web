@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-import { Form, FormGroup, Col, FormLabel, FormControl, InputGroup } from 'react-bootstrap';
+import { Form, Col, InputGroup } from 'react-bootstrap';
 
 class WidgetInput extends Component {
 
@@ -87,13 +87,13 @@ class WidgetInput extends Component {
     return (
       <div className="number-input-widget full">
           <Form componentclass="fieldset" horizontal="true">
-              <FormGroup>
-                  <Col as={FormLabel}>
+              <Form.Group>
+                  <Col as={Form.Label}>
                     {this.props.widget.name}
                   </Col>
                   <Col>
                     <InputGroup>
-                      <FormControl
+                      <Form.Control
                         type="number"
                         step="any"
                         disabled={ this.props.editing }
@@ -112,7 +112,7 @@ class WidgetInput extends Component {
                     )}
                     </InputGroup>
                   </Col>
-                </FormGroup>
+                </Form.Group>
             </Form>
       </div>
     );

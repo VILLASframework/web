@@ -16,7 +16,7 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 class EditWidgetSignalControl extends Component {
   constructor(props) {
@@ -48,9 +48,9 @@ class EditWidgetSignalControl extends Component {
   render() {
 
     return (
-        <FormGroup controlId="signal">
-          <FormLabel>Select signal</FormLabel>
-          <FormControl as="select" value={this.props.widget.signalIDs[0] || ""} onChange={(e) => this.handleSignalChange(e)}>
+        <Form.Group controlId="signal">
+          <Form.Label>Select signal</Form.Label>
+          <Form.Control as="select" value={this.props.widget.signalIDs[0] || ""} onChange={(e) => this.handleSignalChange(e)}>
           <option default>Select signal</option>
             {
               this.state.signals.length === 0 ? (
@@ -61,8 +61,8 @@ class EditWidgetSignalControl extends Component {
                 ))
               )
             }
-          </FormControl>
-        </FormGroup>
+          </Form.Control>
+        </Form.Group>
     );
   }
 }

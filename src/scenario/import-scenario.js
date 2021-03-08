@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import {FormGroup, FormControl, FormLabel, Col} from 'react-bootstrap';
+import { Form, Col } from 'react-bootstrap';
 
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
@@ -93,26 +93,32 @@ class ImportScenarioDialog extends React.Component {
   }
 
   render() {
-    return <Dialog show={this.props.show} title="Import Scenario" buttonTitle="Import" onClose={this.onClose} onReset={this.resetState} valid={this.valid}>
-      <form>
-        <FormGroup as={Col} controlId="file">
-          <FormLabel>Scenario File</FormLabel>
-          <FormControl type="file" onChange={this.loadFile} />
-        </FormGroup>
+    return <Dialog
+      show={this.props.show}
+      title="Import Scenario"
+      buttonTitle="Import"
+      onClose={this.onClose}
+      onReset={this.resetState}
+      valid={this.valid}
+    >
+      <Form>
+        <Form.Group as={Col} controlId="file">
+          <Form.Label>Scenario File</Form.Label>
+          <Form.Control type="file" onChange={this.loadFile} />
+        </Form.Group>
 
-        <FormGroup as={Col} controlId="name">
-          <FormLabel>Name</FormLabel>
-          <FormControl readOnly={this.imported === false} type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
-          <FormControl.Feedback />
-        </FormGroup>
+        <Form.Group as={Col} controlId="name">
+          <Form.Label>Name</Form.Label>
+          <Form.Control readOnly={this.imported === false} type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+          <Form.Control.Feedback />
+        </Form.Group>
 
-        <FormGroup as={Col}>
-          <FormLabel>Start Parameters</FormLabel>
+        <Form.Group as={Col}>
+          <Form.Label>Start Parameters</Form.Label>
 
           <ParametersEditor content={this.state.startParameters} onChange={this.handleStartParametersChange} disabled={this.imported === false} />
-        </FormGroup>
-
-      </form>
+        </Form.Group>
+      </Form>
     </Dialog>;
   }
 }

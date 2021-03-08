@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import {FormGroup, FormControl, Button, Col, ProgressBar} from 'react-bootstrap';
+import { Form, Button, Col, ProgressBar } from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
 import AppDispatcher from "../common/app-dispatcher";
 import Table from "../common/table";
@@ -107,76 +107,81 @@ class EditFilesDialog extends React.Component {
     };
 
     return (
-      <Dialog show={this.props.show} title="Edit Files of scenario" buttonTitle="Close" onClose={() => this.onClose()} blendOutCancel = {true} valid={true} size = 'lg'>
-        <div>
-
-          <Table data={this.props.files}>
-            {this.state.currentUser.role === "Admin" ?
-              <TableColumn
-                title='ID'
-                dataKey='id'
-              />
-              : <></>
-            }
+      <Dialog
+        show={this.props.show}
+        title="Edit Files of Scenario"
+        buttonTitle="Close"
+        onClose={() => this.onClose()}
+        blendOutCancel = {true}
+        valid={true}
+      >
+        <Table data={this.props.files}>
+          {this.state.currentUser.role === "Admin" ?
             <TableColumn
-              title='Name'
-              dataKey='name'
+              title='ID'
+              dataKey='id'
             />
-            <TableColumn
-              title='Size (bytes)'
-              dataKey='size'
-            />
-            <TableColumn
-              title='Type'
-              dataKey='type'
-            />
-            <TableColumn
-              title=''
-              align='right'
-              deleteButton
-              onDelete={(index) => this.deleteFile(index)}
-              editButton
-              onEdit={index => this.setState({ editModal: true, modalFile: this.props.files[index] })}
-            />
-          </Table>
-
-          <FormGroup as={Col} >
-            <FormControl
-              disabled={this.props.disabled}
-              type='file'
-              onChange={(event) => this.selectUploadFile(event)}
-            />
-          </FormGroup>
-
-          <FormGroup as={Col} >
-            <span className='solid-button'>
-              <Button
-                variant='secondary'
-                disabled={this.state.uploadFile === null}
-                onClick={() => this.startFileUpload()}>
-                Upload
-              </Button>
-            </span>
-          </FormGroup>
-
-          <FormGroup as={Col} >
-            <ProgressBar
-              striped={true}
-              animated={true}
-              now={this.state.uploadProgress}
-              label={this.state.uploadProgress + '%'}
-              style={progressBarStyle}
-            />
-          </FormGroup>
-          <div style={{ clear: 'both' }} />
-
-          <EditFileContent
-            show={this.state.editModal}
-            onClose={(data) => this.closeEditModal(data)}
-            sessionToken={this.props.sessionToken}
-            file={this.state.modalFile}
+            : <></>
+          }
+          <TableColumn
+            title='Name'
+            dataKey='name'
           />
-         </div>
+          <TableColumn
+            title='Size (bytes)'
+            dataKey='size'
+          />
+          <TableColumn
+            title='Type'
+            dataKey='type'
+          />
+          <TableColumn
+            title=''
+            align='right'
+            deleteButton
+            onDelete={(index) => this.deleteFile(index)}
+            editButton
+            onEdit={index => this.setState({ editModal: true, modalFile: this.props.files[index] })}
+          />
+        </Table>
+
+        <Form.Group as={Col} >
+          <Form.Control
+            disabled={this.props.disabled}
+            type='file'
+            onChange={(event) => this.selectUploadFile(event)}
+          />
+        </Form.Group>
+
+        <Form.Group as={Col} >
+          <span className='solid-button'>
+            <Button
+              variant='secondary'
+              disabled={this.state.uploadFile === null}
+              onClick={() => this.startFileUpload()}>
+              Upload
+            </Button>
+          </span>
+        </Form.Group>
+
+        <Form.Group as={Col} >
+          <ProgressBar
+            striped={true}
+            animated={true}
+            now={this.state.uploadProgress}
+            label={this.state.uploadProgress + '%'}
+            style={progressBarStyle}
+          />
+        </Form.Group>
+
+        <div style={{ clear: 'both' }} />
+
+        <EditFileContent
+          show={this.state.editModal}
+          onClose={(data) => this.closeEditModal(data)}
+          sessionToken={this.props.sessionToken}
+          file={this.state.modalFile}
+        />
       </Dialog>
     );
   }

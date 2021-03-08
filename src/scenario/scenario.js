@@ -17,7 +17,7 @@
 
 import React from 'react';
 import { Container } from 'flux/utils';
-import { Button, InputGroup, FormControl } from 'react-bootstrap';
+import { Button, InputGroup, Form } from 'react-bootstrap';
 
 import FileSaver from 'file-saver';
 

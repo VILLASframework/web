@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, FormLabel, Button, Col, ProgressBar } from 'react-bootstrap';
+import { Form, Button, Col, ProgressBar } from 'react-bootstrap';
 import AppDispatcher from '../common/app-dispatcher';
 
 class SelectFile extends React.Component {
@@ -88,39 +88,39 @@ class SelectFile extends React.Component {
       };
 
       return <div>
-          <FormGroup>
-              <FormLabel sm={3} md={2}>
+          <Form.Group>
+              <Form.Label sm={3} md={2}>
                   {this.props.name}
-              </FormLabel>
+              </For.m.Label>
 
-              <FormGroup as={Col} sm={9} md={10}>
-                  <FormControl
+              <Form.Group as={Col} sm={9} md={10}>
+                  <Form.Control
                     as="select"
                     value={this.props.value}
                     disabled={this.props.disabled}
                     placeholder='Select file'
                     onChange={(event) => this.props.onChange(event)}>
                       {fileOptions}
-                  </FormControl>
-              </FormGroup>
-          </FormGroup>
+                  </Form.Control>
+              </Form.Group>
+          </Form.Group>
 
-          <FormGroup as={Col} >
-                  <FormControl
+          <Form.Group as={Col} >
+                  <Form.Control
                     disabled={this.props.disabled}
                     type='file'
                     onChange={(event) => this.selectUploadFile(event)} />
-          </FormGroup>
+          </Form.Group>
 
-          <FormGroup as={Col} >
+          <Form.Group as={Col} >
                   <Button
                     disabled={this.state.uploadFile === null}
                     onClick={() => this.startFileUpload()}>
                     Upload
                   </Button>
-          </FormGroup>
+          </Form.Group>
 
-        <FormGroup as={Col} >
+        <Form.Group as={Col} >
           <ProgressBar
             striped={true}
             animated={true}
@@ -128,7 +128,7 @@ class SelectFile extends React.Component {
             label={this.state.uploadProgress + '%'}
             style={progressBarStyle}
           />
-        </FormGroup>
+        </Form.Group>
 
       </div>;
   }

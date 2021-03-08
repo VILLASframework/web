@@ -16,7 +16,7 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 class EditWidgetNumberControl extends Component {
   constructor(props) {
@@ -48,14 +48,14 @@ class EditWidgetNumberControl extends Component {
     }
 
     return (
-        <FormGroup controlId={this.props.controlId}>
-          <FormLabel>{this.props.label}</FormLabel>
-          <FormControl
+        <Form.Group controlId={this.props.controlId}>
+          <Form.Label>{this.props.label}</Form.Label>
+          <Form.Control
             type="number"
             step={step}
             value={isCustomProperty ? this.state.widget[parts[0]][parts[1]] : this.state.widget[this.props.controlId]}
             onChange={e => this.props.handleChange(e)} />
-        </FormGroup>
+        </Form.Group>
     );
   }
 }

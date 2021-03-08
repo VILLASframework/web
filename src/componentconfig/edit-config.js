@@ -16,8 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import {FormGroup, FormControl, FormLabel} from 'react-bootstrap';
-import  { Multiselect } from 'multiselect-react-dropdown'
+import { Form } from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
 
@@ -141,29 +140,29 @@ class EditConfigDialog extends React.Component {
         onReset={() => this.resetState()}
         valid={this.valid}
       >
-        <form>
-          <FormGroup controlId="name">
-            <FormLabel column={false}>Name</FormLabel>
-            <FormControl
+        <Form>
+          <Form.Group controlId="name">
+            <Form.Label column={false}>Name</Form.Label>
+            <Form.Control
               type="text"
               placeholder={this.props.config.name}
               value={this.state.name}
               onChange={(e) => this.handleChange(e)}
             />
-            <FormControl.Feedback />
-          </FormGroup>
+            <Form.Control.Feedback />
+          </Form.Group>
 
-          <FormGroup controlId="icID">
-            <FormLabel column={false}> Infrastructure Component </FormLabel>
-            <FormControl
+          <Form.Group controlId="icID">
+            <Form.Label column={false}> Infrastructure Component </Form.Label>
+            <Form.Control
               as="select"
               placeholder='Select infrastructure component'
               value={this.state.icID}
               onChange={(e) => this.handleChange(e)}
             >
               {ICOptions}
-            </FormControl>
-          </FormGroup>
+            </Form.Control>
+          </Form.Group>
 
           <Multiselect
             options={configFileOptions}
@@ -175,14 +174,14 @@ class EditConfigDialog extends React.Component {
             placeholder={'Select file(s)...'}
           />
 
-          <FormGroup controlId='startParameters'>
-            <FormLabel> Start Parameters </FormLabel>
+          <Form.Group controlId='startParameters'>
+            <Form.Label> Start Parameters </Form.Label>
             <ParametersEditor
               content={this.state.startParameters}
               onChange={(data) => this.handleParameterChange(data)}
             />
-          </FormGroup>
-        </form>
+          </Form.Group>
+        </Form>
       </Dialog>
     );
   }
