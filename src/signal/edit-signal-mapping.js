@@ -25,7 +25,7 @@ import Dialog from "../common/dialogs/dialog";
 import Icon from "../common/icon";
 import AppDispatcher from "../common/app-dispatcher";
 
-class EditSignalMapping extends React.Component {
+class EditSignalMappingDialog extends React.Component {
 
   constructor(props) {
     super(props);
@@ -320,7 +320,7 @@ class EditSignalMapping extends React.Component {
   }
 }
 
-EditSignalMapping.propTypes = {
+EditSignalMappingDialog.propTypes = {
     name: PropTypes.string,
     length: PropTypes.number,
     signals: PropTypes.arrayOf(
@@ -336,4 +336,4 @@ EditSignalMapping.propTypes = {
     onChange: PropTypes.func
 };
 
-export default EditSignalMapping;
+export default EditSignalMappingDialog;

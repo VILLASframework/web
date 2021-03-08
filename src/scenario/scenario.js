@@ -45,7 +45,7 @@ import ResultConfigDialog from '../result/result-configs-dialog';
 import ICAction from '../ic/ic-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
 import EditConfigDialog from "../componentconfig/edit-config";
-import EditSignalMapping from "../signal/edit-signal-mapping";
+import EditSignalMappingDialog from "../signal/edit-signal-mapping";
 import FileStore from "../file/file-store"
 import WidgetStore from "../widget/widget-store";
 import ResultStore from "../result/result-store"
@@ -855,11 +855,18 @@ class Scenario extends React.Component {
         files={this.state.files}
         sessionToken={this.state.sessionToken}
       />
-
-      <ImportConfigDialog show={this.state.importConfigModal} onClose={data => this.importConfig(data)} ics={this.state.ics} />
-      <DeleteDialog title="component configuration" name={this.state.modalConfigData.name} show={this.state.deleteConfigModal} onClose={(c) => this.closeDeleteConfigModal(c)} />
-
-      <EditSignalMapping
+      <ImportConfigDialog
+        show={this.state.importConfigModal}
+        onClose={data => this.importConfig(data)}
+        ics={this.state.ics}
+      />
+      <DeleteDialog
+        title="component configuration"
+        name={this.state.modalConfigData.name}
+        show={this.state.deleteConfigModal}
+        onClose={(c) => this.closeDeleteConfigModal(c)}
+      />
+      <EditSignalMappingDialog
         show={this.state.editOutputSignalsModal}
         onCloseEdit={(direction) => this.closeEditSignalsModal(direction)}
         direction="Output"
@@ -867,7 +874,7 @@ class Scenario extends React.Component {
         configID={this.state.modalConfigData.id}
         sessionToken={this.state.sessionToken}
       />
-      <EditSignalMapping
+      <EditSignalMappingDialog
         show={this.state.editInputSignalsModal}
         onCloseEdit={(direction) => this.closeEditSignalsModal(direction)}
         direction="Input"

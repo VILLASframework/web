@@ -22,7 +22,7 @@ import classNames from 'classnames';
 
 import EditWidget from '../widget/edit-widget/edit-widget';
 import EditFiles from '../file/edit-files';
-import EditSignalMapping from "../signal/edit-signal-mapping";
+import EditSignalMappingDialog from "../signal/edit-signal-mapping";
 import WidgetContextMenu from '../widget/widget-context-menu';
 import WidgetToolbox from '../widget/widget-toolbox';
 import WidgetArea from '../widget/widget-area';
@@ -569,7 +569,7 @@ class Dashboard extends Component {
           scenarioID={this.state.dashboard.scenarioID}
         />
 
-        <EditSignalMapping
+        <EditSignalMappingDialog
           show={this.state.editOutputSignalsModal}
           onCloseEdit={(direction) => this.closeEditSignalsModal(direction)}
           direction="Output"
@@ -578,7 +578,7 @@ class Dashboard extends Component {
           configs={this.state.configs}
           sessionToken={this.state.sessionToken}
         />
-        <EditSignalMapping
+        <EditSignalMappingDialog
           show={this.state.editInputSignalsModal}
           onCloseEdit={(direction) => this.closeEditSignalsModal(direction)}
           direction="Input"
