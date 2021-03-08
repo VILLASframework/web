@@ -20,7 +20,6 @@ import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import NotificationSystem from 'react-notification-system';
 import { Redirect, Route } from 'react-router-dom';
-import { Col } from 'react-bootstrap';
 import { Hidden } from 'react-grid-system'
 
 import AppDispatcher from './common/app-dispatcher';
@@ -29,8 +28,7 @@ import NotificationsDataManager from './common/data-managers/notifications-data-
 import Home from './common/home';
 import Header from './common/header';
 import Footer from './common/footer';
-import SidebarMenu from './common/menu-sidebar';
-import HeaderMenu from './common/header-menu';
+import Menu from './common/menu';
 
 import InfrastructureComponents from './ic/ics';
 import Dashboard from './dashboard/dashboard';
@@ -51,9 +49,7 @@ class App extends React.Component {
       type: 'config/load',
     });
 
-    this.state = {
-      showSidebarMenu: false,
-    }
+    this.state = {}
   }
 
   componentDidMount() {
@@ -72,14 +68,6 @@ class App extends React.Component {
     }
   }
 
-  showSidebarMenu = () => {
-    this.setState({ showSidebarMenu: true });
-  };
-
-  hideSidebarMenu = () => {
-    this.setState({ showSidebarMenu: false });
-  };
-
   render() {
 
     let token = localStorage.getItem("token");
@@ -92,46 +80,32 @@ class App extends React.Component {
 
     let currentUser = JSON.parse(currentUserRaw);
 
-    return (
-      <DndProvider backend={HTML5Backend} >
-        <div>
-          {/*
-          <Col style={{ width: this.state.showSidebarMenu ? '280px' : '0px' }} smHidden mdHidden lgHidden className="sidenav">
-          */}
-          <Hidden sm md lg xl xxl>
-            <Col style={{ width: this.state.showSidebarMenu ? '280px' : '0px' }} className="sidenav">
-                <HeaderMenu onClose={this.hideSidebarMenu} currentRole={currentUser.role} />
-            </Col>
-          </Hidden>
+    return <DndProvider backend={HTML5Backend} >
+        <div className="app">
+          <NotificationSystem
+            ref="notificationSystem"
+          />
+          <Header />
 
-          <div className="app">
-            <NotificationSystem ref="notificationSystem" />
+          <div className='app-body app-body-spacing'>
+            <Menu currentRole={currentUser.role} />
 
-            <Header onMenuButton={this.showSidebarMenu} showMenuButton={false} />
-
-            <div className={`app-body app-body-spacing`} >
-              <Col xs={false}>
-                <SidebarMenu currentRole={currentUser.role} />
-              </Col>
-
-              <div className={`app-content app-content-margin-left`}>
-                <Route exact path="/" component={Home} />
-                <Route path="/home" component={Home} />
-                <Route exact path="/scenarios" component={Scenarios} />
-                <Route path="/scenarios/:scenario" component={Scenario} />
-                <Route path="/dashboards/:dashboard" component={Dashboard} />
-                <Route path="/infrastructure" component={InfrastructureComponents} />
-                <Route path="/account" component={User} />
-                <Route path="/users" component={Users} />
-                <Route path="/api" component={APIBrowser} />
-              </div>
+            <div className='app-content app-content-margin-left'>
+              <Route exact path="/" component={Home} />
+              <Route path="/home" component={Home} />
+              <Route exact path="/scenarios" component={Scenarios} />
+              <Route path="/scenarios/:scenario" component={Scenario} />
+              <Route path="/dashboards/:dashboard" component={Dashboard} />
+              <Route path="/infrastructure" component={InfrastructureComponents} />
+              <Route path="/account" component={User} />
+              <Route path="/users" component={Users} />
+              <Route path="/api" component={APIBrowser} />
             </div>
-
-            <Footer />
           </div>
+
+          <Footer />
         </div>
-      </DndProvider>
-    )
+    </DndProvider>
   }
 }
 

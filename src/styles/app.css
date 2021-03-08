@@ -30,37 +30,18 @@ body {
   hyphens: auto;
 }
 
-.app-body {
-  /*height: 100%;*/
-}
-
 .app-header {
   width: 100%;
-  height: 60px;
-  padding: 10px 0 0 0;
 
   color: #527984;
   background-color: #fff;
 }
 
 .app-header h1 {
-  width: 100%;
+  padding: 5px 0;
   margin: 0;
-
-  text-align: left;
-}
-
-@media (min-width: 768px) {
-  .app-header h1 {
-    text-align: center !important;
-  }
-}
-
-.app-header .menu-icon {
-  color: #818181;
-  right: 5px;
-
-  padding: 6px 0 0 0;
+  width: 100%;
+  text-align: center;
 }
 
 .btn-link {
@@ -83,12 +64,7 @@ body {
 }
 
 .app-body-spacing {
-  padding: 15px 5px 0px 5px;
-}
-
-.app-body-spacing > div {
-  margin-left: 7px;
-  margin-right: 7px;
+  padding: 20px;
 }
 
 .app-content-fullscreen {
@@ -96,7 +72,7 @@ body {
 }
 
 .app-content {
-  padding: 15px 20px;
+  padding: 15px 20px 20px 20px;
 
   width: auto;
   min-height: 300px;
@@ -106,10 +82,8 @@ body {
               0 9px 18px 0 rgba(0, 0, 0, 0.1);
 }
 
-@media (min-width: 768px) {
-  .app-content-margin-left {
-    margin-left: 195px !important;
-  }
+.app-content-margin-left {
+  margin-left: 180px !important;
 }
 
 .verticalhorizontal {
@@ -122,8 +96,8 @@ body {
 /**
  * Menus
  */
-.menu-sidebar {
-  padding: 20px 25px 20px 25px;
+.menu {
+  padding: 20px;
   width: 160px;
   float: left;
 
@@ -132,12 +106,12 @@ body {
               0 9px 18px 0 rgba(0, 0, 0, 0.1);
 }
 
-.menu-sidebar a {
+.menu a {
   color: #4d4d4d;
   text-decoration:none;
 }
 
-.menu-sidebar a:hover, .menu-sidebar a:focus {
+.menu a:hover, .menu a:focus {
   text-decoration:none;
 }
 
@@ -145,17 +119,17 @@ body {
   font-weight: bold;
 }
 
-.menu-sidebar ul {
+.menu ul {
   padding-top: 10px;
   margin-bottom: 0;
   list-style: none;
   white-space: nowrap;
 }
-.menu-sidebar li {
+.menu li {
   margin: 5px 0;
 }
 
-.menu-sidebar a::after {
+.menu a::after {
   /* Trick to make menu items to be as wide as in bold */
   display: block;
   content: attr(title);
@@ -232,7 +206,7 @@ body {
 /**
  * Login select
  */
- .login-select {
+.login-select {
   position: sticky;
   width: 300px;
   height: 150px;

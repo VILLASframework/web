@@ -65,10 +65,11 @@ class SidebarMenu extends React.Component {
   }
 
   render() {
-    if (this.state.externalAuth) {
-      return (
-        <div className="menu-sidebar">
-          <h2>Menu</h2>
+    return (
+      <div className="menu">
+        <h2>Menu</h2>
+
+        {this.state.externalAuth ?
           <ul>
             <li><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
             <li><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
@@ -80,15 +81,7 @@ class SidebarMenu extends React.Component {
             <a onClick={this.logout.bind(this)} href={this.state.logoutLink}>Logout</a>
             <li><NavLink to="/api" title="API Browser">API Browser</NavLink></li>
           </ul>
-        </div>
-      );
-    }
-
-    return (
-      <div className="menu-sidebar">
-        <h2>Menu</h2>
-
-        <ul>
+          : <ul>
           <li><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
           <li><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
           <li><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure">Infrastructure</NavLink></li>
@@ -98,7 +91,7 @@ class SidebarMenu extends React.Component {
           <li><NavLink to="/account" title="Account">Account</NavLink></li>
           <li><NavLink to={this.state.logoutLink} title="Logout">Logout</NavLink></li>
           <li><NavLink to="/api" title="API Browser">API Browser</NavLink></li>
-        </ul>
+        </ul>}
       </div>
     );
   }
