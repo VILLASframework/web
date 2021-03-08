@@ -30,7 +30,7 @@ export default class HeaderMenu extends React.Component {
         <li><NavLink to="/scenarios" activeClassName="active" title="Scenarios" onClick={this.props.onClose}>Scenarios</NavLink></li>
         <li><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure Components" onClick={this.props.onClose}>Infrastructure Components</NavLink></li>
         { this.props.currentRole === 'Admin' ?
-            <li><NavLink to="/users" activeClassName="active" title="User Management" onClick={this.props.onClose}>User Management</NavLink></li> : ''
+            <li><NavLink to="/users" activeClassName="active" title="Users" onClick={this.props.onClose}>Users</NavLink></li> : ''
         }
         <li><NavLink to="/account" title="Account">Account</NavLink></li>
         <li><NavLink to="/logout" title="Logout" onClick={this.props.onClose}>Logout</NavLink></li>

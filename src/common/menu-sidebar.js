@@ -74,7 +74,7 @@ class SidebarMenu extends React.Component {
             <li><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
             <li><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure Components">Infrastructure Components</NavLink></li>
             { this.props.currentRole === 'Admin' ?
-                <li><NavLink to="/users" activeClassName="active" title="User Management">User Management</NavLink></li> : ''
+                <li><NavLink to="/users" activeClassName="active" title="Users">Users</NavLink></li> : ''
             }
             <li><NavLink to="/account" title="Account">Account</NavLink></li>
             <a onClick={this.logout.bind(this)} href={this.state.logoutLink}>Logout</a>
@@ -93,7 +93,7 @@ class SidebarMenu extends React.Component {
           <li><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
           <li><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure Components">Infrastructure Components</NavLink></li>
           { this.props.currentRole === 'Admin' ?
-              <li><NavLink to="/users" activeClassName="active" title="User Management">User Management</NavLink></li> : ''
+              <li><NavLink to="/users" activeClassName="active" title="Users">Users</NavLink></li> : ''
           }
           <li><NavLink to="/account" title="Account">Account</NavLink></li>
           <li><NavLink to={this.state.logoutLink} title="Logout">Logout</NavLink></li>
