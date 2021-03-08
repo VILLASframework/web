@@ -110,7 +110,7 @@ class ICDialog extends React.Component {
                 <Col><b>Start parameter schema</b></Col>
                 <Col>
                   <ReactJson
-                    src={this.props.ic.startParameterScheme}
+                    src={this.props.ic.startParameterSchema}
                     name={false}
                     displayDataTypes={false}
                     displayObjectSize={false}
