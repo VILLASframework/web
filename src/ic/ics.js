@@ -409,6 +409,13 @@ class InfrastructureComponents extends Component {
             onChecked={(ic, event) => this.onICChecked(ic, event)}
             width='30'
           />
+          {this.state.currentUser.role === "Admin" ?
+            <TableColumn
+              title='ID'
+              dataKey='id'
+            />
+            : <></>
+          }
           <TableColumn
             title='Name'
             dataKeys={['name']}

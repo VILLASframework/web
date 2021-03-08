@@ -60,8 +60,8 @@ class Scenarios extends Component {
       editModal: false,
       importModal: false,
       modalScenario: {},
-
-      selectedScenarios: prevState.selectedScenarios || []
+      selectedScenarios: prevState.selectedScenarios || [],
+      currentUser: JSON.parse(localStorage.getItem("currentUser"))
     };
   }
 
@@ -267,9 +267,24 @@ class Scenarios extends Component {
         </h1>
 
         <Table data={this.state.scenarios}>
-          <TableColumn title='Name' dataKey='name' link='/scenarios/' linkKey='id' />
-          <TableColumn title='ID' dataKey='id' />
-          <TableColumn title='Running' dataKey='running' modifier={(running) => this.modifyRunningColumn(running)}/>
+          {this.state.currentUser.role === "Admin" ?
+            <TableColumn
+              title='ID'
+              dataKey='id'
+            />
+            : <></>
+          }
+          <TableColumn
+            title='Name'
+            dataKey='name'
+            link='/scenarios/'
+            linkKey='id'
+          />
+          <TableColumn
+            title='Running'
+            dataKey='running'
+            modifier={(running) => this.modifyRunningColumn(running)}
+          />
           <TableColumn
             width='200'
             editButton

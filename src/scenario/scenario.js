@@ -734,64 +734,6 @@ class Scenario extends React.Component {
       return <h1>Loading Scenario...</h1>;
     }
 
-    let resulttable;
-    if (this.state.results && this.state.results.length > 0) {
-      resulttable = <div>
-        <Table data={this.state.results}>
-          <TableColumn
-            title='Result No.'
-            dataKey='id'
-            modifier={(id, result) => this.modifyResultNoColumn(id, result)}
-          />
-          <TableColumn
-            title='Description'
-            dataKey='description'
-          />
-          <TableColumn
-            title='Created at'
-            dataKey='createdAt'
-          />
-          <TableColumn
-            title='Last update'
-            dataKey='updatedAt'
-          />
-          <TableColumn
-            title='Files'
-            dataKey='resultFileIDs'
-            linkKey='filebuttons'
-            data={this.state.files}
-            width='300'
-            onDownload={(index) => this.downloadResultData(index)}
-          />
-          <TableColumn
-            width='300'
-            editButton
-            downloadAllButton
-            deleteButton
-            onEdit={index => this.setState({ editResultsModal: true, modalResultsIndex: index })}
-            onDownloadAll={(index) => this.downloadResultData(this.state.results[index])}
-            onDelete={(index) => this.setState({ deleteResultsModal: true, modalResultsData: this.state.results[index], modalResultsIndex: index })}
-          />
-        </Table>
-
-        <EditResultDialog
-          sessionToken={this.state.sessionToken}
-          show={this.state.editResultsModal}
-          files={this.state.files}
-          results={this.state.results}
-          resultId={this.state.modalResultsIndex}
-          scenarioID={this.state.scenario.id}
-          onClose={this.closeEditResultsModal.bind(this)} />
-        <DeleteDialog title="result" name={this.state.modalResultsData.id} show={this.state.deleteResultsModal} onClose={(e) => this.closeDeleteResultsModal(e)} />
-        <ResultConfigDialog
-          show={this.state.resultConfigsModal}
-          configs={this.state.modalResultConfigs}
-          resultNo={this.state.modalResultConfigsIndex}
-          onClose={this.closeResultConfigSnapshots.bind(this)}
-        />
-      </div>
-    }
-
     return <div className='section'>
       <div className='section-buttons-group-right'>
         <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete files of scenario </Tooltip>} >
@@ -833,7 +775,15 @@ class Scenario extends React.Component {
           checkbox
           checkboxDisabled={(index) => !this.usesExternalIC(index)}
           onChecked={(index, event) => this.onConfigChecked(index, event)}
-          width='30' />
+          width='30'
+        />
+        {this.state.currentUser.role === "Admin" ?
+          <TableColumn
+            title='ID'
+            dataKey='id'
+          />
+          : <></>
+        }
         <TableColumn
           title='Name'
           dataKey='name'
@@ -947,8 +897,22 @@ class Scenario extends React.Component {
           </span>
       </h2>
       <Table data={this.state.dashboards}>
-        <TableColumn title='Name' dataKey='name' link='/dashboards/' linkKey='id' />
-        <TableColumn title='Grid' dataKey='grid' />
+        {this.state.currentUser.role === "Admin" ?
+          <TableColumn
+            title='ID'
+            dataKey='id'
+          />
+          : <></>
+        }
+        <TableColumn
+          title='Name'
+          dataKey='name'
+          link='/dashboards/'
+          linkKey='id'
+        />
+        <TableColumn
+          title='Grid'
+          dataKey='grid' />
         <TableColumn
           title=''
           width='200'
@@ -980,13 +944,80 @@ class Scenario extends React.Component {
         </OverlayTrigger>
           </span>
       </h2>
-      {resulttable}
-      <NewResultDialog show={this.state.newResultModal} onClose={data => this.closeNewResultModal(data)} />
+
+      <Table data={this.state.results}>
+        <TableColumn
+          title='ID'
+          dataKey='id'
+          modifier={(id, result) => this.modifyResultNoColumn(id, result)}
+        />
+        <TableColumn
+          title='Description'
+          dataKey='description'
+        />
+        <TableColumn
+          title='Created at'
+          dataKey='createdAt'
+        />
+        <TableColumn
+          title='Last update'
+          dataKey='updatedAt'
+        />
+        <TableColumn
+          title='Files'
+          dataKey='resultFileIDs'
+          linkKey='filebuttons'
+          data={this.state.files}
+          width='300'
+          onDownload={(index) => this.downloadResultData(index)}
+        />
+        <TableColumn
+          width='300'
+          editButton
+          downloadAllButton
+          deleteButton
+          onEdit={index => this.setState({ editResultsModal: true, modalResultsIndex: index })}
+          onDownloadAll={(index) => this.downloadResultData(this.state.results[index])}
+          onDelete={(index) => this.setState({ deleteResultsModal: true, modalResultsData: this.state.results[index], modalResultsIndex: index })}
+        />
+      </Table>
+
+      <EditResultDialog
+        sessionToken={this.state.sessionToken}
+        show={this.state.editResultsModal}
+        files={this.state.files}
+        results={this.state.results}
+        resultId={this.state.modalResultsIndex}
+        scenarioID={this.state.scenario.id}
+        onClose={this.closeEditResultsModal.bind(this)}
+      />
+      <DeleteDialog
+        title="result"
+        name={this.state.modalResultsData.id}
+        show={this.state.deleteResultsModal}
+        onClose={(e) => this.closeDeleteResultsModal(e)}
+      />
+      <ResultConfigDialog
+        show={this.state.resultConfigsModal}
+        configs={this.state.modalResultConfigs}
+        resultNo={this.state.modalResultConfigsIndex}
+        onClose={this.closeResultConfigSnapshots.bind(this)}
+      />
+      <NewResultDialog
+        show={this.state.newResultModal}
+        onClose={data => this.closeNewResultModal(data)}
+      />
 
       {/*Scenario Users table*/}
       <h2 style={tableHeadingStyle}>Users sharing this scenario</h2>
-      <div>
-        <Table data={this.state.scenario.users}>
+      <Table data={this.state.scenario.users}>
+        {this.state.currentUser.role === "Admin" ?
+          <TableColumn
+            title='ID'
+            dataKey='id'
+          />
+          : <></>
+        }
           <TableColumn
             title='Name'
             dataKey='username'
