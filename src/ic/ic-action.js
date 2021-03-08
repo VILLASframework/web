@@ -16,22 +16,23 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Button, DropdownButton, Dropdown, InputGroup, FormControl } from 'react-bootstrap';
+import { Form, SplitButton, Dropdown, FormControl } from 'react-bootstrap';
 import AppDispatcher from "../common/app-dispatcher";
 import NotificationsFactory from "../common/data-managers/notifications-factory";
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
 
+
+Number.prototype.pad = function(size) {
+  var s = String(this);
+  while (s.length < (size || 2)) {
+    s = "0" + s;
+  }
+  return s;
+}
+
 class ICAction extends React.Component {
   constructor(props) {
     super(props);
-
-    let t = new Date()
-
-    Number.prototype.pad = function(size) {
-        var s = String(this);
-        while (s.length < (size || 2)) {s = "0" + s;}
-        return s;
-    }
 
     let time = new Date();
     time.setMinutes(5 * Math.round(time.getMinutes() / 5 + 1))
@@ -60,7 +61,7 @@ class ICAction extends React.Component {
       return;
     }
 
-    if (!this.props.hasConfigs) {
+    if (!this.props.configs) {
       let newAction = {};
       newAction["action"] = action.data.action
       newAction["when"] = when
@@ -203,13 +204,15 @@ class ICAction extends React.Component {
 
   render() {
 
-    let sendCommandDisabled = false;
-    if (!this.props.hasConfigs && this.props.selectedICs.length === 0 || this.state.selectedAction == null || this.state.selectedAction.id === "-1") {
-      sendCommandDisabled = true;
-    }
-    if (this.props.hasConfigs && this.props.selectedConfigs.length === 0|| this.state.selectedAction == null || this.state.selectedAction.id === "-1") {
-      sendCommandDisabled = true;
-    }
+    let disabled = this.state.selectedAction == null ||
+                  (this.props.configs
+                    ? this.props.selectedConfigs.length === 0
+                    : this.props.selectedICs.length === 0
+                  );
+
+    let splitButtonStyle = {
+      marginLeft: '10px'
+    };
 
     let time = this.state.time.getFullYear().pad(4) + '-' +
                this.state.time.getMonth().pad(2) + '-' +
@@ -223,29 +226,24 @@ class ICAction extends React.Component {
       </Dropdown.Item>
     ));
 
-    return <div className='solid-button'>
-      <InputGroup>
-        <InputGroup.Prepend>
-          <DropdownButton
-            variant="secondary"
-            title={this.state.selectedAction != null ? this.state.selectedAction.title : ''}
-            id="action-dropdown"
-            onSelect={this.setAction}>
-            {actionList}
-          </DropdownButton>
-          <FormControl
-            type="datetime-local"
-            variant="outline-secondary"
-            value={time}
-            onChange={this.setTimeForAction} />
-        </InputGroup.Prepend>
-        <Button
-          variant="secondary"
-          disabled={sendCommandDisabled}
-          onClick={() => this.runAction(this.state.selectedAction, this.state.time)}>Run</Button>
-      </InputGroup>
-      <small className="text-muted">Select time for synced command execution</small>
-    </div>;
+    return <div>
+            <Form inline>
+              <FormControl
+                type="datetime-local"
+                value={time}
+                onChange={this.setTimeForAction} />
+              <SplitButton
+                  style={splitButtonStyle}
+                  title={this.state.selectedAction != null ? this.state.selectedAction.title : ''}
+                  id="action-dropdown"
+                  onSelect={this.setAction}
+                  disabled={disabled}
+                  onClick={() => this.runAction(this.state.selectedAction, this.state.time)}>
+                  {actionList}
+              </SplitButton>
+            </Form>
+            <small className="text-muted">Select time for synced command execution</small>
+          </div>;
   }
 }
 

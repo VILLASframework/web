@@ -873,14 +873,12 @@ class Scenario extends React.Component {
       {this.state.ExternalICInUse ? (
         <div style={{ float: 'left' }}>
           <ICAction
-            hasConfigs={true}
             ics={this.state.ics}
             configs={this.state.configs}
             selectedConfigs = {this.state.selectedConfigs}
             snapshotConfig = {(index) => this.copyConfig(index)}
             token = {this.state.sessionToken}
             actions={[
-              { id: '-1', title: 'Action', data: { action: 'none' } },
               { id: '0', title: 'Start', data: { action: 'start' } },
               { id: '1', title: 'Stop', data: { action: 'stop' } },
               { id: '2', title: 'Pause', data: { action: 'pause' } },

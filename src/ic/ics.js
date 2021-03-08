@@ -506,12 +506,10 @@ class InfrastructureComponents extends Component {
         {this.state.currentUser.role === "Admin" && this.state.numberOfExternalICs > 0 ?
           <div style={{float: 'left'}}>
             <ICAction
-              hasConfigs = {false}
               ics={this.state.ics}
               selectedICs={this.state.selectedICs}
               token={this.state.sessionToken}
               actions={[
-                {id: '-1', title: 'Action', data: {action: 'none'}},
                 {id: '0', title: 'Reset', data: {action: 'reset'}},
                 {id: '1', title: 'Shutdown', data: {action: 'shutdown'}},
                 {id: '2', title: 'Delete', data: {action: 'delete'}},
@@ -533,9 +531,7 @@ class InfrastructureComponents extends Component {
           onClose={data => this.closeICModal(data)}
           ic={this.state.modalIC}
           token={this.state.sessionToken}
-          userRole={this.state.currentUser.role}
           sendControlCommand={(command, ic) => this.sendControlCommand(command, ic)}/>
-
       </div>
     );
   }
