@@ -59,22 +59,25 @@ class User extends Component {
     this.setState({ editModal: false });
 
     let updatedData = {}
-    updatedData.id = this.state.currentUser.id;
     let updatedUser = this.state.currentUser;
     let hasChanged = false;
     let pwChanged = false;
 
+    updatedData.id = this.state.currentUser.id;
+
     if (data) {
-      if (data.username !== '') {
+      if (data.username !== this.state.currentUser.username) {
         hasChanged = true;
         updatedData.username = data.username;
         updatedUser.username = data.username
       }
-      if (data.mail !== '') {
+
+      if (data.mail !== this.state.currentUser.mail) {
         hasChanged = true;
         updatedData.mail = data.mail;
         updatedUser.mail = data.mail;
       }
+
       if (data.password !== '' && data.oldPassword !== '' && data.password === data.confirmPassword ) {
         pwChanged = true;
         updatedData.password = data.password;
@@ -142,7 +145,7 @@ class User extends Component {
             <EditOwnUserDialog
               show={this.state.editModal}
               onClose={(data) => this.closeEditModal(data)}
-              user={this.state.currentUser}
+              user={user}
             />
           </>
           : <div/>

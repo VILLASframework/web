@@ -471,3 +471,7 @@ hr {
 .swagger-ui .wrapper {
 	padding: 0 !important;
 }
+
+.swagger-ui .info {
+  margin-top: 10px;
+}

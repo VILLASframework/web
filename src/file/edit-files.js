@@ -116,13 +116,10 @@ class EditFilesDialog extends React.Component {
         valid={true}
       >
         <Table data={this.props.files}>
-          {this.state.currentUser.role === "Admin" ?
-            <TableColumn
-              title='ID'
-              dataKey='id'
-            />
-            : <></>
-          }
+          <TableColumn
+            title='ID'
+            dataKey='id'
+          />
           <TableColumn
             title='Name'
             dataKey='name'

@@ -289,7 +289,7 @@ class EditSignalMappingDialog extends React.Component {
               variant='secondary'
               key={51}
               onClick={() => this.handleRemove()} style={buttonStyle}>
-              <Icon icon="minus" />Remove
+              <Icon icon="minus" /> Remove
             </Button>
             <Button
               variant='secondary'

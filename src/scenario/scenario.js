@@ -803,7 +803,7 @@ class Scenario extends React.Component {
           onEdit={index => this.setState({ editInputSignalsModal: true, modalConfigData: this.state.configs[index], modalConfigIndex: index })}
         />
         <TableColumn
-          title='Signal AutoConf'
+          title='Import Signals'
           exportButton
           onExport={(index) => this.signalsAutoConf(index)}
         />
@@ -1048,6 +1048,7 @@ class Scenario extends React.Component {
         <TableColumn
           title=''
           width='200'
+          align='right'
           deleteButton
           onDelete={(index) => this.setState({
             deleteUserModal: true,
@@ -1057,7 +1058,12 @@ class Scenario extends React.Component {
         />
       </Table>
 
-      <InputGroup style={{ width: 400, float: 'right' }}>
+      <InputGroup
+        style={{
+          width: 400,
+          float: 'right'
+        }}
+      >
         <Form.Control
           placeholder="Username"
           onChange={(e) => this.onUserInputChange(e)}
@@ -1076,6 +1082,7 @@ class Scenario extends React.Component {
           </span>
         </InputGroup.Append>
       </InputGroup>
+      <br />
       <br />
 
       <DeleteDialog
