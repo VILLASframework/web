@@ -131,7 +131,7 @@ class ICDialog extends React.Component {
                 collapsed={1}
               />
 
-              {this.props.ic.type === "villas-node" || this.props.ic.type === "villas-relay" ? (
+              {this.props.ic.type === "villas-node" ?
                 <>
                   <div className='section-buttons-group-right'>
                     <Button style={{margin: '5px'}} size='sm' onClick={() => this.downloadGraph(graphURL)}><Icon
