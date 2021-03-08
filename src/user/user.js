@@ -17,7 +17,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import {Button, Col, Row, FormGroup} from 'react-bootstrap';
+import { Button, Form, Row, Col } from 'react-bootstrap';
 
 import AppDispatcher from '../common/app-dispatcher';
 import UsersStore from './users-store';
@@ -101,35 +101,51 @@ class User extends Component {
   }
 
   render() {
+    let user = this.state.currentUser;
 
     return (
       <div>
-        <h1>Your User Account</h1>
+        <h1>Account</h1>
 
-        {this.state.currentUser !== undefined && this.state.currentUser !== null ?
+        {user ?
+          <>
+            <Form>
+              <Form.Group as={Row} controlId="username">
+                <Form.Label column sm={2}>Username</Form.Label>
+                <Col sm={10}>
+                  <Form.Control plaintext readOnly defaultValue={user.username} />
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row} controlId="mail">
+                <Form.Label column sm={2}>E-mail</Form.Label>
+                <Col sm={10}>
+                  <Form.Control plaintext readOnly defaultValue={user.mail} type="email" />
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row} controlId="role">
+                <Form.Label column sm={2}>Role</Form.Label>
+                <Col sm={10}>
+                  <Form.Control plaintext readOnly defaultValue={user.role} />
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row} controlId="formBasicEmail">
+                <Form.Label column sm={2}>Created at</Form.Label>
+                <Col sm={10}>
+                  <Form.Control plaintext readOnly defaultValue={user.createdAt} />
+                </Col>
+              </Form.Group>
+              <Button variant="primary" onClick={() => this.setState({ editModal: true })}>
+                <Icon icon='edit' /> Edit
+              </Button>
+            </Form>
 
-          <form>
-
-            <Row>
-              <FormGroup as={Col} sm={2} controlId="details">
-                <div style={{ alignItems: 'right' }}>Username:</div>
-                <div style={{ alignItems: 'right' }}>E-mail:</div>
-                <div style={{ alignItems: 'right' }}>Role:</div>
-              </FormGroup>
-              <FormGroup as={Col} sm={3} controlId="information" >
-                <div> {this.state.currentUser.username}</div>
-                <div>{this.state.currentUser.mail}</div>
-                <div>{this.state.currentUser.role}</div>
-                <span className='icon-button'>
-                <Button variant='light' size='lg' variant='light' style={{margin: '10px'}} onClick={() => this.setState({ editModal: true })}><Icon size='lg' classname='icon-color' icon='edit' /> </Button>
-                </span>
-              </FormGroup>
-            </Row>
-
-            <EditOwnUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)}
-              user={this.state.currentUser} />
-
-          </form> : "Loading user data..."
+            <EditOwnUserDialog
+              show={this.state.editModal}
+              onClose={(data) => this.closeEditModal(data)}
+              user={this.state.currentUser}
+            />
+          </>
+          : <div/>
         }
       </div>
     );

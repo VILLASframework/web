@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, FormLabel, FormText, Col } from 'react-bootstrap';
+import { Form, Col } from 'react-bootstrap';
 
 import Dialog from '../common/dialogs/dialog';
 
@@ -68,32 +68,32 @@ class NewUserDialog extends React.Component {
   render() {
     return (
       <Dialog show={this.props.show} title="New user" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
-        <form>
-          <FormGroup as={Col} controlId="username">
-            <FormLabel>Username</FormLabel>
-            <FormControl type="text" placeholder="Enter username" value={this.state.name} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-            <FormText>Min 3 characters.</FormText>
-          </FormGroup>
-          <FormGroup as={Col} controlId="mail">
-            <FormLabel>E-mail</FormLabel>
-            <FormControl type="text" placeholder="Enter e-mail" value={this.state.mail} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup as={Col} controlId="password">
-            <FormLabel>Password</FormLabel>
-            <FormControl type="text" placeholder="Enter password" value={this.state.password} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup as={Col} controlId="role">
-            <FormLabel>Role</FormLabel>
-            <FormControl as="select" placeholder="Select role" value={this.state.role} onChange={(e) => this.handleChange(e)}>
+        <Form>
+          <Form.Group as={Col} controlId="username">
+            <Form.Label>Username</Form.Label>
+            <Form.Control type="text" placeholder="Enter username" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <Form.Control.Feedback />
+            <Form.Text>Min 3 characters.</Form.Text>
+          </Form.Group>
+          <Form.Group as={Col} controlId="mail">
+            <Form.Label>E-mail</Form.Label>
+            <Form.Control type="text" placeholder="Enter e-mail" value={this.state.mail} onChange={(e) => this.handleChange(e)} />
+            <Form.Control.Feedback />
+          </Form.Group>
+          <Form.Group as={Col} controlId="password">
+            <Form.Label>Password</Form.Label>
+            <Form.Control type="text" placeholder="Enter password" value={this.state.password} onChange={(e) => this.handleChange(e)} />
+            <Form.Control.Feedback />
+          </Form.Group>
+          <Form.Group as={Col} controlId="role">
+            <Form.Label>Role</Form.Label>
+            <Form.Control as="select" placeholder="Select role" value={this.state.role} onChange={(e) => this.handleChange(e)}>
               <option key='1' value='Admin'>Administrator</option>
               <option key='2' value='User'>User</option>
               <option key='3' value='Guest'>Guest</option>
-            </FormControl>
-          </FormGroup>
-        </form>
+            </Form.Control>
+          </Form.Group>
+        </Form>
       </Dialog>
     );
   }

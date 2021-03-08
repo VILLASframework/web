@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import {FormGroup, FormControl, FormLabel, Col} from 'react-bootstrap';
+import { Form, Col } from 'react-bootstrap';
 
 import Dialog from '../common/dialogs/dialog';
 
@@ -28,12 +28,12 @@ class EditOwnUserDialog extends React.Component {
     super(props);
 
     this.state = {
-      username: '',
-      id: '',
-      mail: '',
+      username: this.props.user.username,
+      id: this.props.user.id,
+      mail: this.props.user.mail,
       password: '',
       oldPassword: '',
-      confirmpassword: ''
+      confirmPassword: ''
     }
   }
 
@@ -83,43 +83,41 @@ class EditOwnUserDialog extends React.Component {
 
   resetState() {
     this.setState({
-      username: '',
-      mail: '',
+      username: this.props.user.username,
+      id: this.props.user.id,
+      mail: this.props.user.mail,
       oldPassword: '',
       confirmPassword: '',
       password: '',
-      id: this.props.user.id,
     });
   }
 
   render() {
     return (
       <Dialog show={this.props.show} title="Edit user" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
-        <form>
-          <FormGroup as={Col} controlId="username">
-            <FormLabel>Username</FormLabel>
-            <FormControl type="text" placeholder={this.props.user.username} value={this.state.username} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup as={Col} controlId="mail">
-            <FormLabel>E-mail</FormLabel>
-            <FormControl type="text" placeholder={this.props.user.mail} value={this.state.mail} onChange={(e) => this.handleChange(e)} />
-          </FormGroup>
-          <FormGroup  as={Col} controlId="oldPassword">
-            <FormLabel>Old Password</FormLabel>
-            <FormControl type="password" placeholder="Enter current password" value={this.state.oldPassword} onChange={(e) => this.handleChange(e)} />
-          </FormGroup>
-
-          <FormGroup as={Col} controlId="password">
-            <FormLabel>New Password</FormLabel>
-            <FormControl type="password" placeholder="Enter password" value={this.state.password} onChange={(e) => this.handleChange(e)} />
-          </FormGroup>
-
-          <FormGroup as={Col} controlId="confirmpassword">
-            <FormLabel>Confirm New Password</FormLabel>
-            <FormControl type="password" placeholder="Enter password" value={this.state.confirmpassword} onChange={(e) => this.handleChange(e)} />
-          </FormGroup>
-        </form>
+        <Form>
+          <Form.Group as={Col} controlId="username">
+            <Form.Label>Username</Form.Label>
+            <Form.Control type="text" value={this.state.username} onChange={(e) => this.handleChange(e)} autocomplete="username" />
+            <Form.Control.Feedback />
+          </Form.Group>
+          <Form.Group as={Col} controlId="mail">
+            <Form.Label>E-mail</Form.Label>
+            <Form.Control type="text" value={this.state.mail} onChange={(e) => this.handleChange(e)} autocomplete="email" />
+          </Form.Group>
+          <Form.Group  as={Col} controlId="oldPassword">
+            <Form.Label>Old Password</Form.Label>
+            <Form.Control type="password" placeholder="Enter current password" value={this.state.oldPassword} onChange={(e) => this.handleChange(e)} autocomplete="current-password" />
+          </Form.Group>
+          <Form.Group as={Col} controlId="password">
+            <Form.Label>New Password</Form.Label>
+            <Form.Control type="password" placeholder="Enter new password" value={this.state.password} onChange={(e) => this.handleChange(e)} autocomplete="new-password" />
+          </Form.Group>
+          <Form.Group as={Col} controlId="confirmPassword">
+            <Form.Label>Confirm New Password</Form.Label>
+            <Form.Control type="password" placeholder="Repeat new password" value={this.state.confirmPassword} onChange={(e) => this.handleChange(e)} autocomplete="new-password" />
+          </Form.Group>
+        </Form>
       </Dialog>
     );
   }

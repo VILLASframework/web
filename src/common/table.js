@@ -17,7 +17,7 @@
 
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { Table, Button, FormControl, FormLabel, FormCheck, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Table, Button, Form, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Icon from './icon';
 
@@ -112,9 +112,11 @@ class CustomTable extends Component {
 
       cell.push(<span>
         &nbsp;
-          <FormLabel column={false} className={labelStyle}>
+        <Form.Label
+          column={false}
+          className={labelStyle}>
           {labelContent}
-        </FormLabel>
+        </Form.Label>
       </span>
       );
     }
@@ -152,7 +154,7 @@ class CustomTable extends Component {
         : false;
 
       cell.push(
-        <FormCheck
+        <Form.Check
           className="table-control-checkbox"
           inline
           disabled={isDisabled}
@@ -333,9 +335,10 @@ class CustomTable extends Component {
                       tabIndex={tabIndex}
                       onClick={evtHdls.onCellClick}
                       onFocus={evtHdls.onCellFocus}
-                      onBlur={evtHdls.onCellBlur}>
-                      {(this.state.editCell[0] === cellIndex && this.state.editCell[1] === rowIndex) ? (
-                        <FormControl
+                      onBlur={evtHdls.onCellBlur}
+                    >
+                      {(this.state.editCell[0] === cellIndex && this.state.editCell[1] === rowIndex) ?
+                        <Form.Control
                           as='input'
                           type={children[cellIndex].props.inputType}
                           value={cell}
