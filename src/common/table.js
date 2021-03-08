@@ -83,12 +83,13 @@ class CustomTable extends Component {
             <OverlayTrigger
               key={contentkey}
               placement={'bottom'}
-              overlay={<Tooltip id={`tooltip-${"export"}`}>Download {contentvalue}</Tooltip>} >
+              overlay={<Tooltip id={`tooltip-${"export"}`}>Download {contentvalue}</Tooltip>}
+            >
               <Button
                 variant='table-control-button'
                 onClick={() => child.props.onDownload(contentkey)}
                 disabled={child.props.onDownload == null}>
-                {contentkey + ' ' }
+                {contentkey + ' '}
                 <Icon icon='file-download' />
               </Button>
             </OverlayTrigger>);

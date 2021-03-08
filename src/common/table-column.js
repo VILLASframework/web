@@ -40,7 +40,6 @@ class TableColumn extends Component {
     checkboxDisabled: null,
     labelStyle: null,
     labelModifier: null
-
   };
 
   render() {

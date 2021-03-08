@@ -746,11 +746,20 @@ class Scenario extends React.Component {
             dataKey='id'
             modifier={(id, result) => this.modifyResultNoColumn(id, result)}
           />
-          <TableColumn title='Description' dataKey='description' />
-          <TableColumn title='Created at' dataKey='createdAt' />
-          <TableColumn title='Last update' dataKey='updatedAt' />
           <TableColumn
-            title='Files/Data'
+            title='Description'
+            dataKey='description'
+          />
+          <TableColumn
+            title='Created at'
+            dataKey='createdAt'
+          />
+          <TableColumn
+            title='Last update'
+            dataKey='updatedAt'
+          />
+          <TableColumn
+            title='Files'
             dataKey='resultFileIDs'
             linkKey='filebuttons'
             data={this.state.files}
@@ -758,7 +767,6 @@ class Scenario extends React.Component {
             onDownload={(index) => this.downloadResultData(index)}
           />
           <TableColumn
-            title='Options'
             width='300'
             editButton
             downloadAllButton
@@ -855,7 +863,11 @@ class Scenario extends React.Component {
           exportButton
           onExport={(index) => this.signalsAutoConf(index)}
         />
-        <TableColumn title='Infrastructure Component' dataKey='icID' modifier={(icID) => this.getICName(icID)} />
+        <TableColumn
+          title='Infrastructure Component'
+          dataKey='icID'
+          modifier={(icID) => this.getICName(icID)}
+        />
         <TableColumn
           title=''
           width='200'
@@ -888,7 +900,7 @@ class Scenario extends React.Component {
         : <div />
       }
 
-      < div style={{ clear: 'both' }} />
+      <div style={{ clear: 'both' }} />
 
       <EditConfigDialog
         show={this.state.editConfigModal}
@@ -977,13 +989,23 @@ class Scenario extends React.Component {
       <h2 style={tableHeadingStyle}>Users sharing this scenario</h2>
       <div>
         <Table data={this.state.scenario.users}>
-          <TableColumn title='Name' dataKey='username' />
-          <TableColumn title='Mail' dataKey='mail' />
+          <TableColumn
+            title='Name'
+            dataKey='username'
+          />
+          <TableColumn
+            title='Mail'
+            dataKey='mail'
+          />
           <TableColumn
             title=''
             width='200'
             deleteButton
-            onDelete={(index) => this.setState({ deleteUserModal: true, deleteUserName: this.state.scenario.users[index].username, modalUserIndex: index })}
+            onDelete={(index) => this.setState({
+              deleteUserModal: true,
+              deleteUserName: this.state.scenario.users[index].username,
+              modalUserIndex: index
+            })}
           />
         </Table>
 
@@ -1009,8 +1031,6 @@ class Scenario extends React.Component {
       </div>
 
       <DeleteDialog title="user from scenario:" name={this.state.deleteUserName} show={this.state.deleteUserModal} onClose={(c) => this.closeDeleteUserModal(c)} />
-
-
     </div>;
   }
 }
