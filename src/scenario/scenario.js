@@ -826,7 +826,7 @@ class Scenario extends React.Component {
       <Table data={this.state.configs}>
         <TableColumn
           checkbox
-          checkboxDisabled={(index) => this.usesExternalIC(index)}
+          checkboxDisabled={(index) => !this.usesExternalIC(index)}
           onChecked={(index, event) => this.onConfigChecked(index, event)}
           width='30' />
         <TableColumn title='Name' dataKey='name' />
