@@ -43,7 +43,10 @@ class Scenarios extends Component {
     return [ScenarioStore, DashboardStore, WidgetStore, ConfigStore, SignalStore];
   }
 
-  static calculateState() {
+  static calculateState(prevState, props) {
+    if (prevState == null) {
+      prevState = {};
+    }
 
     return {
       scenarios: ScenarioStore.getState(),
@@ -58,7 +61,7 @@ class Scenarios extends Component {
       importModal: false,
       modalScenario: {},
 
-      selectedScenarios: []
+      selectedScenarios: prevState.selectedScenarios || []
     };
   }
 

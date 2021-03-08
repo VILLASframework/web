@@ -110,7 +110,7 @@ class Scenario extends React.Component {
       deleteConfigModal: false,
       importConfigModal: false,
       newConfig: prevState.newConfig || false,
-      selectedConfigs: [],
+      selectedConfigs: prevState.selectedConfigs || [],
       filesEditModal: prevState.filesEditModal || false,
       filesEditSaveState: prevState.filesEditSaveState || [],
 

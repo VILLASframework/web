@@ -64,7 +64,11 @@ class InfrastructureComponents extends Component {
     }
   }
 
-  static calculateState() {
+  static calculateState(prevState, props) {
+    if (prevState == null) {
+      prevState = {};
+    }
+
     const ics = InfrastructureComponentStore.getState().sort((a, b) => {
       if (a.state !== b.state) {
           return InfrastructureComponents.statePrio(a.state) > InfrastructureComponents.statePrio(b.state);
@@ -100,7 +104,7 @@ class InfrastructureComponents extends Component {
       modalIC: {},
       deleteModal: false,
       icModal: false,
-      selectedICs: [],
+      selectedICs: prevState.selectedICs || [],
       currentUser: JSON.parse(localStorage.getItem("currentUser"))
     };
   }
