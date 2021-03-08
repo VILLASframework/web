@@ -18,6 +18,7 @@
 import React from 'react';
 import { FormGroup, FormControl, FormLabel, FormCheck, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
+import ParametersEditor from '../common/parameters-editor';
 
 class NewICDialog extends React.Component {
   valid = false;
@@ -35,30 +36,39 @@ class NewICDialog extends React.Component {
       managedexternally: false,
       description: '',
       location: '',
-      manager: ''
+      manager: '',
+      properties: {}
     };
   }
 
   onClose(canceled) {
     if (canceled === false) {
       if (this.valid) {
-        const data = {
+        const parameters = {
           name: this.state.name,
           type: this.state.type,
           category: this.state.category,
           uuid: this.state.uuid,
-          managedexternally: this.state.managedexternally,
           location: this.state.location,
           description: this.state.description,
-          manager: this.state.manager
-        };
-
-        if (this.state.websocketurl != null && this.state.websocketurl !== "" && this.state.websocketurl !== 'http://') {
-          data.websocketurl = this.state.websocketurl;
         }
 
-        if (this.state.apiurl != null && this.state.apiurl !== "" && this.state.apiurl !== 'http://') {
-          data.apiurl = this.state.apiurl;
+        const data = {
+          managedexternally: this.state.managedexternally,
+          manager: this.state.manager,
+          parameters: parameters
+        };
+
+        // Add custom properties
+        if (this.state.managedexternally)
+          Object.assign(parameters, this.state.properties);
+
+        if (this.state.websocketurl != null && this.state.websocketurl !== "") {
+          parameters.websocketurl = this.state.websocketurl;
+        }
+
+        if (this.state.apiurl != null && this.state.apiurl !== "") {
+          parameters.apiurl = this.state.apiurl;
         }
 
         this.props.onClose(data);
@@ -79,8 +89,25 @@ class NewICDialog extends React.Component {
     }
   }
 
+  handlePropertiesChange = properties => {
+    this.setState({
+      properties: properties
+    });
+  };
+
   resetState() {
-    this.setState({ name: '', websocketurl: 'http://', apiurl: 'http://', uuid: this.uuidv4(), type: '', category: '', managedexternally: false, description: '', location: ''});
+    this.setState({
+      name: '',
+      websocketurl: '',
+      apiurl: '',
+      uuid: this.uuidv4(),
+      type: '',
+      category: '',
+      managedexternally: false,
+      description: '',
+      location: '',
+      properties: {}
+    });
   }
 
   validateForm(target) {
@@ -189,10 +216,29 @@ class NewICDialog extends React.Component {
             : <div/>
           }
           <FormGroup controlId="name" valid={this.validateForm('name')}>
-          <OverlayTrigger key="1" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
-            <FormLabel>Name *</FormLabel>
-          </OverlayTrigger>
-            <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <OverlayTrigger key="1" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
+              <FormLabel>Name *</FormLabel>
+            </OverlayTrigger>
+              <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+              <FormControl.Feedback />
+          </FormGroup>
+          {this.state.managedexternally === false ?
+            <FormGroup controlId="uuid" valid={this.validateForm('uuid')}>
+              <FormLabel>UUID</FormLabel>
+              <FormControl type="text" placeholder="Enter uuid" value={this.state.uuid}
+                           onChange={(e) => this.handleChange(e)}/>
+              <FormControl.Feedback/>
+            </FormGroup>
+            : <div/>
+          }
+          <FormGroup controlId="location">
+            <FormLabel>Location</FormLabel>
+            <FormControl type="text" placeholder="Enter Location" value={this.state.location} onChange={(e) => this.handleChange(e)} />
+            <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="description">
+            <FormLabel>Description</FormLabel>
+            <FormControl type="text" placeholder="Enter Description" value={this.state.description} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="category" valid={this.validateForm('category')}>
@@ -221,30 +267,21 @@ class NewICDialog extends React.Component {
           </FormGroup>
           <FormGroup controlId="websocketurl">
             <FormLabel>Websocket URL</FormLabel>
-            <FormControl type="text" placeholder="Enter Websocket URL" value={this.state.websocketurl} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder="https://" value={this.state.websocketurl} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
           <FormGroup controlId="apiurl">
             <FormLabel>API URL</FormLabel>
-            <FormControl type="text" placeholder="Enter API URL" value={this.state.apiurl} onChange={(e) => this.handleChange(e)} />
+            <FormControl type="text" placeholder="https://" value={this.state.apiurl} onChange={(e) => this.handleChange(e)} />
             <FormControl.Feedback />
           </FormGroup>
-          <FormGroup controlId="location">
-            <FormLabel>Location</FormLabel>
-            <FormControl type="text" placeholder="Enter Location" value={this.state.location} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup controlId="description">
-            <FormLabel>Description</FormLabel>
-            <FormControl type="text" placeholder="Enter Description" value={this.state.description} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          {this.state.managedexternally === false ?
-            <FormGroup controlId="uuid" valid={this.validateForm('uuid')}>
-              <FormLabel>UUID</FormLabel>
-              <FormControl type="text" placeholder="Enter uuid" value={this.state.uuid}
-                           onChange={(e) => this.handleChange(e)}/>
-              <FormControl.Feedback/>
+          {this.state.managedexternally === true ?
+            <FormGroup controlId='properties'>
+              <FormLabel> Properties </FormLabel>
+              <ParametersEditor
+                content={this.state.properties}
+                onChange={(data) => this.handlePropertiesChange(data)}
+              />
             </FormGroup>
             : <div/>
           }

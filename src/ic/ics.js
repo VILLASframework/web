@@ -160,7 +160,7 @@ class InfrastructureComponents extends Component {
         let newAction = {};
 
         newAction["action"] = "create";
-        newAction["parameters"] = data;
+        newAction["parameters"] = data.parameters;
         newAction["when"] = new Date()
 
         // find the manager IC

@@ -38,6 +38,7 @@ class EditICDialog extends React.Component {
       category: '',
       managedexternally: false,
       startParameterScheme: {},
+      properties: {}
     };
   }
 
@@ -68,9 +69,9 @@ class EditICDialog extends React.Component {
         if (this.state.category != null && this.state.category !== "" && this.state.category !== this.props.ic.category) {
           data.category = this.state.category;
         }
-        if (this.state.startParameterScheme !== {}) {
-          data.startParameterScheme = this.state.startParameterScheme
-        }
+
+        data.startParameterScheme = this.state.startParameterScheme
+        data.properties = this.state.properties
 
         data.managedexternally = this.state.managedexternally;
 
@@ -96,6 +97,10 @@ class EditICDialog extends React.Component {
     this.setState({ startParameterScheme: data });
   }
 
+  handlePropertiesChange(data) {
+    this.setState({ properties: data });
+  }
+
   resetState() {
     this.setState({
       name: this.props.ic.name,
@@ -107,6 +112,7 @@ class EditICDialog extends React.Component {
       category: this.props.ic.category,
       managedexternally: false,
       startParameterScheme: this.props.ic.startParameterScheme,
+      properties: this.props.ic.properties,
     });
   }
 
@@ -193,6 +199,14 @@ class EditICDialog extends React.Component {
               content={this.state.startParameterScheme}
               disabled={false}
               onChange={(data) => this.handleStartParameterSchemeChange(data)}
+            />
+          </FormGroup>
+          <FormGroup controlId='properties'>
+            <FormLabel column={false}>Properties</FormLabel>
+            <ParametersEditor
+              content={this.state.properties}
+              disabled={true}
+              onChange={(data) => this.handlePropertiesChange(data)}
             />
           </FormGroup>
         </form>
