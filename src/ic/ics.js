@@ -531,6 +531,7 @@ class InfrastructureComponents extends Component {
           onClose={data => this.closeICModal(data)}
           ic={this.state.modalIC}
           token={this.state.sessionToken}
+          user={this.state.currentUser}
           sendControlCommand={(command, ic) => this.sendControlCommand(command, ic)}/>
       </div>
     );

@@ -870,7 +870,7 @@ class Scenario extends React.Component {
         />
       </Table>
 
-      {this.state.ExternalICInUse ? (
+      {this.state.ExternalICInUse ?
         <div style={{ float: 'left' }}>
           <ICAction
             ics={this.state.ics}
@@ -885,7 +885,7 @@ class Scenario extends React.Component {
               { id: '3', title: 'Resume', data: { action: 'resume' } }
             ]} />
         </div>
-      ) : (<div />)
+        : <div />
       }
 
       < div style={{ clear: 'both' }} />

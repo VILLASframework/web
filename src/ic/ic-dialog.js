@@ -143,7 +143,7 @@ class ICDialog extends React.Component {
                     <img alt={"Graph image download failed and/or incorrect image API URL"} src={graphURL}/>
                   </div>
 
-                  {this.props.userRole === "Admin" ?
+                  {this.props.user.role === "Admin" ?
                     <div>
                       <h5>Controls:</h5>
                       <div className='solid-button'>
