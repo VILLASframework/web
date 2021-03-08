@@ -100,8 +100,8 @@ class Home extends React.Component {
         <h3>Funding</h3>
         <p>The development of <a href="http://fein-aachen.org/projects/villas-framework/">VILLASframework</a> projects has received funding from</p>
         <ul>
-          <p>SLEW: Second Life for Energiewende, an Exploratory Teaching Space project funded by RWTH Aachen University</p>
-          <p><a href="https://erigrid2.eu/"> ERIgrid 2.0: </a> An EU Horizon 2020 research and innovation action project for connecting European Smart Grid Infrastructures (grant agreement No 870620)</p>
+          <p><a href="https://www.acs.eonerc.rwth-aachen.de/cms/E-ON-ERC-ACS/Forschung/Forschungsprojekte/Bildungsprojekte/~mikmu/SLEW-SECOND-LIFE-FOR-ENERGIEWENDE/">SLEW:</a> Second Life for Energiewende, an Exploratory Teaching Space project funded by RWTH Aachen University</p>
+          <p><a href="https://erigrid2.eu/">ERIgrid 2.0:</a> An EU Horizon 2020 research and innovation action project for connecting European Smart Grid Infrastructures (grant agreement No 870620)</p>
           <p>
             <img height={100} src={require('../img/european_commission.svg').default} alt="Logo EU" />
             <img height={70} src={require('../img/erigrid2.png').default} alt="Logo ERIgrid 2.0" />
