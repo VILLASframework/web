@@ -137,10 +137,10 @@ class NewICDialog extends React.Component {
     let typeOptions = [];
     switch(this.state.category){
       case "simulator":
-        typeOptions = ["dummy","generic","dpsim","rtlab","rscad","opalrt"];
+        typeOptions = ["dummy","generic","dpsim","rtlab","rscad","rtlab","kubernetes"];
           break;
       case "manager":
-        typeOptions = ["villas-node","villas-relay","generic"];
+        typeOptions = ["villas-node","villas-relay","generic","kubernetes"];
         break;
       case "gateway":
         typeOptions = ["villas-node","villas-relay"];
@@ -201,11 +201,11 @@ class NewICDialog extends React.Component {
             </OverlayTrigger>
             <FormControl as="select" value={this.state.category} onChange={(e) => this.handleChange(e)}>
               <option default>Select category</option>
-              <option>simulator</option>
-              <option>service</option>
-              <option>gateway</option>
-              <option>equipment</option>
-              <option>manager</option>
+              <option value="simulator">Simulator</option>
+              <option value="service">Service</option>
+              <option value="gateway">Gateway</option>
+              <option value="equipment">Equipment</option>
+              <option value="manager">Manager</option>
             </FormControl>
           </FormGroup>
           <FormGroup controlId="type" valid={this.validateForm('type')}>
