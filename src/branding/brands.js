@@ -28,6 +28,12 @@ const brands = {
          account: true,
          api: true,
       },
+      style: {
+         bgcolor: '#6EA2B0',
+         highlights: '#527984',
+         primarytext: '#4d4d4d',
+         secondarytext: '#818181',
+      }
    },
    slew: {
       title: 'SLEW',
@@ -44,6 +50,12 @@ const brands = {
       links: {
          "DPsim Simulator": "https://dpsim.fein-aachen.org",
          "VILLASframework": "https://villas.fein-aachen.org/doc"
+      },
+      style: {
+         bgcolor: '#900603',
+         highlights: '#610C04',
+         primarytext: '#420C09',
+         secondarytext: '#710C04',
       }
    },
    test: {

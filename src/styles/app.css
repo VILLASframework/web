@@ -18,13 +18,21 @@
 /**
  * Application container
  */
+
+:root {
+  --bg: #6EA2B0;
+  --highlights: #527984;
+  --primarytext: #4d4d4d;
+  --secondarytext: #818181;
+}
+
 body {
-  background-color: #6EA2B0 !important;
+  background-color: var(--bg);
 }
 
 .app {
   height: 100vh;
-  color: #4d4d4d;
+  color: var(--primarytext);
 
   font: 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;
   hyphens: auto;
@@ -39,7 +47,7 @@ body {
   height: 60px;
   padding: 10px 0 0 0;
 
-  color: #527984;
+  color: var(--highlights);
   background-color: #fff;
 }
 
@@ -56,8 +64,9 @@ body {
   }
 }
 
+/* can be deleted when header-menu gets removed */
 .app-header .menu-icon {
-  color: #818181;
+  color: var(--secondarytext);
   right: 5px;
 
   padding: 6px 0 0 0;
@@ -77,7 +86,7 @@ body {
 }
 
 .app-footer a {
-  color: #4d4d4d;
+  color: var(--primarytext);
 
   text-decoration: underline;
 }
@@ -134,7 +143,7 @@ body {
 }
 
 .menu-sidebar a {
-  color: #4d4d4d;
+  color: var(--primarytext);
   text-decoration:none;
 }
 
@@ -180,7 +189,7 @@ body {
   padding: 8px 8px 8px 32px;
   text-decoration: none;
   font-size: 25px;
-  color: #818181;
+  color: var(--secondarytext);
   display: block;
   transition: 0.3s;
 }
@@ -198,7 +207,7 @@ body {
   margin-left: 50px;
   text-decoration: none;
   display: block;
-  color: #818181;
+  color: var(--secondarytext);
   transition: 0.3s;
 }
 
@@ -227,27 +236,6 @@ body {
 }
 
 /**
- * Login select
- */
- .login-select {
-  position: sticky;
-  width: 300px;
-  height: 150px;
-  top: 50%;
-  left: 50%;
-  margin-top: 50px;
-  margin-bottom: 100px;
-  transform: translate(-50%);
-
-
-  padding: 20px 20px;
-
-  background-color: #a8c7cf;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
-              0 9px 18px 0 rgba(0, 0, 0, 0.1);
-}
-
-/**
  * Login form
  */
 .login-container {
@@ -272,7 +260,7 @@ hr {
  * Tables
  */
 .table th {
-  background-color: #527984;
+  background-color: var(--highlights);
   color: #fff;
 }
 
@@ -424,23 +412,23 @@ hr {
 }
 
 .section-buttons-group-left .btn{
-  background-color: #527984; 
-  border-color: #527984;
+  background-color: var(--highlights);
+  border-color: var(--highlights);
 }
 
 .section-buttons-group-left .btn:hover{
-  background-color: #31484f; 
+  background-color: #31484f;
   border-color: #31484f;
 }
 
 .drag-and-drop .btn{
-  color: #527984;
-  border-color: #527984;
+  color: var(--highlights);
+  border-color: var(--highlights);
 }
 
 .drag-and-drop .btn:hover{
-  color: #527984;
-  border-color: #527984;
+  color: var(--highlights);
+  border-color: var(--highlights);
 }
 
 
@@ -449,8 +437,8 @@ hr {
 }
 
 .solid-button .btn{
-  background-color: #527984; 
-  border-color: #527984;
+  background-color: var(--highlights);
+  border-color: var(--highlights);
 }
 
 .solid-button .btn:hover{
@@ -459,8 +447,8 @@ hr {
 }
 
 .solid-button .btn:disabled{
-  background-color: #527984; 
-  border-color: #527984;
+  background-color: var(--highlights);
+  border-color: var(--highlights);
 }
 
 .icon-button .btn{
@@ -474,7 +462,7 @@ hr {
 }
 
 .icon-color {
-  color: #527984;
+  color: var(--highlights);
 }
 
 .form-horizontal .form-group {

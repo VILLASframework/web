@@ -41,6 +41,10 @@ import User from './user/user';
 import APIBrowser from './common/api-browser';
 
 import './styles/app.css';
+//import './branding/slew/slew.css'
+import Branding from './branding/branding';
+
+
 
 class App extends React.Component {
 
@@ -53,6 +57,40 @@ class App extends React.Component {
 
     this.state = {
       showSidebarMenu: false,
+    }
+
+    this.setBrandingStyle();
+    //const head = document.querySelector('head');
+    /*
+    document.body.style.backgroundColor = "black";
+    
+    const rootEl = document.querySelector(':root');
+    rootEl.style.setProperty('--highlights', 'yellow');
+    rootEl.style.setProperty('--bg', 'blue');
+    **/
+  }
+
+  setBrandingStyle() {
+    const rootEl = document.querySelector(':root');
+    let background = Branding.instance.getBackgroundColor();
+
+    if (background) {
+      document.body.style.backgroundColor = background;
+    }
+
+    let highlight = Branding.instance.getHighlightColor();
+    if (highlight) {
+      rootEl.style.setProperty('--highlights', highlight);
+    }
+
+    let primary = Branding.instance.getPrimaryTextColor();
+    if (primary) {
+      rootEl.style.setProperty('--primarytext', primary);
+    }
+
+    let secondary = Branding.instance.getSecondaryTextColor();
+    if (secondary) {
+      rootEl.style.setProperty('--secondary', secondary);
     }
   }
 

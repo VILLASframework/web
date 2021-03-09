@@ -19,8 +19,8 @@ import brands from './brands'
 import config from '../config'
 import _ from 'lodash';
 
-import {villasweb_home} from './villasweb/villasweb-home';
-import {slew_home} from './slew/slew_home';
+import { villasweb_home } from './villasweb/villasweb-home';
+import { slew_home } from './slew/slew_home';
 
 
 class Branding {
@@ -38,9 +38,9 @@ class Branding {
 
     static instance = Branding.instance || new Branding(config.branding);
 
-    getHome(username = '' , userid = '', role = '') {
+    getHome(username = '', userid = '', role = '') {
         var homepage = '';
-        switch(this.name) {
+        switch (this.name) {
             case 'villasweb':
                 homepage = villasweb_home(this.brand.title, username, userid, role);
                 break;
@@ -52,6 +52,34 @@ class Branding {
                 break;
         }
         return homepage;
+    }
+
+    getBackgroundColor() {
+        if (this.brand.style && this.brand.style.bgcolor) {
+            return this.brand.style.bgcolor;
+        }
+        return null;
+    }
+
+    getHighlightColor() {
+        if (this.brand.style && this.brand.style.highlights) {
+            return this.brand.style.highlights;
+        }
+        return null;
+    }
+
+    getPrimaryTextColor() {
+        if (this.brand.style && this.brand.style.primarytext) {
+            return this.brand.style.primarytext;
+        }
+        return null;
+    }
+
+    getSecondaryTextColor() {
+        if (this.brand.style && this.brand.style.secondarytext) {
+            return this.brand.style.secondarytext;
+        }
+        return null;
     }
 };
 
