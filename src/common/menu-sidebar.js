@@ -67,13 +67,10 @@ class SidebarMenu extends React.Component {
 
   render() {
     const brand = Branding.instance.brand;
-    console.log(brand.links)
     let links = []
-
     if (brand.links) {
       Object.keys(brand.links).forEach(key => {
-        console.log(`${key}: ${brand.links[key]}`);
-        links.push(<li><a href={brand.links[key]} title={key}>{key}</a></li>);
+        links.push(<li key={key}><a href={brand.links[key]} title={key}>{key}</a></li>);
       })
     }
 
