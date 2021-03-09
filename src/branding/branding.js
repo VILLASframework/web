@@ -29,7 +29,10 @@ class Branding {
         if (!brand) {
             console.error("Branding '" + chosenbrand + "' not available, will use 'villasweb' branding");
             brand = _.get(brands, ['villasweb']);
-            chosenbrand = 'villasweb'
+            chosenbrand = 'villasweb';
+            this.default = true;
+        } else {
+            this.default = false;
         }
 
         this.brand = brand;
@@ -77,6 +80,13 @@ class Branding {
 
     getSecondaryTextColor() {
         if (this.brand.style && this.brand.style.secondarytext) {
+            return this.brand.style.secondarytext;
+        }
+        return null;
+    }
+
+    getFont() {
+        if (this.brand.style && this.brand.style.font) {
             return this.brand.style.secondarytext;
         }
         return null;

@@ -42,9 +42,8 @@ class Home extends React.Component {
     return (
       <div>
         {branding.getHome(currentUser.username, currentUser.id, currentUser.role)}
-        </div>
-        );
-        }
+      </div>);
+  }
 }
 
 export default Home;

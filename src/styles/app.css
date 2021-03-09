@@ -24,6 +24,7 @@
   --highlights: #527984;
   --primarytext: #4d4d4d;
   --secondarytext: #818181;
+  --mainfont: 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 body {
@@ -34,7 +35,7 @@ body {
   height: 100vh;
   color: var(--primarytext);
 
-  font: 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font: var(--mainfont);
   hyphens: auto;
 }
 

@@ -60,17 +60,30 @@ class App extends React.Component {
     }
 
     this.setBrandingStyle();
-    //const head = document.querySelector('head');
-    /*
-    document.body.style.backgroundColor = "black";
-    
-    const rootEl = document.querySelector(':root');
-    rootEl.style.setProperty('--highlights', 'yellow');
-    rootEl.style.setProperty('--bg', 'blue');
-    **/
+  }
+
+  changeHead() {
+    if (Branding.instance.default) {
+      console.log("default branding");
+      return;
+    }
+    document.title = Branding.instance.brand.title + " " + Branding.instance.brand.subtitle;
+    var oldlink = document.getElementById('dynamic-favicon');
+
+    var link = document.createElement('link');
+    link.id = 'dynamic-favicon';
+    link.rel = 'shortcut icon'
+    link.href = Branding.instance.brand.icon;
+
+    if (oldlink) {
+      document.head.removeChild(oldlink);
+    }
+    document.head.appendChild(link);
   }
 
   setBrandingStyle() {
+    this.changeHead();
+
     const rootEl = document.querySelector(':root');
     let background = Branding.instance.getBackgroundColor();
 
@@ -91,6 +104,11 @@ class App extends React.Component {
     let secondary = Branding.instance.getSecondaryTextColor();
     if (secondary) {
       rootEl.style.setProperty('--secondary', secondary);
+    }
+
+    let font = Branding.instance.getFont();
+    if (font) {
+      rootEl.style.setProperty('--mainfont', font);
     }
   }
 

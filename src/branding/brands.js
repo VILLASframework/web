@@ -39,6 +39,7 @@ const brands = {
       title: 'SLEW',
       subtitle: 'Second Life for Energiewende',
       logo: "slew-logo.png",
+      icon: "/slew_icon.png",
       pages: {
          home: true,
          scenarios: true,
@@ -56,6 +57,7 @@ const brands = {
          highlights: '#610C04',
          primarytext: '#420C09',
          secondarytext: '#710C04',
+         font: "16px Roboto, sans-serif",
       }
    },
    test: {
