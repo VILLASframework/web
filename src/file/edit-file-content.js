@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import {FormGroup, FormControl, Button, Col} from 'react-bootstrap';
+import { Form, Button, Col } from 'react-bootstrap';
 import AppDispatcher from "../common/app-dispatcher";
 import Dialog from '../common/dialogs/dialog';
 
@@ -28,7 +28,6 @@ class EditFileContent extends React.Component {
 
     this.state = {
       uploadFile: null,
-      
     };
   }
 
@@ -50,31 +49,33 @@ class EditFileContent extends React.Component {
     this.setState({ uploadFile: null });
   };
 
-
   onClose = () => {
         this.props.onClose();
   };
 
-
-  
-
   render() {
-    return <Dialog show={this.props.show} title='Edit File Content' buttonTitle='Close' onClose={() => this.onClose()} blendOutCancel = {true} valid={true}>
-      <FormGroup as={Col} >
-        <FormControl
+    return <Dialog
+      show={this.props.show}
+      title='Edit File Content'
+      buttonTitle='Close'
+      onClose={() => this.onClose()}
+      blendOutCancel = {true}
+      valid={true}
+    >
+      <Form.Group as={Col} >
+        <Form.Control
           disabled={false}
           type='file'
           onChange={(event) => this.selectUploadFile(event)} />
-      </FormGroup>
+      </Form.Group>
 
-      <FormGroup as={Col} >
+      <Form.Group as={Col} >
         <Button
           disabled={this.state.uploadFile === null}
           onClick={() => this.startEditContent()}>
           Upload
             </Button>
-      </FormGroup>
-
+      </Form.Group>
     </Dialog>;
   }
 }

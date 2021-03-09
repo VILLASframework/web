@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import _ from 'lodash';
 
 import Dialog from '../common/dialogs/dialog';
@@ -111,29 +111,36 @@ class ImportICDialog extends React.Component {
 
   render() {
     return (
-      <Dialog show={this.props.show} title="Import Infrastructure Component" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
-        <form>
-          <FormGroup controlId="file">
-            <FormLabel>Infrastructure Component File</FormLabel>
-            <FormControl type="file" onChange={(e) => this.loadFile(e.target.files)} />
-          </FormGroup>
+      <Dialog
+        show={this.props.show}
+        title="Import Infrastructure Component"
+        buttonTitle="Add"
+        onClose={(c) => this.onClose(c)}
+        onReset={() => this.resetState()}
+        valid={this.valid}
+      >
+        <Form>
+          <Form.Group controlId="file">
+            <Form.Label>Infrastructure Component File</Form.Label>
+            <Form.Control type="file" onChange={(e) => this.loadFile(e.target.files)} />
+          </Form.Group>
 
-          <FormGroup controlId="name" valid={this.validateForm('name')}>
-            <FormLabel>Name</FormLabel>
-            <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup controlId="websocketurl">
-            <FormLabel>Websocket URL</FormLabel>
-            <FormControl type="text" placeholder="Enter websocketurl" value={this.state.websocketurl} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup controlId="uuid" valid={this.validateForm('uuid')}>
-            <FormLabel>UUID</FormLabel>
-            <FormControl type="text" placeholder="Enter uuid" value={this.state.uuid} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-        </form>
+          <Form.Group controlId="name" valid={this.validateForm('name')}>
+            <Form.Label>Name</Form.Label>
+            <Form.Control type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <Form.Control.Feedback />
+          </Form.Group>
+          <Form.Group controlId="websocketurl">
+            <Form.Label>Websocket URL</Form.Label>
+            <Form.Control type="text" placeholder="Enter websocketurl" value={this.state.websocketurl} onChange={(e) => this.handleChange(e)} />
+            <Form.Control.Feedback />
+          </Form.Group>
+          <Form.Group controlId="uuid" valid={this.validateForm('uuid')}>
+            <Form.Label>UUID</Form.Label>
+            <Form.Control type="text" placeholder="Enter uuid" value={this.state.uuid} onChange={(e) => this.handleChange(e)} />
+            <Form.Control.Feedback />
+          </Form.Group>
+        </Form>
       </Dialog>
     );
   }

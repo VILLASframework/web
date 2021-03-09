@@ -16,12 +16,11 @@
  ******************************************************************************/
 
 import React from 'react';
+import { Collapse } from 'react-collapse';
 import PropTypes from 'prop-types';
 import Slider from 'rc-slider';
 import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Icon from "../common/icon";
-import {Collapse} from 'react-collapse';
-
 import ToolboxItem from './toolbox-item';
 
 class WidgetToolbox extends React.Component {
@@ -101,8 +100,8 @@ class WidgetToolbox extends React.Component {
     }
 
     const buttonStyle = {
-      marginRight: '3px', 
-      height: '40px', 
+      marginRight: '3px',
+      height: '40px',
     }
 
     const thereIsTopologyWidget = this.props.widgets != null && Object.values(this.props.widgets).filter(w => w.type === 'Topology').length > 0;

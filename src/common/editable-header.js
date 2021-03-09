@@ -17,7 +17,7 @@
 // TODO remove this file (not used!)
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormControl, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import Icon from './icon';
 
 class EditableHeader extends React.Component {
@@ -79,12 +79,25 @@ class EditableHeader extends React.Component {
             };
 
             return <div>
-                <form style={wrapperStyle}>
-                    <FormControl type='text' size='large' value={this.state.title} onChange={this.onChange} style={editStyle} autoFocus />
-                </form>
+                <Form style={wrapperStyle}>
+                    <Form.Control
+                      type='text'
+                      size='large'
+                      value={this.state.title}
+                      onChange={this.onChange}
+                      style={editStyle}
+                      autoFocus
+                    />
+                </Form>
 
-                <Button onClick={this.save}><Icon icon='check' style={iconStyle} /></Button>
-                <Button onClick={this.cancel}><Icon icon='times' style={iconStyle} /></Button>
+                <Button
+                  onClick={this.save}>
+                    <Icon icon='check' style={iconStyle} />
+                </Button>
+                <Button
+                  onClick={this.cancel}>
+                    <Icon icon='times' style={iconStyle} />
+                </Button>
             </div>;
         }
 

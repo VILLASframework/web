@@ -25,11 +25,14 @@ import { slew_home } from './slew/slew_home';
 
 class Branding {
     constructor(chosenbrand) {
+        // TODO: simplify; error only for "wrong" brand, not for missing brand
         var brand = _.get(brands, [chosenbrand]);
         if (!brand) {
             console.error("Branding '" + chosenbrand + "' not available, will use 'villasweb' branding");
             brand = _.get(brands, ['villasweb']);
             chosenbrand = 'villasweb';
+            this.default = true;
+        } else if (chosenbrand === 'villasweb') {
             this.default = true;
         } else {
             this.default = false;

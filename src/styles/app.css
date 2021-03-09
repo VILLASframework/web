@@ -39,38 +39,18 @@ body {
   hyphens: auto;
 }
 
-.app-body {
-  /*height: 100%;*/
-}
-
 .app-header {
   width: 100%;
-  height: 60px;
-  padding: 10px 0 0 0;
 
   color: var(--highlights);
   background-color: #fff;
 }
 
 .app-header h1 {
-  width: 100%;
+  padding: 5px 0;
   margin: 0;
-
-  text-align: left;
-}
-
-@media (min-width: 768px) {
-  .app-header h1 {
-    text-align: center !important;
-  }
-}
-
-/* can be deleted when header-menu gets removed */
-.app-header .menu-icon {
-  color: var(--secondarytext);
-  right: 5px;
-
-  padding: 6px 0 0 0;
+  width: 100%;
+  text-align: center;
 }
 
 .btn-link {
@@ -93,12 +73,7 @@ body {
 }
 
 .app-body-spacing {
-  padding: 15px 5px 0px 5px;
-}
-
-.app-body-spacing > div {
-  margin-left: 7px;
-  margin-right: 7px;
+  padding: 20px;
 }
 
 .app-content-fullscreen {
@@ -106,7 +81,7 @@ body {
 }
 
 .app-content {
-  padding: 15px 20px;
+  padding: 15px 20px 20px 20px;
 
   width: auto;
   min-height: 300px;
@@ -116,10 +91,8 @@ body {
               0 9px 18px 0 rgba(0, 0, 0, 0.1);
 }
 
-@media (min-width: 768px) {
-  .app-content-margin-left {
-    margin-left: 275px !important;
-  }
+.app-content-margin-left {
+  margin-left: 180px !important;
 }
 
 .verticalhorizontal {
@@ -132,10 +105,9 @@ body {
 /**
  * Menus
  */
-.menu-sidebar {
-  /*display: inline-table;*/
-  padding: 20px 25px 20px 25px;
-  width: 250px;
+.menu {
+  padding: 20px;
+  width: 160px;
   float: left;
 
   background-color: #fff;
@@ -143,12 +115,12 @@ body {
               0 9px 18px 0 rgba(0, 0, 0, 0.1);
 }
 
-.menu-sidebar a {
+.menu a {
   color: var(--primarytext);
   text-decoration:none;
 }
 
-.menu-sidebar a:hover, .menu-sidebar a:focus {
+.menu a:hover, .menu a:focus {
   text-decoration:none;
 }
 
@@ -156,13 +128,17 @@ body {
   font-weight: bold;
 }
 
-.menu-sidebar ul {
+.menu ul {
   padding-top: 10px;
+  margin-bottom: 0;
   list-style: none;
   white-space: nowrap;
 }
+.menu li {
+  margin: 5px 0;
+}
 
-.menu-sidebar a::after {
+.menu a::after {
   /* Trick to make menu items to be as wide as in bold */
   display: block;
   content: attr(title);
@@ -260,6 +236,10 @@ hr {
 /**
  * Tables
  */
+.table th,td {
+  padding: 0.5em 0.5em !important;
+}
+
 .table th {
   background-color: var(--highlights);
   color: #fff;
@@ -268,16 +248,13 @@ hr {
 /**
  * Buttons
  */
-.table-control-button {
-  border: none;
-
-  background: none;
-
-  padding: 0 5px;
+.btn-table-control-button {
+  padding: 0 0.5em !important;
+  line-height: 1em !important;
 }
 
-.table-control-button:hover {
-  color: #888;
+.btn-table-control-button:hover {
+  color: #888 !important;
 }
 
 .table-control-checkbox input {
@@ -473,4 +450,16 @@ hr {
 
 .badge-outdated {
   opacity: 0.4;
+}
+
+
+/**
+ * Swagger UI
+ */
+.swagger-ui .wrapper {
+	padding: 0 !important;
+}
+
+.swagger-ui .info {
+  margin-top: 10px;
 }

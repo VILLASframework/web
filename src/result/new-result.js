@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 import Dialog from '../common/dialogs/dialog';
 
@@ -45,7 +45,7 @@ class NewResultDialog extends React.Component {
   }
 
   resetState() {
-    this.setState({ 
+    this.setState({
         ConfigSnapshots: '',
         Description: '',
         ResultFileIDs: [],
@@ -54,14 +54,21 @@ class NewResultDialog extends React.Component {
 
   render() {
     return (
-      <Dialog show={this.props.show} title="New Result" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={true}>
-        <form>      
-          <FormGroup controlId="Description">
-            <FormLabel>Description</FormLabel>
-            <FormControl type="text" placeholder="Enter description" value={this.state.Description} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-        </form>
+      <Dialog
+        show={this.props.show}
+        title="New Result"
+        buttonTitle="Add"
+        onClose={(c) => this.onClose(c)}
+        onReset={() => this.resetState()}
+        valid={true}
+      >
+        <Form>
+          <Form.Group controlId="Description">
+            <Form.Label>Description</Form.Label>
+            <Form.Control type="text" placeholder="Enter description" value={this.state.Description} onChange={(e) => this.handleChange(e)} />
+            <Form.Control.Feedback />
+          </Form.Group>
+        </Form>
       </Dialog>
     );
   }

@@ -50,7 +50,6 @@ class UsersStore extends ArrayStore {
         return super.reduce(state, action);
     }
   }
-
 }
 
 export default new UsersStore();

@@ -16,16 +16,41 @@
  ******************************************************************************/
 
 import React from 'react';
-import Branding from '../branding/branding';
 
-class Header extends React.Component {
+import { Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
+
+import Icon from '../common/icon';
+
+
+class IconButton extends React.Component {
+
   render() {
-    return (
-      <header className="app-header">
-        <h1>{Branding.instance.brand.title} - {Branding.instance.brand.subtitle}</h1>
-      </header>
-    );
+    const altButtonStyle = {
+      marginLeft: '10px',
+    }
+
+    const iconStyle = {
+      height: '30px',
+      width: '30px'
+    }
+
+    return <OverlayTrigger
+      key={this.props.key}
+      placement={'top'}
+      overlay={<Tooltip id={`tooltip-${"add"}`}>{this.props.tooltip}</Tooltip>} >
+      <Button
+        variant='light'
+        onClick={this.props.onClick}
+        style={altButtonStyle}
+      >
+        <Icon
+          icon={this.props.icon}
+          classname={'icon-color'}
+          style={iconStyle}
+        />
+      </Button>
+    </OverlayTrigger>
   }
 }
 
-export default Header;
+export default IconButton;

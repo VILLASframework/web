@@ -16,7 +16,7 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, Col, Row, FormCheck, FormLabel } from 'react-bootstrap';
+import { Col, Row, Form } from 'react-bootstrap';
 
 import WidgetSlider from '../widgets/slider';
 
@@ -50,12 +50,11 @@ class EditWidgetOrientation extends Component {
   }
 
   render() {
-
     // The <Row> tag shouldn't be necessary, but it gives height to the row while combining horizontal and vertical forms
     return (
-        <FormGroup controlId="orientation">
+        <Form.Group controlId="orientation">
           <Row>
-            <Col className={FormLabel} sm={3}>
+            <Col className={Form.Label} sm={3}>
               Orientation
             </Col>
             <Col sm={10}>
@@ -64,14 +63,20 @@ class EditWidgetOrientation extends Component {
                   let value = WidgetSlider.OrientationTypes[type].value;
                   let name = WidgetSlider.OrientationTypes[type].name;
 
-                  return (
-                    <FormCheck inline label={name} key={value} id={value} type='radio' title='orientation' checked={ value === this.state.widget.customProperties.orientation } onChange={(e) => this.handleOrientationChange(value)}>
-                    </FormCheck>)
+                  return <Form.Check
+                      inline label={name}
+                      key={value}
+                      id={value}
+                      type='radio'
+                      title='orientation'
+                      checked={ value === this.state.widget.customProperties.orientation }
+                      onChange={(e) => this.handleOrientationChange(value)}
+                    />
                 })
               }
             </Col>
           </Row>
-        </FormGroup>
+        </Form.Group>
     );
   }
 }

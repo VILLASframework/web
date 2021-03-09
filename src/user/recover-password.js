@@ -35,13 +35,20 @@ class RecoverPassword extends React.Component {
 
   render() {
     return (
-      <Dialog show={this.props.show} title="Recover password" buttonTitle="Close" onClose={(c) => this.onClose(c)} blendOutCancel = {true} valid={true} size = 'lg'>
+      <Dialog
+        show={this.props.show}
+        title="Recover password"
+        buttonTitle="Close"
+        onClose={(c) => this.onClose(c)}
+        blendOutCancel={true}
+        valid={true}
+      >
         <div>
-        <div>Please contact:</div>
-        <div>{this.state.admin.name}</div>
-        <div>E-Mail:</div>
-        <a href={`mailto:${this.state.admin.mail}`}>{this.state.admin.mail}</a>
-      </div>
+          <div>Please contact:</div>
+          <div>{this.state.admin.name}</div>
+          <div>E-Mail:</div>
+          <a href={`mailto:${this.state.admin.mail}`}>{this.state.admin.mail}</a>
+        </div>
       </Dialog>
     );
   }

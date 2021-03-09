@@ -17,7 +17,6 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import {Button, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import FileSaver from 'file-saver';
 
 import AppDispatcher from '../common/app-dispatcher';
@@ -35,6 +34,7 @@ import EditScenarioDialog from './edit-scenario';
 import ImportScenarioDialog from './import-scenario';
 
 import DeleteDialog from '../common/dialogs/delete-dialog';
+import IconButton from '../common/icon-button';
 
 
 class Scenarios extends Component {
@@ -43,7 +43,10 @@ class Scenarios extends Component {
     return [ScenarioStore, DashboardStore, WidgetStore, ConfigStore, SignalStore];
   }
 
-  static calculateState() {
+  static calculateState(prevState, props) {
+    if (prevState == null) {
+      prevState = {};
+    }
 
     return {
       scenarios: ScenarioStore.getState(),
@@ -57,8 +60,8 @@ class Scenarios extends Component {
       editModal: false,
       importModal: false,
       modalScenario: {},
-
-      selectedScenarios: []
+      selectedScenarios: prevState.selectedScenarios || [],
+      currentUser: JSON.parse(localStorage.getItem("currentUser"))
     };
   }
 
@@ -225,50 +228,50 @@ class Scenarios extends Component {
   }
 
   modifyRunningColumn(running){
-
-    if(running){
-      return <Icon icon='check' />
-    } else {
-      return <Icon icon='times' />
-    }
-
+    return <Icon icon={ running ? 'check' : 'times' } />
   }
 
   render() {
-    const buttonStyle = {
-      marginLeft: '10px',
-    };
-
-    const iconStyle = {
-      height: '30px',
-      width: '30px'
-    }
-
-    return (
-      <div className='section'>
+    return <div className='section'>
         <h1>Scenarios
           <span className='icon-button'>
-          <OverlayTrigger
-            key={1}
-            placement={'top'}
-            overlay={<Tooltip id={`tooltip-${"add"}`}> Add Scenario </Tooltip>} >
-              <Button variant='light' onClick={() => this.setState({ newModal: true })} style={buttonStyle}><Icon icon="plus" classname='icon-color' style={iconStyle} /></Button>
-          </OverlayTrigger>
-          <OverlayTrigger
-            key={2}
-            placement={'top'}
-            overlay={<Tooltip id={`tooltip-${"import"}`}> Import Scenario </Tooltip>} >
-          <Button variant='light' onClick={() => this.setState({ importModal: true })} style={buttonStyle}><Icon icon="upload" classname='icon-color' style={iconStyle} /></Button>
-          </OverlayTrigger>
-            </span>
+            <IconButton
+              key={0}
+              tooltip='Add Scenario'
+              onClick={() => this.setState({ newModal: true })}
+              icon='plus'
+            />
+            <IconButton
+              key={1}
+              tooltip='Import Scenario'
+              onClick={() => this.setState({ importModal: true })}
+              icon='upload'
+            />
+          </span>
         </h1>
 
         <Table data={this.state.scenarios}>
-          <TableColumn title='Name' dataKey='name' link='/scenarios/' linkKey='id' />
-          <TableColumn title='ID' dataKey='id' />
-          <TableColumn title='Running' dataKey='running' modifier={(running) => this.modifyRunningColumn(running)}/>
+          {this.state.currentUser.role === "Admin" ?
+            <TableColumn
+              title='ID'
+              dataKey='id'
+            />
+            : <></>
+          }
+          <TableColumn
+            title='Name'
+            dataKey='name'
+            link='/scenarios/'
+            linkKey='id'
+          />
+          <TableColumn
+            title='Running'
+            dataKey='running'
+            modifier={(running) => this.modifyRunningColumn(running)}
+          />
           <TableColumn
             width='200'
+            align='right'
             editButton
             deleteButton
             exportButton
@@ -285,8 +288,7 @@ class Scenarios extends Component {
         <ImportScenarioDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} nodes={this.state.nodes} />
 
         <DeleteDialog title="scenario" name={this.state.modalScenario.name} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
-      </div>
-    );
+      </div>;
   }
 }
 

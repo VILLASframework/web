@@ -17,7 +17,7 @@
 
 import React from 'react';
 import { scaleLinear, scaleTime, scaleOrdinal} from 'd3-scale';
-import {schemeCategory10} from 'd3-scale-chromatic'
+import { schemeCategory10 } from 'd3-scale-chromatic'
 import { extent } from 'd3-array';
 import { line } from 'd3-shape';
 import { axisBottom, axisLeft } from  'd3-axis';
@@ -103,7 +103,6 @@ class Plot extends React.Component {
       const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(timeFormat("%M:%S"));
       const yAxis = axisLeft().scale(yScale).ticks(5).tickFormat(format(".3s"));
 
-
       return{
         stopTime: stopTime,
         data: null,
@@ -112,7 +111,6 @@ class Plot extends React.Component {
         labelMargin
       };
     }
-
 
     // only show data in requested time
     let data = props.data;
@@ -138,8 +136,6 @@ class Plot extends React.Component {
     if (prevProps.time !== this.props.time) {
       this.createInterval();
     }
-
-
   }
 
   createInterval() {
@@ -222,7 +218,6 @@ class Plot extends React.Component {
   }
 
   render() {
-
     const yLabelPos = {
       x: 12,
       y: this.props.height / 2

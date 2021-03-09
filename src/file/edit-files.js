@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import {FormGroup, FormControl, Button, Col, ProgressBar} from 'react-bootstrap';
+import { Form, Button, Col, ProgressBar } from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
 import AppDispatcher from "../common/app-dispatcher";
 import Table from "../common/table";
@@ -26,7 +26,6 @@ import EditFileContent from  "./edit-file-content";
 
 class EditFilesDialog extends React.Component {
   valid = true;
-
 
   constructor(props) {
     super(props);
@@ -40,7 +39,6 @@ class EditFilesDialog extends React.Component {
   }
 
   onClose() {
-
     this.props.onClose();
   }
 
@@ -71,29 +69,17 @@ class EditFilesDialog extends React.Component {
     } else {
       this.setState({ uploadProgress: 0 });
     }
-
   };
 
   clearProgress = (newFileID) => {
-    /*if (this.props.onChange != null) {
-      let event = {}
-      event["target"] = {}
-      event.target["value"] = newFileID
-      this.props.onChange(event);
-    }
-    */
     this.setState({ uploadProgress: 0 });
-
-
   };
 
-  closeEditModal(){
-
-  this.setState({editModal: false});
+  closeEditModal() {
+    this.setState({editModal: false});
   }
 
   deleteFile(index){
-
     let file = this.props.files[index]
     AppDispatcher.dispatch({
       type: 'files/start-remove',
@@ -102,9 +88,7 @@ class EditFilesDialog extends React.Component {
     });
   }
 
-
   render() {
-
     let fileOptions = [];
     if (this.props.files.length > 0){
       fileOptions.push(
@@ -122,33 +106,51 @@ class EditFilesDialog extends React.Component {
       marginTop: '-40px'
     };
 
-
     return (
-      <Dialog show={this.props.show} title="Edit Files of scenario" buttonTitle="Close" onClose={() => this.onClose()} blendOutCancel = {true} valid={true} size = 'lg'>
-        <div>
+      <Dialog
+        show={this.props.show}
+        title="Edit Files of Scenario"
+        buttonTitle="Close"
+        onClose={() => this.onClose()}
+        blendOutCancel = {true}
+        valid={true}
+      >
+        <Table data={this.props.files}>
+          <TableColumn
+            title='ID'
+            dataKey='id'
+          />
+          <TableColumn
+            title='Name'
+            dataKey='name'
+          />
+          <TableColumn
+            title='Size (bytes)'
+            dataKey='size'
+          />
+          <TableColumn
+            title='Type'
+            dataKey='type'
+          />
+          <TableColumn
+            title=''
+            align='right'
+            deleteButton
+            onDelete={(index) => this.deleteFile(index)}
+            editButton
+            onEdit={index => this.setState({ editModal: true, modalFile: this.props.files[index] })}
+          />
+        </Table>
 
-          <Table data={this.props.files}>
-            <TableColumn title='ID' dataKey='id'/>
-            <TableColumn title='Name' dataKey='name'/>
-            <TableColumn title='Size (bytes)' dataKey='size'/>
-            <TableColumn title='Type' dataKey='type'/>
-            <TableColumn
-              title=''
-              deleteButton
-              onDelete={(index) => this.deleteFile(index)}
-              editButton
-              onEdit={index => this.setState({ editModal: true, modalFile: this.props.files[index] })}
-            />
-          </Table>
+        <Form.Group as={Col} >
+          <Form.Control
+            disabled={this.props.disabled}
+            type='file'
+            onChange={(event) => this.selectUploadFile(event)}
+          />
+        </Form.Group>
 
-          <FormGroup as={Col} >
-            <FormControl
-              disabled={this.props.disabled}
-              type='file'
-              onChange={(event) => this.selectUploadFile(event)} />
-          </FormGroup>
-
-          <FormGroup as={Col} >
+        <Form.Group as={Col} >
           <span className='solid-button'>
             <Button
               variant='secondary'
@@ -157,25 +159,27 @@ class EditFilesDialog extends React.Component {
               Upload
             </Button>
           </span>
-          </FormGroup>
+        </Form.Group>
 
-          <FormGroup as={Col} >
-            <ProgressBar
-              striped={true}
-              animated={true}
-              now={this.state.uploadProgress}
-              label={this.state.uploadProgress + '%'}
-              style={progressBarStyle}
-            />
-          </FormGroup>
-          <div style={{ clear: 'both' }} />
+        <Form.Group as={Col} >
+          <ProgressBar
+            striped={true}
+            animated={true}
+            now={this.state.uploadProgress}
+            label={this.state.uploadProgress + '%'}
+            style={progressBarStyle}
+          />
+        </Form.Group>
 
-          <EditFileContent show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} sessionToken={this.props.sessionToken} file={this.state.modalFile} />
+        <div style={{ clear: 'both' }} />
 
-         </div>
+        <EditFileContent
+          show={this.state.editModal}
+          onClose={(data) => this.closeEditModal(data)}
+          sessionToken={this.props.sessionToken}
+          file={this.state.modalFile}
+        />
       </Dialog>
-
-
     );
   }
 }

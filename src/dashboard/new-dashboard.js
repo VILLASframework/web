@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 import Dialog from '../common/dialogs/dialog';
 
@@ -67,14 +67,21 @@ class NewDashboardDialog extends React.Component {
 
   render() {
     return (
-      <Dialog show={this.props.show} title="New Dashboard" buttonTitle="Add" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
-        <form>
-          <FormGroup controlId="name" valid={this.validateForm('name')}>
-            <FormLabel>Name</FormLabel>
-            <FormControl type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-        </form>
+      <Dialog
+        show={this.props.show}
+        title="New Dashboard"
+        buttonTitle="Add"
+        onClose={(c) => this.onClose(c)}
+        onReset={() => this.resetState()}
+        valid={this.valid}
+      >
+        <Form>
+          <Form.Group controlId="name" valid={this.validateForm('name')}>
+            <Form.Label>Name</Form.Label>
+            <Form.Control type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+            <Form.Control.Feedback />
+          </Form.Group>
+        </Form>
       </Dialog>
     );
   }

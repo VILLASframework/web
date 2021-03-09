@@ -16,7 +16,7 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 class EditWidgetTextControl extends Component {
   constructor(props) {
@@ -60,11 +60,11 @@ class EditWidgetTextControl extends Component {
 
   render() {
     return (
-        <FormGroup controlId={this.props.controlId}>
-          <FormLabel>{this.props.label}</FormLabel>
-          <FormControl type="text" placeholder={this.props.placeholder} value={this.state.value} onChange={e => this.props.handleChange(e)} />
-          <FormControl.Feedback />
-        </FormGroup>
+        <Form.Group controlId={this.props.controlId}>
+          <Form.Label>{this.props.label}</Form.Label>
+          <Form.Control type="text" placeholder={this.props.placeholder} value={this.state.value} onChange={e => this.props.handleChange(e)} />
+          <Form.Control.Feedback />
+        </Form.Group>
     );
   }
 }

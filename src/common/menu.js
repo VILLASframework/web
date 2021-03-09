@@ -74,49 +74,34 @@ class SidebarMenu extends React.Component {
       })
     }
 
-    if (this.state.externalAuth) {
-      return (
-        <div className="menu-sidebar">
-          <h2>Menu</h2>
+    return (
+      <div className="menu">
+        <h2>Menu</h2>
+
+        {this.state.externalAuth ?
           <ul>
             <li hidden={!brand.pages.home}><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
             <li hidden={!brand.pages.scenarios}><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
-            <li hidden={!brand.pages.infrastructure}><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure Components">Infrastructure Components</NavLink></li>
-            { this.props.currentRole === 'Admin' ?
-                <li><NavLink to="/users" activeClassName="active" title="User Management">User Management</NavLink></li> : ''
+            <li hidden={!brand.pages.infrastructure}><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure">Infrastructure</NavLink></li>
+            {this.props.currentRole === 'Admin' ?
+              <li><NavLink to="/users" activeClassName="active" title="Users">Users</NavLink></li> : ''
             }
             <li hidden={!brand.pages.account}><NavLink to="/account" title="Account">Account</NavLink></li>
             <a onClick={this.logout.bind(this)} href={this.state.logoutLink}>Logout</a>
             <li hidden={!brand.pages.api}><NavLink to="/api" title="API Browser">API Browser</NavLink></li>
           </ul>
-          {
-          links.length > 0 ?
-            <div>
-              <br></br>
-              <h4> Links</h4>
-              <ul> {links} </ul>
-            </div>
-            : ''
-        }
-        </div>
-      );
-    }
+          : <ul>
+            <li hidden={!brand.pages.home}><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
+            <li hidden={!brand.pages.scenarios}><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
+            <li hidden={!brand.pages.infrastructure}><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure">Infrastructure</NavLink></li>
+            {this.props.currentRole === 'Admin' ?
+              <li><NavLink to="/users" activeClassName="active" title="Users">Users</NavLink></li> : ''
+            }
+            <li hidden={!brand.pages.account}><NavLink to="/account" title="Account">Account</NavLink></li>
+            <li><NavLink to={this.state.logoutLink} title="Logout">Logout</NavLink></li>
+            <li hidden={!brand.pages.api}> <NavLink to="/api" title="API Browser">API Browser</NavLink></li >
+          </ul >}
 
-    return (
-      <div className="menu-sidebar">
-        <h2>Menu</h2>
-
-        <ul>
-          <li hidden={!brand.pages.home}><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
-          <li hidden={!brand.pages.scenarios}><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
-          <li hidden={!brand.pages.infrastructure}><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure Components">Infrastructure Components</NavLink></li>
-          {this.props.currentRole === 'Admin' ?
-            <li><NavLink to="/users" activeClassName="active" title="User Management">User Management</NavLink></li> : ''
-          }
-          <li hidden={!brand.pages.account}><NavLink to="/account" title="Account">Account</NavLink></li>
-          <li><NavLink to={this.state.logoutLink} title="Logout">Logout</NavLink></li>
-          <li hidden={!brand.pages.api}><NavLink to="/api" title="API Browser">API Browser</NavLink></li>
-        </ul>
         {
           links.length > 0 ?
             <div>

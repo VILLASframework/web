@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import {FormGroup, FormControl, FormLabel} from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 class EditWidgetICControl extends React.Component {
 
@@ -60,13 +60,13 @@ class EditWidgetICControl extends React.Component {
     }
 
     return <div>
-      <FormGroup controlId="ic">
-        <FormLabel>IC</FormLabel>
-        <FormControl
+      <Form.Group controlId="ic">
+        <Form.Label>IC</Form.Label>
+        <Form.Control
           as="select"
           value={isCustomProperty ? this.props.widget[parts[0]][parts[1]] : this.props.widget[this.props.controlId]}
-          onChange={(e) => this.handleICChange(e)}>{icOptions} </FormControl>
-      </FormGroup>
+          onChange={(e) => this.handleICChange(e)}>{icOptions} </Form.Control>
+      </Form.Group>
     </div>;
   }
 }

@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-import { Form, Button, FormGroup, FormControl, FormLabel, Col } from 'react-bootstrap';
+import { Form, Button, Col } from 'react-bootstrap';
 import RecoverPassword from './recover-password'
 import AppDispatcher from '../common/app-dispatcher';
 import _ from 'lodash';
@@ -69,19 +69,19 @@ class LoginForm extends Component {
   villaslogin() {
     return (
       <Form key="login_a">
-        <FormGroup controlId="username">
-          <FormLabel column={true}>Username</FormLabel>
+        <Form.Group controlId="username">
+          <Form.Label column={true}>Username</Form.Label>
           <Col>
-            <FormControl type="text" placeholder="Username" autoComplete="username" onChange={(e) => this.handleChange(e)} />
+            <Form.Control type="text" placeholder="Username" autoComplete="username" onChange={(e) => this.handleChange(e)} />
           </Col>
-        </FormGroup>
+        </Form.Group>
 
-        <FormGroup controlId="password">
-          <FormLabel column={true}>Password</FormLabel>
+        <Form.Group controlId="password">
+          <Form.Label column={true}>Password</Form.Label>
           <Col >
-            <FormControl type="password" placeholder="Password" autoComplete="current-password" onChange={(e) => this.handleChange(e)} />
+            <Form.Control type="password" placeholder="Password" autoComplete="current-password" onChange={(e) => this.handleChange(e)} />
           </Col>
-        </FormGroup>
+        </Form.Group>
 
         {this.props.loginMessage &&
           <div style={{ marginBottom: '20px', color: 'red', fontSize: 'small' }}>
@@ -91,17 +91,16 @@ class LoginForm extends Component {
           </div>
         }
 
-        <FormGroup style={{ paddingTop: 15, paddingBottom: 5 }}>
+        <Form.Group style={{ paddingTop: 15, paddingBottom: 5 }}>
           <Col>
           <span className='solid-button'>
             <Button variant='secondary' style={{width: 90}} type="submit" disabled={this.state.disableLogin} onClick={e => this.login(e)}>Login</Button>
           </span>
             <Button variant="link" size="sm" style={{marginLeft: 85}} onClick={() => this.openRecoverPassword()}>Forgot your password?</Button>
           </Col>
-        </FormGroup>
+        </Form.Group>
 
         <RecoverPassword show={this.state.forgottenPassword} onClose={() => this.closeRecoverPassword()} sessionToken={this.props.sessionToken} />
-
       </Form>
     );
   }

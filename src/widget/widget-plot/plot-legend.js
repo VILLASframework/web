@@ -17,7 +17,7 @@
 
 import React from 'react';
 import { scaleOrdinal} from 'd3-scale';
-import {schemeCategory10} from 'd3-scale-chromatic'
+import { schemeCategory10 } from 'd3-scale-chromatic'
 
 function Legend(props){
 
@@ -44,7 +44,6 @@ function Legend(props){
       </li>
     )
   }
-
 }
 
 class PlotLegend extends React.Component {
@@ -60,7 +59,6 @@ class PlotLegend extends React.Component {
             <Legend key={signal.id} sig={signal} lineColor={"undefined"}/>
           ))
         }
-
       </ul>
     </div>;
   }
