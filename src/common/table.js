@@ -126,7 +126,7 @@ class CustomTable extends Component {
     }
 
     // add buttons
-    let showEditButton = child.props.showEditButton !== null
+    let showEditButton = child.props.showEditButton !== null  && child.props.showEditButton !== undefined
       ? child.props.showEditButton(index)
       : true;
 
@@ -229,7 +229,7 @@ class CustomTable extends Component {
       );
     }
 
-    let showDeleteButton = child.props.showDeleteButton !== null
+    let showDeleteButton = child.props.showDeleteButton !== null  && child.props.showDeleteButton !== undefined
       ? child.props.showDeleteButton(index)
       : true;
 
