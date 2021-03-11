@@ -15,17 +15,24 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
-import Branding from '../branding/branding';
-
-class Header extends React.Component {
-  render() {
-    return (
-      <header className="app-header">
-        <h1>{Branding.instance.values.title} - {Branding.instance.values.subtitle}</h1>
-      </header>
-    );
-  }
+const villasweb_values = {
+   title: 'VILLASweb',
+   subtitle: 'ACS',
+   logo: 'villas_web.svg',
+   pages: {
+      home: true,
+      scenarios: true,
+      infrastructure: true,
+      users: true,
+      account: true,
+      api: true,
+   },
+   style: {
+      bgcolor: '#6EA2B0',
+      highlights: '#527984',
+      primarytext: '#4d4d4d',
+      secondarytext: '#818181',
+   }
 }
 
-export default Header;
+export default villasweb_values;

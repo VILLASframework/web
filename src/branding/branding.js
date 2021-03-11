@@ -15,16 +15,15 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import brands from './brands'
-import config from '../config'
-import _ from 'lodash';
-
 import { villasweb_home } from './villasweb/villasweb-home';
-import { slew_home } from './slew/slew_home';
+import villasweb_values from './villasweb/villasweb-values';
 
+import { slew_home } from './slew/slew-home';
+import slew_values from './slew/slew-values';
 
 class Branding {
     constructor(chosenbrand) {
+        /*
         // TODO: simplify; error only for "wrong" brand, not for missing brand
         var brand = _.get(brands, [chosenbrand]);
         if (!brand) {
@@ -37,21 +36,36 @@ class Branding {
         } else {
             this.default = false;
         }
+        *****/
 
-        this.brand = brand;
-        this.name = chosenbrand;
+        this.brand = chosenbrand;
+        this.setValues();
     }
 
-    static instance = Branding.instance || new Branding(config.branding);
+    static instance = Branding.instance || new Branding(process.env.REACT_APP_BRAND);
+
+    setValues() {
+        switch(this.brand) {
+            case 'villasweb':
+                this.values = villasweb_values;
+                break;
+            case 'slew':
+                this.values = slew_values;
+                break;
+            default:
+                this.values = villasweb_values;
+                break;
+        }
+    }
 
     getHome(username = '', userid = '', role = '') {
         var homepage = '';
-        switch (this.name) {
+        switch (this.brand) {
             case 'villasweb':
-                homepage = villasweb_home(this.brand.title, username, userid, role);
+                homepage = villasweb_home(this.values.title, username, userid, role);
                 break;
             case 'slew':
-                homepage = slew_home(this.brand.title);
+                homepage = slew_home(this.values.title);
                 break;
             default:
                 homepage = villasweb_home();
@@ -61,36 +75,36 @@ class Branding {
     }
 
     getBackgroundColor() {
-        if (this.brand.style && this.brand.style.bgcolor) {
-            return this.brand.style.bgcolor;
+        if (this.values.style && this.values.style.bgcolor) {
+            return this.values.style.bgcolor;
         }
         return null;
     }
 
     getHighlightColor() {
-        if (this.brand.style && this.brand.style.highlights) {
-            return this.brand.style.highlights;
+        if (this.values.style && this.values.style.highlights) {
+            return this.values.style.highlights;
         }
         return null;
     }
 
     getPrimaryTextColor() {
-        if (this.brand.style && this.brand.style.primarytext) {
-            return this.brand.style.primarytext;
+        if (this.values.style && this.values.style.primarytext) {
+            return this.values.style.primarytext;
         }
         return null;
     }
 
     getSecondaryTextColor() {
-        if (this.brand.style && this.brand.style.secondarytext) {
-            return this.brand.style.secondarytext;
+        if (this.values.style && this.values.style.secondarytext) {
+            return this.values.style.secondarytext;
         }
         return null;
     }
 
     getFont() {
-        if (this.brand.style && this.brand.style.font) {
-            return this.brand.style.secondarytext;
+        if (this.values.style && this.values.style.font) {
+            return this.values.style.secondarytext;
         }
         return null;
     }

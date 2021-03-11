@@ -20,7 +20,6 @@ const config = {
     name: 'Institute for Automation of Complex Power Systems (ACS), RWTH Aachen University, Germany',
     mail: 'stvogel@eonerc.rwth-aachen.de'
   },
-  branding: 'slew',
 }
 
 export default config

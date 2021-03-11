@@ -20,7 +20,6 @@ import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import NotificationSystem from 'react-notification-system';
 import { Redirect, Route } from 'react-router-dom';
-import { Hidden } from 'react-grid-system'
 
 import AppDispatcher from './common/app-dispatcher';
 import NotificationsDataManager from './common/data-managers/notifications-data-manager';
@@ -39,7 +38,6 @@ import User from './user/user';
 import APIBrowser from './common/api-browser';
 
 import './styles/app.css';
-//import './branding/slew/slew.css'
 import Branding from './branding/branding';
 
 
@@ -62,13 +60,13 @@ class App extends React.Component {
       console.log("default branding");
       return;
     }
-    document.title = Branding.instance.brand.title + " " + Branding.instance.brand.subtitle;
+    document.title = Branding.instance.values.title + " " + Branding.instance.values.subtitle;
     var oldlink = document.getElementById('dynamic-favicon');
 
     var link = document.createElement('link');
     link.id = 'dynamic-favicon';
     link.rel = 'shortcut icon'
-    link.href = Branding.instance.brand.icon;
+    link.href = Branding.instance.values.icon;
 
     if (oldlink) {
       document.head.removeChild(oldlink);
@@ -98,7 +96,7 @@ class App extends React.Component {
 
     let secondary = Branding.instance.getSecondaryTextColor();
     if (secondary) {
-      rootEl.style.setProperty('--secondary', secondary);
+      rootEl.style.setProperty('--secondarytext', secondary);
     }
 
     let font = Branding.instance.getFont();

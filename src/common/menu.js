@@ -66,11 +66,11 @@ class SidebarMenu extends React.Component {
   }
 
   render() {
-    const brand = Branding.instance.brand;
+    const values = Branding.instance.values;
     let links = []
-    if (brand.links) {
-      Object.keys(brand.links).forEach(key => {
-        links.push(<li key={key}><a href={brand.links[key]} title={key}>{key}</a></li>);
+    if (values.links) {
+      Object.keys(values.links).forEach(key => {
+        links.push(<li key={key}><a href={values.links[key]} title={key}>{key}</a></li>);
       })
     }
 
@@ -80,26 +80,26 @@ class SidebarMenu extends React.Component {
 
         {this.state.externalAuth ?
           <ul>
-            <li hidden={!brand.pages.home}><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
-            <li hidden={!brand.pages.scenarios}><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
-            <li hidden={!brand.pages.infrastructure}><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure">Infrastructure</NavLink></li>
+            <li hidden={!values.pages.home}><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
+            <li hidden={!values.pages.scenarios}><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
+            <li hidden={!values.pages.infrastructure}><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure">Infrastructure</NavLink></li>
             {this.props.currentRole === 'Admin' ?
               <li><NavLink to="/users" activeClassName="active" title="Users">Users</NavLink></li> : ''
             }
-            <li hidden={!brand.pages.account}><NavLink to="/account" title="Account">Account</NavLink></li>
+            <li hidden={!values.pages.account}><NavLink to="/account" title="Account">Account</NavLink></li>
             <a onClick={this.logout.bind(this)} href={this.state.logoutLink}>Logout</a>
-            <li hidden={!brand.pages.api}><NavLink to="/api" title="API Browser">API Browser</NavLink></li>
+            <li hidden={!values.pages.api}><NavLink to="/api" title="API Browser">API Browser</NavLink></li>
           </ul>
           : <ul>
-            <li hidden={!brand.pages.home}><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
-            <li hidden={!brand.pages.scenarios}><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
-            <li hidden={!brand.pages.infrastructure}><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure">Infrastructure</NavLink></li>
+            <li hidden={!values.pages.home}><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
+            <li hidden={!values.pages.scenarios}><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
+            <li hidden={!values.pages.infrastructure}><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure">Infrastructure</NavLink></li>
             {this.props.currentRole === 'Admin' ?
               <li><NavLink to="/users" activeClassName="active" title="Users">Users</NavLink></li> : ''
             }
-            <li hidden={!brand.pages.account}><NavLink to="/account" title="Account">Account</NavLink></li>
+            <li hidden={!values.pages.account}><NavLink to="/account" title="Account">Account</NavLink></li>
             <li><NavLink to={this.state.logoutLink} title="Logout">Logout</NavLink></li>
-            <li hidden={!brand.pages.api}> <NavLink to="/api" title="API Browser">API Browser</NavLink></li >
+            <li hidden={!values.pages.api}> <NavLink to="/api" title="API Browser">API Browser</NavLink></li >
           </ul >}
 
         {

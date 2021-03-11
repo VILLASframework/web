@@ -15,17 +15,30 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
-import Branding from '../branding/branding';
-
-class Header extends React.Component {
-  render() {
-    return (
-      <header className="app-header">
-        <h1>{Branding.instance.values.title} - {Branding.instance.values.subtitle}</h1>
-      </header>
-    );
-  }
+const slew_values = {
+   title: 'SLEW',
+   subtitle: 'Second Life for Energiewende',
+   logo: "slew-logo.png",
+   icon: "/slew_icon.png",
+   pages: {
+      home: true,
+      scenarios: true,
+      infrastructure: false,
+      users: false,
+      account: false,
+      api: false
+   },
+   links: {
+      "DPsim Simulator": "https://dpsim.fein-aachen.org",
+      "VILLASframework": "https://villas.fein-aachen.org/doc"
+   },
+   style: {
+      bgcolor: 'rgba(107,29,26, 0.8)',
+      highlights: '#610C04',
+      primarytext: '#472120',
+      secondarytext: '#472120',
+      font: "16px Roboto, sans-serif",
+   }
 }
 
-export default Header;
+export default slew_values;

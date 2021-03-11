@@ -62,13 +62,11 @@ body {
 
   margin-top: 20px;
   padding-bottom: 10px;
-
+  color: var(--secondarytext);
   text-align: center;
 }
 
 .app-footer a {
-  color: var(--primarytext);
-
   text-decoration: underline;
 }
 
@@ -116,7 +114,7 @@ body {
 }
 
 .menu a {
-  color: var(--primarytext);
+  color: var(--secondarytext);
   text-decoration:none;
 }
 
