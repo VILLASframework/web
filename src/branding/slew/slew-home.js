@@ -22,7 +22,7 @@ export function slew_home(title) {
 
     return (
         <div className="home-container">
-            <img style={{ height: 120, float: 'right' }} src={require('./img/slew-logo.png').default} alt="Logo VILLASweb" />
+            <img style={{ height: 120, float: 'right' }} src={require('./img/slew-logo-draft.png').default} alt="Logo VILLASweb" />
             <h1>Home</h1>
             <p>
                 Welcome to <b>{title}</b>!

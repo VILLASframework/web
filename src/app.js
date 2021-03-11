@@ -66,7 +66,7 @@ class App extends React.Component {
     var link = document.createElement('link');
     link.id = 'dynamic-favicon';
     link.rel = 'shortcut icon'
-    link.href = Branding.instance.values.icon;
+    link.href = '/' + Branding.instance.values.icon;
 
     if (oldlink) {
       document.head.removeChild(oldlink);
