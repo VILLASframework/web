@@ -738,7 +738,7 @@ class Scenario extends React.Component {
     return <div className='section'>
       <div className='section-buttons-group-right'>
         <IconButton
-          key="0"
+          overlaykey="0"
           tooltip="Add, edit or delete files of scenario"
           onClick={this.onEditFiles.bind(this)}
           icon="file"
@@ -759,13 +759,13 @@ class Scenario extends React.Component {
       <h2 style={tableHeadingStyle}>Component Configurations
         <span className='icon-button'>
           <IconButton
-            key={0}
+            overlaykey={0}
             tooltip='Add Component Configuration'
             onClick={() => this.addConfig()}
             icon='plus'
           />
           <IconButton
-            key={1}
+            overlaykey={1}
             tooltip='Import Component Configuration'
             onClick={() => this.setState({ importConfigModal: true })}
             icon='upload'
@@ -887,13 +887,13 @@ class Scenario extends React.Component {
       <h2 style={tableHeadingStyle}>Dashboards
         <span className='icon-button'>
           <IconButton
-            key={0}
+            overlaykey={0}
             tooltip='Add Dashboard'
             onClick={() => this.setState({ newDashboardModal: true })}
             icon='plus'
           />
           <IconButton
-            key={1}
+            overlaykey={1}
             tooltip='Import Dashboard'
             onClick={() => this.setState({ importDashboardModal: true })}
             icon='upload'
@@ -956,7 +956,7 @@ class Scenario extends React.Component {
       <h2 style={tableHeadingStyle}>Results
         <span className='icon-button'>
           <IconButton
-            key={1}
+            overlaykey={1}
             tooltip='Add Result'
             onClick={() => this.setState({ newResultModal: true })}
             icon='plus'
