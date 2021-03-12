@@ -51,58 +51,8 @@ class App extends React.Component {
       type: 'config/load',
     });
 
-    this.setBrandingStyle();
+    Branding.instance.applyBranding();
     this.state = {} 
-  }
-
-  changeHead() {
-    if (Branding.instance.default) {
-      console.log("default branding");
-      return;
-    }
-    document.title = Branding.instance.values.title + " " + Branding.instance.values.subtitle;
-    var oldlink = document.getElementById('dynamic-favicon');
-
-    var link = document.createElement('link');
-    link.id = 'dynamic-favicon';
-    link.rel = 'shortcut icon'
-    link.href = '/' + Branding.instance.values.icon;
-
-    if (oldlink) {
-      document.head.removeChild(oldlink);
-    }
-    document.head.appendChild(link);
-  }
-
-  setBrandingStyle() {
-    this.changeHead();
-
-    const rootEl = document.querySelector(':root');
-    let background = Branding.instance.getBackgroundColor();
-
-    if (background) {
-      document.body.style.backgroundColor = background;
-    }
-
-    let highlight = Branding.instance.getHighlightColor();
-    if (highlight) {
-      rootEl.style.setProperty('--highlights', highlight);
-    }
-
-    let primary = Branding.instance.getPrimaryTextColor();
-    if (primary) {
-      rootEl.style.setProperty('--primarytext', primary);
-    }
-
-    let secondary = Branding.instance.getSecondaryTextColor();
-    if (secondary) {
-      rootEl.style.setProperty('--secondarytext', secondary);
-    }
-
-    let font = Branding.instance.getFont();
-    if (font) {
-      rootEl.style.setProperty('--mainfont', font);
-    }
   }
 
   componentDidMount() {
