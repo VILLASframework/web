@@ -39,6 +39,7 @@ import Scenario from './scenario/scenario';
 import Users from './user/users';
 import User from './user/user';
 import APIBrowser from './common/api-browser';
+import LoginStore from './user/login-store'
 
 import './styles/app.css';
 
@@ -47,23 +48,27 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    AppDispatcher.dispatch({
-      type: 'config/load',
-    });
-
     this.state = {
       showSidebarMenu: false,
     }
   }
 
+  static getStores() {
+    return [LoginStore]
+  }
+
   componentDidMount() {
     NotificationsDataManager.setSystem(this.refs.notificationSystem);
+
+    AppDispatcher.dispatch({
+      type: 'config/load',
+    });
 
     // if token stored locally, we are already logged-in
     let token = localStorage.getItem("token");
     if (token != null && token !== '') {
       let currentUser = JSON.parse(localStorage.getItem("currentUser"));
-      console.log("Already logged-in")
+      console.log("Logged-in as user ", currentUser.username)
       AppDispatcher.dispatch({
         type: 'users/logged-in',
         token: token,

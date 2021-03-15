@@ -57,11 +57,7 @@ class SidebarMenu extends React.Component {
     AppDispatcher.dispatch({
       type: 'users/logout'
     });
-    // The Login Store is deleted automatically
-
-    // discard login token and current User
-    localStorage.setItem('token', '');
-    localStorage.setItem('currentUser', '');
+    // The Login Store and local storage are deleted automatically
   }
 
   render() {

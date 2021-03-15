@@ -15,7 +15,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
+import React from 'react';
 import { Container } from 'flux/utils';
 import { NavbarBrand } from 'react-bootstrap';
 import NotificationSystem from 'react-notification-system';
@@ -28,15 +28,10 @@ import NotificationsDataManager from '../common/data-managers/notifications-data
 import LoginStore from './login-store'
 import AppDispatcher from '../common/app-dispatcher';
 
-class Login extends Component {
+class Login extends React.Component {
   constructor(props) {
     super(props);
 
-    // load config in case the user goes directly to /login
-    // otherwise it will be loaded in app constructor
-    AppDispatcher.dispatch({
-      type: 'config/load',
-    });
   }
 
   static getStores() {
@@ -56,6 +51,12 @@ class Login extends Component {
 
   componentDidMount() {
     NotificationsDataManager.setSystem(this.refs.notificationSystem);
+
+    // load config in case the user goes directly to /login
+    // otherwise it will be loaded in app constructor
+    AppDispatcher.dispatch({
+      type: 'config/load',
+    });
   }
 
   render() {
