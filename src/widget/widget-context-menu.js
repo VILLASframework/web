@@ -18,6 +18,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu, Item, Separator, useContextMenu } from 'react-contexify';
+import 'react-contexify/dist/ReactContexify.css';
 import Widget from './widget';
 
 class WidgetContextMenu extends React.Component {
@@ -122,21 +123,20 @@ class WidgetContextMenu extends React.Component {
 
     const { show } = useContextMenu({id:'widgetMenu'+ this.props.index, style:dim} )
     function showMenu(e) {
-      show(e)
+      e.preventDefault();
+      show(e);
     }
 
-    return <div style={dim}>
-    <div onContextMenu={showMenu}>
-    <Widget
-              data={this.props.widget}
-              onWidgetChange={this.props.onWidgetChange}
-              editing={this.props.editing}
-              index={this.props.index}
-              paused={this.props.paused}
-            />
-    </div>
-    <ContextMenu />
-    </div>
+    return (<div onContextMenu={showMenu} style={dim}>
+      <Widget
+        data={this.props.widget}
+        onWidgetChange={this.props.onWidgetChange}
+        editing={this.props.editing}
+        index={this.props.index}
+        paused={this.props.paused}
+      />
+      <ContextMenu />
+    </div>);
   }
 }
 
