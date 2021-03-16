@@ -24,6 +24,17 @@ import slew_values from './slew/slew-values';
 
 class Branding {
     constructor(chosenbrand) {
+        if (!Branding.branding) {
+            if (chosenbrand === undefined) {
+                chosenbrand = "villasweb"
+            }
+            this.brand = chosenbrand;
+
+            this.setValues();
+            this.isSet = true;
+
+            Branding.branding = this;
+        }
         /*
         // TODO: simplify; error only for "wrong" brand, not for missing brand
         var brand = _.get(brands, [chosenbrand]);
@@ -38,16 +49,11 @@ class Branding {
             this.default = false;
         }
         *****/
-
-        this.brand = chosenbrand;
-        this.isSet = false;
-        this.setValues();
+        return Branding.branding;
     }
 
-    static instance = Branding.instance || new Branding(process.env.REACT_APP_BRAND);
-
     setValues() {
-        switch(this.brand) {
+        switch (this.brand) {
             case 'villasweb':
                 this.values = villasweb_values;
                 break;
@@ -93,10 +99,10 @@ class Branding {
         return (<h1>Welcome!</h1>);
     }
 
+    // TODO: error handling if icon cannot be found
     changeHead() {
-        if (this.default) {
-          console.log("default branding");
-          return;
+        if (!this.values.icon) {
+            return;
         }
         document.title = this.values.title + " " + this.values.subtitle;
         var oldlink = document.getElementById('dynamic-favicon');
@@ -107,19 +113,19 @@ class Branding {
         link.href = '/' + this.values.icon;
 
         if (oldlink) {
-          document.head.removeChild(oldlink);
+            document.head.removeChild(oldlink);
         }
         document.head.appendChild(link);
-      }
+    }
 
-      applyBranding() {
+    applyBranding() {
         this.changeHead();
 
         const rootEl = document.querySelector(':root');
         let background = this.getBackgroundColor();
 
         if (background) {
-          document.body.style.backgroundColor = background;
+            document.body.style.backgroundColor = background;
         }
 
         let maincolor = this.getMainColor();
@@ -129,26 +135,29 @@ class Branding {
 
         let highlight = this.getHighlightColor();
         if (highlight) {
-          rootEl.style.setProperty('--highlights', highlight);
+            rootEl.style.setProperty('--highlights', highlight);
         }
 
         let primary = this.getPrimaryTextColor();
         if (primary) {
-          rootEl.style.setProperty('--primarytext', primary);
+            rootEl.style.setProperty('--primarytext', primary);
         }
 
         let secondary = this.getSecondaryTextColor();
         if (secondary) {
-          rootEl.style.setProperty('--secondarytext', secondary);
+            rootEl.style.setProperty('--secondarytext', secondary);
         }
 
         let font = this.getFont();
         if (font) {
-          rootEl.style.setProperty('--mainfont', font);
+            rootEl.style.setProperty('--mainfont', font);
         }
 
-        this.isSet = false;
-      }
+        let borderradius = this.getBorderRadius();
+        if (borderradius) {
+            rootEl.style.setProperty('--borderradius', borderradius);
+        }
+    }
 
     getBackgroundColor() {
         if (this.values.style && this.values.style.bgcolor) {
@@ -191,7 +200,16 @@ class Branding {
         }
         return null;
     }
+
+    getBorderRadius() {
+        if (this.values.style && this.values.style.borderradius) {
+            return this.values.style.borderradius;
+        }
+        return null;
+    }
 };
 
+const branding = new Branding(process.env.REACT_APP_BRAND);
+Object.freeze(branding);
 
-export default Branding;
+export default branding;

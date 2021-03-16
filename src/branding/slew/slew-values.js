@@ -38,7 +38,7 @@ const slew_values = {
       primarytext: '#472120',
       secondarytext: '#472120',
       font: "16px Roboto, sans-serif",
-      borderradius: "8px"
+      borderradius: "10px"
    }
 }
 

@@ -18,7 +18,7 @@
 import React from 'react';
 
 import { Redirect } from "react-router-dom";
-import Branding from '../branding/branding';
+import branding from '../branding/branding';
 
 
 class Home extends React.Component {
@@ -36,8 +36,6 @@ class Home extends React.Component {
       console.log("HOME redirecting to logout/ login")
       return (<Redirect to="/logout" />);
     }
-
-    const branding = Branding.instance;
 
     return (
       <div>

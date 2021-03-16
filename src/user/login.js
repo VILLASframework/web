@@ -27,7 +27,7 @@ import Footer from '../common/footer';
 import NotificationsDataManager from '../common/data-managers/notifications-data-manager';
 import LoginStore from './login-store'
 import AppDispatcher from '../common/app-dispatcher';
-import Branding from '../branding/branding';
+import branding from '../branding/branding';
 
 
 class Login extends Component {
@@ -41,8 +41,8 @@ class Login extends Component {
     });
 
     // set branding in case the login page gets refreshed
-    if (!Branding.instance.isSet) {
-      Branding.instance.applyBranding();
+    if (!branding.isSet) {
+      branding.applyBranding();
     }
   }
 
@@ -78,7 +78,7 @@ class Login extends Component {
         <Header />
         <div className="login-parent">
           <div className="login-welcome">
-            {Branding.instance.getWelcome()}
+            {branding.getWelcome()}
           </div>
 
           <div className="login-container">

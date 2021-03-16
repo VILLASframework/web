@@ -38,7 +38,7 @@ import User from './user/user';
 import APIBrowser from './common/api-browser';
 
 import './styles/app.css';
-import Branding from './branding/branding';
+import branding from './branding/branding';
 
 
 
@@ -51,7 +51,7 @@ class App extends React.Component {
       type: 'config/load',
     });
 
-    Branding.instance.applyBranding();
+    branding.applyBranding();
     this.state = {} 
   }
 

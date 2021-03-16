@@ -17,7 +17,7 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import Branding from '../branding/branding';
+import branding from '../branding/branding';
 import { Container } from 'flux/utils';
 import LoginStore from '../user/login-store';
 import AppDispatcher from './app-dispatcher';
@@ -66,7 +66,7 @@ class SidebarMenu extends React.Component {
   }
 
   render() {
-    const values = Branding.instance.values;
+    const values = branding.values;
     let links = []
     if (values.links) {
       Object.keys(values.links).forEach(key => {

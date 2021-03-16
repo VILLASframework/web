@@ -16,13 +16,13 @@
  ******************************************************************************/
 
 import React from 'react';
-import Branding from '../branding/branding';
+import branding from '../branding/branding';
 
 class Header extends React.Component {
   render() {
     return (
       <header className="app-header">
-        <h1>{Branding.instance.values.title} - {Branding.instance.values.subtitle}</h1>
+        <h1>{branding.values.title} - {branding.values.subtitle}</h1>
       </header>
     );
   }
