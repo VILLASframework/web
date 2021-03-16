@@ -18,7 +18,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu, Item, Separator, useContextMenu } from 'react-contexify';
-import 'react-contexify/dist/ReactContexify.css';
 import Widget from './widget';
 
 class WidgetContextMenu extends React.Component {
@@ -94,40 +93,40 @@ class WidgetContextMenu extends React.Component {
     }
   };
 
+
   render() {
     const isLocked = this.props.widget.locked;
-    const ContextMenu = () => (
-      <Menu id={'widgetMenu'+ this.props.index} style={{zIndex: 1000, display: 'inline-block'}}>
-      <Item disabled={isLocked} onClick={this.editWidget}>Edit</Item>
-      <Item disabled={isLocked} onClick={this.duplicateWidget}>Duplicate</Item>
-      <Item disabled={isLocked} onClick={this.deleteWidget}>Delete</Item>
-
-      <Separator />
-
-      <Item disabled={isLocked} onClick={this.moveAbove}>Move above</Item>
-      <Item disabled={isLocked} onClick={this.moveToFront}>Move to front</Item>
-      <Item disabled={isLocked} onClick={this.moveUnderneath}>Move underneath</Item>
-      <Item disabled={isLocked} onClick={this.moveToBack}>Move to back</Item>
-
-      <Separator />
-
-      <Item disabled={isLocked} onClick={this.lockWidget}>Lock</Item>
-      <Item disabled={isLocked === false} onClick={this.unlockWidget}>Unlock</Item>
-      </Menu>
-  );
 
     let dim = {
       width: '100%',
       height: '100%'
     };
 
-    const { show } = useContextMenu({id:'widgetMenu'+ this.props.index, style:dim} )
+    const { show } = useContextMenu({id:'widgetMenu'+ this.props.index} )
     function showMenu(e) {
       e.preventDefault();
       show(e);
     }
 
     return (<div onContextMenu={showMenu} style={dim}>
+      <Menu id={'widgetMenu'+ this.props.index}>
+        <Item disabled={isLocked} onClick={this.editWidget}>Edit</Item>
+        <Item disabled={isLocked} onClick={this.duplicateWidget}>Duplicate</Item>
+        <Item disabled={isLocked} onClick={this.deleteWidget}>Delete</Item>
+
+        <Separator />
+
+        <Item disabled={isLocked} onClick={this.moveAbove}>Move above</Item>
+        <Item disabled={isLocked} onClick={this.moveToFront}>Move to front</Item>
+        <Item disabled={isLocked} onClick={this.moveUnderneath}>Move underneath</Item>
+        <Item disabled={isLocked} onClick={this.moveToBack}>Move to back</Item>
+
+        <Separator />
+
+        <Item disabled={isLocked} onClick={this.lockWidget}>Lock</Item>
+        <Item disabled={isLocked === false} onClick={this.unlockWidget}>Unlock</Item>
+      </Menu>
+
       <Widget
         data={this.props.widget}
         onWidgetChange={this.props.onWidgetChange}
@@ -135,7 +134,8 @@ class WidgetContextMenu extends React.Component {
         index={this.props.index}
         paused={this.props.paused}
       />
-      <ContextMenu />
+
+
     </div>);
   }
 }
