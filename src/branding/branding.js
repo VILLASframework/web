@@ -18,8 +18,7 @@
 import { villasweb_footer, villasweb_home } from './villasweb/villasweb-functions';
 import villasweb_values from './villasweb/villasweb-values';
 
-import { slew_home } from './slew/slew-home';
-import { slew_welcome } from './slew/slew-welcome';
+import { slew_home, slew_welcome } from './slew/slew-functions';
 import slew_values from './slew/slew-values';
 
 class Branding {

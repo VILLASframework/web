@@ -19,7 +19,6 @@ import './slew.css'
 
 
 export function slew_home(title) {
-
     return (
         <div className="home-container">
             <img style={{ height: 120, float: 'right' }} src={require('./img/slew-logo-draft.png').default} alt="Logo VILLASweb" />
@@ -56,6 +55,13 @@ export function slew_home(title) {
                 <img id="images" height={70} src={require('./img/european_commission.svg').default} alt="Logo EU"/>
               </div>
         </div>)
-
 }
 
+export function slew_welcome() {
+  return (
+      <div >
+          <h1>Welcome!</h1>
+          <p>SLEW is a learning platform for running experiments in a virtual power engineering world.
+              The platform enables to interact with the experiments in real time and perform analyses on the experimental results.</p>
+      </div>)
+}
