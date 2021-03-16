@@ -15,7 +15,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import { villasweb_home } from './villasweb/villasweb-home';
+import { villasweb_footer, villasweb_home } from './villasweb/villasweb-functions';
 import villasweb_values from './villasweb/villasweb-values';
 
 import { slew_home } from './slew/slew-home';
@@ -80,6 +80,10 @@ class Branding {
                 break;
         }
         return homepage;
+    }
+
+    getFooter() {
+        return villasweb_footer();
     }
 
     getWelcome() {

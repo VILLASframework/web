@@ -23,7 +23,6 @@ import { Redirect } from 'react-router-dom';
 
 import LoginForm from './login-form';
 import Header from '../common/header';
-import Footer from '../common/footer';
 import NotificationsDataManager from '../common/data-managers/notifications-data-manager';
 import LoginStore from './login-store'
 import AppDispatcher from '../common/app-dispatcher';
@@ -88,7 +87,7 @@ class Login extends Component {
           </div>
         </div>
 
-        <Footer />
+        {branding.getFooter()}
       </div>
     );
   }

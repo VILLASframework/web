@@ -66,3 +66,11 @@ export function villasweb_home(title, username, userid, role) {
       </ul>
     </div>)
 }
+
+export function villasweb_footer() {
+  return (
+    <footer className="app-footer">
+      Copyright &copy; {new Date().getFullYear()} - <a href="https://www.acs.eonerc.rwth-aachen.de">Institute for Automation of Complex Power Systems</a> - <a href="https://www.rwth-aachen.de">RWTH Aachen University</a>
+    </footer>
+  );
+}

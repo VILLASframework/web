@@ -26,7 +26,6 @@ import NotificationsDataManager from './common/data-managers/notifications-data-
 
 import Home from './common/home';
 import Header from './common/header';
-import Footer from './common/footer';
 import Menu from './common/menu';
 
 import InfrastructureComponents from './ic/ics';
@@ -106,7 +105,7 @@ class App extends React.Component {
             </div>
           </div>
 
-          <Footer />
+          {branding.getFooter()}
         </div>
     </DndProvider>
   }
