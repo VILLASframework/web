@@ -154,11 +154,13 @@ class EditResultDialog extends React.Component {
             <Form.Control.Feedback />
           </Col>
           <Col xs lg="2">
+          <span className='solid-button'>
             <Button
               type="submit"
               onClick={() => this.submitDescription()}>
               Save
           </Button>
+          </span>
           </Col>
         </Row>
       </Form.Group>
@@ -194,11 +196,14 @@ class EditResultDialog extends React.Component {
             <Form.Control type='file' onChange={(event) => this.selectUploadFile(event)} />
           </Col>
           <Col xs lg="2">
+          <span className='solid-button'>
             <Button
+              variant='secondary'
               disabled={this.state.uploadFile === null}
               onClick={() => this.startFileUpload()}>
               Upload
           </Button>
+          </span>
           </Col>
         </Row>
       </div>
