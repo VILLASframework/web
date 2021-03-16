@@ -17,7 +17,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Menu, Item, Separator, useContextMenu } from 'react-contexify';
+import { Menu, Item, Separator, contextMenu } from 'react-contexify';
 import Widget from './widget';
 
 class WidgetContextMenu extends React.Component {
@@ -93,6 +93,25 @@ class WidgetContextMenu extends React.Component {
     }
   };
 
+  showMenu = e => {
+    let index = this.props.index
+    if (this.props.editing){
+      contextMenu.show({
+        event: e,
+        id: 'widgetMenu' + index,
+        position: {
+          x: 'inherit',
+          y: 'inherit',
+        }
+      })
+    }
+    else {
+      contextMenu.show({
+        event: e,
+        id: 'widgetMenu' + index,
+      })
+    }
+  }
 
   render() {
     const isLocked = this.props.widget.locked;
@@ -102,41 +121,36 @@ class WidgetContextMenu extends React.Component {
       height: '100%'
     };
 
-    const { show } = useContextMenu({id:'widgetMenu'+ this.props.index} )
-    function showMenu(e) {
-      e.preventDefault();
-      show(e);
-    }
+    return (
 
-    return (<div onContextMenu={showMenu} style={dim}>
-      <Menu id={'widgetMenu'+ this.props.index}>
-        <Item disabled={isLocked} onClick={this.editWidget}>Edit</Item>
-        <Item disabled={isLocked} onClick={this.duplicateWidget}>Duplicate</Item>
-        <Item disabled={isLocked} onClick={this.deleteWidget}>Delete</Item>
+      <div style={dim} onContextMenu={this.showMenu}>
+        <Widget
+          data={this.props.widget}
+          onWidgetChange={this.props.onWidgetChange}
+          editing={this.props.editing}
+          index={this.props.index}
+          paused={this.props.paused}
+        />
 
-        <Separator />
+        <Menu id={'widgetMenu' + this.props.index}>
+          <Item disabled={isLocked} onClick={this.editWidget}>Edit</Item>
+          <Item disabled={isLocked} onClick={this.duplicateWidget}>Duplicate</Item>
+          <Item disabled={isLocked} onClick={this.deleteWidget}>Delete</Item>
 
-        <Item disabled={isLocked} onClick={this.moveAbove}>Move above</Item>
-        <Item disabled={isLocked} onClick={this.moveToFront}>Move to front</Item>
-        <Item disabled={isLocked} onClick={this.moveUnderneath}>Move underneath</Item>
-        <Item disabled={isLocked} onClick={this.moveToBack}>Move to back</Item>
+          <Separator />
 
-        <Separator />
+          <Item disabled={isLocked} onClick={this.moveAbove}>Move above</Item>
+          <Item disabled={isLocked} onClick={this.moveToFront}>Move to front</Item>
+          <Item disabled={isLocked} onClick={this.moveUnderneath}>Move underneath</Item>
+          <Item disabled={isLocked} onClick={this.moveToBack}>Move to back</Item>
 
-        <Item disabled={isLocked} onClick={this.lockWidget}>Lock</Item>
-        <Item disabled={isLocked === false} onClick={this.unlockWidget}>Unlock</Item>
-      </Menu>
+          <Separator />
 
-      <Widget
-        data={this.props.widget}
-        onWidgetChange={this.props.onWidgetChange}
-        editing={this.props.editing}
-        index={this.props.index}
-        paused={this.props.paused}
-      />
-
-
-    </div>);
+          <Item disabled={isLocked} onClick={this.lockWidget}>Lock</Item>
+          <Item disabled={isLocked === false} onClick={this.unlockWidget}>Unlock</Item>
+        </Menu>
+      </div>
+    );
   }
 }
 
