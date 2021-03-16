@@ -39,9 +39,10 @@ class SidebarMenu extends React.Component {
 
   static calculateState(prevState, props) {
     let config = LoginStore.getState().config;
+    let externalauth = _.get(config, ['authentication', 'external', 'enabled']);
     let logout_url = _.get(config, ['authentication', 'logout_url']);
 
-    if (logout_url) {
+    if (externalauth && logout_url) {
       return {
         externalAuth: true,
         logoutLink: logout_url,
