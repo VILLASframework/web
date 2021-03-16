@@ -39,10 +39,8 @@ class Login extends Component {
       type: 'config/load',
     });
 
-    // set branding in case the login page gets refreshed
-    if (!branding.isSet) {
-      branding.applyBranding();
-    }
+    // apply branding in case the login page gets refreshed
+    branding.applyBranding();
   }
 
   static getStores() {
