@@ -16,21 +16,21 @@
  **********************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 class EditWidgetTextSizeControl extends React.Component {
   render() {
     const sizes = [11, 12, 14, 16, 18, 20, 22, 24, 28, 32, 36, 40, 46, 52, 60, 72];
 
     return (
-      <FormGroup controlId="customProperties.textSize">
-        <FormLabel>Text size</FormLabel>
-        <FormControl as="select" value={this.props.widget.customProperties.textSize} onChange={e => this.props.handleChange(e)}>
+      <Form.Group controlId="customProperties.textSize">
+        <Form.Label>Text size</Form.Label>
+        <Form.Control as="select" value={this.props.widget.customProperties.textSize} onChange={e => this.props.handleChange(e)}>
           {sizes.map((size, index) => (
             <option key={index} value={size}>{size}</option>
           ))}
-        </FormControl>
-      </FormGroup>
+        </Form.Control>
+      </Form.Group>
     );
   }
 }

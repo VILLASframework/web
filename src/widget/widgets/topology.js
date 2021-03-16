@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import {UncontrolledReactSVGPanZoom} from 'react-svg-pan-zoom';
+import { UncontrolledReactSVGPanZoom } from 'react-svg-pan-zoom';
 import '../../styles/simple-spinner.css';
 import { cimsvg } from 'libcimsvg';
 import AppDispatcher from "../../common/app-dispatcher";
@@ -94,7 +94,7 @@ class WidgetTopology extends React.Component {
   }
 
   static getDerivedStateFromProps(props, state){
-    // find the selected file of the widget, is undefined if no file is selected
+    // Find the selected file of the widget, is undefined if no file is selected
     let file = props.files.find(file => file.id === parseInt(props.widget.customProperties.file, 10));
 
     let dashboardState = state.dashboardState;
@@ -104,7 +104,7 @@ class WidgetTopology extends React.Component {
       dashboardState = 'show_message';
       message = 'Select a topology model.'
     } else if (!file.hasOwnProperty('data') && dashboardState === 'show_message'){
-      // data of file is missing, start download
+      // Data of file is missing, start download
       dashboardState = 'loading';
       message = '';
       AppDispatcher.dispatch({
@@ -113,7 +113,7 @@ class WidgetTopology extends React.Component {
         token: props.token
       });
     } else if (file.hasOwnProperty('data') && (dashboardState === 'loading'|| dashboardState === 'show_message')){
-      //file is available set state to ready
+      // File is available set state to ready
       dashboardState = 'ready'
       message = '';
     }
@@ -135,8 +135,6 @@ class WidgetTopology extends React.Component {
       window.onMouseMove = function() {};
     }
 
-    //this.Viewer.fitToViewer();
-
     // Query the file referenced by the widget (if any)
     if (this.state.file !== undefined) {
       this.setState({dashboardState: 'loading'});
@@ -155,7 +153,7 @@ class WidgetTopology extends React.Component {
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
 
     if(this.state.dashboardState === 'ready'){
-      //Topology file incl data downloaded, init SVG (should happen only once!)
+      // Topology file incl data downloaded, init SVG (should happen only once!)
       if (this.svgElem) {
         let cimsvgInstance = new cimsvg(this.svgElem.current);
         cimsvg.setCimsvg(cimsvgInstance);

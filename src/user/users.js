@@ -17,12 +17,12 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import {Button, OverlayTrigger, Tooltip} from 'react-bootstrap';
 
 import AppDispatcher from '../common/app-dispatcher';
 import UsersStore from './users-store';
 
 import Icon from '../common/icon';
+import IconButton from '../common/icon-button';
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
 import NewUserDialog from './new-user';
@@ -38,7 +38,6 @@ class Users extends Component {
   }
 
   static calculateState(prevState, props) {
-
     let token = localStorage.getItem("token");
 
     // If there is a token available and this method was called as a result of loading users
@@ -56,7 +55,8 @@ class Users extends Component {
       newModal: false,
       editModal: false,
       deleteModal: false,
-      modalData: {}
+      modalData: {},
+      currentUser: JSON.parse(localStorage.getItem("currentUser"))
     };
   }
 
@@ -90,24 +90,16 @@ class Users extends Component {
     this.setState({ editModal: false });
 
     if (data) {
-      if(data.password === data.confirmpassword) {
-
+      if (data.password === data.confirmPassword) {
         AppDispatcher.dispatch({
           type: 'users/start-edit',
           data: data,
           token: this.state.token
         });
-      } else{
-
+      } else {
         NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR("New password not correctly confirmed"))
       }
     }
-  }
-
-  getHumanRoleName(role_key) {
-    const HUMAN_ROLE_NAMES = {Admin: 'Administrator', User: 'User', Guest: 'Guest'};
-
-    return HUMAN_ROLE_NAMES.hasOwnProperty(role_key)? HUMAN_ROLE_NAMES[role_key] : '';
   }
 
   onModalKeyPress = (event) => {
@@ -118,55 +110,69 @@ class Users extends Component {
     }
   };
 
-  modifyActiveColumn(active){
-
-    if(active){
-      return <Icon icon='check' />
-    } else {
-      return <Icon icon='times' />
-    }
-
+  modifyActiveColumn(active) {
+    return <Icon icon={active ? 'check' : 'times'} />
   }
 
   render() {
-
-    const buttonStyle = {
-      marginLeft: '10px',
-    };
-
-    const iconStyle = {
-      height: '30px',
-      width: '30px'
-    }
-
-    return (
-      <div>
+    return <div>
         <h1>Users
           <span className='icon-button'>
-          <OverlayTrigger
-            key={1}
-            placement={'top'}
-            overlay={<Tooltip id={`tooltip-${"add"}`}> Add User </Tooltip>} >
-            <Button variant='light' style={buttonStyle} onClick={() => this.setState({ newModal: true })}><Icon icon='plus' classname='icon-color' style={iconStyle} /> </Button>
-          </OverlayTrigger>
-        </span>
+            <IconButton
+              key={0}
+              tooltip='Add User'
+              onClick={() => this.setState({ newModal: true })}
+              icon='plus'
+            />
+          </span>
         </h1>
 
         <Table data={this.state.users}>
-          <TableColumn title='Username' width='150' dataKey='username' />
-          <TableColumn title='ID' width='150' dataKey='id' />
-          <TableColumn title='E-mail' dataKey='mail'  />
-          <TableColumn title='Role' dataKey='role'  modifier={(role) => this.getHumanRoleName(role)} />
-          <TableColumn title='Active' dataKey='active' modifier={(active) => this.modifyActiveColumn(active)} />
-          <TableColumn width='200' editButton deleteButton onEdit={index => this.setState({ editModal: true, modalData: this.state.users[index] })} onDelete={index => this.setState({ deleteModal: true, modalData: this.state.users[index] })} />
+          {this.state.currentUser.role === "Admin" ?
+            <TableColumn
+              title='ID'
+              dataKey='id'
+            />
+            : <></>
+          }
+          <TableColumn
+            title='Username'
+            width='150'
+            dataKey='username'
+          />
+          <TableColumn
+            title='E-mail'
+            dataKey='mail'
+          />
+          <TableColumn
+            title='Role'
+            dataKey='role'
+          />
+          <TableColumn
+            title='Active'
+            dataKey='active'
+            modifier={(active) => this.modifyActiveColumn(active)}
+          />
+          <TableColumn
+            width='200'
+            align='right'
+            editButton
+            deleteButton
+            onEdit={index => this.setState({
+              editModal: true,
+              modalData: this.state.users[index]
+            })}
+            onDelete={index => this.setState({
+              deleteModal: true,
+              modalData: this.state.users[index]
+            })}
+          />
         </Table>
 
         <NewUserDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
         <EditUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />
-
         <DeleteDialog title="user" name={this.state.modalData.username} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
-      </div>
-    );
+      </div>;
   }
 }
 

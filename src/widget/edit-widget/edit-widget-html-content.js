@@ -16,7 +16,7 @@
  **********************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 class EditWidgetHTMLContent extends React.Component {
   constructor(props) {
@@ -60,20 +60,25 @@ class EditWidgetHTMLContent extends React.Component {
 
   handleKeyIgnore(event){
     // This function prevents a keystroke from beeing handled by dialog.js
-    event.stopPropagation();    
-    }
-    
+    event.stopPropagation();
+  }
 
   render() {
     return (
-        <FormGroup controlId={this.props.controlId}>
-          <FormLabel>HTML Content</FormLabel>
-          <FormControl  onKeyDown={this.handleKeyIgnore} componentclass="textarea" style={{ height: 200 }} placeholder={this.props.placeholder} value={this.state.value} onChange={e => this.props.handleChange(e)} />
-          <FormControl.Feedback />
-        </FormGroup>
+        <Form.Group controlId={this.props.controlId}>
+          <Form.Label>HTML Content</Form.Label>
+          <Form.Control
+            onKeyDown={this.handleKeyIgnore}
+            componentclass="textarea"
+            style={{ height: 200 }}
+            placeholder={this.props.placeholder}
+            value={this.state.value}
+            onChange={e => this.props.handleChange(e)}
+          />
+          <Form.Control.Feedback />
+        </Form.Group>
     );
   }
 }
-
 
 export default EditWidgetHTMLContent;

@@ -25,18 +25,7 @@ class Header extends React.Component {
   render() {
     return (
       <header className="app-header">
-        <Col xs={{span: 10}} sm={{span: 8, offset: 2}}>
-          <h1>{config.instance} - {config.subtitle}</h1>
-        </Col>
-        <Hidden sm md lg xl>
-          <Col xs={2} style={{ paddingLeft: 'auto', paddingRight: 0 }}>
-            {this.props.showMenuButton &&
-              <Button variant="link" onClick={this.props.onMenuButton} style={{ float: 'right', marginRight: '10px' }}>
-                <Icon size="3x" icon="bars" className="menu-icon" />
-              </Button>
-            }
-          </Col>
-        </Hidden>
+        <h1>{config.instance} - {config.subtitle}</h1>
       </header>
     );
   }

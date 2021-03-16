@@ -39,16 +39,19 @@ class TableColumn extends Component {
     checkboxKey: '',
     checkboxDisabled: null,
     labelStyle: null,
-    labelModifier: null
-
+    labelModifier: null,
+    align: 'left'
   };
 
   render() {
-    return (
-      <th width={this.props.width}>
-        {this.props.title}
-      </th>
-    );
+    let style = {
+      textAlign: this.props.align,
+      width: this.props.width
+    };
+
+    return <th style={style}>
+      {this.props.title}
+    </th>;
   }
 }
 

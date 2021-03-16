@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 import Dialog from '../common/dialogs/dialog';
 
@@ -102,15 +102,15 @@ class ImportConfigDialog extends React.Component {
         onClose={(c) => this.onClose(c)}
         onReset={() => this.resetState()}
         valid={this.valid} >
-        <form>
-          <FormGroup controlId='file'>
-            <FormLabel>Component Configuration File</FormLabel>
-            <FormControl type='file' onChange={this.loadFile} />
-          </FormGroup>
+        <Form>
+          <Form.Group controlId='file'>
+            <Form.Label>Component Configuration File</Form.Label>
+            <Form.Control type='file' onChange={this.loadFile} />
+          </Form.Group>
 
-          <FormGroup controlId="name" >
-            <FormLabel>Name</FormLabel>
-            <FormControl
+          <Form.Group controlId="name" >
+            <Form.Label>Name</Form.Label>
+            <Form.Control
               readOnly={!this.imported}
               isValid={this.validateForm('name')}
               type="text"
@@ -118,9 +118,9 @@ class ImportConfigDialog extends React.Component {
               value={this.state.name}
               onChange={(e) => this.handleChange(e)}
             />
-            <FormControl.Feedback />
-          </FormGroup>
-        </form>
+            <Form.Control.Feedback />
+          </Form.Group>
+        </Form>
       </Dialog>
     );
   }

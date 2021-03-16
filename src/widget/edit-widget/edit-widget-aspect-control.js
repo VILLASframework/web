@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormCheck } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 class EditWidgetAspectControl extends React.Component {
   constructor(props) {
@@ -41,15 +41,15 @@ class EditWidgetAspectControl extends React.Component {
     }
 
     return (
-      <FormGroup>
-        <FormCheck
+      <Form.Group>
+        <Form.Check
           type='checkbox'
           id={this.props.controlId}
           checked={isCustomProperty ?  this.state.widget[parts[0]][parts[1]] : this.state.widget[this.props.controlId]}
           label={"Lock Aspect Ratio"}
-          onChange={e => this.props.handleChange(e)}>
-        </FormCheck>
-      </FormGroup>
+          onChange={e => this.props.handleChange(e)}
+        />
+      </Form.Group>
     );
   }
 }

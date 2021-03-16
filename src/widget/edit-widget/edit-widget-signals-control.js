@@ -16,7 +16,7 @@
  **********************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, FormCheck, FormLabel } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 class EditWidgetSignalsControl extends Component {
   constructor(props) {
@@ -55,25 +55,25 @@ class EditWidgetSignalsControl extends Component {
 
   render() {
     return (
-        <FormGroup>
-          <FormLabel>Signals</FormLabel>
+        <Form.Group>
+          <Form.Label>Signals</Form.Label>
           {
             this.state.signals === 0 || !this.state.widget.hasOwnProperty(this.props.controlId)? (
-              <FormLabel>No signals available</FormLabel>
+              <Form.Label>No signals available</Form.Label>
             ) : (
               this.state.signals.map((signal, index) => (
-                <FormCheck
+                <Form.Check
                   type={'checkbox'}
                   label={signal.name}
                   id={signal.id}
                   key={signal.id}
                   checked={this.state.checkedSignals.find(id => id === signal.id) !== undefined}
                   onChange={(e) => this.handleSignalChange(e.target.checked, signal.id)}>
-                </FormCheck>
+                </Form.Check>
                 ))
               )
           }
-        </FormGroup>
+        </Form.Group>
     );
   }
 }

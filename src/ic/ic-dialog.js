@@ -1,11 +1,11 @@
 import React from 'react';
-import {Button, Row, Col} from 'react-bootstrap';
+import { Button, Row, Col } from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
 import Icon from "../common/icon";
 import ConfirmCommand from './confirm-command';
 import ReactJson from 'react-json-view';
 import FileSaver from 'file-saver';
-
+import moment from 'moment';
 
 class ICDialog extends React.Component {
   valid = true;
@@ -70,11 +70,10 @@ class ICDialog extends React.Component {
       graphURL = this.props.ic.apiurl + "/graph.svg"
     }
 
-
     return (
       <Dialog
         show={this.props.show}
-        title={this.props.ic.name + " ( " + this.props.ic.uuid + " )"}
+        title={this.props.ic.name}
         buttonTitle="Close"
         onClose={(c) => this.onClose(c)}
         valid={true}
@@ -84,27 +83,62 @@ class ICDialog extends React.Component {
         <form>
           <Row>
             <Col>
-              <h5>State: {this.props.ic.state}</h5>
-              <h5>Category: {this.props.ic.category}</h5>
-              <h5>Type: {this.props.ic.type}</h5>
-              <h5>Uptime: {this.props.ic.uptime}</h5>
-              <h5>Location: {this.props.ic.location}</h5>
-              <h5>Description: {this.props.ic.description}</h5>
-              <h5>Websocket URL: {this.props.ic.websocketurl}</h5>
-              <h5>API URL: {this.props.ic.apiurl}</h5>
-              <h5>Start parameter scheme:</h5>
-              <ReactJson
-                src={this.props.ic.startParameterScheme}
-                name={false}
-                displayDataTypes={false}
-                displayObjectSize={false}
-                enableClipboard={false}
-                collapsed={0}
-              />
+              <Row>
+                <Col><b>Name</b></Col>
+                <Col>{this.props.ic.name}</Col>
+              </Row>
+              <Row>
+                <Col><b>UUID</b></Col>
+                <Col>{this.props.ic.uuid}</Col>
+              </Row>
+              <Row>
+                <Col><b>State</b></Col>
+                <Col>{this.props.ic.state}</Col>
+              </Row>
+              <Row>
+                <Col><b>Category</b></Col>
+                <Col>{this.props.ic.category}</Col>
+              </Row>
+              <Row>
+                <Col><b>Type</b></Col>
+                <Col>{this.props.ic.type}</Col>
+              </Row>
+              <Row>
+                <Col><b>Uptime</b></Col>
+                <Col>{moment.duration(this.props.ic.uptime, "seconds").humanize()}</Col>
+              </Row>
+              <Row>
+                <Col><b>Location</b></Col>
+                <Col>{this.props.ic.location}</Col>
+              </Row>
+              <Row>
+                <Col><b>Description</b></Col>
+                <Col>{this.props.ic.description}</Col>
+              </Row>
+              <Row>
+                <Col><b>Websocket URL</b></Col>
+                <Col>{this.props.ic.websocketurl}</Col>
+              </Row>
+              <Row>
+                <Col><b>API URL</b></Col>
+                <Col>{this.props.ic.apiurl}</Col>
+              </Row>
+              <Row>
+                <Col><b>Start parameter schema</b></Col>
+                <Col>
+                  <ReactJson
+                    src={this.props.ic.startParameterSchema}
+                    name={false}
+                    displayDataTypes={false}
+                    displayObjectSize={false}
+                    enableClipboard={false}
+                    collapsed={0}
+                  />
+                </Col>
+              </Row>
             </Col>
 
             <Col>
-
               <h5>Raw Status:</h5>
               {this.isJSON(this.props.ic.statusupdateraw) ?
                 <ReactJson
@@ -120,7 +154,7 @@ class ICDialog extends React.Component {
               }
 
 
-              {this.props.ic.type === "villas-node" || this.props.ic.type === "villas-relay" ? (
+              {this.props.ic.type === "villas-node" ?
                 <>
                   <div className='section-buttons-group-right'>
                     <Button style={{margin: '5px'}} size='sm' onClick={() => this.downloadGraph(graphURL)}><Icon
@@ -131,29 +165,29 @@ class ICDialog extends React.Component {
                     <img alt={"Graph image download failed and/or incorrect image API URL"} src={graphURL}/>
                   </div>
 
-                  {this.props.userRole === "Admin" ? (
-                      <div>
-                        <h5>Controls:</h5>
-                        <div className='solid-button'>
-                          <Button variant='secondary' style={{margin: '5px'}} size='lg'
-                                  onClick={() => this.setState({confirmCommand: true, command: 'restart'})}>Restart</Button>
-                          <Button variant='secondary' style={{margin: '5px'}} size='lg' onClick={() => this.setState({
-                            confirmCommand: true,
-                            command: 'shutdown'
-                          })}>Shutdown</Button>
-                        </div>
-                      </div>)
-                    : (<div/>)}
-
+                  {this.props.user.role === "Admin" ?
+                    <div>
+                      <h5>Controls:</h5>
+                      <div className='solid-button'>
+                        <Button variant='secondary' style={{margin: '5px'}} size='lg'
+                                onClick={() => this.setState({confirmCommand: true, command: 'restart'})}>Restart</Button>
+                        <Button variant='secondary' style={{margin: '5px'}} size='lg' onClick={() => this.setState({
+                          confirmCommand: true,
+                          command: 'shutdown'
+                        })}>Shutdown</Button>
+                      </div>
+                    </div>
+                    : <div/>
+                  }
                   <ConfirmCommand show={this.state.confirmCommand} command={this.state.command} name={this.props.ic.name}
                                   onClose={c => this.closeConfirmModal(c)}/>
-
-                </>) : (<div/>)}
+                </>
+                : <div/>
+              }
             </Col>
           </Row>
         </form>
       </Dialog>
-
     );
   }
 }

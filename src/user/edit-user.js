@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import {FormGroup, FormControl, FormLabel, Col} from 'react-bootstrap';
+import { Form, Col } from 'react-bootstrap';
 
 import Dialog from '../common/dialogs/dialog';
 
@@ -27,13 +27,13 @@ class EditUserDialog extends React.Component {
     super(props);
 
     this.state = {
-      username: '',
-      mail: '',
-      role: '',
-      id: '',
+      username: props.user.username,
+      mail: props.user.mail,
+      role: props.user.role,
+      id: props.user.id,
+      active: props.user.active,
       password: '',
-      active: '',
-      confirmpassword: '',
+      confirmPassword: '',
       oldPassword: ''
     }
   }
@@ -57,47 +57,45 @@ class EditUserDialog extends React.Component {
     var mail = true;
     var pw = true;
     var active = true;
-    var confirmpassword = true;
-    var oldPW = true;
-
+    var confirmPassword = true;
+    var oldPassword = true;
 
     if (this.state.username === '') {
       username = false;
     }
 
-    if (this.state.role === ''){
+    if (this.state.role === '') {
       role = false;
     }
 
-    if(this.state.mail === ''){
+    if (this.state.mail === '') {
       mail = false;
     }
 
-    if(this.state.password === ''){
+    if (this.state.password === '') {
       pw = false;
     }
 
-    if(this.state.active === ''){
+    if (this.state.active === '') {
       active = false;
     }
 
-    if(this.state.confirmpassword === ''){
-      confirmpassword = false;
+    if (this.state.confirmPassword === '') {
+      confirmPassword = false;
     }
 
-    if(this.state.oldPassword === ''){
-      oldPW = false;
+    if (this.state.oldPassword === '') {
+      oldPassword = false;
     }
 
     // form is valid if any of the fields contain somethig
-    this.valid = username || role || mail || pw || active || confirmpassword || oldPW;
-
+    this.valid = username || role || mail || pw || active || confirmPassword || oldPassword;
   }
 
   resetState() {
     this.setState({
-      //username: this.props.user.username,
-      //mail: this.props.user.mail,
+      username: this.props.user.username,
+      mail: this.props.user.mail,
       role: this.props.user.role,
       id: this.props.user.id
     });
@@ -106,46 +104,44 @@ class EditUserDialog extends React.Component {
   render() {
     return (
       <Dialog show={this.props.show} title="Edit user" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
-        <form>
-          <FormGroup as={Col} controlId="username">
-            <FormLabel>Username</FormLabel>
-            <FormControl type="text" placeholder={this.props.user.username} value={this.state.username} onChange={(e) => this.handleChange(e)} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup as={Col} controlId="mail">
-            <FormLabel>E-mail</FormLabel>
-            <FormControl type="text" placeholder={this.props.user.mail} value={this.state.mail} onChange={(e) => this.handleChange(e)} />
-          </FormGroup>
-          <FormGroup  as={Col} controlId="oldPassword">
-            <FormLabel>Admin Password</FormLabel>
-            <FormControl type="password" placeholder="Enter admin password" value={this.state.oldPassword} onChange={(e) => this.handleChange(e)} />
-          </FormGroup>
-          <FormGroup as={Col} controlId="password">
-            <FormLabel>Password</FormLabel>
-            <FormControl type="password" placeholder="Enter password" value={this.state.password} onChange={(e) => this.handleChange(e)} />
-          </FormGroup>
-          <FormGroup as={Col} controlId="confirmpassword">
-            <FormLabel>Confirm New Password</FormLabel>
-            <FormControl type="password" placeholder="Enter password" value={this.state.confirmpassword} onChange={(e) => this.handleChange(e)} />
-          </FormGroup>
-          <FormGroup as={Col} controlId="role">
-            <FormLabel>Role</FormLabel>
-            <FormControl as="select" placeholder="Select role" value={this.state.role} onChange={(e) => this.handleChange(e)}>
+        <Form>
+          <Form.Group as={Col} controlId="username">
+            <Form.Label>Username</Form.Label>
+            <Form.Control type="text" value={this.state.username} onChange={(e) => this.handleChange(e)} />
+            <Form.Control.Feedback />
+          </Form.Group>
+          <Form.Group as={Col} controlId="mail">
+            <Form.Label>E-mail</Form.Label>
+            <Form.Control type="text" value={this.state.mail} onChange={(e) => this.handleChange(e)} />
+          </Form.Group>
+          <Form.Group  as={Col} controlId="oldPassword">
+            <Form.Label>Admin Password</Form.Label>
+            <Form.Control type="password" placeholder="Enter admin password" value={this.state.oldPassword} onChange={(e) => this.handleChange(e)} />
+          </Form.Group>
+          <Form.Group as={Col} controlId="password">
+            <Form.Label>Password</Form.Label>
+            <Form.Control type="password" placeholder="Enter password" value={this.state.password} onChange={(e) => this.handleChange(e)} />
+          </Form.Group>
+          <Form.Group as={Col} controlId="confirmPassword">
+            <Form.Label>Confirm New Password</Form.Label>
+            <Form.Control type="password" placeholder="Enter password" value={this.state.confirmPassword} onChange={(e) => this.handleChange(e)} />
+          </Form.Group>
+          <Form.Group as={Col} controlId="role">
+            <Form.Label>Role</Form.Label>
+            <Form.Control as="select" placeholder="Select role" value={this.state.role} onChange={(e) => this.handleChange(e)}>
               <option key='1' value='Admin'>Administrator</option>
               <option key='2' value='User'>User</option>
               <option key='3' value='Guest'>Guest</option>
-            </FormControl>
-          </FormGroup>
-
-          <FormGroup as={Col} controlId="active">
-            <FormLabel>Active</FormLabel>
-            <FormControl as="select" placeholder="Select Active state" value={this.state.active} onChange={(e) => this.handleChange(e)}>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group as={Col} controlId="active">
+            <Form.Label>Active</Form.Label>
+            <Form.Control as="select" placeholder="Select Active state" value={this.state.active} onChange={(e) => this.handleChange(e)}>
               <option key='1' value='yes'>Yes</option>
               <option key='2' value='no'>No</option>
-            </FormControl>
-          </FormGroup>
-
-        </form>
+            </Form.Control>
+          </Form.Group>
+        </Form>
       </Dialog>
     );
   }

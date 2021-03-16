@@ -16,42 +16,41 @@
  ******************************************************************************/
 
 import React from 'react';
-import Dialog from '../common/dialogs/dialog';
-import Config from '../config';
+
+import { Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
+
+import Icon from '../common/icon';
 
 
-class RecoverPassword extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      admin: Config.admin
-    }
-  }
-
-  onClose() {
-      this.props.onClose();
-  }
+class IconButton extends React.Component {
 
   render() {
-    return (
-      <Dialog
-        show={this.props.show}
-        title="Recover password"
-        buttonTitle="Close"
-        onClose={(c) => this.onClose(c)}
-        blendOutCancel={true}
-        valid={true}
+    const altButtonStyle = {
+      marginLeft: '10px',
+    }
+
+    const iconStyle = {
+      height: '30px',
+      width: '30px'
+    }
+
+    return <OverlayTrigger
+      key={this.props.key}
+      placement={'top'}
+      overlay={<Tooltip id={`tooltip-${"add"}`}>{this.props.tooltip}</Tooltip>} >
+      <Button
+        variant='light'
+        onClick={this.props.onClick}
+        style={altButtonStyle}
       >
-        <div>
-          <div>Please contact:</div>
-          <div>{this.state.admin.name}</div>
-          <div>E-Mail:</div>
-          <a href={`mailto:${this.state.admin.mail}`}>{this.state.admin.mail}</a>
-        </div>
-      </Dialog>
-    );
+        <Icon
+          icon={this.props.icon}
+          classname={'icon-color'}
+          style={iconStyle}
+        />
+      </Button>
+    </OverlayTrigger>
   }
 }
 
-export default RecoverPassword;
+export default IconButton;

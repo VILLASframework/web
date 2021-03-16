@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-import { FormGroup, OverlayTrigger, Tooltip , FormLabel, Button } from 'react-bootstrap';
+import { Form, OverlayTrigger, Tooltip, Button } from 'react-bootstrap';
 import ColorPicker from './color-picker'
 import Icon from "../../common/icon";
 
@@ -77,7 +77,7 @@ class EditWidgetColorControl extends Component {
     let style = {
       backgroundColor: color,
       opacity: opacity,
-      width: '260px', 
+      width: '260px',
       height: '40px'
     }
 
@@ -86,23 +86,20 @@ class EditWidgetColorControl extends Component {
       tooltipText = "Change border color";
     }
 
-   
-    return (
-      <FormGroup>
-        <FormLabel>{this.props.label}</FormLabel>
 
-        <div className='section-buttons-group-right'>
+    return <Form.Group>
+      <Form.Label>{this.props.label}</Form.Label>
+
+      <div className='section-buttons-group-right'>
         <OverlayTrigger key={0} placement={'right'} overlay={<Tooltip id={`tooltip-${"color"}`}> {tooltipText} </Tooltip>} >
         <Button key={2} style={style} onClick={this.openColorPicker.bind(this)}  >
           <Icon icon="paint-brush"/>
         </Button>
         </OverlayTrigger>
-        </div>
+      </div>
 
-        <ColorPicker show={this.state.showColorPicker} onClose={(data) => this.closeEditModal(data)} widget={this.state.widget} controlId={this.props.controlId} disableOpacity={this.props.disableOpacity}/>
-      </FormGroup>
-
-    )
+      <ColorPicker show={this.state.showColorPicker} onClose={(data) => this.closeEditModal(data)} widget={this.state.widget} controlId={this.props.controlId} disableOpacity={this.props.disableOpacity}/>
+    </Form.Group>;
   }
 }
 

@@ -17,7 +17,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import {Button, Badge, Tooltip, OverlayTrigger} from 'react-bootstrap';
+import { Button, Badge } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 import moment from 'moment'
@@ -38,6 +38,7 @@ import ICAction from './ic-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
 import NotificationsFactory from "../common/data-managers/notifications-factory";
+import IconButton from '../common/icon-button';
 
 class InfrastructureComponents extends Component {
   static getStores() {
@@ -64,7 +65,11 @@ class InfrastructureComponents extends Component {
     }
   }
 
-  static calculateState() {
+  static calculateState(prevState, props) {
+    if (prevState == null) {
+      prevState = {};
+    }
+
     const ics = InfrastructureComponentStore.getState().sort((a, b) => {
       if (a.state !== b.state) {
           return InfrastructureComponents.statePrio(a.state) > InfrastructureComponents.statePrio(b.state);
@@ -88,7 +93,6 @@ class InfrastructureComponents extends Component {
     let services = ics.filter(ic => ic.category === "service")
     let equipment = ics.filter(ic => ic.category === "equipment")
 
-
     return {
       sessionToken: localStorage.getItem("token"),
       ics: ics,
@@ -101,7 +105,7 @@ class InfrastructureComponents extends Component {
       modalIC: {},
       deleteModal: false,
       icModal: false,
-      selectedICs: [],
+      selectedICs: prevState.selectedICs || [],
       currentUser: JSON.parse(localStorage.getItem("currentUser"))
     };
   }
@@ -112,7 +116,7 @@ class InfrastructureComponents extends Component {
       token: this.state.sessionToken,
     });
 
-   // Start timer for periodic refresh
+    // Start timer for periodic refresh
     this.timer = window.setInterval(() => this.refresh(), 10000);
   }
 
@@ -121,7 +125,6 @@ class InfrastructureComponents extends Component {
   }
 
   refresh() {
-
     if (this.state.editModal || this.state.deleteModal || this.state.icModal){
       // do nothing since a dialog is open at the moment
     }
@@ -160,8 +163,9 @@ class InfrastructureComponents extends Component {
       } else {
         // externally managed IC: dispatch create action to selected manager
         let newAction = {};
+
         newAction["action"] = "create";
-        newAction["parameters"] = data;
+        newAction["parameters"] = data.parameters;
         newAction["when"] = new Date()
 
         // find the manager IC
@@ -178,7 +182,6 @@ class InfrastructureComponents extends Component {
           result: null,
           token: this.state.sessionToken
         });
-
       }
     }
   }
@@ -240,7 +243,6 @@ class InfrastructureComponents extends Component {
   }
 
   onICChecked(ic, event) {
-
     let index = this.state.ics.indexOf(ic);
     const selectedICs = Object.assign([], this.state.selectedICs);
     for (let key in selectedICs) {
@@ -265,8 +267,6 @@ class InfrastructureComponents extends Component {
     selectedICs.push(index);
     this.setState({ selectedICs: selectedICs });
   }
-
-
 
   static isICOutdated(component) {
     if (!component.stateUpdateAt)
@@ -323,18 +323,18 @@ class InfrastructureComponents extends Component {
         style.push('badge-default');
 
         /* Possible states of ICs
-        *   'error':        ['resetting', 'error'],
-            'idle':         ['resetting', 'error', 'idle', 'starting', 'shuttingdown'],
-            'starting':     ['resetting', 'error', 'running'],
-            'running':      ['resetting', 'error', 'pausing', 'stopping'],
-            'pausing':      ['resetting', 'error', 'paused'],
-            'paused':       ['resetting', 'error', 'resuming', 'stopping'],
-            'resuming':     ['resetting', 'error', 'running'],
-            'stopping':     ['resetting', 'error', 'idle'],
-            'resetting':    ['resetting', 'error', 'idle'],
-            'shuttingdown': ['shutdown', 'error'],
-            'shutdown':     ['starting', 'error']
-        * */
+         *  'error':        ['resetting', 'error'],
+         *  'idle':         ['resetting', 'error', 'idle', 'starting', 'shuttingdown'],
+         *  'starting':     ['resetting', 'error', 'running'],
+         *  'running':      ['resetting', 'error', 'pausing', 'stopping'],
+         *  'pausing':      ['resetting', 'error', 'paused'],
+         *  'paused':       ['resetting', 'error', 'resuming', 'stopping'],
+         *  'resuming':     ['resetting', 'error', 'running'],
+         *  'stopping':     ['resetting', 'error', 'idle'],
+         *  'resetting':    ['resetting', 'error', 'idle'],
+         *  'shuttingdown': ['shutdown', 'error'],
+         *  'shutdown':     ['starting', 'error']
+         */
     }
 
     return style.join(' ')
@@ -409,6 +409,13 @@ class InfrastructureComponents extends Component {
             onChecked={(ic, event) => this.onICChecked(ic, event)}
             width='30'
           />
+          {this.state.currentUser.role === "Admin" ?
+            <TableColumn
+              title='ID'
+              dataKey='id'
+            />
+            : <></>
+          }
           <TableColumn
             title='Name'
             dataKeys={['name']}
@@ -438,6 +445,7 @@ class InfrastructureComponents extends Component {
           {this.state.currentUser.role === "Admin" ?
             <TableColumn
               width='150'
+              align='right'
               editButton
               showEditButton ={(index) => this.isLocalIC(index, ics)}
               exportButton
@@ -481,26 +489,23 @@ class InfrastructureComponents extends Component {
 
     return (
       <div className='section'>
-        <h1>Infrastructure Components
+        <h1>Infrastructure
           {this.state.currentUser.role === "Admin" ?
-            (<span className='icon-button'>
-              <OverlayTrigger
-                key={1}
-                placement={'top'}
-                overlay={<Tooltip id={`tooltip-${"add"}`}> Add Infrastructure Component </Tooltip>} >
-                <Button variant='light' onClick={() => this.setState({newModal: true})} style={buttonStyle}><Icon icon="plus" classname='icon-color' style={iconStyle}
-                                                                                                /></Button>
-              </OverlayTrigger>
-              <OverlayTrigger
-                key={2}
-                placement={'top'}
-                overlay={<Tooltip id={`tooltip-${"import"}`}> Import Infrastructure Component </Tooltip>} >
-                <Button variant='light' onClick={() => this.setState({importModal: true})} style={buttonStyle}><Icon icon="upload" classname='icon-color' style={iconStyle}
-                                                                                                   /></Button>
-              </OverlayTrigger>
-              </span>)
-            :
-            (<span> </span>)
+            <span className='icon-button'>
+              <IconButton
+                alt={1}
+                tooltip='Add Infrastructure Component'
+                onClick={() => this.setState({newModal: true})}
+                icon='plus'
+              />
+              <IconButton
+                alt={1}
+                tooltip='Import Infrastructure Component'
+                onClick={() => this.setState({importModal: true})}
+                icon='upload'
+              />
+            </span>
+            : <span/>
           }
         </h1>
 
@@ -513,20 +518,18 @@ class InfrastructureComponents extends Component {
         {this.state.currentUser.role === "Admin" && this.state.numberOfExternalICs > 0 ?
           <div style={{float: 'left'}}>
             <ICAction
-              hasConfigs = {false}
               ics={this.state.ics}
               selectedICs={this.state.selectedICs}
               token={this.state.sessionToken}
               actions={[
-                {id: '-1', title: 'Action', data: {action: 'none'}},
                 {id: '0', title: 'Reset', data: {action: 'reset'}},
                 {id: '1', title: 'Shutdown', data: {action: 'shutdown'}},
-                {id: '2', title: 'Delete', data: {action: 'delete'}}
+                {id: '2', title: 'Delete', data: {action: 'delete'}},
+                {id: '3', title: 'Recreate', data: {action: 'create'}},
               ]}
             />
           </div>
-          :
-          <div/>
+          : <div/>
         }
 
         <div style={{ clear: 'both' }} />
@@ -540,9 +543,8 @@ class InfrastructureComponents extends Component {
           onClose={data => this.closeICModal(data)}
           ic={this.state.modalIC}
           token={this.state.sessionToken}
-          userRole={this.state.currentUser.role}
+          user={this.state.currentUser}
           sendControlCommand={(command, ic) => this.sendControlCommand(command, ic)}/>
-
       </div>
     );
   }

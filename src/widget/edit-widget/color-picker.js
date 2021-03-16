@@ -16,6 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
+import { Form } from 'react-bootstrap';
 import { SketchPicker } from 'react-color';
 import Dialog from '../../common/dialogs/dialog';
 
@@ -31,8 +32,7 @@ class ColorPicker extends React.Component {
     };
   }
 
-  static getDerivedStateFromProps(props, state){
-
+  static getDerivedStateFromProps(props, state) {
     return {
       widget: props.widget
     };
@@ -49,25 +49,24 @@ class ColorPicker extends React.Component {
   }
 
   handleChangeComplete = (color) => {
-    
     let temp = this.state.widget;
 
-    if(this.props.controlId === 'strokeStyle'){
+    if (this.props.controlId === 'strokeStyle'){
       temp.customProperties.zones[this.props.zoneIndex]['strokeStyle'] = color.hex;
     }
-    else if(this.props.controlId === 'lineColor'){
+    else if (this.props.controlId === 'lineColor'){
       temp.customProperties.lineColors[this.props.lineIndex] = color.hex;
     }
-    else{
-    let parts = this.props.controlId.split('.');
-    let isCustomProperty = true;
+    else {
+      let parts = this.props.controlId.split('.');
+      let isCustomProperty = true;
 
-    if (parts.length === 1){
-      isCustomProperty = false;
-    }
+      if (parts.length === 1){
+        isCustomProperty = false;
+      }
 
-    isCustomProperty ? temp[parts[0]][parts[1]] = color.hex : temp[this.props.controlId] = color.hex;
-    isCustomProperty ? temp[parts[0]][parts[1] + "_opacity"] = color.rgb.a : temp[this.props.controlId +"_opacity"] = color.rgb.a;
+      isCustomProperty ? temp[parts[0]][parts[1]] = color.hex : temp[this.props.controlId] = color.hex;
+      isCustomProperty ? temp[parts[0]][parts[1] + "_opacity"] = color.rgb.a : temp[this.props.controlId +"_opacity"] = color.rgb.a;
     }
 
     this.setState({ widget: temp });
@@ -88,46 +87,45 @@ class ColorPicker extends React.Component {
   };
 
   render() {
-
     let hexColor;
     let opacity = 1;
     let parts = this.props.controlId.split('.');
     let isCustomProperty = true;
-    if (parts.length === 1){
+    if (parts.length === 1) {
       isCustomProperty = false;
     }
 
-    if(this.props.controlId === 'strokeStyle'){
-      if(typeof this.state.widget.customProperties.zones[this.props.zoneIndex] !== 'undefined'){
+    if (this.props.controlId === 'strokeStyle') {
+      if (typeof this.state.widget.customProperties.zones[this.props.zoneIndex] !== 'undefined') {
         hexColor = this.state.widget.customProperties.zones[this.props.zoneIndex]['strokeStyle'];
       }
     }
-    else if(this.props.controlId === 'lineColor'){
-      if(typeof this.state.widget.customProperties.lineColors[this.props.lineIndex] !== 'undefined'){
+    else if (this.props.controlId === 'lineColor') {
+      if (typeof this.state.widget.customProperties.lineColors[this.props.lineIndex] !== 'undefined') {
         hexColor = this.state.widget.customProperties.lineColors[this.props.lineIndex];
       }
     }
     else{
-    hexColor = isCustomProperty ? this.state.widget[parts[0]][parts[1]]: this.state.widget[this.props.controlId];
-    opacity = isCustomProperty ? this.state.widget[parts[0]][parts[1] + "_opacity"]: this.state.widget[this.props.controlId + "_opacity"];
-
+      hexColor = isCustomProperty ? this.state.widget[parts[0]][parts[1]]: this.state.widget[this.props.controlId];
+      opacity = isCustomProperty ? this.state.widget[parts[0]][parts[1] + "_opacity"]: this.state.widget[this.props.controlId + "_opacity"];
     }
 
-    
     let rgbColor = this.hexToRgb(hexColor, opacity);
-
-
-
-      return <Dialog show={this.props.show} title='Color Picker' buttonTitle='Save' onClose={(c) => this.onClose(c)} valid={true}>
-          <form>
+      return <Dialog
+        show={this.props.show}
+        title='Color Picker'
+        buttonTitle='Save'
+        onClose={(c) => this.onClose(c)}
+        valid={true}
+        >
+          <Form>
               <SketchPicker
                   color={rgbColor}
-                  disableAlpha={this.props.disableOpacity} 
+                  disableAlpha={this.props.disableOpacity}
                   onChangeComplete={ this.handleChangeComplete }
-                  width={"300"}
+                  width={300}
               />
-
-          </form>
+          </Form>
       </Dialog>;
   }
 }

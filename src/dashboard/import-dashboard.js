@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 import Dialog from '../common/dialogs/dialog';
 
@@ -100,15 +100,15 @@ class ImportDashboardDialog extends React.Component {
         onClose={(c) => this.onClose(c)}
         onReset={() => this.resetState()}
         valid={this.valid}>
-        <form>
-          <FormGroup controlId="file">
-            <FormLabel>Dashboard File</FormLabel>
-            <FormControl type="file" onChange={(e) => this.loadFile(e.target.files)} />
-          </FormGroup>
+        <Form>
+          <Form.Group controlId="file">
+            <Form.Label>Dashboard File</Form.Label>
+            <Form.Control type="file" onChange={(e) => this.loadFile(e.target.files)} />
+          </Form.Group>
 
-          <FormGroup controlId="name" >
-            <FormLabel>Name</FormLabel>
-            <FormControl
+          <Form.Group controlId="name" >
+            <Form.Label>Name</Form.Label>
+            <Form.Control
               readOnly={!this.imported}
               isValid={this.validateForm('name')}
               type="text"
@@ -116,9 +116,9 @@ class ImportDashboardDialog extends React.Component {
               value={this.state.name}
               onChange={(e) => this.handleChange(e)}
             />
-            <FormControl.Feedback />
-          </FormGroup>
-        </form>
+            <Form.Control.Feedback />
+          </Form.Group>
+        </Form>
       </Dialog>
     );
   }

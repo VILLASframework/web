@@ -26,7 +26,7 @@ class LoginComplete extends React.Component {
   constructor(props) {
     console.log("LoginComplete constructor");
     super(props);
-    
+
     AppDispatcher.dispatch({
       type: 'users/extlogin',
     });
@@ -42,15 +42,12 @@ class LoginComplete extends React.Component {
     this.startTimer = this.startTimer.bind(this);
     this.countDown = this.countDown.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
-
-    
   }
 
   componentDidMount() {
     this.startTimer();
     this.setState({secondsToWait: 5});
   }
-
 
   static getStores(){
     return [LoginStore]
@@ -97,8 +94,12 @@ class LoginComplete extends React.Component {
       this.stopTimer();
       return (<Redirect to="/login" />);
     } else {
-      return (<div class="verticalhorizontal">
-        <img style={{height: 300}}src={require('../img/dog-waiting-bw.jpg').default} alt="Waiting Dog" /></div>);
+      return <div class="verticalhorizontal">
+        <img
+          style={{height: 300}}
+          src={require('../img/dog-waiting-bw.jpg').default}
+          alt="Waiting Dog" />
+      </div>;
     }
   }
 }
