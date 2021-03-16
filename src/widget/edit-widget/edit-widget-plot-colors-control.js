@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-import { OverlayTrigger, Tooltip , Button } from 'react-bootstrap';
+import { OverlayTrigger, Tooltip , Button, Form } from 'react-bootstrap';
 import ColorPicker from './color-picker'
 import Icon from "../../common/icon";
 import { scaleOrdinal } from "d3-scale";

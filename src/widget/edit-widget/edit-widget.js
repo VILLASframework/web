@@ -174,6 +174,7 @@ class EditWidgetDialog extends React.Component {
         onClose={(c) => this.onClose(c)}
         onReset={() => this.resetState()}
         valid={this.valid}
+        size={'sm'}
       >
         <Form encType='multipart/form-data'>
           { controls || '' }
