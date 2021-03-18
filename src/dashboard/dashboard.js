@@ -21,7 +21,7 @@ import Fullscreenable from 'react-fullscreenable';
 import classNames from 'classnames';
 
 import EditWidget from '../widget/edit-widget/edit-widget';
-import EditFiles from '../file/edit-files';
+import EditFilesDialog from '../file/edit-files';
 import EditSignalMappingDialog from "../signal/edit-signal-mapping";
 import WidgetContextMenu from '../widget/widget-context-menu';
 import WidgetToolbox from '../widget/widget-toolbox';
@@ -560,7 +560,7 @@ class Dashboard extends Component {
           ics={this.state.ics}
         />
 
-        <EditFiles
+        <EditFilesDialog
           sessionToken={this.state.sessionToken}
           show={this.state.filesEditModal}
           onClose={this.closeEditFiles.bind(this)}

@@ -36,7 +36,7 @@ import ImportConfigDialog from '../componentconfig/import-config';
 import ImportDashboardDialog from "../dashboard/import-dashboard";
 import NewDashboardDialog from "../dashboard/new-dashboard";
 import EditDashboardDialog from '../dashboard/edit-dashboard';
-import EditFiles from '../file/edit-files'
+import EditFilesDialog from '../file/edit-files'
 import NewResultDialog from '../result/new-result';
 import EditResultDialog from '../result/edit-result';
 import ResultConfigDialog from '../result/result-configs-dialog';
@@ -746,7 +746,7 @@ class Scenario extends React.Component {
       </div>
       <h1>{this.state.scenario.name}</h1>
 
-      <EditFiles
+      <EditFilesDialog
         sessionToken={this.state.sessionToken}
         show={this.state.filesEditModal}
         onClose={this.closeEditFiles.bind(this)}
