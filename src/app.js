@@ -80,6 +80,7 @@ class App extends React.Component {
     }
 
     let currentUser = JSON.parse(currentUserRaw);
+    let pages = branding.values.pages;
 
     return <DndProvider backend={HTML5Backend} >
         <div className="app">
@@ -93,14 +94,14 @@ class App extends React.Component {
 
             <div className='app-content app-content-margin-left'>
               <Route exact path="/" component={Home} />
-              <Route path="/home" component={Home} />
-              <Route exact path="/scenarios" component={Scenarios} />
-              <Route path="/scenarios/:scenario" component={Scenario} />
-              <Route path="/dashboards/:dashboard" component={Dashboard} />
-              <Route path="/infrastructure" component={InfrastructureComponents} />
-              <Route path="/account" component={User} />
-              <Route path="/users" component={Users} />
-              <Route path="/api" component={APIBrowser} />
+              { pages.home ? <Route path="/home" component={Home} /> : '' }
+              { pages.scenarios ? <Route exact path="/scenarios" component={Scenarios} /> : '' }
+              { pages.scenarios ? <Route path="/scenarios/:scenario" component={Scenario} /> : '' }
+              { pages.scenarios ? <Route path="/dashboards/:dashboard" component={Dashboard} /> : '' }
+              { pages.infrastructure ? <Route path="/infrastructure" component={InfrastructureComponents} /> : '' }
+              { pages.account ? <Route path="/account" component={User} /> : '' }
+              { pages.users ? <Route path="/users" component={Users} /> : '' }
+              { pages.api ? <Route path="/api" component={APIBrowser} /> : '' }
             </div>
           </div>
 
