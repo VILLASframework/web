@@ -21,6 +21,9 @@ import villasweb_values from './villasweb/villasweb-values';
 import { slew_home, slew_welcome } from './slew/slew-functions';
 import slew_values from './slew/slew-values';
 
+import { template_welcome, template_home, template_footer } from './template/template-functions';
+import template_values from './template/template-values';
+
 class Branding {
     constructor(chosenbrand) {
         if (Branding.branding) {
@@ -43,6 +46,9 @@ class Branding {
             case 'slew':
                 this.values = slew_values;
                 break;
+            case 'template':
+                this.values = template_values;
+                break;
             default:
                 console.error("Branding '" + this.brand + "' not available, will use 'villasweb' branding");
                 this.brand = 'villasweb';
@@ -60,6 +66,9 @@ class Branding {
             case 'slew':
                 homepage = slew_home();
                 break;
+            case 'template':
+                homepage = template_home();
+                break;
             default:
                 homepage = villasweb_home(this.getTitle(), username, userid, role);
                 break;
@@ -68,7 +77,16 @@ class Branding {
     }
 
     getFooter() {
-        return villasweb_footer();
+        var footer = '';
+        switch(this.brand) {
+            case 'template':
+                footer = template_footer();
+                break;
+            default:
+                footer = villasweb_footer();
+                break;
+        }
+        return footer;
     }
 
     getWelcome() {
@@ -76,6 +94,9 @@ class Branding {
         switch (this.brand) {
             case 'slew':
                 welcome = slew_welcome();
+                break;
+            case 'template':
+                welcome = template_welcome();
                 break;
             default:
                 welcome = this.defaultWelcome();
