@@ -32,10 +32,10 @@ const slew_values = {
       "VILLASframework": "https://villas.fein-aachen.org/doc"
    },
    style: {
-      background: 'rgba(107,29,26, 0.8)',
-      highlights: '#610C04',
-      maincolor: 'rgba(40,0,0,0.8)',
-      secondarytext: '#472120',
+      background: 'rgba(207,209,210, 1)',
+      highlights: 'rgba(0,84,159, 0.75)',
+      maincolor: 'rgba(80,80,80, 1)',
+      secondarytext: 'rgba(80,80,80, 0.9)',
       font: "16px Roboto, sans-serif",
       borderradius: "10px"
    }
