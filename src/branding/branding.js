@@ -23,32 +23,16 @@ import slew_values from './slew/slew-values';
 
 class Branding {
     constructor(chosenbrand) {
-        if (!Branding.branding) {
-            if (chosenbrand === undefined) {
-                chosenbrand = "villasweb"
-            }
-            this.brand = chosenbrand;
-
-            this.setValues();
-            this.isSet = true;
-
-            Branding.branding = this;
+        if (Branding.branding) {
+            return Branding.branding;
         }
-        /*
-        // TODO: simplify; error only for "wrong" brand, not for missing brand
-        var brand = _.get(brands, [chosenbrand]);
-        if (!brand) {
-            console.error("Branding '" + chosenbrand + "' not available, will use 'villasweb' branding");
-            brand = _.get(brands, ['villasweb']);
-            chosenbrand = 'villasweb';
-            this.default = true;
-        } else if (chosenbrand === 'villasweb') {
-            this.default = true;
-        } else {
-            this.default = false;
-        }
-        *****/
-        return Branding.branding;
+
+        this.brand = chosenbrand;
+        this.setValues();
+        this.checkValues();
+        this.applyStyle();
+
+        Branding.branding = this;
     }
 
     setValues() {
@@ -60,6 +44,8 @@ class Branding {
                 this.values = slew_values;
                 break;
             default:
+                console.error("Branding '" + this.brand + "' not available, will use 'villasweb' branding");
+                this.brand = 'villasweb';
                 this.values = villasweb_values;
                 break;
         }
@@ -69,13 +55,13 @@ class Branding {
         var homepage = '';
         switch (this.brand) {
             case 'villasweb':
-                homepage = villasweb_home(this.values.title, username, userid, role);
+                homepage = villasweb_home(this.getTitle(), username, userid, role);
                 break;
             case 'slew':
-                homepage = slew_home(this.values.title);
+                homepage = slew_home();
                 break;
             default:
-                homepage = villasweb_home();
+                homepage = villasweb_home(this.getTitle(), username, userid, role);
                 break;
         }
         return homepage;
@@ -99,15 +85,22 @@ class Branding {
     }
 
     defaultWelcome() {
-        return (<h1>Welcome!</h1>);
+        return (<div><h1>Welcome!</h1><p>This is the welcome page and you are very welcome here.</p></div>);
     }
 
-    // TODO: error handling if icon cannot be found
+    // if icon cannot be found, the default favicon will be used
     changeHead() {
+        // set title of document
+        let title = this.getTitle();
+        if (this.getSubtitle()) {
+            title += " " + this.getSubtitle();
+        }
+        document.title = title;
+
+        // set document icon
         if (!this.values.icon) {
             return;
         }
-        document.title = this.values.title + " " + this.values.subtitle;
         var oldlink = document.getElementById('dynamic-favicon');
 
         var link = document.createElement('link');
@@ -121,14 +114,51 @@ class Branding {
         document.head.appendChild(link);
     }
 
-    applyBranding() {
+    checkValues() {
+        if (!this.values.hasOwnProperty('pages'))  {
+            let pages = {};
+            pages.home =  true;
+            pages.scenarios = true;
+            pages.infrastructure = true;
+            pages.users = true;
+            pages.account = true;
+            pages.api = true;
+
+            this.values.pages = pages;
+        } else {
+            if (!this.values.pages.hasOwnProperty('home')) {
+                this.values.pages['home'] = false;
+            }
+            if (!this.values.pages.hasOwnProperty('scenarios')) {
+                this.values.pages['scenarios'] = false;
+            }
+            if (!this.values.pages.hasOwnProperty('infrastructure')) {
+                this.values.pages['infrastructure'] = false;
+            }
+            if (!this.values.pages.hasOwnProperty('users')) {
+                this.values.pages['users'] = false;
+            }
+            if (!this.values.pages.hasOwnProperty('account')) {
+                this.values.pages['account'] = false;
+            }
+            if (!this.values.pages.hasOwnProperty('api')) {
+                this.values.pages['api'] = false;
+            }
+        }
+    }
+
+    applyStyle() {
         this.changeHead();
 
         const rootEl = document.querySelector(':root');
-        let background = this.getBackgroundColor();
 
+        let background = this.getBackgroundColor();
         if (background) {
-            document.body.style.backgroundColor = background;
+            console.log(background)
+            rootEl.style.setProperty('--bg', background);
+            //document.body.style.backgroundColor = background;
+        } else {
+            console.log(document.body.style.backgroundColor)
         }
 
         let maincolor = this.getMainColor();
@@ -139,11 +169,6 @@ class Branding {
         let highlight = this.getHighlightColor();
         if (highlight) {
             rootEl.style.setProperty('--highlights', highlight);
-        }
-
-        let primary = this.getPrimaryTextColor();
-        if (primary) {
-            rootEl.style.setProperty('--primarytext', primary);
         }
 
         let secondary = this.getSecondaryTextColor();
@@ -163,8 +188,8 @@ class Branding {
     }
 
     getBackgroundColor() {
-        if (this.values.style && this.values.style.bgcolor) {
-            return this.values.style.bgcolor;
+        if (this.values.style && this.values.style.background) {
+            return this.values.style.background;
         }
         return null;
     }
@@ -179,13 +204,6 @@ class Branding {
     getHighlightColor() {
         if (this.values.style && this.values.style.highlights) {
             return this.values.style.highlights;
-        }
-        return null;
-    }
-
-    getPrimaryTextColor() {
-        if (this.values.style && this.values.style.primarytext) {
-            return this.values.style.primarytext;
         }
         return null;
     }
@@ -209,6 +227,14 @@ class Branding {
             return this.values.style.borderradius;
         }
         return null;
+    }
+
+    getTitle() {
+        return this.values.title ? this.values.title : "No Title!";
+    }
+
+    getSubtitle() {
+        return this.values.subtitle ? this.values.subtitle : null;
     }
 };
 

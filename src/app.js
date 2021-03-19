@@ -50,7 +50,6 @@ class App extends React.Component {
       type: 'config/load',
     });
 
-    branding.applyBranding();
     this.state = {} 
   }
 

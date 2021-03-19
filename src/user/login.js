@@ -38,9 +38,6 @@ class Login extends Component {
     AppDispatcher.dispatch({
       type: 'config/load',
     });
-
-    // apply branding in case the login page gets refreshed
-    branding.applyBranding();
   }
 
   static getStores() {
