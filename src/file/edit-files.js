@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Form, Button, Col, ProgressBar } from 'react-bootstrap';
+import {Form, Button, Col, ProgressBar, Row} from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
 import AppDispatcher from "../common/app-dispatcher";
 import Table from "../common/table";
@@ -142,24 +142,26 @@ class EditFilesDialog extends React.Component {
           />
         </Table>
 
-        <Form.Group as={Col} >
-          <Form.Control
-            disabled={this.props.disabled}
-            type='file'
-            onChange={(event) => this.selectUploadFile(event)}
-          />
-        </Form.Group>
-
-        <Form.Group as={Col} >
+        <div style={{ float: 'center' }}>
+          <h5>Add file</h5>
+          <Row>
+            <Col xs lg="4">
+              <Form.Control type='file' onChange={(event) => this.selectUploadFile(event)} />
+            </Col>
+            <Col xs lg="2">
           <span className='solid-button'>
             <Button
               variant='secondary'
               disabled={this.state.uploadFile === null}
               onClick={() => this.startFileUpload()}>
               Upload
-            </Button>
+          </Button>
           </span>
-        </Form.Group>
+            </Col>
+          </Row>
+        </div>
+
+        <br />
 
         <Form.Group as={Col} >
           <ProgressBar
@@ -167,7 +169,6 @@ class EditFilesDialog extends React.Component {
             animated={true}
             now={this.state.uploadProgress}
             label={this.state.uploadProgress + '%'}
-            style={progressBarStyle}
           />
         </Form.Group>
 
