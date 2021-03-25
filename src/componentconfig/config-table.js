@@ -47,6 +47,24 @@ class ConfigTable extends Component {
     }
   }
 
+  static getDerivedStateFromProps(props, state){
+
+    let ExternalICInUse = false
+
+    for (let config of props.configs){
+      for (let component of props.ics) {
+        if ((config.icID === component.id) && (component.managedexternally === true)) {
+          ExternalICInUse = true;
+          break;
+        }
+      }
+    }
+
+    return {
+      ExternalICInUse: ExternalICInUse
+    };
+  }
+
   addConfig() {
     const config = {
       scenarioID: this.props.scenario.id,
@@ -181,24 +199,13 @@ class ConfigTable extends Component {
   }
 
   usesExternalIC(index) {
-    let icID = this.props.configs[index].icID;
-
-    let ic = null;
     for (let component of this.props.ics) {
-      if (component.id === icID) {
-        ic = component;
+      if (component.id === this.props.configs[index].icID) {
+        if (component.managedexternally === true) {
+          return true
+        }
       }
     }
-
-    if (ic == null) {
-      return false;
-    }
-
-    if (ic.managedexternally === true) {
-      this.setState({ ExternalICInUse: true })
-      return true
-    }
-
     return false
   }
 
