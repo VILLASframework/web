@@ -24,12 +24,12 @@ class DashboardButtonGroup extends React.Component {
   render() {
     const buttonStyle = {
       marginLeft: '12px',
-      height: '44px', 
+      height: '44px',
       width : '35px',
     };
 
     const iconStyle = {
-      height: '25px', 
+      height: '25px',
       width : '25px'
     }
 
@@ -56,7 +56,6 @@ class DashboardButtonGroup extends React.Component {
     } else {
       if (this.props.fullscreen !== true) {
         buttons.push(
-        
           <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"expand"}`}> Change to fullscreen view </Tooltip>} >
           <Button key={key} variant= 'light' size="lg" onClick={this.props.onFullscreen} style={buttonStyle}>
             <Icon icon="expand" classname='icon-color' style={iconStyle}/>

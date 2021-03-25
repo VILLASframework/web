@@ -46,6 +46,23 @@ class ICDialog extends React.Component {
     FileSaver.saveAs(blob, this.props.ic.name + ".svg");
   }
 
+  isJSON(data){
+    if (data === undefined || data === null){
+      return false;
+    }
+    let str = JSON.stringify(data);
+    try
+    {
+      JSON.parse(str)
+    }
+    catch(ex){
+      return false
+    }
+
+    return true
+  }
+
+
   render() {
 
     let graphURL = ""
@@ -123,14 +140,19 @@ class ICDialog extends React.Component {
 
             <Col>
               <h5>Raw Status:</h5>
-              <ReactJson
-                src={this.props.ic.statusupdateraw}
-                name={false}
-                displayDataTypes={false}
-                displayObjectSize={false}
-                enableClipboard={false}
-                collapsed={1}
-              />
+              {this.isJSON(this.props.ic.statusupdateraw) ?
+                <ReactJson
+                  src={this.props.ic.statusupdateraw}
+                  name={false}
+                  displayDataTypes={false}
+                  displayObjectSize={false}
+                  enableClipboard={false}
+                  collapsed={2}
+                />
+                :
+                <div>No valid JSON raw data available.</div>
+              }
+
 
               {this.props.ic.type === "villas-node" ?
                 <>

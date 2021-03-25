@@ -17,7 +17,7 @@
 
 import React from 'react';
 import { DndProvider } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
+import { HTML5Backend }from 'react-dnd-html5-backend';
 import NotificationSystem from 'react-notification-system';
 import { Redirect, Route } from 'react-router-dom';
 import jwt from 'jsonwebtoken'
@@ -37,6 +37,7 @@ import Scenario from './scenario/scenario';
 import Users from './user/users';
 import User from './user/user';
 import APIBrowser from './common/api-browser';
+import LoginStore from './user/login-store'
 
 
 import './styles/app.css';
@@ -46,15 +47,19 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    AppDispatcher.dispatch({
-      type: 'config/load',
-    });
-
     this.state = {}
+  }
+
+  static getStores() {
+    return [LoginStore]
   }
 
   componentDidMount() {
     NotificationsDataManager.setSystem(this.refs.notificationSystem);
+
+    AppDispatcher.dispatch({
+      type: 'config/load',
+    });
 
     // if token stored locally, we are already logged-in
     let token = localStorage.getItem("token");
@@ -68,7 +73,7 @@ class App extends React.Component {
         });
       } else {
         let currentUser = JSON.parse(localStorage.getItem("currentUser"));
-        console.log("Already logged-in")
+        console.log("Logged-in as user ", currentUser.username)
         AppDispatcher.dispatch({
           type: 'users/logged-in',
           token: token,
