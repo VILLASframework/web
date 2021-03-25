@@ -69,7 +69,7 @@ class LoginComplete extends React.Component {
   }
 
   startTimer() {
-    if (this.timer == 0 && this.state.secondsToWait > 0) {
+    if (this.timer === 0 && this.state.secondsToWait > 0) {
       // call function 'countDown' every 1000ms
       this.timer = setInterval(this.countDown, 1000);
     }
@@ -80,7 +80,7 @@ class LoginComplete extends React.Component {
     this.setState({secondsToWait: seconds});
 
     // waiting time over, stop counting down
-    if (seconds == 0) {
+    if (seconds === 0) {
       clearInterval(this.timer);
     }
   }
@@ -90,11 +90,11 @@ class LoginComplete extends React.Component {
       this.stopTimer();
       return (<Redirect to="/home" />);
     }
-    else if (this.state.secondsToWait == 0) {
+    else if (this.state.secondsToWait === 0) {
       this.stopTimer();
       return (<Redirect to="/login" />);
     } else {
-      return <div class="verticalhorizontal">
+      return <div className="verticalhorizontal">
         <img
           style={{height: 300}}
           src={require('../img/dog-waiting-bw.jpg').default}

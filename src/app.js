@@ -20,6 +20,7 @@ import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import NotificationSystem from 'react-notification-system';
 import { Redirect, Route } from 'react-router-dom';
+import jwt from 'jsonwebtoken'
 
 import AppDispatcher from './common/app-dispatcher';
 import NotificationsDataManager from './common/data-managers/notifications-data-manager';
@@ -35,6 +36,7 @@ import Scenario from './scenario/scenario';
 import Users from './user/users';
 import User from './user/user';
 import APIBrowser from './common/api-browser';
+
 
 import './styles/app.css';
 import branding from './branding/branding';
@@ -59,14 +61,29 @@ class App extends React.Component {
     // if token stored locally, we are already logged-in
     let token = localStorage.getItem("token");
     if (token != null && token !== '') {
-      let currentUser = JSON.parse(localStorage.getItem("currentUser"));
-      console.log("Already logged-in")
-      AppDispatcher.dispatch({
-        type: 'users/logged-in',
-        token: token,
-        currentUser: currentUser
-      });
+
+      let isExpired = this.tokenIsExpired(token);
+      if (isExpired) {
+        console.log("Token expired")
+        AppDispatcher.dispatch({
+          type: 'users/logout'
+        });
+      } else {
+        let currentUser = JSON.parse(localStorage.getItem("currentUser"));
+        console.log("Already logged-in")
+        AppDispatcher.dispatch({
+          type: 'users/logged-in',
+          token: token,
+          currentUser: currentUser
+        });
+      }
     }
+  }
+
+  tokenIsExpired(token){
+    let decodedToken = jwt.decode(token);
+    let timeNow = (new Date().getTime() + 1) / 1000;
+    return decodedToken.exp < timeNow;
   }
 
   render() {
@@ -74,7 +91,7 @@ class App extends React.Component {
     let token = localStorage.getItem("token");
     let currentUserRaw = localStorage.getItem("currentUser");
 
-    if (token == null || token === "" || currentUserRaw == null || currentUserRaw === "") {
+    if ((token == null || token === "" || currentUserRaw == null || currentUserRaw === "") || this.tokenIsExpired(token)) {
       console.log("APP redirecting to logout/ login")
       return (<Redirect to="/logout" />);
     }

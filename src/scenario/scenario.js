@@ -36,7 +36,7 @@ import ImportConfigDialog from '../componentconfig/import-config';
 import ImportDashboardDialog from "../dashboard/import-dashboard";
 import NewDashboardDialog from "../dashboard/new-dashboard";
 import EditDashboardDialog from '../dashboard/edit-dashboard';
-import EditFiles from '../file/edit-files'
+import EditFilesDialog from '../file/edit-files'
 import NewResultDialog from '../result/new-result';
 import EditResultDialog from '../result/edit-result';
 import ResultConfigDialog from '../result/result-configs-dialog';
@@ -168,7 +168,7 @@ class Scenario extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     // check whether file data has been loaded
     if (this.state.filesToDownload && this.state.filesToDownload.length > 0) {
-      if (this.state.files != prevState.files) {
+      if (this.state.files !== prevState.files) {
         if (!this.state.zipfiles) {
           let fileToDownload = FileStore.getState().filter(file => file.id === this.state.filesToDownload[0])
           if (fileToDownload.length === 1 && fileToDownload[0].data) {
@@ -746,7 +746,7 @@ class Scenario extends React.Component {
       </div>
       <h1>{this.state.scenario.name}</h1>
 
-      <EditFiles
+      <EditFilesDialog
         sessionToken={this.state.sessionToken}
         show={this.state.filesEditModal}
         onClose={this.closeEditFiles.bind(this)}
@@ -777,44 +777,50 @@ class Scenario extends React.Component {
           checkbox
           checkboxDisabled={(index) => !this.usesExternalIC(index)}
           onChecked={(index, event) => this.onConfigChecked(index, event)}
-          width='30'
+          width={20}
         />
         {this.state.currentUser.role === "Admin" ?
           <TableColumn
             title='ID'
             dataKey='id'
+            width={70}
           />
           : <></>
         }
         <TableColumn
           title='Name'
           dataKey='name'
+          width={300}
         />
         <TableColumn
           title='# Output Signals'
           dataKey='outputLength'
           editButton
           onEdit={index => this.setState({ editOutputSignalsModal: true, modalConfigData: this.state.configs[index], modalConfigIndex: index })}
+          width={150}
         />
         <TableColumn
           title='# Input Signals'
           dataKey='inputLength'
           editButton
           onEdit={index => this.setState({ editInputSignalsModal: true, modalConfigData: this.state.configs[index], modalConfigIndex: index })}
+          width={150}
         />
         <TableColumn
           title='Import Signals'
           exportButton
           onExport={(index) => this.signalsAutoConf(index)}
+          width={150}
         />
         <TableColumn
           title='Infrastructure Component'
           dataKey='icID'
           modifier={(icID) => this.getICName(icID)}
+          width={300}
         />
         <TableColumn
           title=''
-          width='200'
+          width={200}
           align='right'
           editButton
           deleteButton
@@ -905,6 +911,7 @@ class Scenario extends React.Component {
           <TableColumn
             title='ID'
             dataKey='id'
+            width={70}
           />
           : <></>
         }
@@ -913,13 +920,17 @@ class Scenario extends React.Component {
           dataKey='name'
           link='/dashboards/'
           linkKey='id'
+          width={300}
         />
         <TableColumn
           title='Grid'
-          dataKey='grid' />
+          dataKey='grid'
+          width={100}
+        />
+
         <TableColumn
           title=''
-          width='200'
+          width={200}
           align='right'
           editButton
           deleteButton
@@ -969,18 +980,22 @@ class Scenario extends React.Component {
           title='ID'
           dataKey='id'
           modifier={(id, result) => this.modifyResultNoColumn(id, result)}
+          width={70}
         />
         <TableColumn
           title='Description'
           dataKey='description'
+          width={300}
         />
         <TableColumn
           title='Created at'
           dataKey='createdAt'
+          width={200}
         />
         <TableColumn
           title='Last update'
           dataKey='updatedAt'
+          width={200}
         />
         <TableColumn
           title='Files'
@@ -988,9 +1003,10 @@ class Scenario extends React.Component {
           linkKey='filebuttons'
           data={this.state.files}
           onDownload={(index) => this.downloadResultData(index)}
+          width={300}
         />
         <TableColumn
-          width='200'
+          width={200}
           align='right'
           editButton
           downloadAllButton
@@ -1034,20 +1050,23 @@ class Scenario extends React.Component {
           <TableColumn
             title='ID'
             dataKey='id'
+            width={70}
           />
           : <></>
         }
         <TableColumn
           title='Name'
           dataKey='username'
+          width={300}
         />
         <TableColumn
           title='Role'
           dataKey='role'
+          width={100}
         />
         <TableColumn
           title=''
-          width='200'
+          width={30}
           align='right'
           deleteButton
           onDelete={(index) => this.setState({
