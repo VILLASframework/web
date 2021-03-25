@@ -74,44 +74,56 @@ class SidebarMenu extends React.Component {
         links.push(<li key={key}><a href={values.links[key]} title={key}>{key}</a></li>);
       })
     }
+    var logoStyle = { height: 110, float: 'center' };
+    var logo = branding.getLogo(logoStyle);
 
     return (
-      <div className="menu">
-        <h2>Menu</h2>
-
-        {this.state.externalAuth ?
-          <ul>
-            <li hidden={!values.pages.home}><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
-            <li hidden={!values.pages.scenarios}><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
-            <li hidden={!values.pages.infrastructure}><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure">Infrastructure</NavLink></li>
-            {this.props.currentRole === 'Admin' ?
-              <li><NavLink to="/users" activeClassName="active" title="Users">Users</NavLink></li> : ''
-            }
-            <li hidden={!values.pages.account}><NavLink to="/account" title="Account">Account</NavLink></li>
-            <a onClick={this.logout.bind(this)} href={this.state.logoutLink}>Logout</a>
-            <li hidden={!values.pages.api}><NavLink to="/api" title="API Browser">API Browser</NavLink></li>
-          </ul>
-          : <ul>
-            <li hidden={!values.pages.home}><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
-            <li hidden={!values.pages.scenarios}><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
-            <li hidden={!values.pages.infrastructure}><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure">Infrastructure</NavLink></li>
-            {this.props.currentRole === 'Admin' ?
-              <li><NavLink to="/users" activeClassName="active" title="Users">Users</NavLink></li> : ''
-            }
-            <li hidden={!values.pages.account}><NavLink to="/account" title="Account">Account</NavLink></li>
-            <li><NavLink to={this.state.logoutLink} title="Logout">Logout</NavLink></li>
-            <li hidden={!values.pages.api}> <NavLink to="/api" title="API Browser">API Browser</NavLink></li >
-          </ul >}
-
-        {
-          links.length > 0 ?
-            <div>
-              <br></br>
-              <h4> Links</h4>
-              <ul> {links} </ul>
-            </div>
-            : ''
+      <div className="menucontainer">
+        { logo ?
+          <div className="menu">
+            {logo}
+          </div>
+          : ''
         }
+        <div className="menu">
+          <h2>Menu</h2>
+
+          {this.state.externalAuth ?
+            <ul>
+              <li hidden={!values.pages.home}><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
+              <li hidden={!values.pages.scenarios}><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
+              <li hidden={!values.pages.infrastructure}><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure">Infrastructure</NavLink></li>
+              {this.props.currentRole === 'Admin' ?
+                <li><NavLink to="/users" activeClassName="active" title="Users">Users</NavLink></li> : ''
+              }
+              <li hidden={!values.pages.account}><NavLink to="/account" title="Account">Account</NavLink></li>
+              <a onClick={this.logout.bind(this)} href={this.state.logoutLink}>Logout</a>
+              <li hidden={!values.pages.api}><NavLink to="/api" title="API Browser">API Browser</NavLink></li>
+            </ul>
+            : <ul>
+              <li hidden={!values.pages.home}><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
+              <li hidden={!values.pages.scenarios}><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
+              <li hidden={!values.pages.infrastructure}><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure">Infrastructure</NavLink></li>
+              {this.props.currentRole === 'Admin' ?
+                <li><NavLink to="/users" activeClassName="active" title="Users">Users</NavLink></li> : ''
+              }
+              <li hidden={!values.pages.account}><NavLink to="/account" title="Account">Account</NavLink></li>
+              <li><NavLink to={this.state.logoutLink} title="Logout">Logout</NavLink></li>
+              <li hidden={!values.pages.api}> <NavLink to="/api" title="API Browser">API Browser</NavLink></li >
+            </ul >}
+
+          {
+            links.length > 0 ?
+              <div>
+                <br></br>
+                <h4> Links</h4>
+                <ul> {links} </ul>
+              </div>
+              : ''
+          }
+        </div>
+
+
       </div>
     );
   }

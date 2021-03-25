@@ -26,10 +26,6 @@ import template_values from './template/template-values';
 
 class Branding {
     constructor(chosenbrand) {
-        if (Branding.branding) {
-            return Branding.branding;
-        }
-
         this.brand = chosenbrand;
         this.setValues();
         this.checkValues();
@@ -175,9 +171,7 @@ class Branding {
 
         let background = this.getBackgroundColor();
         if (background) {
-            console.log(background)
             rootEl.style.setProperty('--bg', background);
-            //document.body.style.backgroundColor = background;
         } else {
             console.log(document.body.style.backgroundColor)
         }
@@ -206,6 +200,18 @@ class Branding {
         if (borderradius) {
             rootEl.style.setProperty('--borderradius', borderradius);
         }
+    }
+
+    getLogo(style) {
+        let image = null;
+
+        try {
+            image =  <img style={style} src={require('./' + this.brand + '/img/' + this.values.logo).default} alt={'Logo ' + this.values.title} />
+        } catch (err) {
+            console.error("cannot find './" + this.brand + '/img/' + this.values.logo + "'");
+        }
+ 
+        return image;
     }
 
     getBackgroundColor() {
@@ -259,7 +265,6 @@ class Branding {
     }
 };
 
-const branding = new Branding(process.env.REACT_APP_BRAND);
-Object.freeze(branding);
+var branding = new Branding(process.env.REACT_APP_BRAND);
 
 export default branding;

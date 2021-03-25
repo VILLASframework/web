@@ -111,10 +111,15 @@ body {
 /**
  * Menus
  */
+.menucontainer {
+  float: left;
+  flex-direction: column;
+}
+
 .menu {
   padding: 20px;
+  margin-bottom: 20px;
   width: 160px;
-  float: left;
   border-radius: var(--borderradius);
 
 
