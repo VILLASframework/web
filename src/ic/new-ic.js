@@ -56,6 +56,12 @@ class NewICDialog extends React.Component {
         const data = {
           managedexternally: this.state.managedexternally,
           manager: this.state.manager,
+          name: this.state.name,
+          type: this.state.type,
+          category: this.state.category,
+          uuid: this.state.uuid,
+          description: this.state.description,
+          location: this.state.location,
           parameters: parameters
         };
 
@@ -65,10 +71,12 @@ class NewICDialog extends React.Component {
 
         if (this.state.websocketurl != null && this.state.websocketurl !== "") {
           parameters.websocketurl = this.state.websocketurl;
+          data.websocketurl = this.state.websocketurl;
         }
 
         if (this.state.apiurl != null && this.state.apiurl !== "") {
           parameters.apiurl = this.state.apiurl;
+          data.apiurl = this.state.apiurl;
         }
 
         this.props.onClose(data);
