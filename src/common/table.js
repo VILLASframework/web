@@ -290,7 +290,10 @@ class CustomTable extends Component {
       const row = [];
 
       for (let child of props.children) {
-        row.push(CustomTable.addCell(data, index, child));
+        // check whether empty <></> object has been given
+        if (Object.keys(child.props).length != 0) {
+          row.push(CustomTable.addCell(data, index, child));
+        }
       }
 
       return row;
