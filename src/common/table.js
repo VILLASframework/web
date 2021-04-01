@@ -291,7 +291,7 @@ class CustomTable extends Component {
 
       for (let child of props.children) {
         // check whether empty <></> object has been given
-        if (Object.keys(child.props).length != 0) {
+        if (Object.keys(child.props).length !== 0) {
           row.push(CustomTable.addCell(data, index, child));
         }
       }

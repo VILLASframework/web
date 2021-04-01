@@ -26,6 +26,7 @@ import Scenarios from './scenario/scenarios';
 import Scenario from './scenario/scenario';
 import Dashboard from './dashboard/dashboard'
 import InfrastructureComponents from './ic/ics';
+import InfrastructureComponent from './ic/ic';
 import Users from './user/users';
 import User from "./user/user";
 import LoginComplete from './user/login-complete'
@@ -45,6 +46,7 @@ class Root extends React.Component {
           <Route path='/scenarios/:scenario' component={Scenario} />
           <Route path='/dashboards/:dashboard' component={Dashboard} />
           <Route path='/infrastructure' component={InfrastructureComponents} />
+          <Route path='/infrastructure/:ic' component={InfrastructureComponent} />
           <Route path='/users' component={Users} />
           <Route path='/account' component={User} />
 

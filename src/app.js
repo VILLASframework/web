@@ -31,6 +31,7 @@ import Footer from './common/footer';
 import Menu from './common/menu';
 
 import InfrastructureComponents from './ic/ics';
+import InfrastructureComponent from './ic/ic';
 import Dashboard from './dashboard/dashboard';
 import Scenarios from './scenario/scenarios';
 import Scenario from './scenario/scenario';
@@ -117,7 +118,8 @@ class App extends React.Component {
               <Route exact path="/scenarios" component={Scenarios} />
               <Route path="/scenarios/:scenario" component={Scenario} />
               <Route path="/dashboards/:dashboard" component={Dashboard} />
-              <Route path="/infrastructure" component={InfrastructureComponents} />
+              <Route exact path="/infrastructure" component={InfrastructureComponents} />
+              <Route path="/infrastructure/:ic" component={InfrastructureComponent} />
               <Route path="/account" component={User} />
               <Route path="/users" component={Users} />
               <Route path="/api" component={APIBrowser} />

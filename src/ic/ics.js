@@ -367,30 +367,9 @@ class InfrastructureComponents extends Component {
     }
   }
 
-  modifyNameColumn(name, component){
-    let index = this.state.ics.indexOf(component);
-    return <Button variant="link" onClick={() => this.openICStatus(component)}>{name}</Button>
-  }
-
   openICStatus(ic){
     let index = this.state.ics.indexOf(ic);
     this.setState({ icModal: true, modalIC: ic, modalIndex: index })
-  }
-
-  sendControlCommand(command,ic){
-    if(command === "restart"){
-      AppDispatcher.dispatch({
-        type: 'ics/restart',
-        url: ic.apiurl + "/restart",
-        token: this.state.sessionToken,
-      });
-    }else if(command === "shutdown"){
-      AppDispatcher.dispatch({
-        type: 'ics/shutdown',
-        url: ic.apiurl + "/shutdown",
-        token: this.state.sessionToken,
-      });
-    }
   }
 
   isLocalIC(index, ics){
@@ -419,7 +398,8 @@ class InfrastructureComponents extends Component {
           <TableColumn
             title='Name'
             dataKeys={['name']}
-            modifier={(name, component) => this.modifyNameColumn(name, component)}
+            link='/infrastructure/'
+            linkKey='id'
           />
           <TableColumn
             title='State'
