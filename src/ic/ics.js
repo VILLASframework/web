@@ -472,13 +472,13 @@ class InfrastructureComponents extends Component {
           {this.state.currentUser.role === "Admin" ?
             <span className='icon-button'>
               <IconButton
-                alt={1}
+                ikey={1}
                 tooltip='Add Infrastructure Component'
                 onClick={() => this.setState({newModal: true})}
                 icon='plus'
               />
               <IconButton
-                alt={1}
+                ikey={1}
                 tooltip='Import Infrastructure Component'
                 onClick={() => this.setState({importModal: true})}
                 icon='upload'

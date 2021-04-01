@@ -161,7 +161,7 @@ class ResultTable extends Component {
         <h2 style={this.props.tableHeadingStyle}>Results
           <span className='icon-button'>
           <IconButton
-            key={1}
+            ikey={1}
             tooltip='Add Result'
             onClick={() => this.setState({ newResultModal: true })}
             icon='plus'

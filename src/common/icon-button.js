@@ -35,7 +35,7 @@ class IconButton extends React.Component {
     }
 
     return <OverlayTrigger
-      key={this.props.key}
+      key={this.props.ikey}
       placement={'top'}
       overlay={<Tooltip id={`tooltip-${"add"}`}>{this.props.tooltip}</Tooltip>} >
       <Button

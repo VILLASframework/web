@@ -129,7 +129,7 @@ class Scenario extends React.Component {
     return <div className='section'>
       <div className='section-buttons-group-right'>
         <IconButton
-          key="0"
+          ikey="0"
           tooltip="Add, edit or delete files of scenario"
           onClick={this.onEditFiles.bind(this)}
           icon="file"
