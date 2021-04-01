@@ -17,7 +17,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Badge } from 'react-bootstrap';
+import { Badge } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 import moment from 'moment'
@@ -32,7 +32,6 @@ import TableColumn from '../common/table-column';
 import NewICDialog from './new-ic';
 import EditICDialog from './edit-ic';
 import ImportICDialog from './import-ic';
-import ICDialog from './ic-dialog';
 
 import ICAction from './ic-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
@@ -518,13 +517,6 @@ class InfrastructureComponents extends Component {
         <EditICDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} ic={this.state.modalIC} />
         <ImportICDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} />
         <DeleteDialog title="infrastructure-component" name={this.state.modalIC.name || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
-        <ICDialog
-          show={this.state.icModal}
-          onClose={data => this.closeICModal(data)}
-          ic={this.state.modalIC}
-          token={this.state.sessionToken}
-          user={this.state.currentUser}
-          sendControlCommand={(command, ic) => this.sendControlCommand(command, ic)}/>
       </div>
     );
   }
