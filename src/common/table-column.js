@@ -28,6 +28,8 @@ class TableColumn extends Component {
     showDeleteButton: null,
     exportButton: false,
     duplicateButton: false,
+    isLocked: null,
+    locked: false,
     link: '/',
     linkKey: '',
     dataIndex: false,

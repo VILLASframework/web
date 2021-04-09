@@ -124,6 +124,7 @@ class ScenarioUsersTable extends Component {
               deleteUserName: this.props.scenario.users[index].username,
               modalUserIndex: index
             })}
+            locked={this.props.locked}
           />
         </Table>
 
@@ -145,6 +146,7 @@ class ScenarioUsersTable extends Component {
               variant='light'
               type="submit"
               style={altButtonStyle}
+              disabled={this.props.locked}
               onClick={() => this.addUser()}>
               <Icon icon="plus" classname={'icon-color'} style={iconStyle} />
             </Button>

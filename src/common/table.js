@@ -125,6 +125,8 @@ class CustomTable extends Component {
       cell.push(index);
     }
 
+    let isLocked = child.props.locked || (child.props.isLocked != null && child.props.isLocked(index));
+
     // add buttons
     let showEditButton = child.props.showEditButton !== null  && child.props.showEditButton !== undefined
       ? child.props.showEditButton(index)
@@ -140,7 +142,7 @@ class CustomTable extends Component {
           <Button
             variant='table-control-button'
             onClick={() => child.props.onEdit(index)}
-            disabled={child.props.onEdit == null} >
+            disabled={child.props.onEdit == null || isLocked} >
             <Icon icon='edit' />
           </Button>
         </OverlayTrigger>
@@ -190,7 +192,7 @@ class CustomTable extends Component {
           <Button
             variant='table-control-button'
             onClick={() => child.props.onDuplicate(index)}
-            disabled={child.props.onDuplicate == null}>
+            disabled={child.props.onDuplicate == null || isLocked}>
             <Icon icon='copy' />
           </Button>
         </OverlayTrigger>
@@ -206,7 +208,7 @@ class CustomTable extends Component {
           <Button
             variant='table-control-button'
             onClick={() => child.props.onAddRemove(index)}
-            disabled={child.props.onAddRemove == null}>
+            disabled={child.props.onAddRemove == null || isLocked}>
             <Icon icon='file' />
           </Button>
         </OverlayTrigger>
@@ -242,7 +244,7 @@ class CustomTable extends Component {
           <Button
             variant='table-control-button'
             onClick={() => child.props.onDelete(index)}
-            disabled={child.props.onDelete == null}>
+            disabled={child.props.onDelete == null || isLocked}>
             <Icon icon='trash' />
           </Button>
         </OverlayTrigger>

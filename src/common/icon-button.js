@@ -42,6 +42,7 @@ class IconButton extends React.Component {
         variant='light'
         onClick={this.props.onClick}
         style={altButtonStyle}
+        disabled={this.props.disabled}
       >
         <Icon
           icon={this.props.icon}

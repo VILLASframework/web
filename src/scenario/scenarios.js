@@ -73,7 +73,7 @@ class Scenarios extends Component {
   }
 
   closeNewModal(data) {
-    if(data) {
+    if (data) {
       AppDispatcher.dispatch({
         type: 'scenarios/start-add',
         data: data,
@@ -218,7 +218,7 @@ class Scenarios extends Component {
     jsonObj["configs"] = this.getConfigs(scenario.id);
     jsonObj["dashboards"] = this.getDashboards(scenario.id);
 
-    if(jsonObj) {
+    if (jsonObj) {
       AppDispatcher.dispatch({
         type: 'scenarios/start-add',
         data: jsonObj,
@@ -227,68 +227,85 @@ class Scenarios extends Component {
     }
   }
 
-  modifyRunningColumn(running){
-    return <Icon icon={ running ? 'check' : 'times' } />
+  isLocked(index) {
+    return this.state.scenarios[index].isLocked;
+  }
+
+  onLock(scenario) {
+    let data = {};
+    data.id = scenario.id;
+    data.isLocked = !scenario.isLocked;
+
+    AppDispatcher.dispatch({
+      type: 'scenarios/start-edit',
+      data,
+      token: this.state.sessionToken
+    });
   }
 
   render() {
     return <div className='section'>
-        <h1>Scenarios
+      <h1>Scenarios
           <span className='icon-button'>
-            <IconButton
-              ikey={0}
-              tooltip='Add Scenario'
-              onClick={() => this.setState({ newModal: true })}
-              icon='plus'
-            />
-            <IconButton
-              ikey={1}
-              tooltip='Import Scenario'
-              onClick={() => this.setState({ importModal: true })}
-              icon='upload'
-            />
-          </span>
-        </h1>
-
-        <Table data={this.state.scenarios}>
-          {this.state.currentUser.role === "Admin" ?
-            <TableColumn
-              title='ID'
-              dataKey='id'
-            />
-            : <></>
-          }
-          <TableColumn
-            title='Name'
-            dataKey='name'
-            link='/scenarios/'
-            linkKey='id'
+          <IconButton
+            ikey={0}
+            tooltip='Add Scenario'
+            onClick={() => this.setState({ newModal: true })}
+            icon='plus'
           />
-          <TableColumn
-            title='Running'
-            dataKey='running'
-            modifier={(running) => this.modifyRunningColumn(running)}
+          <IconButton
+            ikey={1}
+            tooltip='Import Scenario'
+            onClick={() => this.setState({ importModal: true })}
+            icon='upload'
           />
+        </span>
+      </h1>
+
+      <Table data={this.state.scenarios}>
+        {this.state.currentUser.role === "Admin" ?
           <TableColumn
-            width='200'
-            align='right'
-            editButton
-            deleteButton
-            exportButton
-            duplicateButton
-            onEdit={index => this.setState({ editModal: true, modalScenario: this.state.scenarios[index] })}
-            onDelete={index => this.setState({ deleteModal: true, modalScenario: this.state.scenarios[index] })}
-            onExport={index => this.exportScenario(index)}
-            onDuplicate={index => this.duplicateScenario(index)}
+            title='ID'
+            dataKey='id'
           />
-        </Table>
+          : <></>
+        }
+        <TableColumn
+          title='Name'
+          dataKey='name'
+          link='/scenarios/'
+          linkKey='id'
+        />
+        {this.state.currentUser.role === "Admin" ?
+          <TableColumn
+            title='Locked'
+            checkbox
+            checkboxKey='isLocked'
+            onChecked={(index, event) => this.onLock(index)}
+          />
+          : <></>
+        }
+        <TableColumn
+          width='200'
+          align='right'
+          editButton
+          deleteButton
+          exportButton
+          duplicateButton
+          onEdit={index => this.setState({ editModal: true, modalScenario: this.state.scenarios[index] })}
+          onDelete={index => this.setState({ deleteModal: true, modalScenario: this.state.scenarios[index] })}
+          onExport={index => this.exportScenario(index)}
+          onDuplicate={index => this.duplicateScenario(index)}
+          isLocked={index => this.isLocked(index)}
+        />
+      </Table>
 
-        <NewScenarioDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
-        <EditScenarioDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} scenario={this.state.modalScenario} />
-        <ImportScenarioDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} nodes={this.state.nodes} />
+      <NewScenarioDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
+      <EditScenarioDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} scenario={this.state.modalScenario} />
+      <ImportScenarioDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} nodes={this.state.nodes} />
 
-        <DeleteDialog title="scenario" name={this.state.modalScenario.name} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
-      </div>;
+      <DeleteDialog title="scenario" name={this.state.modalScenario.name} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
+    </div>;
   }
 }
 

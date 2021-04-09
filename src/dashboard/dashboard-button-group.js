@@ -91,9 +91,10 @@ class DashboardButtonGroup extends React.Component {
       }
 
       if (this.props.fullscreen !== true) {
+        let filesTooltip = this.props.locked ? "View files of scenario" : "Add, edit or delete files of scenario";
         buttons.push(
           <OverlayTrigger key={key++} placement={'bottom'}
-                          overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete files of scenario </Tooltip>}>
+                          overlay={<Tooltip id={`tooltip-${"file"}`}>{filesTooltip}</Tooltip>}>
             <Button key={key} variant='light' size="lg" onClick={this.props.onEditFiles} style={buttonStyle}>
               <Icon icon="file" classname='icon-color' style={iconStyle}/>
             </Button>
@@ -120,7 +121,7 @@ class DashboardButtonGroup extends React.Component {
         buttons.push(
           <OverlayTrigger key={key++} placement={'bottom'}
                           overlay={<Tooltip id={`tooltip-${"layout"}`}> Add widgets and edit layout </Tooltip>}>
-            <Button key={key} variant='light' size="lg" onClick={this.props.onEdit} style={buttonStyle}>
+            <Button key={key} variant='light' size="lg" onClick={this.props.onEdit} style={buttonStyle} disabled={this.props.locked}>
               <Icon icon="pen" classname='icon-color' style={iconStyle}/>
             </Button>
           </OverlayTrigger>

@@ -308,12 +308,14 @@ class ConfigTable extends Component {
             tooltip='Add Component Configuration'
             onClick={() => this.addConfig()}
             icon='plus'
+            disabled={this.props.locked}
           />
           <IconButton
             ikey={1}
             tooltip='Import Component Configuration'
             onClick={() => this.setState({ importConfigModal: true })}
             icon='upload'
+            disabled={this.props.locked}
           />
         </span>
         </h2>
@@ -343,6 +345,7 @@ class ConfigTable extends Component {
             editButton
             onEdit={index => this.setState({ editOutputSignalsModal: true, modalConfigData: this.props.configs[index], modalConfigIndex: index })}
             width={150}
+            locked={this.props.locked}
           />
           <TableColumn
             title='# Input Signals'
@@ -350,6 +353,7 @@ class ConfigTable extends Component {
             editButton
             onEdit={index => this.setState({ editInputSignalsModal: true, modalConfigData: this.props.configs[index], modalConfigIndex: index })}
             width={150}
+            locked={this.props.locked}
           />
           <TableColumn
             title='Import Signals'
@@ -375,6 +379,7 @@ class ConfigTable extends Component {
             onDelete={(index) => this.setState({ deleteConfigModal: true, modalConfigData: this.props.configs[index], modalConfigIndex: index })}
             onExport={index => this.exportConfig(index)}
             onDuplicate={index => this.duplicateConfig(index)}
+            locked={this.props.locked}
           />
         </Table>
 

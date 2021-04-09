@@ -148,12 +148,14 @@ class DashboardTable extends Component {
                 tooltip='Add Dashboard'
                 onClick={() => this.setState({newDashboardModal: true})}
                 icon='plus'
+                disabled={this.props.locked}
               />
               <IconButton
                 ikey={1}
                 tooltip='Import Dashboard'
                 onClick={() => this.setState({importDashboardModal: true})}
                 icon='upload'
+                disabled={this.props.locked}
               />
             </span>
         </h2>
@@ -198,6 +200,7 @@ class DashboardTable extends Component {
             })}
             onExport={index => this.exportDashboard(index)}
             onDuplicate={index => this.duplicateDashboard(index)}
+            locked={this.props.locked}
           />
         </Table>
 

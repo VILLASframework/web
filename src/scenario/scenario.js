@@ -126,11 +126,13 @@ class Scenario extends React.Component {
       return <h1>Loading Scenario...</h1>;
     }
 
+    let tooltip = this.state.scenario.isLocked ? "View files of scenario" : "Add, edit or delete files of scenario";
+
     return <div className='section'>
       <div className='section-buttons-group-right'>
         <IconButton
           ikey="0"
-          tooltip="Add, edit or delete files of scenario"
+          tooltip={tooltip}
           onClick={this.onEditFiles.bind(this)}
           icon="file"
         />
@@ -144,6 +146,7 @@ class Scenario extends React.Component {
         signals={this.state.signals}
         files={this.state.files}
         scenarioID={this.state.scenario.id}
+        locked={this.state.scenario.isLocked}
       />
 
       <ConfigTable
@@ -155,6 +158,7 @@ class Scenario extends React.Component {
         sessionToken={this.state.sessionToken}
         currentUser={this.state.currentUser}
         tableHeadingStyle={tableHeadingStyle}
+        locked={this.state.scenario.isLocked}
       />
 
       <DashboardTable
@@ -164,6 +168,7 @@ class Scenario extends React.Component {
         sessionToken={this.state.sessionToken}
         currentUser={this.state.currentUser}
         tableHeadingStyle={tableHeadingStyle}
+        locked={this.state.scenario.isLocked}
       />
 
       <ResultTable
@@ -172,6 +177,7 @@ class Scenario extends React.Component {
         scenario={this.state.scenario}
         sessionToken={this.state.sessionToken}
         tableHeadingStyle={tableHeadingStyle}
+        locked={this.state.scenario.isLocked}
       />
 
       <ScenarioUsersTable
@@ -179,6 +185,7 @@ class Scenario extends React.Component {
         currentUser={this.state.currentUser}
         sessionToken={this.state.sessionToken}
         tableHeadingStyle={tableHeadingStyle}
+        locked={this.state.scenario.isLocked}
       />
 
     </div>

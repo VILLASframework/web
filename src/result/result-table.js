@@ -165,6 +165,7 @@ class ResultTable extends Component {
             tooltip='Add Result'
             onClick={() => this.setState({ newResultModal: true })}
             icon='plus'
+            disabled={this.props.locked}
           />
         </span>
         </h2>
@@ -208,6 +209,7 @@ class ResultTable extends Component {
             onEdit={index => this.setState({ editResultsModal: true, modalResultsIndex: index })}
             onDownloadAll={(index) => this.downloadResultData(this.props.results[index])}
             onDelete={(index) => this.setState({ deleteResultsModal: true, modalResultsData: this.props.results[index], modalResultsIndex: index })}
+            locked={this.props.locked}
           />
         </Table>
 
