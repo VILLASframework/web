@@ -183,6 +183,23 @@ class CustomTable extends Component {
       );
     }
 
+    if (child.props.signalButton) {
+      cell.push(
+        <OverlayTrigger
+          key={1}
+          placement={'bottom'}
+          overlay={<Tooltip id={`tooltip-${"signal"}`}> Autoconfigure Signals </Tooltip>}
+        >
+          <Button
+            variant='table-control-button'
+            onClick={() => child.props.onAutoConf(index)}
+            disabled={child.props.onAutoConf == null}>
+            <Icon icon='wave-square' />
+          </Button>
+        </OverlayTrigger>
+      );
+    }
+
     if (child.props.duplicateButton) {
       cell.push(
         <OverlayTrigger

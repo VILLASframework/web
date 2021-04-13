@@ -356,10 +356,10 @@ class ConfigTable extends Component {
             locked={this.props.locked}
           />
           <TableColumn
-            title='Import Signals'
-            exportButton
-            onExport={(index) => this.signalsAutoConf(index)}
-            width={150}
+            title='Autoconfigure Signals'
+            signalButton
+            onAutoConf={(index) => this.signalsAutoConf(index)}
+            width={170}
           />
           <TableColumn
             title='Infrastructure Component'

@@ -27,6 +27,7 @@ class TableColumn extends Component {
     deleteButton: false,
     showDeleteButton: null,
     exportButton: false,
+    signalButton: false,
     duplicateButton: false,
     isLocked: null,
     locked: false,
