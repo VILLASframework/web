@@ -103,7 +103,7 @@ class DashboardButtonGroup extends React.Component {
 
         buttons.push(
           <OverlayTrigger key={key++} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete input signals </Tooltip>}>
-            <Button key={key} variant='light' size="lg" onClick={this.props.onEditInputSignals} style={buttonStyle}>
+            <Button key={key} variant='light' size="lg" onClick={this.props.onEditInputSignals} style={buttonStyle} disabled={this.props.locked}>
               <Icon icon="sign-in-alt" classname='icon-color' style={iconStyle}/>
             </Button>
           </OverlayTrigger>
@@ -112,7 +112,7 @@ class DashboardButtonGroup extends React.Component {
         buttons.push(
           <OverlayTrigger key={key++} placement={'bottom'}
                           overlay={<Tooltip id={`tooltip-${"file"}`}> Add, edit or delete output signals </Tooltip>}>
-            <Button key={key} variant='light' size="lg" onClick={this.props.onEditOutputSignals} style={buttonStyle}>
+            <Button key={key} variant='light' size="lg" onClick={this.props.onEditOutputSignals} style={buttonStyle} disabled={this.props.locked}>
               <Icon icon="sign-out-alt" classname='icon-color' style={iconStyle}/>
             </Button>
           </OverlayTrigger>
