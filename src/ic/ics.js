@@ -201,9 +201,6 @@ class InfrastructureComponents extends Component {
     }
   }
 
-  closeICModal(data){
-    this.setState({ icModal : false });
-  }
 
   closeDeleteModal(confirmDelete){
     this.setState({ deleteModal: false });
@@ -345,14 +342,6 @@ class InfrastructureComponents extends Component {
     return dateTime.fromNow()
   }
 
-  modifyManagedExternallyColumn(managedExternally, component){
-    if(managedExternally){
-      return <Icon icon='check' />
-    } else {
-      return ""
-    }
-  }
-
   modifyUptimeColumn(uptime, component){
     if(uptime >= 0){
       let momentDurationFormatSetup = require("moment-duration-format");
@@ -364,11 +353,6 @@ class InfrastructureComponents extends Component {
     else{
       return <Badge variant="secondary">Unknown</Badge>
     }
-  }
-
-  openICStatus(ic){
-    let index = this.state.ics.indexOf(ic);
-    this.setState({ icModal: true, modalIC: ic, modalIndex: index })
   }
 
   isLocalIC(index, ics){
@@ -451,14 +435,6 @@ class InfrastructureComponents extends Component {
 
   render() {
 
-    const buttonStyle = {
-      marginLeft: '10px'
-    };
-
-    const iconStyle = {
-      height: '30px',
-      width: '30px'
-    }
 
     let managerTable = this.getICCategoryTable(this.state.managers, false, "IC Managers")
     let simulatorTable = this.getICCategoryTable(this.state.simulators, true, "Simulators")
