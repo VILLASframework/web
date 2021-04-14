@@ -20,6 +20,7 @@ import { Container } from 'flux/utils';
 
 import AppDispatcher from '../common/app-dispatcher';
 import IconButton from '../common/icon-button';
+import IconToggleButton from '../common/icon-toggle-button';
 
 import ScenarioStore from './scenario-store';
 import ICStore from '../ic/ic-store';
@@ -52,6 +53,7 @@ class Scenario extends React.Component {
     let scenarioID = parseInt(props.match.params.scenario, 10)
 
       return{
+        sessionToken: localStorage.getItem("token"),
         scenario: ScenarioStore.getState().find(s => s.id === scenarioID),
         results: ResultStore.getState().filter(result => result.scenarioID === scenarioID),
         sessionToken: localStorage.getItem("token"),
@@ -70,26 +72,24 @@ class Scenario extends React.Component {
   }
 
   componentDidMount() {
-
-    let token = localStorage.getItem("token")
     let scenarioID = parseInt(this.props.match.params.scenario, 10)
     //load selected scenario
     AppDispatcher.dispatch({
       type: 'scenarios/start-load',
       data: scenarioID,
-      token: token
+      token: this.state.sessionToken
     });
 
     AppDispatcher.dispatch({
       type: 'scenarios/start-load-users',
       data: scenarioID,
-      token: token
+      token: this.state.sessionToken
     });
 
     // load ICs to enable that component configs and dashboards work with them
     AppDispatcher.dispatch({
       type: 'ics/start-load',
-      token: token
+      token: this.state.sessionToken
     });
   }
 
@@ -110,6 +110,22 @@ class Scenario extends React.Component {
 
   closeEditFiles() {
     this.setState({ filesEditModal: false });
+  }
+
+  /* ##############################################
+  * Change locked state of scenario
+  ############################################## */
+
+  onChangeLock() {
+    let data = {};
+    data.id = this.state.scenario.id;
+    data.isLocked = !this.state.scenario.isLocked;
+
+    AppDispatcher.dispatch({
+      type: 'scenarios/start-edit',
+      data,
+      token: this.state.sessionToken
+    });
   }
 
   /* ##############################################
@@ -137,7 +153,21 @@ class Scenario extends React.Component {
           icon="file"
         />
       </div>
-      <h1>{this.state.scenario.name}</h1>
+      <h1>
+        {this.state.scenario.name}
+        <span className='icon-button'>
+              <IconToggleButton
+                ikey={0}
+                onChange={() => this.onChangeLock()}
+                checked={this.state.scenario.isLocked}
+                checkedIcon='lock'
+                uncheckedIcon='lock-open'
+                tooltipChecked='Scenario is locked, cannot be edited'
+                tooltipUnchecked='Scenario is unlocked, can be edited'
+                disabled={this.state.currentUser.role !== "Admin"}
+              />
+            </span>
+        </h1>
 
       <EditFilesDialog
         sessionToken={this.state.sessionToken}
