@@ -74,7 +74,7 @@ class SidebarMenu extends React.Component {
         links.push(<li key={key}><a href={values.links[key]} title={key}>{key}</a></li>);
       })
     }
-    var logoStyle = { height: 110, float: 'center' };
+    var logoStyle = { height: 110, margin: 'auto' };
     var logo = branding.getLogo(logoStyle);
 
     return (

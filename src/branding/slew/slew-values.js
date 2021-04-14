@@ -18,8 +18,8 @@
 const slew_values = {
    title: 'SLEW',
    subtitle: 'Second Life for Energiewende',
-   icon: "slew_magenta.png",
-   logo: "slew_magenta.svg",
+   icon: "slew_blue.png",
+   logo: "slew_blue.svg",
    pages: {
       home: true,
       scenarios: true,
