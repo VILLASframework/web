@@ -16,11 +16,11 @@
  ******************************************************************************/
 
 import React, {Component} from "react";
-import {Button, Form, InputGroup} from "react-bootstrap";
+import { Form, InputGroup} from "react-bootstrap";
 import {Redirect} from "react-router-dom";
 import Table from "../common/table";
 import TableColumn from "../common/table-column";
-import Icon from "../common/icon";
+import IconButton from "../common/icon-button";
 import DeleteDialog from "../common/dialogs/delete-dialog";
 import AppDispatcher from "../common/app-dispatcher";
 
@@ -82,15 +82,6 @@ class ScenarioUsersTable extends Component {
       return (<Redirect to="/scenarios" />);
     }
 
-    const altButtonStyle = {
-      marginLeft: '10px',
-    }
-
-    const iconStyle = {
-      height: '30px',
-      width: '30px'
-    }
-
     return (
       <div>
         {/*Scenario Users table*/}
@@ -142,14 +133,14 @@ class ScenarioUsersTable extends Component {
           />
           <InputGroup.Append>
           <span className='icon-button'>
-            <Button
-              variant='light'
-              type="submit"
-              style={altButtonStyle}
-              disabled={this.props.locked}
-              onClick={() => this.addUser()}>
-              <Icon icon="plus" classname={'icon-color'} style={iconStyle} />
-            </Button>
+          <IconButton
+            ikey={1}
+            tooltip='Add User to Scenario'
+            onClick={() => this.addUser()}
+            icon='plus'
+            disabled={this.props.locked}
+            hidetooltip={this.props.locked}
+          />
           </span>
           </InputGroup.Append>
         </InputGroup>

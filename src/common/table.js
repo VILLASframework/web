@@ -20,6 +20,8 @@ import _ from 'lodash';
 import { Table, Button, Form, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Icon from './icon';
+import IconToggleButton from './icon-toggle-button';
+
 
 class CustomTable extends Component {
   constructor(props) {
@@ -128,7 +130,7 @@ class CustomTable extends Component {
     let isLocked = child.props.locked || (child.props.isLocked != null && child.props.isLocked(index));
 
     // add buttons
-    let showEditButton = child.props.showEditButton !== null  && child.props.showEditButton !== undefined
+    let showEditButton = child.props.showEditButton !== null && child.props.showEditButton !== undefined
       ? child.props.showEditButton(index)
       : true;
 
@@ -162,6 +164,21 @@ class CustomTable extends Component {
           disabled={isDisabled}
           checked={checkboxKey ? data[checkboxKey] : null}
           onChange={e => child.props.onChecked(data, e)}
+        />
+      );
+    }
+
+    if (child.props.lockButton) {
+      cell.push(
+        <IconToggleButton
+          ikey={0}
+          onChange={() => child.props.onChangeLock(index)}
+          checked={isLocked}
+          checkedIcon='lock'
+          uncheckedIcon='lock-open'
+          tooltipChecked='Scenario is locked, cannot be edited'
+          tooltipUnchecked='Scenario is unlocked, can be edited'
+          disabled={false}
         />
       );
     }
@@ -248,7 +265,7 @@ class CustomTable extends Component {
       );
     }
 
-    let showDeleteButton = child.props.showDeleteButton !== null  && child.props.showDeleteButton !== undefined
+    let showDeleteButton = child.props.showDeleteButton !== null && child.props.showDeleteButton !== undefined
       ? child.props.showDeleteButton(index)
       : true;
 
@@ -370,14 +387,14 @@ class CustomTable extends Component {
                           value={cell}
                           onChange={(event) => children[cellIndex].props.onInlineChange(event, rowIndex, cellIndex)}
                           ref={ref => { this.activeInput = ref; }} />
-                      : <span>
+                        : <span>
                           {
                             cell.map((element, elementIndex) =>
                               <span key={elementIndex}>{element}</span>
                             )
                           }
                         </span>
-                        }
+                      }
                     </td>
                   })
                 }

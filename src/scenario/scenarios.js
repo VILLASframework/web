@@ -231,10 +231,10 @@ class Scenarios extends Component {
     return this.state.scenarios[index].isLocked;
   }
 
-  onLock(scenario) {
+  onLock(index) {
     let data = {};
-    data.id = scenario.id;
-    data.isLocked = !scenario.isLocked;
+    data.id = this.state.scenarios[index].id;
+    data.isLocked = !this.state.scenarios[index].isLocked;
 
     AppDispatcher.dispatch({
       type: 'scenarios/start-edit',
@@ -279,9 +279,10 @@ class Scenarios extends Component {
         {this.state.currentUser.role === "Admin" ?
           <TableColumn
             title='Locked'
-            checkbox
+            lockButton
             checkboxKey='isLocked'
-            onChecked={(index, event) => this.onLock(index)}
+            onChangeLock={(index, event) => this.onLock(index)}
+            isLocked={index => this.isLocked(index)}
           />
           : <></>
         }

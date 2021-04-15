@@ -26,12 +26,7 @@ class IconToggleButton extends React.Component {
 
   render() {
     const altButtonStyle = {
-      marginLeft: '20px',
-    }
-
-    const iconStyle = {
-      height: '30px',
-      width: '30px'
+      marginLeft: '10px',
     }
 
     return <OverlayTrigger
@@ -58,13 +53,11 @@ class IconToggleButton extends React.Component {
             <Icon
               icon={this.props.checkedIcon}
               classname={'icon-color'}
-              style={iconStyle}
             />
             :
             <Icon
               icon={this.props.uncheckedIcon}
               classname={'icon-color'}
-              style={iconStyle}
             />
           }
         </ToggleButton>
