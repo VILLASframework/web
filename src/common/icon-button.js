@@ -34,23 +34,32 @@ class IconButton extends React.Component {
       width: '30px'
     }
 
-    return <OverlayTrigger
-      key={this.props.ikey}
-      placement={'top'}
-      overlay={<Tooltip id={`tooltip-${"add"}`}>{this.props.tooltip}</Tooltip>} >
-      <Button
-        variant='light'
-        onClick={this.props.onClick}
-        style={altButtonStyle}
-        disabled={this.props.disabled}
-      >
-        <Icon
-          icon={this.props.icon}
-          classname={'icon-color'}
-          style={iconStyle}
-        />
-      </Button>
-    </OverlayTrigger>
+    let btn = <Button
+      variant='light'
+      disabled={this.props.disabled}
+      onClick={this.props.onClick}
+      style={this.props.buttonStyle ? this.props.buttonStyle : altButtonStyle}
+    >
+      <Icon
+        icon={this.props.icon}
+        classname={'icon-color'}
+        style={this.props.iconStyle ? this.props.iconStyle : iconStyle}
+      />
+    </Button>
+
+    let button;
+    if (!this.props.tooltip || this.props.hidetooltip) {
+      button = btn;
+    } else {
+      button = <OverlayTrigger
+        key={this.props.ikey}
+        placement={this.props.tipPlacement ? this.props.tipPlacement : 'top'}
+        overlay={<Tooltip id={`tooltip-${this.props.ikey}`}>{this.props.tooltip}</Tooltip>} >
+       {btn}
+      </OverlayTrigger>
+    }
+
+    return button;
   }
 }
 
