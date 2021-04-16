@@ -25,25 +25,16 @@ import Icon from '../common/icon';
 class IconButton extends React.Component {
 
   render() {
-    const altButtonStyle = {
-      marginLeft: '10px',
-    }
-
-    const iconStyle = {
-      height: '30px',
-      width: '30px'
-    }
-
     let btn = <Button
-      variant='light'
+      variant={this.props.variant ? this.props.variant : 'light'}
       disabled={this.props.disabled}
       onClick={this.props.onClick}
-      style={this.props.buttonStyle ? this.props.buttonStyle : altButtonStyle}
+      style={this.props.buttonStyle}
     >
       <Icon
         icon={this.props.icon}
         classname={'icon-color'}
-        style={this.props.iconStyle ? this.props.iconStyle : iconStyle}
+        style={this.props.iconStyle}
       />
     </Button>
 

@@ -137,6 +137,14 @@ class DashboardTable extends Component {
   }
 
   render() {
+    const buttonStyle = {
+      marginLeft: '10px',
+    }
+
+    const iconStyle = {
+      height: '30px',
+      width: '30px'
+    }
 
     return (
       <div>
@@ -150,6 +158,8 @@ class DashboardTable extends Component {
                 icon='plus'
                 disabled={this.props.locked}
                 hidetooltip={this.props.locked}
+                buttonStyle={buttonStyle}
+                iconStyle={iconStyle}
               />
               <IconButton
                 ikey={1}
@@ -158,6 +168,8 @@ class DashboardTable extends Component {
                 icon='upload'
                 disabled={this.props.locked}
                 hidetooltip={this.props.locked}
+                buttonStyle={buttonStyle}
+                iconStyle={iconStyle}
               />
             </span>
         </h2>

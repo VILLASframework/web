@@ -25,27 +25,18 @@ import Icon from './icon';
 class IconToggleButton extends React.Component {
 
   render() {
-    const altButtonStyle = {
-      marginLeft: '10px',
-    }
+    let tooltip = this.props.checked ? this.props.tooltipChecked : this.props.tooltipUnchecked;
 
     return <OverlayTrigger
       key={this.props.ikey}
       placement={'top'}
-      overlay={
-        <Tooltip id={`tooltip-${"add"}`}>
-          {this.props.checked ?
-            this.props.tooltipChecked
-            :
-            this.props.tooltipUnchecked
-          }
-        </Tooltip>} >
+      overlay={<Tooltip id={`tooltip-${this.props.ikey}`}>{tooltip}</Tooltip>} >
       <ButtonGroup toggle>
         <ToggleButton
           variant='light'
           type='checkbox'
           onChange={this.props.onChange}
-          style={altButtonStyle}
+          style={this.props.buttonStyle}
           disabled={this.props.disabled}
           checked={this.props.checked}
         >
@@ -53,11 +44,13 @@ class IconToggleButton extends React.Component {
             <Icon
               icon={this.props.checkedIcon}
               classname={'icon-color'}
+              style={this.props.iconStyle}
             />
             :
             <Icon
               icon={this.props.uncheckedIcon}
               classname={'icon-color'}
+              style={this.props.iconStyle}
             />
           }
         </ToggleButton>

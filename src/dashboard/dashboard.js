@@ -487,6 +487,15 @@ class Dashboard extends Component {
       return <div className="section-title">  <span>{"Loading Dashboard..."}</span>  </div>
     }
 
+    const buttonStyle = {
+      marginLeft: '10px',
+    }
+
+    const iconStyle = {
+      height: '25px',
+      width: '25px'
+    }
+
     const grid = this.state.dashboard.grid;
     const boxClasses = classNames('section', 'box', { 'fullscreen-padding': this.props.isFullscreen });
     let draggable = this.state.editing;
@@ -505,6 +514,8 @@ class Dashboard extends Component {
                 tooltipChecked='Dashboard is locked, cannot be edited'
                 tooltipUnchecked='Dashboard is unlocked, can be edited'
                 disabled={true}
+                buttonStyle={buttonStyle}
+                iconStyle={iconStyle}
               />
             </span>
           </h2>

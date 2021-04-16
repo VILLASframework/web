@@ -244,6 +244,15 @@ class Scenarios extends Component {
   }
 
   render() {
+    const buttonStyle = {
+      marginLeft: '10px',
+    }
+
+    const iconStyle = {
+      height: '30px',
+      width: '30px'
+    }
+
     return <div className='section'>
       <h1>Scenarios
           <span className='icon-button'>
@@ -252,12 +261,16 @@ class Scenarios extends Component {
             tooltip='Add Scenario'
             onClick={() => this.setState({ newModal: true })}
             icon='plus'
+            buttonStyle={buttonStyle}
+            iconStyle={iconStyle}
           />
           <IconButton
             ikey={1}
             tooltip='Import Scenario'
             onClick={() => this.setState({ importModal: true })}
             icon='upload'
+            buttonStyle={buttonStyle}
+            iconStyle={iconStyle}
           />
         </span>
       </h1>

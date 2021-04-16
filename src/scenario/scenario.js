@@ -133,6 +133,14 @@ class Scenario extends React.Component {
   ############################################## */
 
   render() {
+    const buttonStyle = {
+      marginLeft: '10px',
+    }
+
+    const iconStyle = {
+      height: '30px',
+      width: '30px'
+    }
 
     const tableHeadingStyle = {
       paddingTop: '30px'
@@ -151,6 +159,8 @@ class Scenario extends React.Component {
           tooltip={tooltip}
           onClick={this.onEditFiles.bind(this)}
           icon="file"
+          buttonStyle={buttonStyle}
+          iconStyle={iconStyle}
         />
       </div>
       <h1>
@@ -165,6 +175,8 @@ class Scenario extends React.Component {
                 tooltipChecked='Scenario is locked, cannot be edited'
                 tooltipUnchecked='Scenario is unlocked, can be edited'
                 disabled={this.state.currentUser.role !== "Admin"}
+                buttonStyle={buttonStyle}
+                iconStyle={iconStyle}
               />
             </span>
         </h1>

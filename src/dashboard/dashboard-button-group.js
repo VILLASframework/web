@@ -64,7 +64,7 @@ class DashboardButtonGroup extends React.Component {
 
   render() {
     const buttons = [];
-    key = 0;
+    buttonkey = 0;
 
     if (this.props.editing) {
       buttons.push(this.getBtn("save", "Save changes", this.props.onSave));

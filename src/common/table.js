@@ -21,6 +21,7 @@ import { Table, Button, Form, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Icon from './icon';
 import IconToggleButton from './icon-toggle-button';
+import IconButton from '../common/icon-button';
 
 
 class CustomTable extends Component {
@@ -47,6 +48,7 @@ class CustomTable extends Component {
   static addCell(data, index, child) {
     // add data to cell
     let content = null;
+    let childkey = 0;
 
     if ('dataKeys' in child.props) {
       for (let key of child.props.dataKeys) {
@@ -92,7 +94,7 @@ class CustomTable extends Component {
                 onClick={() => child.props.onDownload(contentkey)}
                 disabled={child.props.onDownload == null}>
                 {contentkey + ' '}
-                <Icon icon='file-download' />
+                <Icon icon='file-download' classname={'icon-color'}/>
               </Button>
             </OverlayTrigger>);
         });
@@ -136,19 +138,17 @@ class CustomTable extends Component {
 
     if (child.props.editButton && showEditButton) {
       cell.push(
-        <OverlayTrigger
-          key={0}
-          placement={'bottom'}
-          overlay={<Tooltip id={`tooltip-${"edit"}`}> Edit </Tooltip>}
-        >
-          <Button
-            variant='table-control-button'
-            onClick={() => child.props.onEdit(index)}
-            disabled={child.props.onEdit == null || isLocked} >
-            <Icon icon='edit' />
-          </Button>
-        </OverlayTrigger>
-      );
+        <IconButton
+          key={childkey++}
+          ikey={childkey++}
+          icon={'edit'}
+          disabled={child.props.onEdit == null || isLocked}
+          hidetooltip={isLocked}
+          tooltip={"Edit"}
+          tipPlacement={'bottom'}
+          onClick={() => child.props.onEdit(index)}
+          variant={'table-control-button'}
+        />)
     }
 
     if (child.props.checkbox) {
@@ -171,7 +171,7 @@ class CustomTable extends Component {
     if (child.props.lockButton) {
       cell.push(
         <IconToggleButton
-          ikey={0}
+          ikey={childkey++}
           onChange={() => child.props.onChangeLock(index)}
           checked={isLocked}
           checkedIcon='lock'
@@ -185,84 +185,74 @@ class CustomTable extends Component {
 
     if (child.props.exportButton) {
       cell.push(
-        <OverlayTrigger
-          key={1}
-          placement={'bottom'}
-          overlay={<Tooltip id={`tooltip-${"export"}`}> Export </Tooltip>}
-        >
-          <Button
-            variant='table-control-button'
-            onClick={() => child.props.onExport(index)}
-            disabled={child.props.onExport == null}>
-            <Icon icon='download' />
-          </Button>
-        </OverlayTrigger>
-      );
+        <IconButton
+          key={childkey++}
+          ikey={childkey++}
+          icon={'download'}
+          disabled={child.props.onExport == null}
+          tooltip={"Export"}
+          tipPlacement={'bottom'}
+          onClick={() => child.props.onExport(index)}
+          variant={'table-control-button'}
+        />);
     }
 
     if (child.props.signalButton) {
       cell.push(
-        <OverlayTrigger
-          key={1}
-          placement={'bottom'}
-          overlay={<Tooltip id={`tooltip-${"signal"}`}> Autoconfigure Signals </Tooltip>}
-        >
-          <Button
-            variant='table-control-button'
-            onClick={() => child.props.onAutoConf(index)}
-            disabled={child.props.onAutoConf == null}>
-            <Icon icon='wave-square' />
-          </Button>
-        </OverlayTrigger>
-      );
+        <IconButton
+          key={childkey++}
+          ikey={childkey++}
+          icon={'wave-square'}
+          disabled={child.props.onAutoConf == null}
+          tooltip={"Autoconfigure Signals"}
+          tipPlacement={'bottom'}
+          onClick={() => child.props.onAutoConf(index)}
+          variant={'table-control-button'}
+        />);
     }
 
     if (child.props.duplicateButton) {
       cell.push(
-        <OverlayTrigger
-          key={2}
-          placement={'bottom'}
-          overlay={<Tooltip id={`tooltip-${"duplicate"}`}> Duplicate </Tooltip>} >
-          <Button
-            variant='table-control-button'
-            onClick={() => child.props.onDuplicate(index)}
-            disabled={child.props.onDuplicate == null || isLocked}>
-            <Icon icon='copy' />
-          </Button>
-        </OverlayTrigger>
-      );
+        <IconButton
+          key={childkey++}
+          ikey={childkey++}
+          icon={'copy'}
+          disabled={child.props.onDuplicate == null || isLocked}
+          hidetooltip={isLocked}
+          tooltip={"Duplicate"}
+          tipPlacement={'bottom'}
+          onClick={() => child.props.onDuplicate(index)}
+          variant={'table-control-button'}
+        />);
     }
 
     if (child.props.addRemoveFilesButton) {
       cell.push(
-        <OverlayTrigger
-          key={3}
-          placement={'bottom'}
-          overlay={<Tooltip id={`tooltip-${"export"}`}>Add/remove File(s)</Tooltip>} >
-          <Button
-            variant='table-control-button'
-            onClick={() => child.props.onAddRemove(index)}
-            disabled={child.props.onAddRemove == null || isLocked}>
-            <Icon icon='file' />
-          </Button>
-        </OverlayTrigger>
-      );
+        <IconButton
+          key={childkey++}
+          ikey={childkey++}
+          icon={'file'}
+          disabled={child.props.onAddRemove == null || isLocked}
+          hidetooltip={isLocked}
+          tooltip={"Add/remove File(s)"}
+          tipPlacement={'bottom'}
+          onClick={() => child.props.onAddRemove(index)}
+          variant={'table-control-button'}
+        />);
     }
 
     if (child.props.downloadAllButton) {
       cell.push(
-        <OverlayTrigger
-          key={4}
-          placement={'bottom'}
-          overlay={<Tooltip id={`tooltip-${"export"}`}>Download All Files</Tooltip>} >
-          <Button
-            variant='table-control-button'
-            onClick={() => child.props.onDownloadAll(index)}
-            disabled={child.props.onDownloadAll == null}>
-            <Icon icon='file-download' />
-          </Button>
-        </OverlayTrigger>
-      );
+        <IconButton
+          key={childkey++}
+          ikey={childkey++}
+          icon={'file-download'}
+          disabled={child.props.onDownloadAll == null}
+          tooltip={"Download All Files"}
+          tipPlacement={'bottom'}
+          onClick={() => child.props.onDownloadAll(index)}
+          variant={'table-control-button'}
+        />);
     }
 
     let showDeleteButton = child.props.showDeleteButton !== null && child.props.showDeleteButton !== undefined
@@ -271,18 +261,17 @@ class CustomTable extends Component {
 
     if (child.props.deleteButton && showDeleteButton) {
       cell.push(
-        <OverlayTrigger
-          key={5}
-          placement={'bottom'}
-          overlay={<Tooltip id={`tooltip-${"delete"}`}> Delete </Tooltip>} >
-          <Button
-            variant='table-control-button'
-            onClick={() => child.props.onDelete(index)}
-            disabled={child.props.onDelete == null || isLocked}>
-            <Icon icon='trash' />
-          </Button>
-        </OverlayTrigger>
-      );
+        <IconButton
+          key={childkey++}
+          ikey={childkey++}
+          icon={'trash'}
+          disabled={child.props.onDelete == null || isLocked}
+          hidetooltip={isLocked}
+          tooltip={"Delete"}
+          tipPlacement={'bottom'}
+          onClick={() => child.props.onDelete(index)}
+          variant={'table-control-button'}
+        />);
     }
 
     return cell;
