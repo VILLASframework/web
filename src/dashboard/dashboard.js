@@ -27,6 +27,7 @@ import WidgetContextMenu from '../widget/widget-context-menu';
 import WidgetToolbox from '../widget/widget-toolbox';
 import WidgetArea from '../widget/widget-area';
 import DashboardButtonGroup from './dashboard-button-group';
+import IconToggleButton from '../common/icon-toggle-button';
 
 import DashboardStore from './dashboard-store';
 import SignalStore from '../signal/signal-store'
@@ -493,7 +494,20 @@ class Dashboard extends Component {
     return (<div className={boxClasses} >
       <div className='section-header box-header'>
         <div className="section-title">
-          <h2>{this.state.dashboard.name}</h2>
+          <h2>
+            {this.state.dashboard.name}
+            <span className='icon-button'>
+              <IconToggleButton
+                ikey={0}
+                checked={this.state.locked}
+                checkedIcon='lock'
+                uncheckedIcon='lock-open'
+                tooltipChecked='Dashboard is locked, cannot be edited'
+                tooltipUnchecked='Dashboard is unlocked, can be edited'
+                disabled={true}
+              />
+            </span>
+          </h2>
         </div>
 
           <DashboardButtonGroup
