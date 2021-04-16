@@ -309,6 +309,7 @@ class ConfigTable extends Component {
             onClick={() => this.addConfig()}
             icon='plus'
             disabled={this.props.locked}
+            hidetooltip={this.props.locked}
           />
           <IconButton
             ikey={1}
@@ -316,6 +317,7 @@ class ConfigTable extends Component {
             onClick={() => this.setState({ importConfigModal: true })}
             icon='upload'
             disabled={this.props.locked}
+            hidetooltip={this.props.locked}
           />
         </span>
         </h2>
