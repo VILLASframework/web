@@ -159,6 +159,7 @@ class ResultTable extends Component {
       <div>
         {/*Result table*/}
         <h2 style={this.props.tableHeadingStyle}>Results
+        <span className='icon-button'>
           <IconButton
             ikey={1}
             tooltip='Add Result'
@@ -167,6 +168,7 @@ class ResultTable extends Component {
             disabled={this.props.locked}
             hidetooltip={this.props.locked}
           />
+          </span>
         </h2>
 
         <Table data={this.props.results}>
