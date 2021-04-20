@@ -375,6 +375,7 @@ class ConfigTable extends Component {
             signalButton
             onAutoConf={(index) => this.signalsAutoConf(index)}
             width={170}
+            locked={this.props.locked}
           />
           <TableColumn
             title='Infrastructure Component'

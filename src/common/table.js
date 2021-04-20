@@ -204,7 +204,8 @@ class CustomTable extends Component {
           key={childkey++}
           ikey={childkey++}
           icon={'wave-square'}
-          disabled={child.props.onAutoConf == null}
+          disabled={child.props.onAutoConf == null || child.props.locked }
+          hidetooltip={isLocked}
           tooltip={"Autoconfigure Signals"}
           tipPlacement={'bottom'}
           onClick={() => child.props.onAutoConf(index)}

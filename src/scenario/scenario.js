@@ -53,7 +53,6 @@ class Scenario extends React.Component {
     let scenarioID = parseInt(props.match.params.scenario, 10)
 
       return{
-        sessionToken: localStorage.getItem("token"),
         scenario: ScenarioStore.getState().find(s => s.id === scenarioID),
         results: ResultStore.getState().filter(result => result.scenarioID === scenarioID),
         sessionToken: localStorage.getItem("token"),
