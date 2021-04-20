@@ -23,61 +23,9 @@ import { Multiselect } from 'multiselect-react-dropdown'
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
 
-const template0 = {
-  id: 0,
-  name: "No Template"
-}
-
-const templateA = {
-  id: 1,
-  name: "Template A",
-  type: "object",
-  required: ["name"],
-  properties: {
-    name: { type: "string", title: "Name", default: "Template A" },
-    paramB: {
-      title: "MyParam",
-      enum: [
-        "option1",
-        "option2"
-      ],
-      enumNames: [
-        "Option 1",
-        "Option 2"
-      ]
-    }
-  }
-};
-
-const templateB = {
-  id: 2,
-  name: "Template B",
-  type: "object",
-  definitions: {
-    uint: {
-      type: "integer",
-      minimum: 0
-    },
-  },
-  properties: {
-    name: { type: "string", title: "Name", default: "Template B" },
-    description: { type: "string", title: "Description", default: "Description for Template B" },
-    paramB: {
-      title: "MyParam B",
-      enum: [
-        "option1",
-        "option2",
-        "option3"
-      ],
-      enumNames: [
-        "Option 1",
-        "Option 2",
-        "Option 3"
-      ]
-    },
-    minLength: { type: "integer", title: "Minimum Length", minimum: 0, default: 0 }
-  }
-};
+import template0 from './paramtemplates/template0'
+import templateA from './paramtemplates/templateA'
+import templateB from './paramtemplates/templateB'
 
 const templates = [template0, templateA, templateB];
 
