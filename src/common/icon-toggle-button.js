@@ -33,7 +33,7 @@ class IconToggleButton extends React.Component {
       overlay={<Tooltip id={`tooltip-${this.props.ikey}`}>{tooltip}</Tooltip>} >
       <ButtonGroup toggle>
         <ToggleButton
-          variant='light'
+          variant={this.props.variant ? this.props.variant : 'light'}
           type='checkbox'
           onChange={this.props.onChange}
           style={this.props.buttonStyle}

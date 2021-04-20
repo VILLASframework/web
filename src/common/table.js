@@ -179,6 +179,7 @@ class CustomTable extends Component {
           tooltipChecked='Scenario is locked, cannot be edited'
           tooltipUnchecked='Scenario is unlocked, can be edited'
           disabled={false}
+          variant={'table-control-button'}
         />
       );
     }
@@ -217,7 +218,7 @@ class CustomTable extends Component {
           key={childkey++}
           ikey={childkey++}
           icon={'copy'}
-          disabled={child.props.onDuplicate == null || isLocked}
+          disabled={child.props.onDuplicate == null || child.props.locked}
           hidetooltip={isLocked}
           tooltip={"Duplicate"}
           tipPlacement={'bottom'}
