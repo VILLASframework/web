@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-import { Form, OverlayTrigger, Tooltip, Button } from 'react-bootstrap';
+import { Form, OverlayTrigger, Tooltip, Button, Col } from 'react-bootstrap';
 import ColorPicker from './color-picker'
 import Icon from "../../common/icon";
 
@@ -77,8 +77,8 @@ class EditWidgetColorControl extends Component {
     let style = {
       backgroundColor: color,
       opacity: opacity,
-      width: '260px',
-      height: '40px'
+      width: '80px',
+      height: '40px',
     }
 
     let tooltipText = "Change color and opacity";
@@ -87,19 +87,23 @@ class EditWidgetColorControl extends Component {
     }
 
 
-    return <Form.Group>
-      <Form.Label>{this.props.label}</Form.Label>
+    return ( <Form.Row>
+      <Form.Group as={Col}>
+        <Form.Label>{this.props.label}</Form.Label>
+      </Form.Group>
 
-      <div className='section-buttons-group-right'>
-        <OverlayTrigger key={0} placement={'right'} overlay={<Tooltip id={`tooltip-${"color"}`}> {tooltipText} </Tooltip>} >
-        <Button key={2} style={style} onClick={this.openColorPicker.bind(this)}  >
-          <Icon icon="paint-brush"/>
-        </Button>
-        </OverlayTrigger>
-      </div>
-
-      <ColorPicker show={this.state.showColorPicker} onClose={(data) => this.closeEditModal(data)} widget={this.state.widget} controlId={this.props.controlId} disableOpacity={this.props.disableOpacity}/>
-    </Form.Group>;
+      <Form.Group as={Col}>
+        <div className='section-buttons-group-right'>
+          <OverlayTrigger key={0} placement={'right'} overlay={<Tooltip id={`tooltip-${"color"}`}> {tooltipText} </Tooltip>} >
+          <Button style={style} onClick={this.openColorPicker.bind(this)}  >
+            <Icon icon="paint-brush"/>
+          </Button>
+          </OverlayTrigger>
+        </div>
+        <ColorPicker show={this.state.showColorPicker} onClose={(data) => this.closeEditModal(data)} widget={this.state.widget} controlId={this.props.controlId} disableOpacity={this.props.disableOpacity}/>
+      </Form.Group>
+    </Form.Row>
+  );
   }
 }
 

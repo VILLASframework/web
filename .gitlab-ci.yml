@@ -4,14 +4,14 @@ variables:
   DOCKER_IMAGE: ${CI_REGISTRY_IMAGE}
   FF_GITLAB_REGISTRY_HELPER_IMAGE: 1
 
-cache:
-  untracked: true
-  key: ${CI_PROJECT_ID}
-  paths:
-    - node_modules/
-    - _site/vendor/
-    - .bundled/
-    - .yarn
+#cache:
+#  untracked: true
+#  key: ${CI_PROJECT_ID}
+#  paths:
+#    - node_modules/
+#    - _site/vendor/
+#    - .bundled/
+#    - .yarn
 
 stages:
   - build
@@ -19,16 +19,16 @@ stages:
 
 build:
   stage: build
-  image: node:12.2
+  image: node:14.16
   before_script:
     - mkdir -p build
   script:
     - npm install
     - npm run build
-  artifacts:
-    paths:
-      - build/
-    expire_in: 1 week
+#  artifacts:
+#    paths:
+#      - build/
+#    expire_in: 1 week
 
 deploy:
   stage: deploy

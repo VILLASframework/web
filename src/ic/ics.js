@@ -17,7 +17,7 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-import { Button, Badge } from 'react-bootstrap';
+import { Badge } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 import moment from 'moment'
@@ -32,7 +32,6 @@ import TableColumn from '../common/table-column';
 import NewICDialog from './new-ic';
 import EditICDialog from './edit-ic';
 import ImportICDialog from './import-ic';
-import ICDialog from './ic-dialog';
 
 import ICAction from './ic-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
@@ -367,30 +366,9 @@ class InfrastructureComponents extends Component {
     }
   }
 
-  modifyNameColumn(name, component){
-    let index = this.state.ics.indexOf(component);
-    return <Button variant="link" onClick={() => this.openICStatus(component)}>{name}</Button>
-  }
-
   openICStatus(ic){
     let index = this.state.ics.indexOf(ic);
     this.setState({ icModal: true, modalIC: ic, modalIndex: index })
-  }
-
-  sendControlCommand(command,ic){
-    if(command === "restart"){
-      AppDispatcher.dispatch({
-        type: 'ics/restart',
-        url: ic.apiurl + "/restart",
-        token: this.state.sessionToken,
-      });
-    }else if(command === "shutdown"){
-      AppDispatcher.dispatch({
-        type: 'ics/shutdown',
-        url: ic.apiurl + "/shutdown",
-        token: this.state.sessionToken,
-      });
-    }
   }
 
   isLocalIC(index, ics){
@@ -419,7 +397,8 @@ class InfrastructureComponents extends Component {
           <TableColumn
             title='Name'
             dataKeys={['name']}
-            modifier={(name, component) => this.modifyNameColumn(name, component)}
+            link='/infrastructure/'
+            linkKey='id'
           />
           <TableColumn
             title='State'
@@ -493,13 +472,13 @@ class InfrastructureComponents extends Component {
           {this.state.currentUser.role === "Admin" ?
             <span className='icon-button'>
               <IconButton
-                overlaykey={1}
+                ikey={1}
                 tooltip='Add Infrastructure Component'
                 onClick={() => this.setState({newModal: true})}
                 icon='plus'
               />
               <IconButton
-                overlaykey={2}
+                ikey={1}
                 tooltip='Import Infrastructure Component'
                 onClick={() => this.setState({importModal: true})}
                 icon='upload'
@@ -538,13 +517,6 @@ class InfrastructureComponents extends Component {
         <EditICDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} ic={this.state.modalIC} />
         <ImportICDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} />
         <DeleteDialog title="infrastructure-component" name={this.state.modalIC.name || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
-        <ICDialog
-          show={this.state.icModal}
-          onClose={data => this.closeICModal(data)}
-          ic={this.state.modalIC}
-          token={this.state.sessionToken}
-          user={this.state.currentUser}
-          sendControlCommand={(command, ic) => this.sendControlCommand(command, ic)}/>
       </div>
     );
   }
