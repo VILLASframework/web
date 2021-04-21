@@ -25,31 +25,32 @@ import Icon from '../common/icon';
 class IconButton extends React.Component {
 
   render() {
-    const altButtonStyle = {
-      marginLeft: '10px',
+    let btn = <Button
+      variant={this.props.variant ? this.props.variant : 'light'}
+      disabled={this.props.disabled}
+      onClick={this.props.onClick}
+      style={this.props.buttonStyle}
+    >
+      <Icon
+        icon={this.props.icon}
+        classname={'icon-color'}
+        style={this.props.iconStyle}
+      />
+    </Button>
+
+    let button;
+    if (!this.props.tooltip || this.props.hidetooltip) {
+      button = btn;
+    } else {
+      button = <OverlayTrigger
+        key={this.props.ikey}
+        placement={this.props.tipPlacement ? this.props.tipPlacement : 'top'}
+        overlay={<Tooltip id={`tooltip-${this.props.ikey}`}>{this.props.tooltip}</Tooltip>} >
+       {btn}
+      </OverlayTrigger>
     }
 
-    const iconStyle = {
-      height: '30px',
-      width: '30px'
-    }
-
-    return <OverlayTrigger
-      key={this.props.ikey}
-      placement={'top'}
-      overlay={<Tooltip id={`tooltip-${"add"}`}>{this.props.tooltip}</Tooltip>} >
-      <Button
-        variant='light'
-        onClick={this.props.onClick}
-        style={altButtonStyle}
-      >
-        <Icon
-          icon={this.props.icon}
-          classname={'icon-color'}
-          style={iconStyle}
-        />
-      </Button>
-    </OverlayTrigger>
+    return button;
   }
 }
 

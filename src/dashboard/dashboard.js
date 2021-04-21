@@ -27,6 +27,7 @@ import WidgetContextMenu from '../widget/widget-context-menu';
 import WidgetToolbox from '../widget/widget-toolbox';
 import WidgetArea from '../widget/widget-area';
 import DashboardButtonGroup from './dashboard-button-group';
+import IconToggleButton from '../common/icon-toggle-button';
 
 import DashboardStore from './dashboard-store';
 import SignalStore from '../signal/signal-store'
@@ -35,6 +36,8 @@ import WidgetStore from '../widget/widget-store';
 import ICStore from '../ic/ic-store'
 import ConfigStore from '../componentconfig/config-store'
 import AppDispatcher from '../common/app-dispatcher';
+import ScenarioStore from '../scenario/scenario-store';
+
 
 import 'react-contexify/dist/ReactContexify.min.css';
 import WidgetContainer from '../widget/widget-container';
@@ -45,7 +48,7 @@ class Dashboard extends Component {
   static lastWidgetKey = 0;
   static webSocketsOpened = false;
   static getStores() {
-    return [DashboardStore, FileStore, WidgetStore, SignalStore, ConfigStore, ICStore];
+    return [DashboardStore, FileStore, WidgetStore, SignalStore, ConfigStore, ICStore, ScenarioStore];
   }
 
   static calculateState(prevState, props) {
@@ -80,9 +83,14 @@ class Dashboard extends Component {
     // filter component configurations to the ones that belong to this scenario
     let configs = [];
     let files = [];
+    let locked = false;
     if (dashboard !== undefined) {
       configs = ConfigStore.getState().filter(config => config.scenarioID === dashboard.scenarioID);
       files = FileStore.getState().filter(file => file.scenarioID === dashboard.scenarioID);
+      let scenario = ScenarioStore.getState().find(s => s.id === dashboard.scenarioID);
+      if (scenario) {
+        locked = scenario.isLocked;
+      }
       if (dashboard.height === 0) {
         dashboard.height = 400;
       }
@@ -144,6 +152,7 @@ class Dashboard extends Component {
       widgetOrigIDs: prevState.widgetOrigIDs || [],
 
       maxWidgetHeight: maxHeight || null,
+      locked,
     };
 
   }
@@ -214,6 +223,13 @@ class Dashboard extends Component {
       AppDispatcher.dispatch({
         type: 'files/start-load',
         param: '?scenarioID=' + this.state.dashboard.scenarioID,
+        token: this.state.sessionToken
+      });
+
+      // load scenario for 'isLocked' value
+      AppDispatcher.dispatch({
+        type: 'scenarios/start-load',
+        data: this.state.dashboard.scenarioID,
         token: this.state.sessionToken
       });
     }
@@ -482,6 +498,15 @@ class Dashboard extends Component {
       return <div className="section-title">  <span>{"Loading Dashboard..."}</span>  </div>
     }
 
+    const buttonStyle = {
+      marginLeft: '10px',
+    }
+
+    const iconStyle = {
+      height: '25px',
+      width: '25px'
+    }
+
     const grid = this.state.dashboard.grid;
     const boxClasses = classNames('section', 'box', { 'fullscreen-padding': this.props.isFullscreen });
     let draggable = this.state.editing;
@@ -489,10 +514,26 @@ class Dashboard extends Component {
     return (<div className={boxClasses} >
       <div className='section-header box-header'>
         <div className="section-title">
-          <h2>{this.state.dashboard.name}</h2>
+          <h2>
+            {this.state.dashboard.name}
+            <span className='icon-button'>
+              <IconToggleButton
+                ikey={0}
+                checked={this.state.locked}
+                checkedIcon='lock'
+                uncheckedIcon='lock-open'
+                tooltipChecked='Dashboard is locked, cannot be edited'
+                tooltipUnchecked='Dashboard is unlocked, can be edited'
+                disabled={true}
+                buttonStyle={buttonStyle}
+                iconStyle={iconStyle}
+              />
+            </span>
+          </h2>
         </div>
 
           <DashboardButtonGroup
+            locked={this.state.locked}
             editing={this.state.editing}
             onEdit={this.startEditing.bind(this)}
             fullscreen={this.props.isFullscreen}
@@ -578,6 +619,7 @@ class Dashboard extends Component {
             signals={this.state.signals}
             files={this.state.files}
             scenarioID={this.state.dashboard.scenarioID}
+            locked={this.state.locked}
           />
 
           <EditSignalMappingDialog
