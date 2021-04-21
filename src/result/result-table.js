@@ -154,19 +154,31 @@ class ResultTable extends Component {
   }
 
   render() {
+    const buttonStyle = {
+      marginLeft: '10px',
+    }
+
+    const iconStyle = {
+      height: '30px',
+      width: '30px'
+    }
 
     return (
       <div>
         {/*Result table*/}
         <h2 style={this.props.tableHeadingStyle}>Results
-          <span className='icon-button'>
+        <span className='icon-button'>
           <IconButton
             ikey={1}
             tooltip='Add Result'
             onClick={() => this.setState({ newResultModal: true })}
             icon='plus'
+            disabled={this.props.locked}
+            hidetooltip={this.props.locked}
+            buttonStyle={buttonStyle}
+            iconStyle={iconStyle}
           />
-        </span>
+          </span>
         </h2>
 
         <Table data={this.props.results}>
@@ -208,6 +220,7 @@ class ResultTable extends Component {
             onEdit={index => this.setState({ editResultsModal: true, modalResultsIndex: index })}
             onDownloadAll={(index) => this.downloadResultData(this.props.results[index])}
             onDelete={(index) => this.setState({ deleteResultsModal: true, modalResultsData: this.props.results[index], modalResultsIndex: index })}
+            locked={this.props.locked}
           />
         </Table>
 

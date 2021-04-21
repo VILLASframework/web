@@ -298,6 +298,15 @@ class ConfigTable extends Component {
   }
 
   render() {
+    const buttonStyle = {
+      marginLeft: '10px',
+    }
+
+    const iconStyle = {
+      height: '30px',
+      width: '30px'
+    }
+
     return (
       <div>
         {/*Component Configurations table*/}
@@ -308,12 +317,20 @@ class ConfigTable extends Component {
             tooltip='Add Component Configuration'
             onClick={() => this.addConfig()}
             icon='plus'
+            disabled={this.props.locked}
+            hidetooltip={this.props.locked}
+            buttonStyle={buttonStyle}
+            iconStyle={iconStyle}
           />
           <IconButton
             ikey={1}
             tooltip='Import Component Configuration'
             onClick={() => this.setState({ importConfigModal: true })}
             icon='upload'
+            disabled={this.props.locked}
+            hidetooltip={this.props.locked}
+            buttonStyle={buttonStyle}
+            iconStyle={iconStyle}
           />
         </span>
         </h2>
@@ -343,6 +360,7 @@ class ConfigTable extends Component {
             editButton
             onEdit={index => this.setState({ editOutputSignalsModal: true, modalConfigData: this.props.configs[index], modalConfigIndex: index })}
             width={150}
+            locked={this.props.locked}
           />
           <TableColumn
             title='# Input Signals'
@@ -350,12 +368,14 @@ class ConfigTable extends Component {
             editButton
             onEdit={index => this.setState({ editInputSignalsModal: true, modalConfigData: this.props.configs[index], modalConfigIndex: index })}
             width={150}
+            locked={this.props.locked}
           />
           <TableColumn
-            title='Import Signals'
-            exportButton
-            onExport={(index) => this.signalsAutoConf(index)}
-            width={150}
+            title='Autoconfigure Signals'
+            signalButton
+            onAutoConf={(index) => this.signalsAutoConf(index)}
+            width={170}
+            locked={this.props.locked}
           />
           <TableColumn
             title='Infrastructure Component'
@@ -375,6 +395,7 @@ class ConfigTable extends Component {
             onDelete={(index) => this.setState({ deleteConfigModal: true, modalConfigData: this.props.configs[index], modalConfigIndex: index })}
             onExport={index => this.exportConfig(index)}
             onDuplicate={index => this.duplicateConfig(index)}
+            locked={this.props.locked}
           />
         </Table>
 
