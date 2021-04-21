@@ -106,10 +106,12 @@ class EditFilesDialog extends React.Component {
       marginTop: '-40px'
     };
 
+    let title = this.props.locked ? "View files of scenario" : "Edit Files of Scenario";
+
     return (
       <Dialog
         show={this.props.show}
-        title="Edit Files of Scenario"
+        title={title}
         buttonTitle="Close"
         onClose={() => this.onClose()}
         blendOutCancel = {true}
@@ -139,6 +141,7 @@ class EditFilesDialog extends React.Component {
             onDelete={(index) => this.deleteFile(index)}
             editButton
             onEdit={index => this.setState({ editModal: true, modalFile: this.props.files[index] })}
+            locked={this.props.locked}
           />
         </Table>
 
@@ -146,13 +149,17 @@ class EditFilesDialog extends React.Component {
           <h5>Add file</h5>
           <Row>
             <Col xs lg="4">
-              <Form.Control type='file' onChange={(event) => this.selectUploadFile(event)} />
+              <Form.Control
+                type='file'
+                onChange={(event) => this.selectUploadFile(event)}
+                disabled={this.props.locked}
+                />
             </Col>
             <Col xs lg="2">
           <span className='solid-button'>
             <Button
               variant='secondary'
-              disabled={this.state.uploadFile === null}
+              disabled={this.state.uploadFile === null || this.props.locked}
               onClick={() => this.startFileUpload()}>
               Upload
           </Button>
