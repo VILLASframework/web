@@ -137,6 +137,14 @@ class DashboardTable extends Component {
   }
 
   render() {
+    const buttonStyle = {
+      marginLeft: '10px',
+    }
+
+    const iconStyle = {
+      height: '30px',
+      width: '30px'
+    }
 
     return (
       <div>
@@ -148,12 +156,20 @@ class DashboardTable extends Component {
                 tooltip='Add Dashboard'
                 onClick={() => this.setState({newDashboardModal: true})}
                 icon='plus'
+                disabled={this.props.locked}
+                hidetooltip={this.props.locked}
+                buttonStyle={buttonStyle}
+                iconStyle={iconStyle}
               />
               <IconButton
                 ikey={1}
                 tooltip='Import Dashboard'
                 onClick={() => this.setState({importDashboardModal: true})}
                 icon='upload'
+                disabled={this.props.locked}
+                hidetooltip={this.props.locked}
+                buttonStyle={buttonStyle}
+                iconStyle={iconStyle}
               />
             </span>
         </h2>
@@ -198,6 +214,7 @@ class DashboardTable extends Component {
             })}
             onExport={index => this.exportDashboard(index)}
             onDuplicate={index => this.duplicateDashboard(index)}
+            locked={this.props.locked}
           />
         </Table>
 
