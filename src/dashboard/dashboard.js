@@ -518,7 +518,7 @@ class Dashboard extends Component {
             {this.state.dashboard.name}
             <span className='icon-button'>
               <IconToggleButton
-                ikey={0}
+                childKey={0}
                 checked={this.state.locked}
                 checkedIcon='lock'
                 uncheckedIcon='lock-open'

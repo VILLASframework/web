@@ -38,7 +38,7 @@ class DashboardButtonGroup extends React.Component {
     if (locked) {
       return <IconButton
         key={buttonkey++}
-        ikey={buttonkey}
+        childKey={buttonkey}
         icon={icon}
         disabled={true}
         hidetooltip={true}
@@ -51,7 +51,7 @@ class DashboardButtonGroup extends React.Component {
     } else {
       return <IconButton
         key={buttonkey++}
-        ikey={buttonkey}
+        childKey={buttonkey}
         icon={icon}
         tooltip={tooltip}
         tipPlacement={'bottom'}

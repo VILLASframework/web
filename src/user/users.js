@@ -119,7 +119,7 @@ class Users extends Component {
         <h1>Users
           <span className='icon-button'>
             <IconButton
-              ikey={0}
+              childKey={0}
               tooltip='Add User'
               onClick={() => this.setState({ newModal: true })}
               icon='plus'

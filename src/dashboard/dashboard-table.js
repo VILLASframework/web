@@ -152,7 +152,7 @@ class DashboardTable extends Component {
         <h2 style={this.props.tableHeadingStyle}>Dashboards
           <span className='icon-button'>
               <IconButton
-                ikey={0}
+                childKey={0}
                 tooltip='Add Dashboard'
                 onClick={() => this.setState({newDashboardModal: true})}
                 icon='plus'
@@ -162,7 +162,7 @@ class DashboardTable extends Component {
                 iconStyle={iconStyle}
               />
               <IconButton
-                ikey={1}
+                childKey={1}
                 tooltip='Import Dashboard'
                 onClick={() => this.setState({importDashboardModal: true})}
                 icon='upload'

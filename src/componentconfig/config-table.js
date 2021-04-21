@@ -313,7 +313,7 @@ class ConfigTable extends Component {
         <h2 style={this.props.tableHeadingStyle}>Component Configurations
           <span className='icon-button'>
           <IconButton
-            ikey={0}
+            childKey={0}
             tooltip='Add Component Configuration'
             onClick={() => this.addConfig()}
             icon='plus'
@@ -323,7 +323,7 @@ class ConfigTable extends Component {
             iconStyle={iconStyle}
           />
           <IconButton
-            ikey={1}
+            childKey={1}
             tooltip='Import Component Configuration'
             onClick={() => this.setState({ importConfigModal: true })}
             icon='upload'
