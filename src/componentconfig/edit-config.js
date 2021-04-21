@@ -28,6 +28,13 @@ import templateA from './paramtemplates/templateA'
 import templateB from './paramtemplates/templateB'
 
 const templates = [template0, templateA, templateB];
+let paramForm;
+
+
+const onSubmitSchema = ({formData}, e) => {
+  e.preventDefault();
+  console.log(formData);
+}
 
 class EditConfigDialog extends React.Component {
   valid = false;
@@ -39,6 +46,7 @@ class EditConfigDialog extends React.Component {
       icID: '',
       startParameters: {},
       startparamTemplate: null,
+      formData: "",
       selectedFiles: [] // list of selected files {name, id}, this is not the fileIDs list of the config!
     };
   }
@@ -137,7 +145,13 @@ class EditConfigDialog extends React.Component {
       selectedFiles: selectedFiles,
     });
   }
-
+ 
+  handleSubmit({formData}, e) {
+    e.preventDefault();
+    //var formData = document.getElementById('jsonFormData');
+    console.log(formData)
+    console.log("hallo");
+  }
 
   render() {
     const ICOptions = this.props.ics.map(s =>
@@ -211,10 +225,9 @@ class EditConfigDialog extends React.Component {
           </BForm.Group>
 
           {this.state.startparamTemplate ?
-            <Form schema={this.state.startparamTemplate}
-              onChange={console.log("changed")}
-              onSubmit={console.log("submitted")}
-              onError={console.log("error")} />
+            <Form schema={this.state.startparamTemplate} id='jsonFormData'  onSubmit={this.handleSubmit.bind(this)}>
+
+              </Form>
             :
             <ParametersEditor
               content={this.state.startParameters}
@@ -226,5 +239,15 @@ class EditConfigDialog extends React.Component {
     );
   }
 }
+
+/**+++++ onSubmit={console.log(formData)
+ *               <div>
+                <button type="submit" onClick={this.onSubmit}>Submit</button>
+              </div>
+
+                            <div>
+                <button type="submit" onClick={this.onSubmit}>Submit</button>
+              </div>
+ */
 
 export default EditConfigDialog;
