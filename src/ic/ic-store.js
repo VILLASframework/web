@@ -112,9 +112,18 @@ class InfrastructureComponentStore extends ArrayStore {
         ICsDataManager.getStatus(action.url, action.token, action.ic);
         return super.reduce(state, action);
 
+      case 'ics/get-config':
+        ICsDataManager.getConfig(action.url, action.token, action.ic);
+        return super.reduce(state, action);
+
+      case 'ics/get-statistics':
+        ICsDataManager.getStatistics(action.url, action.token, action.ic);
+        return super.reduce(state, action);
+
+
       case 'ics/status-received':
         let tempIC = action.ic;
-        if(!tempIC.managedexternally){
+        if (!tempIC.managedexternally) {
           tempIC.state = action.data.state;
           tempIC.uptime = action.data.time_now - action.data.time_started;
           tempIC.statusupdateraw = action.data
@@ -130,9 +139,17 @@ class InfrastructureComponentStore extends ArrayStore {
         console.log("status error:", action.error);
         return super.reduce(state, action);
 
+      case 'ics/config-error':
+        console.log("config error:", action.error);
+        return super.reduce(state, action);
+
+      case 'ics/statistics-error':
+        console.log("statistics error:", action.error);
+        return super.reduce(state, action);
+
       case 'ics/nodestats-received':
         let tempIC2 = action.ic;
-        if(!tempIC2.managedexternally){
+        if (!tempIC2.managedexternally) {
           if (tempIC2.statusupdateraw === null || tempIC2.statusupdateraw === undefined) {
             tempIC2.statusupdateraw = {};
           }

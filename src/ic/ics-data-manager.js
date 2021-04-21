@@ -117,7 +117,8 @@ class IcsDataManager extends RestDataManager {
     })
 
     // get name of websocket
-    /*let ws_api = ic.websocketurl.split("/")
+    /*
+    let ws_api = ic.websocketurl.split("/")
     let ws_name = ws_api[ws_api.length-1] // websocket name is the last element in the websocket url
 
     RestAPI.get(url + "/node/" + ws_name + "/stats", null).then(response => {
@@ -134,6 +135,38 @@ class IcsDataManager extends RestDataManager {
       })
     })*/
 
+  }
+
+  getConfig(url,token,ic){
+    RestAPI.get(url + "node/" + ic.uuid, null).then(response => {
+      AppDispatcher.dispatch({
+        type: 'ics/config-received',
+        data: response,
+        token: token,
+        ic: ic
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'ics/config-error',
+        error: error
+      })
+    })
+  }
+
+  getStatistics(url,token,ic){
+    RestAPI.get(url + "/node/" +ic.uuid + "/stats", null).then(response => {
+      AppDispatcher.dispatch({
+        type: 'ics/statistics-received',
+        data: response,
+        token: token,
+        ic: ic
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'ics/statistics-error',
+        error: error
+      })
+    })
   }
 
   restart(url,token){
