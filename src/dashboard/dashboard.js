@@ -27,6 +27,7 @@ import WidgetContextMenu from '../widget/widget-context-menu';
 import WidgetToolbox from '../widget/widget-toolbox';
 import WidgetArea from '../widget/widget-area';
 import DashboardButtonGroup from './dashboard-button-group';
+import IconToggleButton from '../common/icon-toggle-button';
 
 import DashboardStore from './dashboard-store';
 import SignalStore from '../signal/signal-store'
@@ -35,6 +36,8 @@ import WidgetStore from '../widget/widget-store';
 import ICStore from '../ic/ic-store'
 import ConfigStore from '../componentconfig/config-store'
 import AppDispatcher from '../common/app-dispatcher';
+import ScenarioStore from '../scenario/scenario-store';
+
 
 import 'react-contexify/dist/ReactContexify.min.css';
 import WidgetContainer from '../widget/widget-container';
@@ -45,7 +48,7 @@ class Dashboard extends Component {
   static lastWidgetKey = 0;
   static webSocketsOpened = false;
   static getStores() {
-    return [DashboardStore, FileStore, WidgetStore, SignalStore, ConfigStore, ICStore];
+    return [DashboardStore, FileStore, WidgetStore, SignalStore, ConfigStore, ICStore, ScenarioStore];
   }
 
   static calculateState(prevState, props) {
@@ -80,9 +83,14 @@ class Dashboard extends Component {
     // filter component configurations to the ones that belong to this scenario
     let configs = [];
     let files = [];
+    let locked = false;
     if (dashboard !== undefined) {
       configs = ConfigStore.getState().filter(config => config.scenarioID === dashboard.scenarioID);
       files = FileStore.getState().filter(file => file.scenarioID === dashboard.scenarioID);
+      let scenario = ScenarioStore.getState().find(s => s.id === dashboard.scenarioID);
+      if (scenario) {
+        locked = scenario.isLocked;
+      }
       if (dashboard.height === 0) {
         dashboard.height = 400;
       }
@@ -144,6 +152,7 @@ class Dashboard extends Component {
       widgetOrigIDs: prevState.widgetOrigIDs || [],
 
       maxWidgetHeight: maxHeight || null,
+      locked,
     };
 
   }
@@ -177,11 +186,22 @@ class Dashboard extends Component {
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
     // open web sockets if ICs are already known and sockets are not opened yet
     if (this.state.ics !== undefined && !Dashboard.webSocketsOpened) {
-      if (this.state.ics.length > 0) {
-        console.log("Starting to open IC websockets:", this.state.ics);
+    // only open sockets of ICs with configured input or output signals
+    let relevantICs = this.state.ics.filter(ic => {
+      let result = false;
+      this.state.configs.forEach(config => {
+        if(ic.id === config.icID && (config.inputLength !== 0 || config.outputLength !== 0)){
+          result = true;
+        }
+      })
+      return result;
+    })
+    
+      if (relevantICs.length > 0) {
+        console.log("Starting to open IC websockets:", relevantICs);
         AppDispatcher.dispatch({
           type: 'ics/open-sockets',
-          data: this.state.ics
+          data: relevantICs
         });
 
         Dashboard.webSocketsOpened = true;
@@ -203,6 +223,13 @@ class Dashboard extends Component {
       AppDispatcher.dispatch({
         type: 'files/start-load',
         param: '?scenarioID=' + this.state.dashboard.scenarioID,
+        token: this.state.sessionToken
+      });
+
+      // load scenario for 'isLocked' value
+      AppDispatcher.dispatch({
+        type: 'scenarios/start-load',
+        data: this.state.dashboard.scenarioID,
         token: this.state.sessionToken
       });
     }
@@ -471,66 +498,65 @@ class Dashboard extends Component {
       return <div className="section-title">  <span>{"Loading Dashboard..."}</span>  </div>
     }
 
+    const buttonStyle = {
+      marginLeft: '10px',
+    }
+
+    const iconStyle = {
+      height: '25px',
+      width: '25px'
+    }
+
     const grid = this.state.dashboard.grid;
     const boxClasses = classNames('section', 'box', { 'fullscreen-padding': this.props.isFullscreen });
     let draggable = this.state.editing;
     let dropZoneHeight = this.state.dashboard.height;
-    return <div className={boxClasses} >
+    return (<div className={boxClasses} >
       <div className='section-header box-header'>
         <div className="section-title">
-          <h2>{this.state.dashboard.name}</h2>
+          <h2>
+            {this.state.dashboard.name}
+            <span className='icon-button'>
+              <IconToggleButton
+                ikey={0}
+                checked={this.state.locked}
+                checkedIcon='lock'
+                uncheckedIcon='lock-open'
+                tooltipChecked='Dashboard is locked, cannot be edited'
+                tooltipUnchecked='Dashboard is unlocked, can be edited'
+                disabled={true}
+                buttonStyle={buttonStyle}
+                iconStyle={iconStyle}
+              />
+            </span>
+          </h2>
         </div>
 
-        <DashboardButtonGroup
-          editing={this.state.editing}
-          onEdit={this.startEditing.bind(this)}
-          fullscreen={this.props.isFullscreen}
-          paused={this.state.paused}
-          onSave={this.saveEditing.bind(this)}
-          onCancel={this.cancelEditing.bind(this)}
-          onFullscreen={this.props.toggleFullscreen}
-          onPause={this.pauseData.bind(this)}
-          onUnpause={this.unpauseData.bind(this)}
-          onEditFiles={this.startEditFiles.bind(this)}
-          onEditOutputSignals={this.editOutputSignals.bind(this)}
-          onEditInputSignals={this.editInputSignals.bind(this)}
-        />
-      </div>
+          <DashboardButtonGroup
+            locked={this.state.locked}
+            editing={this.state.editing}
+            onEdit={this.startEditing.bind(this)}
+            fullscreen={this.props.isFullscreen}
+            paused={this.state.paused}
+            onSave={this.saveEditing.bind(this)}
+            onCancel={this.cancelEditing.bind(this)}
+            onFullscreen={this.props.toggleFullscreen}
+            onPause={this.pauseData.bind(this)}
+            onUnpause={this.unpauseData.bind(this)}
+            onEditFiles={this.startEditFiles.bind(this)}
+            onEditOutputSignals={this.editOutputSignals.bind(this)}
+            onEditInputSignals={this.editInputSignals.bind(this)}
+          />
+        </div>
 
-      <div className="box box-content" onContextMenu={(e) => e.preventDefault()}>
-        {this.state.editing &&
-          <WidgetToolbox grid={grid} onGridChange={this.setGrid.bind(this)} dashboard={this.state.dashboard} onDashboardSizeChange={this.setDashboardSize.bind(this)} widgets={this.state.widgets} />
-        }
-        {!draggable ? (
-          <WidgetArea widgets={this.state.widgets} dropZoneHeight={dropZoneHeight} editing={this.state.editing} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
-            {this.state.widgets != null && Object.keys(this.state.widgets).map(widgetKey => (
-              <WidgetContainer widget={this.state.widgets[widgetKey]} key={widgetKey}>
-                <WidgetContextMenu
-                  key={widgetKey}
-                  index={parseInt(widgetKey, 10)}
-                  widget={this.state.widgets[widgetKey]}
-                  onEdit={this.editWidget.bind(this)}
-                  onDuplicate={this.duplicateWidget.bind(this)}
-                  onDelete={this.deleteWidget.bind(this)}
-                  onChange={this.widgetChange.bind(this)}
-
-                  onWidgetChange={this.widgetChange.bind(this)}
-                  editing={this.state.editing}
-                  grid={grid}
-                  paused={this.state.paused}
-                />
-              </WidgetContainer>
-            ))}
-          </WidgetArea>
-        ) : (
-            <WidgetArea widgets={this.state.widgets} editing={this.state.editing} dropZoneHeight={dropZoneHeight} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
+        <div className="box box-content" onContextMenu={(e) => e.preventDefault()}>
+          {this.state.editing &&
+            <WidgetToolbox grid={grid} onGridChange={this.setGrid.bind(this)} dashboard={this.state.dashboard} onDashboardSizeChange={this.setDashboardSize.bind(this)} widgets={this.state.widgets} />
+          }
+          {!draggable ? (
+            <WidgetArea widgets={this.state.widgets} dropZoneHeight={dropZoneHeight} editing={this.state.editing} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
               {this.state.widgets != null && Object.keys(this.state.widgets).map(widgetKey => (
-                <EditableWidgetContainer
-                  widget={this.state.widgets[widgetKey]}
-                  key={widgetKey}
-                  grid={grid}
-                  index={parseInt(widgetKey, 10)}
-                  onWidgetChange={this.widgetChange.bind(this)}>
+                <WidgetContainer widget={this.state.widgets[widgetKey]} key={widgetKey}>
                   <WidgetContextMenu
                     key={widgetKey}
                     index={parseInt(widgetKey, 10)}
@@ -542,53 +568,83 @@ class Dashboard extends Component {
 
                     onWidgetChange={this.widgetChange.bind(this)}
                     editing={this.state.editing}
+                    grid={grid}
                     paused={this.state.paused}
                   />
-                </EditableWidgetContainer>
+                </WidgetContainer>
               ))}
             </WidgetArea>
+          ) : (
+              <WidgetArea widgets={this.state.widgets} editing={this.state.editing} dropZoneHeight={dropZoneHeight} grid={grid} onWidgetAdded={this.handleDrop.bind(this)}>
+                {this.state.widgets != null && Object.keys(this.state.widgets).map(widgetKey => (
+                  <EditableWidgetContainer
+                    widget={this.state.widgets[widgetKey]}
+                    key={widgetKey}
+                    grid={grid}
+                    index={parseInt(widgetKey, 10)}
+                    onWidgetChange={this.widgetChange.bind(this)}>
+                    <WidgetContextMenu
+                      key={widgetKey}
+                      index={parseInt(widgetKey, 10)}
+                      widget={this.state.widgets[widgetKey]}
+                      onEdit={this.editWidget.bind(this)}
+                      onDuplicate={this.duplicateWidget.bind(this)}
+                      onDelete={this.deleteWidget.bind(this)}
+                      onChange={this.widgetChange.bind(this)}
 
-          )}
+                      onWidgetChange={this.widgetChange.bind(this)}
+                      editing={this.state.editing}
+                      paused={this.state.paused}
+                    />
+                  </EditableWidgetContainer>
+                ))}
+              </WidgetArea>
 
-        <EditWidget
-          sessionToken={this.state.sessionToken}
-          show={this.state.editModal}
-          onClose={this.closeEdit.bind(this)}
-          widget={this.state.modalData}
-          signals={this.state.signals}
-          files={this.state.files}
-          ics={this.state.ics}
-        />
+            )}
 
-        <EditFilesDialog
-          sessionToken={this.state.sessionToken}
-          show={this.state.filesEditModal}
-          onClose={this.closeEditFiles.bind(this)}
-          signals={this.state.signals}
-          files={this.state.files}
-          scenarioID={this.state.dashboard.scenarioID}
-        />
+          <EditWidget
+            sessionToken={this.state.sessionToken}
+            show={this.state.editModal}
+            onClose={this.closeEdit.bind(this)}
+            widget={this.state.modalData}
+            signals={this.state.signals}
+            files={this.state.files}
+            ics={this.state.ics}
+          />
 
-        <EditSignalMappingDialog
-          show={this.state.editOutputSignalsModal}
-          onCloseEdit={(direction) => this.closeEditSignalsModal(direction)}
-          direction="Output"
-          signals={this.state.signals}
-          configID={null}
-          configs={this.state.configs}
-          sessionToken={this.state.sessionToken}
-        />
-        <EditSignalMappingDialog
-          show={this.state.editInputSignalsModal}
-          onCloseEdit={(direction) => this.closeEditSignalsModal(direction)}
-          direction="Input"
-          signals={this.state.signals}
-          configID={null}
-          configs={this.state.configs}
-          sessionToken={this.state.sessionToken}
-        />
+          <EditFilesDialog
+            sessionToken={this.state.sessionToken}
+            show={this.state.filesEditModal}
+            onClose={this.closeEditFiles.bind(this)}
+            signals={this.state.signals}
+            files={this.state.files}
+            scenarioID={this.state.dashboard.scenarioID}
+            locked={this.state.locked}
+          />
+
+          <EditSignalMappingDialog
+            show={this.state.editOutputSignalsModal}
+            onCloseEdit={(direction) => this.closeEditSignalsModal(direction)}
+            direction="Output"
+            signals={this.state.signals}
+            configID={null}
+            configs={this.state.configs}
+            sessionToken={this.state.sessionToken}
+          />
+          <EditSignalMappingDialog
+            show={this.state.editInputSignalsModal}
+            onCloseEdit={(direction) => this.closeEditSignalsModal(direction)}
+            direction="Input"
+            signals={this.state.signals}
+            configID={null}
+            configs={this.state.configs}
+            sessionToken={this.state.sessionToken}
+          />
+
+
+        </div>
       </div>
-    </div>;
+    );
   }
 }
 

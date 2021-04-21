@@ -17,7 +17,7 @@
 
 import React from 'react';
 import { DndProvider } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
+import { HTML5Backend }from 'react-dnd-html5-backend';
 import NotificationSystem from 'react-notification-system';
 import { Redirect, Route } from 'react-router-dom';
 import jwt from 'jsonwebtoken'
@@ -30,12 +30,14 @@ import Header from './common/header';
 import Menu from './common/menu';
 
 import InfrastructureComponents from './ic/ics';
+import InfrastructureComponent from './ic/ic';
 import Dashboard from './dashboard/dashboard';
 import Scenarios from './scenario/scenarios';
 import Scenario from './scenario/scenario';
 import Users from './user/users';
 import User from './user/user';
 import APIBrowser from './common/api-browser';
+import LoginStore from './user/login-store'
 
 
 import './styles/app.css';
@@ -48,15 +50,19 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    AppDispatcher.dispatch({
-      type: 'config/load',
-    });
+    this.state = {}
+  }
 
-    this.state = {} 
+  static getStores() {
+    return [LoginStore]
   }
 
   componentDidMount() {
     NotificationsDataManager.setSystem(this.refs.notificationSystem);
+
+    AppDispatcher.dispatch({
+      type: 'config/load',
+    });
 
     // if token stored locally, we are already logged-in
     let token = localStorage.getItem("token");
@@ -70,7 +76,7 @@ class App extends React.Component {
         });
       } else {
         let currentUser = JSON.parse(localStorage.getItem("currentUser"));
-        console.log("Already logged-in")
+        console.log("Logged-in as user ", currentUser.username)
         AppDispatcher.dispatch({
           type: 'users/logged-in',
           token: token,
@@ -115,7 +121,8 @@ class App extends React.Component {
               { pages.scenarios ? <Route exact path="/scenarios" component={Scenarios} /> : '' }
               { pages.scenarios ? <Route path="/scenarios/:scenario" component={Scenario} /> : '' }
               { pages.scenarios ? <Route path="/dashboards/:dashboard" component={Dashboard} /> : '' }
-              { pages.infrastructure ? <Route path="/infrastructure" component={InfrastructureComponents} /> : '' }
+              { pages.infrastructure ? <Route exact path="/infrastructure" component={InfrastructureComponents} /> : '' }
+              { pages.infrastructure ? <Route path="/infrastructure/:ic" component={InfrastructureComponent} /> : '' }
               { pages.account ? <Route path="/account" component={User} /> : '' }
               { pages.users ? <Route path="/users" component={Users} /> : '' }
               { pages.api ? <Route path="/api" component={APIBrowser} /> : '' }

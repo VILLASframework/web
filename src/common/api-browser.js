@@ -39,7 +39,7 @@ class APIBrowser extends React.Component {
     return spec;
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this._asyncRequest = RestAPI.get('/api/v2/openapi')
       .then((spec) => {
         this._asyncRequest = null;
