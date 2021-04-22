@@ -25,10 +25,10 @@ export function slew_home() {
             <p>
                 Welcome to <b>SLEW</b>!
             </p>
-            <p>SLEW is a learng platform for running experiments in a virtual power engineering world.
-                The platform enables to interact with the experiments in real time and perform analyses on the experimental results.</p>
+            <p>SLEW is a learning platform for running experiments in a virtual power engineering world.
+                The platform enables interaction with the experiments in real time and performing analysis on the experimental results.</p>
 
-            <p>The motivation behind is the ongoing transformation of the energy system, which is making the system more and more complex.
+            <p>The motivation behind SLEW is the ongoing transformation of the energy system, which is making the system more and more complex.
             Hence, understanding new phenomena and underlying interactions is getting more challenging, also because real experimental
             activities for obtaining a better understanding are not possible for obvious reasons of security and safety.</p>
 
