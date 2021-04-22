@@ -15,7 +15,22 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 import React from 'react';
+import { Button } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
+
+
+export function villasweb_welcome() {
+  let url = 'https://villas.fein-aachen.org/doc/web.html';
+  return (
+      <div >
+          <h1>Welcome!</h1>
+          <p>VILLASweb is a tool to configure real-time co-simulations and display simulation real-time data.
+              It enables the management and monitoring of simulators, models and simulations.</p>
+          <span className='solid-button'>
+            <Button key="learnmore" onClick={e => window.location = url }>Learn more</Button>
+          </span>
+      </div>)
+}
 
 export function villasweb_home(title, username, userid, role) {
   return (

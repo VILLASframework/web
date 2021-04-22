@@ -15,7 +15,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import { villasweb_footer, villasweb_home } from './villasweb/villasweb-functions';
+import { villasweb_footer, villasweb_home, villasweb_welcome } from './villasweb/villasweb-functions';
 import villasweb_values from './villasweb/villasweb-values';
 
 import { slew_home, slew_welcome } from './slew/slew-functions';
@@ -88,6 +88,9 @@ class Branding {
     getWelcome() {
         var welcome = '';
         switch (this.brand) {
+            case 'villasweb':
+                welcome = villasweb_welcome();
+                break;
             case 'slew':
                 welcome = slew_welcome();
                 break;
