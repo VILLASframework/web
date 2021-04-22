@@ -23,7 +23,6 @@ const villasweb_values = {
       home: true,
       scenarios: true,
       infrastructure: true,
-      users: true,
       account: true,
       api: true,
    },

@@ -24,7 +24,6 @@ const slew_values = {
       home: true,
       scenarios: true,
       infrastructure: false,
-      users: false,
       account: false,
       api: false
    },

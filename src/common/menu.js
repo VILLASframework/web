@@ -70,13 +70,13 @@ class SidebarMenu extends React.Component {
         links.push(<li key={key}><a href={values.links[key]} title={key}>{key}</a></li>);
       })
     }
-    var logoStyle = { height: 110, margin: 'auto' };
+    var logoStyle = { width: 110, margin: 'auto' };
     var logo = branding.getLogo(logoStyle);
 
     return (
       <div className="menucontainer">
         { logo ?
-          <div className="menu">
+          <div className="menulogo">
             {logo}
           </div>
           : ''
@@ -88,7 +88,9 @@ class SidebarMenu extends React.Component {
             <ul>
               <li hidden={!values.pages.home}><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
               <li hidden={!values.pages.scenarios}><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
-              <li hidden={!values.pages.infrastructure}><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure">Infrastructure</NavLink></li>
+              {this.props.currentRole === 'Admin' || values.pages.infrastructure ?
+                <li><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure">Infrastructure</NavLink></li> : ''
+              }
               {this.props.currentRole === 'Admin' ?
                 <li><NavLink to="/users" activeClassName="active" title="Users">Users</NavLink></li> : ''
               }
