@@ -101,7 +101,9 @@ class SidebarMenu extends React.Component {
             : <ul>
               <li hidden={!values.pages.home}><NavLink to="/home" activeClassName="active" title="Home">Home</NavLink></li>
               <li hidden={!values.pages.scenarios}><NavLink to="/scenarios" activeClassName="active" title="Scenarios">Scenarios</NavLink></li>
-              <li hidden={!values.pages.infrastructure}><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure">Infrastructure</NavLink></li>
+              {this.props.currentRole === 'Admin' || values.pages.infrastructure ?
+                <li><NavLink to="/infrastructure" activeClassName="active" title="Infrastructure">Infrastructure</NavLink></li> : ''
+              }
               {this.props.currentRole === 'Admin' ?
                 <li><NavLink to="/users" activeClassName="active" title="Users">Users</NavLink></li> : ''
               }

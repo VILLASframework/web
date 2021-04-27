@@ -121,8 +121,12 @@ class App extends React.Component {
               { pages.scenarios ? <Route exact path="/scenarios" component={Scenarios} /> : '' }
               { pages.scenarios ? <Route path="/scenarios/:scenario" component={Scenario} /> : '' }
               { pages.scenarios ? <Route path="/dashboards/:dashboard" component={Dashboard} /> : '' }
-              { pages.infrastructure ? <Route exact path="/infrastructure" component={InfrastructureComponents} /> : '' }
-              <Route path="/infrastructure/:ic" component={InfrastructureComponent} />
+              { currentUser.role === "Admin" || pages.infrastructure ?
+                <Route exact path="/infrastructure" component={InfrastructureComponents} />
+              : '' }
+              { currentUser.role === "Admin" || pages.infrastructure ?
+                <Route path="/infrastructure/:ic" component={InfrastructureComponent} />
+              : '' }
               { pages.account ? <Route path="/account" component={User} /> : '' }
               <Route path="/users" component={Users} />
               { pages.api ? <Route path="/api" component={APIBrowser} /> : '' }
