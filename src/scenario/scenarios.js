@@ -257,7 +257,7 @@ class Scenarios extends Component {
       <h1>Scenarios
           <span className='icon-button'>
           <IconButton
-            ikey={0}
+            childKey={0}
             tooltip='Add Scenario'
             onClick={() => this.setState({ newModal: true })}
             icon='plus'
@@ -265,7 +265,7 @@ class Scenarios extends Component {
             iconStyle={iconStyle}
           />
           <IconButton
-            ikey={1}
+            childKey={1}
             tooltip='Import Scenario'
             onClick={() => this.setState({ importModal: true })}
             icon='upload'

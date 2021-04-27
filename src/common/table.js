@@ -140,7 +140,7 @@ class CustomTable extends Component {
       cell.push(
         <IconButton
           key={childkey++}
-          ikey={childkey++}
+          childKey={childkey++}
           icon={'edit'}
           disabled={child.props.onEdit == null || isLocked}
           hidetooltip={isLocked}
@@ -171,7 +171,7 @@ class CustomTable extends Component {
     if (child.props.lockButton) {
       cell.push(
         <IconToggleButton
-          ikey={childkey++}
+          childKey={childkey++}
           onChange={() => child.props.onChangeLock(index)}
           checked={isLocked}
           checkedIcon='lock'
@@ -188,7 +188,7 @@ class CustomTable extends Component {
       cell.push(
         <IconButton
           key={childkey++}
-          ikey={childkey++}
+          childKey={childkey++}
           icon={'download'}
           disabled={child.props.onExport == null}
           tooltip={"Export"}
@@ -202,7 +202,7 @@ class CustomTable extends Component {
       cell.push(
         <IconButton
           key={childkey++}
-          ikey={childkey++}
+          childKey={childkey++}
           icon={'wave-square'}
           disabled={child.props.onAutoConf == null || child.props.locked }
           hidetooltip={isLocked}
@@ -217,7 +217,7 @@ class CustomTable extends Component {
       cell.push(
         <IconButton
           key={childkey++}
-          ikey={childkey++}
+          childKey={childkey++}
           icon={'copy'}
           disabled={child.props.onDuplicate == null || child.props.locked}
           hidetooltip={isLocked}
@@ -232,7 +232,7 @@ class CustomTable extends Component {
       cell.push(
         <IconButton
           key={childkey++}
-          ikey={childkey++}
+          childKey={childkey++}
           icon={'file'}
           disabled={child.props.onAddRemove == null || isLocked}
           hidetooltip={isLocked}
@@ -247,7 +247,7 @@ class CustomTable extends Component {
       cell.push(
         <IconButton
           key={childkey++}
-          ikey={childkey++}
+          childKey={childkey++}
           icon={'file-download'}
           disabled={child.props.onDownloadAll == null}
           tooltip={"Download All Files"}
@@ -265,7 +265,7 @@ class CustomTable extends Component {
       cell.push(
         <IconButton
           key={childkey++}
-          ikey={childkey++}
+          childKey={childkey++}
           icon={'trash'}
           disabled={child.props.onDelete == null || isLocked}
           hidetooltip={isLocked}

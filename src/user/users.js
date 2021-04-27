@@ -115,14 +115,25 @@ class Users extends Component {
   }
 
   render() {
+    const buttonStyle = {
+      marginLeft: '10px',
+    }
+
+    const iconStyle = {
+      height: '30px',
+      width: '30px'
+    }
+
     return <div>
         <h1>Users
           <span className='icon-button'>
             <IconButton
-              ikey={0}
+              childKey={0}
               tooltip='Add User'
               onClick={() => this.setState({ newModal: true })}
               icon='plus'
+              buttonStyle={buttonStyle}
+              iconStyle={iconStyle}
             />
           </span>
         </h1>

@@ -154,7 +154,7 @@ class Scenario extends React.Component {
     return <div className='section'>
       <div className='section-buttons-group-right'>
         <IconButton
-          ikey="0"
+          childKey="0"
           tooltip={tooltip}
           onClick={this.onEditFiles.bind(this)}
           icon="file"
@@ -166,7 +166,7 @@ class Scenario extends React.Component {
         {this.state.scenario.name}
         <span className='icon-button'>
               <IconToggleButton
-                ikey={0}
+                childKey={0}
                 onChange={() => this.onChangeLock()}
                 checked={this.state.scenario.isLocked}
                 checkedIcon='lock'
