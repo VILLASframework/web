@@ -61,6 +61,31 @@ class InfrastructureComponent extends React.Component {
             data: icID,
             token: this.state.sessionToken,
         });
+
+      // Start timer for periodic refresh
+      this.timer = window.setInterval(() => this.refresh(), 10000);
+    }
+
+    refresh() {
+
+        let icID = parseInt(this.props.match.params.ic, 10);
+        AppDispatcher.dispatch({
+          type: 'ics/start-load',
+          token: this.state.sessionToken,
+          data: icID
+        });
+
+        // get status of VILLASnode and VILLASrelay ICs
+        if ((this.state.ic.type === "villas-node" || this.state.ic.type === "villas-relay")
+          && this.state.ic.apiurl !== '' && this.state.ic.apiurl !== undefined && this.state.ic.apiurl !== null && !this.state.ic.managedexternally) {
+          AppDispatcher.dispatch({
+            type: 'ics/get-status',
+            url: this.state.ic.apiurl,
+            token: this.state.sessionToken,
+            ic: this.state.ic
+          });
+        }
+
     }
 
     isJSON(data) {
@@ -102,12 +127,12 @@ class InfrastructureComponent extends React.Component {
         if(!canceled){
           this.sendControlCommand();
         }
-    
+
         this.setState({confirmCommand: false, command: ''});
       }
-    
+
       async downloadGraph(url) {
-    
+
         let blob = await fetch(url).then(r => r.blob())
         FileSaver.saveAs(blob, this.props.ic.name + ".svg");
       }
@@ -172,14 +197,15 @@ class InfrastructureComponent extends React.Component {
                                 <tr>
                                     <td>Start parameter schema</td>
                                     <td>
-                                        <ReactJson
+                                      {this.isJSON(this.state.ic.startparameterschema) ?
+                                      <ReactJson
                                             src={this.state.ic.startparameterschema}
                                             name={false}
                                             displayDataTypes={false}
                                             displayObjectSize={false}
                                             enableClipboard={false}
                                             collapsed={0}
-                                        />
+                                        /> : <div>No Start parameter schema JSON available.</div>}
                                     </td>
                                 </tr>
                             </tbody>
