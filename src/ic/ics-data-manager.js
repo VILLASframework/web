@@ -102,7 +102,11 @@ class IcsDataManager extends RestDataManager {
   }
 
   getStatus(url,token,ic){
-    RestAPI.get(url + "/status", null).then(response => {
+    let requestURL = url;
+    if(ic.type === "villas-node"){
+      requestURL += "/status";
+    }
+    RestAPI.get(requestURL, null).then(response => {
       AppDispatcher.dispatch({
         type: 'ics/status-received',
         data: response,
@@ -147,7 +151,7 @@ class IcsDataManager extends RestDataManager {
     let ws_api = ic.websocketurl.split("/")
     let ws_name = ws_api[ws_api.length-1] // name is the last element in the websocket url
 
-    RestAPI.get(url + "/node/" +ws_name + "/stats", null).then(response => {
+    RestAPI.get(url + "/node/" + ws_name + "/stats", null).then(response => {
       AppDispatcher.dispatch({
         type: 'ics/statistics-received',
         data: response,

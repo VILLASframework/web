@@ -222,6 +222,27 @@ class InfrastructureComponent extends React.Component {
                                 collapsed={0}
                             /> : <div>No valid JSON raw data available.</div>}
 
+                        <b>Raw Config</b>
+                        {this.isJSON(this.state.ic.statusupdateraw["config"]) ?
+                            <ReactJson
+                                src={this.state.ic.statusupdateraw["config"]}
+                                name={false}
+                                displayDataTypes={false}
+                                displayObjectSize={false}
+                                enableClipboard={false}
+                                collapsed={0}
+                            /> : <div>No valid config JSON raw data available.</div>}
+                        <b>Raw Statistics</b>
+                        {this.isJSON(this.state.ic.statusupdateraw["statistics"]) ?
+                            <ReactJson
+                                src={this.state.ic.statusupdateraw["statistics"]}
+                                name={false}
+                                displayDataTypes={false}
+                                displayObjectSize={false}
+                                enableClipboard={false}
+                                collapsed={0}
+                            /> : <div>No valid statistics JSON raw data available.</div>}
+
                         {this.state.ic.type === "villas-node" ?
                             <>
                                 <div className='section-buttons-group-right'>
