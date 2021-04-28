@@ -107,7 +107,8 @@ class IcsDataManager extends RestDataManager {
         type: 'ics/status-received',
         data: response,
         token: token,
-        ic: ic
+        ic: ic,
+        url: url
       });
     }).catch(error => {
       AppDispatcher.dispatch({
@@ -116,34 +117,21 @@ class IcsDataManager extends RestDataManager {
       })
     })
 
-    // get name of websocket
-    /*
-    let ws_api = ic.websocketurl.split("/")
-    let ws_name = ws_api[ws_api.length-1] // websocket name is the last element in the websocket url
-
-    RestAPI.get(url + "/node/" + ws_name + "/stats", null).then(response => {
-      AppDispatcher.dispatch({
-        type: 'ics/nodestats-received',
-        data: response,
-        token: token,
-        ic: ic
-      });
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: 'ics/nodestats-error',
-        error: error
-      })
-    })*/
-
   }
 
   getConfig(url,token,ic){
-    RestAPI.get(url + "node/" + ic.uuid, null).then(response => {
+
+    // get the name of the node
+    let ws_api = ic.websocketurl.split("/")
+    let ws_name = ws_api[ws_api.length-1] // name is the last element in the websocket url
+
+    RestAPI.get(url + "/node/" + ws_name, null).then(response => {
       AppDispatcher.dispatch({
         type: 'ics/config-received',
         data: response,
         token: token,
-        ic: ic
+        ic: ic,
+        url: url
       });
     }).catch(error => {
       AppDispatcher.dispatch({
@@ -154,7 +142,12 @@ class IcsDataManager extends RestDataManager {
   }
 
   getStatistics(url,token,ic){
-    RestAPI.get(url + "/node/" +ic.uuid + "/stats", null).then(response => {
+
+    // get the name of the node
+    let ws_api = ic.websocketurl.split("/")
+    let ws_name = ws_api[ws_api.length-1] // name is the last element in the websocket url
+
+    RestAPI.get(url + "/node/" +ws_name + "/stats", null).then(response => {
       AppDispatcher.dispatch({
         type: 'ics/statistics-received',
         data: response,
@@ -164,7 +157,9 @@ class IcsDataManager extends RestDataManager {
     }).catch(error => {
       AppDispatcher.dispatch({
         type: 'ics/statistics-error',
-        error: error
+        error: error,
+        token: token,
+        ic: ic
       })
     })
   }
