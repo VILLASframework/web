@@ -118,15 +118,7 @@ class Users extends Component {
     }
   }
 
-  onModalKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-
-      this.confirmDeleteModal();
-    }
-  };
-
-  onUserChecked(user) {
+ onUserChecked(user) {
     let temp = this.state.usersToAdd;
     const found = temp.get(user.id);
     if (!found) {
@@ -138,7 +130,9 @@ class Users extends Component {
   }
 
   setScenario(ID) {
-    let scenario = this.state.scenarios.find(s => s.id == ID);
+
+    let scenarioID = parseInt(ID, 10)
+    let scenario = this.state.scenarios.find(s => s.id === scenarioID);
     this.setState({ selectedScenarioID: scenario.id, selectedScenario: scenario.name, addUsersModal: true })
   };
 
