@@ -20,11 +20,11 @@ import FileSaver from 'file-saver';
 import IconButton from "../common/icon-button";
 import Table from "../common/table";
 import TableColumn from "../common/table-column";
-import NewDashboardDialog from "./new-dashboard";
 import EditDashboardDialog from "./edit-dashboard";
 import ImportDashboardDialog from "./import-dashboard";
 import DeleteDialog from "../common/dialogs/delete-dialog";
 import AppDispatcher from "../common/app-dispatcher";
+import NewDialog from "../common/dialogs/new-dialog";
 
 class DashboardTable extends Component {
 
@@ -43,15 +43,15 @@ class DashboardTable extends Component {
   closeNewDashboardModal(data) {
     this.setState({ newDashboardModal: false });
     if (data) {
-      // TODO: 'newDashboard' not used, check this
-      let newDashboard = data;
+      let newDashboard = {};
+      newDashboard["name"] = data.value;
       // add default grid value and scenarioID
       newDashboard["grid"] = 15;
       newDashboard["scenarioID"] = this.props.scenario.id;
 
       AppDispatcher.dispatch({
         type: 'dashboards/start-add',
-        data,
+        data: newDashboard,
         token: this.props.sessionToken,
       });
     }
@@ -218,10 +218,14 @@ class DashboardTable extends Component {
           />
         </Table>
 
-        <NewDashboardDialog
+        <NewDialog
           show={this.state.newDashboardModal}
+          title="New Dashboard"
+          inputLabel="Name"
+          placeholder="Enter name"
           onClose={data => this.closeNewDashboardModal(data)}
         />
+
         <EditDashboardDialog
           show={this.state.dashboardEditModal}
           dashboard={this.state.modalDashboardData}
