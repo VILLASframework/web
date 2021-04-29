@@ -41,22 +41,13 @@ class Users extends Component {
   }
 
   static calculateState(prevState, props) {
-    let token = localStorage.getItem("token");
-
-    // If there is a token available and this method was called as a result of loading users
-    if (!prevState && token) {
-      AppDispatcher.dispatch({
-        type: 'users/start-load',
-        token: token
-      });
-    }
 
     if (prevState == null) {
       prevState = {};
     }
 
     return {
-      token: token,
+      token: localStorage.getItem("token"),
       users: UsersStore.getState(),
       scenarios: ScenarioStore.getState(),
       usersToAdd: prevState.usersToAdd || new Map(),
@@ -70,6 +61,19 @@ class Users extends Component {
       modalData: {},
       currentUser: JSON.parse(localStorage.getItem("currentUser"))
     };
+  }
+
+  componentDidMount() {
+    AppDispatcher.dispatch({
+      type: 'scenarios/start-load',
+      token: this.state.token
+    });
+
+    AppDispatcher.dispatch({
+      type: 'users/start-load',
+      token: this.state.token
+    });
+
   }
 
   closeNewModal(data) {
