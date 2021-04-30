@@ -434,7 +434,14 @@ class InfrastructureComponents extends Component {
   }
 
   render() {
+    const buttonStyle = {
+      marginLeft: '10px',
+    }
 
+    const iconStyle = {
+      height: '30px',
+      width: '30px'
+    }
 
     let managerTable = this.getICCategoryTable(this.state.managers, false, "IC Managers")
     let simulatorTable = this.getICCategoryTable(this.state.simulators, true, "Simulators")

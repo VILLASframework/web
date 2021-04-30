@@ -223,7 +223,7 @@ class InfrastructureComponent extends React.Component {
                             /> : <div>No valid JSON raw data available.</div>}
 
                         <b>Raw Config</b>
-                        {this.isJSON(this.state.ic.statusupdateraw["config"]) ?
+                        {this.state.ic.statusupdateraw && this.isJSON(this.state.ic.statusupdateraw["config"]) ?
                             <ReactJson
                                 src={this.state.ic.statusupdateraw["config"]}
                                 name={false}
@@ -233,7 +233,7 @@ class InfrastructureComponent extends React.Component {
                                 collapsed={0}
                             /> : <div>No valid config JSON raw data available.</div>}
                         <b>Raw Statistics</b>
-                        {this.isJSON(this.state.ic.statusupdateraw["statistics"]) ?
+                        {this.state.ic.statusupdateraw && this.isJSON(this.state.ic.statusupdateraw["statistics"]) ?
                             <ReactJson
                                 src={this.state.ic.statusupdateraw["statistics"]}
                                 name={false}
