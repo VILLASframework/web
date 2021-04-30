@@ -20,13 +20,16 @@ import { Container } from 'flux/utils';
 
 import AppDispatcher from '../common/app-dispatcher';
 import UsersStore from './users-store';
+import ScenarioStore from '../scenario/scenario-store';
 
 import Icon from '../common/icon';
 import IconButton from '../common/icon-button';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
 import NewUserDialog from './new-user';
 import EditUserDialog from './edit-user';
+import UsersToScenarioDialog from './users-to-scenario';
 
 import DeleteDialog from '../common/dialogs/delete-dialog';
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
@@ -34,30 +37,43 @@ import NotificationsFactory from "../common/data-managers/notifications-factory"
 
 class Users extends Component {
   static getStores() {
-    return [ UsersStore ];
+    return [UsersStore, ScenarioStore];
   }
 
   static calculateState(prevState, props) {
-    let token = localStorage.getItem("token");
 
-    // If there is a token available and this method was called as a result of loading users
-    if (!prevState && token) {
-      AppDispatcher.dispatch({
-        type: 'users/start-load',
-        token: token
-      });
+    if (prevState == null) {
+      prevState = {};
     }
 
     return {
-      token: token,
+      token: localStorage.getItem("token"),
       users: UsersStore.getState(),
+      scenarios: ScenarioStore.getState(),
+      usersToAdd: prevState.usersToAdd || new Map(),
+      selectedScenarioID: prevState.selectedScenarioID || null,
+      selectedScenario: prevState.selectedScenario || '',
 
       newModal: false,
+      addUsersModal: false,
       editModal: false,
       deleteModal: false,
       modalData: {},
       currentUser: JSON.parse(localStorage.getItem("currentUser"))
     };
+  }
+
+  componentDidMount() {
+    AppDispatcher.dispatch({
+      type: 'scenarios/start-load',
+      token: this.state.token
+    });
+
+    AppDispatcher.dispatch({
+      type: 'users/start-load',
+      token: this.state.token
+    });
+
   }
 
   closeNewModal(data) {
@@ -102,13 +118,36 @@ class Users extends Component {
     }
   }
 
-  onModalKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-
-      this.confirmDeleteModal();
+ onUserChecked(user) {
+    let temp = this.state.usersToAdd;
+    const found = temp.get(user.id);
+    if (!found) {
+      temp.set(user.id, user.username);
+    } else {
+      temp.delete(user.id)
     }
+    this.setState({ usersToAdd: temp });
+  }
+
+  setScenario(ID) {
+
+    let scenarioID = parseInt(ID, 10)
+    let scenario = this.state.scenarios.find(s => s.id === scenarioID);
+    this.setState({ selectedScenarioID: scenario.id, selectedScenario: scenario.name, addUsersModal: true })
   };
+
+  closeAddUsersModal() {
+    this.state.usersToAdd.forEach((value, key) => {
+      AppDispatcher.dispatch({
+        type: 'scenarios/add-user',
+        data: this.state.selectedScenarioID,
+        username: value,
+        token: this.state.token
+      });
+    })
+
+    this.setState({ addUsersModal: false, selectedScenarioID: null })
+  }
 
   modifyActiveColumn(active) {
     return <Icon icon={active ? 'check' : 'times'} />
@@ -125,65 +164,91 @@ class Users extends Component {
     }
 
     return <div>
-        <h1>Users
+      <h1>Users
           <span className='icon-button'>
-            <IconButton
-              childKey={0}
-              tooltip='Add User'
-              onClick={() => this.setState({ newModal: true })}
-              icon='plus'
-              buttonStyle={buttonStyle}
-              iconStyle={iconStyle}
-            />
-          </span>
-        </h1>
+          <IconButton
+            childKey={0}
+            tooltip='Add User'
+            onClick={() => this.setState({ newModal: true })}
+            icon='plus'
+            buttonStyle={buttonStyle}
+            iconStyle={iconStyle}
+          />
+        </span>
+      </h1>
 
-        <Table data={this.state.users}>
-          {this.state.currentUser.role === "Admin" ?
-            <TableColumn
-              title='ID'
-              dataKey='id'
-            />
-            : <></>
-          }
+      <Table data={this.state.users}>
+        {this.state.currentUser.role === "Admin" ?
           <TableColumn
-            title='Username'
-            width='150'
-            dataKey='username'
+            title='ID'
+            dataKey='id'
           />
+          : <></>
+        }
+        {this.state.currentUser.role === "Admin" ?
           <TableColumn
-            title='E-mail'
-            dataKey='mail'
+            title='Add'
+            checkbox
+            onChecked={(index, event) => this.onUserChecked(index, event)}
+            checkboxKey='checked'
+            width='30'
           />
-          <TableColumn
-            title='Role'
-            dataKey='role'
-          />
-          <TableColumn
-            title='Active'
-            dataKey='active'
-            modifier={(active) => this.modifyActiveColumn(active)}
-          />
-          <TableColumn
-            width='200'
-            align='right'
-            editButton
-            deleteButton
-            onEdit={index => this.setState({
-              editModal: true,
-              modalData: this.state.users[index]
-            })}
-            onDelete={index => this.setState({
-              deleteModal: true,
-              modalData: this.state.users[index]
-            })}
-          />
-        </Table>
+          : <></>
+        }
+        <TableColumn
+          title='Username'
+          width='150'
+          dataKey='username'
+        />
+        <TableColumn
+          title='E-mail'
+          dataKey='mail'
+        />
+        <TableColumn
+          title='Role'
+          dataKey='role'
+        />
+        <TableColumn
+          title='Active'
+          dataKey='active'
+          modifier={(active) => this.modifyActiveColumn(active)}
+        />
+        <TableColumn
+          width='200'
+          align='right'
+          editButton
+          deleteButton
+          onEdit={index => this.setState({
+            editModal: true,
+            modalData: this.state.users[index]
+          })}
+          onDelete={index => this.setState({
+            deleteModal: true,
+            modalData: this.state.users[index]
+          })}
+        />
+      </Table>
+      <span className='solid-button'>
+        <DropdownButton
+          title='Add to Scenario'
+          onSelect={(id) => this.setScenario(id)}
+        >
+          {this.state.scenarios.map(scenario => (
+            <Dropdown.Item key={scenario.id} eventKey={scenario.id}>{scenario.name}</Dropdown.Item>
+          ))}
+        </DropdownButton>
+      </span>
 
-        <NewUserDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
-        <EditUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />
-        <DeleteDialog title="user" name={this.state.modalData.username} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
-      </div>;
+      <UsersToScenarioDialog
+        show={this.state.addUsersModal}
+        users={this.state.usersToAdd}
+        scenario={this.state.selectedScenario}
+        onClose={() => this.closeAddUsersModal()}
+      />
+      <NewUserDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
+      <EditUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />
+      <DeleteDialog title="user" name={this.state.modalData.username} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
+    </div>;
   }
 }
 

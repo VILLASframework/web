@@ -15,11 +15,12 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, {Component} from "react";
+import React, { Component } from "react";
 import FileSaver from 'file-saver';
 import IconButton from "../common/icon-button";
 import Table from "../common/table";
 import TableColumn from "../common/table-column";
+import NewDialog from "../common/dialogs/new-dialog";
 import DeleteDialog from "../common/dialogs/delete-dialog";
 import AppDispatcher from "../common/app-dispatcher";
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
@@ -37,21 +38,21 @@ class ConfigTable extends Component {
       editConfigModal: false,
       modalConfigData: {},
       modalConfigIndex: 0,
+      newConfigModal: false,
       deleteConfigModal: false,
       importConfigModal: false,
-      newConfig:  false,
       selectedConfigs: [],
       ExternalICInUse: false,
-      editOutputSignalsModal:  false,
-      editInputSignalsModal:  false,
+      editOutputSignalsModal: false,
+      editInputSignalsModal: false,
     }
   }
 
-  static getDerivedStateFromProps(props, state){
+  static getDerivedStateFromProps(props, state) {
 
     let ExternalICInUse = false
 
-    for (let config of props.configs){
+    for (let config of props.configs) {
       for (let component of props.ics) {
         if ((config.icID === component.id) && (component.managedexternally === true)) {
           ExternalICInUse = true;
@@ -65,26 +66,27 @@ class ConfigTable extends Component {
     };
   }
 
-  addConfig() {
-    const config = {
-      scenarioID: this.props.scenario.id,
-      name: 'New Component Configuration',
-      icID: this.props.ics.length > 0 ? this.props.ics[0].id : null,
-      startParameters: {},
-    };
+  closeNewConfigModal(data) {
+    this.setState({ newConfigModal: false });
 
-    AppDispatcher.dispatch({
-      type: 'configs/start-add',
-      data: config,
-      token: this.props.sessionToken
-    });
+    if (data) {
+      const config = {
+        scenarioID: this.props.scenario.id,
+        name: data.value,
+        icID: this.props.ics.length > 0 ? this.props.ics[0].id : null,
+        startParameters: {},
+      };
 
-    this.setState({ newConfig: true });
-
+      AppDispatcher.dispatch({
+        type: 'configs/start-add',
+        data: config,
+        token: this.props.sessionToken
+      });
+    }
   }
 
   closeEditConfigModal(data) {
-    this.setState({ editConfigModal: false, newConfig: false });
+    this.setState({ editConfigModal: false });
 
     if (data) {
       AppDispatcher.dispatch({
@@ -312,27 +314,27 @@ class ConfigTable extends Component {
         {/*Component Configurations table*/}
         <h2 style={this.props.tableHeadingStyle}>Component Configurations
           <span className='icon-button'>
-          <IconButton
-            childKey={0}
-            tooltip='Add Component Configuration'
-            onClick={() => this.addConfig()}
-            icon='plus'
-            disabled={this.props.locked}
-            hidetooltip={this.props.locked}
-            buttonStyle={buttonStyle}
-            iconStyle={iconStyle}
-          />
-          <IconButton
-            childKey={1}
-            tooltip='Import Component Configuration'
-            onClick={() => this.setState({ importConfigModal: true })}
-            icon='upload'
-            disabled={this.props.locked}
-            hidetooltip={this.props.locked}
-            buttonStyle={buttonStyle}
-            iconStyle={iconStyle}
-          />
-        </span>
+            <IconButton
+              childKey={0}
+              tooltip='Add Component Configuration'
+              onClick={() => this.setState({ newConfigModal: true })}
+              icon='plus'
+              disabled={this.props.locked}
+              hidetooltip={this.props.locked}
+              buttonStyle={buttonStyle}
+              iconStyle={iconStyle}
+            />
+            <IconButton
+              childKey={1}
+              tooltip='Import Component Configuration'
+              onClick={() => this.setState({ importConfigModal: true })}
+              icon='upload'
+              disabled={this.props.locked}
+              hidetooltip={this.props.locked}
+              buttonStyle={buttonStyle}
+              iconStyle={iconStyle}
+            />
+          </span>
         </h2>
         <Table data={this.props.configs}>
           <TableColumn
@@ -404,9 +406,9 @@ class ConfigTable extends Component {
             <ICAction
               ics={this.props.ics}
               configs={this.props.configs}
-              selectedConfigs = {this.state.selectedConfigs}
-              snapshotConfig = {(index) => this.copyConfig(index)}
-              token = {this.props.sessionToken}
+              selectedConfigs={this.state.selectedConfigs}
+              snapshotConfig={(index) => this.copyConfig(index)}
+              token={this.props.sessionToken}
               actions={[
                 { id: '0', title: 'Start', data: { action: 'start' } },
                 { id: '1', title: 'Stop', data: { action: 'stop' } },
@@ -431,6 +433,13 @@ class ConfigTable extends Component {
           show={this.state.importConfigModal}
           onClose={data => this.importConfig(data)}
           ics={this.props.ics}
+        />
+        <NewDialog
+          show={this.state.newConfigModal}
+          title="New Component Configuration"
+          inputLabel="Name"
+          placeholder="Enter name"
+          onClose={data => this.closeNewConfigModal(data)}
         />
         <DeleteDialog
           title="component configuration"

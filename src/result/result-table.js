@@ -26,7 +26,7 @@ import TableColumn from "../common/table-column";
 import DeleteDialog from "../common/dialogs/delete-dialog";
 import EditResultDialog from "./edit-result";
 import ResultConfigDialog from "./result-configs-dialog";
-import NewResultDialog from "./new-result";
+import NewDialog from "../common/dialogs/new-dialog";
 
 class ResultTable extends Component {
 
@@ -79,10 +79,13 @@ class ResultTable extends Component {
   closeNewResultModal(data) {
     this.setState({ newResultModal: false });
     if (data) {
-      data["scenarioID"] = this.props.scenario.id;
+      let newResult = { ConfigSnapshots: '', ResultFileIDs: [] };
+      newResult["scenarioID"] = this.props.scenario.id;
+      newResult["Description"] = data.value;
+
       AppDispatcher.dispatch({
         type: 'results/start-add',
-        data,
+        data: newResult,
         token: this.props.sessionToken,
       });
     }
@@ -245,8 +248,11 @@ class ResultTable extends Component {
           resultNo={this.state.modalResultConfigsIndex}
           onClose={this.closeResultConfigSnapshots.bind(this)}
         />
-        <NewResultDialog
+        <NewDialog
           show={this.state.newResultModal}
+          title="New Result"
+          inputLabel="Description"
+          placeholder="Enter description"
           onClose={data => this.closeNewResultModal(data)}
         />
       </div>
