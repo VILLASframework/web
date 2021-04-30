@@ -27,7 +27,6 @@ import NotificationsDataManager from './common/data-managers/notifications-data-
 
 import Home from './common/home';
 import Header from './common/header';
-import Footer from './common/footer';
 import Menu from './common/menu';
 
 import InfrastructureComponents from './ic/ics';
@@ -42,6 +41,9 @@ import LoginStore from './user/login-store'
 
 
 import './styles/app.css';
+import branding from './branding/branding';
+
+
 
 class App extends React.Component {
 
@@ -101,6 +103,7 @@ class App extends React.Component {
     }
 
     let currentUser = JSON.parse(currentUserRaw);
+    let pages = branding.values.pages;
 
     return <DndProvider backend={HTML5Backend} >
         <div className="app">
@@ -114,19 +117,23 @@ class App extends React.Component {
 
             <div className='app-content app-content-margin-left'>
               <Route exact path="/" component={Home} />
-              <Route path="/home" component={Home} />
-              <Route exact path="/scenarios" component={Scenarios} />
-              <Route path="/scenarios/:scenario" component={Scenario} />
-              <Route path="/dashboards/:dashboard" component={Dashboard} />
-              <Route exact path="/infrastructure" component={InfrastructureComponents} />
-              <Route path="/infrastructure/:ic" component={InfrastructureComponent} />
-              <Route path="/account" component={User} />
+              { pages.home ? <Route path="/home" component={Home} /> : '' }
+              { pages.scenarios ? <Route exact path="/scenarios" component={Scenarios} /> : '' }
+              { pages.scenarios ? <Route path="/scenarios/:scenario" component={Scenario} /> : '' }
+              { pages.scenarios ? <Route path="/dashboards/:dashboard" component={Dashboard} /> : '' }
+              { currentUser.role === "Admin" || pages.infrastructure ?
+                <Route exact path="/infrastructure" component={InfrastructureComponents} />
+              : '' }
+              { currentUser.role === "Admin" || pages.infrastructure ?
+                <Route path="/infrastructure/:ic" component={InfrastructureComponent} />
+              : '' }
+              { pages.account ? <Route path="/account" component={User} /> : '' }
               <Route path="/users" component={Users} />
-              <Route path="/api" component={APIBrowser} />
+              { pages.api ? <Route path="/api" component={APIBrowser} /> : '' }
             </div>
           </div>
 
-          <Footer />
+          {branding.getFooter()}
         </div>
     </DndProvider>
   }

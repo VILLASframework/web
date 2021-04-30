@@ -15,16 +15,30 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
-
-class Footer extends Component {
-  render() {
-    return (
-      <footer className="app-footer">
-        Copyright &copy; {new Date().getFullYear()} - <a href="https://www.acs.eonerc.rwth-aachen.de">Institute for Automation of Complex Power Systems</a> - <a href="https://www.rwth-aachen.de">RWTH Aachen University</a>
-      </footer>
-    );
-  }
+const slew_values = {
+   title: 'SLEW',
+   subtitle: 'Second Life for Energiewende',
+   icon: "slew_blue.png",
+   logo: "slew_logo.png",
+   pages: {
+      home: true,
+      scenarios: true,
+      infrastructure: false,
+      account: false,
+      api: false
+   },
+   links: {
+      "DPsim Simulator": "https://dpsim.fein-aachen.org",
+      "VILLASframework": "https://villas.fein-aachen.org/doc"
+   },
+   style: {
+      background: 'rgba(207,209,210, 1)',
+      highlights: 'rgba(0,84,159, 0.75)',
+      maincolor: 'rgba(80,80,80, 1)',
+      secondarytext: 'rgba(80,80,80, 0.9)',
+      font: "16px Roboto, sans-serif",
+      borderradius: "10px"
+   }
 }
 
-export default Footer;
+export default slew_values;

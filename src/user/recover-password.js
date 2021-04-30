@@ -17,15 +17,20 @@
 
 import React from 'react';
 import Dialog from '../common/dialogs/dialog';
-import Config from '../config';
+import { Container } from 'flux/utils';
+import LoginStore from './login-store'
+import _ from 'lodash';
 
 
 class RecoverPassword extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      admin: Config.admin
+  static getStores() {
+    return [LoginStore]
+  }
+
+  static calculateState(prevState, props) {
+    return {
+      config: LoginStore.getState().config
     }
   }
 
@@ -44,14 +49,14 @@ class RecoverPassword extends React.Component {
         valid={true}
       >
         <div>
-          <div>Please contact:</div>
-          <div>{this.state.admin.name}</div>
-          <div>E-Mail:</div>
-          <a href={`mailto:${this.state.admin.mail}`}>{this.state.admin.mail}</a>
+          <h5>Please contact:</h5>
+          <div>{_.get(this.state.config, ['contact', 'name'])}</div>
+          <a href={`mailto:${_.get(this.state.config, ['contact', 'mail'])}`}>{_.get(this.state.config, ['contact', 'mail'])}</a>
         </div>
       </Dialog>
     );
   }
 }
 
-export default RecoverPassword;
+let fluxContainerConverter = require('../common/FluxContainerConverter');
+export default Container.create(fluxContainerConverter.convert(RecoverPassword));

@@ -18,22 +18,36 @@
 /**
  * Application container
  */
+
+:root {
+  --bg: #eceded;
+  --highlights: #527984;
+  --secondarytext: #818181;
+  --borderradius: 0px;
+  --mainfont: 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --maincolor: #4d4d4d;
+}
+
+* {
+  color: var(--maincolor);
+}
+
 body {
-  background-color: #6EA2B0 !important;
+  background-color: var(--bg) !important;
 }
 
 .app {
   height: 100vh;
-  color: #4d4d4d;
+  color: var(--maincolor);
+  border-radius: var(--borderradius);
 
-  font: 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  font: var(--mainfont);
   hyphens: auto;
 }
 
 .app-header {
   width: 100%;
-
-  color: #527984;
   background-color: #fff;
 }
 
@@ -42,6 +56,7 @@ body {
   margin: 0;
   width: 100%;
   text-align: center;
+  color: var(--highlights);
 }
 
 .btn-link {
@@ -53,13 +68,11 @@ body {
 
   margin-top: 20px;
   padding-bottom: 10px;
-
+  color: var(--secondarytext);
   text-align: center;
 }
 
 .app-footer a {
-  color: #4d4d4d;
-
   text-decoration: underline;
 }
 
@@ -73,6 +86,8 @@ body {
 
 .app-content {
   padding: 15px 20px 20px 20px;
+  border-radius: var(--borderradius);
+
 
   width: auto;
   min-height: 300px;
@@ -96,10 +111,30 @@ body {
 /**
  * Menus
  */
+.menucontainer {
+  float: left;
+  flex-direction: column;
+}
+
 .menu {
   padding: 20px;
+  margin-bottom: 20px;
   width: 160px;
-  float: left;
+  border-radius: var(--borderradius);
+
+
+  background-color: #fff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
+              0 9px 18px 0 rgba(0, 0, 0, 0.1);
+}
+
+.menulogo {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+  width: 160px;
+  border-radius: var(--borderradius);
 
   background-color: #fff;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
@@ -107,7 +142,7 @@ body {
 }
 
 .menu a {
-  color: #4d4d4d;
+  color: var(--secondarytext);
   text-decoration:none;
 }
 
@@ -157,7 +192,7 @@ body {
   padding: 8px 8px 8px 32px;
   text-decoration: none;
   font-size: 25px;
-  color: #818181;
+  color: var(--secondarytext);
   display: block;
   transition: 0.3s;
 }
@@ -175,7 +210,7 @@ body {
   margin-left: 50px;
   text-decoration: none;
   display: block;
-  color: #818181;
+  color: var(--secondarytext);
   transition: 0.3s;
 }
 
@@ -204,33 +239,30 @@ body {
 }
 
 /**
- * Login select
+ * Login form
  */
-.login-select {
-  position: sticky;
-  width: 300px;
-  height: 150px;
-  top: 50%;
-  left: 50%;
-  margin-top: 50px;
-  margin-bottom: 100px;
-  transform: translate(-50%);
+ .login-parent {
+   display: flex;
+   max-width: 800px;
 
+   margin: 30px auto;
+ }
 
-  padding: 20px 20px;
+ .login-welcome {
+  float: right;
+  max-width: 400px;
+  padding: 15px 20px;
+  border-radius: var(--borderradius) 0px 0px var(--borderradius);
 
-  background-color: #a8c7cf;
+  background-color: #fff;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
               0 9px 18px 0 rgba(0, 0, 0, 0.1);
 }
 
-/**
- * Login form
- */
 .login-container {
+  float: left;
   max-width: 400px;
-
-  margin: 30px auto;
+  border-radius: 0px var(--borderradius) var(--borderradius) 0px;
   padding: 15px 20px;
 
   background-color: #fff;
@@ -253,7 +285,7 @@ hr {
 }
 
 .table th {
-  background-color: #527984;
+  background-color: var(--highlights);
   color: #fff;
 }
 
@@ -402,23 +434,23 @@ hr {
 }
 
 .section-buttons-group-left .btn{
-  background-color: #527984; 
-  border-color: #527984;
+  background-color: var(--highlights);
+  border-color: var(--highlights);
 }
 
 .section-buttons-group-left .btn:hover{
-  background-color: #31484f; 
+  background-color: #31484f;
   border-color: #31484f;
 }
 
 .drag-and-drop .btn{
-  color: #527984;
-  border-color: #527984;
+  color: var(--highlights);
+  border-color: var(--highlights);
 }
 
 .drag-and-drop .btn:hover{
-  color: #527984;
-  border-color: #527984;
+  color: var(--highlights);
+  border-color: var(--highlights);
 }
 
 
@@ -427,8 +459,8 @@ hr {
 }
 
 .solid-button .btn{
-  background-color: #527984; 
-  border-color: #527984;
+  background-color: var(--highlights);
+  border-color: var(--highlights);
 }
 
 .solid-button .btn:hover{
@@ -437,8 +469,8 @@ hr {
 }
 
 .solid-button .btn:disabled{
-  background-color: #527984; 
-  border-color: #527984;
+  background-color: var(--highlights);
+  border-color: var(--highlights);
 }
 
 .icon-button .btn{
@@ -452,7 +484,7 @@ hr {
 }
 
 .icon-color {
-  color: #527984;
+  color: var(--highlights);
 }
 
 .form-horizontal .form-group {
