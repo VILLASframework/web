@@ -96,8 +96,8 @@ class LoginComplete extends React.Component {
     } else {
       return <div className="verticalhorizontal">
         <img
-          style={{height: 300}}
-          src={require('../img/dog-waiting-bw.jpg').default}
+          style={{height: 80}}
+          src={require('../img/ajax-loader.gif').default}
           alt="Waiting Dog" />
       </div>;
     }

@@ -16,17 +16,23 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Col, Button } from 'react-bootstrap';
-import { Hidden } from 'react-grid-system'
-import Icon from './icon';
-import config from '../config';
+import branding from '../branding/branding';
 
 class Header extends React.Component {
   render() {
+    let hasSubtitle = branding.getSubtitle();
     return (
-      <header className="app-header">
-        <h1>{config.instance} - {config.subtitle}</h1>
+      <div>
+      { hasSubtitle ?
+        <header className="app-header">
+        <h1>{branding.getTitle()} - {branding.getSubtitle()}</h1>
       </header>
+      :
+      <header className="app-header">
+        <h1>{branding.getTitle()} </h1>
+      </header>
+      }
+      </div>
     );
   }
 }

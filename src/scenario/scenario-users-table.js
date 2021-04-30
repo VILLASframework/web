@@ -134,7 +134,7 @@ class ScenarioUsersTable extends Component {
           <InputGroup.Append>
           <span className='icon-button'>
           <IconButton
-            ikey={1}
+            childKey={1}
             tooltip='Add User to Scenario'
             onClick={() => this.addUser()}
             icon='plus'

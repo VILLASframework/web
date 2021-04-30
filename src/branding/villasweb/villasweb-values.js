@@ -15,18 +15,23 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-const config = {
-    publicPathBase: 'public/',
-    instance: 'VILLASweb',
-    subtitle: 'ACS',
-    admin: {
-      name: 'Institute for Automation of Complex Power Systems (ACS), RWTH Aachen University, Germany',
-      mail: 'stvogel@eonerc.rwth-aachen.de'
-    },
-    externalAuth: true,
-    loginURL: '/oauth2/start?rd=/login/complete',
-    provider: 'Jupyter',
-    disableVillasLogin: false,
-};
+const villasweb_values = {
+   title: 'VILLASweb',
+   subtitle: 'ACS',
+   logo: 'villas_web.svg',
+   pages: {
+      home: true,
+      scenarios: true,
+      infrastructure: true,
+      account: true,
+      api: true,
+   },
+   style: {
+      background: '#6EA2B0',
+      highlights: '#527984',
+      maincolor: '#4d4d4d',
+      secondarytext: '#818181',
+   }
+}
 
-export default config
+export default villasweb_values;

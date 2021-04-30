@@ -23,10 +23,11 @@ import { Redirect } from 'react-router-dom';
 
 import LoginForm from './login-form';
 import Header from '../common/header';
-import Footer from '../common/footer';
 import NotificationsDataManager from '../common/data-managers/notifications-data-manager';
 import LoginStore from './login-store'
 import AppDispatcher from '../common/app-dispatcher';
+import branding from '../branding/branding';
+
 
 class Login extends React.Component {
   constructor(props) {
@@ -70,14 +71,19 @@ class Login extends React.Component {
         <NotificationSystem ref="notificationSystem" />
 
         <Header />
+        <div className="login-parent">
+          <div className="login-welcome">
+            {branding.getWelcome()}
+          </div>
 
-        <div className="login-container">
-          <NavbarBrand>Login</NavbarBrand>
+          <div className="login-container">
+            <NavbarBrand>Login</NavbarBrand>
 
-          <LoginForm loginMessage={this.state.loginMessage} config={this.state.config}/>
+            <LoginForm loginMessage={this.state.loginMessage} config={this.state.config} />
+          </div>
         </div>
 
-        <Footer />
+        {branding.getFooter()}
       </div>
     );
   }

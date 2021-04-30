@@ -18,54 +18,66 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
 
-import Dialog from '../common/dialogs/dialog';
+import Dialog from './dialog';
 
-class NewResultDialog extends React.Component {
-
+class NewDialog extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-        ConfigSnapshots: '',
-        Description: '',
-        ResultFileIDs: [],
+      value: ''
     }
   }
 
   onClose(canceled) {
     if (canceled === false) {
-        this.props.onClose(this.state);
+      this.props.onClose(this.state);
     } else {
       this.props.onClose();
     }
   }
 
   handleChange(e) {
+    console.log(e)
+
     this.setState({ [e.target.id]: e.target.value });
   }
 
   resetState() {
-    this.setState({
-        ConfigSnapshots: '',
-        Description: '',
-        ResultFileIDs: [],
-     });
+    this.setState({ value: '' });
+  }
+
+  validateForm(target) {
+    // check all controls
+    var inputGiven = true;
+
+    if (this.state.value === '') {
+      inputGiven = false;
+    }
+
+    this.valid = inputGiven;
+
+    // return state to control
+    if (target === 'value') return inputGiven ? "success" : "error";
+
+    return "success";
   }
 
   render() {
     return (
       <Dialog
+        size="md"
         show={this.props.show}
-        title="New Result"
+        title={this.props.title}
         buttonTitle="Add"
         onClose={(c) => this.onClose(c)}
         onReset={() => this.resetState()}
-        valid={true}
+        valid={this.valid}
       >
         <Form>
-          <Form.Group controlId="Description">
-            <Form.Label>Description</Form.Label>
-            <Form.Control type="text" placeholder="Enter description" value={this.state.Description} onChange={(e) => this.handleChange(e)} />
+          <Form.Group controlId="value" valid={this.validateForm('value')}>
+            <Form.Label>{this.props.inputLabel}</Form.Label>
+            <Form.Control type="text" placeholder={this.props.placeholder} value={this.state.value} onChange={(e) => this.handleChange(e)} />
             <Form.Control.Feedback />
           </Form.Group>
         </Form>
@@ -74,4 +86,4 @@ class NewResultDialog extends React.Component {
   }
 }
 
-export default NewResultDialog;
+export default NewDialog;
