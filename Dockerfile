@@ -28,7 +28,7 @@ RUN npm install
 
 # Install app dependencies
 COPY . /usr/src/app
-RUN REACT_APP_BRAND=slew npm run build
+RUN npm run build
 
 FROM nginx
 
