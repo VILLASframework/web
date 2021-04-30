@@ -27,6 +27,7 @@ ADD package.json /usr/src/app
 RUN npm install
 
 # Install app dependencies
+ARG REACT_APP_BRAND
 COPY . /usr/src/app
 RUN npm run build
 
