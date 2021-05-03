@@ -19,10 +19,7 @@ import React, { Component } from 'react';
 import { OverlayTrigger, Tooltip , Button, Form } from 'react-bootstrap';
 import ColorPicker from './color-picker'
 import Icon from "../../common/icon";
-import { scaleOrdinal } from "d3-scale";
-import { schemeCategory10 } from "d3-scale-chromatic";
-
-// schemeCategory20 no longer available in d3
+import {schemeCategory10} from "d3-scale-chromatic";
 
 class EditWidgetPlotColorsControl extends Component {
 
@@ -30,51 +27,78 @@ class EditWidgetPlotColorsControl extends Component {
     super(props);
 
     this.state = {
-      widget: {},
       showColorPicker: false,
       originalColor: null,
-      selectedIndex: null
+      selectedIndex: null,
+      lineColors: [],
+      signalIDs: []
     };
   }
 
-  static getDerivedStateFromProps(props, state){
-
-    let widget = props.widget;
-    if(widget.customProperties.lineColors === undefined || widget.customProperties.lineColors === null){
-      // for backwards compatibility with old plots
-      widget.customProperties.lineColors = []
-
-      const newLineColor = scaleOrdinal(schemeCategory10);
-      for (let signalID of widget.signalIDs){
-        widget.customProperties.lineColors.push(newLineColor(signalID))
-      }
-    }
-
+  static getDerivedStateFromProps(props, state) {
     return {
-      widget: widget
+      lineColors: props.widget.customProperties.lineColors,
+      signalIDs: props.widget.signalIDs,
     };
   }
 
-//same here
+  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
 
-  closeEditModal = (data) => {
+    let lineColorsChanged = false;
+
+    if (JSON.stringify(this.state.signalIDs) !== JSON.stringify(prevState.signalIDs)){
+      // if there was a change to the signal IDs
+      let tempLineColors = JSON.parse(JSON.stringify(this.state.lineColors));
+      let oldNoSignals = tempLineColors.length
+
+      if (this.state.signalIDs.length > prevState.signalIDs.length){
+        // more signals than before
+        let diff = this.state.signalIDs.length - prevState.signalIDs.length
+        for (let i = 0; i<diff; i++){
+          tempLineColors.push(schemeCategory10[oldNoSignals+i % 10])
+          lineColorsChanged = true;
+        }
+
+      } else if (this.state.signalIDs.length < prevState.signalIDs.length){
+        // less signals than before
+        let diff = prevState.signalIDs.length - this.state.signalIDs.length
+        for (let i = 0; i<diff; i++){
+          tempLineColors.pop()
+          lineColorsChanged = true;
+        }
+      }
+
+      this.setState({lineColors: tempLineColors})
+      if (lineColorsChanged){
+        this.props.handleChange({target: { id: this.props.controlId, value: tempLineColors} })
+      }
+
+    }
+  }
+
+  closeColorPickerEditModal = (data) => {
     this.setState({showColorPicker: false})
+    let tempLineColors = JSON.parse(JSON.stringify(this.state.lineColors));
     if(typeof data === 'undefined'){
-
-      let temp = this.state.widget;
-      temp.customProperties.lineColors[this.state.selectedIndex] = this.state.originalColor;
-      this.setState({ widget: temp });
+      // Color picker canceled
+      tempLineColors[this.state.selectedIndex] = this.state.originalColor;
+      this.setState({lineColors: tempLineColors})
+    } else {
+      // color picker with result data {hexcolor, opacity}
+      tempLineColors[this.state.selectedIndex] = data.hexcolor
+      this.setState({lineColors: tempLineColors})
+      this.props.handleChange({target: { id: this.props.controlId, value: tempLineColors} })
     }
   }
 
   editLineColor = (index) => {
     if(this.state.selectedIndex !== index){
-        let color = this.state.widget.customProperties.lineColors[index];
-        this.setState({selectedIndex: index, showColorPicker: true, originalColor: color});
-        }
-        else{
-          this.setState({selectedIndex: null});
-        }
+      let color = typeof this.state.lineColors[index] === "undefined" ? schemeCategory10[index % 10] : this.state.lineColors[index];
+      this.setState({selectedIndex: index, showColorPicker: true, originalColor: color});
+    }
+    else{
+      this.setState({selectedIndex: null});
+    }
   }
 
   render() {
@@ -84,15 +108,15 @@ class EditWidgetPlotColorsControl extends Component {
         <Form.Label>Line Colors</Form.Label>
           <div>
               {
-                this.state.widget.signalIDs.map((signalID, idx) => {
-                  let color = this.state.widget.customProperties.lineColors[signalID];
-                  let width = 260 / this.state.widget.signalIDs.length;
+                this.props.widget.signalIDs.map((signalID, idx) => {
+
+                  let color = typeof this.state.lineColors[idx] === "undefined" ? schemeCategory10[idx % 10] : this.state.lineColors[idx];
+                  let width = 260 / this.props.widget.signalIDs.length;
                   let style = {
                       backgroundColor: color,
                       width: width,
                       height: '40px'
                   }
-
                   let signal = this.props.signals.find(signal => signal.id === signalID);
 
                   return <OverlayTrigger
@@ -103,16 +127,23 @@ class EditWidgetPlotColorsControl extends Component {
                     <Button
                       style={style}
                       key={idx}
-                      onClick={i => this.editLineColor(signalID)}
+                      onClick={i => this.editLineColor(idx)}
                     >
                       <Icon icon="pen" />
                     </Button>
+
                   </OverlayTrigger>;
                 })
               }
             </div>
 
-        <ColorPicker show={this.state.showColorPicker} onClose={(data) => this.closeEditModal(data)} widget={this.state.widget} lineIndex={this.state.selectedIndex} controlId={'lineColor'} disableOpacity={true}/>
+        <ColorPicker
+          show={this.state.showColorPicker}
+          onClose={(data) => this.closeColorPickerEditModal(data)}
+          hexcolor={this.state.lineColors[this.state.selectedIndex]}
+          opacity={1}
+          disableOpacity={true}
+        />
       </Form.Group>
 
     )

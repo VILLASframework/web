@@ -95,7 +95,6 @@ class EditSignalMappingDialog extends React.Component {
     let signals = this.state.signals;
     let modifiedSignals = this.state.modifiedSignalIDs;
 
-    console.log("HandleMappingChange", row, column)
       if (column === 2) { // Name change
         signals[row].name = event.target.value;
         if (modifiedSignals.find(id => id === signals[row].id) === undefined) {
@@ -112,7 +111,6 @@ class EditSignalMappingDialog extends React.Component {
           modifiedSignals.push(signals[row].id);
         }
       } else if (column === 1) { //index change
-        console.log("Index change")
         signals[row].index =parseInt(event.target.value, 10);
         if (modifiedSignals.find(id => id === signals[row].id) === undefined) {
           modifiedSignals.push(signals[row].id);

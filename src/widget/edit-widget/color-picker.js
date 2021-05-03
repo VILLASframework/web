@@ -19,27 +19,29 @@ import React from 'react';
 import { Form } from 'react-bootstrap';
 import { SketchPicker } from 'react-color';
 import Dialog from '../../common/dialogs/dialog';
+import {schemeCategory10} from "d3-scale-chromatic";
 
 
 class ColorPicker extends React.Component {
-  valid = true;
 
   constructor(props) {
     super(props);
 
     this.state = {
-      widget: {}
+      rgbColor: {},
     };
   }
 
-  static getDerivedStateFromProps(props, state) {
-    return {
-      widget: props.widget
-    };
+  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
+
+    if(this.props.show !== prevProps.show){
+      // update color if show status of color picker has changed
+      this.setState({rgbColor: ColorPicker.hexToRgb(this.props.hexcolor,this.props.opacity)})
+    }
   }
 
-  hexToRgb = (hex,opacity) => {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  static hexToRgb(hex,opacity) {
+    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
       r: parseInt(result[1], 16),
       g: parseInt(result[2], 16),
@@ -49,27 +51,7 @@ class ColorPicker extends React.Component {
   }
 
   handleChangeComplete = (color) => {
-    let temp = this.state.widget;
-
-    if (this.props.controlId === 'strokeStyle'){
-      temp.customProperties.zones[this.props.zoneIndex]['strokeStyle'] = color.hex;
-    }
-    else if (this.props.controlId === 'lineColor'){
-      temp.customProperties.lineColors[this.props.lineIndex] = color.hex;
-    }
-    else {
-      let parts = this.props.controlId.split('.');
-      let isCustomProperty = true;
-
-      if (parts.length === 1){
-        isCustomProperty = false;
-      }
-
-      isCustomProperty ? temp[parts[0]][parts[1]] = color.hex : temp[this.props.controlId] = color.hex;
-      isCustomProperty ? temp[parts[0]][parts[1] + "_opacity"] = color.rgb.a : temp[this.props.controlId +"_opacity"] = color.rgb.a;
-    }
-
-    this.setState({ widget: temp });
+    this.setState({rgbColor: color.rgb})
   };
 
   onClose = canceled => {
@@ -81,52 +63,40 @@ class ColorPicker extends React.Component {
       return;
     }
 
-    if (this.valid && this.props.onClose != null) {
-      this.props.onClose(this.state.widget);
+    if (this.props.onClose != null) {
+
+      const rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => {
+        const hex = x.toString(16)
+        return hex.length === 1 ? '0' + hex : hex
+      }).join('')
+
+      let data = {
+        hexcolor: rgbToHex(this.state.rgbColor.r, this.state.rgbColor.g,this.state.rgbColor.b),
+        opacity: this.state.rgbColor.a,
+      }
+
+      this.props.onClose(data);
     }
   };
 
   render() {
-    let hexColor;
-    let opacity = 1;
-    let parts = this.props.controlId.split('.');
-    let isCustomProperty = true;
-    if (parts.length === 1) {
-      isCustomProperty = false;
-    }
 
-    if (this.props.controlId === 'strokeStyle') {
-      if (typeof this.state.widget.customProperties.zones[this.props.zoneIndex] !== 'undefined') {
-        hexColor = this.state.widget.customProperties.zones[this.props.zoneIndex]['strokeStyle'];
-      }
-    }
-    else if (this.props.controlId === 'lineColor') {
-      if (typeof this.state.widget.customProperties.lineColors[this.props.lineIndex] !== 'undefined') {
-        hexColor = this.state.widget.customProperties.lineColors[this.props.lineIndex];
-      }
-    }
-    else{
-      hexColor = isCustomProperty ? this.state.widget[parts[0]][parts[1]]: this.state.widget[this.props.controlId];
-      opacity = isCustomProperty ? this.state.widget[parts[0]][parts[1] + "_opacity"]: this.state.widget[this.props.controlId + "_opacity"];
-    }
-
-    let rgbColor = this.hexToRgb(hexColor, opacity);
-      return <Dialog
-        show={this.props.show}
-        title='Color Picker'
-        buttonTitle='Save'
-        onClose={(c) => this.onClose(c)}
-        valid={true}
-        >
-          <Form>
-              <SketchPicker
-                  color={rgbColor}
-                  disableAlpha={this.props.disableOpacity}
-                  onChangeComplete={ this.handleChangeComplete }
-                  width={300}
-              />
-          </Form>
-      </Dialog>;
+    return <Dialog
+      show={this.props.show}
+      title='Color Picker'
+      buttonTitle='Save'
+      onClose={(c) => this.onClose(c)}
+      valid={true}
+      >
+        <Form>
+          <SketchPicker
+              color={this.state.rgbColor}
+              disableAlpha={this.props.disableOpacity}
+              onChangeComplete={ this.handleChangeComplete }
+              width={300}
+          />
+        </Form>
+    </Dialog>;
   }
 }
 
