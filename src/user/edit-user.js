@@ -77,6 +77,9 @@ class EditUserDialog extends React.Component {
       username: this.props.user.username,
       mail: this.props.user.mail,
       role: this.props.user.role,
+      password: "",
+      confirmPassword: "",
+      oldPassword: "",
     });
   }
 

@@ -19,17 +19,16 @@ import React from 'react';
 import { Form, Col } from 'react-bootstrap';
 
 import Dialog from '../common/dialogs/dialog';
+import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
+import NotificationsFactory from "../common/data-managers/notifications-factory";
 
 
 class EditOwnUserDialog extends React.Component {
-  valid: true;
-
   constructor(props) {
     super(props);
 
     this.state = {
-      username: this.props.user.username,
-      id: this.props.user.id,
+      username: "",
       mail: this.props.user.mail,
       password: '',
       oldPassword: '',
@@ -39,9 +38,29 @@ class EditOwnUserDialog extends React.Component {
 
   onClose(canceled) {
     if (canceled === false) {
-      if (this.valid) {
-        this.props.onClose(this.state);
+
+      let user = {};
+      user.id = this.props.user.id;
+      user.password = this.state.password;
+      user.oldPassword = this.state.oldPassword;
+      user.confirmPassword = this.state.confirmPassword
+
+      if (this.state.username != null && this.state.username !== this.props.user.username){
+        user.username = this.state.username;
       }
+
+      if (this.state.mail != null && this.state.mail !== this.props.user.mail){
+        user.mail = this.state.mail;
+      }
+
+      if (this.state.password !== '' && this.state.oldPassword !== '' && this.state.password === this.state.confirmPassword ) {
+        user.password = this.state.password;
+        user.oldPassword = this.state.oldPassword;
+      } else if (this.state.password !== '' && this.state.password !== this.state.confirmPassword) {
+        NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR('New password not correctly confirmed'));
+      }
+
+      this.props.onClose(user);
     } else {
       this.props.onClose();
     }
@@ -49,42 +68,11 @@ class EditOwnUserDialog extends React.Component {
 
   handleChange(e) {
     this.setState({ [e.target.id]: e.target.value });
-
-    // check all controls
-    let username = true;
-    let mail = true;
-    let pw = true;
-    let oldPassword = true;
-    let confirmPassword = true;
-
-    if (this.state.username === '') {
-      username = false;
-    }
-
-    if (this.state.mail === '') {
-      mail = false;
-    }
-
-    if (this.state.password === '') {
-      pw = false;
-    }
-
-    if (this.state.oldPassword === '') {
-      oldPassword = false;
-    }
-
-    if (this.state.confirmPassword === '') {
-      confirmPassword = false;
-    }
-
-    // form is valid if the following condition is met
-    this.valid = username || mail || (oldPassword && pw && confirmPassword);
   }
 
   resetState() {
     this.setState({
       username: this.props.user.username,
-      id: this.props.user.id,
       mail: this.props.user.mail,
       oldPassword: '',
       confirmPassword: '',
@@ -94,28 +82,28 @@ class EditOwnUserDialog extends React.Component {
 
   render() {
     return (
-      <Dialog show={this.props.show} title="Edit user" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={this.valid}>
+      <Dialog show={this.props.show} title="Edit user" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={true}>
         <Form>
           <Form.Group as={Col} controlId="username">
             <Form.Label>Username</Form.Label>
-            <Form.Control type="text" value={this.state.username} onChange={(e) => this.handleChange(e)} autocomplete="username" />
+            <Form.Control type="text" placeholder={this.props.user.username} value={this.state.username} onChange={(e) => this.handleChange(e)} autoComplete="username" />
             <Form.Control.Feedback />
           </Form.Group>
           <Form.Group as={Col} controlId="mail">
             <Form.Label>E-mail</Form.Label>
-            <Form.Control type="text" value={this.state.mail} onChange={(e) => this.handleChange(e)} autocomplete="email" />
+            <Form.Control type="text" placeholder={this.props.user.mail} value={this.state.mail} onChange={(e) => this.handleChange(e)} autoComplete="email" />
           </Form.Group>
           <Form.Group  as={Col} controlId="oldPassword">
             <Form.Label>Old Password</Form.Label>
-            <Form.Control type="password" placeholder="Enter current password" value={this.state.oldPassword} onChange={(e) => this.handleChange(e)} autocomplete="current-password" />
+            <Form.Control type="password" placeholder="Enter current password" value={this.state.oldPassword} onChange={(e) => this.handleChange(e)} autoComplete="current-password" />
           </Form.Group>
           <Form.Group as={Col} controlId="password">
             <Form.Label>New Password</Form.Label>
-            <Form.Control type="password" placeholder="Enter new password" value={this.state.password} onChange={(e) => this.handleChange(e)} autocomplete="new-password" />
+            <Form.Control type="password" placeholder="Enter new password" value={this.state.password} onChange={(e) => this.handleChange(e)} autoComplete="new-password" />
           </Form.Group>
           <Form.Group as={Col} controlId="confirmPassword">
             <Form.Label>Confirm New Password</Form.Label>
-            <Form.Control type="password" placeholder="Repeat new password" value={this.state.confirmPassword} onChange={(e) => this.handleChange(e)} autocomplete="new-password" />
+            <Form.Control type="password" placeholder="Repeat new password" value={this.state.confirmPassword} onChange={(e) => this.handleChange(e)} autoComplete="new-password" />
           </Form.Group>
         </Form>
       </Dialog>

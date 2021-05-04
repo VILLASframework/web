@@ -20,6 +20,7 @@ import { Container } from 'flux/utils';
 
 import AppDispatcher from '../common/app-dispatcher';
 import UsersStore from './users-store';
+import LoginStore from './login-store';
 import ScenarioStore from '../scenario/scenario-store';
 
 import Icon from '../common/icon';
@@ -37,7 +38,7 @@ import NotificationsFactory from "../common/data-managers/notifications-factory"
 
 class Users extends Component {
   static getStores() {
-    return [UsersStore, ScenarioStore];
+    return [UsersStore, ScenarioStore, LoginStore];
   }
 
   static calculateState(prevState, props) {
@@ -110,7 +111,8 @@ class Users extends Component {
         AppDispatcher.dispatch({
           type: 'users/start-edit',
           data: data,
-          token: this.state.token
+          token: this.state.token,
+          currentUser: this.state.currentUser,
         });
       } else {
         NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR("New password not correctly confirmed"))
