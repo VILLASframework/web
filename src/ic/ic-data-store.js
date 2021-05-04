@@ -110,6 +110,7 @@ class ICDataStore extends ReduceStore {
         state[action.ic].input.timestamp = Date.now();
         state[action.ic].input.sequence++;
         state[action.ic].input.values[action.signal-1] = action.data;
+        state[action.ic].input.length = state[action.ic].input.values.length
 
         // copy of state needed because changes are not yet propagated
         let input = JSON.parse(JSON.stringify(state[action.ic].input));

@@ -17,12 +17,10 @@
 
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
-
 import AppDispatcher from '../common/app-dispatcher';
 import UsersStore from './users-store';
 import LoginStore from './login-store';
 import ScenarioStore from '../scenario/scenario-store';
-
 import Icon from '../common/icon';
 import IconButton from '../common/icon-button';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
@@ -31,10 +29,7 @@ import TableColumn from '../common/table-column';
 import NewUserDialog from './new-user';
 import EditUserDialog from './edit-user';
 import UsersToScenarioDialog from './users-to-scenario';
-
 import DeleteDialog from '../common/dialogs/delete-dialog';
-import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
-import NotificationsFactory from "../common/data-managers/notifications-factory";
 
 class Users extends Component {
   static getStores() {
