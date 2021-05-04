@@ -202,18 +202,24 @@ class EditWidgetColorZonesControl extends React.Component {
             width: width,
             height: '40px'
           }
-          return (<Button
-            style={style}
-            key={idx}
-            onClick={i => this.editColorZone(idx)}
-            disabled={!this.props.widget.customProperties.colorZones}>
-              <Icon icon="pen" />
-          </Button>
+          return (
+            <span>
+              <OverlayTrigger key={idx} placement={'right'} overlay={<Tooltip id={`tooltip-${"color-edit"}`}>Edit zone</Tooltip>} >
+              <Button
+              style={style}
+              key={idx}
+              onClick={i => this.editColorZone(idx)}
+              disabled={!this.props.widget.customProperties.colorZones}>
+                <Icon icon="pen" />
+              </Button>
+              </OverlayTrigger>
+            </span>
           )
         })
       }
     </div>
       <Collapse isOpened={collapse}>
+        <Form.Label>Edit selected color zone:</Form.Label>
         <OverlayTrigger key={0} placement={'right'} overlay={<Tooltip id={`tooltip-${"color"}`}>Change color</Tooltip>} >
           <Button key={0} style={pickerStyle} onClick={this.openColorPicker.bind(this)}  >
             <Icon icon="paint-brush"/>
@@ -244,11 +250,13 @@ class EditWidgetColorZonesControl extends React.Component {
           </tbody>
         </Table>
         <span className='icon-button'>
-          <Button
-            variant='light'
-            onClick={this.removeZones} >
-            <Icon style={iconStyle} classname='icon-color' icon="trash-alt" />
-          </Button>
+          <OverlayTrigger key={1} placement={'right'} overlay={<Tooltip id={`tooltip-${"color-delete"}`}>Remove zone</Tooltip>} >
+            <Button
+              variant='light'
+              onClick={this.removeZones} >
+              <Icon style={iconStyle} classname='icon-color' icon="trash-alt" />
+            </Button>
+          </OverlayTrigger>
         </span>
       </Collapse>
       <ColorPicker
