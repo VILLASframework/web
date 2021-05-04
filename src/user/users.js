@@ -107,16 +107,12 @@ class Users extends Component {
     this.setState({ editModal: false });
 
     if (data) {
-      if (data.password === data.confirmPassword) {
-        AppDispatcher.dispatch({
-          type: 'users/start-edit',
-          data: data,
-          token: this.state.token,
-          currentUser: this.state.currentUser,
-        });
-      } else {
-        NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR("New password not correctly confirmed"))
-      }
+      AppDispatcher.dispatch({
+        type: 'users/start-edit',
+        data: data,
+        token: this.state.token,
+        currentUser: this.state.currentUser,
+      });
     }
   }
 

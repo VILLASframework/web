@@ -19,6 +19,8 @@ import React from 'react';
 import { Form, Col } from 'react-bootstrap';
 
 import Dialog from '../common/dialogs/dialog';
+import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
+import NotificationsFactory from "../common/data-managers/notifications-factory";
 
 class EditUserDialog extends React.Component {
   constructor(props) {
@@ -41,10 +43,6 @@ class EditUserDialog extends React.Component {
       let user = {}
       user.id = this.props.user.id;
 
-      user.password = this.state.password;
-      user.confirmPassword = this.state.confirmPassword
-      user.oldpassword = this.state.oldPassword
-
       if (this.state.username != null && this.state.username !== this.props.user.username){
         user.username = this.state.username
       }
@@ -59,6 +57,13 @@ class EditUserDialog extends React.Component {
 
       if (this.state.active != null && this.state.active !== this.props.user.active){
         user.active = this.state.active
+      }
+
+      if (this.state.password !== '' && this.state.oldPassword !== '' && this.state.password === this.state.confirmPassword) {
+        user.password = this.state.password;
+        user.oldpassword = this.state.oldPassword
+      } else if (this.state.password !== '' && this.state.password !== this.state.confirmPassword){
+        NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR("New password not correctly confirmed"))
       }
 
       this.props.onClose(user);
