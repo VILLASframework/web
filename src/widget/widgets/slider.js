@@ -79,14 +79,14 @@ class WidgetSlider extends Component {
   valueIsChanging(newValue) {
     this.props.widget.customProperties.value = newValue;
     if (this.props.widget.customProperties.continous_update)
-      this.valueChanged(newValue);
+      this.valueChanged(newValue, false);
 
     this.setState({ value: newValue });
   }
 
-  valueChanged(newValue) {
+  valueChanged(newValue, isFinalChange) {
     if (this.props.onInputChanged) {
-      this.props.onInputChanged(newValue, 'value', newValue);
+      this.props.onInputChanged(newValue, 'value', newValue, isFinalChange);
     }
   }
 
@@ -95,7 +95,7 @@ class WidgetSlider extends Component {
     let isVertical = this.props.widget.customProperties.orientation === WidgetSlider.OrientationTypes.VERTICAL.value;
     let fields = {
       name: this.props.widget.name,
-      control: <Slider min={ this.props.widget.customProperties.rangeMin } max={ this.props.widget.customProperties.rangeMax } step={ this.props.widget.customProperties.step } value={ this.state.value } disabled={ this.props.editing } vertical={ isVertical } onChange={ (v) => this.valueIsChanging(v) } onAfterChange={ (v) => this.valueChanged(v) }/>,
+      control: <Slider min={ this.props.widget.customProperties.rangeMin } max={ this.props.widget.customProperties.rangeMax } step={ this.props.widget.customProperties.step } value={ this.state.value } disabled={ this.props.editing } vertical={ isVertical } onChange={ (v) => this.valueIsChanging(v) } onAfterChange={ (v) => this.valueChanged(v, true) }/>,
       value: <span>{ format('.2f')(Number.parseFloat(this.state.value)) }</span>,
       unit: <span className="signal-unit">{ this.state.unit }</span>
     }
