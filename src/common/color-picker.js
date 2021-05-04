@@ -19,6 +19,7 @@ import React from 'react';
 import { Form } from 'react-bootstrap';
 import { SketchPicker } from 'react-color';
 import Dialog from './dialogs/dialog';
+import PropTypes from 'prop-types'
 
 class ColorPicker extends React.Component {
 
@@ -96,6 +97,14 @@ class ColorPicker extends React.Component {
         </Form>
     </Dialog>;
   }
+}
+
+ColorPicker.propTypes = {
+  onClose: PropTypes.func,
+  disableOpacity: PropTypes.bool,
+  show: PropTypes.bool,
+  hexcolor: PropTypes.string,
+  opacity: PropTypes.number
 }
 
 export default ColorPicker;
