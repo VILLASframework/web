@@ -17,7 +17,7 @@
 
 import React, { Component } from 'react';
 import { Form, OverlayTrigger, Tooltip, Button, Col } from 'react-bootstrap';
-import ColorPicker from './color-picker'
+import ColorPicker from '../../common/color-picker'
 import Icon from "../../common/icon";
 
 // schemeCategory20 no longer available in d3

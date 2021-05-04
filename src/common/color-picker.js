@@ -18,9 +18,7 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
 import { SketchPicker } from 'react-color';
-import Dialog from '../../common/dialogs/dialog';
-import {schemeCategory10} from "d3-scale-chromatic";
-
+import Dialog from './dialogs/dialog';
 
 class ColorPicker extends React.Component {
 
