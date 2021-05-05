@@ -23,7 +23,7 @@ import { Container, Col, Row, Table, Button } from 'react-bootstrap';
 import moment from 'moment';
 import ReactJson from 'react-json-view';
 import ConfirmCommand from './confirm-command';
-import Icon from "../common/icon";
+import IconButton from '../common/icon-button';
 
 
 
@@ -165,6 +165,15 @@ class InfrastructureComponent extends React.Component {
             graphURL = this.state.ic.apiurl + "/graph.svg"
         }
 
+        const buttonStyle = {
+            marginLeft: '5px',
+          }
+      
+          const iconStyle = {
+            height: '25px',
+            width: '25px'
+          }
+
         return <div className='section'>
             <h1>{this.state.ic.name}</h1>
             <Container>
@@ -233,8 +242,14 @@ class InfrastructureComponent extends React.Component {
                         {this.state.ic.type === "villas-node" ?
                             <>
                                 <div className='section-buttons-group-right'>
-                                    <Button style={{ margin: '5px' }} size='sm' onClick={() => this.downloadGraph(graphURL)}><Icon
-                                        icon="download" /></Button>
+                                    <IconButton
+                                        childKey={0}
+                                        tooltip='Download Graph'
+                                        onClick={() => this.downloadGraph(graphURL)}
+                                        icon='download'
+                                        buttonStyle={buttonStyle}
+                                        iconStyle={iconStyle}
+                                    />
                                 </div>
                                 <hr></hr>
                                 <b>Graph:</b>
@@ -265,9 +280,15 @@ class InfrastructureComponent extends React.Component {
                         {this.state.ic.type === "villas-relay" ?
                             <>
                             <div className='section-buttons-group-right'>
-                                    <Button style={{ margin: '5px' }} size='sm' onClick={() => this.refresh()}><Icon
-                                        icon="sync-alt" /></Button>
-                            </div>
+                                <IconButton
+                                        childKey={1}
+                                        tooltip='Refresh'
+                                        onClick={() => this.refresh()}
+                                        icon='sync-alt'
+                                        buttonStyle={buttonStyle}
+                                        iconStyle={iconStyle}
+                                    />
+                                </div>
                                 <b>Raw Status</b>
                                 {this.state.ic.statusupdateraw !== null && this.isJSON(this.state.ic.statusupdateraw) ?
                                     <ReactJson
@@ -283,6 +304,16 @@ class InfrastructureComponent extends React.Component {
                             <div />}
                     </Col>
                 </Row>
+                <div className='section-buttons-group-right'>
+                    <IconButton
+                                        childKey={2}
+                                        tooltip='Refresh'
+                                        onClick={() => this.refresh()}
+                                        icon='sync-alt'
+                                        buttonStyle={buttonStyle}
+                                        iconStyle={iconStyle}
+                                    />
+                    </div>
                 <Row>
                 {this.state.ic.type === "villas-node" ?
                     <>
@@ -310,11 +341,7 @@ class InfrastructureComponent extends React.Component {
                                 collapsed={1}
                             /> : <div>No valid config JSON raw data available.</div>}
                     </Col>
-                    <Col>
-                    <div className='section-buttons-group-right'>
-                                    <Button style={{ margin: '5px' }} onClick={() => this.refresh()}><Icon
-                                        icon="sync-alt" /></Button>
-                    </div>
+                    <Col>                    
                         <b>Raw Statistics</b>
                         {this.state.ic.statusupdateraw && this.isJSON(this.state.ic.statusupdateraw["statistics"]) ?
                             <ReactJson
