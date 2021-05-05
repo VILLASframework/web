@@ -62,9 +62,23 @@ class InfrastructureComponent extends React.Component {
             token: this.state.sessionToken,
         });
 
-      // Start timer for periodic refresh
-      this.timer = window.setInterval(() => this.refresh(), 10000);
+        // get status of VILLASnode and VILLASrelay ICs
+        if(this.state.ic != undefined){
+        if ((this.state.ic.type === "villas-node" || this.state.ic.type === "villas-relay")
+          && this.state.ic.apiurl !== '' && this.state.ic.apiurl !== undefined && this.state.ic.apiurl !== null && !this.state.ic.managedexternally) {
+          AppDispatcher.dispatch({
+            type: 'ics/get-status',
+            url: this.state.ic.apiurl,
+            token: this.state.sessionToken,
+            ic: this.state.ic
+          });
+        }
     }
+    else{
+        this.timer = window.setInterval(() => this.refresh(), 10000);
+    }
+    }
+
 
     refresh() {
 
@@ -84,6 +98,10 @@ class InfrastructureComponent extends React.Component {
             token: this.state.sessionToken,
             ic: this.state.ic
           });
+        }
+
+        if(this.timer){
+            window.clearInterval(this.timer);
         }
 
     }
@@ -212,40 +230,8 @@ class InfrastructureComponent extends React.Component {
                         </Table>
                     </Col>
                     <Col>
-                    {this.state.ic.type === "villas-node" ?
+                        {this.state.ic.type === "villas-node" ?
                             <>
-                    <b>Raw Status</b>
-                        {this.state.ic.statusupdateraw !== null && this.isJSON(this.state.ic.statusupdateraw) ?
-                            <ReactJson
-                                src={this.state.ic.statusupdateraw}
-                                name={false}
-                                displayDataTypes={false}
-                                displayObjectSize={false}
-                                enableClipboard={false}
-                                collapsed={0}
-                            /> : <div>No valid JSON raw data available.</div>}
-
-                        <b>Raw Config</b>
-                        {this.state.ic.statusupdateraw && this.isJSON(this.state.ic.statusupdateraw["config"]) ?
-                            <ReactJson
-                                src={this.state.ic.statusupdateraw["config"]}
-                                name={false}
-                                displayDataTypes={false}
-                                displayObjectSize={false}
-                                enableClipboard={false}
-                                collapsed={0}
-                            /> : <div>No valid config JSON raw data available.</div>}
-                        <b>Raw Statistics</b>
-                        {this.state.ic.statusupdateraw && this.isJSON(this.state.ic.statusupdateraw["statistics"]) ?
-                            <ReactJson
-                                src={this.state.ic.statusupdateraw["statistics"]}
-                                name={false}
-                                displayDataTypes={false}
-                                displayObjectSize={false}
-                                enableClipboard={false}
-                                collapsed={0}
-                            /> : <div>No valid statistics JSON raw data available.</div>}
-
                                 <div className='section-buttons-group-right'>
                                     <Button style={{ margin: '5px' }} size='sm' onClick={() => this.downloadGraph(graphURL)}><Icon
                                         icon="download" /></Button>
@@ -278,6 +264,10 @@ class InfrastructureComponent extends React.Component {
 
                         {this.state.ic.type === "villas-relay" ?
                             <>
+                            <div className='section-buttons-group-right'>
+                                    <Button style={{ margin: '5px' }} size='sm' onClick={() => this.refresh()}><Icon
+                                        icon="sync-alt" /></Button>
+                            </div>
                                 <b>Raw Status</b>
                                 {this.state.ic.statusupdateraw !== null && this.isJSON(this.state.ic.statusupdateraw) ?
                                     <ReactJson
@@ -286,14 +276,59 @@ class InfrastructureComponent extends React.Component {
                                         displayDataTypes={false}
                                         displayObjectSize={false}
                                         enableClipboard={false}
-                                        collapsed={0}
+                                        collapsed={1}
                                     /> : <div>No valid JSON raw data available.</div>}
                             </>
                             :
                             <div />}
-
                     </Col>
                 </Row>
+                <Row>
+                {this.state.ic.type === "villas-node" ?
+                    <>
+                    <Col>
+                        <b>Raw Status</b>
+                        {this.state.ic.statusupdateraw !== null && this.isJSON(this.state.ic.statusupdateraw) ?
+                            <ReactJson
+                                src={this.state.ic.statusupdateraw}
+                                name={false}
+                                displayDataTypes={false}
+                                displayObjectSize={false}
+                                enableClipboard={false}
+                                collapsed={1}
+                            /> : <div>No valid JSON raw data available.</div>}
+                    </Col>
+                    <Col>
+                        <b>Raw Config</b>
+                        {this.state.ic.statusupdateraw && this.isJSON(this.state.ic.statusupdateraw["config"]) ?
+                            <ReactJson
+                                src={this.state.ic.statusupdateraw["config"]}
+                                name={false}
+                                displayDataTypes={false}
+                                displayObjectSize={false}
+                                enableClipboard={false}
+                                collapsed={1}
+                            /> : <div>No valid config JSON raw data available.</div>}
+                    </Col>
+                    <Col>
+                    <div className='section-buttons-group-right'>
+                                    <Button style={{ margin: '5px' }} onClick={() => this.refresh()}><Icon
+                                        icon="sync-alt" /></Button>
+                    </div>
+                        <b>Raw Statistics</b>
+                        {this.state.ic.statusupdateraw && this.isJSON(this.state.ic.statusupdateraw["statistics"]) ?
+                            <ReactJson
+                                src={this.state.ic.statusupdateraw["statistics"]}
+                                name={false}
+                                displayDataTypes={false}
+                                displayObjectSize={false}
+                                enableClipboard={false}
+                                collapsed={1}
+                            /> : <div>No valid statistics JSON raw data available.</div>}
+                    </Col>
+                            </>
+                            : <div />}
+                            </Row>
             </Container>
         </div>;
     }
