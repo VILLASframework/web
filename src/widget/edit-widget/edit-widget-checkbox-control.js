@@ -21,21 +21,19 @@ import { Form } from 'react-bootstrap';
 class EditWidgetCheckboxControl extends React.Component {
   constructor(props) {
     super(props);
+  }
 
-    let parts = this.props.controlId.split('.');
-    let isCustomProperty = true;
-    if (parts.length ===1){
-      isCustomProperty = false;
-    }
-
+  static getDerivedStateFromProps(props, state) {
+    let parts = props.controlId.split('.');
     let isChecked;
-    if (isCustomProperty){
-      isChecked = this.props.widget[parts[0]][parts[1]]
-    } else{
-      isChecked = this.props.widget[this.props.controlId]
+
+    if (parts.length ===1){
+      isChecked = props.widget[props.controlId]
+    } else {
+      isChecked = props.widget[parts[0]][parts[1]]
     }
 
-    this.state = {
+    return {
       isChecked
     };
   }
