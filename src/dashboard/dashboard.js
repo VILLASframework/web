@@ -186,17 +186,17 @@ class Dashboard extends Component {
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
     // open web sockets if ICs are already known and sockets are not opened yet
     if (this.state.ics !== undefined && !Dashboard.webSocketsOpened) {
-    // only open sockets of ICs with configured input or output signals
-    let relevantICs = this.state.ics.filter(ic => {
-      let result = false;
-      this.state.configs.forEach(config => {
-        if(ic.id === config.icID && (config.inputLength !== 0 || config.outputLength !== 0)){
-          result = true;
-        }
+      // only open sockets of ICs with configured input or output signals
+      let relevantICs = this.state.ics.filter(ic => {
+        let result = false;
+        this.state.configs.forEach(config => {
+          if(ic.id === config.icID && (config.inputLength !== 0 || config.outputLength !== 0)){
+            result = true;
+          }
+        })
+        return result;
       })
-      return result;
-    })
-    
+
       if (relevantICs.length > 0) {
         console.log("Starting to open IC websockets:", relevantICs);
         AppDispatcher.dispatch({
