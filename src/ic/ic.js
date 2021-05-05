@@ -211,8 +211,11 @@ class InfrastructureComponent extends React.Component {
                             </tbody>
                         </Table>
                     </Col>
-                    <Col><b>Raw Status</b>
-                        {this.isJSON(this.state.ic.statusupdateraw) ?
+                    <Col>
+                    {this.state.ic.type === "villas-node" ?
+                            <>
+                    <b>Raw Status</b>
+                        {this.state.ic.statusupdateraw !== null && this.isJSON(this.state.ic.statusupdateraw) ?
                             <ReactJson
                                 src={this.state.ic.statusupdateraw}
                                 name={false}
@@ -243,8 +246,6 @@ class InfrastructureComponent extends React.Component {
                                 collapsed={0}
                             /> : <div>No valid statistics JSON raw data available.</div>}
 
-                        {this.state.ic.type === "villas-node" ?
-                            <>
                                 <div className='section-buttons-group-right'>
                                     <Button style={{ margin: '5px' }} size='sm' onClick={() => this.downloadGraph(graphURL)}><Icon
                                         icon="download" /></Button>
@@ -274,6 +275,22 @@ class InfrastructureComponent extends React.Component {
                                     onClose={c => this.confirmCommand(c)} />
                             </>
                             : <div />}
+
+                        {this.state.ic.type === "villas-relay" ?
+                            <>
+                                <b>Raw Status</b>
+                                {this.state.ic.statusupdateraw !== null && this.isJSON(this.state.ic.statusupdateraw) ?
+                                    <ReactJson
+                                        src={this.state.ic.statusupdateraw}
+                                        name={false}
+                                        displayDataTypes={false}
+                                        displayObjectSize={false}
+                                        enableClipboard={false}
+                                        collapsed={0}
+                                    /> : <div>No valid JSON raw data available.</div>}
+                            </>
+                            :
+                            <div />}
 
                     </Col>
                 </Row>
