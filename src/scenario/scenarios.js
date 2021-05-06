@@ -18,21 +18,19 @@
 import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import FileSaver from 'file-saver';
-
 import AppDispatcher from '../common/app-dispatcher';
 import ScenarioStore from './scenario-store';
 import DashboardStore from '../dashboard/dashboard-store';
 import WidgetStore from "../widget/widget-store";
 import ConfigStore from '../componentconfig/config-store';
 import SignalStore from '../signal/signal-store'
-
-import Icon from '../common/icon';
+import ResultStore from '../result/result-store'
+import FileStore from '../file/file-store'
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
 import NewScenarioDialog from './new-scenario';
 import EditScenarioDialog from './edit-scenario';
 import ImportScenarioDialog from './import-scenario';
-
 import DeleteDialog from '../common/dialogs/delete-dialog';
 import IconButton from '../common/icon-button';
 
@@ -40,7 +38,7 @@ import IconButton from '../common/icon-button';
 class Scenarios extends Component {
 
   static getStores() {
-    return [ScenarioStore, DashboardStore, WidgetStore, ConfigStore, SignalStore];
+    return [ScenarioStore, DashboardStore, WidgetStore, ConfigStore, SignalStore, ResultStore, FileStore];
   }
 
   static calculateState(prevState, props) {

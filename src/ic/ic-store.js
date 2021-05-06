@@ -114,7 +114,7 @@ class InfrastructureComponentStore extends ArrayStore {
 
       case 'ics/status-received':
         let tempIC = action.ic;
-        if(!tempIC.managedexternally){
+        if (!tempIC.managedexternally) {
           tempIC.state = action.data.state;
           tempIC.uptime = action.data.time_now - action.data.time_started;
           tempIC.statusupdateraw = action.data
@@ -123,6 +123,8 @@ class InfrastructureComponentStore extends ArrayStore {
             data: tempIC,
             token: action.token,
           });
+
+          ICsDataManager.getConfig(action.url, action.token, tempIC);
         }
         return super.reduce(state, action);
 
@@ -130,9 +132,45 @@ class InfrastructureComponentStore extends ArrayStore {
         console.log("status error:", action.error);
         return super.reduce(state, action);
 
-      case 'ics/nodestats-received':
+      case 'ics/config-error':
+        console.log("config error:", action.error);
+        return super.reduce(state, action);
+
+      case 'ics/config-received':
+        let temp = action.ic;
+        if (!temp.managedexternally) {
+          if (temp.statusupdateraw === null || temp.statusupdateraw === undefined) {
+            temp.statusupdateraw = {};
+          }
+          temp.statusupdateraw["config"] = action.data;
+          AppDispatcher.dispatch({
+            type: 'ics/start-edit',
+            data: temp,
+            token: action.token,
+          });
+          ICsDataManager.getStatistics(action.url, action.token, temp);
+
+        }
+        return super.reduce(state, action);
+
+      case 'ics/statistics-error':
+        if (action.error.status === 400){
+          // in case of bad request add the error message to the raw status
+          // most likely the statistics collection is disabled for this node
+          AppDispatcher.dispatch({
+            type: 'ics/statistics-received',
+            data: action.error.response.text,
+            token: action.token,
+            ic: action.ic
+          });
+        } else {
+          console.log("statistics error:", action.error);
+        }
+        return super.reduce(state, action);
+
+      case 'ics/statistics-received':
         let tempIC2 = action.ic;
-        if(!tempIC2.managedexternally){
+        if (!tempIC2.managedexternally) {
           if (tempIC2.statusupdateraw === null || tempIC2.statusupdateraw === undefined) {
             tempIC2.statusupdateraw = {};
           }
@@ -143,10 +181,6 @@ class InfrastructureComponentStore extends ArrayStore {
             token: action.token,
           });
         }
-        return super.reduce(state, action);
-
-      case 'ics/nodestats-error':
-        console.log("nodestats error:", action.error);
         return super.reduce(state, action);
 
       case 'ics/restart':
