@@ -38,6 +38,7 @@ class EditConfigDialog extends React.Component {
       name: '',
       icID: '',
       startParameters: {},
+      formData: {},
       startparamTemplate: null,
       formData: "",
       selectedFiles: [] // list of selected files {name, id}, this is not the fileIDs list of the config!
@@ -57,7 +58,6 @@ class EditConfigDialog extends React.Component {
         if (this.state.startParameters !== {} &&
           JSON.stringify(this.props.config.startParameters) !== JSON.stringify(this.state.startParameters)) {
           data.startParameters = this.state.startParameters;
-          console.log(this.state.startParameters)
         }
 
         let IDs = []
@@ -79,6 +79,9 @@ class EditConfigDialog extends React.Component {
     } else {
       this.props.onClose();
     }
+
+    this.setState({ startparamTemplate: null })
+    this.valid = false
   }
 
   handleChange(e) {
@@ -89,7 +92,7 @@ class EditConfigDialog extends React.Component {
   changeTemplate(e) {
     let templateId = e.target.value;
 
-    if (templateId === 0) {
+    if (parseInt(templateId, 10) === 0) {
       this.setState({ startparamTemplate: null });
     } else {
       this.setState({ startparamTemplate: templates[templateId] });
@@ -137,11 +140,13 @@ class EditConfigDialog extends React.Component {
       icID: this.props.config.icID,
       startParameters: this.props.config.startParameters,
       selectedFiles: selectedFiles,
+      startparamTemplate: null,
     });
   }
 
-  onSubmit(form) {
-    console.log(form.formData);
+  handleFormChange({formData}) {
+    this.setState({formData: formData, startParameters: formData})
+    this.valid = this.isValid()
   }
 
   render() {
@@ -223,8 +228,14 @@ class EditConfigDialog extends React.Component {
           : <></>}
         </BForm>
         {this.state.startparamTemplate ?
-            <Form schema={this.state.startparamTemplate} id='jsonFormData'  onSubmit={this.onSubmit}>
-            </Form> : <></> }
+            <Form
+              schema={this.state.startparamTemplate}
+              formData={this.state.formData}
+              id='jsonFormData'
+              onChange={({formData}) => this.handleFormChange({formData})}
+              children={true} // hides submit button
+              />
+            : <></> }
       </Dialog>
     );
   }
