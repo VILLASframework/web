@@ -30,6 +30,7 @@ import SignalStore from '../signal/signal-store'
 import FileStore from "../file/file-store"
 import WidgetStore from "../widget/widget-store";
 import ResultStore from "../result/result-store"
+import UsersStore from "../user/users-store"
 
 import DashboardTable from '../dashboard/dashboard-table'
 import ResultTable from "../result/result-table";
@@ -67,7 +68,7 @@ class Scenario extends React.Component {
   }
 
   static getStores() {
-    return [ScenarioStore, ConfigStore, DashboardStore, ICStore, SignalStore, FileStore, WidgetStore, ResultStore];
+    return [ScenarioStore, ConfigStore, DashboardStore, ICStore, SignalStore, FileStore, WidgetStore, ResultStore, UsersStore];
   }
 
   componentDidMount() {
