@@ -28,13 +28,6 @@ import templateA from './paramtemplates/templateA'
 import templateB from './paramtemplates/templateB'
 
 const templates = [template0, templateA, templateB];
-let paramForm;
-
-
-const onSubmitSchema = ({formData}, e) => {
-  e.preventDefault();
-  console.log(formData);
-}
 
 class EditConfigDialog extends React.Component {
   valid = false;
@@ -64,6 +57,7 @@ class EditConfigDialog extends React.Component {
         if (this.state.startParameters !== {} &&
           JSON.stringify(this.props.config.startParameters) !== JSON.stringify(this.state.startParameters)) {
           data.startParameters = this.state.startParameters;
+          console.log(this.state.startParameters)
         }
 
         let IDs = []
@@ -145,12 +139,9 @@ class EditConfigDialog extends React.Component {
       selectedFiles: selectedFiles,
     });
   }
- 
-  handleSubmit({formData}, e) {
-    e.preventDefault();
-    //var formData = document.getElementById('jsonFormData');
-    console.log(formData)
-    console.log("hallo");
+
+  onSubmit(form) {
+    console.log(form.formData);
   }
 
   render() {
@@ -224,30 +215,19 @@ class EditConfigDialog extends React.Component {
             </BForm.Control>
           </BForm.Group>
 
-          {this.state.startparamTemplate ?
-            <Form schema={this.state.startparamTemplate} id='jsonFormData'  onSubmit={this.handleSubmit.bind(this)}>
-
-              </Form>
-            :
+          {!this.state.startparamTemplate ?
             <ParametersEditor
-              content={this.state.startParameters}
-              onChange={(data) => this.handleParameterChange(data)}
-            />
-          }
+            content={this.state.startParameters}
+            onChange={(data) => this.handleParameterChange(data)}
+          />
+          : <></>}
         </BForm>
+        {this.state.startparamTemplate ?
+            <Form schema={this.state.startparamTemplate} id='jsonFormData'  onSubmit={this.onSubmit}>
+            </Form> : <></> }
       </Dialog>
     );
   }
 }
-
-/**+++++ onSubmit={console.log(formData)
- *               <div>
-                <button type="submit" onClick={this.onSubmit}>Submit</button>
-              </div>
-
-                            <div>
-                <button type="submit" onClick={this.onSubmit}>Submit</button>
-              </div>
- */
 
 export default EditConfigDialog;
