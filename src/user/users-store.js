@@ -19,10 +19,13 @@ import ArrayStore from '../common/array-store';
 import UsersDataManager from './users-data-manager';
 import NotificationsDataManager from '../common/data-managers/notifications-data-manager';
 import NotificationsFactory from "../common/data-managers/notifications-factory";
+import AppDispatcher from "../common/app-dispatcher";
 
 class UsersStore extends ArrayStore {
   constructor() {
     super('users', UsersDataManager);
+
+    this.currentUser = null;
   }
 
   reduce(state, action) {
@@ -45,6 +48,33 @@ class UsersStore extends ArrayStore {
 
         }
         return super.reduce(state, action);
+
+      case this.type + '/start-edit':
+
+        // save current user on user edit
+        this.currentUser = action.currentUser;
+        return super.reduce(state, action)
+
+      case this.type + '/edited':
+
+        let currentUserID = this.currentUser.id;
+
+        // check if own user was updated
+        for (let u of [action.data]){
+          if (u.id === currentUserID){
+            console.log("Detected update of current user, updating login store")
+
+            AppDispatcher.dispatch({
+              type: 'users/logged-in',
+              token: null,
+              currentUser: u,
+            });
+            break;
+          }
+        }
+
+        return super.reduce(state, action)
+
 
       default:
         return super.reduce(state, action);

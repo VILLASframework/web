@@ -107,7 +107,10 @@ class WidgetPlot extends React.Component {
           signalIDs={this.props.widget.signalIDs}
         />
       </div>
-      <PlotLegend signals={this.state.signals} lineColors={this.props.widget.customProperties.lineColors} />
+      <PlotLegend
+        signals={this.state.signals}
+        lineColors={this.props.widget.customProperties.lineColors}
+        showUnit={this.props.widget.customProperties.showUnit} />
     </div>;
   }
 }

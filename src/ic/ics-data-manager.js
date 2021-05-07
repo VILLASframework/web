@@ -102,12 +102,17 @@ class IcsDataManager extends RestDataManager {
   }
 
   getStatus(url,token,ic){
-    RestAPI.get(url + "/status", null).then(response => {
+    let requestURL = url;
+    if(ic.type === "villas-node"){
+      requestURL += "/status";
+    }
+    RestAPI.get(requestURL, null).then(response => {
       AppDispatcher.dispatch({
         type: 'ics/status-received',
         data: response,
         token: token,
-        ic: ic
+        ic: ic,
+        url: url
       });
     }).catch(error => {
       AppDispatcher.dispatch({
@@ -116,24 +121,51 @@ class IcsDataManager extends RestDataManager {
       })
     })
 
-    // get name of websocket
-    /*let ws_api = ic.websocketurl.split("/")
-    let ws_name = ws_api[ws_api.length-1] // websocket name is the last element in the websocket url
+  }
+
+  getConfig(url,token,ic){
+
+    // get the name of the node
+    let ws_api = ic.websocketurl.split("/")
+    let ws_name = ws_api[ws_api.length-1] // name is the last element in the websocket url
+
+    RestAPI.get(url + "/node/" + ws_name, null).then(response => {
+      AppDispatcher.dispatch({
+        type: 'ics/config-received',
+        data: response,
+        token: token,
+        ic: ic,
+        url: url
+      });
+    }).catch(error => {
+      AppDispatcher.dispatch({
+        type: 'ics/config-error',
+        error: error
+      })
+    })
+  }
+
+  getStatistics(url,token,ic){
+
+    // get the name of the node
+    let ws_api = ic.websocketurl.split("/")
+    let ws_name = ws_api[ws_api.length-1] // name is the last element in the websocket url
 
     RestAPI.get(url + "/node/" + ws_name + "/stats", null).then(response => {
       AppDispatcher.dispatch({
-        type: 'ics/nodestats-received',
+        type: 'ics/statistics-received',
         data: response,
         token: token,
         ic: ic
       });
     }).catch(error => {
       AppDispatcher.dispatch({
-        type: 'ics/nodestats-error',
-        error: error
+        type: 'ics/statistics-error',
+        error: error,
+        token: token,
+        ic: ic
       })
-    })*/
-
+    })
   }
 
   restart(url,token){

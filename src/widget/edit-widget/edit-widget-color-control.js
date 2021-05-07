@@ -17,7 +17,7 @@
 
 import React, { Component } from 'react';
 import { Form, OverlayTrigger, Tooltip, Button, Col } from 'react-bootstrap';
-import ColorPicker from './color-picker'
+import ColorPicker from '../../common/color-picker'
 import Icon from "../../common/icon";
 
 // schemeCategory20 no longer available in d3
@@ -28,55 +28,51 @@ class EditWidgetColorControl extends Component {
     super(props);
 
     this.state = {
-      widget: {},
+      color: null,
+      opacity: null,
       showColorPicker: false,
       originalColor: null
     };
   }
 
   static getDerivedStateFromProps(props, state){
+    let parts = props.controlId.split('.');
+    let isCustomProperty = true;
+    if (parts.length === 1){
+      isCustomProperty = false;
+    }
+
+    let color = (isCustomProperty ? props.widget[parts[0]][parts[1]] : props.widget[props.controlId]);
+    let opacity = (isCustomProperty ? props.widget[parts[0]][parts[1] + "_opacity"] : props.widget[props.controlId + "_opacity"]);
+
     return {
-      widget: props.widget
+      color: color,
+      opacity: opacity,
     };
   }
 
   openColorPicker = () =>{
-    let parts = this.props.controlId.split('.');
-    let isCustomProperty = true;
-    if (parts.length === 1){
-      isCustomProperty = false;
-    }
-    let color = (isCustomProperty ? this.props.widget[parts[0]][parts[1]] : this.props.widget[this.props.controlId]);
-
-    this.setState({showColorPicker: true, originalColor: color});
+    this.setState({showColorPicker: true, originalColor: this.state.color});
   }
 
-  closeEditModal = (data) => {
+  closeColorPickerEditModal = (data) => {
     this.setState({showColorPicker: false})
-    if(typeof data === 'undefined'){
-      let parts = this.props.controlId.split('.');
-      let isCustomProperty = true;
-      if (parts.length === 1) {
-        isCustomProperty = false;
-      }
 
-      let temp = this.state.widget;
-      isCustomProperty ? temp[parts[0]][parts[1]] = this.state.originalColor : temp[this.props.controlId] = this.state.originalColor;
-      this.setState({ widget: temp });
+    if(typeof data === 'undefined'){
+
+      this.setState({ color: this.state.originalColor });
+    } else {
+      // color picker with result data {hexcolor, opacity}
+      this.setState({color: data.hexcolor, opacity: data.opacity})
+      this.props.handleChange({target: { id: this.props.controlId, value: data.hexcolor} })
+      this.props.handleChange({target: { id: this.props.controlId + "_opacity", value: data.opacity} })
     }
   }
 
   render() {
-    let parts = this.props.controlId.split('.');
-    let isCustomProperty = true;
-    if (parts.length === 1){
-      isCustomProperty = false;
-    }
-    let color = (isCustomProperty ? this.props.widget[parts[0]][parts[1]] : this.props.widget[this.props.controlId]);
-    let opacity = (isCustomProperty ? this.props.widget[parts[0]][parts[1] + "_opacity"] : this.props.widget[this.props.controlId + "_opacity"]);
     let style = {
-      backgroundColor: color,
-      opacity: opacity,
+      backgroundColor: this.state.color,
+      opacity: this.state.opacity,
       width: '80px',
       height: '40px',
     }
@@ -85,8 +81,6 @@ class EditWidgetColorControl extends Component {
     if(this.props.disableOpacity){
       tooltipText = "Change border color";
     }
-
-
     return ( <Form.Row>
       <Form.Group as={Col}>
         <Form.Label>{this.props.label}</Form.Label>
@@ -100,7 +94,13 @@ class EditWidgetColorControl extends Component {
           </Button>
           </OverlayTrigger>
         </div>
-        <ColorPicker show={this.state.showColorPicker} onClose={(data) => this.closeEditModal(data)} widget={this.state.widget} controlId={this.props.controlId} disableOpacity={this.props.disableOpacity}/>
+        <ColorPicker
+          show={this.state.showColorPicker}
+          onClose={(data) => this.closeColorPickerEditModal(data)}
+          hexcolor={this.state.color}
+          opacity={this.state.opacity}
+          disableOpacity={this.props.disableOpacity}
+        />
       </Form.Group>
     </Form.Row>
   );

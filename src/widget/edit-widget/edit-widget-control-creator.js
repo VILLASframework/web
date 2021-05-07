@@ -74,7 +74,8 @@ export default function CreateControls(widgetType = null, widget = null, session
                 <EditWidgetSignalsControl key={1} widget={widget} controlId={'signalIDs'}  signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
                 <EditWidgetPlotColorsControl key={2} widget={widget} controlId={'customProperties.lineColors'} signals={signals} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetTextControl key={3} widget={widget} controlId={'customProperties.ylabel'} label={'Y-Axis name'} placeholder={'Enter a name for the y-axis'}  handleChange={(e) => handleChange(e)} />,
-                <EditWidgetMinMaxControl key={4} widget={widget} controlId="customProperties.y" handleChange={e => handleChange(e)} />
+                <EditWidgetCheckboxControl key={4} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />,
+                <EditWidgetMinMaxControl key={5} widget={widget} controlId="customProperties.y" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Table':
@@ -96,7 +97,7 @@ export default function CreateControls(widgetType = null, widget = null, session
                 <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
                 <EditWidgetSignalControl key={1} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
                 <EditWidgetCheckboxControl key={2} widget={widget} controlId="customProperties.colorZones" input text="Show color zones" handleChange={e => handleChange(e)} />,
-                <EditWidgetColorZonesControl key={3} widget={widget} handleChange={e => handleChange(e)} />,
+                <EditWidgetColorZonesControl key={3} widget={widget} controlId="customProperties.zones" handleChange={e => handleChange(e)} disableOpacity={true}/>,
                 <EditWidgetMinMaxControl key={4} widget={widget} controlId="customProperties.value" handleChange={e => handleChange(e)} />
             );
             break;

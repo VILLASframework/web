@@ -66,11 +66,14 @@ class LoginStore extends ReduceStore {
         return Object.assign({}, state, { token: null, currentUser: null, loginMessage: null});
 
       case 'users/logged-in':
-        // save login in local storage
-        localStorage.setItem('token', action.token);
+        // save login data in local storage and loginStore
+        let newState = state
+        if (action.token != null){
+          localStorage.setItem('token', action.token);
+          newState = Object.assign({}, state, {token: action.token})
+        }
         localStorage.setItem('currentUser', JSON.stringify(action.currentUser));
-
-        return Object.assign({}, state, { token: action.token, currentUser: action.currentUser});
+        return Object.assign({}, newState, { currentUser: action.currentUser});
 
       case 'users/login-error':
         if (action.error && !action.error.handled) {

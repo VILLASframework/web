@@ -71,7 +71,7 @@ class SignalsDataManager extends RestDataManager{
     let configured = false;
     let error = false;
     for(let nodeConfig of nodes){
-      console.log("parsing node config: ", nodeConfig)
+      //console.log("parsing node config: ", nodeConfig)
       if(!nodeConfig.hasOwnProperty("name")){
         console.warn("Could not parse the following node config because it lacks a name parameter:", nodeConfig);
       } else if(nodeConfig.name === socketname){
@@ -128,7 +128,6 @@ class SignalsDataManager extends RestDataManager{
           for (let outSig of nodeConfig.out.signals) {
 
             if (outSig.enabled) {
-              console.log("adding output signal:", outSig);
               let newSignal = {
                 configID: configID,
                 direction: 'out',

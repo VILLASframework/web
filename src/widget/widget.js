@@ -94,18 +94,20 @@ class Widget extends React.Component {
     };
   }
 
-  inputDataChanged(widget, data, controlID, controlValue) {
+  inputDataChanged(widget, data, controlID, controlValue, isFinalChange) {
     // controlID is the path to the widget customProperty that is changed (for example 'value')
 
     // modify the widget customProperty
     if (controlID !== '') {
       let updatedWidget = JSON.parse(JSON.stringify(widget));
       updatedWidget.customProperties[controlID] = controlValue;
-      AppDispatcher.dispatch({
-        type: 'widgets/start-edit',
-        token: this.state.sessionToken,
-        data: updatedWidget
-      });
+      if(isFinalChange) {
+        AppDispatcher.dispatch({
+          type: 'widgets/start-edit',
+          token: this.state.sessionToken,
+          data: updatedWidget
+        });
+      }
     }
 
     // The following assumes that a widget modifies/ uses exactly one signal
@@ -185,21 +187,21 @@ class Widget extends React.Component {
       return <WidgetButton
         widget={widget}
         editing={this.props.editing}
-        onInputChanged={(value, controlID, controlValue) => this.inputDataChanged(widget, value, controlID, controlValue)}
+        onInputChanged={(value, controlID, controlValue, isFinalChange) => this.inputDataChanged(widget, value, controlID, controlValue, isFinalChange)}
         signals={this.state.signals}
       />
     } else if (widget.type === 'NumberInput') {
       return <WidgetInput
         widget={widget}
         editing={this.props.editing}
-        onInputChanged={(value, controlID, controlValue) => this.inputDataChanged(widget, value, controlID, controlValue)}
+        onInputChanged={(value, controlID, controlValue, isFinalChange) => this.inputDataChanged(widget, value, controlID, controlValue, isFinalChange)}
         signals={this.state.signals}
       />
     } else if (widget.type === 'Slider') {
       return <WidgetSlider
         widget={widget}
         editing={this.props.editing}
-        onInputChanged={(value, controlID, controlValue) => this.inputDataChanged(widget, value, controlID, controlValue)}
+        onInputChanged={(value, controlID, controlValue, isFinalChange) => this.inputDataChanged(widget, value, controlID, controlValue, isFinalChange)}
         signals={this.state.signals}
       />
     } else if (widget.type === 'Gauge') {

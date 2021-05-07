@@ -24,26 +24,15 @@ function Legend(props){
   const signal = props.sig;
   const hasScalingFactor = (signal.scalingFactor !== 1);
 
-  const newLineColor = scaleOrdinal(schemeCategory10);
+  let color = typeof props.lineColor === "undefined" ? schemeCategory10[props.index % 10] : props.lineColor;
 
-  let color = typeof props.lineColor === "undefined" ? newLineColor(signal.id) : props.lineColor;
-
-  if(hasScalingFactor){
-    return (
-      <li key={signal.id} className="signal-legend" style={{ color: color }}>
-      <span className="signal-legend-name">{signal.name}</span>
-      <span style={{ marginLeft: '0.3em' }} className="signal-unit">{signal.unit}</span>
-      <span style={{ marginLeft: '0.3em' }} className="signal-scale">{signal.scalingFactor}</span>
-      </li>
-    )
-  } else {
-    return (
-      <li key={signal.id} className="signal-legend" style={{ color: color }}>
-        <span className="signal-legend-name">{signal.name}</span>
-        <span style={{ marginLeft: '0.3em' }} className="signal-unit">{signal.unit}</span>
-      </li>
-    )
-  }
+  return (
+    <li key={signal.id} className="signal-legend" style={{ color: color }}>
+    <span className="signal-legend-name">{signal.name}</span>
+      {props.showUnit ? <span style={{marginLeft: '0.3em'}} className="signal-unit">{signal.unit}</span> : <></> }
+      {hasScalingFactor ? <span style={{ marginLeft: '0.3em' }} className="signal-scale">{signal.scalingFactor}</span> : <></>}
+    </li>
+  )
 }
 
 class PlotLegend extends React.Component {
@@ -52,11 +41,11 @@ class PlotLegend extends React.Component {
     return <div className="plot-legend">
       <ul>
         { this.props.lineColors !== undefined && this.props.lineColors != null ? (
-          this.props.signals.map( signal =>
-             <Legend key={signal.id} sig={signal} lineColor={this.props.lineColors[signal.id]}/>
+          this.props.signals.map( (signal, idx) =>
+             <Legend key={signal.id} sig={signal} showUnit={this.props.showUnit} index={idx} lineColor={this.props.lineColors[idx]}/>
         )) : (
-          this.props.signals.map( signal =>
-            <Legend key={signal.id} sig={signal} lineColor={"undefined"}/>
+          this.props.signals.map( (signal, idx) =>
+            <Legend key={signal.id} sig={signal} showUnit={this.props.showUnit} index={idx} lineColor={"undefined"}/>
           ))
         }
       </ul>

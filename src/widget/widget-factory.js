@@ -90,6 +90,7 @@ class WidgetFactory {
                 widget.customProperties.yMax = 10;
                 widget.customProperties.yUseMinMax = false;
                 widget.customProperties.lineColors = [];
+                widget.customProperties.showUnit = false;
                 break;
             case 'Table':
                 widget.minWidth = 200;
@@ -150,7 +151,7 @@ class WidgetFactory {
                 widget.customProperties.rangeMin = 0;
                 widget.customProperties.rangeMax = 200;
                 widget.customProperties.rangeUseMinMax = true;
-                widget.customProperties.showUnit = true;
+                widget.customProperties.showUnit = false;
                 widget.customProperties.continous_update = false;
                 widget.customProperties.default_value = '0';
                 widget.customProperties.value = '';

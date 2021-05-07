@@ -54,14 +54,14 @@ class WidgetButton extends Component {
 
   valueChanged(newValue, pressed) {
     if (this.props.onInputChanged) {
-      this.props.onInputChanged(newValue, 'pressed', pressed);
+      this.props.onInputChanged(newValue, 'pressed', pressed, true);
     }
   }
 
   render() {
 
     const buttonStyle = {
-      backgroundColor: this.props.widget.customProperties.background_color, 
+      backgroundColor: this.props.widget.customProperties.background_color,
       borderColor: this.props.widget.customProperties.border_color,
       color: this.props.widget.customProperties.font_color,
       opacity: this.props.widget.customProperties.background_color_opacity

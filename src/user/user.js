@@ -15,100 +15,74 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
+import React from 'react';
 import { Container } from 'flux/utils';
-import { Button, Form, Row, Col } from 'react-bootstrap';
-
+import { Form, Row, Col } from 'react-bootstrap';
 import AppDispatcher from '../common/app-dispatcher';
-import UsersStore from './users-store';
-
-import Icon from '../common/icon';
 import EditOwnUserDialog from './edit-own-user'
-import NotificationsDataManager from "../common/data-managers/notifications-data-manager"
-import NotificationsFactory from "../common/data-managers/notifications-factory";
+import IconButton from "../common/icon-button";
+import LoginStore from './login-store'
 
-class User extends Component {
+class User extends React.Component {
+  constructor() {
+    super();
+
+    this.state = {
+      token: LoginStore.getState().token,
+      editModal: false,
+    }
+  }
+
   static getStores() {
-    return [ UsersStore ];
+    return [ LoginStore ];
   }
 
   static calculateState(prevState, props) {
-    prevState = prevState || {};
-
-    let currentUserID = JSON.parse(localStorage.getItem("currentUser")).id;
-    let currentUser = UsersStore.getState().find(user => user.id === parseInt(currentUserID, 10));
-
     return {
-      currentUser,
-      token: localStorage.getItem("token"),
-      editModal: false,
-    };
-  }
-
-  componentDidMount() {
-    let currentUserID = JSON.parse(localStorage.getItem("currentUser")).id;
-
-    AppDispatcher.dispatch({
-      type: 'users/start-load',
-      data: parseInt(currentUserID, 10),
-      token: this.state.token
-    });
+      currentUser: LoginStore.getState().currentUser
+    }
   }
 
   closeEditModal(data) {
     this.setState({ editModal: false });
 
-    let updatedData = {}
-    let updatedUser = this.state.currentUser;
-    let hasChanged = false;
-    let pwChanged = false;
-
-    updatedData.id = this.state.currentUser.id;
-
     if (data) {
-      if (data.username !== this.state.currentUser.username) {
-        hasChanged = true;
-        updatedData.username = data.username;
-        updatedUser.username = data.username
-      }
-
-      if (data.mail !== this.state.currentUser.mail) {
-        hasChanged = true;
-        updatedData.mail = data.mail;
-        updatedUser.mail = data.mail;
-      }
-
-      if (data.password !== '' && data.oldPassword !== '' && data.password === data.confirmPassword ) {
-        pwChanged = true;
-        updatedData.password = data.password;
-        updatedData.oldPassword = data.oldPassword;
-      } else if (data.password !== '' && data.password !== data.confirmPassword) {
-        NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR('New password not correctly confirmed'));
-        return
-      }
-
-      if (hasChanged || pwChanged) {
-        if (hasChanged){
-          this.setState({ currentUser: updatedUser })
-        }
-
-        AppDispatcher.dispatch({
-          type: 'users/start-edit',
-          data: updatedData,
-          token: this.state.token
-        });
-      } else {
-        NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_WARNING('No update requested, no input data'));
-      }
+      AppDispatcher.dispatch({
+        type: 'users/start-edit',
+        data: data,
+        token: this.state.token,
+        currentUser: this.state.currentUser,
+      });
     }
   }
 
   render() {
     let user = this.state.currentUser;
 
+    const buttonStyle = {
+      marginLeft: '10px',
+    }
+
+    const iconStyle = {
+      height: '30px',
+      width: '30px'
+    }
+
     return (
       <div>
-        <h1>Account</h1>
+        <h1>Account
+          <span className='icon-button'>
+
+            <IconButton
+              childKey={0}
+              tooltip='Edit Account'
+              onClick={() => this.setState({ editModal: true })}
+              icon='edit'
+              buttonStyle={buttonStyle}
+              iconStyle={iconStyle}
+            />
+          </span>
+        </h1>
 
         {user ?
           <>
@@ -116,30 +90,28 @@ class User extends Component {
               <Form.Group as={Row} controlId="username">
                 <Form.Label column sm={2}>Username</Form.Label>
                 <Col sm={10}>
-                  <Form.Control plaintext readOnly defaultValue={user.username} />
+                  <Form.Control plaintext readOnly value={user.username} />
                 </Col>
               </Form.Group>
               <Form.Group as={Row} controlId="mail">
                 <Form.Label column sm={2}>E-mail</Form.Label>
                 <Col sm={10}>
-                  <Form.Control plaintext readOnly defaultValue={user.mail} type="email" />
+                  <Form.Control plaintext readOnly value={user.mail} type="email" />
                 </Col>
               </Form.Group>
               <Form.Group as={Row} controlId="role">
                 <Form.Label column sm={2}>Role</Form.Label>
                 <Col sm={10}>
-                  <Form.Control plaintext readOnly defaultValue={user.role} />
+                  <Form.Control plaintext readOnly value={user.role} />
                 </Col>
               </Form.Group>
               <Form.Group as={Row} controlId="formBasicEmail">
                 <Form.Label column sm={2}>Created at</Form.Label>
                 <Col sm={10}>
-                  <Form.Control plaintext readOnly defaultValue={user.createdAt} />
+                  <Form.Control plaintext readOnly value={user.createdAt} />
                 </Col>
               </Form.Group>
-              <Button variant="primary" onClick={() => this.setState({ editModal: true })}>
-                <Icon icon='edit' /> Edit
-              </Button>
+
             </Form>
 
             <EditOwnUserDialog
