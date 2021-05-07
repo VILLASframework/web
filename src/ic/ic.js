@@ -25,6 +25,7 @@ import moment from 'moment';
 import ReactJson from 'react-json-view';
 import ConfirmCommand from './confirm-command';
 import IconButton from '../common/icon-button';
+import FileSaver from 'file-saver';
 
 
 
@@ -202,7 +203,7 @@ class InfrastructureComponent extends React.Component {
             </Table>
           </Col>
           <Col>
-            {this.state.ic.type === "villas-node" ?
+            {this.state.category ==="gateway" && this.state.ic.type === "villas-node" ?
               <>
                 <div className='section-buttons-group-right'>
                   <IconButton
@@ -244,7 +245,7 @@ class InfrastructureComponent extends React.Component {
               </>
               : <div />}
 
-            {this.state.ic.type === "villas-relay" ?
+            {this.state.category ==="gateway" && this.state.ic.type === "villas-relay" ?
               <>
               <div className='section-buttons-group-right'>
                 <IconButton
@@ -256,6 +257,7 @@ class InfrastructureComponent extends React.Component {
                   iconStyle={iconStyle}
                 />
               </div>
+              <hr/>
               <b>Raw Status</b>
               {this.state.ic.statusupdateraw !== null && this.isJSON(this.state.ic.statusupdateraw) ?
                 <ReactJson
@@ -271,7 +273,7 @@ class InfrastructureComponent extends React.Component {
               <div />}
           </Col>
         </Row>
-        {this.state.ic.type === "villas-node" ?
+        {this.state.category ==="gateway" && this.state.ic.type === "villas-node" ?
           <>
         <div className='section-buttons-group-right'>
           <IconButton
