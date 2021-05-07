@@ -63,7 +63,7 @@ class InfrastructureComponent extends React.Component {
 
   refresh() {
     // get status of VILLASnode and VILLASrelay ICs
-    if ((this.state.ic.type === "villas-node" || this.state.ic.type === "villas-relay")
+    if (this.state.ic.category === "gateway" && (this.state.ic.type === "villas-node" || this.state.ic.type === "villas-relay")
       && this.state.ic.apiurl !== '' && this.state.ic.apiurl !== undefined && this.state.ic.apiurl !== null && !this.state.ic.managedexternally) {
       AppDispatcher.dispatch({
         type: 'ics/get-status',

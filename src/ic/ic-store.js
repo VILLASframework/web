@@ -118,13 +118,17 @@ class InfrastructureComponentStore extends ArrayStore {
           tempIC.state = action.data.state;
           tempIC.uptime = action.data.time_now - action.data.time_started;
           tempIC.statusupdateraw = action.data
+          tempIC.uuid = action.data.uuid
           AppDispatcher.dispatch({
             type: 'ics/start-edit',
             data: tempIC,
             token: action.token,
           });
 
-          ICsDataManager.getConfig(action.url, action.token, tempIC);
+          if(tempIC.type === "villas-node"){
+            ICsDataManager.getConfig(action.url, action.token, tempIC);
+          }
+
         }
         return super.reduce(state, action);
 
@@ -148,7 +152,10 @@ class InfrastructureComponentStore extends ArrayStore {
             data: temp,
             token: action.token,
           });
-          ICsDataManager.getStatistics(action.url, action.token, temp);
+
+          if(temp.type === "villas-node") {
+            ICsDataManager.getStatistics(action.url, action.token, temp);
+          }
 
         }
         return super.reduce(state, action);
