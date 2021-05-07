@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Form } from 'react-bootstrap';
+import { Form, Col, Row, Button } from 'react-bootstrap';
 import _ from 'lodash';
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
@@ -120,6 +120,23 @@ class EditICDialog extends React.Component {
     });
   }
 
+  selectStartParamsFile(event) {
+    const file = event.target.files[0];
+    if (file.type.match('application/json') === false) {
+      console.log("not a json file")
+      return;
+    }
+
+    let reader = new FileReader();
+    reader.readAsText(file);
+
+    // TODO: error handling
+    reader.onload = event => {
+      const params = JSON.parse(reader.result);
+      this.setState({ startParameterSchema: params})
+    }
+  };
+
   render() {
     let typeOptions = [];
     switch(this.state.category){
@@ -196,8 +213,16 @@ class EditICDialog extends React.Component {
             <Form.Control type="text" placeholder={this.props.ic.description} value={this.state.description || '' } onChange={(e) => this.handleChange(e)} />
             <Form.Control.Feedback />
           </Form.Group>
+          <hr/>
           <Form.Group controlId='startParameterSchema'>
-            <Form.Label column={false}>Start parameter schema of IC</Form.Label>
+            <Row>
+            <Col xs lg="5">
+              <Form.Label column={false}>Start parameter schema of IC</Form.Label>
+            </Col>
+            <Col xs lg="4">
+              <Form.Control type='file' onChange={(event) => this.selectStartParamsFile(event)} />
+            </Col>
+            </Row>
             <ParametersEditor
               content={this.state.startParameterSchema}
               disabled={false}
