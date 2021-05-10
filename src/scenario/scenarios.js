@@ -22,10 +22,11 @@ import AppDispatcher from '../common/app-dispatcher';
 import ScenarioStore from './scenario-store';
 import DashboardStore from '../dashboard/dashboard-store';
 import WidgetStore from "../widget/widget-store";
-import ConfigStore from '../componentconfig/config-store';
+import ComponentConfigStore from '../componentconfig/config-store';
 import SignalStore from '../signal/signal-store'
 import ResultStore from '../result/result-store'
 import FileStore from '../file/file-store'
+import LoginStore from '../user/login-store'
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
 import NewScenarioDialog from './new-scenario';
@@ -38,7 +39,7 @@ import IconButton from '../common/icon-button';
 class Scenarios extends Component {
 
   static getStores() {
-    return [ScenarioStore, DashboardStore, WidgetStore, ConfigStore, SignalStore, ResultStore, FileStore];
+    return [ScenarioStore, DashboardStore, WidgetStore, ComponentConfigStore, SignalStore, ResultStore, FileStore,LoginStore];
   }
 
   static calculateState(prevState, props) {
@@ -49,7 +50,7 @@ class Scenarios extends Component {
     return {
       scenarios: ScenarioStore.getState(),
       dashboards: DashboardStore.getState(),
-      configs: ConfigStore.getState(),
+      configs: ComponentConfigStore.getState(),
       sessionToken: localStorage.getItem("token"),
 
       newModal: false,
