@@ -23,11 +23,6 @@ import { Multiselect } from 'multiselect-react-dropdown'
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
 
-import template0 from './paramtemplates/template0'
-import templateA from './paramtemplates/templateA'
-import templateB from './paramtemplates/templateB'
-
-const templates = [template0, templateA, templateB];
 
 class EditConfigDialog extends React.Component {
   valid = false;
@@ -89,16 +84,6 @@ class EditConfigDialog extends React.Component {
     this.valid = this.isValid()
   }
 
-  changeTemplate(e) {
-    let templateId = e.target.value;
-
-    if (parseInt(templateId, 10) === 0) {
-      this.setState({ startparamTemplate: null });
-    } else {
-      this.setState({ startparamTemplate: templates[templateId] });
-    }
-  }
-
   handleParameterChange(data) {
     if (data) {
       this.setState({ startParameters: data });
@@ -135,12 +120,23 @@ class EditConfigDialog extends React.Component {
       }
     }
 
+    // TODO: set schema to null when this.state.icID is changed
+    let schema = null;
+    if (this.props.ics && this.props.config.icID) {
+      let currentIC = this.props.ics.find(ic => ic.id === parseInt(this.props.config.icID, 10));
+      if (currentIC) {
+        if (currentIC.startparameterschema.hasOwnProperty('type')) {
+          schema = currentIC.startparameterschema;
+        }
+      }
+    }
+
     this.setState({
       name: this.props.config.name,
       icID: this.props.config.icID,
       startParameters: this.props.config.startParameters,
       selectedFiles: selectedFiles,
-      startparamTemplate: null,
+      startparamTemplate: schema,
     });
   }
 
@@ -152,10 +148,6 @@ class EditConfigDialog extends React.Component {
   render() {
     const ICOptions = this.props.ics.map(s =>
       <option key={s.id} value={s.id}>{s.name}</option>
-    );
-
-    const TemplateOptions = templates.map(t =>
-      <option key={t.id} value={t.id}>{t.name}</option>
     );
 
     let configFileOptions = [];
@@ -209,16 +201,7 @@ class EditConfigDialog extends React.Component {
           />
 
           <hr></hr>
-          <BForm.Group controlId='startParameters'>
-            <BForm.Label> Start Parameters </BForm.Label>
-            <BForm.Control
-              as="select"
-              placeholder='Select template for start parameters'
-              onChange={(e) => this.changeTemplate(e)}
-            >
-              {TemplateOptions}
-            </BForm.Control>
-          </BForm.Group>
+          <BForm.Label><b>Start Parameters</b></BForm.Label>
 
           {!this.state.startparamTemplate ?
             <ParametersEditor
