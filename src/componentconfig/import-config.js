@@ -55,7 +55,7 @@ class ImportConfigDialog extends React.Component {
   loadFile = event => {
     // get file
     const file = event.target.files[0];
-    if (file.type.match('application/json') === false) {
+    if (!file.type.match('application/json')) {
       return;
     }
 
