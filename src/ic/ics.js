@@ -26,7 +26,6 @@ import moment from 'moment'
 import AppDispatcher from '../common/app-dispatcher';
 import InfrastructureComponentStore from './ic-store';
 
-import Icon from '../common/icon';
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
 import NewICDialog from './new-ic';
