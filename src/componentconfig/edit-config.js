@@ -84,6 +84,25 @@ class EditConfigDialog extends React.Component {
     this.valid = this.isValid()
   }
 
+  changeIC(id) {
+    let schema = null;
+    if (this.props.ics) {
+      let currentIC = this.props.ics.find(ic => ic.id === parseInt(id, 10));
+      if (currentIC) {
+        if (currentIC.startparameterschema.hasOwnProperty('type')) {
+          schema = currentIC.startparameterschema;
+        }
+      }
+    }
+
+    this.setState({
+      icID: id,
+      startparamTemplate: schema,
+    });
+
+    this.valid = this.isValid()
+  }
+
   handleParameterChange(data) {
     if (data) {
       this.setState({ startParameters: data });
@@ -120,7 +139,6 @@ class EditConfigDialog extends React.Component {
       }
     }
 
-    // TODO: set schema to null when this.state.icID is changed
     let schema = null;
     if (this.props.ics && this.props.config.icID) {
       let currentIC = this.props.ics.find(ic => ic.id === parseInt(this.props.config.icID, 10));
@@ -184,7 +202,7 @@ class EditConfigDialog extends React.Component {
               as="select"
               placeholder='Select infrastructure component'
               value={this.state.icID}
-              onChange={(e) => this.handleChange(e)}
+              onChange={(e) => this.changeIC(e.target.value)}
             >
               {ICOptions}
             </BForm.Control>
