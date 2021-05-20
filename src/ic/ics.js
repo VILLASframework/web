@@ -126,6 +126,7 @@ class InfrastructureComponents extends Component {
   refresh() {
     if (this.state.editModal || this.state.deleteModal || this.state.icModal){
       // do nothing since a dialog is open at the moment
+      return
     }
     else {
       AppDispatcher.dispatch({
