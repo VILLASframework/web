@@ -106,7 +106,7 @@ class EditICDialog extends React.Component {
       description: this.props.ic.description,
       category: this.props.ic.category,
       managedexternally: false,
-      startparameterschema: this.props.ic.startparameterschema,
+      startparameterschema: this.props.ic.startparameterschema || {},
     });
   }
 
