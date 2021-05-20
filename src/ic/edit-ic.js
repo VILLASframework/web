@@ -122,15 +122,15 @@ class EditICDialog extends React.Component {
 
   selectStartParamsFile(event) {
     const file = event.target.files[0];
-    if (file.type.match('application/json') === false) {
-      console.log("not a json file")
+
+    if (!file.type.match('application/json')) {
+      console.error("Not a json file. Will not process file '" + file.name + "'.")
       return;
     }
 
     let reader = new FileReader();
     reader.readAsText(file);
 
-    // TODO: error handling
     reader.onload = event => {
       const params = JSON.parse(reader.result);
       this.setState({ startParameterSchema: params})
