@@ -35,7 +35,6 @@ class EditConfigDialog extends React.Component {
       startParameters: {},
       formData: {},
       startparamTemplate: null,
-      formData: "",
       selectedFiles: [] // list of selected files {name, id}, this is not the fileIDs list of the config!
     };
   }
@@ -218,7 +217,7 @@ class EditConfigDialog extends React.Component {
             placeholder={'Select file(s)...'}
           />
 
-          <hr></hr>
+          <hr/>
           <BForm.Label><b>Start Parameters</b></BForm.Label>
 
           {!this.state.startparamTemplate ?
