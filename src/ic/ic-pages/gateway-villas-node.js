@@ -69,8 +69,6 @@ class GatewayVillasNode extends React.Component {
       graphURL = this.props.ic.apiurl + "/graph.svg"
     }
 
-    console.log("Villasnode Gateway: ", this.props.ic)
-
     return (<div className='section'>
 
 
