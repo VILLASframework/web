@@ -16,10 +16,13 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Form } from 'react-bootstrap';
+import Form from "@rjsf/core";
+
+import { Form as BForm } from 'react-bootstrap';
 import { Multiselect } from 'multiselect-react-dropdown'
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
+
 
 class EditConfigDialog extends React.Component {
   valid = false;
@@ -30,6 +33,8 @@ class EditConfigDialog extends React.Component {
       name: '',
       icID: '',
       startParameters: {},
+      formData: {},
+      startparamTemplate: null,
       selectedFiles: [] // list of selected files {name, id}, this is not the fileIDs list of the config!
     };
   }
@@ -44,21 +49,21 @@ class EditConfigDialog extends React.Component {
         if (this.state.icID !== '' && this.props.config.icID !== parseInt(this.state.icID)) {
           data.icID = parseInt(this.state.icID, 10);
         }
-        if(this.state.startParameters !==  {} &&
-          JSON.stringify(this.props.config.startParameters) !== JSON.stringify(this.state.startParameters)){
+        if (this.state.startParameters !== {} &&
+          JSON.stringify(this.props.config.startParameters) !== JSON.stringify(this.state.startParameters)) {
           data.startParameters = this.state.startParameters;
         }
 
         let IDs = []
-        for(let e of this.state.selectedFiles){
+        for (let e of this.state.selectedFiles) {
           IDs.push(e.id)
         }
-        if(this.props.config.fileIDs !== null && this.props.config.fileIDs !== undefined) {
+        if (this.props.config.fileIDs !== null && this.props.config.fileIDs !== undefined) {
           if (JSON.stringify(IDs) !== JSON.stringify(this.props.config.fileIDs)) {
             data.fileIDs = IDs;
           }
         }
-        else{
+        else {
           data.fileIDs = IDs
         }
 
@@ -68,6 +73,9 @@ class EditConfigDialog extends React.Component {
     } else {
       this.props.onClose();
     }
+
+    this.setState({ startparamTemplate: null })
+    this.valid = false
   }
 
   handleChange(e) {
@@ -75,9 +83,28 @@ class EditConfigDialog extends React.Component {
     this.valid = this.isValid()
   }
 
+  changeIC(id) {
+    let schema = null;
+    if (this.props.ics) {
+      let currentIC = this.props.ics.find(ic => ic.id === parseInt(id, 10));
+      if (currentIC) {
+        if (currentIC.startparameterschema.hasOwnProperty('type')) {
+          schema = currentIC.startparameterschema;
+        }
+      }
+    }
+
+    this.setState({
+      icID: id,
+      startparamTemplate: schema,
+    });
+
+    this.valid = this.isValid()
+  }
+
   handleParameterChange(data) {
     if (data) {
-      this.setState({startParameters: data});
+      this.setState({ startParameters: data });
     }
     this.valid = this.isValid()
   }
@@ -101,12 +128,22 @@ class EditConfigDialog extends React.Component {
 
     // determine list of selected files incl id and filename
     let selectedFiles = []
-    if(this.props.config.fileIDs !== null && this.props.config.fileIDs !== undefined) {
+    if (this.props.config.fileIDs !== null && this.props.config.fileIDs !== undefined) {
       for (let selectedFileID of this.props.config.fileIDs) {
         for (let file of this.props.files) {
           if (file.id === selectedFileID) {
-            selectedFiles.push({name: file.name, id: file.id})
+            selectedFiles.push({ name: file.name, id: file.id })
           }
+        }
+      }
+    }
+
+    let schema = null;
+    if (this.props.ics && this.props.config.icID) {
+      let currentIC = this.props.ics.find(ic => ic.id === parseInt(this.props.config.icID, 10));
+      if (currentIC) {
+        if (currentIC.startparameterschema.hasOwnProperty('type')) {
+          schema = currentIC.startparameterschema;
         }
       }
     }
@@ -116,9 +153,14 @@ class EditConfigDialog extends React.Component {
       icID: this.props.config.icID,
       startParameters: this.props.config.startParameters,
       selectedFiles: selectedFiles,
+      startparamTemplate: schema,
     });
   }
 
+  handleFormChange({formData}) {
+    this.setState({formData: formData, startParameters: formData})
+    this.valid = this.isValid()
+  }
 
   render() {
     const ICOptions = this.props.ics.map(s =>
@@ -126,9 +168,9 @@ class EditConfigDialog extends React.Component {
     );
 
     let configFileOptions = [];
-    for(let file of this.props.files) {
+    for (let file of this.props.files) {
       configFileOptions.push(
-        {name: file.name, id: file.id}
+        { name: file.name, id: file.id }
       );
     }
 
@@ -141,29 +183,29 @@ class EditConfigDialog extends React.Component {
         onReset={() => this.resetState()}
         valid={this.valid}
       >
-        <Form>
-          <Form.Group controlId="name">
-            <Form.Label column={false}>Name</Form.Label>
-            <Form.Control
+        <BForm>
+          <BForm.Group controlId="name">
+            <BForm.Label column={false}>Name</BForm.Label>
+            <BForm.Control
               type="text"
               placeholder={this.props.config.name}
               value={this.state.name}
               onChange={(e) => this.handleChange(e)}
             />
-            <Form.Control.Feedback />
-          </Form.Group>
+            <BForm.Control.Feedback />
+          </BForm.Group>
 
-          <Form.Group controlId="icID">
-            <Form.Label column={false}> Infrastructure Component </Form.Label>
-            <Form.Control
+          <BForm.Group controlId="icID">
+            <BForm.Label column={false}> Infrastructure Component </BForm.Label>
+            <BForm.Control
               as="select"
               placeholder='Select infrastructure component'
               value={this.state.icID}
-              onChange={(e) => this.handleChange(e)}
+              onChange={(e) => this.changeIC(e.target.value)}
             >
               {ICOptions}
-            </Form.Control>
-          </Form.Group>
+            </BForm.Control>
+          </BForm.Group>
 
           <Multiselect
             options={configFileOptions}
@@ -175,14 +217,25 @@ class EditConfigDialog extends React.Component {
             placeholder={'Select file(s)...'}
           />
 
-          <Form.Group controlId='startParameters'>
-            <Form.Label> Start Parameters </Form.Label>
+          <hr/>
+          <BForm.Label><b>Start Parameters</b></BForm.Label>
+
+          {!this.state.startparamTemplate ?
             <ParametersEditor
-              content={this.state.startParameters}
-              onChange={(data) => this.handleParameterChange(data)}
-            />
-          </Form.Group>
-        </Form>
+            content={this.state.startParameters}
+            onChange={(data) => this.handleParameterChange(data)}
+          />
+          : <></>}
+        </BForm>
+        {this.state.startparamTemplate ?
+            <Form
+              schema={this.state.startparamTemplate}
+              formData={this.state.formData}
+              id='jsonFormData'
+              onChange={({formData}) => this.handleFormChange({formData})}
+              children={true} // hides submit button
+              />
+            : <></> }
       </Dialog>
     );
   }
