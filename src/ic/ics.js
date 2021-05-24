@@ -100,7 +100,7 @@ class InfrastructureComponents extends Component {
       services: services,
       equipment: equipment,
       numberOfExternalICs,
-      modalIC: {},
+      modalIC: prevState.modalIC || {},
       deleteModal: false,
       icModal: false,
       selectedICs: prevState.selectedICs || [],
@@ -125,6 +125,7 @@ class InfrastructureComponents extends Component {
   refresh() {
     if (this.state.editModal || this.state.deleteModal || this.state.icModal){
       // do nothing since a dialog is open at the moment
+      return
     }
     else {
       AppDispatcher.dispatch({
@@ -186,13 +187,9 @@ class InfrastructureComponents extends Component {
   }
 
   closeEditModal(data) {
-    this.setState({ editModal : false });
+    this.setState({ editModal : false, modalIC: {} });
 
     if (data) {
-      //let ic = this.state.ics[this.state.modalIndex];
-      //ic = data;
-      //this.setState({ ic: ic });
-
       AppDispatcher.dispatch({
         type: 'ics/start-edit',
         data: data,
@@ -203,8 +200,6 @@ class InfrastructureComponents extends Component {
 
 
   closeDeleteModal(confirmDelete){
-    this.setState({ deleteModal: false });
-
     if (confirmDelete === false) {
       return;
     }
@@ -214,6 +209,8 @@ class InfrastructureComponents extends Component {
       data: this.state.modalIC,
       token: this.state.sessionToken,
     });
+
+    this.setState({ deleteModal: false, modalIC: {} });
   }
 
   exportIC(index) {

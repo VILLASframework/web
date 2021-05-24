@@ -38,8 +38,6 @@ class NewDialog extends React.Component {
   }
 
   handleChange(e) {
-    console.log(e)
-
     this.setState({ [e.target.id]: e.target.value });
   }
 

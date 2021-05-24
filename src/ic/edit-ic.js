@@ -16,8 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Form } from 'react-bootstrap';
-import _ from 'lodash';
+import { Form, Col, Row } from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
 
@@ -36,15 +35,15 @@ class EditICDialog extends React.Component {
       type: '',
       category: '',
       managedexternally: false,
-      startParameterSchema: {},
-      properties: {}
+      startparameterschema: {}
     };
   }
+
 
   onClose(canceled) {
     if (canceled === false) {
       if (this.valid) {
-        let data = this.props.ic;
+        let data = JSON.parse(JSON.stringify(this.props.ic));
 
         if (this.state.name != null && this.state.name !== "" && this.state.name !== this.props.ic.name) {
           data.name = this.state.name;
@@ -69,12 +68,8 @@ class EditICDialog extends React.Component {
           data.category = this.state.category;
         }
 
-        if (this.state.startParameterSchema !== {}) {
-          data.startParameterSchema = this.state.startParameterSchema;
-        }
-
-        if (this.state.properties !== {}) {
-          data.properties = this.state.properties;
+        if (this.state.startparameterschema !== {}) {
+          data.startparameterschema = this.state.startparameterschema;
         }
 
         data.managedexternally = this.state.managedexternally;
@@ -98,11 +93,7 @@ class EditICDialog extends React.Component {
   }
 
   handleStartParameterSchemaChange(data) {
-    this.setState({ startParameterSchema: data });
-  }
-
-  handlePropertiesChange(data) {
-    this.setState({ properties: data });
+    this.setState({ startparameterschema: data });
   }
 
   resetState() {
@@ -115,10 +106,26 @@ class EditICDialog extends React.Component {
       description: this.props.ic.description,
       category: this.props.ic.category,
       managedexternally: false,
-      startParameterSchema: this.props.ic.startParameterSchema,
-      properties: this.props.ic.properties,
+      startparameterschema: this.props.ic.startparameterschema || {},
     });
   }
+
+  selectStartParamsFile(event) {
+    const file = event.target.files[0];
+
+    if (!file.type.match('application/json')) {
+      console.error("Not a json file. Will not process file '" + file.name + "'.")
+      return;
+    }
+
+    let reader = new FileReader();
+    reader.readAsText(file);
+
+    reader.onload = event => {
+      const params = JSON.parse(reader.result);
+      this.setState({ startparameterschema: params})
+    }
+  };
 
   render() {
     let typeOptions = [];
@@ -196,22 +203,23 @@ class EditICDialog extends React.Component {
             <Form.Control type="text" placeholder={this.props.ic.description} value={this.state.description || '' } onChange={(e) => this.handleChange(e)} />
             <Form.Control.Feedback />
           </Form.Group>
+          <hr/>
           <Form.Group controlId='startParameterSchema'>
-            <Form.Label column={false}>Start parameter schema of IC</Form.Label>
+            <Row>
+            <Col xs lg="5">
+              <Form.Label column={false}>Start parameter schema of IC</Form.Label>
+            </Col>
+            <Col xs lg="4">
+              <Form.Control type='file' onChange={(event) => this.selectStartParamsFile(event)} />
+            </Col>
+            </Row>
             <ParametersEditor
-              content={this.state.startParameterSchema}
-              disabled={false}
+              content={this.state.startparameterschema}
               onChange={(data) => this.handleStartParameterSchemaChange(data)}
+              disabled={false}
             />
           </Form.Group>
-          <Form.Group controlId='properties'>
-            <Form.Label column={false}>Properties</Form.Label>
-            <ParametersEditor
-              content={this.state.properties}
-              disabled={true}
-              onChange={(data) => this.handlePropertiesChange(data)}
-            />
-          </Form.Group>
+
         </Form>
       </Dialog>
     );
