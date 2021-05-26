@@ -184,6 +184,7 @@ class InfrastructureComponent extends React.Component {
     }else {
       page = <DefaultICPage
         ic = {this.state.ic}
+        sessionToken = {this.state.sessionToken}
         buttonStyle = {buttonStyle}
         iconStyle = {iconStyle}
       />
