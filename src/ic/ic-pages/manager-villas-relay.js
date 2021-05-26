@@ -18,6 +18,7 @@
 import React from 'react';
 import IconButton from "../../common/icon-button";
 import {Col, Container, Row} from "react-bootstrap";
+import { refresh, ICParamsTable, rawDataTable } from "../ic"
 
 class ManagerVillasRelay extends React.Component {
 
@@ -34,7 +35,7 @@ class ManagerVillasRelay extends React.Component {
           <IconButton
             childKey={2}
             tooltip='Refresh'
-            onClick={() => this.props.refresh(this.props.ic, this.props.sessionToken)}
+            onClick={() => refresh(this.props.ic, this.props.sessionToken)}
             icon='sync-alt'
             buttonStyle={this.props.buttonStyle}
             iconStyle={this.props.iconStyle}
@@ -45,11 +46,11 @@ class ManagerVillasRelay extends React.Component {
         <Container>
           <Row>
             <Col>
-              {this.props.ICParamsTable(this.props.ic)}
+              {ICParamsTable(this.props.ic)}
             </Col>
             <Col>
               <b>Raw Status</b>
-              {this.props.rawDataTable(this.props.ic.statusupdateraw)}
+              {rawDataTable(this.props.ic.statusupdateraw)}
             </Col>
           </Row>
         </Container>

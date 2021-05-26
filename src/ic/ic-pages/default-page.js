@@ -17,6 +17,8 @@
 
 import React from 'react';
 import {Col, Container, Row} from "react-bootstrap";
+import IconButton from "../../common/icon-button";
+import {refresh, ICParamsTable } from "../ic"
 
 class DefaultICPage extends React.Component {
 
@@ -26,11 +28,23 @@ class DefaultICPage extends React.Component {
 
   render() {
     return (<div className='section'>
-        <h1>{this.props.ic.name} </h1>
+        <h1>{this.props.ic.name}
+          <span className='icon-button'>
+
+            <IconButton
+              childKey={1}
+              tooltip='Refresh'
+              onClick={() => refresh(this.props.ic, this.props.sessionToken)}
+              icon='sync-alt'
+              buttonStyle={this.props.buttonStyle}
+              iconStyle={this.props.iconStyle}
+            />
+          </span>
+        </h1>
         <Container>
           <Row>
             <Col>
-              {this.props.ICParamsTable(this.props.ic)}
+              {ICParamsTable(this.props.ic)}
             </Col>
           </Row>
         </Container>

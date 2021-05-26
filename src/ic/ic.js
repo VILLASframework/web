@@ -164,9 +164,6 @@ class InfrastructureComponent extends React.Component {
         ic = {this.state.ic}
         currentUser = {this.state.currentUser}
         sessionToken = {this.state.sessionToken}
-        ICParamsTable = {(ic) => InfrastructureComponent.ICParamsTable(ic)}
-        rawDataTable = {(rawData) => InfrastructureComponent.rawDataTable(rawData)}
-        refresh = {(ic, token) => InfrastructureComponent.refresh(ic, token)}
         buttonStyle = {buttonStyle}
         iconStyle = {iconStyle}
       />
@@ -176,9 +173,6 @@ class InfrastructureComponent extends React.Component {
         ics = {this.state.ics}
         currentUser = {this.state.currentUser}
         sessionToken = {this.state.sessionToken}
-        ICParamsTable = {(ic) => InfrastructureComponent.ICParamsTable(ic)}
-        rawDataTable = {(rawData) => InfrastructureComponent.rawDataTable(rawData)}
-        refresh = {(ic, token) => InfrastructureComponent.refresh(ic, token)}
         buttonStyle = {buttonStyle}
         iconStyle = {iconStyle}
       />
@@ -188,16 +182,14 @@ class InfrastructureComponent extends React.Component {
         ics = {this.state.ics}
         currentUser = {this.state.currentUser}
         sessionToken = {this.state.sessionToken}
-        ICParamsTable = {(ic) => InfrastructureComponent.ICParamsTable(ic)}
-        rawDataTable = {(rawData) => InfrastructureComponent.rawDataTable(rawData)}
-        refresh = {(ic, token) => InfrastructureComponent.refresh(ic, token)}
         buttonStyle = {buttonStyle}
         iconStyle = {iconStyle}
       />
     }else {
       page = <DefaultICPage
         ic = {this.state.ic}
-        ICParamsTable = {(ic) => InfrastructureComponent.ICParamsTable(ic)}
+        buttonStyle = {buttonStyle}
+        iconStyle = {iconStyle}
       />
     }
     return page
@@ -206,3 +198,6 @@ class InfrastructureComponent extends React.Component {
 
 let fluxContainerConverter = require('../common/FluxContainerConverter');
 export default FluxContainer.create(fluxContainerConverter.convert(InfrastructureComponent), { withProps: true });
+export const refresh = InfrastructureComponent.refresh;
+export const ICParamsTable = InfrastructureComponent.ICParamsTable;
+export const rawDataTable = InfrastructureComponent.rawDataTable;
