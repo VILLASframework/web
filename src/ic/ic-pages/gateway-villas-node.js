@@ -21,6 +21,7 @@ import IconButton from "../../common/icon-button";
 import ConfirmCommand from "../confirm-command";
 import FileSaver from 'file-saver';
 import AppDispatcher from "../../common/app-dispatcher";
+import { refresh, ICParamsTable, rawDataTable } from "../ic"
 
 class GatewayVillasNode extends React.Component {
 
@@ -78,7 +79,7 @@ class GatewayVillasNode extends React.Component {
           <IconButton
             childKey={2}
             tooltip='Refresh'
-            onClick={() => this.props.refresh(this.props.ic, this.props.sessionToken)}
+            onClick={() => refresh(this.props.ic, this.props.sessionToken)}
             icon='sync-alt'
             buttonStyle={this.props.buttonStyle}
             iconStyle={this.props.iconStyle}
@@ -89,7 +90,7 @@ class GatewayVillasNode extends React.Component {
       <Container>
         <Row>
           <Col>
-            {this.props.ICParamsTable(this.props.ic)}
+            {ICParamsTable(this.props.ic)}
           </Col>
           <Col>
             <div className='section-buttons-group-right'>
@@ -142,15 +143,15 @@ class GatewayVillasNode extends React.Component {
         <Row>
           <Col>
             <b>Raw Status</b>
-            {this.props.rawDataTable(this.props.ic.statusupdateraw)}
+            {rawDataTable(this.props.ic.statusupdateraw)}
           </Col>
           <Col>
             <b>Raw Config</b>
-            {this.props.rawDataTable(this.props.ic.statusupdateraw != null ? this.props.ic.statusupdateraw.config : null )}
+            {rawDataTable(this.props.ic.statusupdateraw != null ? this.props.ic.statusupdateraw.config : null )}
           </Col>
           <Col>
             <b>Raw Statistics</b>
-            {this.props.rawDataTable(this.props.ic.statusupdateraw != null ? this.props.ic.statusupdateraw.statistics : null)}
+            {rawDataTable(this.props.ic.statusupdateraw != null ? this.props.ic.statusupdateraw.statistics : null)}
           </Col>
           <Col>
 

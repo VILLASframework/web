@@ -26,7 +26,6 @@ import moment from 'moment'
 import AppDispatcher from '../common/app-dispatcher';
 import InfrastructureComponentStore from './ic-store';
 
-import Icon from '../common/icon';
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
 import NewICDialog from './new-ic';
@@ -257,8 +256,8 @@ class InfrastructureComponents extends Component {
     return Date.now() - new Date(component.stateUpdateAt) > fiveMinutes;
   }
 
-  stateLabelStyle(state, component){
-    var style = [ 'badge' ];
+  static stateLabelStyle(state, component){
+    let style = [ 'badge' ];
 
     if (InfrastructureComponents.isICOutdated(component) && state !== 'shutdown') {
       style.push('badge-outdated');
@@ -320,13 +319,13 @@ class InfrastructureComponents extends Component {
     return style.join(' ')
   }
 
-  stateUpdateModifier(updatedAt, component) {
+  static stateUpdateModifier(updatedAt, component) {
     let dateFormat = 'ddd, DD MMM YYYY HH:mm:ss ZZ';
     let dateTime = moment(updatedAt, dateFormat);
     return dateTime.fromNow()
   }
 
-  modifyUptimeColumn(uptime, component){
+  static modifyUptimeColumn(uptime, component){
     if(uptime >= 0){
       let momentDurationFormatSetup = require("moment-duration-format");
       momentDurationFormatSetup(moment)
@@ -339,7 +338,7 @@ class InfrastructureComponents extends Component {
     }
   }
 
-  isLocalIC(index, ics){
+  static isLocalIC(index, ics){
     let ic = ics[index]
     return !ic.managedexternally
   }
@@ -351,7 +350,7 @@ class InfrastructureComponents extends Component {
         <Table data={ics}>
           <TableColumn
             checkbox
-            checkboxDisabled={(index) => this.isLocalIC(index, ics) === true}
+            checkboxDisabled={(index) => InfrastructureComponents.isLocalIC(index, ics) === true}
             onChecked={(ic, event) => this.onICChecked(ic, event)}
             width='30'
           />
@@ -372,7 +371,7 @@ class InfrastructureComponents extends Component {
             title='State'
             labelKey='state'
             tooltipKey='error'
-            labelStyle={(state, component) => this.stateLabelStyle(state, component)}
+            labelStyle={(state, component) => InfrastructureComponents.stateLabelStyle(state, component)}
           />
           <TableColumn
             title='Type'
@@ -381,12 +380,12 @@ class InfrastructureComponents extends Component {
           <TableColumn
             title='Uptime'
             dataKey='uptime'
-            modifier={(uptime, component) => this.modifyUptimeColumn(uptime, component)}
+            modifier={(uptime, component) => InfrastructureComponents.modifyUptimeColumn(uptime, component)}
           />
           <TableColumn
             title='Last Update'
             dataKey='stateUpdateAt'
-            modifier={(stateUpdateAt, component) => this.stateUpdateModifier(stateUpdateAt, component)}
+            modifier={(stateUpdateAt, component) => InfrastructureComponents.stateUpdateModifier(stateUpdateAt, component)}
           />
 
           {this.state.currentUser.role === "Admin" ?
@@ -394,10 +393,10 @@ class InfrastructureComponents extends Component {
               width='150'
               align='right'
               editButton
-              showEditButton ={(index) => this.isLocalIC(index, ics)}
+              showEditButton ={(index) => InfrastructureComponents.isLocalIC(index, ics)}
               exportButton
               deleteButton
-              showDeleteButton = {(index) => this.isLocalIC(index, ics)}
+              showDeleteButton = {(index) => InfrastructureComponents.isLocalIC(index, ics)}
               onEdit={index => this.setState({editModal: true, modalIC: ics[index], modalIndex: index})}
               onExport={index => this.exportIC(index)}
               onDelete={index => this.setState({deleteModal: true, modalIC: ics[index], modalIndex: index})}
@@ -495,3 +494,4 @@ class InfrastructureComponents extends Component {
 
 let fluxContainerConverter = require('../common/FluxContainerConverter');
 export default Container.create(fluxContainerConverter.convert(InfrastructureComponents));
+export const stateLabelStyle = InfrastructureComponents.stateLabelStyle;

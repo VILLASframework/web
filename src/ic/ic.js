@@ -26,6 +26,7 @@ import ReactJson from 'react-json-view';
 import GatewayVillasNode from './ic-pages/gateway-villas-node'
 import ManagerVillasRelay from './ic-pages/manager-villas-relay'
 import DefaultICPage from './ic-pages/default-page'
+import DefaultManagerPage from './ic-pages/default-manager-page';
 
 class InfrastructureComponent extends React.Component {
   constructor(props) {
@@ -43,6 +44,7 @@ class InfrastructureComponent extends React.Component {
 
   static calculateState(prevState, props) {
     return {
+      ics: ICstore.getState(),
       ic: ICstore.getState().find(ic => ic.id === parseInt(props.match.params.ic, 10))
     }
   }
@@ -55,6 +57,16 @@ class InfrastructureComponent extends React.Component {
       data: icID,
       token: this.state.sessionToken,
     });
+  }
+
+  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS){
+
+    let icID = parseInt(this.props.match.params.ic, 10);
+
+    if(typeof prevState !== "undefined" && typeof prevState.ic !== "undefined" && parseInt(prevState.ic.id, 10) !== icID){
+      this.setState({ ic: ICstore.getState().find(ic => ic.id === icID)});
+    }
+
   }
 
   static refresh(ic, token) {
@@ -142,34 +154,39 @@ class InfrastructureComponent extends React.Component {
       height: '25px',
       width: '25px'
     }
-
     let page = <>IC page not defined</>
     if (this.state.ic.category ==="gateway" && this.state.ic.type === "villas-node")  {
       page = <GatewayVillasNode
         ic = {this.state.ic}
         currentUser = {this.state.currentUser}
         sessionToken = {this.state.sessionToken}
-        ICParamsTable = {(ic) => InfrastructureComponent.ICParamsTable(ic)}
-        rawDataTable = {(rawData) => InfrastructureComponent.rawDataTable(rawData)}
-        refresh = {(ic, token) => InfrastructureComponent.refresh(ic, token)}
         buttonStyle = {buttonStyle}
         iconStyle = {iconStyle}
       />
     } else if (this.state.ic.category ==="manager" && this.state.ic.type === "villas-relay") {
       page = <ManagerVillasRelay
         ic = {this.state.ic}
+        ics = {this.state.ics}
         currentUser = {this.state.currentUser}
         sessionToken = {this.state.sessionToken}
-        ICParamsTable = {(ic) => InfrastructureComponent.ICParamsTable(ic)}
-        rawDataTable = {(rawData) => InfrastructureComponent.rawDataTable(rawData)}
-        refresh = {(ic, token) => InfrastructureComponent.refresh(ic, token)}
         buttonStyle = {buttonStyle}
         iconStyle = {iconStyle}
       />
-    } else {
+    }else if (this.state.ic.category ==="manager") {
+      page = <DefaultManagerPage
+        ic = {this.state.ic}
+        ics = {this.state.ics}
+        currentUser = {this.state.currentUser}
+        sessionToken = {this.state.sessionToken}
+        buttonStyle = {buttonStyle}
+        iconStyle = {iconStyle}
+      />
+    }else {
       page = <DefaultICPage
         ic = {this.state.ic}
-        ICParamsTable = {(ic) => InfrastructureComponent.ICParamsTable(ic)}
+        sessionToken = {this.state.sessionToken}
+        buttonStyle = {buttonStyle}
+        iconStyle = {iconStyle}
       />
     }
     return page
@@ -178,3 +195,6 @@ class InfrastructureComponent extends React.Component {
 
 let fluxContainerConverter = require('../common/FluxContainerConverter');
 export default FluxContainer.create(fluxContainerConverter.convert(InfrastructureComponent), { withProps: true });
+export const refresh = InfrastructureComponent.refresh;
+export const ICParamsTable = InfrastructureComponent.ICParamsTable;
+export const rawDataTable = InfrastructureComponent.rawDataTable;
