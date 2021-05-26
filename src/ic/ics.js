@@ -134,20 +134,6 @@ class InfrastructureComponents extends Component {
       });
 
     }
-
-     // get status of VILLASnode and VILLASrelay ICs
-     this.state.ics.forEach(ic => {
-      if (ic.category === "gateway" && (ic.type === "villas-node" || ic.type === "villas-relay")
-        && ic.apiurl !== '' && ic.apiurl !== undefined && ic.apiurl !== null && !ic.managedexternally) {
-        AppDispatcher.dispatch({
-          type: 'ics/get-status',
-          url: ic.apiurl,
-          token: this.state.sessionToken,
-          ic: ic
-        });
-      }
-    })
-
   }
 
   closeNewModal(data) {
