@@ -58,15 +58,11 @@ class InfrastructureComponent extends React.Component {
   }
 
   static refresh(ic, token) {
-    // get status of VILLASnode and VILLASrelay ICs
-    if (ic.apiurl !== '' && ic.apiurl !== undefined && ic.apiurl !== null && !ic.managedexternally) {
-      AppDispatcher.dispatch({
-        type: 'ics/get-status',
-        url: ic.apiurl,
-        token: token,
-        ic: ic
-      });
-    }
+    AppDispatcher.dispatch({
+      type: 'ics/start-load',
+      data: ic.id,
+      token: token,
+    });
   }
 
   static isJSON(data) {
