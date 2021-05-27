@@ -19,16 +19,14 @@ import React, { Component } from 'react';
 import { Container } from 'flux/utils';
 import Fullscreenable from 'react-fullscreenable';
 import classNames from 'classnames';
-
 import EditWidget from '../widget/edit-widget/edit-widget';
 import EditFilesDialog from '../file/edit-files';
 import EditSignalMappingDialog from "../signal/edit-signal-mapping";
 import WidgetContextMenu from '../widget/widget-context-menu';
 import WidgetToolbox from '../widget/widget-toolbox';
-import WidgetArea from '../widget/widget-area';
+import WidgetArea from './widget-area';
 import DashboardButtonGroup from './dashboard-button-group';
 import IconToggleButton from '../common/icon-toggle-button';
-
 import DashboardStore from './dashboard-store';
 import SignalStore from '../signal/signal-store'
 import FileStore from '../file/file-store';
@@ -37,8 +35,6 @@ import ICStore from '../ic/ic-store'
 import ConfigStore from '../componentconfig/config-store'
 import AppDispatcher from '../common/app-dispatcher';
 import ScenarioStore from '../scenario/scenario-store';
-
-
 import 'react-contexify/dist/ReactContexify.min.css';
 import WidgetContainer from '../widget/widget-container';
 import EditableWidgetContainer from '../widget/editable-widget-container';
