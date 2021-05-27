@@ -26,7 +26,8 @@ import ReactJson from 'react-json-view';
 import GatewayVillasNode from './ic-pages/gateway-villas-node'
 import ManagerVillasRelay from './ic-pages/manager-villas-relay'
 import DefaultICPage from './ic-pages/default-page'
-import DefaultManagerPage from './ic-pages/default-manager-page';
+import DefaultManagerPage from './ic-pages/default-manager-page'
+import KubernetesICPage from './ic-pages/kubernetes-page'
 
 class InfrastructureComponent extends React.Component {
   constructor(props) {
@@ -180,6 +181,15 @@ class InfrastructureComponent extends React.Component {
         sessionToken = {this.state.sessionToken}
         buttonStyle = {buttonStyle}
         iconStyle = {iconStyle}
+      />
+    } else if (this.state.ic.category === "simulator" && this.state.ic.type === "kubernetes") {
+      page = <KubernetesICPage
+      ic={this.state.ic}
+      ics={this.state.ics}
+      currentUser={this.state.currentUser}
+      sessionToken={this.state.sessionToken}
+      buttonStyle={buttonStyle}
+      iconStyle={iconStyle}
       />
     }else {
       page = <DefaultICPage
