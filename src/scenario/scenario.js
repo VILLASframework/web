@@ -24,6 +24,7 @@ import IconToggleButton from '../common/icon-toggle-button';
 
 import ScenarioStore from './scenario-store';
 import ICStore from '../ic/ic-store';
+import ICDataStore from '../ic/ic-data-store';
 import DashboardStore from '../dashboard/dashboard-store';
 import ConfigStore from '../componentconfig/config-store';
 import SignalStore from '../signal/signal-store'
@@ -31,6 +32,7 @@ import FileStore from "../file/file-store"
 import WidgetStore from "../widget/widget-store";
 import ResultStore from "../result/result-store"
 import UsersStore from "../user/users-store"
+import LoginStore from "../user/login-store"
 
 import DashboardTable from '../dashboard/dashboard-table'
 import ResultTable from "../result/result-table";
@@ -68,7 +70,7 @@ class Scenario extends React.Component {
   }
 
   static getStores() {
-    return [ScenarioStore, ConfigStore, DashboardStore, ICStore, SignalStore, FileStore, WidgetStore, ResultStore, UsersStore];
+    return [ScenarioStore, ConfigStore, DashboardStore, ICStore, ICDataStore, SignalStore, FileStore, WidgetStore, ResultStore, UsersStore, LoginStore];
   }
 
   componentDidMount() {

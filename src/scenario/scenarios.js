@@ -27,6 +27,9 @@ import SignalStore from '../signal/signal-store'
 import ResultStore from '../result/result-store'
 import FileStore from '../file/file-store'
 import LoginStore from '../user/login-store'
+import UsersStore from '../user/users-store'
+import ICStore from '../ic/ic-store'
+import ICDataStore from '../ic/ic-data-store'
 import Table from '../common/table';
 import TableColumn from '../common/table-column';
 import NewScenarioDialog from './new-scenario';
@@ -39,7 +42,7 @@ import IconButton from '../common/icon-button';
 class Scenarios extends Component {
 
   static getStores() {
-    return [ScenarioStore, DashboardStore, WidgetStore, ComponentConfigStore, SignalStore, ResultStore, FileStore,LoginStore];
+    return [ScenarioStore, DashboardStore, WidgetStore, ComponentConfigStore, SignalStore, ResultStore, FileStore,LoginStore, UsersStore, ICStore, ICDataStore];
   }
 
   static calculateState(prevState, props) {
