@@ -22,7 +22,6 @@ import classNames from 'classnames';
 import EditWidget from '../widget/edit-widget/edit-widget';
 import EditFilesDialog from '../file/edit-files';
 import EditSignalMappingDialog from "../signal/edit-signal-mapping";
-import WidgetContextMenu from '../widget/widget-context-menu';
 import WidgetToolbox from '../widget/widget-toolbox';
 import WidgetArea from './widget-area';
 import DashboardButtonGroup from './dashboard-button-group';
@@ -32,7 +31,9 @@ import SignalStore from '../signal/signal-store'
 import FileStore from '../file/file-store';
 import WidgetStore from '../widget/widget-store';
 import ICStore from '../ic/ic-store'
+import ICDataStore from '../ic/ic-data-store'
 import ConfigStore from '../componentconfig/config-store'
+import ResultStore from '../result/result-store'
 import AppDispatcher from '../common/app-dispatcher';
 import ScenarioStore from '../scenario/scenario-store';
 import 'react-contexify/dist/ReactContexify.min.css';
@@ -44,7 +45,7 @@ class Dashboard extends Component {
   static lastWidgetKey = 0;
   static webSocketsOpened = false;
   static getStores() {
-    return [DashboardStore, FileStore, WidgetStore, SignalStore, ConfigStore, ICStore, ScenarioStore];
+    return [DashboardStore, FileStore, WidgetStore, SignalStore, ConfigStore, ICStore, ICDataStore, ScenarioStore, ResultStore];
   }
 
   static calculateState(prevState, props) {
@@ -142,9 +143,9 @@ class Dashboard extends Component {
       editInputSignalsModal: editInputSignalsModal,
       filesEditModal: prevState.filesEditModal || false,
       filesEditSaveState: prevState.filesEditSaveState || [],
-      modalData: null,
-      modalIndex: null,
-      widgetChangeData: [],
+      modalData: prevState.modalData || null,
+      modalIndex: prevState.modalIndex ||null,
+      widgetChangeData: prevState.widgetChangeData || [],
       widgetOrigIDs: prevState.widgetOrigIDs || [],
 
       maxWidgetHeight: maxHeight || null,
@@ -279,8 +280,6 @@ class Dashboard extends Component {
 
   }
 
-
-
   editWidget(widget, index) {
     this.setState({ editModal: true, modalData: widget, modalIndex: index });
   };
@@ -328,7 +327,7 @@ class Dashboard extends Component {
         param: '?dashboardID=' + this.state.dashboard.id
       });
 
-      this.setState({ editModal: false });
+      this.setState({ editModal: false , modalData: null, modalIndex: null});
 
       return;
     }
@@ -344,7 +343,7 @@ class Dashboard extends Component {
       data: data
     });
 
-    this.setState({ editModal: false });
+    this.setState({ editModal: false , modalData: null, modalIndex: null});
   };
 
 
