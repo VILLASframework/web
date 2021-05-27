@@ -17,10 +17,11 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Menu, Item, Separator, contextMenu } from 'react-contexify';
-import Widget from './widget';
+import { Menu, Item, Separator } from 'react-contexify';
+import "react-contexify/dist/ReactContexify.css";
 
 class WidgetContextMenu extends React.Component {
+
   editWidget = event => {
     if (this.props.onEdit != null) {
       this.props.onEdit(this.props.widget, this.props.index);
@@ -93,26 +94,6 @@ class WidgetContextMenu extends React.Component {
     }
   };
 
-  showMenu = e => {
-    let index = this.props.index
-    if (this.props.editing){
-      contextMenu.show({
-        event: e,
-        id: 'widgetMenu' + index,
-        position: {
-          x: 'inherit',
-          y: 'inherit',
-        }
-      })
-    }
-    else {
-      contextMenu.show({
-        event: e,
-        id: 'widgetMenu' + index,
-      })
-    }
-  }
-
   render() {
     const isLocked = this.props.widget.locked;
 
@@ -122,16 +103,7 @@ class WidgetContextMenu extends React.Component {
     };
 
     return (
-
-      <div style={dim} onContextMenu={this.showMenu}>
-        <Widget
-          data={this.props.widget}
-          onWidgetChange={this.props.onWidgetChange}
-          editing={this.props.editing}
-          index={this.props.index}
-          paused={this.props.paused}
-        />
-
+      <div >
         <Menu id={'widgetMenu' + this.props.index}>
           <Item disabled={isLocked} onClick={this.editWidget}>Edit</Item>
           <Item disabled={isLocked} onClick={this.duplicateWidget}>Duplicate</Item>
@@ -158,8 +130,8 @@ WidgetContextMenu.propTypes = {
   index: PropTypes.number.isRequired,
   widget: PropTypes.object.isRequired,
   onEdit: PropTypes.func.isRequired,
-  onDelete: PropTypes.func,
-  onChange: PropTypes.func
+  onDelete: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired
 };
 
 export default WidgetContextMenu
