@@ -402,7 +402,7 @@ class ConfigTable extends Component {
         </Table>
 
         {this.state.ExternalICInUse ?
-          <div style={{ float: 'left' }}>
+          <div style={{ float: 'left', clear: 'both' }}>
             <ICAction
               ics={this.props.ics}
               configs={this.props.configs}
@@ -416,10 +416,8 @@ class ConfigTable extends Component {
                 { id: '3', title: 'Resume', data: { action: 'resume' } }
               ]} />
           </div>
-          : <div />
+          : <div/>
         }
-
-        <div style={{ clear: 'both' }} />
 
         <EditConfigDialog
           show={this.state.editConfigModal}
