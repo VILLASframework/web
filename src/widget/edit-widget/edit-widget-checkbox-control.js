@@ -21,6 +21,9 @@ import { Form } from 'react-bootstrap';
 class EditWidgetCheckboxControl extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isChecked: false,
+    }
   }
 
   static getDerivedStateFromProps(props, state) {
