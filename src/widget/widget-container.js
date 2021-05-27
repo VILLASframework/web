@@ -95,18 +95,19 @@ class WidgetContainer extends React.Component {
   render() {
 
     const widget = this.props.widget;
-    let contextMenu = (<WidgetContextMenu
-      key={this.props.key}
-      index={this.props.index}
-      widget={this.props.widget}
-      onEdit={this.props.onEdit}
-      onDuplicate={this.props.onDuplicate}
-      onDelete={this.props.onDelete}
-      onChange={this.props.onChange}
+    let contextMenu = (
+      <WidgetContextMenu
+        key={"widget-context-menu"+this.props.index}
+        index={this.props.index}
+        widget={this.props.widget}
+        onEdit={this.props.onEdit}
+        onDuplicate={this.props.onDuplicate}
+        onDelete={this.props.onDelete}
+        onChange={this.props.onChange}
 
-      onWidgetChange={this.props.onWidgetChange}
-      editing={this.props.editing}
-      paused={this.props.paused}
+        onWidgetChange={this.props.onWidgetChange}
+        editing={this.props.editing}
+        paused={this.props.paused}
     />)
 
     if ( !this.props.editing ){
@@ -148,8 +149,9 @@ class WidgetContainer extends React.Component {
       'locked': widget.isLocked
     });
 
-    return ( <div className='widget'  onContextMenu={(e) => this.showMenu(e, this.props.index, this.props.editing)}>
+    return ( <div key={"widget-rnd-context" + this.props.index} className='widget'  onContextMenu={(e) => this.showMenu(e, this.props.index, this.props.editing)}>
       <Rnd
+        key={"widget-rnd" + this.props.index}
         ref={c => { this.rnd = c; }}
         size={{width: Number(widget.width), height: Number(widget.height)}}
         position={{x: Number(widget.x), y: Number(widget.y),}}

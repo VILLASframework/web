@@ -508,11 +508,11 @@ class Dashboard extends Component {
     let dropZoneHeight = this.state.dashboard.height;
 
     return (<div className={boxClasses} >
-      <div className='section-header box-header'>
-        <div className="section-title">
+      <div key={"header-box"} className='section-header box-header'>
+        <div key={"title"} className="section-title">
           <h2>
             {this.state.dashboard.name}
-            <span className='icon-button'>
+            <span key={"toggle-lock-button"} className='icon-button'>
               <IconToggleButton
                 childKey={0}
                 checked={this.state.locked}
@@ -529,6 +529,7 @@ class Dashboard extends Component {
         </div>
 
         <DashboardButtonGroup
+          key={"dashboard-buttons"}
           locked={this.state.locked}
           editing={this.state.editing}
           onEdit={this.startEditing.bind(this)}
@@ -545,9 +546,10 @@ class Dashboard extends Component {
         />
       </div>
 
-      <div className="box box-content" onContextMenu={(e) => e.preventDefault()}>
+      <div key={"dashboard-area"} className="box box-content" onContextMenu={(e) => e.preventDefault()}>
         {this.state.editing &&
           <WidgetToolbox
+            key={"widget-toolbox"}
             grid={grid}
             onGridChange={this.setGrid.bind(this)}
             dashboard={this.state.dashboard}
@@ -556,6 +558,7 @@ class Dashboard extends Component {
         }
 
         <WidgetArea
+          key={"widget-area"}
           widgets={this.state.widgets}
           editing={this.state.editing}
           dropZoneHeight={dropZoneHeight}
@@ -564,10 +567,10 @@ class Dashboard extends Component {
         >
           {this.state.widgets != null && Object.keys(this.state.widgets).map(widgetKey => (
 
-            <div >
+            <div key={"widget-container-wrapper" + widgetKey}>
               <WidgetContainer
                 widget={this.state.widgets[widgetKey]}
-                key={widgetKey}
+                key={"widget-container" + widgetKey}
                 index={parseInt(widgetKey, 10)}
                 grid={grid}
                 onWidgetChange={this.widgetChange.bind(this)}
@@ -579,7 +582,7 @@ class Dashboard extends Component {
                 onChange={this.widgetChange.bind(this)}
               >
                 <Widget
-                  key={widgetKey}
+                  key={"widget" + widgetKey}
                   data={this.state.widgets[widgetKey]}
                   onWidgetChange={this.widgetChange.bind(this)}
                   editing={this.state.editing}
@@ -594,6 +597,7 @@ class Dashboard extends Component {
         </WidgetArea>
 
         <EditWidget
+          key={"edit-widget"}
           sessionToken={this.state.sessionToken}
           show={this.state.editModal}
           onClose={this.closeEdit.bind(this)}
@@ -604,6 +608,7 @@ class Dashboard extends Component {
         />
 
         <EditFilesDialog
+          key={"edit-files-dialog"}
           sessionToken={this.state.sessionToken}
           show={this.state.filesEditModal}
           onClose={this.closeEditFiles.bind(this)}
@@ -614,6 +619,7 @@ class Dashboard extends Component {
         />
 
         <EditSignalMappingDialog
+          key={"edit-signal-mapping-output-dialog"}
           show={this.state.editOutputSignalsModal}
           onCloseEdit={(direction) => this.closeEditSignalsModal(direction)}
           direction="Output"
@@ -623,6 +629,7 @@ class Dashboard extends Component {
           sessionToken={this.state.sessionToken}
         />
         <EditSignalMappingDialog
+          key={"edit-signal-mapping-input-dialog"}
           show={this.state.editInputSignalsModal}
           onCloseEdit={(direction) => this.closeEditSignalsModal(direction)}
           direction="Input"
