@@ -88,7 +88,7 @@ class EditConfigDialog extends React.Component {
     if (this.props.ics) {
       let currentIC = this.props.ics.find(ic => ic.id === parseInt(id, 10));
       if (currentIC) {
-        if (currentIC.startparameterschema.hasOwnProperty('type')) {
+        if (currentIC.startparameterschema !== null && currentIC.startparameterschema.hasOwnProperty('type')) {
           schema = currentIC.startparameterschema;
         }
       }
@@ -142,7 +142,7 @@ class EditConfigDialog extends React.Component {
     if (this.props.ics && this.props.config.icID) {
       let currentIC = this.props.ics.find(ic => ic.id === parseInt(this.props.config.icID, 10));
       if (currentIC) {
-        if (currentIC.startparameterschema.hasOwnProperty('type')) {
+        if (currentIC.startparameterschema !== null && currentIC.startparameterschema.hasOwnProperty('type')) {
           schema = currentIC.startparameterschema;
         }
       }
