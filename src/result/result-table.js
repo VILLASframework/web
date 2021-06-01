@@ -26,6 +26,7 @@ import TableColumn from "../common/table-column";
 import DeleteDialog from "../common/dialogs/delete-dialog";
 import EditResultDialog from "./edit-result";
 import ResultConfigDialog from "./result-configs-dialog";
+import ResultPythonDialog from "./result-python-dialog";
 import NewDialog from "../common/dialogs/new-dialog";
 
 class ResultTable extends Component {
@@ -34,6 +35,7 @@ class ResultTable extends Component {
     super();
 
     this.state = {
+      pythonResultsModal: false,
       editResultsModal: false,
       modalResultsData: {},
       modalResultsIndex: 0,
@@ -93,6 +95,10 @@ class ResultTable extends Component {
 
   closeEditResultsModal() {
     this.setState({ editResultsModal: false });
+  }
+
+  closePythonResultsModal() {
+    this.setState({ pythonResultsModal: false });
   }
 
   downloadResultData(param) {
@@ -218,9 +224,11 @@ class ResultTable extends Component {
             width={200}
             align='right'
             editButton
+            pythonResultsButton
             downloadAllButton
             deleteButton
-            onEdit={index => this.setState({ editResultsModal: true, modalResultsIndex: index })}
+            onPythonResults={(index) => this.setState({ pythonResultsModal: true, modalResultsIndex: index })}
+            onEdit={(index) => this.setState({ editResultsModal: true, modalResultsIndex: index })}
             onDownloadAll={(index) => this.downloadResultData(this.props.results[index])}
             onDelete={(index) => this.setState({ deleteResultsModal: true, modalResultsData: this.props.results[index], modalResultsIndex: index })}
             locked={this.props.locked}
@@ -247,6 +255,13 @@ class ResultTable extends Component {
           configs={this.state.modalResultConfigs}
           resultNo={this.state.modalResultConfigsIndex}
           onClose={this.closeResultConfigSnapshots.bind(this)}
+        />
+        <ResultPythonDialog
+          show={this.state.pythonResultsModal}
+          files={this.props.files}
+          results={this.props.results}
+          resultId={this.state.modalResultsIndex}
+          onClose={this.closePythonResultsModal.bind(this)}
         />
         <NewDialog
           show={this.state.newResultModal}
