@@ -23,7 +23,6 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
-
 class ResultPythonDialog extends React.Component {
   villasDataProcessingUrl = 'https://pypi.org/project/villas-dataprocessing/';
 
@@ -68,65 +67,104 @@ class ResultPythonDialog extends React.Component {
     }, 100);
   }
 
-  getPythonDependencies() {
-    return `pip install villas-dataprocessing`
+  getPythonDependencies(notebook) {
+    let code = '';
+    if (notebook)
+      code += `import sys
+!{sys.executable} -m `;
+
+    code += `pip install villas-dataprocessing`;
+
+    return code;
   }
 
-  getPythonSnippet(result) {
+  getPythonSnippets(notebook, result) {
     let token = localStorage.getItem('token');
 
     let files = [];
-    let hasCSV = false;
     for (let file of this.props.files) {
       if (result.resultFileIDs.includes(file.id)) {
         files.push(file);
-        if (file.type == 'text/csv')
-          hasCSV = true;
       }
     }
 
-    let code = '';
+    let code_snippets = [];
 
-    if (hasCSV)
-      code += 'import pandas\n';
+    /* Imports */
+    let code_imports = '';
+    if (notebook)
+      code_imports += 'from IPython.display import display\n'
 
-    code += `from villas.web.result import Result
+    code_imports += `from villas.web.result import Result\n`
+    code_imports += `from pprint import pprint`
 
-r = Result(${result.id}, '${token}')
+    code_snippets.push(code_imports)
 
-# print(r)                               # result details
-# print(r.files)                         # list of files of this result set
+    /* Result object */
+    code_snippets.push(`r = Result(${result.id}, '${token}')`);
 
-# f = r.files[0]                         # first file
+    /* Examples */
+    code_snippets.push(`# Get result metadata
+print(r)                                 # result details
+pprint(r.files)                          # list of files of this result set`);
+
+    code_snippets.push(`f = r.files[0]                           # first file
 # f = r.get_files_by_type('text/csv')[0] # first CSV file
-# f = r.get_file_by_name('result.csv')   # by filename`;
+# f = r.get_file_by_name('result.csv')   # by filename`);
+
+    code_snippets.push(`# Get file metadata
+print('Name: %s' % f.name)
+print('Size: %d Bytes' % f.size)
+print('Type: ' + f.type)
+print('Created at: %s' % f.created_at)
+print('Updated at: %s' % f.updated_at)`);
+
+    code_snippets.push(`# Open file as fileobj
+# with f.open() as fh:
+#   contents = fh.read()
+
+# Load and parse file contents (supports xls, mat, json, h5)
+contents = f.load()`);
 
     for (let file of files) {
-      console.log(file);
-      code += `\n\nf${file.id} = r.get_file_by_name('${file.name}')`;
+      let code = `# Get file by name
+f${file.id} = r.get_file_by_name('${file.name}')`;
+
+      if (notebook)
+        code += `\n\n# Display contents in Jupyter
+display(f${file.id})\n`;
 
       switch (file.type) {
         case 'application/zip':
-          code += `\nwith f${file.id}.open_zip('testdata.csv') as f:
-  data = pandas.read_csv(f)`;
+          code += `\n# Open a file within the zipped results
+with f${file.id}.open_zip('file_in_zip.csv') as f:
+  f${file.id} = pandas.read_csv(f)`;
           break;
 
         case 'text/csv':
-          code += `\nwith f${file.id}.open() as f:
-  data = pandas.read_csv(f)`;
+        case 'application/vnd.ms-excel':
+        case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+        case 'application/x-hdf5':
+        case 'application/x-matlab-data':
+          code += `\n# Load tables as Pandas dataframe
+f${file.id} = f${file.id}.load()`;
+          break;
+
+        case 'application/json':
+          code += `\n# Load JSON file as Python dictionary
+f${file.id} = f${file.id}.load()`;
           break;
 
         default:
-          code += `\nwith f${file.id}.open() as f:
-  data = f.read()`;
+          code += `\n# Load files as bytes
+f${file.id} = f${file.id}.load()`;
           break;
       }
 
-      code += `
-  print(data)`;
+      code_snippets.push(code);
     }
 
-    return code;
+    return code_snippets;
   }
 
   /* Generate random cell ids
@@ -134,24 +172,34 @@ r = Result(${result.id}, '${token}')
    * See: https://jupyter.org/enhancement-proposals/62-cell-id/cell-id.html
    */
   getCellId() {
-    return Math.round(1000000 * Math.random()).toString();
+    var result           = [];
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+
+    for ( var i = 0; i < 8; i++ )
+      result.push(characters.charAt(Math.floor(Math.random() * charactersLength)));
+
+    return result.join('');
   }
 
   getJupyterNotebook(result) {
     let ipynb_cells = [];
-    let cells = [
-      this.getPythonDependencies(),
-      this.getPythonSnippet(result)
-    ]
+    let cells = [ this.getPythonDependencies(true) ];
+    cells = cells.concat(this.getPythonSnippets(true, result));
 
     for (let cell of cells) {
+      let lines = cell.split('\n');
+
+      for (let i = 0; i < lines.length -1; i++)
+        lines[i] += '\n'
+
       ipynb_cells.push({
         cell_type: 'code',
         execution_count: null,
         id: this.getCellId(),
         metadata: {},
         outputs: [],
-        source: cell.split('\n')
+        source: lines
       })
     }
 
@@ -187,7 +235,8 @@ r = Result(${result.id}, '${token}')
     if (!result)
       return null;
 
-    let code = this.getPythonSnippet(result);
+    let snippets = this.getPythonSnippets(true, result);
+    let code = snippets.join('\n\n');
     return (
       <Dialog
         show={this.props.show}
@@ -204,7 +253,7 @@ r = Result(${result.id}, '${token}')
         <SyntaxHighlighter
           language="bash"
           style={github}>
-            {this.getPythonDependencies()}
+            {this.getPythonDependencies(false)}
         </SyntaxHighlighter>
 
         <p><b>2a)</b> Insert the following snippet your Python code:</p>
