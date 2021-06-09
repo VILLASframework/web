@@ -402,7 +402,7 @@ class ConfigTable extends Component {
         </Table>
 
         {this.state.ExternalICInUse ?
-          <div style={{ float: 'left', clear: 'both' }}>
+          <div>
             <ICAction
               ics={this.props.ics}
               configs={this.props.configs}
