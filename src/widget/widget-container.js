@@ -157,7 +157,6 @@ class WidgetContainer extends React.Component {
         position={{x: Number(widget.x), y: Number(widget.y),}}
         minWidth={widget.minWidth}
         minHeight={widget.minHeight}
-        maxWidth={widget.customProperties.maxWidth || '100%'}
         lockAspectRatio={Boolean(widget.customProperties.lockAspect)}
         bounds={'body'}
         className={widgetClasses}
