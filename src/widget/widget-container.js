@@ -159,7 +159,7 @@ class WidgetContainer extends React.Component {
         minHeight={widget.minHeight}
         maxWidth={widget.customProperties.maxWidth || '100%'}
         lockAspectRatio={Boolean(widget.customProperties.lockAspect)}
-        bounds={'parent'}
+        bounds={'body'}
         className={widgetClasses}
         onResizeStart={this.borderWasClicked}
         onResizeStop={this.resizeStop}
