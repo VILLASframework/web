@@ -62,6 +62,7 @@ class Plot extends React.Component {
       labelMargin,
       identifier: uniqueIdentifier++,
       stopTime: null,
+      freeze: false
     };
   }
 
@@ -80,7 +81,7 @@ class Plot extends React.Component {
     }
 
     // check if data is invalid
-    if (props.data == null || props.data.length === 0) {
+    if (props.signalIDs === [] || props.mode === "auto time-scrolling" && (props.data == null || props.data.length === 0)) {
       // create empty plot axes
       let xScale;
       let yScale;
@@ -133,6 +134,21 @@ class Plot extends React.Component {
   }
 
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
+    
+    if(this.props.mode === "last samples"){
+      let freeze = true;
+
+      for (let i = 0; i < this.props.signalIDs.length; i++) {
+        if(this.props.data[i][this.props.data[i].length - 1].x !== prevProps.data[i][prevProps.data[i].length - 1].x){
+          freeze = false;
+        }
+      }
+      
+      if(freeze !== prevState.freeze){
+      this.setState({freeze: freeze})
+      }
+    }
+
     if (prevProps.time !== this.props.time) {
       this.createInterval();
     }
@@ -159,14 +175,15 @@ class Plot extends React.Component {
       this.interval = null;
     }
   }
-
+//for last samples: only tick if new samples arrive, else freeze
   tick = () => {
-    if (this.state.data == null) {
+
+    if (this.props.signalIDs === [] || this.props.mode === "auto time-scrolling" && this.state.data == null) {
       this.setState({ lines: null });
       return;
     }
 
-    if (this.props.paused === true) {
+    if (this.props.paused === true || (this.props.mode === "last samples" && this.state.freeze)) {
       return;
     }
 

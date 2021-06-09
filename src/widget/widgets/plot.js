@@ -85,7 +85,7 @@ class WidgetPlot extends React.Component {
 
   }
 
-
+  //do we need this function?
   scaleData(data, scaleFactor){
     // data is an array of value pairs x,y
   }
@@ -95,6 +95,7 @@ class WidgetPlot extends React.Component {
       <div className="widget-plot">
         <Plot
           data={this.state.data}
+          mode={this.props.widget.customProperties.mode}
           height={this.props.widget.height - 55}
           width={this.props.widget.width - 20}
           time={this.props.widget.customProperties.time}
