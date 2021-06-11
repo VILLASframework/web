@@ -243,6 +243,20 @@ class CustomTable extends Component {
         />);
     }
 
+    if (child.props.pythonResultsButton) {
+      cell.push(
+        <IconButton
+          key={childkey++}
+          childKey={childkey++}
+          icon={['fab', 'python']}
+          disabled={child.props.onPythonResults == null}
+          tooltip={"Get Python code"}
+          tipPlacement={'bottom'}
+          onClick={() => child.props.onPythonResults(index)}
+          variant={'table-control-button'}
+        />);
+    }
+
     if (child.props.downloadAllButton) {
       cell.push(
         <IconButton
