@@ -110,7 +110,7 @@ class SidebarMenu extends React.Component {
               <li hidden={!values.pages.account}><NavLink to="/account" title="Account">Account</NavLink></li>
               <li><NavLink to={this.state.logoutLink} title="Logout">Logout</NavLink></li>
               <li hidden={!values.pages.api}> <NavLink to="/api" title="API Browser">API Browser</NavLink></li >
-            </ul >}
+            </ul>}
 
           {
             links.length > 0 ?

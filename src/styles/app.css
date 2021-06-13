@@ -63,6 +63,24 @@ body {
   padding: 0 !important;
 }
 
+a:link { 
+  text-decoration: none; 
+}
+
+a:visited { 
+  text-decoration: none; 
+}
+
+a:hover { 
+  text-decoration: none; 
+}
+
+a:active { 
+  text-decoration: none; 
+}
+
+
+
 .app-footer {
   width: 100%;
 
@@ -156,6 +174,7 @@ body {
 
 .menu ul {
   padding-top: 10px;
+  padding-left: 0px;
   margin-bottom: 0;
   list-style: none;
   white-space: nowrap;
@@ -224,6 +243,7 @@ body {
  */
 .home-container > ul {
   margin-left: 2em;
+  padding-left: 0px;
 }
 
 .home-container > img {
