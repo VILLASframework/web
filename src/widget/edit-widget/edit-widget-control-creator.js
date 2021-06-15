@@ -33,6 +33,7 @@ import EditWidgetMinMaxControl from './edit-widget-min-max-control';
 import EditWidgetParametersControl from './edit-widget-parameters-control';
 import EditWidgetICControl from './edit-widget-ic-control';
 import EditWidgetPlotColorsControl from './edit-widget-plot-colors-control';
+import EditWidgetPlotModeControl from './edit-widget-plot-mode-control';
 //import EditWidgetHTMLContent from './edit-widget-html-content';
 
 export default function CreateControls(widgetType = null, widget = null, sessionToken = null, files = null,ics = null, signals, handleChange) {
@@ -75,7 +76,8 @@ export default function CreateControls(widgetType = null, widget = null, session
                 <EditWidgetPlotColorsControl key={2} widget={widget} controlId={'customProperties.lineColors'} signals={signals} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetTextControl key={3} widget={widget} controlId={'customProperties.ylabel'} label={'Y-Axis name'} placeholder={'Enter a name for the y-axis'}  handleChange={(e) => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={4} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />,
-                <EditWidgetMinMaxControl key={5} widget={widget} controlId="customProperties.y" handleChange={e => handleChange(e)} />
+                <EditWidgetPlotModeControl key={5} widget={widget} controlId={'customProperties.mode'} input handleChange={e => handleChange(e)} />,
+                <EditWidgetMinMaxControl key={6} widget={widget} controlId="customProperties.y" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Table':
