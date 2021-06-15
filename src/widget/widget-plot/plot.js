@@ -132,6 +132,9 @@ class Plot extends React.Component {
     }
 
     let tempTimestamp = state.lastTimestamp;
+    if(typeof tempTimestamp === "undefined"){
+      tempTimestamp = [];
+    }
     let freeze = false;
 
     if (props.mode === "last samples" && state.update) {
