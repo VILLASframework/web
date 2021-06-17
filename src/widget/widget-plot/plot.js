@@ -119,7 +119,7 @@ class Plot extends React.Component {
 
     // only show data in requested time
     let data = props.data;
-    let icDataset = data.find(function(element) {
+    let icDataset = data.find(function (element) {
       return element !== undefined;
     })
 
@@ -132,32 +132,31 @@ class Plot extends React.Component {
     }
 
     let tempTimestamp = state.lastTimestamp;
-    if(typeof tempTimestamp === "undefined"){
+    if (typeof tempTimestamp === "undefined") {
       tempTimestamp = [];
     }
+    
     let freeze = false;
 
-    if (props.mode === "last samples" && state.update) {
-      freeze = true;
-      if (state.lastTimestamp !== [] && props.mode === "last samples" && props.data.length > 0) {
-
-        for (let i = 0; i < props.signalIDs.length; i++) {
-          if (typeof props.data[i][props.data[i].length - 1].x !== "undefined" && props.data[i][props.data[i].length - 1].x !== state.lastTimestamp[i] && typeof state.lastTimestamp[i] !== "undefined") {
-            freeze = false;
+    if (state.update) {
+      if (props.mode === "last samples") {
+        freeze = true;
+        if (tempTimestamp !== [] && props.mode === "last samples") {
+          for (let i = 0; i < props.signalIDs.length; i++) {
+            if (typeof data[i] !== "undefined" && typeof data[i][data[i].length - 1].x !== "undefined" && typeof tempTimestamp[i] !== "undefined" && data[i][data[i].length - 1].x !== tempTimestamp[i]) {
+              freeze = false;
+            }
           }
         }
-
       }
 
-    }
-
-    if(state.update){
-    for (let i = 0; i < props.signalIDs.length; i++) {
-      if(typeof props.data[i][props.data[i].length - 1].x !== "undefined"){
-      tempTimestamp[i] = props.data[i][props.data[i].length - 1].x;
+      for (let i = 0; i < props.signalIDs.length; i++) {
+        if (typeof data[i] !== "undefined" && typeof data[i][data[i].length - 1].x !== "undefined") {
+          tempTimestamp[i] = data[i][data[i].length - 1].x;
+        }
       }
     }
-  }
+
 
     return {
       data,
