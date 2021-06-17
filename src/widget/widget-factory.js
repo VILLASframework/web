@@ -99,10 +99,10 @@ class WidgetFactory {
                 widget.height = 200;
                 widget.customProperties.showUnit = false;
                 break;
-            case 'Label':
+          case 'Label':
                 widget.minWidth = 20;
                 widget.minHeight = 20;
-                widget.customProperties.maxWidth = 100;
+                widget.customProperties.maxWidth = 100; // TODO: this props is currently ignored!
                 widget.width = 100;
                 widget.height = 35;
                 widget.name = 'Label';
