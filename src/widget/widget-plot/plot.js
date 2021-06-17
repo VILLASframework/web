@@ -142,7 +142,7 @@ class Plot extends React.Component {
       if (state.lastTimestamp !== [] && props.mode === "last samples" && props.data.length > 0) {
 
         for (let i = 0; i < props.signalIDs.length; i++) {
-          if (props.data[i][props.data[i].length - 1].x !== state.lastTimestamp[i] && typeof state.lastTimestamp[i] !== "undefined") {
+          if (typeof props.data[i][props.data[i].length - 1].x !== "undefined" && props.data[i][props.data[i].length - 1].x !== state.lastTimestamp[i] && typeof state.lastTimestamp[i] !== "undefined") {
             freeze = false;
           }
         }
@@ -153,7 +153,9 @@ class Plot extends React.Component {
 
     if(state.update){
     for (let i = 0; i < props.signalIDs.length; i++) {
+      if(typeof props.data[i][props.data[i].length - 1].x !== "undefined"){
       tempTimestamp[i] = props.data[i][props.data[i].length - 1].x;
+      }
     }
   }
 
