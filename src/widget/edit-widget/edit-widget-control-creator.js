@@ -20,7 +20,7 @@ import React from 'react';
 import EditWidgetTextControl from './edit-widget-text-control';
 import EditWidgetNumberControl from './edit-widget-number-control';
 import EditWidgetColorControl from './edit-widget-color-control';
-import EditWidgetTimeControl from './edit-widget-time-control';
+import EditWidgetSamplesControl from './edit-widget-samples-control';
 import EditFileWidgetControl from './edit-widget-file-control';
 import EditWidgetSignalControl from './edit-widget-signal-control';
 import EditWidgetSignalsControl from './edit-widget-signals-control';
@@ -71,12 +71,12 @@ export default function CreateControls(widgetType = null, widget = null, session
               break;
         case 'Plot':
             DialogControls.push(
-                <EditWidgetTimeControl key={0} widget={widget} controlId={'customProperties.time'} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetSignalsControl key={1} widget={widget} controlId={'signalIDs'}  signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
-                <EditWidgetPlotColorsControl key={2} widget={widget} controlId={'customProperties.lineColors'} signals={signals} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetTextControl key={3} widget={widget} controlId={'customProperties.ylabel'} label={'Y-Axis name'} placeholder={'Enter a name for the y-axis'}  handleChange={(e) => handleChange(e)} />,
-                <EditWidgetCheckboxControl key={4} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />,
-                <EditWidgetPlotModeControl key={5} widget={widget} controlId={'customProperties.mode'} input handleChange={e => handleChange(e)} />,
+                <EditWidgetPlotModeControl key={0} widget={widget} controlId={'customProperties.mode'} input handleChange={e => handleChange(e)} />,
+                <EditWidgetSamplesControl key={1} widget={widget} timeId={'customProperties.time'} nbrId={'customProperties.nbrSamples'} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetSignalsControl key={2} widget={widget} controlId={'signalIDs'}  signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
+                <EditWidgetPlotColorsControl key={3} widget={widget} controlId={'customProperties.lineColors'} signals={signals} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetTextControl key={4} widget={widget} controlId={'customProperties.ylabel'} label={'Y-Axis name'} placeholder={'Enter a name for the y-axis'}  handleChange={(e) => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={5} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />,
                 <EditWidgetMinMaxControl key={6} widget={widget} controlId="customProperties.y" handleChange={e => handleChange(e)} />
             );
             break;
