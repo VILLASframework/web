@@ -36,24 +36,21 @@ class KubernetesICPage extends React.Component {
     let jobLink = "";
     let podLinks = [];
 
-    //should be configurable via the backend
-    let rancher_url = "rancher.k8s.eonerc.rwth-aachen.de";
-    let cluster_name = "local";
+    if( typeof props.rancherURL !== "undefined" && typeof props.k8sCluster !== "undefined" ){
+      let firstPart = "https://" + props.rancherURL + "/dashboard/c/" + props.k8sCluster + "/explorer";
 
-    //! statusupdateraw properties only placeholders, not the right property names 
-    if(typeof props.statusupdateraw !== "undefined" && typeof props.statusupdateraw.namespace !== "undefined"){
+      // raw properties of IC
+      let ICproperties = props.ic.statusupdateraw.properties
+      if(typeof ICproperties !== "undefined" && typeof ICproperties.namespace !== "undefined"){
 
-        let firstPart = "https://" + rancher_url + "/dashboard/c/" + cluster_name + "/explorer";
-
-        if(typeof props.statusupdateraw.name !== "undefined"){
-            jobLink = firstPart + "/batch.job/" + props.statusupdateraw.namespace + "/" + props.statusupdateraw.job_name;
-        }
-
-        if(typeof props.statusupdateraw.pod_names !== []){
-          props.statusupdateraw.pod_names.map(name => (
-            podLinks.push(firstPart + "/pod/" + props.statusupdateraw.namespace + "/" + name)
+        if(typeof ICproperties.job_name !== "undefined"){
+          jobLink = firstPart + "/batch.job/" + ICproperties.namespace + "/" + ICproperties.job_name;
+        } else if (typeof ICproperties.pod_names !== "undefined" && ICproperties.pod_names !== []){
+          ICproperties.pod_names.map(name => (
+            podLinks.push(firstPart + "/pod/" + ICproperties.namespace + "/" + name)
           ))
         }
+      }
     }
 
     return {
@@ -84,11 +81,11 @@ class KubernetesICPage extends React.Component {
           <Table striped size="sm">
             <tbody>
             <tr><td>Rancher UI pages:</td></tr>
-            {this.state.jobLink !== "" ? 
+            {this.state.jobLink !== "" ?
             <tr><td>Job:</td><td>{this.state.jobLink}</td></tr>
             :
             <></>}
-            {this.state.podLinks !== [] && this.state.podLinks.map(link => 
+            {this.state.podLinks !== [] && this.state.podLinks.map(link =>
             <tr><td>Pod:</td><td>{link}</td></tr>
             )
             }
