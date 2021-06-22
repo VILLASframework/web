@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
-import { Form, OverlayTrigger, Tooltip, Button, Col } from 'react-bootstrap';
+import { Form, Container, Row, Col, OverlayTrigger, Tooltip, Button} from 'react-bootstrap';
 import ColorPicker from '../../common/color-picker'
 import Icon from "../../common/icon";
 
@@ -81,12 +81,13 @@ class EditWidgetColorControl extends Component {
     if(this.props.disableOpacity){
       tooltipText = "Change border color";
     }
-    return ( <Form.Row>
-      <Form.Group as={Col}>
+    return ( <Container>
+    <Row>
+      <Col>
         <Form.Label>{this.props.label}</Form.Label>
-      </Form.Group>
+      </Col>
 
-      <Form.Group as={Col}>
+      <Col>
         <div className='section-buttons-group-right'>
           <OverlayTrigger key={0} placement={'right'} overlay={<Tooltip id={`tooltip-${"color"}`}> {tooltipText} </Tooltip>} >
           <Button style={style} onClick={this.openColorPicker.bind(this)}  >
@@ -101,8 +102,9 @@ class EditWidgetColorControl extends Component {
           opacity={this.state.opacity}
           disableOpacity={this.props.disableOpacity}
         />
-      </Form.Group>
-    </Form.Row>
+      </Col>
+      </Row>
+    </Container>
   );
   }
 }
