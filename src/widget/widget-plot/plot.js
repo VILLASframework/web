@@ -35,7 +35,6 @@ let uniqueIdentifier = 0;
 class Plot extends React.Component {
   constructor(props) {
     super(props);
-
     // create dummy axes
     let labelMargin = 0;
     if (props.yLabel !== '') {
@@ -62,8 +61,7 @@ class Plot extends React.Component {
       labelMargin,
       identifier: uniqueIdentifier++,
       stopTime: null,
-      freeze: false,
-      update: true
+      firstTimestamp: null
     };
   }
 
@@ -113,7 +111,6 @@ class Plot extends React.Component {
         xAxis,
         yAxis,
         labelMargin,
-        lastTimestamp: []
       };
     }
 
@@ -123,37 +120,25 @@ class Plot extends React.Component {
       return element !== undefined;
     })
 
+    let firstTimestamp;
+    if (props.mode === "last samples") {
+      firstTimestamp = (data[0].length - 1 - props.samples) > 0 ? data[0][(data[0].length - 1) - props.samples].x : data[0][0].x;
+      let tempTimestamp;
 
-    const firstTimestamp = icDataset[icDataset.length - 1].x - (props.time + 1) * 1000;
-    if (icDataset[0].x < firstTimestamp) {
-      // only show data in range (+100 ms)
-      const index = icDataset.findIndex(value => value.x >= firstTimestamp - 100);
-      data = data.map(values => values.slice(index));
-    }
-
-    let tempTimestamp = state.lastTimestamp;
-    if (typeof tempTimestamp === "undefined") {
-      tempTimestamp = [];
-    }
-    
-    let freeze = false;
-
-    if (state.update) {
-      if (props.mode === "last samples") {
-        freeze = true;
-        if (tempTimestamp !== [] && props.mode === "last samples") {
-          for (let i = 0; i < props.signalIDs.length; i++) {
-            if (typeof data[i] !== "undefined" && typeof data[i][data[i].length - 1].x !== "undefined" && typeof tempTimestamp[i] !== "undefined" && data[i][data[i].length - 1].x !== tempTimestamp[i]) {
-              freeze = false;
-            }
-          }
+      for (let i = 1; i < props.signalIDs.length; i++) {
+        if (typeof props.data[i] !== "undefined") {
+          tempTimestamp = (data[i].length - 1 - props.samples) > 0 ? data[i][(data[i].length - 1) - props.samples].x : data[i][0].x;
+          firstTimestamp = tempTimestamp < firstTimestamp ? tempTimestamp : firstTimestamp;
         }
       }
 
-      for (let i = 0; i < props.signalIDs.length; i++) {
-        if (typeof data[i] !== "undefined" && typeof data[i][data[i].length - 1].x !== "undefined") {
-          tempTimestamp[i] = data[i][data[i].length - 1].x;
-        }
+    }
+    else {
+      firstTimestamp = icDataset[icDataset.length - 1].x - (props.time + 1) * 1000;
+      if (icDataset[0].x < firstTimestamp) {
+        // only show data in range (+100 ms)
+        const index = icDataset.findIndex(value => value.x >= firstTimestamp - 100);
+        data = data.map(values => values.slice(index));
       }
     }
 
@@ -161,15 +146,12 @@ class Plot extends React.Component {
     return {
       data,
       labelMargin,
-      freeze,
-      lastTimestamp: tempTimestamp,
-      update: !state.update
+      firstTimestamp
     };
 
   }
 
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-
     if (prevProps.time !== this.props.time) {
       this.createInterval();
     }
@@ -197,8 +179,6 @@ class Plot extends React.Component {
     }
   }
 
-
-//for last samples: only tick if new samples arrive, else freeze
   tick = () => {
 
     if (this.state.data == null) {
@@ -206,7 +186,7 @@ class Plot extends React.Component {
       return;
     }
 
-    if (this.props.paused === true || (this.props.mode === "last samples" && this.state.freeze)) {
+    if (this.props.paused === true) {
       return;
     }
 
@@ -231,7 +211,24 @@ class Plot extends React.Component {
     }
 
     // create scale functions for both axes
-    const xScale = scaleTime().domain([Date.now() - this.props.time * 1000, Date.now()]).range([0, this.props.width - leftMargin - this.state.labelMargin - rightMargin]);
+    let xScale;
+    let data = this.props.data;
+    if(this.props.mode === "last samples"){
+        let lastTimestamp = data[0][data[0].length - 1].x;
+  
+        for (let i = 1; i < this.props.signalIDs.length; i++) {
+          if (typeof data[i] !== "undefined") {
+            lastTimestamp = data[i][data[i].length - 1].x > lastTimestamp ? data[i][data[i].length -1].x : lastTimestamp;
+          }
+        }
+
+
+      xScale = scaleTime().domain([this.state.firstTimestamp, lastTimestamp]).range([0, this.props.width - leftMargin - this.state.labelMargin - rightMargin]);
+    }
+    else{
+      xScale = scaleTime().domain([Date.now() - this.props.time * 1000, Date.now()]).range([0, this.props.width - leftMargin - this.state.labelMargin - rightMargin]);
+
+    }
     const yScale = scaleLinear().domain(yRange).range([this.props.height + topMargin - bottomMargin, topMargin]);
 
     const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(timeFormat("%M:%S"));

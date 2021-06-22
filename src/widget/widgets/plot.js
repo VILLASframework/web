@@ -99,6 +99,7 @@ class WidgetPlot extends React.Component {
           height={this.props.widget.height - 55}
           width={this.props.widget.width - 20}
           time={this.props.widget.customProperties.time}
+          samples={this.props.widget.customProperties.nbrSamples || 100}
           yMin={this.props.widget.customProperties.yMin}
           yMax={this.props.widget.customProperties.yMax}
           yUseMinMax={this.props.widget.customProperties.yUseMinMax}
