@@ -300,11 +300,11 @@ hr {
 /**
  * Tables
  */
-.table th,td {
+.table thead,th,td {
   padding: 0.5em 0.5em !important;
 }
 
-.table th {
+.table thead,th {
   background-color: var(--highlights);
   color: #fff;
 }
