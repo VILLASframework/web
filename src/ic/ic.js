@@ -192,7 +192,7 @@ class InfrastructureComponent extends React.Component {
 
       let rancherURL = ""
       let k8sCluster = ""
-      if (typeof this.state.config !== undefined)
+      if (this.state.config != null)
       {
         rancherURL = this.state.config.rancherURL
         k8sCluster = this.state.config.k8sCluster
