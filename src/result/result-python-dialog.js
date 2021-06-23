@@ -83,8 +83,10 @@ class ResultPythonDialog extends React.Component {
 
     let files = [];
     for (let file of this.props.files) {
-      if (result.resultFileIDs.includes(file.id)) {
-        files.push(file);
+      if (result.resultFileIDs != null) {
+        if (result.resultFileIDs.includes(file.id)) {
+          files.push(file);
+        }
       }
     }
 
