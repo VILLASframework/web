@@ -40,15 +40,17 @@ class KubernetesICPage extends React.Component {
       let firstPart = "https://" + props.rancherURL + "/dashboard/c/" + props.k8sCluster + "/explorer";
 
       // raw properties of IC
-      let ICproperties = props.ic.statusupdateraw.properties
-      if(typeof ICproperties !== "undefined" && typeof ICproperties.namespace !== "undefined"){
+      if (props.ic.statusupdateraw != null) {
+        let ICproperties = props.ic.statusupdateraw.properties
+        if(typeof ICproperties !== "undefined" && typeof ICproperties.namespace !== "undefined"){
 
-        if(typeof ICproperties.job_name !== "undefined"){
-          jobLink = firstPart + "/batch.job/" + ICproperties.namespace + "/" + ICproperties.job_name;
-        } else if (typeof ICproperties.pod_names !== "undefined" && ICproperties.pod_names !== []){
-          ICproperties.pod_names.map(name => (
-            podLinks.push(firstPart + "/pod/" + ICproperties.namespace + "/" + name)
-          ))
+          if(typeof ICproperties.job_name !== "undefined"){
+            jobLink = firstPart + "/batch.job/" + ICproperties.namespace + "/" + ICproperties.job_name;
+          } else if (typeof ICproperties.pod_names !== "undefined" && ICproperties.pod_names !== []){
+            ICproperties.pod_names.map(name => (
+              podLinks.push(firstPart + "/pod/" + ICproperties.namespace + "/" + name)
+            ))
+          }
         }
       }
     }
