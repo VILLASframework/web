@@ -60,10 +60,13 @@ class CustomTable extends Component {
     } else if ('data' in child.props && 'dataKey' in child.props) {
       content = new Map();
       let keys = _.get(data, child.props.dataKey);
-      let filteredData = child.props.data.filter(data => keys.includes(data.id))
-      filteredData.forEach(file => {
-        content.set(_.get(file, 'id'), _.get(file, 'name'));
-      })
+      if (keys != null){
+        let filteredData = child.props.data.filter(data => keys.includes(data.id))
+        filteredData.forEach(file => {
+          content.set(_.get(file, 'id'), _.get(file, 'name'));
+        })
+      }
+
     } else if ('dataKey' in child.props) {
       content = _.get(data, child.props.dataKey);
     }
