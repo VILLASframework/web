@@ -18,6 +18,7 @@
 import React from 'react';
 import ICstore from './ic-store';
 import ICdataStore from './ic-data-store'
+import LoginStore from '../user/login-store'
 import { Container as FluxContainer } from 'flux/utils';
 import AppDispatcher from '../common/app-dispatcher';
 import { Table, } from 'react-bootstrap';
@@ -26,7 +27,8 @@ import ReactJson from 'react-json-view';
 import GatewayVillasNode from './ic-pages/gateway-villas-node'
 import ManagerVillasRelay from './ic-pages/manager-villas-relay'
 import DefaultICPage from './ic-pages/default-page'
-import DefaultManagerPage from './ic-pages/default-manager-page';
+import DefaultManagerPage from './ic-pages/default-manager-page'
+import KubernetesICPage from './ic-pages/simulator-kubernetes'
 
 class InfrastructureComponent extends React.Component {
   constructor(props) {
@@ -39,13 +41,14 @@ class InfrastructureComponent extends React.Component {
   }
 
   static getStores() {
-    return [ICstore, ICdataStore];
+    return [ICstore, ICdataStore, LoginStore];
   }
 
   static calculateState(prevState, props) {
     return {
       ics: ICstore.getState(),
-      ic: ICstore.getState().find(ic => ic.id === parseInt(props.match.params.ic, 10))
+      ic: ICstore.getState().find(ic => ic.id === parseInt(props.match.params.ic, 10)),
+      config: LoginStore.getState().config
     }
   }
 
@@ -56,6 +59,10 @@ class InfrastructureComponent extends React.Component {
       type: 'ics/start-load',
       data: icID,
       token: this.state.sessionToken,
+    });
+
+    AppDispatcher.dispatch({
+      type: 'config/load',
     });
   }
 
@@ -180,6 +187,26 @@ class InfrastructureComponent extends React.Component {
         sessionToken = {this.state.sessionToken}
         buttonStyle = {buttonStyle}
         iconStyle = {iconStyle}
+      />
+    } else if (this.state.ic.category === "simulator" && this.state.ic.type === "kubernetes") {
+
+      let rancherURL = ""
+      let k8sCluster = ""
+      if (typeof this.state.config !== undefined)
+      {
+        rancherURL = this.state.config.rancherURL
+        k8sCluster = this.state.config.k8sCluster
+      }
+
+      page = <KubernetesICPage
+      ic={this.state.ic}
+      ics={this.state.ics}
+      currentUser={this.state.currentUser}
+      sessionToken={this.state.sessionToken}
+      buttonStyle={buttonStyle}
+      iconStyle={iconStyle}
+      rancherURL={rancherURL}
+      k8sCluster={k8sCluster}
       />
     }else {
       page = <DefaultICPage
