@@ -91,6 +91,8 @@ class WidgetFactory {
                 widget.customProperties.yUseMinMax = false;
                 widget.customProperties.lineColors = [];
                 widget.customProperties.showUnit = false;
+                widget.customProperties.mode = 'auto time-scrolling';
+                widget.customProperties.nbrSamples = 100;
                 break;
             case 'Table':
                 widget.minWidth = 200;

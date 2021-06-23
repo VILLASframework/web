@@ -35,7 +35,6 @@ let uniqueIdentifier = 0;
 class Plot extends React.Component {
   constructor(props) {
     super(props);
-
     // create dummy axes
     let labelMargin = 0;
     if (props.yLabel !== '') {
@@ -62,6 +61,7 @@ class Plot extends React.Component {
       labelMargin,
       identifier: uniqueIdentifier++,
       stopTime: null,
+      firstTimestamp: null
     };
   }
 
@@ -74,6 +74,7 @@ class Plot extends React.Component {
   }
 
   static getDerivedStateFromProps(props, state){
+
     let labelMargin = 0;
     if (props.yLabel !== '') {
       labelMargin = 30;
@@ -103,31 +104,49 @@ class Plot extends React.Component {
       const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(timeFormat("%M:%S"));
       const yAxis = axisLeft().scale(yScale).ticks(5).tickFormat(format(".3s"));
 
+
       return{
         stopTime: stopTime,
         data: null,
         xAxis,
         yAxis,
-        labelMargin
+        labelMargin,
       };
     }
 
     // only show data in requested time
     let data = props.data;
-    let icDataset = data.find(function(element) {
+    let icDataset = data.find(function (element) {
       return element !== undefined;
     })
 
-    const firstTimestamp = icDataset[icDataset.length - 1].x - (props.time + 1) * 1000;
-    if (icDataset[0].x < firstTimestamp) {
-      // only show data in range (+100 ms)
-      const index = icDataset.findIndex(value => value.x >= firstTimestamp - 100);
-      data = data.map(values => values.slice(index));
+    let firstTimestamp;
+    if (props.mode === "last samples") {
+      firstTimestamp = (data[0].length - 1 - props.samples) > 0 ? data[0][(data[0].length - 1) - props.samples].x : data[0][0].x;
+      let tempTimestamp;
+
+      for (let i = 1; i < props.signalIDs.length; i++) {
+        if (typeof props.data[i] !== "undefined") {
+          tempTimestamp = (data[i].length - 1 - props.samples) > 0 ? data[i][(data[i].length - 1) - props.samples].x : data[i][0].x;
+          firstTimestamp = tempTimestamp < firstTimestamp ? tempTimestamp : firstTimestamp;
+        }
+      }
+
     }
+    else {
+      firstTimestamp = icDataset[icDataset.length - 1].x - (props.time + 1) * 1000;
+      if (icDataset[0].x < firstTimestamp) {
+        // only show data in range (+100 ms)
+        const index = icDataset.findIndex(value => value.x >= firstTimestamp - 100);
+        data = data.map(values => values.slice(index));
+      }
+    }
+
 
     return {
       data,
-      labelMargin
+      labelMargin,
+      firstTimestamp
     };
 
   }
@@ -161,6 +180,7 @@ class Plot extends React.Component {
   }
 
   tick = () => {
+
     if (this.state.data == null) {
       this.setState({ lines: null });
       return;
@@ -191,7 +211,24 @@ class Plot extends React.Component {
     }
 
     // create scale functions for both axes
-    const xScale = scaleTime().domain([Date.now() - this.props.time * 1000, Date.now()]).range([0, this.props.width - leftMargin - this.state.labelMargin - rightMargin]);
+    let xScale;
+    let data = this.props.data;
+    if(this.props.mode === "last samples"){
+        let lastTimestamp = data[0][data[0].length - 1].x;
+  
+        for (let i = 1; i < this.props.signalIDs.length; i++) {
+          if (typeof data[i] !== "undefined") {
+            lastTimestamp = data[i][data[i].length - 1].x > lastTimestamp ? data[i][data[i].length -1].x : lastTimestamp;
+          }
+        }
+
+
+      xScale = scaleTime().domain([this.state.firstTimestamp, lastTimestamp]).range([0, this.props.width - leftMargin - this.state.labelMargin - rightMargin]);
+    }
+    else{
+      xScale = scaleTime().domain([Date.now() - this.props.time * 1000, Date.now()]).range([0, this.props.width - leftMargin - this.state.labelMargin - rightMargin]);
+
+    }
     const yScale = scaleLinear().domain(yRange).range([this.props.height + topMargin - bottomMargin, topMargin]);
 
     const xAxis = axisBottom().scale(xScale).ticks(5).tickFormat(timeFormat("%M:%S"));
@@ -217,6 +254,7 @@ class Plot extends React.Component {
   }
 
   render() {
+
     const yLabelPos = {
       x: 12,
       y: this.props.height / 2

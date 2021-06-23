@@ -18,45 +18,39 @@
 import React, { Component } from 'react';
 import { Form } from 'react-bootstrap';
 
-class EditWidgetTimeControl extends Component {
+class EditWidgetPlotModeControl extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      widget: {
-      }
+      widget: {},
     };
   }
 
   static getDerivedStateFromProps(props, state){
-    return{
-      widget: props.widget
+    return {
+      widget: props.widget,
     };
+  }
+
+  handleModeChange(e){
+
+    this.props.handleChange({ target: { id: this.props.controlId, value: e.target.value } });
+
   }
 
   render() {
 
-    let parts = this.props.controlId.split('.');
-    let isCustomProperty = true;
-    if (parts.length === 1){
-      isCustomProperty = false;
-    }
-
     return (
-      <Form.Group controlId= {this.props.controlId}>
-        <Form.Label>Time</Form.Label>
-        <Form.Control
-          type="number"
-          min="1"
-          max="300"
-          placeholder="Enter time"
-          value={isCustomProperty ? this.state.widget[parts[0]][parts[1]] : this.state.widget[this.props.controlId]}
-          onChange={(e) => this.props.handleChange(e)}
-        />
-        <Form.Text>Time in seconds</Form.Text>
-      </Form.Group>
+        <Form.Group controlId="mode">
+          <Form.Label>Select mode</Form.Label>
+          <Form.Control as="select" value={this.props.widget.customProperties.mode || ""} onChange={(e) => this.handleModeChange(e)}>
+          <option key={0} value={"auto time-scrolling"}>Auto time-scrolling</option>
+          <option key={1} value={"last samples"}>Last samples</option>
+          </Form.Control>
+        </Form.Group>
     );
   }
 }
 
-export default EditWidgetTimeControl;
+export default EditWidgetPlotModeControl;
