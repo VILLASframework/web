@@ -64,7 +64,7 @@ class EditWidgetOrientation extends Component {
                   let name = WidgetSlider.OrientationTypes[type].name;
 
                   return <Form.Check
-                      inline label={name}
+                      label={name}
                       key={value}
                       id={value}
                       type='radio'

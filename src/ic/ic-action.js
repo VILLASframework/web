@@ -227,7 +227,7 @@ class ICAction extends React.Component {
     ));
 
     return <div>
-            <Form inline>
+            <Form>
               <Form.Control
                 type="datetime-local"
                 value={time}

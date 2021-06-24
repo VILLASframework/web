@@ -160,7 +160,6 @@ class CustomTable extends Component {
       cell.push(
         <Form.Check
           className="table-control-checkbox"
-          inline
           disabled={isDisabled}
           checked={checkboxKey ? data[checkboxKey] : null}
           onChange={e => child.props.onChecked(data, e)}
