@@ -171,6 +171,7 @@ class CustomTable extends Component {
       cell.push(
         <IconToggleButton
           childKey={childkey++}
+          index={data.id}
           onChange={() => child.props.onChangeLock(index)}
           checked={isLocked}
           checkedIcon='lock'

@@ -32,7 +32,7 @@ class IconToggleButton extends React.Component {
       placement={'top'}
       overlay={<Tooltip id={`tooltip-${this.props.childKey}`}>{tooltip}</Tooltip>} >
         <ToggleButton
-          id={this.props.childKey}
+          id={this.props.index}
           variant={this.props.variant ? this.props.variant : 'light'}
           type='checkbox'
           onChange={this.props.onChange}
