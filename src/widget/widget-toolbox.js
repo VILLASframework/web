@@ -136,9 +136,11 @@ class WidgetToolbox extends React.Component {
           </Button>
           </OverlayTrigger>
           <OverlayTrigger key={1} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"decrease"}`}> Decrease dashboard height </Tooltip>} >
+          <span>
           <Button variant="light" key={1} disabled={disableDecrease} style={buttonStyle} onClick={() => this.props.onDashboardSizeChange(-1)} >
           <Icon icon="minus" classname='icon-color' style={iconStyle}/>
           </Button>
+          </span>
           </OverlayTrigger>
 
         </div>
@@ -154,9 +156,11 @@ class WidgetToolbox extends React.Component {
       <ToolboxItem name='Label' type='widget' icon = 'plus'/>
       <ToolboxItem name='Image' type='widget' icon = 'plus'/>
       <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"?"}`}> Drag and drop widgets onto the dashboard </Tooltip>} >
+      <span>
       <Button disabled={true} variant="light" size="sm" key={0}  >
           <Icon icon="question" />
       </Button>
+      </span>
       </OverlayTrigger>
       </Collapse>
 
@@ -169,9 +173,11 @@ class WidgetToolbox extends React.Component {
       <ToolboxItem name='Topology' type='widget' disabled={thereIsTopologyWidget} title={topologyItemMsg} icon = 'plus'/>
       <ToolboxItem name='TimeOffset' type='widget' icon = 'plus' />
       <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"?"}`}> Drag and drop widgets onto the dashboard </Tooltip>} >
+      <span>
       <Button disabled={true} variant="light" size="sm" key={0}  >
           <Icon icon="question" />
       </Button>
+      </span>
       </OverlayTrigger>
       </Collapse>
 
@@ -180,9 +186,11 @@ class WidgetToolbox extends React.Component {
       <ToolboxItem name='NumberInput' type='widget' icon = 'plus'/>
       <ToolboxItem name='Slider' type='widget' icon = 'plus'/>
       <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"?"}`}> Drag and drop widgets onto the dashboard </Tooltip>} >
+      <span>
       <Button disabled={true} variant="light" size="sm" key={0}  >
           <Icon icon="question" />
       </Button>
+      </span>
       </OverlayTrigger>
       </Collapse>
       </span>

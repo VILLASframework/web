@@ -31,6 +31,7 @@ class IconToggleButton extends React.Component {
       key={this.props.childKey}
       placement={'top'}
       overlay={<Tooltip id={`tooltip-${this.props.childKey}`}>{tooltip}</Tooltip>} >
+      <span>
         <ToggleButton
           id={this.props.index}
           variant={this.props.variant ? this.props.variant : 'light'}
@@ -54,6 +55,7 @@ class IconToggleButton extends React.Component {
             />
           }
         </ToggleButton>
+        </span>
     </OverlayTrigger>
   }
 }

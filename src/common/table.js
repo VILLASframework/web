@@ -89,6 +89,7 @@ class CustomTable extends Component {
               placement={'bottom'}
               overlay={<Tooltip id={`tooltip-${"export"}`}>Download {contentvalue}</Tooltip>}
             >
+            <span>
               <Button
                 variant='table-control-button'
                 onClick={() => child.props.onDownload(contentkey)}
@@ -96,6 +97,7 @@ class CustomTable extends Component {
                 {contentkey + ' '}
                 <Icon icon='file-download' classname={'icon-color'}/>
               </Button>
+              </span>
             </OverlayTrigger>);
         });
       } else {

@@ -205,6 +205,7 @@ class EditWidgetColorZonesControl extends React.Component {
           return (
             <span>
               <OverlayTrigger key={idx} placement={'right'} overlay={<Tooltip id={`tooltip-${"color-edit"}`}>Edit zone</Tooltip>} >
+              <span>
               <Button
               style={style}
               key={idx}
@@ -212,6 +213,7 @@ class EditWidgetColorZonesControl extends React.Component {
               disabled={!this.props.widget.customProperties.colorZones}>
                 <Icon icon="pen" />
               </Button>
+              </span>
               </OverlayTrigger>
             </span>
           )
