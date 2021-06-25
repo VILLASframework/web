@@ -17,7 +17,7 @@
 
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { Table, Button, Form, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Table, Button, Form, Tooltip, OverlayTrigger, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Icon from './icon';
 import IconToggleButton from './icon-toggle-button';
@@ -113,14 +113,14 @@ class CustomTable extends Component {
       }
 
       let labelStyle = child.props.labelStyle(data[labelKey], data)
-
+    
       cell.push(<span>
         &nbsp;
-        <Form.Label
-          column={false}
-          className={labelStyle}>
+        <Badge
+          bg={labelStyle[0]}
+          className={labelStyle[1]}>
           {labelContent}
-        </Form.Label>
+        </Badge>
       </span>
       );
     }
