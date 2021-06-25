@@ -94,6 +94,7 @@ class KubernetesICPage extends React.Component {
             </tbody>
           </Table>
         </Row>
+        <hr/>
         <Row>
           <Col>
             {ICParamsTable(this.props.ic)}

@@ -19,7 +19,6 @@ import React from 'react';
 import {Button, Col, Container, Row} from "react-bootstrap";
 import IconButton from "../../common/icon-button";
 import ConfirmCommand from "../confirm-command";
-import FileSaver from 'file-saver';
 import AppDispatcher from "../../common/app-dispatcher";
 import { refresh, ICParamsTable, rawDataTable } from "../ic"
 
@@ -32,11 +31,6 @@ class GatewayVillasNode extends React.Component {
       confirmCommand: false,
       command: '',
     }
-  }
-
-  async downloadGraph(url) {
-    let blob = await fetch(url).then(r => r.blob())
-    FileSaver.saveAs(blob, this.props.ic.name + ".svg");
   }
 
   sendControlCommand() {
@@ -65,11 +59,6 @@ class GatewayVillasNode extends React.Component {
 
   render() {
 
-    let graphURL = ""
-    if (this.props.ic.apiurl !== "") {
-      graphURL = this.props.ic.apiurl + "/graph.svg"
-    }
-
     return (<div className='section'>
 
 
@@ -93,26 +82,9 @@ class GatewayVillasNode extends React.Component {
             {ICParamsTable(this.props.ic)}
           </Col>
           <Col>
-            <div className='section-buttons-group-right'>
-              <IconButton
-                childKey={0}
-                tooltip='Download Graph'
-                onClick={() => this.downloadGraph(graphURL)}
-                icon='download'
-                buttonStyle={this.props.buttonStyle}
-                iconStyle={this.props.iconStyle}
-              />
-            </div>
-            <hr/>
-            <b>Graph:</b>
-            <div>
-              <img alt={"Graph image download failed and/or incorrect image API URL"} src={graphURL} />
-            </div>
-
             {this.props.currentUser.role === "Admin" ?
               <div>
-                <hr/>
-                <b>Controls:</b>
+                <h3>Controls:</h3>
                 <div className='solid-button'>
                   <Button
                     variant='secondary'
@@ -140,6 +112,7 @@ class GatewayVillasNode extends React.Component {
             />
           </Col>
         </Row>
+        <hr/>
         <Row>
           <Col>
             <b>Raw Status</b>

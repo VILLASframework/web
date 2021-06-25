@@ -25,6 +25,7 @@ import { Table, } from 'react-bootstrap';
 import moment from 'moment';
 import ReactJson from 'react-json-view';
 import GatewayVillasNode from './ic-pages/gateway-villas-node'
+import ManagerVillasNode from './ic-pages/manager-villas-node'
 import ManagerVillasRelay from './ic-pages/manager-villas-relay'
 import DefaultICPage from './ic-pages/default-page'
 import DefaultManagerPage from './ic-pages/default-manager-page'
@@ -165,6 +166,15 @@ class InfrastructureComponent extends React.Component {
     if (this.state.ic.category ==="gateway" && this.state.ic.type === "villas-node")  {
       page = <GatewayVillasNode
         ic = {this.state.ic}
+        currentUser = {this.state.currentUser}
+        sessionToken = {this.state.sessionToken}
+        buttonStyle = {buttonStyle}
+        iconStyle = {iconStyle}
+      />
+    }else if (this.state.ic.category ==="manager" && this.state.ic.type === "villas-node"){
+      page = <ManagerVillasNode
+        ic = {this.state.ic}
+        ics = {this.state.ics}
         currentUser = {this.state.currentUser}
         sessionToken = {this.state.sessionToken}
         buttonStyle = {buttonStyle}
