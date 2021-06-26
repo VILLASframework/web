@@ -226,7 +226,7 @@ class EditSignalMappingDialog extends React.Component {
         <Form.Group>
           <Form.Label>{this.props.direction} Mapping</Form.Label>
           <Form.Text>Click <i>Index</i>, <i>Name</i> or <i>Unit</i> cell to edit</Form.Text>
-          <Table checkbox onChecked={(signal) => this.onSignalChecked(signal)} data={this.state.signals}>
+          <Table breakWord={true} checkbox onChecked={(signal) => this.onSignalChecked(signal)} data={this.state.signals}>
               <TableColumn
                 checkbox
                 onChecked={(index, event) => this.onSignalChecked(index, event)}

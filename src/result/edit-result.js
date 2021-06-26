@@ -165,7 +165,7 @@ class EditResultDialog extends React.Component {
         </Row>
       </Form.Group>
 
-      <Table data={this.state.files}>
+      <Table breakWord={true} data={this.state.files}>
         <TableColumn
           title='ID'
           dataKey='id'

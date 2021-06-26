@@ -351,6 +351,8 @@ class CustomTable extends Component {
       children = [children];
     }
 
+    let tbodyStyle =  this.props.breakWord ? {wordBreak: 'break-all'} : {};
+
     return (
       <Table style={{ width: this.props.width }} striped hover>
         <thead>
@@ -358,7 +360,7 @@ class CustomTable extends Component {
             {this.props.children}
           </tr>
         </thead>
-        <tbody>
+        <tbody style={tbodyStyle}>
           {
             this.state.rows.map((row, rowIndex) =>
               <tr key={rowIndex}>

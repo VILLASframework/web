@@ -117,7 +117,7 @@ class EditFilesDialog extends React.Component {
         blendOutCancel = {true}
         valid={true}
       >
-        <Table data={this.props.files}>
+        <Table breakWord={true} data={this.props.files}>
           <TableColumn
             title='ID'
             dataKey='id'
