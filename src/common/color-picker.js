@@ -81,6 +81,7 @@ class ColorPicker extends React.Component {
   render() {
 
     return <Dialog
+      size="m"
       show={this.props.show}
       title='Color Picker'
       buttonTitle='Save'
@@ -92,7 +93,7 @@ class ColorPicker extends React.Component {
               color={this.state.rgbColor}
               disableAlpha={this.props.disableOpacity}
               onChangeComplete={ this.handleChangeComplete }
-              width={300}
+              width={445}
           />
         </Form>
     </Dialog>;

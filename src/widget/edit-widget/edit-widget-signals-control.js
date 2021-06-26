@@ -63,6 +63,7 @@ class EditWidgetSignalsControl extends Component {
             ) : (
               this.state.signals.map((signal, index) => (
                 <Form.Check
+                  style={{wordBreak: 'break-all'}}
                   type={'checkbox'}
                   label={signal.name}
                   id={signal.id}
