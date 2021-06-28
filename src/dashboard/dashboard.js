@@ -280,6 +280,14 @@ class Dashboard extends Component {
 
   }
 
+  onChange(widget, index, callback = null){
+    AppDispatcher.dispatch({
+      type: 'widgets/start-edit',
+      token: this.state.sessionToken,
+      data: widget
+    });
+  }
+
   editWidget(widget, index) {
     this.setState({ editModal: true, modalData: widget, modalIndex: index });
   };
@@ -578,12 +586,11 @@ class Dashboard extends Component {
                 onEdit={this.editWidget.bind(this)}
                 onDuplicate={this.duplicateWidget.bind(this)}
                 onDelete={this.deleteWidget.bind(this)}
-                onChange={this.widgetChange.bind(this)}
+                onChange={this.onChange.bind(this)}
               >
                 <Widget
                   key={"widget" + widgetKey}
                   data={this.state.widgets[widgetKey]}
-                  onWidgetChange={this.widgetChange.bind(this)}
                   editing={this.state.editing}
                   index={parseInt(widgetKey, 10)}
                   paused={this.state.paused}

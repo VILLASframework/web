@@ -104,8 +104,6 @@ class WidgetContainer extends React.Component {
         onDuplicate={this.props.onDuplicate}
         onDelete={this.props.onDelete}
         onChange={this.props.onChange}
-
-        onWidgetChange={this.props.onWidgetChange}
         editing={this.props.editing}
         paused={this.props.paused}
     />)

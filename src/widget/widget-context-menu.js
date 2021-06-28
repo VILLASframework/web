@@ -79,7 +79,7 @@ class WidgetContextMenu extends React.Component {
   };
 
   lockWidget = event => {
-    this.props.widget.locked = true;
+    this.props.widget.isLocked = true;
 
     if (this.props.onChange != null) {
       this.props.onChange(this.props.widget, this.props.index);
@@ -87,7 +87,7 @@ class WidgetContextMenu extends React.Component {
   };
 
   unlockWidget = event => {
-    this.props.widget.locked = false;
+    this.props.widget.isLocked = false;
 
     if (this.props.onChange != null) {
       this.props.onChange(this.props.widget, this.props.index);
