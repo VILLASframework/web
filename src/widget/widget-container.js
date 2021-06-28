@@ -158,7 +158,7 @@ class WidgetContainer extends React.Component {
         minWidth={widget.minWidth}
         minHeight={widget.minHeight}
         lockAspectRatio={Boolean(widget.customProperties.lockAspect)}
-        bounds={'body'}
+        bounds={'.toolbox-dropzone'}
         className={widgetClasses}
         onResizeStart={this.borderWasClicked}
         onResizeStop={this.resizeStop}
