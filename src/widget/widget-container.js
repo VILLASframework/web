@@ -147,12 +147,12 @@ class WidgetContainer extends React.Component {
       'locked': widget.isLocked
     });
 
-    return ( <div key={"widget-rnd-context" + this.props.index} className='widget'  onContextMenu={(e) => this.showMenu(e, this.props.index, this.props.editing)}>
+    return ( <div key={"widget-rnd-context" + this.props.index} className='widget' style={{zIndex: Number(widget.z), position: 'relative'}} onContextMenu={(e) => this.showMenu(e, this.props.index, this.props.editing)}>
       <Rnd
         key={"widget-rnd" + this.props.index}
         ref={c => { this.rnd = c; }}
         size={{width: Number(widget.width), height: Number(widget.height)}}
-        position={{x: Number(widget.x), y: Number(widget.y),}}
+        position={{x: Number(widget.x), y: Number(widget.y)}}
         minWidth={widget.minWidth}
         minHeight={widget.minHeight}
         lockAspectRatio={Boolean(widget.customProperties.lockAspect)}
@@ -163,7 +163,6 @@ class WidgetContainer extends React.Component {
         onDragStop={this.dragStop}
         dragGrid={gridArray}
         resizeGrid={gridArray}
-        zindex={widget.z}
         enableResizing={resizing}
         disableDragging={widget.isLocked}
       >
