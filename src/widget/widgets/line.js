@@ -50,6 +50,10 @@ class WidgetLine extends Component {
     }
 
     let length = width;
+    rotation = Math.abs(parseInt(rotation,10));
+    if(rotation % 90 === 0 && (rotation/90) % 2 === 1){
+      length = height;
+    }
 
     // calculate line coordinates (in percent)
     const x1 = width * 0.5 - 0.5 * Math.cos(rad) * length;

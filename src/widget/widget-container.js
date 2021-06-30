@@ -125,7 +125,7 @@ class WidgetContainer extends React.Component {
     }
 
     let resizingRestricted = false;
-    if (widget.customProperties.resizeRightLeftLock || widget.customProperties.resizeTopBottomLock) {
+    if (widget.customProperties.resizeLeftRightLock || widget.customProperties.resizeTopBottomLock) {
       resizingRestricted = true;
     }
 
@@ -133,8 +133,8 @@ class WidgetContainer extends React.Component {
       bottom: !(widget.customProperties.resizeTopBottomLock || widget.isLocked),
       bottomLeft: !(resizingRestricted || widget.isLocked),
       bottomRight: !(resizingRestricted || widget.isLocked),
-      left: !(widget.customProperties.resizeRightLeftLock || widget.isLocked),
-      right: !(widget.customProperties.resizeRightLeftLock || widget.isLocked),
+      left: !(widget.customProperties.resizeLeftRightLock || widget.isLocked),
+      right: !(widget.customProperties.resizeLeftRightLock || widget.isLocked),
       top: !(widget.customProperties.resizeTopBottomLock || widget.isLocked),
       topLeft: !(resizingRestricted || widget.isLocked),
       topRight: !(resizingRestricted || widget.isLocked)
