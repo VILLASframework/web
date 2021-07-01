@@ -586,7 +586,7 @@ class Dashboard extends Component {
                 onEdit={this.editWidget.bind(this)}
                 onDuplicate={this.duplicateWidget.bind(this)}
                 onDelete={this.deleteWidget.bind(this)}
-                onChange={this.onChange.bind(this)}
+                onChange={this.state.editing ? this.widgetChange.bind(this) : this.onChange.bind(this)}
               >
                 <Widget
                   key={"widget" + widgetKey}
