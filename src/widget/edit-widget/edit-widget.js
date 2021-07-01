@@ -80,11 +80,11 @@ class EditWidgetDialog extends React.Component {
   setNewLockRestrictions(changeObject) {
     if (changeObject.customProperties.orientation === 0) {
       changeObject.customProperties.resizeTopBottomLock = true;
-      changeObject.customProperties.resizeRightLeftLock = false;
+      changeObject.customProperties.resizeLeftRightLock = false;
     }
     else if (changeObject.customProperties.orientation === 1) {
       changeObject.customProperties.resizeTopBottomLock = false;
-      changeObject.customProperties.resizeRightLeftLock = true;
+      changeObject.customProperties.resizeLeftRightLock = true;
     }
     return changeObject;
   }
@@ -101,7 +101,11 @@ class EditWidgetDialog extends React.Component {
 
     if (parts[1] === 'lockAspect') {
       //not a customProperty
+      if(typeof e.target.value === "boolean"){
+        customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value;
+      }else{
       customProperty ? changeObject[parts[0]][parts[1]] = e.target.checked : changeObject[e.target.id] = e.target.checked;
+      }
 
       // correct image aspect if turned on
       if (e.target.checked && (this.state.temporal.customProperties.file !== -1)) {

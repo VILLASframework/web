@@ -34,6 +34,7 @@ import EditWidgetParametersControl from './edit-widget-parameters-control';
 import EditWidgetICControl from './edit-widget-ic-control';
 import EditWidgetPlotColorsControl from './edit-widget-plot-colors-control';
 import EditWidgetPlotModeControl from './edit-widget-plot-mode-control';
+import EditWidgetRotationControl from './edit-widget-rotation-control';
 //import EditWidgetHTMLContent from './edit-widget-html-content';
 
 export default function CreateControls(widgetType = null, widget = null, sessionToken = null, files = null,ics = null, signals, handleChange) {
@@ -162,7 +163,7 @@ export default function CreateControls(widgetType = null, widget = null, session
         case 'Line':
             DialogControls.push(
                 <EditWidgetColorControl key={0} widget={widget} controlId={'customProperties.border_color'} label={'Line color'} handleChange={(e) => handleChange(e)} disableOpacity={false}/>,
-                <EditWidgetNumberControl key={1} widget={widget} controlId={'customProperties.rotation'} label={'Rotation (degrees)'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetRotationControl key={1} widget={widget} controlId={'customProperties.rotation'} label={'Rotation (degrees)'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetNumberControl key={2} widget={widget} controlId={'customProperties.border_width'} label={'Line width'} defaultValue={0} handleChange={(e) => handleChange(e)} />
             );
             break;

@@ -193,13 +193,15 @@ class WidgetFactory {
                 widget.customProperties.file = -1; // ID of file, -1 means non selected
                 break;
             case 'Line':
-                widget.height = 100;
+                widget.height = 26;
                 widget.width = 100;
                 widget.customProperties.border_color = '#4287f5';
                 widget.customProperties.border_color_opacity = 1;
                 widget.customProperties.border_width = 2;
                 widget.customProperties.rotation = 0;
-                widget.customProperties.lockAspect = true;
+                widget.customProperties.lockAspect = false;
+                widget.customProperties.resizeLeftRightLock = false;
+                widget.customProperties.resizeTopBottomLock = true;
                 break;
 
             case 'TimeOffset':
