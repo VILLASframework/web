@@ -25,6 +25,7 @@ class WidgetBox extends Component {
       borderColor: this.props.widget.customProperties.border_color,
       backgroundColor: this.props.widget.customProperties.background_color,
       opacity: this.props.widget.customProperties.background_color_opacity,
+      borderWidth: this.props.widget.customProperties.border_width + 'px'
     }
 
     return (

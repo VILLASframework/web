@@ -132,6 +132,7 @@ export default function CreateControls(widgetType = null, widget = null, session
             DialogControls.push(
                 <EditWidgetColorControl key={0} widget={widget} controlId={'customProperties.background_color'} label={'Background Color and Opacity'} handleChange={e => handleChange(e)} disableOpacity={false}/>,
                 <EditWidgetColorControl key={1} widget={widget} controlId={'customProperties.border_color'} label={'Border Color'} handleChange={(e) => handleChange(e)} disableOpacity={true}/>,
+                <EditWidgetNumberControl key={2} widget={widget} controlId={'customProperties.border_width'} label={'Border width'} defaultValue={0} handleChange={(e) => handleChange(e)} />
             );
             break;
         case 'Label':

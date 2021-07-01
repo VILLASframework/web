@@ -180,6 +180,7 @@ class WidgetFactory {
                 widget.height = 100;
                 widget.customProperties.border_color = '#4287f5';
                 widget.customProperties.border_color_opacity = 1;
+                widget.customProperties.border_width = 2;
                 widget.customProperties.background_color = '#961520';
                 widget.customProperties.background_color_opacity = 1;
                 widget.z = 0;
