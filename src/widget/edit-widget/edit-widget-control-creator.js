@@ -39,12 +39,21 @@ export default function CreateControls(widgetType = null, widget = null, session
     // Use a list to concatenate the controls according to the widget type
     var DialogControls = [];
 
+    let topStyle={marginBottom: '10px'}
+
+    let bottomStyle={marginTop: '10px'}
+
+    let midStyle={
+        marginTop: '10px',
+        marginBottom: '10px'
+    }
+
     switch(widgetType) {
         case 'CustomAction':
             DialogControls.push(
-              <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
-              <EditWidgetTextControl key={1} widget={widget} controlId={'customProperties.icon'} label={'Icon'} placeholder={'Enter an awesome font icon name'} handleChange={e => handleChange(e)} />,
-              <EditWidgetParametersControl key={2} widget={widget} controlId={'customProperties.actions'} label={'Actions'} handleChange={(e) => handleChange(e)} />
+              <EditWidgetTextControl key={0} style={topStyle} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
+              <EditWidgetTextControl key={1} style={midStyle} widget={widget} controlId={'customProperties.icon'} label={'Icon'} placeholder={'Enter an awesome font icon name'} handleChange={e => handleChange(e)} />,
+              <EditWidgetParametersControl key={2} style={bottomStyle} widget={widget} controlId={'customProperties.actions'} label={'Actions'} handleChange={(e) => handleChange(e)} />
             );
             break;
         case 'Action':
@@ -54,88 +63,88 @@ export default function CreateControls(widgetType = null, widget = null, session
             break;
         case 'Value':
             DialogControls.push(
-                <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Signal name'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
-                <EditWidgetSignalControl key={1} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
-                <EditWidgetTextSizeControl key={2} widget={widget} handleChange={e => handleChange(e)} />,
-                <EditWidgetCheckboxControl key={3} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />
+                <EditWidgetTextControl key={0} style={topStyle} widget={widget} controlId={'name'} label={'Signal name'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
+                <EditWidgetSignalControl key={1} style={midStyle} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
+                <EditWidgetTextSizeControl key={2} style={midStyle} widget={widget} handleChange={e => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={3} style={bottomStyle} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Lamp':
               DialogControls.push(
-                <EditWidgetSignalControl key={0} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
-                <EditWidgetTextControl key={1} widget={widget} controlId={'customProperties.threshold'} label={'Threshold'} placeholder={'0.5'} handleChange={e => handleChange(e)} />,
-                <EditWidgetColorControl key={2} widget={widget} controlId={'customProperties.on_color'} label={'Color On'} handleChange={(e) => handleChange(e)} disableOpacity={false}/>,
-                <EditWidgetColorControl key={3} widget={widget} controlId={'customProperties.off_color'} label={'Color Off'} handleChange={(e) => handleChange(e)} disableOpacity={false}/>,
+                <EditWidgetSignalControl key={0} style={topStyle} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
+                <EditWidgetTextControl key={1} style={midStyle} widget={widget} controlId={'customProperties.threshold'} label={'Threshold'} placeholder={'0.5'} handleChange={e => handleChange(e)} />,
+                <EditWidgetColorControl key={2} style={midStyle} widget={widget} controlId={'customProperties.on_color'} label={'Color On'} handleChange={(e) => handleChange(e)} disableOpacity={false}/>,
+                <EditWidgetColorControl key={3} style={bottomStyle} widget={widget} controlId={'customProperties.off_color'} label={'Color Off'} handleChange={(e) => handleChange(e)} disableOpacity={false}/>,
               );
               break;
         case 'Plot':
             DialogControls.push(
-                <EditWidgetTimeControl key={0} widget={widget} controlId={'customProperties.time'} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetSignalsControl key={1} widget={widget} controlId={'signalIDs'}  signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
-                <EditWidgetPlotColorsControl key={2} widget={widget} controlId={'customProperties.lineColors'} signals={signals} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetTextControl key={3} widget={widget} controlId={'customProperties.ylabel'} label={'Y-Axis name'} placeholder={'Enter a name for the y-axis'}  handleChange={(e) => handleChange(e)} />,
-                <EditWidgetCheckboxControl key={4} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />,
-                <EditWidgetMinMaxControl key={5} widget={widget} controlId="customProperties.y" handleChange={e => handleChange(e)} />
+                <EditWidgetTimeControl key={0} style={topStyle} widget={widget} controlId={'customProperties.time'} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetSignalsControl key={1} style={midStyle} widget={widget} controlId={'signalIDs'}  signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
+                <EditWidgetPlotColorsControl key={2} style={midStyle} widget={widget} controlId={'customProperties.lineColors'} signals={signals} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetTextControl key={3} style={midStyle} widget={widget} controlId={'customProperties.ylabel'} label={'Y-Axis name'} placeholder={'Enter a name for the y-axis'}  handleChange={(e) => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={4} style={midStyle} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />,
+                <EditWidgetMinMaxControl key={5} style={bottomStyle} widget={widget} controlId="customProperties.y" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Table':
             DialogControls.push(
-                <EditWidgetSignalsControl key={0} widget={widget} controlId={'signalIDs'}  signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
-                <EditWidgetCheckboxControl key={1} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />
+                <EditWidgetSignalsControl key={0} style={topStyle} widget={widget} controlId={'signalIDs'}  signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
+                <EditWidgetCheckboxControl key={1} style={bottomStyle} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Image':
             // Restrict to only image file types (MIME)
             //let imageControlFiles = files == null? [] : files.filter(file => file.type.includes('image'));
             DialogControls.push(
-                <EditFileWidgetControl key={0} widget={widget} controlId={"customProperties.file"} files={files} type={'image'} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetAspectControl key={1} widget={widget} controlId={"customProperties.lockAspect"} handleChange={e => handleChange(e)} />
+                <EditFileWidgetControl key={0} style={topStyle} widget={widget} controlId={"customProperties.file"} files={files} type={'image'} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetAspectControl key={1} style={bottomStyle} widget={widget} controlId={"customProperties.lockAspect"} handleChange={e => handleChange(e)} />
             );
             break;
         case 'Gauge':
             DialogControls.push(
-                <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
-                <EditWidgetSignalControl key={1} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
-                <EditWidgetCheckboxControl key={2} widget={widget} controlId="customProperties.colorZones" input text="Show color zones" handleChange={e => handleChange(e)} />,
-                <EditWidgetColorZonesControl key={3} widget={widget} controlId="customProperties.zones" handleChange={e => handleChange(e)} disableOpacity={true}/>,
-                <EditWidgetMinMaxControl key={4} widget={widget} controlId="customProperties.value" handleChange={e => handleChange(e)} />
+                <EditWidgetTextControl key={0} style={topStyle} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
+                <EditWidgetSignalControl key={1} style={midStyle} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
+                <EditWidgetCheckboxControl key={2} style={midStyle} widget={widget} controlId="customProperties.colorZones" input text="Show color zones" handleChange={e => handleChange(e)} />,
+                <EditWidgetColorZonesControl key={3} style={midStyle} widget={widget} controlId="customProperties.zones" handleChange={e => handleChange(e)} disableOpacity={true}/>,
+                <EditWidgetMinMaxControl key={4} style={bottomStyle} widget={widget} controlId="customProperties.value" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Slider':
             DialogControls.push(
-                <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
-                <EditWidgetOrientation key={1} widget={widget} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetSignalControl key={2} widget={widget} controlId={'signalIDs'} input signals={signals} handleChange={(e) => handleChange(e)} direction={'in'}/>,
-                <EditWidgetCheckboxControl key={3} widget={widget} controlId={'customProperties.continous_update'} input text={'Continous Update'} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetCheckboxControl key={4} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />,
-                <EditWidgetMinMaxControl key={5} widget={widget} controlId={'customProperties.range'} handleChange={e => handleChange(e)} />,
-                <EditWidgetNumberControl key={6} widget={widget} controlId={'customProperties.step'} label={'Step Size'} defaultValue={0.1} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetNumberControl key={7} widget={widget} controlId={'customProperties.default_value'} label={'Default Value'} defaultValue={50} handleChange={(e) => handleChange(e)} />
+                <EditWidgetTextControl key={0} style={topStyle} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
+                <EditWidgetOrientation key={1} style={midStyle} widget={widget} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetSignalControl key={2} style={midStyle} widget={widget} controlId={'signalIDs'} input signals={signals} handleChange={(e) => handleChange(e)} direction={'in'}/>,
+                <EditWidgetCheckboxControl key={3} style={midStyle} widget={widget} controlId={'customProperties.continous_update'} input text={'Continous Update'} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={4} style={midStyle} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />,
+                <EditWidgetMinMaxControl key={5} style={midStyle} widget={widget} controlId={'customProperties.range'} handleChange={e => handleChange(e)} />,
+                <EditWidgetNumberControl key={6} style={midStyle} widget={widget} controlId={'customProperties.step'} label={'Step Size'} defaultValue={0.1} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetNumberControl key={7} style={bottomStyle} widget={widget} controlId={'customProperties.default_value'} label={'Default Value'} defaultValue={50} handleChange={(e) => handleChange(e)} />
             );
             break;
         case 'Button':
             DialogControls.push(
-                <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
-                <EditWidgetSignalControl key={1} widget={widget} controlId={'signalIDs'} input signals={signals} handleChange={(e) => handleChange(e)} direction={'in'}/>,
-                <EditWidgetCheckboxControl key={2} widget={widget} controlId={'customProperties.toggle'} input text="Toggle" handleChange={e => handleChange(e)} />,
-                <EditWidgetNumberControl key={3} widget={widget} controlId={'customProperties.on_value'} label={'On Value'} defaultValue={1} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetNumberControl key={4} widget={widget} controlId={'customProperties.off_value'} label={'Off Value'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetColorControl key={5} widget={widget} controlId={'customProperties.background_color'} label={'Background Color and Opacity'} handleChange={(e) => handleChange(e)} disableOpacity={false}/>,
-                <EditWidgetColorControl key={6} widget={widget} controlId={'customProperties.border_color'} label={'Border Color'} handleChange={(e) => handleChange(e)} disableOpacity={true}/>,
-                <EditWidgetColorControl key={7} widget={widget} controlId={'customProperties.font_color'} label={'Font Color'} handleChange={(e) => handleChange(e)} disableOpacity={true}/>,
+                <EditWidgetTextControl key={0} style={topStyle} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
+                <EditWidgetSignalControl key={1} style={midStyle} widget={widget} controlId={'signalIDs'} input signals={signals} handleChange={(e) => handleChange(e)} direction={'in'}/>,
+                <EditWidgetCheckboxControl key={2} style={midStyle} widget={widget} controlId={'customProperties.toggle'} input text="Toggle" handleChange={e => handleChange(e)} />,
+                <EditWidgetNumberControl key={3} style={midStyle} widget={widget} controlId={'customProperties.on_value'} label={'On Value'} defaultValue={1} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetNumberControl key={4} style={midStyle} widget={widget} controlId={'customProperties.off_value'} label={'Off Value'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetColorControl key={5} style={midStyle} widget={widget} controlId={'customProperties.background_color'} label={'Background Color and Opacity'} handleChange={(e) => handleChange(e)} disableOpacity={false}/>,
+                <EditWidgetColorControl key={6} style={midStyle} widget={widget} controlId={'customProperties.border_color'} label={'Border Color'} handleChange={(e) => handleChange(e)} disableOpacity={true}/>,
+                <EditWidgetColorControl key={7} style={bottomStyle} widget={widget} controlId={'customProperties.font_color'} label={'Font Color'} handleChange={(e) => handleChange(e)} disableOpacity={true}/>,
             );
             break;
         case 'Box':
             DialogControls.push(
-                <EditWidgetColorControl key={0} widget={widget} controlId={'customProperties.background_color'} label={'Background Color and Opacity'} handleChange={e => handleChange(e)} disableOpacity={false}/>,
-                <EditWidgetColorControl key={1} widget={widget} controlId={'customProperties.border_color'} label={'Border Color'} handleChange={(e) => handleChange(e)} disableOpacity={true}/>,
+                <EditWidgetColorControl key={0} style={topStyle} widget={widget} controlId={'customProperties.background_color'} label={'Background Color and Opacity'} handleChange={e => handleChange(e)} disableOpacity={false}/>,
+                <EditWidgetColorControl key={1} style={bottomStyle} widget={widget} controlId={'customProperties.border_color'} label={'Border Color'} handleChange={(e) => handleChange(e)} disableOpacity={true}/>,
             );
             break;
         case 'Label':
             DialogControls.push(
-                <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
-                <EditWidgetTextSizeControl key={1} widget={widget} handleChange={e => handleChange(e)} />,
-                <EditWidgetColorControl key={2} widget={widget} controlId={'customProperties.fontColor'} label={'Text color'} handleChange={e => handleChange(e)} disableOpacity={false}/>
+                <EditWidgetTextControl key={0} style={topStyle} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
+                <EditWidgetTextSizeControl key={1} style={midStyle} widget={widget} handleChange={e => handleChange(e)} />,
+                <EditWidgetColorControl key={2} style={bottomStyle} widget={widget} controlId={'customProperties.fontColor'} label={'Text color'} handleChange={e => handleChange(e)} disableOpacity={false}/>
             );
             break;
         /*case 'HTML':
@@ -152,27 +161,27 @@ export default function CreateControls(widgetType = null, widget = null, session
             break;
         case 'NumberInput':
             DialogControls.push(
-                <EditWidgetTextControl key={0} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
-                <EditWidgetSignalControl key={2} widget={widget} controlId={'signalIDs'} input  signals={signals} handleChange={(e) => handleChange(e)} direction={'in'}/>,
-                <EditWidgetCheckboxControl key={1} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />
+                <EditWidgetTextControl key={0} style={topStyle} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
+                <EditWidgetSignalControl key={2} style={midStyle} widget={widget} controlId={'signalIDs'} input  signals={signals} handleChange={(e) => handleChange(e)} direction={'in'}/>,
+                <EditWidgetCheckboxControl key={1} style={bottomStyle} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Line':
             DialogControls.push(
-                <EditWidgetColorControl key={0} widget={widget} controlId={'customProperties.border_color'} label={'Line color'} handleChange={(e) => handleChange(e)} disableOpacity={false}/>,
-                <EditWidgetNumberControl key={1} widget={widget} controlId={'customProperties.rotation'} label={'Rotation (degrees)'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetNumberControl key={2} widget={widget} controlId={'customProperties.border_width'} label={'Line width'} defaultValue={0} handleChange={(e) => handleChange(e)} />
+                <EditWidgetColorControl key={0} style={topStyle} widget={widget} controlId={'customProperties.border_color'} label={'Line color'} handleChange={(e) => handleChange(e)} disableOpacity={false}/>,
+                <EditWidgetNumberControl key={1} style={midStyle} widget={widget} controlId={'customProperties.rotation'} label={'Rotation (degrees)'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetNumberControl key={2} style={bottomStyle} widget={widget} controlId={'customProperties.border_width'} label={'Line width'} defaultValue={0} handleChange={(e) => handleChange(e)} />
             );
             break;
 
         case 'TimeOffset':
             DialogControls.push(
-                <EditWidgetICControl key={0} widget={widget} controlId={'customProperties.icID'} input ics={ics} handleChange={(e) => handleChange(e)}/>,
-                <EditWidgetNumberControl key={1} widget={widget} controlId={'customProperties.threshold_yellow'} label={'Threshold yellow'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetNumberControl key={2} widget={widget} controlId={'customProperties.threshold_red'} label={'Threshold red'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetCheckboxControl key={3} widget={widget} controlId={'customProperties.horizontal'} input text="Horizontal" handleChange={e => handleChange(e)} />,
-                <EditWidgetCheckboxControl key={4} widget={widget} controlId={'customProperties.showName'} input text="showName" handleChange={e => handleChange(e)} />,
-                <EditWidgetCheckboxControl key={5} widget={widget} controlId={'customProperties.showOffset'} input text="showOffset" handleChange={e => handleChange(e)} />,
+                <EditWidgetICControl key={0} style={topStyle} widget={widget} controlId={'customProperties.icID'} input ics={ics} handleChange={(e) => handleChange(e)}/>,
+                <EditWidgetNumberControl key={1} style={midStyle} widget={widget} controlId={'customProperties.threshold_yellow'} label={'Threshold yellow'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetNumberControl key={2} style={midStyle} widget={widget} controlId={'customProperties.threshold_red'} label={'Threshold red'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={3} style={midStyle} widget={widget} controlId={'customProperties.horizontal'} input text="Horizontal" handleChange={e => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={4} style={midStyle} widget={widget} controlId={'customProperties.showName'} input text="showName" handleChange={e => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={5} style={bottomStyle} widget={widget} controlId={'customProperties.showOffset'} input text="showOffset" handleChange={e => handleChange(e)} />,
             );
             break;
 

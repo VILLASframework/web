@@ -59,7 +59,7 @@ class EditWidgetICControl extends React.Component {
       icOptions = <option style={{ display: 'none' }}>No ics found</option>
     }
 
-    return <div>
+    return <div style={this.props.style}>
       <Form.Group controlId="ic">
         <Form.Label>IC</Form.Label>
         <Form.Control

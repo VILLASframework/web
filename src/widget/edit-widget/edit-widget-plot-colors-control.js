@@ -104,7 +104,7 @@ class EditWidgetPlotColorsControl extends Component {
   render() {
 
     return (
-      <Form.Group>
+      <Form.Group style={this.props.style}>
         <Form.Label>Line Colors</Form.Label>
           <div>
               {

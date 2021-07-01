@@ -46,7 +46,7 @@ class EditWidgetCheckboxControl extends React.Component {
   }
 
   render() {
-    return <Form.Group>
+    return <Form.Group style={this.props.style}>
       <Form.Check
         type={"checkbox"}
         id={this.props.controlId}

@@ -23,7 +23,7 @@ class EditWidgetTextSizeControl extends React.Component {
     const sizes = [11, 12, 14, 16, 18, 20, 22, 24, 28, 32, 36, 40, 46, 52, 60, 72];
 
     return (
-      <Form.Group controlId="customProperties.textSize">
+      <Form.Group controlId="customProperties.textSize" style={this.props.style}>
         <Form.Label>Text size</Form.Label>
         <Form.Control as="select" value={this.props.widget.customProperties.textSize} onChange={e => this.props.handleChange(e)}>
           {sizes.map((size, index) => (

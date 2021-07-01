@@ -41,7 +41,7 @@ class EditWidgetAspectControl extends React.Component {
     }
 
     return (
-      <Form.Group>
+      <Form.Group style={this.props.style}>
         <Form.Check
           type='checkbox'
           id={this.props.controlId}

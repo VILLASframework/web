@@ -81,7 +81,7 @@ class EditWidgetColorControl extends Component {
     if(this.props.disableOpacity){
       tooltipText = "Change border color";
     }
-    return ( <Container>
+    return ( <Container style={this.props.style}>
     <Row>
       <Col>
         <Form.Label>{this.props.label}</Form.Label>

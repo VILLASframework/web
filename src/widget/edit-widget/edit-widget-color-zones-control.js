@@ -180,7 +180,7 @@ class EditWidgetColorZonesControl extends React.Component {
       marginTop: '20px'
     }
 
-    return <Form.Group>
+    return <Form.Group style={this.props.style}>
       <Form.Label>Color Zones</Form.Label>
       <span className='icon-button'>
         <Button

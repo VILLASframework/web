@@ -55,7 +55,7 @@ class EditWidgetSignalsControl extends Component {
 
   render() {
     return (
-        <Form.Group>
+        <Form.Group style={this.props.style}>
           <Form.Label>Signals</Form.Label>
           {
             this.state.signals === 0 || !this.state.widget.hasOwnProperty(this.props.controlId)? (

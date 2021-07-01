@@ -52,7 +52,7 @@ class EditWidgetOrientation extends Component {
   render() {
     // The <Row> tag shouldn't be necessary, but it gives height to the row while combining horizontal and vertical forms
     return (
-        <Form.Group controlId="orientation">
+        <Form.Group controlId="orientation" style={this.props.style}>
           <Row>
             <Col className={Form.Label} sm={3}>
               Orientation

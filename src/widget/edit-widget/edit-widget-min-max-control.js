@@ -75,7 +75,7 @@ class EditWidgetMinMaxControl extends React.Component {
 
   render() {
 
-    return <Form.Group>
+    return <Form.Group style={this.props.style}>
       <Form.Label>{this.props.label}</Form.Label>
       <Form.Check
         label= {"UseMinMax"}
