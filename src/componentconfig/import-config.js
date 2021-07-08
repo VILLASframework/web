@@ -103,7 +103,7 @@ class ImportConfigDialog extends React.Component {
         onReset={() => this.resetState()}
         valid={this.valid} >
         <Form>
-          <Form.Group controlId='file'>
+          <Form.Group controlId='file' style={{marginBottom: '15px'}}>
             <Form.Label>Component Configuration File</Form.Label>
             <Form.Control type='file' onChange={this.loadFile} />
           </Form.Group>

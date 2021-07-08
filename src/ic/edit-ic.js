@@ -159,12 +159,12 @@ class EditICDialog extends React.Component {
       >
         <Form>
           <Form.Label column={false}>UUID: {this.props.ic.uuid}</Form.Label>
-          <Form.Group controlId="name">
+          <Form.Group controlId="name" style={{marginBottom: '15px'}}>
             <Form.Label column={false}>Name</Form.Label>
             <Form.Control type="text" placeholder={this.props.ic.name} value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <Form.Control.Feedback />
           </Form.Group>
-          <Form.Group controlId="category">
+          <Form.Group controlId="category" style={{marginBottom: '15px'}}>
             <Form.Label column={false}>Category</Form.Label>
             <Form.Control as="select" value={this.state.category} onChange={(e) => this.handleChange(e)}>
               <option>simulator</option>
@@ -174,7 +174,7 @@ class EditICDialog extends React.Component {
               <option>manager</option>
             </Form.Control>
           </Form.Group>
-          <Form.Group controlId="type">
+          <Form.Group controlId="type" style={{marginBottom: '15px'}}>
             <Form.Label column={false}>Type</Form.Label>
             <Form.Control as="select" value={this.state.type} onChange={(e) => this.handleChange(e)}>
               <option default>Select type</option>
@@ -183,17 +183,17 @@ class EditICDialog extends React.Component {
               ))}
             </Form.Control>
           </Form.Group>
-          <Form.Group controlId="websocketurl">
+          <Form.Group controlId="websocketurl" style={{marginBottom: '15px'}}>
             <Form.Label column={false}>Websocket URL</Form.Label>
             <Form.Control type="text" placeholder={this.props.ic.websocketurl} value={this.state.websocketurl} onChange={(e) => this.handleChange(e)} />
             <Form.Control.Feedback />
           </Form.Group>
-          <Form.Group controlId="apiurl">
+          <Form.Group controlId="apiurl" style={{marginBottom: '15px'}}>
             <Form.Label column={false}>API URL</Form.Label>
             <Form.Control type="text" placeholder={this.props.ic.apiurl} value={this.state.apiurl} onChange={(e) => this.handleChange(e)} />
             <Form.Control.Feedback />
           </Form.Group>
-          <Form.Group controlId="location">
+          <Form.Group controlId="location" style={{marginBottom: '15px'}}>
             <Form.Label column={false}>Location</Form.Label>
             <Form.Control type="text" placeholder={this.props.ic.location} value={this.state.location || '' } onChange={(e) => this.handleChange(e)} />
             <Form.Control.Feedback />

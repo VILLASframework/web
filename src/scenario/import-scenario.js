@@ -102,12 +102,12 @@ class ImportScenarioDialog extends React.Component {
       valid={this.valid}
     >
       <Form>
-        <Form.Group as={Col} controlId="file">
+        <Form.Group as={Col} controlId="file" style={{marginBottom: '15px'}}>
           <Form.Label>Scenario File</Form.Label>
           <Form.Control type="file" onChange={this.loadFile} />
         </Form.Group>
 
-        <Form.Group as={Col} controlId="name">
+        <Form.Group as={Col} controlId="name" style={{marginBottom: '15px'}}>
           <Form.Label>Name</Form.Label>
           <Form.Control readOnly={this.imported === false} type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
           <Form.Control.Feedback />
