@@ -184,7 +184,7 @@ class EditConfigDialog extends React.Component {
         valid={this.valid}
       >
         <BForm>
-          <BForm.Group controlId="name">
+          <BForm.Group controlId="name" style={{marginBottom: '15px'}}>
             <BForm.Label column={false}>Name</BForm.Label>
             <BForm.Control
               type="text"
@@ -195,8 +195,8 @@ class EditConfigDialog extends React.Component {
             <BForm.Control.Feedback />
           </BForm.Group>
 
-          <BForm.Group controlId="icID">
-            <BForm.Label column={false}> Infrastructure Component </BForm.Label>
+          <BForm.Group controlId="icID" style={{marginBottom: '15px'}}>
+            <BForm.Label  column={false}> Infrastructure Component </BForm.Label>
             <BForm.Control
               as="select"
               placeholder='Select infrastructure component'

@@ -78,7 +78,7 @@ class NewScenarioDialog extends React.Component {
       onReset={this.resetState}
       valid={this.valid}>
       <Form>
-        <Form.Group as={Col} controlId="name">
+        <Form.Group as={Col} controlId="name" style={{marginBottom: '15px'}}>
           <Form.Label>Name</Form.Label>
           <Form.Control type="text" placeholder="Enter name" value={this.state.name} onChange={this.handleChange} />
           <Form.Control.Feedback />

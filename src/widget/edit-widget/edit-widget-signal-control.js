@@ -48,7 +48,7 @@ class EditWidgetSignalControl extends Component {
   render() {
 
     return (
-        <Form.Group controlId="signal">
+        <Form.Group controlId="signal" style={this.props.style}>
           <Form.Label>Select signal</Form.Label>
           <Form.Control as="select" value={this.props.widget.signalIDs[0] || ""} onChange={(e) => this.handleSignalChange(e)}>
           <option default>Select signal</option>

@@ -17,7 +17,7 @@
 
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { Table, Button, Form, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Table, Button, Form, Tooltip, OverlayTrigger, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Icon from './icon';
 import IconToggleButton from './icon-toggle-button';
@@ -92,6 +92,7 @@ class CustomTable extends Component {
               placement={'bottom'}
               overlay={<Tooltip id={`tooltip-${"export"}`}>Download {contentvalue}</Tooltip>}
             >
+            <span>
               <Button
                 variant='table-control-button'
                 onClick={() => child.props.onDownload(contentkey)}
@@ -99,6 +100,7 @@ class CustomTable extends Component {
                 {contentkey + ' '}
                 <Icon icon='file-download' classname={'icon-color'}/>
               </Button>
+              </span>
             </OverlayTrigger>);
         });
       } else {
@@ -116,14 +118,14 @@ class CustomTable extends Component {
       }
 
       let labelStyle = child.props.labelStyle(data[labelKey], data)
-
+    
       cell.push(<span>
         &nbsp;
-        <Form.Label
-          column={false}
-          className={labelStyle}>
+        <Badge
+          bg={labelStyle[0]}
+          className={labelStyle[1]}>
           {labelContent}
-        </Form.Label>
+        </Badge>
       </span>
       );
     }
@@ -163,7 +165,6 @@ class CustomTable extends Component {
       cell.push(
         <Form.Check
           className="table-control-checkbox"
-          inline
           disabled={isDisabled}
           checked={checkboxKey ? data[checkboxKey] : null}
           onChange={e => child.props.onChecked(data, e)}
@@ -175,6 +176,7 @@ class CustomTable extends Component {
       cell.push(
         <IconToggleButton
           childKey={childkey++}
+          index={data.id}
           onChange={() => child.props.onChangeLock(index)}
           checked={isLocked}
           checkedIcon='lock'

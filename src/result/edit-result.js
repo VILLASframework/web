@@ -139,7 +139,7 @@ class EditResultDialog extends React.Component {
       blendOutCancel={true}
       valid={true}
     >
-      <Form.Group as={Col} controlId='description'>
+      <Form.Group as={Col} controlId='description' style={{marginBottom: '15px'}}>
         <Row style={{ float: 'center' }} >
           <Col xs lg="2">
             <Form.Label>Description</Form.Label>

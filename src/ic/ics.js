@@ -257,49 +257,45 @@ class InfrastructureComponents extends Component {
   }
 
   static stateLabelStyle(state, component){
-    let style = [ 'badge' ];
-
-    if (InfrastructureComponents.isICOutdated(component) && state !== 'shutdown') {
-      style.push('badge-outdated');
-    }
+    let style = [];
 
     switch (state) {
       case 'error':
-        style.push('badge-danger');
+        style[0] = 'danger';
         break;
       case 'idle':
-        style.push('badge-primary');
+        style[0] = 'primary';
         break;
       case 'starting':
-        style.push('badge-info');
+        style[0] = 'info';
         break;
       case 'running':
-        style.push('badge-success');
+        style[0] = 'success';
         break;
       case 'pausing':
-        style.push('badge-info');
+        style[0] = 'info';
         break;
       case 'paused':
-        style.push('badge-info');
+        style[0] = 'info';
         break;
       case 'resuming':
-        style.push('badge-warning');
+        style[0] = 'warning';
         break;
       case 'stopping':
-        style.push('badge-warning');
+        style[0] = 'warning';
         break;
       case 'resetting':
-        style.push('badge-warning');
+        style[0] = 'warning';
         break;
       case 'shuttingdown':
-        style.push('badge-warning');
+        style[0] = 'warning';
         break;
       case 'shutdown':
-        style.push('badge-warning');
+        style[0] = 'warning';
         break;
 
       default:
-        style.push('badge-default');
+        style[0] = 'secondary';
 
         /* Possible states of ICs
          *  'error':        ['resetting', 'error'],
@@ -316,7 +312,14 @@ class InfrastructureComponents extends Component {
          */
     }
 
-    return style.join(' ')
+    if (InfrastructureComponents.isICOutdated(component) && state !== 'shutdown') {
+      style[1] = 'badge-outdated';
+    }
+    else{
+      style[1] = '';
+    }
+
+    return style
   }
 
   static stateUpdateModifier(updatedAt, component) {
@@ -334,7 +337,7 @@ class InfrastructureComponents extends Component {
       return <span>{timeString}</span>
     }
     else{
-      return <Badge variant="secondary">Unknown</Badge>
+      return <Badge bg="secondary">unknown</Badge>
     }
   }
 

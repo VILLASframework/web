@@ -523,6 +523,7 @@ class Dashboard extends Component {
               <IconToggleButton
                 childKey={0}
                 checked={this.state.locked}
+                index={this.state.dashboard.id}
                 checkedIcon='lock'
                 uncheckedIcon='lock-open'
                 tooltipChecked='Dashboard is locked, cannot be edited'

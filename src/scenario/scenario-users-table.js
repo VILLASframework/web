@@ -77,6 +77,7 @@ class ScenarioUsersTable extends Component {
 
 
   render() {
+
     if (this.state.goToScenarios) {
       console.log("redirect to scenario overview")
       return (<Redirect to="/scenarios" />);
@@ -131,7 +132,6 @@ class ScenarioUsersTable extends Component {
             value={this.state.userToAdd}
             type="text"
           />
-          <InputGroup.Append>
           <span className='icon-button'>
           <IconButton
             childKey={1}
@@ -142,7 +142,6 @@ class ScenarioUsersTable extends Component {
             hidetooltip={this.props.locked}
           />
           </span>
-          </InputGroup.Append>
         </InputGroup>
         <br />
         <br />

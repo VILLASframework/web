@@ -45,7 +45,7 @@ class EditWidgetParametersControl extends Component {
 
   render() {
     return (
-        <Form.Group controlId={this.props.controlId}>
+        <Form.Group controlId={this.props.controlId} style={this.props.style}>
           <Form.Label>{this.props.label}</Form.Label>
           <ParametersEditor
             content={this.state.widget[this.props.controlId] || {}}

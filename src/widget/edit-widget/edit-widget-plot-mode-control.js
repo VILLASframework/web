@@ -42,9 +42,12 @@ class EditWidgetPlotModeControl extends Component {
   render() {
 
     return (
-        <Form.Group controlId="mode">
+        <Form.Group controlId="mode" style={this.props.style}>
           <Form.Label>Select mode</Form.Label>
-          <Form.Control as="select" value={this.props.widget.customProperties.mode || ""} onChange={(e) => this.handleModeChange(e)}>
+          <Form.Control
+            as="select"
+            value={this.props.widget.customProperties.mode || ""}
+            onChange={(e) => this.handleModeChange(e)}>
           <option key={0} value={"auto time-scrolling"}>Auto time-scrolling</option>
           <option key={1} value={"last samples"}>Last samples</option>
           </Form.Control>

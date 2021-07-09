@@ -170,6 +170,7 @@ class Scenario extends React.Component {
         <span className='icon-button'>
               <IconToggleButton
                 childKey={0}
+                index={this.state.scenario.id}
                 onChange={() => this.onChangeLock()}
                 checked={this.state.scenario.isLocked}
                 checkedIcon='lock'

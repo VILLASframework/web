@@ -17,7 +17,7 @@
 
 import React from 'react';
 
-import { ToggleButton, ButtonGroup, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { ToggleButton, Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 import Icon from './icon';
 
@@ -31,8 +31,9 @@ class IconToggleButton extends React.Component {
       key={this.props.childKey}
       placement={'top'}
       overlay={<Tooltip id={`tooltip-${this.props.childKey}`}>{tooltip}</Tooltip>} >
-      <ButtonGroup toggle>
+      <span>
         <ToggleButton
+          id={this.props.index}
           variant={this.props.variant ? this.props.variant : 'light'}
           type='checkbox'
           onChange={this.props.onChange}
@@ -54,7 +55,7 @@ class IconToggleButton extends React.Component {
             />
           }
         </ToggleButton>
-      </ButtonGroup>
+        </span>
     </OverlayTrigger>
   }
 }

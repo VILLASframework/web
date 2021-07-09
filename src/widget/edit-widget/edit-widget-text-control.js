@@ -60,7 +60,7 @@ class EditWidgetTextControl extends Component {
 
   render() {
     return (
-        <Form.Group controlId={this.props.controlId}>
+        <Form.Group controlId={this.props.controlId} style={this.props.style}>
           <Form.Label>{this.props.label}</Form.Label>
           <Form.Control type="text" placeholder={this.props.placeholder} value={this.state.value} onChange={e => this.props.handleChange(e)} />
           <Form.Control.Feedback />

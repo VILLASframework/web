@@ -92,28 +92,28 @@ class EditUserDialog extends React.Component {
     return (
       <Dialog show={this.props.show} title="Edit user" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={true}>
         <Form>
-          <Form.Group as={Col} controlId="username">
+          <Form.Group as={Col} controlId="username" style={{marginBottom: '15px'}}>
             <Form.Label>Username</Form.Label>
             <Form.Control type="text" placeholder={this.props.user.username} value={this.state.username} onChange={(e) => this.handleChange(e)} />
             <Form.Control.Feedback />
           </Form.Group>
-          <Form.Group as={Col} controlId="mail">
+          <Form.Group as={Col} controlId="mail" style={{marginBottom: '15px'}}>
             <Form.Label>E-mail</Form.Label>
             <Form.Control type="text" placeholder={this.props.user.mail} value={this.state.mail} onChange={(e) => this.handleChange(e)} />
           </Form.Group>
-          <Form.Group  as={Col} controlId="oldPassword">
+          <Form.Group  as={Col} controlId="oldPassword" style={{marginBottom: '15px'}}>
             <Form.Label>Admin Password</Form.Label>
             <Form.Control type="password" placeholder="Enter admin password" value={this.state.oldPassword} onChange={(e) => this.handleChange(e)} />
           </Form.Group>
-          <Form.Group as={Col} controlId="password">
+          <Form.Group as={Col} controlId="password" style={{marginBottom: '15px'}}>
             <Form.Label>New User Password</Form.Label>
             <Form.Control type="password" placeholder="Enter password" value={this.state.password} onChange={(e) => this.handleChange(e)} />
           </Form.Group>
-          <Form.Group as={Col} controlId="confirmPassword">
+          <Form.Group as={Col} controlId="confirmPassword" style={{marginBottom: '15px'}}>
             <Form.Label>Confirm new Password</Form.Label>
             <Form.Control type="password" placeholder="Enter password" value={this.state.confirmPassword} onChange={(e) => this.handleChange(e)} />
           </Form.Group>
-          <Form.Group as={Col} controlId="role">
+          <Form.Group as={Col} controlId="role" style={{marginBottom: '15px'}}>
             <Form.Label>Role</Form.Label>
             <Form.Control as="select" placeholder={this.props.user.role} value={this.state.role} onChange={(e) => this.handleChange(e)}>
               <option key='1' value='Admin'>Administrator</option>

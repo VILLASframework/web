@@ -65,7 +65,7 @@ class EditWidgetHTMLContent extends React.Component {
 
   render() {
     return (
-        <Form.Group controlId={this.props.controlId}>
+        <Form.Group controlId={this.props.controlId} style={this.props.style}>
           <Form.Label>HTML Content</Form.Label>
           <Form.Control
             onKeyDown={this.handleKeyIgnore}

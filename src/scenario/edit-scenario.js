@@ -83,7 +83,7 @@ class EditScenarioDialog extends React.Component {
       valid={true}
     >
       <Form>
-        <Form.Group as={Col} controlId='name'>
+        <Form.Group as={Col} controlId='name' style={{marginBottom: '15px'}}>
           <Form.Label column={false}>Name</Form.Label>
           <Form.Control type='text' placeholder='Enter name' value={this.state.name} onChange={this.handleChange} />
           <Form.Control.Feedback />

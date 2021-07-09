@@ -76,18 +76,18 @@ class NewUserDialog extends React.Component {
         valid={this.valid}
       >
         <Form>
-          <Form.Group as={Col} controlId="username">
+          <Form.Group as={Col} controlId="username" style={{marginBottom: '15px'}}>
             <Form.Label>Username</Form.Label>
             <Form.Control type="text" placeholder="Enter username" value={this.state.name} onChange={(e) => this.handleChange(e)} />
             <Form.Control.Feedback />
             <Form.Text>Min 3 characters.</Form.Text>
           </Form.Group>
-          <Form.Group as={Col} controlId="mail">
+          <Form.Group as={Col} controlId="mail" style={{marginBottom: '15px'}}>
             <Form.Label>E-mail</Form.Label>
             <Form.Control type="text" placeholder="Enter e-mail" value={this.state.mail} onChange={(e) => this.handleChange(e)} />
             <Form.Control.Feedback />
           </Form.Group>
-          <Form.Group as={Col} controlId="password">
+          <Form.Group as={Col} controlId="password" style={{marginBottom: '15px'}}>
             <Form.Label>Password</Form.Label>
             <Form.Control type="text" placeholder="Enter password" value={this.state.password} onChange={(e) => this.handleChange(e)} />
             <Form.Control.Feedback />

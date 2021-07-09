@@ -58,7 +58,7 @@ class EditFileWidgetControl extends React.Component {
       fileOptions = <option style={{ display: 'none' }}>No files found</option>
     }
 
-    return <div>
+    return <div style={this.props.style}>
       <Form.Group controlId="file">
         <Form.Label>File</Form.Label>
         <Form.Control
