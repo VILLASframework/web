@@ -41,7 +41,8 @@ import WidgetGauge from './widgets/gauge';
 import WidgetBox from './widgets/box';
 import WidgetTopology from './widgets/topology';
 import WidgetLine from './widgets/line';
-import WidgetTimeOffset from './widgets/time-offset'
+import WidgetTimeOffset from './widgets/time-offset';
+import WidgetICstatus from './widgets/icstatus';
 //import WidgetHTML from './widgets/html';
 
 
@@ -238,6 +239,11 @@ class Widget extends React.Component {
         widget={widget}
         data={this.state.icData}
         websockets={this.state.websockets}
+        ics={this.state.ics}
+      />
+    } else if (widget.type === 'ICstatus') {
+      return <WidgetICstatus
+        widget={widget}
         ics={this.state.ics}
       />
     }

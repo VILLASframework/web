@@ -31,7 +31,8 @@ import EditWidgetCheckboxControl from './edit-widget-checkbox-control';
 import EditWidgetColorZonesControl from './edit-widget-color-zones-control';
 import EditWidgetMinMaxControl from './edit-widget-min-max-control';
 import EditWidgetParametersControl from './edit-widget-parameters-control';
-import EditWidgetICControl from './edit-widget-ic-control';
+import EditWidgetICSelect from './edit-widget-ic-select';
+import EditWidgetICChecklist from './edit-widget-ic-checklist';
 import EditWidgetPlotColorsControl from './edit-widget-plot-colors-control';
 import EditWidgetPlotModeControl from './edit-widget-plot-mode-control';
 import EditWidgetRotationControl from './edit-widget-rotation-control';
@@ -180,13 +181,19 @@ export default function CreateControls(widgetType = null, widget = null, session
 
         case 'TimeOffset':
             DialogControls.push(
-                <EditWidgetICControl key={0} style={topStyle} widget={widget} controlId={'customProperties.icID'} input ics={ics} handleChange={(e) => handleChange(e)}/>,
+                <EditWidgetICSelect key={0} style={topStyle} widget={widget} controlId={'customProperties.icID'} input ics={ics} handleChange={(e) => handleChange(e)}/>,
                 <EditWidgetNumberControl key={1} style={midStyle} widget={widget} controlId={'customProperties.threshold_yellow'} label={'Threshold yellow'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetNumberControl key={2} style={midStyle} widget={widget} controlId={'customProperties.threshold_red'} label={'Threshold red'} defaultValue={0} handleChange={(e) => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={3} style={midStyle} widget={widget} controlId={'customProperties.horizontal'} input text="Horizontal" handleChange={e => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={4} style={midStyle} widget={widget} controlId={'customProperties.showName'} input text="showName" handleChange={e => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={5} style={bottomStyle} widget={widget} controlId={'customProperties.showOffset'} input text="showOffset" handleChange={e => handleChange(e)} />,
             );
+            break;
+
+        case 'ICstatus':
+            DialogControls.push(
+              <EditWidgetICChecklist key={0} style={topStyle} widget={widget} controlId={'customProperties.icID'} input ics={ics} handleChange={e => handleChange(e)} />,
+              );
             break;
 
         default:

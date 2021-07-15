@@ -18,7 +18,7 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
 
-class EditWidgetICControl extends React.Component {
+class EditWidgetICChecklist extends React.Component {
 
   constructor(props) {
     super(props);
@@ -71,4 +71,4 @@ class EditWidgetICControl extends React.Component {
   }
 }
 
-export default EditWidgetICControl;
+export default EditWidgetICChecklist;
