@@ -25,7 +25,6 @@ class EditWidgetICSelect extends React.Component {
 
     this.state = {
       ics: [],
-      checkedICs: []
     };
   }
 
@@ -35,32 +34,38 @@ class EditWidgetICSelect extends React.Component {
     };
   }
 
-  handleICChange(checked, icID) {
-    console.log(checked)
-    console.log(icID)
-
-    //let value = e.target.value === "Select IC" ? (-1) : (e.target.value);
-    //this.props.handleChange({ target: { id: this.props.controlId, value: value } });
+  handleICChange(e) {
+    let value = e.target.value === "Select IC" ? (-1) : (e.target.value);
+    this.props.handleChange({ target: { id: this.props.controlId, value: value } });
   }
 
   render() {
+
+    let parts = this.props.controlId.split('.');
+    let isCustomProperty = true;
+    if(parts.length === 1){
+      isCustomProperty = false;
+    }
+
+    let icOptions = [];
+    if (this.state.ics !== null && this.state.ics.length > 0){
+      icOptions.push(
+        <option key = {0} default>Select IC</option>
+        )
+      icOptions.push(this.state.ics.map((ic, index) => (
+        <option key={index+1} value={ic.id}>{ic.name}</option>
+      )))
+    } else {
+      icOptions = <option style={{ display: 'none' }}>No ics found</option>
+    }
+
     return <div style={this.props.style}>
       <Form.Group controlId="ic">
-        <Form.Label>Visible ICs</Form.Label>
-        {
-          this.state.ics.map(ic => (
-            <Form.Check
-              style={{wordBreak: 'break-all'}}
-              type={'checkbox'}
-              label={ic.name}
-              id={ic.id}
-              key={ic.id}
-              checked={this.state.checkedICs.find(id => id === ic.id) !== undefined}
-              onChange={(e) => this.handleICChange(e.target.checked, ic.id)}
-              >
-            </Form.Check>
-          ))
-        }
+        <Form.Label>IC</Form.Label>
+        <Form.Control
+          as="select"
+          value={isCustomProperty ? this.props.widget[parts[0]][parts[1]] : this.props.widget[this.props.controlId]}
+          onChange={(e) => this.handleICChange(e)}>{icOptions} </Form.Control>
       </Form.Group>
     </div>;
   }
