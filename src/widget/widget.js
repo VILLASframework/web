@@ -244,7 +244,7 @@ class Widget extends React.Component {
     } else if (widget.type === 'ICstatus') {
       return <WidgetICstatus
         widget={widget}
-        ics={this.state.ics}
+        ics={this.props.ics}
       />
     }
 
