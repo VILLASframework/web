@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import IconButton from "../../common/icon-button";
+import IconButton from "../../common/buttons/icon-button";
 import {Col, Container, Row, Table} from "react-bootstrap";
 import { refresh, ICParamsTable, rawDataTable } from "../ic"
 

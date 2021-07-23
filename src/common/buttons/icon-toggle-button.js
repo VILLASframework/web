@@ -19,7 +19,7 @@ import React from 'react';
 
 import { ToggleButton, Tooltip, OverlayTrigger } from 'react-bootstrap';
 
-import Icon from './icon';
+import Icon from '../icon';
 
 
 class IconToggleButton extends React.Component {

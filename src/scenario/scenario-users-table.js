@@ -20,7 +20,7 @@ import { Form, InputGroup} from "react-bootstrap";
 import {Redirect} from "react-router-dom";
 import Table from "../common/table";
 import TableColumn from "../common/table-column";
-import IconButton from "../common/icon-button";
+import IconButton from "../common/buttons/icon-button";
 import DeleteDialog from "../common/dialogs/delete-dialog";
 import AppDispatcher from "../common/app-dispatcher";
 

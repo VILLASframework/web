@@ -25,7 +25,7 @@ import EditSignalMappingDialog from "../signal/edit-signal-mapping";
 import WidgetToolbox from '../widget/widget-toolbox';
 import WidgetArea from './widget-area';
 import DashboardButtonGroup from './dashboard-button-group';
-import IconToggleButton from '../common/icon-toggle-button';
+import IconToggleButton from '../common/buttons/icon-toggle-button';
 import DashboardStore from './dashboard-store';
 import SignalStore from '../signal/signal-store'
 import FileStore from '../file/file-store';

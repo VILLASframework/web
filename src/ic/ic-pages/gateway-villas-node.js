@@ -17,7 +17,7 @@
 
 import React from 'react';
 import {Button, Col, Container, Row} from "react-bootstrap";
-import IconButton from "../../common/icon-button";
+import IconButton from "../../common/buttons/icon-button";
 import ConfirmCommand from "../confirm-command";
 import AppDispatcher from "../../common/app-dispatcher";
 import { refresh, ICParamsTable, rawDataTable } from "../ic"

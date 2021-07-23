@@ -17,7 +17,7 @@
 
 import React from 'react';
 import {Col, Container, Row} from "react-bootstrap";
-import IconButton from "../../common/icon-button";
+import IconButton from "../../common/buttons/icon-button";
 import {refresh, ICParamsTable } from "../ic"
 
 class DefaultICPage extends React.Component {

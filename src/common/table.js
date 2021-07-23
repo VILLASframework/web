@@ -20,8 +20,8 @@ import _ from 'lodash';
 import { Table, Button, Form, Tooltip, OverlayTrigger, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Icon from './icon';
-import IconToggleButton from './icon-toggle-button';
-import IconButton from '../common/icon-button';
+import IconToggleButton from './buttons/icon-toggle-button';
+import IconButton from './buttons/icon-button';
 
 
 class CustomTable extends Component {
