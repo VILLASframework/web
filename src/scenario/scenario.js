@@ -19,8 +19,8 @@ import React from 'react';
 import { Container } from 'flux/utils';
 
 import AppDispatcher from '../common/app-dispatcher';
-import IconButton from '../common/icon-button';
-import IconToggleButton from '../common/icon-toggle-button';
+import IconButton from '../common/buttons/icon-button';
+import IconToggleButton from '../common/buttons/icon-toggle-button';
 
 import ScenarioStore from './scenario-store';
 import ICStore from '../ic/ic-store';

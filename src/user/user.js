@@ -20,7 +20,7 @@ import { Container } from 'flux/utils';
 import { Form, Row, Col } from 'react-bootstrap';
 import AppDispatcher from '../common/app-dispatcher';
 import EditOwnUserDialog from './edit-own-user'
-import IconButton from "../common/icon-button";
+import IconButton from "../common/buttons/icon-button";
 import LoginStore from './login-store'
 
 class User extends React.Component {

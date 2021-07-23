@@ -36,7 +36,7 @@ import NewScenarioDialog from './new-scenario';
 import EditScenarioDialog from './edit-scenario';
 import ImportScenarioDialog from './import-scenario';
 import DeleteDialog from '../common/dialogs/delete-dialog';
-import IconButton from '../common/icon-button';
+import IconButton from '../common/buttons/icon-button';
 
 
 class Scenarios extends Component {

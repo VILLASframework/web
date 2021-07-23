@@ -17,7 +17,7 @@
 
 import React, {Component} from "react";
 import FileSaver from 'file-saver';
-import IconButton from "../common/icon-button";
+import IconButton from "../common/buttons/icon-button";
 import Table from "../common/table";
 import TableColumn from "../common/table-column";
 import EditDashboardDialog from "./edit-dashboard";

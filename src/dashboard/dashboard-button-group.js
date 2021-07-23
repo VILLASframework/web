@@ -17,7 +17,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import IconButton from '../common/icon-button';
+import IconButton from '../common/buttons/icon-button';
 
 const buttonStyle = {
   marginLeft: '12px',

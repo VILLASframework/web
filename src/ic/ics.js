@@ -36,7 +36,7 @@ import ICAction from './ic-action';
 import DeleteDialog from '../common/dialogs/delete-dialog';
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
 import NotificationsFactory from "../common/data-managers/notifications-factory";
-import IconButton from '../common/icon-button';
+import IconButton from '../common/buttons/icon-button';
 
 class InfrastructureComponents extends Component {
   static getStores() {

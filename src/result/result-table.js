@@ -20,7 +20,7 @@ import JSZip from 'jszip';
 import {Button} from "react-bootstrap";
 import FileSaver from 'file-saver';
 import AppDispatcher from "../common/app-dispatcher";
-import IconButton from "../common/icon-button";
+import IconButton from "../common/buttons/icon-button";
 import Table from "../common/table";
 import TableColumn from "../common/table-column";
 import DeleteDialog from "../common/dialogs/delete-dialog";

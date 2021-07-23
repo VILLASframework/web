@@ -22,7 +22,7 @@ import UsersStore from './users-store';
 import LoginStore from './login-store';
 import ScenarioStore from '../scenario/scenario-store';
 import Icon from '../common/icon';
-import IconButton from '../common/icon-button';
+import IconButton from '../common/buttons/icon-button';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import Table from '../common/table';
 import TableColumn from '../common/table-column';

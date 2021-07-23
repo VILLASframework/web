@@ -19,44 +19,50 @@ import React from 'react';
 
 import { ToggleButton, Tooltip, OverlayTrigger } from 'react-bootstrap';
 
-import Icon from './icon';
+import Icon from '../icon';
 
 
 class IconToggleButton extends React.Component {
 
   render() {
-    let tooltip = this.props.checked ? this.props.tooltipChecked : this.props.tooltipUnchecked;
+    let btn = <ToggleButton
+      id={this.props.index}
+      variant={this.props.variant ? this.props.variant : 'light'}
+      type='checkbox'
+      onChange={this.props.onChange}
+      style={this.props.buttonStyle}
+      disabled={this.props.disabled}
+      checked={this.props.checked}
+    >
+      {this.props.checked ?
+        <Icon
+          icon={this.props.checkedIcon}
+          classname={'icon-color'}
+          style={this.props.iconStyle}
+        />
+        :
+        <Icon
+          icon={this.props.uncheckedIcon}
+          classname={'icon-color'}
+          style={this.props.iconStyle}
+        />
+      }
+    </ToggleButton>
 
-    return <OverlayTrigger
+    let button;
+    let tooltip = this.props.checked ? this.props.tooltipChecked : this.props.tooltipUnchecked;
+    if (tooltip && tooltip !== '') {
+      button = <OverlayTrigger
       key={this.props.childKey}
       placement={'top'}
       overlay={<Tooltip id={`tooltip-${this.props.childKey}`}>{tooltip}</Tooltip>} >
-      <span>
-        <ToggleButton
-          id={this.props.index}
-          variant={this.props.variant ? this.props.variant : 'light'}
-          type='checkbox'
-          onChange={this.props.onChange}
-          style={this.props.buttonStyle}
-          disabled={this.props.disabled}
-          checked={this.props.checked}
-        >
-          {this.props.checked ?
-            <Icon
-              icon={this.props.checkedIcon}
-              classname={'icon-color'}
-              style={this.props.iconStyle}
-            />
-            :
-            <Icon
-              icon={this.props.uncheckedIcon}
-              classname={'icon-color'}
-              style={this.props.iconStyle}
-            />
-          }
-        </ToggleButton>
-        </span>
-    </OverlayTrigger>
+        {btn}
+      </OverlayTrigger>
+    } else {
+      button = btn
+    }
+
+    return button;
   }
 }
 
