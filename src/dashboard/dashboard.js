@@ -595,6 +595,7 @@ class Dashboard extends Component {
                   editing={this.state.editing}
                   index={parseInt(widgetKey, 10)}
                   paused={this.state.paused}
+                  ics={this.state.ics}
                 />
               </WidgetContainer>
 

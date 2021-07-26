@@ -41,7 +41,8 @@ import WidgetGauge from './widgets/gauge';
 import WidgetBox from './widgets/box';
 import WidgetTopology from './widgets/topology';
 import WidgetLine from './widgets/line';
-import WidgetTimeOffset from './widgets/time-offset'
+import WidgetTimeOffset from './widgets/time-offset';
+import WidgetICstatus from './widgets/icstatus';
 //import WidgetHTML from './widgets/html';
 
 
@@ -55,7 +56,6 @@ class Widget extends React.Component {
   static calculateState(prevState, props) {
 
     let websockets = WebsocketStore.getState();
-    let ics = ICStore.getState();
 
     let icData = {};
 
@@ -84,7 +84,6 @@ class Widget extends React.Component {
     }
 
     return {
-      ics: ics,
       websockets: websockets,
       icData: icData,
       signals: signals,
@@ -238,7 +237,12 @@ class Widget extends React.Component {
         widget={widget}
         data={this.state.icData}
         websockets={this.state.websockets}
-        ics={this.state.ics}
+        ics={this.props.ics}
+      />
+    } else if (widget.type === 'ICstatus') {
+      return <WidgetICstatus
+        widget={widget}
+        ics={this.props.ics}
       />
     }
 
