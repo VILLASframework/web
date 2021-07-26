@@ -17,6 +17,7 @@
 
 import ArrayStore from '../common/array-store';
 import ConfigsDataManager from './configs-data-manager';
+import AppDispatcher from "../common/app-dispatcher";
 
 class ConfigStore extends ArrayStore {
 
@@ -58,7 +59,23 @@ class ConfigStore extends ArrayStore {
           // no import
           return super.reduce(state, action);
         }
+      case 'configs/start-icdata-prep':
 
+        //action.data == signals of component (in or out)
+        //data has at least one element, otherwise this case would not be triggered
+        let firstSignal = action.data[0]
+        let config = state.find(c => c.id === firstSignal.configID)
+
+        if ( config !== undefined ) {
+          // prepare IC data
+          AppDispatcher.dispatch({
+            type: 'icData/prepareSignals' + firstSignal.direction,
+            length: action.data.length,
+            id: config.icID
+          });
+        }
+
+        return state
       default:
         return super.reduce(state, action);
 

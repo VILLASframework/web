@@ -40,21 +40,31 @@ class ICDataStore extends ReduceStore {
 
         return state;
 
-      case 'icData/prepare':
-        state[action.id] = {
-          output: {
+      case 'icData/prepareSignalsin':
+        if ( state[action.id] === undefined ) {
+          state[action.id] = {}
+        }
+        state[action.id].input = {
             sequence: -1,
-            length: action.outputLength,
-            values: []
-          },
-          input: {
-            sequence: -1,
-            length: action.inputLength,
+            length: action.length,
             version: 2,
             type: 0,
             timestamp: Date.now(),
-            values: new Array(action.inputLength).fill(0)
-          }
+            values: new Array(action.length).fill(0)
+        };
+
+        this.__emitChange();
+        return state;
+
+      case 'icData/prepareSignalsout':
+        if ( state[action.id] === undefined ) {
+          state[action.id] = {}
+        }
+
+        state[action.id].output = {
+          sequence: -1,
+          length: action.length,
+          values: []
         };
 
         this.__emitChange();

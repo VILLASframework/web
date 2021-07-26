@@ -25,6 +25,19 @@ class SignalsDataManager extends RestDataManager{
 
   constructor() {
     super('signal', '/signals');
+    this.onLoad = this.onSignalsLoaded;
+  }
+
+  onSignalsLoaded(data, token){
+    if (Array.isArray(data) && data.length > 0 ){
+      // prepare IC data if any signals are returned
+      AppDispatcher.dispatch({
+        type: 'configs/start-icdata-prep',
+        data: data,
+      });
+
+    }
+
   }
 
   reloadConfig(token, id){

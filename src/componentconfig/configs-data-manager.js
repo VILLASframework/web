@@ -31,14 +31,6 @@ class ConfigDataManager extends RestDataManager {
 
     for (let config of data) {
 
-      // prepare IC data
-      AppDispatcher.dispatch({
-        type: 'icData/prepare',
-        inputLength: parseInt(config.inputLength, 10),
-        outputLength: parseInt(config.outputLength, 10),
-        id: config.icID
-      });
-
       // request in signals
       AppDispatcher.dispatch({
         type: 'signals/start-load',
