@@ -56,7 +56,6 @@ class Widget extends React.Component {
   static calculateState(prevState, props) {
 
     let websockets = WebsocketStore.getState();
-    let ics = ICStore.getState();
 
     let icData = {};
 
@@ -85,7 +84,6 @@ class Widget extends React.Component {
     }
 
     return {
-      ics: ics,
       websockets: websockets,
       icData: icData,
       signals: signals,
@@ -239,7 +237,7 @@ class Widget extends React.Component {
         widget={widget}
         data={this.state.icData}
         websockets={this.state.websockets}
-        ics={this.state.ics}
+        ics={this.props.ics}
       />
     } else if (widget.type === 'ICstatus') {
       return <WidgetICstatus
