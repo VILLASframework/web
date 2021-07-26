@@ -219,6 +219,11 @@ class ConfigTable extends Component {
     }
   }
 
+  computeNumberOfSignals(configID, direction){
+    let signals = this.props.signals.filter(s => (s.configID === configID && s.direction === direction))
+    return <span>{signals.length}</span>
+  }
+
   /* ##############################################
   * Signal modification methods
   ############################################## */
@@ -358,19 +363,21 @@ class ConfigTable extends Component {
           />
           <TableColumn
             title='# Output Signals'
-            dataKey='outputLength'
+            dataKey='id'
             editButton
             onEdit={index => this.setState({ editOutputSignalsModal: true, modalConfigData: this.props.configs[index], modalConfigIndex: index })}
             width={150}
             locked={this.props.locked}
+            modifier={(component) => this.computeNumberOfSignals(component, "out")}
           />
           <TableColumn
             title='# Input Signals'
-            dataKey='inputLength'
+            dataKey='id'
             editButton
             onEdit={index => this.setState({ editInputSignalsModal: true, modalConfigData: this.props.configs[index], modalConfigIndex: index })}
             width={150}
             locked={this.props.locked}
+            modifier={(component) => this.computeNumberOfSignals(component, "in")}
           />
           <TableColumn
             title='Autoconfigure Signals'
