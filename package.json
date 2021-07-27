@@ -24,6 +24,7 @@
     "flux": "^4.0.1",
     "gaugeJS": "^1.3.7",
     "handlebars": "^4.7.7",
+    "isomorphic-form-data": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "jszip": "^3.6.0",
     "libcimsvg": "git+https://git.rwth-aachen.de/acs/public/cim/pintura-npm-package.git",
