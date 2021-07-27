@@ -149,8 +149,6 @@ class ConfigTable extends Component {
 
     delete config.id;
     delete config.scenarioID;
-    delete config.inputLength;
-    delete config.outputLength;
 
     return config;
   }
