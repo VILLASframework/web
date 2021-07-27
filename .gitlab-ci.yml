@@ -19,7 +19,7 @@ stages:
 
 build:
   stage: build
-  image: node:14.16
+  image: node:16.5
   before_script:
     - mkdir -p build
   script:
