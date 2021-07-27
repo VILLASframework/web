@@ -24,7 +24,7 @@ WORKDIR /usr/src/app
 # use changes to package.json to force Docker not to use the cache
 # when we change our application's nodejs dependencies:
 ADD package.json /usr/src/app
-RUN npm install
+RUN npm install --force
 
 # Install app dependencies
 ARG REACT_APP_BRAND

@@ -23,7 +23,7 @@ build:
   before_script:
     - mkdir -p build
   script:
-    - npm install
+    - npm install --force
     - npm run build
 #  artifacts:
 #    paths:
