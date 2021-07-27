@@ -34,6 +34,7 @@ class EditICDialog extends React.Component {
       description: '',
       type: '',
       category: '',
+      icstate: '',
       managedexternally: false,
       startparameterschema: {}
     };
@@ -66,6 +67,10 @@ class EditICDialog extends React.Component {
 
         if (this.state.category != null && this.state.category !== "" && this.state.category !== this.props.ic.category) {
           data.category = this.state.category;
+        }
+
+        if (this.state.icstate != null && this.state.icstate !== "" && this.state.icstate !== this.props.ic.state) {
+          data.state = this.state.icstate;
         }
 
         if (this.state.startparameterschema !== {}) {
@@ -105,6 +110,7 @@ class EditICDialog extends React.Component {
       location: this.props.ic.location,
       description: this.props.ic.description,
       category: this.props.ic.category,
+      icstate: this.props.ic.state,
       managedexternally: false,
       startparameterschema: this.props.ic.startparameterschema || {},
     });
@@ -148,6 +154,9 @@ class EditICDialog extends React.Component {
       default:
         typeOptions =[];
     }
+
+    let stateOptions = ["idle", "starting", "running", "pausing", "paused", "resuming", "stopping", "resetting", "error", "gone", "shuttingdown", "shutdown"];
+
     return (
       <Dialog
         show={this.props.show}
@@ -183,6 +192,19 @@ class EditICDialog extends React.Component {
               ))}
             </Form.Control>
           </Form.Group>
+          {
+            this.state.type === "dummy" ?
+            <Form.Group controlId="icstate" style={{marginBottom: '15px'}}>
+            <Form.Label column={false}>State</Form.Label>
+            <Form.Control as="select" value={this.state.state} onChange={(e) => this.handleChange(e)}>
+              <option default>Select State</option>
+              {stateOptions.map((name,index) => (
+                <option key={index}>{name}</option>
+              ))}
+            </Form.Control>
+          </Form.Group>
+          : <></>
+          }
           <Form.Group controlId="websocketurl" style={{marginBottom: '15px'}}>
             <Form.Label column={false}>Websocket URL</Form.Label>
             <Form.Control type="text" placeholder={this.props.ic.websocketurl} value={this.state.websocketurl} onChange={(e) => this.handleChange(e)} />
