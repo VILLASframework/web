@@ -27,7 +27,7 @@
       return true
     } else {
       for (var i = 0; i < nextProps.length; i++) {
-        if (nextProps.ics[i].state === this.props.ics[i].state){
+        if (nextProps.ics[i].state !== this.props.ics[i].state){
           return true
         }
       }
