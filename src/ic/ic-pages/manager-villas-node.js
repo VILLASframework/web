@@ -22,7 +22,7 @@ import Table from '../../common/table';
 import TableColumn from '../../common/table-column';
 import FileSaver from 'file-saver';
 import { stateLabelStyle } from "../ics";
-import { refresh, ICParamsTable } from "../ic"
+import {refresh, ICParamsTable, rawDataTable} from "../ic"
 
 class ManagerVillasNode extends React.Component {
 
@@ -119,6 +119,12 @@ class ManagerVillasNode extends React.Component {
                             />
                         </Table>
                     </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <b>Raw Status</b>
+                    {rawDataTable(this.props.ic.statusupdateraw)}
+                  </Col>
                 </Row>
             </Container>
         </div>

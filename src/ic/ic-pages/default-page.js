@@ -18,7 +18,7 @@
 import React from 'react';
 import {Col, Container, Row} from "react-bootstrap";
 import IconButton from "../../common/buttons/icon-button";
-import {refresh, ICParamsTable } from "../ic"
+import {refresh, ICParamsTable, rawDataTable} from "../ic"
 
 class DefaultICPage extends React.Component {
 
@@ -45,6 +45,12 @@ class DefaultICPage extends React.Component {
           <Row>
             <Col>
               {ICParamsTable(this.props.ic)}
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <b>Raw Status</b>
+              {rawDataTable(this.props.ic.statusupdateraw)}
             </Col>
           </Row>
         </Container>

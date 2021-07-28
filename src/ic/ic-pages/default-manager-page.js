@@ -21,7 +21,7 @@ import IconButton from "../../common/buttons/icon-button";
 import Table from '../../common/table';
 import TableColumn from '../../common/table-column';
 import { stateLabelStyle } from "../ics";
-import { refresh, ICParamsTable } from "../ic"
+import {refresh, ICParamsTable, rawDataTable} from "../ic"
 
 class DefaultManagerPage extends React.Component {
 
@@ -92,6 +92,12 @@ class DefaultManagerPage extends React.Component {
             dataKeys={['type']}
           />
         </Table>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <b>Raw Status</b>
+            {rawDataTable(this.props.ic.statusupdateraw)}
           </Col>
         </Row>
       </Container>
