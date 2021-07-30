@@ -196,7 +196,7 @@ class EditICDialog extends React.Component {
             this.state.type === "dummy" ?
             <Form.Group controlId="icstate" style={{marginBottom: '15px'}}>
             <Form.Label column={false}>State</Form.Label>
-            <Form.Control as="select" value={this.state.state} onChange={(e) => this.handleChange(e)}>
+            <Form.Control as="select" value={this.state.icstate} onChange={(e) => this.handleChange(e)}>
               <option default>Select State</option>
               {stateOptions.map((name,index) => (
                 <option key={index}>{name}</option>

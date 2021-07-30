@@ -15,33 +15,50 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
- import React from 'react';
- import { Badge } from 'react-bootstrap';
- import { stateLabelStyle } from "../../ic/ics";
+import React from 'react';
+import { Badge } from 'react-bootstrap';
+import { stateLabelStyle } from "../../ic/ics";
+import AppDispatcher from '../../common/app-dispatcher';
 
 
- class WidgetICstatus extends React.Component {
- 
-  shouldComponentUpdate(nextProps) {
-    if (this.props.ics.length !== nextProps.ics.length) {
-      return true
-    } else {
-      for (var i = 0; i < nextProps.length; i++) {
-        if (nextProps.ics[i].state !== this.props.ics[i].state){
-          return true
-        }
-      }
+class WidgetICstatus extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      sessionToken: localStorage.getItem("token")
+    };
+  }
+
+  componentDidMount() {
+    // Start timer for periodic refresh
+    this.timer = window.setInterval(() => this.refresh(), 5000);
+  }
+
+  componentWillUnmount() {
+    window.clearInterval(this.timer);
+  }
+
+  refresh() {
+    if (this.props.ics) {
+      this.props.ics.forEach(ic => {
+        let icID = parseInt(ic.id, 10);
+        AppDispatcher.dispatch({
+          type: 'ics/start-load',
+          data: icID,
+          token: this.state.sessionToken,
+        });
+      })
     }
-    return false
   }
 
   render() {
     let badges = []
     if (this.props.ics) {
-      this.props.ics.forEach(ic =>{
+      this.props.ics.forEach(ic => {
         let badgeStyle = stateLabelStyle(ic.state, ic)
-        badges.push(<Badge 
-          key={ic.id} 
+        badges.push(<Badge
+          key={ic.id}
           bg={badgeStyle[0]}
           className={badgeStyle[1]}>
           {ic.name + ": " + ic.state}</Badge>)

@@ -24,7 +24,6 @@ import ConfigsStore from '../componentconfig/config-store';
 import FileStore from '../file/file-store';
 import SignalStore from '../signal/signal-store'
 import WebsocketStore from './websocket-store'
-import ICStore from '../ic/ic-store';
 
 import WidgetCustomAction from './widgets/custom-action';
 import WidgetAction from './widgets/action';
@@ -50,7 +49,7 @@ import '../styles/widgets.css';
 
 class Widget extends React.Component {
   static getStores() {
-    return [ ICDataStore, ConfigsStore, FileStore, SignalStore, WebsocketStore, ICStore];
+    return [ ICDataStore, ConfigsStore, FileStore, SignalStore, WebsocketStore];
   }
 
   static calculateState(prevState, props) {
