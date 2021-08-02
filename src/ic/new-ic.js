@@ -16,9 +16,10 @@
  ******************************************************************************/
 
 import React from 'react';
-import { Form, OverlayTrigger, Tooltip} from 'react-bootstrap';
+import { Form as BForm, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
+import Form from "@rjsf/core";
 
 class NewICDialog extends React.Component {
   valid = false;
@@ -103,6 +104,10 @@ class NewICDialog extends React.Component {
     });
   };
 
+  handleFormChange({formData}) {
+    this.setState({properties: formData})
+  }
+
   resetState() {
     this.setState({
       name: '',
@@ -114,29 +119,29 @@ class NewICDialog extends React.Component {
       managedexternally: false,
       description: '',
       location: '',
-      properties: {}
+      properties: {},
     });
   }
 
   validateForm(target) {
+
+    if (this.state.managedexternally) {
+      this.valid = this.state.manager !== '';
+      return this.state.manager !== '' ? "success" : "error";
+    }
+
     // check all controls
     let name = true;
     let uuid = true;
-    let websocketurl = true;
     let type = true;
     let category = true;
-    let manager = true;
 
     if (this.state.name === '') {
       name = false;
     }
 
-    if (!this.state.managedexternally && this.state.uuid === '') {
+    if (this.state.uuid === '') {
       uuid = false;
-    }
-
-    if(this.state.managedexternally && manager === ''){
-      manager = false;
     }
 
     if (this.state.type === '') {
@@ -147,15 +152,13 @@ class NewICDialog extends React.Component {
       category = false;
     }
 
-    this.valid = name && uuid && websocketurl && type && category && manager;
+    this.valid = name && uuid &&  type && category;
 
     // return state to control
     if (target === 'name') return name ? "success" : "error";
     if (target === 'uuid') return uuid ? "success" : "error";
-    if (target === 'websocketurl') return websocketurl ? "success" : "error";
     if (target === 'type') return type ? "success" : "error";
     if (target === 'category') return category ? "success" : "error";
-    if (target === 'manager') return manager ? "success" : "error";
 
     return this.valid;
   }
@@ -191,7 +194,7 @@ class NewICDialog extends React.Component {
     }
 
     let managerOptions = [];
-    managerOptions.push(<option default>Select manager</option>);
+    managerOptions.push(<option key={-1} value={"Select manager"} defaultChecked={true}>Select manager</option>);
     for (let m of this.props.managers) {
       managerOptions.push (
         <option key={m.id} value={m.uuid}>{m.name}</option>
@@ -207,100 +210,121 @@ class NewICDialog extends React.Component {
         onReset={() => this.resetState()}
         valid={this.validateForm()}
       >
-        <Form>
-          {this.props.managers.length > 0 ?
-            <>
-              <Form.Group controlId="managedexternally">
-                <OverlayTrigger key="-1" placement={'left'} overlay={<Tooltip id={`tooltip-${"me"}`}>An externally managed component is created and managed by an IC manager via AMQP</Tooltip>} >
-                  <Form.Check type={"checkbox"} label={"Managed externally"} defaultChecked={this.state.managedexternally} onChange={e => this.handleChange(e)}>
-                  </Form.Check>
-                </OverlayTrigger>
-              </Form.Group>
-              {this.state.managedexternally === true ?
-                <Form.Group controlId="manager" valid={this.validateForm('manager')}>
-                  <OverlayTrigger key="0" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
-                    <Form.Label>Manager to create new IC *</Form.Label>
-                  </OverlayTrigger>
-                  <Form.Control as="select" value={this.state.manager} onChange={(e) => this.handleChange(e)}>
-                    {managerOptions}
-                  </Form.Control>
-                </Form.Group>
-                : <div/>
-              }
-            </>
-            : <div/>
+        {this.props.managers.length > 0 ?
+          <BForm>
+            <BForm.Group controlId="managedexternally">
+              <OverlayTrigger key="-1" placement={'left'}
+                              overlay={<Tooltip id={`tooltip-${"me"}`}>An externally managed component is created and
+                                managed by an IC manager via AMQP</Tooltip>}>
+                <BForm.Check type={"checkbox"} label={"Use manager"} defaultChecked={this.state.managedexternally}
+                             onChange={e => this.handleChange(e)}>
+                </BForm.Check>
+              </OverlayTrigger>
+            </BForm.Group>
+          </BForm> : <></>
+        }
+        {this.state.managedexternally === true ?
+          <>
+
+          <BForm>
+            <BForm.Group controlId="manager" valid={this.validateForm('manager')}>
+              <OverlayTrigger key="0" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
+                <BForm.Label>Manager to create new IC *</BForm.Label>
+              </OverlayTrigger>
+              <BForm.Control as="select" value={this.state.manager} onChange={(e) => this.handleChange(e)}>
+                {managerOptions}
+              </BForm.Control>
+            </BForm.Group>
+          </BForm>
+
+          {this.state.manager !== '' && this.props.managers.find(m => m.uuid === this.state.manager).createparameterschema !== undefined ?
+            <Form
+              schema={this.props.managers.find(m => m.uuid === this.state.manager).createparameterschema}
+              formData={this.state.properties}
+              id='jsonFormData'
+              onChange={({formData}) => this.handleFormChange({formData})}
+              children={true} // hides submit button
+            />
+          :
+            <BForm>
+              <BForm.Group controlId="properties">
+                <BForm.Label>Create Properties</BForm.Label>
+                  <ParametersEditor
+                    content={this.state.properties}
+                    onChange={(data) => this.handlePropertiesChange(data)}
+                  />
+              </BForm.Group>
+            </BForm>
           }
-          <Form.Group controlId="name" valid={this.validateForm('name')}>
-            <OverlayTrigger key="1" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
-              <Form.Label>Name *</Form.Label>
-            </OverlayTrigger>
-              <Form.Control type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
-              <Form.Control.Feedback />
-          </Form.Group>
-          {this.state.managedexternally === false ?
-            <Form.Group controlId="uuid" valid={this.validateForm('uuid')}>
-              <Form.Label>UUID</Form.Label>
-              <Form.Control type="text" placeholder="Enter uuid" value={this.state.uuid}
-                           onChange={(e) => this.handleChange(e)}/>
-              <Form.Control.Feedback/>
-            </Form.Group>
-            : <div/>
-          }
-          <Form.Group controlId="location">
-            <Form.Label>Location</Form.Label>
-            <Form.Control type="text" placeholder="Enter Location" value={this.state.location} onChange={(e) => this.handleChange(e)} />
-            <Form.Control.Feedback />
-          </Form.Group>
-          <Form.Group controlId="description">
-            <Form.Label>Description</Form.Label>
-            <Form.Control type="text" placeholder="Enter Description" value={this.state.description} onChange={(e) => this.handleChange(e)} />
-            <Form.Control.Feedback />
-          </Form.Group>
-          <Form.Group controlId="category" valid={this.validateForm('category')}>
-            <OverlayTrigger key="2" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
-              <Form.Label>Category of component *</Form.Label>
-            </OverlayTrigger>
-            <Form.Control as="select" value={this.state.category} onChange={(e) => this.handleChange(e)}>
-              <option default>Select category</option>
-              <option value="simulator">Simulator</option>
-              <option value="service">Service</option>
-              <option value="gateway">Gateway</option>
-              <option value="equipment">Equipment</option>
-              <option value="manager">Manager</option>
-            </Form.Control>
-          </Form.Group>
-          <Form.Group controlId="type" valid={this.validateForm('type')}>
-            <OverlayTrigger key="3" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
-              <Form.Label>Type of component *</Form.Label>
-            </OverlayTrigger>
-            <Form.Control as="select" value={this.state.type} onChange={(e) => this.handleChange(e)}>
-              <option default>Select type</option>
-              {typeOptions.map((name,index) => (
-                <option key={index}>{name}</option>
-              ))}
-            </Form.Control>
-          </Form.Group>
-          <Form.Group controlId="websocketurl">
-            <Form.Label>Websocket URL</Form.Label>
-            <Form.Control type="text" placeholder="https://" value={this.state.websocketurl} onChange={(e) => this.handleChange(e)} />
-            <Form.Control.Feedback />
-          </Form.Group>
-          <Form.Group controlId="apiurl">
-            <Form.Label>API URL</Form.Label>
-            <Form.Control type="text" placeholder="https://" value={this.state.apiurl} onChange={(e) => this.handleChange(e)} />
-            <Form.Control.Feedback />
-          </Form.Group>
-          {this.state.managedexternally === true ?
-            <Form.Group controlId='properties'>
-              <Form.Label> Properties </Form.Label>
-              <ParametersEditor
-                content={this.state.properties}
-                onChange={(data) => this.handlePropertiesChange(data)}
-              />
-            </Form.Group>
-            : <div/>
-          }
-        </Form>
+          </>
+        :
+          <BForm>
+            <BForm.Group controlId="name" valid={this.validateForm('name')}>
+              <OverlayTrigger key="1" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
+                <BForm.Label>Name *</BForm.Label>
+              </OverlayTrigger>
+              <BForm.Control type="text" placeholder="Enter name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
+              <BForm.Control.Feedback />
+            </BForm.Group>
+
+            <BForm.Group controlId="uuid" valid={this.validateForm('uuid')}>
+              <BForm.Label>UUID</BForm.Label>
+              <BForm.Control type="text" placeholder="Enter uuid" value={this.state.uuid}
+                onChange={(e) => this.handleChange(e)}/>
+              <BForm.Control.Feedback/>
+            </BForm.Group>
+
+            <BForm.Group controlId="location">
+              <BForm.Label>Location</BForm.Label>
+              <BForm.Control type="text" placeholder="Enter Location" value={this.state.location} onChange={(e) => this.handleChange(e)} />
+              <BForm.Control.Feedback />
+            </BForm.Group>
+
+            <BForm.Group controlId="description">
+              <BForm.Label>Description</BForm.Label>
+              <BForm.Control type="text" placeholder="Enter Description" value={this.state.description} onChange={(e) => this.handleChange(e)} />
+              <BForm.Control.Feedback />
+            </BForm.Group>
+
+            <BForm.Group controlId="category" valid={this.validateForm('category')}>
+              <OverlayTrigger key="2" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
+                <BForm.Label>Category of component *</BForm.Label>
+              </OverlayTrigger>
+              <BForm.Control as="select" value={this.state.category} onChange={(e) => this.handleChange(e)}>
+                <option default>Select category</option>
+                <option value="simulator">Simulator</option>
+                <option value="service">Service</option>
+                <option value="gateway">Gateway</option>
+                <option value="equipment">Equipment</option>
+                <option value="manager">Manager</option>
+              </BForm.Control>
+            </BForm.Group>
+
+            <BForm.Group controlId="type" valid={this.validateForm('type')}>
+              <OverlayTrigger key="3" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
+                <BForm.Label>Type of component *</BForm.Label>
+             </OverlayTrigger>
+              <BForm.Control as="select" value={this.state.type} onChange={(e) => this.handleChange(e)}>
+                <option default>Select type</option>
+                  {typeOptions.map((name,index) => (
+                     <option key={index}>{name}</option>
+                  ))}
+              </BForm.Control>
+            </BForm.Group>
+
+            <BForm.Group controlId="websocketurl">
+              <BForm.Label>Websocket URL</BForm.Label>
+              <BForm.Control type="text" placeholder="https://" value={this.state.websocketurl} onChange={(e) => this.handleChange(e)} />
+              <BForm.Control.Feedback />
+            </BForm.Group>
+
+            <BForm.Group controlId="apiurl">
+              <BForm.Label>API URL</BForm.Label>
+              <BForm.Control type="text" placeholder="https://" value={this.state.apiurl} onChange={(e) => this.handleChange(e)} />
+              <BForm.Control.Feedback />
+            </BForm.Group>
+          </BForm>
+        }
       </Dialog>
     );
   }
