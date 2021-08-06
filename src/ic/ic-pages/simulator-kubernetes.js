@@ -46,10 +46,11 @@ class KubernetesICPage extends React.Component {
 
           if(typeof ICproperties.job_name !== "undefined"){
             jobLink = firstPart + "/batch.job/" + ICproperties.namespace + "/" + ICproperties.job_name;
-          } else if (typeof ICproperties.pod_names !== "undefined" && ICproperties.pod_names !== []){
-            ICproperties.pod_names.map(name => (
-              podLinks.push(firstPart + "/pod/" + ICproperties.namespace + "/" + name)
-            ))
+          }
+          if (typeof ICproperties.pod_names !== "undefined"){
+            for (let i=0; i<ICproperties.pod_names.length; i++){
+              podLinks.push(firstPart + "/pod/" + ICproperties.namespace + "/" + ICproperties.pod_names[i])
+            }
           }
         }
       }
