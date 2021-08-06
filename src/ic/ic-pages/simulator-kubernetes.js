@@ -71,7 +71,7 @@ class KubernetesICPage extends React.Component {
           <IconButton
             childKey={2}
             tooltip='Refresh'
-            onClick={() => this.props.refresh(this.props.ic, this.props.sessionToken)}
+            onClick={() => refresh(this.props.ic, this.props.sessionToken)}
             icon='sync-alt'
             buttonStyle={this.props.buttonStyle}
             iconStyle={this.props.iconStyle}
