@@ -85,11 +85,15 @@ class KubernetesICPage extends React.Component {
             <tbody>
             <tr><td>Rancher UI pages:</td></tr>
             {this.state.jobLink !== "" ?
-            <tr><td>Job:</td><td>{this.state.jobLink}</td></tr>
+            <tr><td>Job:</td><td>
+              <a href={this.state.jobLink}>{this.state.jobLink}</a>
+              </td></tr>
             :
             <></>}
             {this.state.podLinks !== [] && this.state.podLinks.map(link =>
-            <tr><td>Pod:</td><td>{link}</td></tr>
+            <tr><td>Pod:</td><td>
+              <a href={link}>{link}</a>
+            </td></tr>
             )
             }
             </tbody>
