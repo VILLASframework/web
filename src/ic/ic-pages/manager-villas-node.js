@@ -36,7 +36,7 @@ class ManagerVillasNode extends React.Component {
 
   static calculateState(prevState, props) {
 
-    let sortedICs = props.ics.filter(ic => ic.category !== "manager" && parseInt(ic.manager,10) === parseInt(props.ic.uuid,10));
+    let sortedICs = props.ics.filter(ic => ic.category !== "manager" && ic.manager === props.ic.uuid);
     return {
       managedICs: sortedICs
     }
