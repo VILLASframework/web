@@ -33,12 +33,14 @@ class DefaultManagerPage extends React.Component {
     }
   }
 
-  static calculateState(prevState, props) {
-
-    let sortedICs = props.ics.filter(ic => ic.category !== "manager" && ic.manager === props.ic.uuid);
-    return {
-      managedICs: sortedICs
+  static getDerivedStateFromProps(props, state) {
+    if(props.ics){
+      let sortedICs = props.ics.filter(ic => ic.category !== "manager" && ic.manager === props.ic.uuid);
+      return {
+        managedICs: sortedICs
+      }
     }
+    return null
   }
 
   render() {
