@@ -37,10 +37,11 @@ import DeleteDialog from '../common/dialogs/delete-dialog';
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
 import NotificationsFactory from "../common/data-managers/notifications-factory";
 import IconButton from '../common/buttons/icon-button';
+import IconToggleButton from '../common/buttons/icon-toggle-button';
 
 class InfrastructureComponents extends Component {
   static getStores() {
-    return [ InfrastructureComponentStore];
+    return [InfrastructureComponentStore];
   }
 
   static statePrio(state) {
@@ -70,7 +71,7 @@ class InfrastructureComponents extends Component {
 
     const ics = InfrastructureComponentStore.getState().sort((a, b) => {
       if (a.state !== b.state) {
-          return InfrastructureComponents.statePrio(a.state) > InfrastructureComponents.statePrio(b.state);
+        return InfrastructureComponents.statePrio(a.state) > InfrastructureComponents.statePrio(b.state);
       }
       else if (a.name !== b.name) {
         return a.name < b.name;
@@ -104,7 +105,8 @@ class InfrastructureComponents extends Component {
       deleteModal: false,
       icModal: false,
       selectedICs: prevState.selectedICs || [],
-      currentUser: JSON.parse(localStorage.getItem("currentUser"))
+      currentUser: JSON.parse(localStorage.getItem("currentUser")),
+      showGeneric: prevState.showGeneric || false,
     };
   }
 
@@ -123,7 +125,7 @@ class InfrastructureComponents extends Component {
   }
 
   refresh() {
-    if (this.state.editModal || this.state.deleteModal || this.state.icModal){
+    if (this.state.editModal || this.state.deleteModal || this.state.icModal) {
       // do nothing since a dialog is open at the moment
       return
     }
@@ -137,7 +139,7 @@ class InfrastructureComponents extends Component {
   }
 
   closeNewModal(data) {
-    this.setState({ newModal : false });
+    this.setState({ newModal: false });
 
     if (data) {
       if (!data.managedexternally) {
@@ -156,7 +158,7 @@ class InfrastructureComponents extends Component {
 
         // find the manager IC
         let managerIC = this.state.ics.find(ic => ic.uuid === data.manager)
-        if (managerIC === null || managerIC === undefined){
+        if (managerIC === null || managerIC === undefined) {
           NotificationsDataManager.addNotification(NotificationsFactory.ADD_ERROR("Could not find manager IC with UUID " + data.manager));
           return;
         }
@@ -173,7 +175,7 @@ class InfrastructureComponents extends Component {
   }
 
   closeEditModal(data) {
-    this.setState({ editModal : false, modalIC: {} });
+    this.setState({ editModal: false, modalIC: {} });
 
     if (data) {
       AppDispatcher.dispatch({
@@ -185,7 +187,7 @@ class InfrastructureComponents extends Component {
   }
 
 
-  closeDeleteModal(confirmDelete){
+  closeDeleteModal(confirmDelete) {
     if (confirmDelete === false) {
       return;
     }
@@ -256,7 +258,7 @@ class InfrastructureComponents extends Component {
     return Date.now() - new Date(component.stateUpdateAt) > fiveMinutes;
   }
 
-  static stateLabelStyle(state, component){
+  static stateLabelStyle(state, component) {
     let style = [];
 
     switch (state) {
@@ -297,25 +299,25 @@ class InfrastructureComponents extends Component {
       default:
         style[0] = 'secondary';
 
-        /* Possible states of ICs
-         *  'error':        ['resetting', 'error'],
-         *  'idle':         ['resetting', 'error', 'idle', 'starting', 'shuttingdown'],
-         *  'starting':     ['resetting', 'error', 'running'],
-         *  'running':      ['resetting', 'error', 'pausing', 'stopping'],
-         *  'pausing':      ['resetting', 'error', 'paused'],
-         *  'paused':       ['resetting', 'error', 'resuming', 'stopping'],
-         *  'resuming':     ['resetting', 'error', 'running'],
-         *  'stopping':     ['resetting', 'error', 'idle'],
-         *  'resetting':    ['resetting', 'error', 'idle'],
-         *  'shuttingdown': ['shutdown', 'error'],
-         *  'shutdown':     ['starting', 'error']
-         */
+      /* Possible states of ICs
+       *  'error':        ['resetting', 'error'],
+       *  'idle':         ['resetting', 'error', 'idle', 'starting', 'shuttingdown'],
+       *  'starting':     ['resetting', 'error', 'running'],
+       *  'running':      ['resetting', 'error', 'pausing', 'stopping'],
+       *  'pausing':      ['resetting', 'error', 'paused'],
+       *  'paused':       ['resetting', 'error', 'resuming', 'stopping'],
+       *  'resuming':     ['resetting', 'error', 'running'],
+       *  'stopping':     ['resetting', 'error', 'idle'],
+       *  'resetting':    ['resetting', 'error', 'idle'],
+       *  'shuttingdown': ['shutdown', 'error'],
+       *  'shutdown':     ['starting', 'error']
+       */
     }
 
     if (InfrastructureComponents.isICOutdated(component) && state !== 'shutdown') {
       style[1] = 'badge-outdated';
     }
-    else{
+    else {
       style[1] = '';
     }
 
@@ -328,28 +330,44 @@ class InfrastructureComponents extends Component {
     return dateTime.fromNow()
   }
 
-  static modifyUptimeColumn(uptime, component){
-    if(uptime >= 0){
+  static modifyUptimeColumn(uptime, component) {
+    if (uptime >= 0) {
       let momentDurationFormatSetup = require("moment-duration-format");
       momentDurationFormatSetup(moment)
 
       let timeString = moment.duration(uptime, "seconds").humanize();
       return <span>{timeString}</span>
     }
-    else{
+    else {
       return <Badge bg="secondary">unknown</Badge>
     }
   }
 
-  static isLocalIC(index, ics){
+  static isLocalIC(index, ics) {
     let ic = ics[index]
     return !ic.managedexternally
   }
 
-  getICCategoryTable(ics, editable, title){
+  getICCategoryTable(ics, title, isManager = false) {
     if (ics && ics.length > 0) {
       return (<div>
-        <h2>{title}</h2>
+        <h2>
+          {title}
+          { isManager ?
+          <span className='icon-button'>
+          <IconToggleButton
+            childKey={0}
+            index={1}
+            onChange={() => this.setState(prevState => ({showGeneric: !prevState.showGeneric}))}
+            checked={this.state.showGeneric}
+            checkedIcon='eye'
+            uncheckedIcon='eye-slash'
+            tooltipChecked='click to hide generic managers'
+            tooltipUnchecked='click to show generic managers'
+          />
+        </span>:<></>
+          }
+        </h2>
         <Table data={ics}>
           <TableColumn
             checkbox
@@ -412,9 +430,9 @@ class InfrastructureComponents extends Component {
             />
           }
         </Table>
-      </div>);
+      </div >);
     } else {
-      return <div/>
+      return <div />
     }
 
   }
@@ -429,11 +447,17 @@ class InfrastructureComponents extends Component {
       width: '30px'
     }
 
-    let managerTable = this.getICCategoryTable(this.state.managers, false, "IC Managers")
-    let simulatorTable = this.getICCategoryTable(this.state.simulators, true, "Simulators")
-    let gatewayTable = this.getICCategoryTable(this.state.gateways, true, "Gateways")
-    let serviceTable = this.getICCategoryTable(this.state.services, true, "Services")
-    let equipmentTable = this.getICCategoryTable(this.state.equipment, true, "Equipment")
+    let managerTable = this.getICCategoryTable(this.state.managers, "IC Managers ", true)
+    // filter out generic managers
+    if (!this.state.showGeneric) {
+      let managers = this.state.managers.filter(ic => ic.type !== "generic")
+      managerTable = this.getICCategoryTable(managers, "IC Managers ", true)
+    }
+
+    let simulatorTable = this.getICCategoryTable(this.state.simulators, "Simulators")
+    let gatewayTable = this.getICCategoryTable(this.state.gateways, "Gateways")
+    let serviceTable = this.getICCategoryTable(this.state.services, "Services")
+    let equipmentTable = this.getICCategoryTable(this.state.equipment, "Equipment")
 
     return (
       <div className='section'>
@@ -443,7 +467,7 @@ class InfrastructureComponents extends Component {
               <IconButton
                 childKey={1}
                 tooltip='Add Infrastructure Component'
-                onClick={() => this.setState({newModal: true})}
+                onClick={() => this.setState({ newModal: true })}
                 icon='plus'
                 buttonStyle={buttonStyle}
                 iconStyle={iconStyle}
@@ -451,13 +475,13 @@ class InfrastructureComponents extends Component {
               <IconButton
                 childKey={1}
                 tooltip='Import Infrastructure Component'
-                onClick={() => this.setState({importModal: true})}
+                onClick={() => this.setState({ importModal: true })}
                 icon='upload'
                 buttonStyle={buttonStyle}
                 iconStyle={iconStyle}
               />
             </span>
-            : <span/>
+            : <span />
           }
         </h1>
 
@@ -468,20 +492,20 @@ class InfrastructureComponents extends Component {
         {equipmentTable}
 
         {this.state.currentUser.role === "Admin" && this.state.numberOfExternalICs > 0 ?
-          <div style={{float: 'left'}}>
+          <div style={{ float: 'left' }}>
             <ICAction
               ics={this.state.ics}
               selectedICs={this.state.selectedICs}
               token={this.state.sessionToken}
               actions={[
-                {id: '0', title: 'Reset', data: {action: 'reset'}},
-                {id: '1', title: 'Shutdown', data: {action: 'shutdown'}},
-                {id: '2', title: 'Delete', data: {action: 'delete'}},
-                {id: '3', title: 'Recreate', data: {action: 'create'}},
+                { id: '0', title: 'Reset', data: { action: 'reset' } },
+                { id: '1', title: 'Shutdown', data: { action: 'shutdown' } },
+                { id: '2', title: 'Delete', data: { action: 'delete' } },
+                { id: '3', title: 'Recreate', data: { action: 'create' } },
               ]}
             />
           </div>
-          : <div/>
+          : <div />
         }
 
         <div style={{ clear: 'both' }} />
