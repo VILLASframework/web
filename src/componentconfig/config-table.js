@@ -24,7 +24,7 @@ import NewDialog from "../common/dialogs/new-dialog";
 import DeleteDialog from "../common/dialogs/delete-dialog";
 import AppDispatcher from "../common/app-dispatcher";
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
-import ICAction from "../ic/ic-action";
+import ICActionBoard from "../ic/ic-action-board";
 import EditConfigDialog from "./edit-config";
 import ImportConfigDialog from "./import-config";
 import EditSignalMappingDialog from "../signal/edit-signal-mapping";
@@ -408,18 +408,21 @@ class ConfigTable extends Component {
 
         {this.state.ExternalICInUse ?
           <div>
-            <ICAction
+            <ICActionBoard
               ics={this.props.ics}
               configs={this.props.configs}
               selectedConfigs={this.state.selectedConfigs}
               snapshotConfig={(index) => this.copyConfig(index)}
               token={this.props.sessionToken}
-              actions={[
-                { id: '0', title: 'Start', data: { action: 'start' } },
-                { id: '1', title: 'Stop', data: { action: 'stop' } },
-                { id: '2', title: 'Pause', data: { action: 'pause' } },
-                { id: '3', title: 'Resume', data: { action: 'resume' } }
-              ]} />
+              doStart={true}
+              enableResultCheck={true}
+              doPauseResume={true}
+              doStop={true}
+              doReset={false}
+              doShutdown={false}
+              doDelete={false}
+              doRecreate={false}
+            />
           </div>
           : <div/>
         }

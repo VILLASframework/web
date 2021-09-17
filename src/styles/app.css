@@ -437,6 +437,24 @@ hr {
   background-color: #ffffff;
 }
 
+.section-buttons-group-center {
+  height: auto !important;
+  padding-left: 3px;
+  padding-right: 13px;
+  border-color: #ffffff;
+  background-color: #ffffff;
+}
+
+.section-buttons-group-center .btn{
+  border-color: #ffffff;
+  background-color: #ffffff;
+}
+
+.section-buttons-group-center .btn:hover{
+  border-color: #e3e3e3;
+  background-color: #e3e3e3;
+}
+
 .section-buttons-group-right .btn{
   border-color: #ffffff;
   background-color: #ffffff;
