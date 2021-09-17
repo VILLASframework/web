@@ -69,7 +69,11 @@ class InfrastructureComponentStore extends ArrayStore {
         if (!Array.isArray(action.action))
           action.action = [ action.action ]
 
-        ICsDataManager.doActions(action.icid, action.action, action.token, action.result);
+        if (action.icid !== undefined && action.icid != null && JSON.stringify(action.icid) !== JSON.stringify({})) {
+          ICsDataManager.doActionsForIC(action.icid, action.action, action.token)
+        } else {
+          ICsDataManager.doActionForMultipleICs(action.action, action.result, action.token);
+        }
         return state;
 
       case 'ics/action-started':
@@ -100,7 +104,7 @@ class InfrastructureComponentStore extends ArrayStore {
             }
             a.model.url = modelURLs
           }
-          ICsDataManager.doActions(a.icid, [a], action.token)
+          ICsDataManager.doActionsForIC(a.icid, [a], action.token)
         }
         return state;
 

@@ -32,7 +32,7 @@ import NewICDialog from './new-ic';
 import EditICDialog from './edit-ic';
 import ImportICDialog from './import-ic';
 
-import ICAction from './ic-action';
+import ICActionBoard from './ic-action-board';
 import DeleteDialog from '../common/dialogs/delete-dialog';
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
 import NotificationsFactory from "../common/data-managers/notifications-factory";
@@ -460,6 +460,7 @@ class InfrastructureComponents extends Component {
     let equipmentTable = this.getICCategoryTable(this.state.equipment, "Equipment")
 
     return (
+      <div>
       <div className='section'>
         <h1>Infrastructure
           {this.state.currentUser.role === "Admin" ?
@@ -490,19 +491,22 @@ class InfrastructureComponents extends Component {
         {gatewayTable}
         {serviceTable}
         {equipmentTable}
+        </div>
 
         {this.state.currentUser.role === "Admin" && this.state.numberOfExternalICs > 0 ?
-          <div style={{ float: 'left' }}>
-            <ICAction
+          <div>
+            <ICActionBoard
               ics={this.state.ics}
               selectedICs={this.state.selectedICs}
               token={this.state.sessionToken}
-              actions={[
-                { id: '0', title: 'Reset', data: { action: 'reset' } },
-                { id: '1', title: 'Shutdown', data: { action: 'shutdown' } },
-                { id: '2', title: 'Delete', data: { action: 'delete' } },
-                { id: '3', title: 'Recreate', data: { action: 'create' } },
-              ]}
+              enableResultCheck={false}
+              doStart={false}
+              doPauseResume={false}
+              doStop={false}
+              doReset={true}
+              doShutdown={true}
+              doDelete={true}
+              doRecreate={true}
             />
           </div>
           : <div />

@@ -15,237 +15,183 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
-import { Form, SplitButton, Dropdown } from 'react-bootstrap';
 import AppDispatcher from "../common/app-dispatcher";
 import NotificationsFactory from "../common/data-managers/notifications-factory";
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
 
 
-Number.prototype.pad = function(size) {
-  var s = String(this);
-  while (s.length < (size || 2)) {
-    s = "0" + s;
-  }
-  return s;
-}
+/* VILLAScontoller protocol
+* see: https://villas.fein-aachen.org/doc/controller-protocol.html
+*/
+class ICAction {
 
-class ICAction extends React.Component {
-  constructor(props) {
-    super(props);
-
-    let time = new Date();
-    time.setMinutes(5 * Math.round(time.getMinutes() / 5 + 1))
-
-    this.state = {
-      selectedAction: null,
-      time: time
-    };
+  dispatchActionForIC(action, icID, token, result = null) {
+    AppDispatcher.dispatch({
+      type: 'ics/start-action',
+      icid: icID,
+      action: action,
+      result: result,
+      token: token
+    });
   }
 
-  static getDerivedStateFromProps(props, state) {
-    if (state.selectedAction == null) {
-      if (props.actions != null && props.actions.length > 0) {
-        return {
-          selectedAction: props.actions[0]
-        };
-      }
-    }
+  reset(icID, time, token) {
+    let newAction = {};
+    newAction['action'] = 'reset'
+    newAction['when'] = time
 
-    return null
+    this.dispatchActionForIC(newAction, icID, token)
   }
 
-  runAction(action, when) {
-    if (action.data.action === 'none') {
-      console.warn("No command selected. Nothing was sent.");
+  shutdown(icID, time, token) {
+    let newAction = {};
+    newAction['action'] = 'shutdown'
+    newAction['when'] = time
+
+    this.dispatchActionForIC(newAction, icID, token)
+  }
+
+  dispatchActionForManagedIC(action, ic, managerIC, token) {
+    if (managerIC == null) {
+      NotificationsDataManager.addNotification(NotificationsFactory.DELETE_ERROR("Could not find manager IC with UUID " + ic.manager));
       return;
     }
 
-    if (!this.props.configs) {
-      let newAction = {};
-      newAction["action"] = action.data.action
-      newAction["when"] = when
+    let icID = managerIC.id; // send action to manager of IC
+    action['parameters'] = {};
 
-      for (let index of this.props.selectedICs) {
-        let ic = this.props.ics[index];
-        let icID = ic.id;
+    if (action.action === 'delete') {
+      action.parameters['uuid'] = ic.uuid;
+    }
+    else if (action.action === 'create') {
+      action.parameters = ic.statusupdateraw.properties;
+    }
 
-        /* VILLAScontroller protocol
-         * see: https://villas.fein-aachen.org/doc/controller-protocol.html
-         */
+    AppDispatcher.dispatch({
+      type: 'ics/start-action',
+      icid: icID,
+      action: action,
+      result: null,
+      token: token
+    });
+  }
 
-        if (newAction.action === "create" || newAction.action === "delete") {
-          // prepare parameters for delete incl. correct IC id
-          newAction["parameters"] = {};
+  deleteIC(ic, managerIC, time, token) {
+    let newAction = {};
+    newAction['action'] = 'delete'
+    newAction['when'] = time
 
-          if (newAction.action === "delete") {
-            newAction.parameters["uuid"] = ic.uuid;
-          }
-          else if (newAction.action === "create") {
-            newAction.parameters = ic.statusupdateraw.properties;
-          }
+    this.dispatchActionForManagedIC(newAction, ic, managerIC, token)
+  }
 
-          // get the ID of the manager IC
-          let managerIC = null;
-          for (let i of this.props.ics) {
-            if (i.uuid === ic.manager) {
-              managerIC = i;
-            }
-          }
+  recreate(ic, managerIC, time, token) {
+    let newAction = {};
+    newAction['action'] = 'create'
+    newAction['when'] = time
 
-          if (managerIC == null) {
-            NotificationsDataManager.addNotification(NotificationsFactory.DELETE_ERROR("Could not find manager IC with UUID " + ic.manager));
-            continue;
-          }
+    this.dispatchActionForManagedIC(newAction, ic, managerIC, token)
+  }
 
-          icID = managerIC.id; // send delete action to manager of IC
+  start(configs, configSnapshots, ics, time, token, doCreateResult = false) {
+    let newActions = [];
+    for (let config of configs) {
+      let newAction = {}
+      newAction['action'] = 'start'
+      newAction['when'] = time
+
+      // get IC for component config
+      let ic = null;
+      for (let component of ics) {
+        if (component.id === config.icID) {
+          ic = component;
         }
+      }
 
-        AppDispatcher.dispatch({
-          type: 'ics/start-action',
-          icid: icID,
-          action: newAction,
-          result: null,
-          token: this.props.token
-        });
+      if (ic == null) {
+        continue;
+      }
 
-      } // end for loop over selected ICs
-    } else {
-      /* VILLAScontoller protocol
-       * see: https://villas.fein-aachen.org/doc/controller-protocol.html
-       */
+      // the following is not required by the protocol; it is an internal help
+      newAction["icid"] = ic.id
+      newAction["parameters"] = config.startParameters;
 
-      let newActions = [];
-      for (let config of this.props.selectedConfigs) {
-        let newAction = {}
-        newAction["action"] = action.data.action
-        newAction["when"] = when
+      if (config.fileIDs && config.fileIDs.length > 0) {
+        newAction["model"] = {}
+        newAction.model["type"] = "url-list"
+        newAction.model["token"] = token
 
-        // get IC for component config
-        let ic = null;
-        for (let component of this.props.ics) {
-          if (component.id === config.icID) {
-            ic = component;
-          }
+        let fileURLs = []
+        for (let fileID of config.fileIDs) {
+          fileURLs.push("/files/" + fileID.toString())
         }
+        newAction.model["url"] = fileURLs
+      }
 
-        if (ic == null) {
-          continue;
-        }
+      if (doCreateResult) {
+        newAction["results"] = {}
+        newAction.results["type"] = "url"
+        newAction.results["token"] = token
+        // RESULTID serves as placeholder and is replaced later
+        newAction.results["url"] = "/results/RESULTID/file"
+      }
 
-        // the following is not required by the protocol; it is an internal help
-        newAction["icid"] = ic.id
+      // add the new action
+      newActions.push(newAction);
+    }
 
-        if (newAction.action === 'start') {
-          newAction["parameters"] = config.startParameters;
-
-          if (config.fileIDs && config.fileIDs.length > 0) {
-            newAction["model"] = {}
-            newAction.model["type"] = "url-list"
-            newAction.model["token"] = this.props.token
-
-            let fileURLs = []
-            for (let fileID of config.fileIDs) {
-              fileURLs.push("/files/" + fileID.toString())
-            }
-            newAction.model["url"] = fileURLs
-          }
-
-          newAction["results"] = {}
-          newAction.results["type"] = "url"
-          newAction.results["token"] = this.props.token
-          newAction.results["url"] = "/results/RESULTID/file" // RESULTID serves as placeholder and is replaced later
-        }
-
-        // add the new action
-        newActions.push(newAction);
-
-      } // end for loop over selected configs
-
-      let newResult = {}
+    // create new result for new run
+    let newResult = null
+    if (doCreateResult) {
+      newResult = {}
       newResult["result"] = {}
 
-      if (action.data.action === 'start') {
-        let configSnapshots = [];
-        // create config snapshots in case action is start
-        for (let config of this.props.selectedConfigs) {
-          let index = this.props.configs.indexOf(config)
-          configSnapshots.push(this.props.snapshotConfig(index));
-        }
-
-        // create new result for new run
-        newResult.result["description"] = "Start at " + when;
-        newResult.result["scenarioID"] = this.props.selectedConfigs[0].scenarioID
-        newResult.result["configSnapshots"] = configSnapshots
-      }
-
-      console.log("Dispatching actions for configs", newActions, newResult)
-      AppDispatcher.dispatch({
-        type: 'ics/start-action',
-        action: newActions,
-        result: newResult,
-        token: this.props.token
-      });
+      newResult.result["description"] = "Start at " + time;
+      newResult.result["scenarioID"] = configs[0].scenarioID
+      newResult.result["configSnapshots"] = configSnapshots
     }
+
+    console.log("Dispatching actions for configs", newActions, newResult)
+    AppDispatcher.dispatch({
+      type: 'ics/start-action',
+      action: newActions,
+      result: newResult,
+      token: token
+    });
   }
 
-  setAction = id => {
-    // search action
-    for (let action of this.props.actions) {
-      if (action.id === id) {
-        this.setState({ selectedAction: action });
-      }
-    }
-  };
+  dispatchActionsForMultipleICs(actiontype, time, icIDs, token, result = null) {
+    let newActions = [];
+    icIDs.forEach(id => {
+      let newAction = {}
+      newAction['action'] = actiontype
+      newAction['when'] = time
 
-  setTimeForAction = (time) => {
-    this.setState({ time: new Date(time) })
+      // the following is not required by the protocol; it is an internal help
+      newAction["icid"] = id
+
+      newActions.push(newAction);
+    })
+
+    console.log("Dispatching actions for configs", newActions)
+    AppDispatcher.dispatch({
+      type: 'ics/start-action',
+      action: newActions,
+      result: result,
+      token: token
+    });
   }
 
-  render() {
+  stop(icIDs, time, token) {
+    this.dispatchActionsForMultipleICs('stop', time, icIDs, token)
+  }
 
-    let disabled = this.state.selectedAction == null ||
-                  (this.props.configs
-                    ? this.props.selectedConfigs.length === 0
-                    : this.props.selectedICs.length === 0
-                  );
+  pause(icIDs, time, token) {
+    this.dispatchActionsForMultipleICs('pause', time, icIDs, token)
+  }
 
-    let splitButtonStyle = {
-      marginLeft: '10px'
-    };
-
-    let time = this.state.time.getFullYear().pad(4) + '-' +
-               this.state.time.getMonth().pad(2) + '-' +
-               this.state.time.getDay().pad(2) + 'T' +
-               this.state.time.getHours().pad(2) + ':' +
-               this.state.time.getMinutes().pad(2);
-
-    const actionList = this.props.actions.map(action => (
-      <Dropdown.Item key={action.id} eventKey={action.id} active={this.state.selectedAction === action.id}>
-        {action.title}
-      </Dropdown.Item>
-    ));
-
-    return <div>
-            <Form>
-              <Form.Control
-                type="datetime-local"
-                value={time}
-                onChange={this.setTimeForAction}
-              />
-              <SplitButton
-                  style={splitButtonStyle}
-                  title={this.state.selectedAction != null ? this.state.selectedAction.title : ''}
-                  id="action-dropdown"
-                  onSelect={this.setAction}
-                  disabled={disabled}
-                  onClick={() => this.runAction(this.state.selectedAction, this.state.time)}>
-                  {actionList}
-              </SplitButton>
-            </Form>
-            <small className="text-muted">Select time for synced command execution</small>
-          </div>;
+  resume(icIDs, time, token) {
+    this.dispatchActionsForMultipleICs('resume', time, icIDs, token)
   }
 }
 
-export default ICAction;
+export default new ICAction();
