@@ -20,6 +20,7 @@ import { Form as BForm, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
 import Form from "@rjsf/core";
+import $RefParser from '@apidevtools/json-schema-ref-parser';
 
 class NewICDialog extends React.Component {
   valid = false;
@@ -38,7 +39,8 @@ class NewICDialog extends React.Component {
       description: '',
       location: '',
       manager: '',
-      properties: {}
+      properties: {},
+      schema: {}
     };
   }
 
@@ -95,6 +97,24 @@ class NewICDialog extends React.Component {
     }
     else{
       this.setState({ [e.target.id]: e.target.value });
+    }
+  }
+
+  setManager(e) {
+    this.setState({ [e.target.id]: e.target.value });
+
+    if (this.props.managers) {
+      let schema = this.props.managers.find(m => m.uuid === e.target.value).createparameterschema
+      if (schema) {
+        $RefParser.dereference(schema, (err, deref) => {
+          if (err) {
+            console.error(err)
+          }
+          else {
+            this.setState({schema: schema})
+          }
+        })
+      }
     }
   }
 
@@ -231,15 +251,15 @@ class NewICDialog extends React.Component {
               <OverlayTrigger key="0" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
                 <BForm.Label>Manager to create new IC *</BForm.Label>
               </OverlayTrigger>
-              <BForm.Control as="select" value={this.state.manager} onChange={(e) => this.handleChange(e)}>
+              <BForm.Control as="select" value={this.state.manager} onChange={(e) => this.setManager(e)}>
                 {managerOptions}
               </BForm.Control>
             </BForm.Group>
           </BForm>
 
-          {this.state.manager !== '' && this.props.managers.find(m => m.uuid === this.state.manager).createparameterschema !== undefined ?
+          {this.state.schema ?
             <Form
-              schema={this.props.managers.find(m => m.uuid === this.state.manager).createparameterschema}
+              schema={this.state.schema}
               formData={this.state.properties}
               id='jsonFormData'
               onChange={({formData}) => this.handleFormChange({formData})}
@@ -255,7 +275,7 @@ class NewICDialog extends React.Component {
                   />
               </BForm.Group>
             </BForm>
-          }
+        }
           </>
         :
           <BForm>
