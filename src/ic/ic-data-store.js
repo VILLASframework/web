@@ -76,6 +76,11 @@ class ICDataStore extends ReduceStore {
           return state;
         }
 
+        if (action.source_index !== 0) {
+          // TODO process loopback message
+          return state;
+        }
+
         if (state[action.id].output == null) {
           state[action.id].output = {
             values: []
@@ -120,7 +125,11 @@ class ICDataStore extends ReduceStore {
         state[action.ic].input.timestamp = Date.now();
         state[action.ic].input.sequence++;
         state[action.ic].input.values[action.signal-1] = action.data;
-        state[action.ic].input.length = state[action.ic].input.values.length
+        state[action.ic].input.length = state[action.ic].input.values.length;
+        state[action.ic].input.source_index = action.signal;
+        // The previous line sets the index of the source signal, can only be mapped to correct signal upon loopback
+        // if exactly one WS is used by the dashboard for sending signals
+        // index counting starts at 1, not at 0!
 
         // copy of state needed because changes are not yet propagated
         let input = JSON.parse(JSON.stringify(state[action.ic].input));

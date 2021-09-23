@@ -103,7 +103,7 @@ class IcDataDataManager {
       return null;
     }
 
-    const id = data.getUint8(1);
+    const source_index = data.getUint8(1);
     const bits = data.getUint8(0);
     const length = data.getUint16(0x02, 1);
     const bytes = length * 4 + 16;
@@ -111,6 +111,7 @@ class IcDataDataManager {
     return {
       version: (bits >> OFFSET_VERSION) & 0xF,
       type: (bits >> OFFSET_TYPE) & 0x3,
+      source_index: source_index,
       length: length,
       sequence: data.getUint32(0x04, 1),
       timestamp: data.getUint32(0x08, 1) * 1e3 + data.getUint32(0x0C, 1) * 1e-6,
@@ -146,10 +147,14 @@ class IcDataDataManager {
     bits |= (message.version & 0xF) << OFFSET_VERSION;
     bits |= (message.type & 0x3) << OFFSET_TYPE;
 
+    let source_index = 0;
+    source_index |= (message.source_index & 0xFF);
+
     const sec = Math.floor(message.timestamp / 1e3);
     const nsec = (message.timestamp - sec * 1e3) * 1e6;
 
     view.setUint8(0x00, bits, true);
+    view.setUint8(0x01, source_index, true);
     view.setUint16(0x02, message.length, true);
     view.setUint32(0x04, message.sequence, true);
     view.setUint32(0x08, sec, true);
