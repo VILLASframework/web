@@ -37,15 +37,16 @@ class WidgetTimeOffset extends Component {
       return {icID: props.widget.customProperties.icID};
     }
 
+    let ic = props.ics.find(ic => ic.id === parseInt(state.icID, 10));
+    let websocket = props.websockets.find(ws => ws.url === ic.websocketurl);
+
     if (props.data == null
       || props.data[state.icID] == null
       || props.data[state.icID].output == null
       || props.data[state.icID].output.timestamp == null) {
+      if (websocket) { return {timeOffset: -1, websocketOpen: websocket.connected};}
       return {timeOffset: -1};
     }
-
-    let ic = props.ics.find(ic => ic.id === parseInt(state.icID, 10));
-    let websocket = props.websockets.find(ws => ws.url === ic.websocketurl);
 
     let serverTime = props.data[state.icID].output.timestamp;
     let localTime = Date.now();
@@ -62,6 +63,8 @@ class WidgetTimeOffset extends Component {
     let icSelected = " ";
     if(!this.state.websocketOpen){
       icSelected = "no connection";
+    } else if (this.state.websocketOpen && this.state.timeOffset < 0) {
+      icSelected = "no/invalid data";
     } else if (this.props.widget.customProperties.showOffset){
       icSelected = this.state.timeOffset + 's';
     }
@@ -80,9 +83,9 @@ class WidgetTimeOffset extends Component {
       (<span>Please select Infrastructure Component</span>)}
       </Tooltip>}>
         <TrafficLight Horizontal={this.props.widget.customProperties.horizontal} width={this.props.widget.width - 40} height={this.props.widget.height - 40}
-        RedOn={(this.props.widget.customProperties.threshold_red <= this.state.timeOffset) || !this.state.websocketOpen}
+        RedOn={(this.props.widget.customProperties.threshold_red <= this.state.timeOffset) || !this.state.websocketOpen || (this.state.timeOffset < 0)}
         YellowOn={(this.props.widget.customProperties.threshold_yellow <= this.state.timeOffset) && (this.state.timeOffset < this.props.widget.customProperties.threshold_red) && this.state.websocketOpen}
-        GreenOn={(this.state.timeOffset < this.props.widget.customProperties.threshold_yellow) && this.state.websocketOpen}
+        GreenOn={(this.state.timeOffset > 0) && (this.state.timeOffset < this.props.widget.customProperties.threshold_yellow) && this.state.websocketOpen}
       />
       </OverlayTrigger>
       {this.props.widget.customProperties.icID !== -1 ?
