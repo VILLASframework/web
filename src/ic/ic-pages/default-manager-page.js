@@ -16,11 +16,10 @@
  ******************************************************************************/
 
 import React from 'react';
-import {Col, Container, Row} from "react-bootstrap";
+import {Col, Row} from "react-bootstrap";
 import IconButton from "../../common/buttons/icon-button";
-import Table from '../../common/table';
-import TableColumn from '../../common/table-column';
-import { stateLabelStyle } from "../ics";
+import ManagedICsTable from "./managed-ics-table";
+
 import {refresh, ICParamsTable, rawDataTable} from "../ic"
 
 class DefaultManagerPage extends React.Component {
@@ -64,32 +63,10 @@ class DefaultManagerPage extends React.Component {
           {ICParamsTable(this.props.ic)}
         </Col>
         <Col>
-          <h4>Managed ICs</h4>
-          <Table data={this.state.managedICs}>
-            {this.props.currentUser.role === "Admin" ?
-              <TableColumn
-                title='ID'
-                dataKey='id'
-              />
-              : <></>
-            }
-            <TableColumn
-              title='Name'
-              dataKeys={['name']}
-              link='/infrastructure/'
-              linkKey='id'
-            />
-            <TableColumn
-              title='State'
-              labelKey='state'
-              tooltipKey='error'
-              labelStyle={(state, component) => stateLabelStyle(state, component)}
-            />
-            <TableColumn
-              title='Type'
-              dataKeys={['type']}
-            />
-          </Table>
+          <ManagedICsTable
+            managedICs={this.state.managedICs}
+            currentUser={this.props.currentUser}
+          />
         </Col>
       </Row>
       <hr />

@@ -16,13 +16,11 @@
  ******************************************************************************/
 
 import React from 'react';
-import {Col, Container, Row} from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import IconButton from "../../common/buttons/icon-button";
-import Table from '../../common/table';
-import TableColumn from '../../common/table-column';
+import ManagedICsTable from "./managed-ics-table";
 import FileSaver from 'file-saver';
-import { stateLabelStyle } from "../ics";
-import {refresh, ICParamsTable, rawDataTable} from "../ic"
+import { refresh, ICParamsTable, rawDataTable } from "../ic"
 
 class ManagerVillasNode extends React.Component {
 
@@ -35,7 +33,7 @@ class ManagerVillasNode extends React.Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    if(props.ics){
+    if (props.ics) {
       let sortedICs = props.ics.filter(ic => ic.category !== "manager" && ic.manager === props.ic.uuid);
       return {
         managedICs: sortedICs
@@ -76,32 +74,10 @@ class ManagerVillasNode extends React.Component {
             {ICParamsTable(this.props.ic)}
           </Col>
           <Col>
-            <h4>Managed ICs</h4>
-            <Table data={this.state.managedICs}>
-                {this.props.currentUser.role === "Admin" ?
-                    <TableColumn
-                        title='ID'
-                        dataKey='id'
-                    />
-                    : <></>
-                }
-                <TableColumn
-                    title='Name'
-                    dataKeys={['name']}
-                    link='/infrastructure/'
-                    linkKey='id'
-                />
-                <TableColumn
-                    title='State'
-                    labelKey='state'
-                    tooltipKey='error'
-                    labelStyle={(state, component) => stateLabelStyle(state, component)}
-                />
-                <TableColumn
-                    title='Type'
-                    dataKeys={['type']}
-                />
-              </Table>
+            <ManagedICsTable
+              managedICs={this.state.managedICs}
+              currentUser={this.props.currentUser}
+            />
           </Col>
       </Row>
       <hr />

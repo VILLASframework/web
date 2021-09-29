@@ -19,11 +19,26 @@ import React from 'react';
 import IconButton from "../../common/buttons/icon-button";
 import {Col, Container, Row} from "react-bootstrap";
 import { refresh, ICParamsTable, rawDataTable } from "../ic"
+import ManagedICsTable from "./managed-ics-table";
 
 class ManagerVillasRelay extends React.Component {
 
   constructor() {
     super();
+
+    this.state = {
+      managedICs: [],
+    }
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.ics) {
+      let sortedICs = props.ics.filter(ic => ic.category !== "manager" && ic.manager === props.ic.uuid);
+      return {
+        managedICs: sortedICs
+      }
+    }
+    return null
   }
 
   render() {
@@ -41,17 +56,26 @@ class ManagerVillasRelay extends React.Component {
             />
           </span>
         </h1>
-
-        <Row>
-          <Col>
-            <h4>Properties</h4>
-            {ICParamsTable(this.props.ic)}
-          </Col>
-          <Col>
-            <h4>Raw Status</h4>
-            {rawDataTable(this.props.ic.statusupdateraw)}
-          </Col>
-        </Row>
+        <Container>
+          <Row>
+            <Col>
+              <h4>Properties</h4>
+              {ICParamsTable(this.props.ic)}
+            </Col>
+            <Col>
+            <ManagedICsTable
+              managedICs={this.state.managedICs}
+              currentUser={this.props.currentUser}
+            />
+            </Col>
+            </Row>
+            <Row>
+            <Col>
+              <h4>Raw Status</h4>
+              {rawDataTable(this.props.ic.statusupdateraw)}
+            </Col>
+          </Row>
+        </Container>
       </div>
     )
   }
