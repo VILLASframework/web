@@ -76,11 +76,6 @@ class ICDataStore extends ReduceStore {
           return state;
         }
 
-        if (action.source_index !== 0) {
-          // TODO process loopback message
-          return state;
-        }
-
         if (state[action.id].output == null) {
           state[action.id].output = {
             values: []
@@ -90,6 +85,12 @@ class ICDataStore extends ReduceStore {
         // loop over all samples in a vector
         for (let j = 0; j < action.data.length; j++) {
           let smp = action.data[j];
+
+          // check if msg is loopback msg
+          if (smp.source_index !== 0) {
+            // TODO process loopback message
+            return state;
+          }
 
           // add data to infrastructure component
           for (let i = 0; i < smp.length; i++) {

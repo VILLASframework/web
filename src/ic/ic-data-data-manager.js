@@ -117,7 +117,7 @@ class IcDataDataManager {
       timestamp: data.getUint32(0x08, 1) * 1e3 + data.getUint32(0x0C, 1) * 1e-6,
       values: new Float32Array(data.buffer, data.byteOffset + 0x10, length),
       blob: new DataView(data.buffer, data.byteOffset + 0x00, bytes),
-      id: id
+      // id: id
     };
   }
 
