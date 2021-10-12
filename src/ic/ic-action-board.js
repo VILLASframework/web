@@ -19,8 +19,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { Form, Row, Col } from 'react-bootstrap';
 import AppDispatcher from "../common/app-dispatcher";
-import NotificationsFactory from "../common/data-managers/notifications-factory";
-import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
+import DateTimePicker from 'react-datetime-picker';
 import ICButtonGroup from "./ic-button-group";
 import ICAction from "./ic-action";
 
@@ -42,7 +41,7 @@ class ICActionBoard extends React.Component {
 
     this.state = {
       selectedAction: null,
-      time: time.toString(),
+      time: time,
       paused: false,
       timeIsValid: true,
       createResult: true,
@@ -188,20 +187,6 @@ class ICActionBoard extends React.Component {
     this.setState({ paused: !this.state.paused })
   }
 
-  setTimeForAction = (event) => {
-    console.log(event)
-    let newTime = new Date(event.target.value)
-    console.log(newTime)
-    if (newTime instanceof Date && !isNaN(newTime)) {
-      console.log("valid date")
-      console.log(newTime)
-      this.setState({ time: newTime.toString(), timeIsValid: true })
-    } else {
-      console.log("invalid date")
-      this.setState({ time: event.target.value, timeIsValid: false })
-    }
-  }
-
   render() {
     let disabled = (this.props.configs
       ? this.props.selectedConfigs.length === 0
@@ -210,19 +195,16 @@ class ICActionBoard extends React.Component {
 
     const boxClasses = classNames('section', 'box', { 'fullscreen-padding': this.props.isFullscreen });
     return (<div className={boxClasses}>
-      <Row md={8} lg={8}>
-        <Col md={3} lg={3}>
+      <Row className='align-items-center'>
+        <Col style={{padding: '10px'}} md='auto' lg='auto'>
           <Form>
-          {/*<Form.Group controlId="time">*/}
-            <Form.Control
-              type="text"
+            <DateTimePicker
+              onChange={(newTime) => this.setState({time: newTime})}
               value={this.state.time}
-              onChange={this.setTimeForAction}
-            />
-            {/*</Form.Group>*/}
+              />
           </Form>
         </Col>
-        <Col lg={2}>
+        <Col style={{padding: '20px'}} md='auto' lg='auto'>
           <ICButtonGroup
             disabled={disabled || !this.state.timeIsValid}
             onReset={this.props.doReset ? this.onReset : null}
@@ -236,7 +218,7 @@ class ICActionBoard extends React.Component {
           />
         </Col>
         {this.props.enableResultCheck ?
-          <Col lg={2}>
+          <Col style={{padding: '20px'}} md='auto' lg='auto'>
             <Form.Group controlId="resultCheck">
               <Form.Check 
                 type="checkbox" 

@@ -25,6 +25,9 @@ const buttonStyle = {
   marginLeft: '12px',
   height: '44px',
   width: '35px',
+  alignItems: 'center',
+  justifyContent: 'center',
+  display: 'inline-flex'
 };
 
 const iconStyle = {
@@ -100,7 +103,7 @@ class ICButtonGroup extends React.Component {
       buttons.push(this.getBtn("stop", "Stop", this.props.onStop, disabled));
     }
 
-    return <div className='section-buttons-group-right'>
+    return <div className='section-buttons-group-center'>
       {buttons}
     </div>;
   }
