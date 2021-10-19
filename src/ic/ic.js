@@ -162,17 +162,17 @@ class InfrastructureComponent extends React.Component {
       height: '25px',
       width: '25px'
     }
-    let page = <>IC page not defined</>
+
     if (this.state.ic.category ==="gateway" && this.state.ic.type === "villas-node")  {
-      page = <GatewayVillasNode
+      return <GatewayVillasNode
         ic = {this.state.ic}
         currentUser = {this.state.currentUser}
         sessionToken = {this.state.sessionToken}
         buttonStyle = {buttonStyle}
         iconStyle = {iconStyle}
       />
-    }else if (this.state.ic.category ==="manager" && this.state.ic.type === "villas-node"){
-      page = <ManagerVillasNode
+    } else if (this.state.ic.category ==="manager" && this.state.ic.type === "villas-node") {
+      return <ManagerVillasNode
         ic = {this.state.ic}
         ics = {this.state.ics}
         currentUser = {this.state.currentUser}
@@ -181,7 +181,7 @@ class InfrastructureComponent extends React.Component {
         iconStyle = {iconStyle}
       />
     } else if (this.state.ic.category ==="manager" && this.state.ic.type === "villas-relay") {
-      page = <ManagerVillasRelay
+      return <ManagerVillasRelay
         ic = {this.state.ic}
         ics = {this.state.ics}
         currentUser = {this.state.currentUser}
@@ -189,8 +189,8 @@ class InfrastructureComponent extends React.Component {
         buttonStyle = {buttonStyle}
         iconStyle = {iconStyle}
       />
-    }else if (this.state.ic.category ==="manager") {
-      page = <DefaultManagerPage
+    } else if (this.state.ic.category ==="manager") {
+      return <DefaultManagerPage
         ic = {this.state.ic}
         ics = {this.state.ics}
         currentUser = {this.state.currentUser}
@@ -199,34 +199,23 @@ class InfrastructureComponent extends React.Component {
         iconStyle = {iconStyle}
       />
     } else if (this.state.ic.category === "simulator" && this.state.ic.type === "kubernetes") {
-
-      let rancherURL = ""
-      let k8sCluster = ""
-      if (this.state.config != null)
-      {
-        rancherURL = this.state.config.rancherURL
-        k8sCluster = this.state.config.k8sCluster
-      }
-
-      page = <KubernetesICPage
-      ic={this.state.ic}
-      ics={this.state.ics}
-      currentUser={this.state.currentUser}
-      sessionToken={this.state.sessionToken}
-      buttonStyle={buttonStyle}
-      iconStyle={iconStyle}
-      rancherURL={rancherURL}
-      k8sCluster={k8sCluster}
+      return <KubernetesICPage
+        ic={this.state.ic}
+        ics={this.state.ics}
+        config={this.state.config}
+        currentUser={this.state.currentUser}
+        sessionToken={this.state.sessionToken}
+        buttonStyle={buttonStyle}
+        iconStyle={iconStyle}
       />
-    }else {
-      page = <DefaultICPage
+    } else {
+      return <DefaultICPage
         ic = {this.state.ic}
         sessionToken = {this.state.sessionToken}
         buttonStyle = {buttonStyle}
         iconStyle = {iconStyle}
       />
     }
-    return page
   }
 }
 
