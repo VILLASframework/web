@@ -26,54 +26,99 @@ class KubernetesICPage extends React.Component {
     super(props);
 
     this.state = {
-        jobLink: "",
+        jobLink: null,
         podLinks: []
       };
   }
 
   static getDerivedStateFromProps(props, state){
 
-    let jobLink = "";
-    let podLinks = [];
-    let rancherURL = ""
-    let clusterName = ""
+    let namespace = null;
+    let jobName = null;
+    let podNames = [];
+    let clusterName = null;
+    let rancherURL = null;
 
-    // TODO take those from IC properties in raw statusupdate of manager IC
-    if (props.config != null && props.config.kubernetes != null) {
-      rancherURL = this.state.config.kubernetes["rancher-url"]
-      clusterName = this.state.config.kubernetes["cluster-name"]
+    let managerIC = props.ics.find(ic => ic.uuid === props.ic.manager);
+
+    // Take k8s cluster details from managers status update
+    if (managerIC != null) {
+      let managerProps = managerIC.statusupdateraw.properties;
+
+      if (managerProps != null) {
+        rancherURL = managerProps.rancher_url;
+        clusterName = managerProps.cluster_name;
+      }
     }
 
-    if (typeof props.rancherURL !== "undefined" && typeof clusterName !== "undefined"){
-      let firstPart = "https://" + rancherURL + "/dashboard/c/" + clusterName + "/explorer";
+    // Fallback to backend config
+    if (props.config != null && props.config.kubernetes != null) {
+      let k8s = props.config.kubernetes;
+      if (k8s != null) {
+        if (rancherURL == null) {
+          rancherURL = k8s.rancher_url
+        }
 
+        if (clusterName == null) {
+          clusterName = k8s.cluster_name
+        }
+      }
+    }
+
+    if (rancherURL != null && clusterName != null) {
       // raw properties of IC
       if (props.ic.statusupdateraw != null) {
-        let icprops = props.ic.statusupdateraw.properties
-        if(typeof icprops !== "undefined" && typeof icprops.namespace !== "undefined") {
+        let icProps = props.ic.statusupdateraw.properties
+        if (icProps != null && icProps.namespace != null) {
+          namespace = icProps.namespace;
+          jobName = icProps.job_name;
 
-          if (typeof icprops.job_name !== "undefined") {
-            jobLink = firstPart + "/batch.job/" + icprops.namespace + "/" + icprops.job_name;
-          }
-
-          if (typeof icprops.pod_names !== "undefined") {
-            for (let i=0; i<icprops.pod_names.length; i++) {
-              podLinks.push(firstPart + "/pod/" + icprops.namespace + "/" + icprops.pod_names[i])
-            }
+          if (icProps.pod_names != null) {
+            podNames = icProps.pod_names;
           }
         }
       }
     }
 
     return {
-      jobLink: jobLink,
-      podLinks: podLinks
+      rancherURL: rancherURL,
+      clusterName: clusterName,
+      namespace: namespace,
+      jobName: jobName,
+      podNames: podNames
     };
   }
 
   render() {
-    return (<div className='section'>
+    let rancherTableRows = []
 
+    if (this.state.rancherURL != null && this.state.clusterName != null) {
+      let baseURL = "https://" + this.state.rancherURL + "/dashboard/c/" + this.state.clusterName + "/explorer";
+
+      if (this.state.namespace != null) {
+        if (this.state.jobName != null) {
+          let url = baseURL + "/batch.job/" + this.state.namespace + "/" + this.state.jobName;
+
+          rancherTableRows.push(<tr>
+            <td>Job</td>
+            <td>{this.state.namespace}</td>
+            <td><a href={url}>{this.state.jobNname}</a></td>
+          </tr>)
+        }
+
+        for (const podName of this.state.podNames) {
+          let url = baseURL + "/pod/" + this.state.namespace + "/" + podName;
+
+          rancherTableRows.push(<tr>
+            <td>Pod</td>
+            <td>{this.state.namespace}</td>
+            <td><a href={url}>{podName}</a></td>
+          </tr>)
+        }
+      }
+    }
+
+    return (<div className='section'>
       <h1>{this.props.ic.name}
         <span className='icon-button'>
 
@@ -87,7 +132,6 @@ class KubernetesICPage extends React.Component {
           />
         </span>
       </h1>
-
       <div>
         <Row>
           <Col>
@@ -95,20 +139,17 @@ class KubernetesICPage extends React.Component {
             {ICParamsTable(this.props.ic)}
           </Col>
           <Col>
-            <h4>Rancher UI</h4>
+            <h4>Resources</h4>
             <Table striped size="sm">
+              <thead>
+                <tr>
+                  <th>Kind</th>
+                  <th>Namespace</th>
+                  <th>Name</th>
+                </tr>
+              </thead>
               <tbody>
-                <tr><td></td></tr>
-                {this.state.jobLink !== "" ?
-                  <tr>
-                    <td>Job</td>
-                    <td><a href={this.state.jobLink}>{this.state.jobLink}</a></td>
-                  </tr>:<></>}
-                {this.state.podLinks !== [] && this.state.podLinks.map(link =>
-                  <tr>
-                    <td>Pod</td>
-                    <td><a href={link}>{link}</a></td>
-                  </tr>)}
+                {rancherTableRows}
               </tbody>
             </Table>
           </Col>
