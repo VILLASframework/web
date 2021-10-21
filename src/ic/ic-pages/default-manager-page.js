@@ -46,11 +46,8 @@ class DefaultManagerPage extends React.Component {
   render() {
 
     return (<div className='section'>
-
-
       <h1>{this.props.ic.name}
         <span className='icon-button'>
-
           <IconButton
             childKey={2}
             tooltip='Refresh'
@@ -61,53 +58,49 @@ class DefaultManagerPage extends React.Component {
           />
         </span>
       </h1>
-
-      <Container>
-        <Row>
-          <Col>
-            {ICParamsTable(this.props.ic)}
-          </Col>
-          <Col>
-          <h3>Managed ICs:</h3>
+      <Row>
+        <Col>
+          <h4>Properties</h4>
+          {ICParamsTable(this.props.ic)}
+        </Col>
+        <Col>
+          <h4>Managed ICs</h4>
           <Table data={this.state.managedICs}>
-          {this.props.currentUser.role === "Admin" ?
+            {this.props.currentUser.role === "Admin" ?
+              <TableColumn
+                title='ID'
+                dataKey='id'
+              />
+              : <></>
+            }
             <TableColumn
-              title='ID'
-              dataKey='id'
+              title='Name'
+              dataKeys={['name']}
+              link='/infrastructure/'
+              linkKey='id'
             />
-            : <></>
-          }
-          <TableColumn
-            title='Name'
-            dataKeys={['name']}
-            link='/infrastructure/'
-            linkKey='id'
-          />
-          <TableColumn
-            title='State'
-            labelKey='state'
-            tooltipKey='error'
-            labelStyle={(state, component) => stateLabelStyle(state, component)}
-          />
-          <TableColumn
-            title='Type'
-            dataKeys={['type']}
-          />
-        </Table>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <b>Raw Status</b>
-            {rawDataTable(this.props.ic.statusupdateraw)}
-          </Col>
-        </Row>
-      </Container>
-      </div>
-    )
-
+            <TableColumn
+              title='State'
+              labelKey='state'
+              tooltipKey='error'
+              labelStyle={(state, component) => stateLabelStyle(state, component)}
+            />
+            <TableColumn
+              title='Type'
+              dataKeys={['type']}
+            />
+          </Table>
+        </Col>
+      </Row>
+      <hr />
+      <Row>
+        <Col>
+          <h4>Raw Status</h4>
+          {rawDataTable(this.props.ic.statusupdateraw)}
+        </Col>
+      </Row>
+    </div>)
   }
-
 }
 
 export default DefaultManagerPage;

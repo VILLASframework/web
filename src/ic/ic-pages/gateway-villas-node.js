@@ -60,11 +60,8 @@ class GatewayVillasNode extends React.Component {
   render() {
 
     return (<div className='section'>
-
-
       <h1>{this.props.ic.name}
         <span className='icon-button'>
-
           <IconButton
             childKey={2}
             tooltip='Refresh'
@@ -76,66 +73,59 @@ class GatewayVillasNode extends React.Component {
         </span>
       </h1>
 
-      <Container>
-        <Row>
-          <Col>
-            {ICParamsTable(this.props.ic)}
-          </Col>
-          <Col>
-            {this.props.currentUser.role === "Admin" ?
-              <div>
-                <h3>Controls:</h3>
-                <div className='solid-button'>
-                  <Button
-                    variant='secondary'
-                    style={{ margin: '5px' }}
-                    size='lg'
-                    onClick={() => this.setState({ confirmCommand: true, command: 'restart' })}>
-                    Restart
-                  </Button>
-                  <Button
-                    variant='secondary'
-                    style={{ margin: '5px' }}
-                    size='lg'
-                    onClick={() => this.setState({ confirmCommand: true, command: 'shutdown' })}>
-                    Shutdown
-                  </Button>
-                </div>
+      <Row>
+        <Col>
+          <h4>Properties</h4>
+          {ICParamsTable(this.props.ic)}
+        </Col>
+        <Col>
+          {this.props.currentUser.role === "Admin" ?
+            <div>
+              <h4>Controls</h4>
+              <div className='solid-button'>
+                <Button
+                  variant='secondary'
+                  style={{ margin: '5px' }}
+                  size='lg'
+                  onClick={() => this.setState({ confirmCommand: true, command: 'restart' })}>
+                  Restart
+                </Button>
+                <Button
+                  variant='secondary'
+                  style={{ margin: '5px' }}
+                  size='lg'
+                  onClick={() => this.setState({ confirmCommand: true, command: 'shutdown' })}>
+                  Shutdown
+                </Button>
               </div>
-              : <div />
-            }
-            <ConfirmCommand
-              show={this.state.confirmCommand}
-              command={this.state.command}
-              name={this.props.ic.name}
-              onClose={c => this.confirmCommand(c)}
-            />
-          </Col>
-        </Row>
-        <hr/>
-        <Row>
-          <Col>
-            <b>Raw Status</b>
-            {rawDataTable(this.props.ic.statusupdateraw)}
-          </Col>
-          <Col>
-            <b>Raw Config</b>
-            {rawDataTable(this.props.ic.statusupdateraw != null ? this.props.ic.statusupdateraw.config : null )}
-          </Col>
-          <Col>
-            <b>Raw Statistics</b>
-            {rawDataTable(this.props.ic.statusupdateraw != null ? this.props.ic.statusupdateraw.statistics : null)}
-          </Col>
-          <Col>
-
-          </Col>
-        </Row>
-      </Container>
-      </div>
-    )
-
+            </div>
+            : <div />
+          }
+          <ConfirmCommand
+            show={this.state.confirmCommand}
+            command={this.state.command}
+            name={this.props.ic.name}
+            onClose={c => this.confirmCommand(c)}
+          />
+        </Col>
+      </Row>
+      <hr/>
+      <Row>
+        <Col>
+          <h4>Raw Status</h4>
+          {rawDataTable(this.props.ic.statusupdateraw)}
+        </Col>
+        <Col>
+          <h4>Raw Config</h4>
+          {rawDataTable(this.props.ic.statusupdateraw != null ? this.props.ic.statusupdateraw.config : null )}
+        </Col>
+        <Col>
+          <h4>Raw Statistics</h4>
+          {rawDataTable(this.props.ic.statusupdateraw != null ? this.props.ic.statusupdateraw.statistics : null)}
+        </Col>
+      </Row>
+    </div>)
   }
-
 }
 
 export default GatewayVillasNode;

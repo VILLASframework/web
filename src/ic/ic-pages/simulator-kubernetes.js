@@ -88,41 +88,42 @@ class KubernetesICPage extends React.Component {
         </span>
       </h1>
 
-      <Container>
+      <div>
         <Row>
-          <Table striped size="sm">
-            <tbody>
-            <tr><td>Rancher UI pages:</td></tr>
-            {this.state.jobLink !== "" ?
-            <tr><td>Job:</td><td>
-              <a href={this.state.jobLink}>{this.state.jobLink}</a>
-              </td></tr>
-            :
-            <></>}
-            {this.state.podLinks !== [] && this.state.podLinks.map(link =>
-            <tr><td>Pod:</td><td>
-              <a href={link}>{link}</a>
-            </td></tr>
-            )
-            }
-            </tbody>
-          </Table>
+          <Col>
+            <h4>Properties</h4>
+            {ICParamsTable(this.props.ic)}
+          </Col>
+          <Col>
+            <h4>Rancher UI</h4>
+            <Table striped size="sm">
+              <tbody>
+                <tr><td></td></tr>
+                {this.state.jobLink !== "" ?
+                  <tr>
+                    <td>Job</td>
+                    <td><a href={this.state.jobLink}>{this.state.jobLink}</a></td>
+                  </tr>:<></>}
+                {this.state.podLinks !== [] && this.state.podLinks.map(link =>
+                  <tr>
+                    <td>Pod</td>
+                    <td><a href={link}>{link}</a></td>
+                  </tr>)}
+              </tbody>
+            </Table>
+          </Col>
         </Row>
         <hr/>
         <Row>
           <Col>
-            {ICParamsTable(this.props.ic)}
-          </Col>
-          <Col>
-            <b>Raw Status</b>
+            <h4>Raw Status</h4>
             {rawDataTable(this.props.ic.statusupdateraw)}
           </Col>
         </Row>
-      </Container>
+      </div>
     </div>
     )
   }
-
 }
 
 export default KubernetesICPage;

@@ -31,29 +31,27 @@ class ManagerVillasRelay extends React.Component {
 
         <h1>{this.props.ic.name}
           <span className='icon-button'>
-
-          <IconButton
-            childKey={2}
-            tooltip='Refresh'
-            onClick={() => refresh(this.props.ic, this.props.sessionToken)}
-            icon='sync-alt'
-            buttonStyle={this.props.buttonStyle}
-            iconStyle={this.props.iconStyle}
-          />
-        </span>
+            <IconButton
+              childKey={2}
+              tooltip='Refresh'
+              onClick={() => refresh(this.props.ic, this.props.sessionToken)}
+              icon='sync-alt'
+              buttonStyle={this.props.buttonStyle}
+              iconStyle={this.props.iconStyle}
+            />
+          </span>
         </h1>
 
-        <Container>
-          <Row>
-            <Col>
-              {ICParamsTable(this.props.ic)}
-            </Col>
-            <Col>
-              <b>Raw Status</b>
-              {rawDataTable(this.props.ic.statusupdateraw)}
-            </Col>
-          </Row>
-        </Container>
+        <Row>
+          <Col>
+            <h4>Properties</h4>
+            {ICParamsTable(this.props.ic)}
+          </Col>
+          <Col>
+            <h4>Raw Status</h4>
+            {rawDataTable(this.props.ic.statusupdateraw)}
+          </Col>
+        </Row>
       </div>
     )
   }
