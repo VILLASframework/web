@@ -61,24 +61,20 @@ export function villasweb_home(title, username, userid, role) {
       <h3>Funding</h3>
       <p>The development of <a href="http://fein-aachen.org/projects/villas-framework/">VILLASframework</a> projects has received funding from</p>
       <ul>
-        <p><a href="https://www.acs.eonerc.rwth-aachen.de/cms/E-ON-ERC-ACS/Forschung/Forschungsprojekte/Bildungsprojekte/~mikmu/SLEW-SECOND-LIFE-FOR-ENERGIEWENDE/">SLEW:</a> Second Life for Energiewende, an Exploratory Teaching Space project funded by RWTH Aachen University</p>
-        <p><a href="https://erigrid2.eu/">ERIgrid 2.0:</a> An EU Horizon 2020 research and innovation action project for connecting European Smart Grid Infrastructures (grant agreement No 870620)</p>
-        <p>
-          <img height={100} src={require('./img/european_commission.svg').default} alt="Logo EU" />
-          <img height={70} src={require('./img/erigrid2.png').default} alt="Logo ERIgrid 2.0" />
-        </p>
-        <p><a href="http://www.uel4-0.de/">Urban Energy Lab 4.0:</a> A project funded by EFRE.NRW (European Regional Development Fund) for the setup of a novel energy research infrastructure.</p>
-        <p>
-          <img height={70} src={require('./img/uel_efre.jpeg').default} alt="Logo UEL OP EFRE NRW" />
-          <img height={70} src={require('./img/uel.png').default} alt="Logo UEL" />
-        </p>
-        <p><a href="http://www.re-serve.eu">RESERVE:</a> An EU Horizon 2020 research and innovation project (grant agreement No 727481)</p>
-        <p>
-          <img height={100} src={require('./img/european_commission.svg').default} alt="Logo EU" />
-          <img height={70} src={require('./img/reserve.svg').default} alt="Logo RESERVE" />
-        </p>
-        <p><a href="http://www.jara.org/en/research/energy">JARA-ENERGY:</a> Jülich-Aachen Research Alliance (JARA) is an initiative of RWTH Aachen University and Forschungszentrum Jülich.</p>
+        <li><a href="https://www.acs.eonerc.rwth-aachen.de/cms/E-ON-ERC-ACS/Forschung/Forschungsprojekte/Bildungsprojekte/~mikmu/SLEW-SECOND-LIFE-FOR-ENERGIEWENDE/">SLEW:</a> Second Life for Energiewende, an Exploratory Teaching Space project funded by RWTH Aachen University</li>
+        <li><a href="https://erigrid2.eu/">ERIgrid 2.0:</a> An EU Horizon 2020 research and innovation action project for connecting European Smart Grid Infrastructures (grant agreement No 870620)</li>
+        <li><a href="http://www.uel4-0.de/">Urban Energy Lab 4.0:</a> A project funded by EFRE.NRW (European Regional Development Fund) for the setup of a novel energy research infrastructure.</li>
+        <li><a href="http://www.re-serve.eu">RESERVE:</a> An EU Horizon 2020 research and innovation project (grant agreement No 727481)</li>
+        <li><a href="http://www.jara.org/en/research/energy">JARA-ENERGY:</a> Jülich-Aachen Research Alliance (JARA) is an initiative of RWTH Aachen University and Forschungszentrum Jülich.</li>
       </ul>
+      <p class="funding-logos">
+        <img src={require('./img/uel_efre.jpeg').default} alt="Logo UEL OP EFRE NRW" />
+        <img src={require('./img/uel.png').default} alt="Logo UEL" />
+        <img src={require('./img/european_commission.svg').default} alt="Logo EU" />
+        <img src={require('./img/reserve.svg').default} alt="Logo RESERVE" />
+        <img src={require('./img/european_commission.svg').default} alt="Logo EU" />
+        <img src={require('./img/erigrid2.png').default} alt="Logo ERIgrid 2.0" />
+      </p>
     </div>)
 }
 

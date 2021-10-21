@@ -81,6 +81,10 @@ a:active {
 }
 
 
+.funding-logos img {
+  height: 70px;
+  margin: 0 10px;
+}
 
 .app-footer {
   width: 100%;
