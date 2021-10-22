@@ -118,11 +118,15 @@ class EditWidgetPlotColorsControl extends Component {
                       height: '40px'
                   }
                   let signal = this.props.signals.find(signal => signal.id === signalID);
+                  let signalNameTooltip = "n/a"
+                  if (signal !== undefined) {
+                    signalNameTooltip = signal.name
+                  }
 
                   return <OverlayTrigger
                     key={idx}
                     placement={'bottom'}
-                    overlay={<Tooltip id={'tooltip-${"signal name"}'}>{signal.name}</Tooltip>}
+                    overlay={<Tooltip id={'tooltip-${"signal name"}'}>{signalNameTooltip}</Tooltip>}
                   >
                     <Button
                       style={style}
