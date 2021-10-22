@@ -95,12 +95,21 @@ class WidgetSlider extends Component {
     let isVertical = this.props.widget.customProperties.orientation === WidgetSlider.OrientationTypes.VERTICAL.value;
     let fields = {
       name: this.props.widget.name,
-      control: <Slider min={ this.props.widget.customProperties.rangeMin } max={ this.props.widget.customProperties.rangeMax } step={ this.props.widget.customProperties.step } value={ this.state.value } disabled={ this.props.editing } vertical={ isVertical } onChange={ (v) => this.valueIsChanging(v) } onAfterChange={ (v) => this.valueChanged(v, true) }/>,
-      value: <span>{ format('.2f')(Number.parseFloat(this.state.value)) }</span>,
+      control: <Slider
+        min={ this.props.widget.customProperties.rangeMin }
+        max={ this.props.widget.customProperties.rangeMax }
+        step={ this.props.widget.customProperties.step }
+        value={ this.state.value }
+        disabled={ this.props.editing }
+        vertical={ isVertical }
+        onChange={ (v) => this.valueIsChanging(v) }
+        onAfterChange={ (v) => this.valueChanged(v, true)
+        }/>,
+      value: <span className="signal-value">{ format('.2f')(Number.parseFloat(this.state.value)) }</span>,
       unit: <span className="signal-unit">{ this.state.unit }</span>
     }
 
-    var widgetClasses = classNames({
+    let widgetClasses = classNames({
                     'slider-widget': true,
                     'full': true,
                     'vertical': isVertical,
@@ -108,12 +117,16 @@ class WidgetSlider extends Component {
                   });
 
     return (
-        <div className={widgetClasses}>
-          <label>{ fields.name }</label>
-          { fields.control }
-          <span>{ fields.value }</span>
-          {this.props.widget.customProperties.showUnit && fields.unit}
-        </div>
+      <>
+      <div >
+        { fields.name }
+        { fields.value }
+        {this.props.widget.customProperties.showUnit && fields.unit}
+      </div>
+      <div className={widgetClasses}>
+        { fields.control }
+      </div>
+      </>
     );
   }
 }

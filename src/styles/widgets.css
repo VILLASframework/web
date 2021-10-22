@@ -165,6 +165,14 @@ li.signal-legend::before {
     color: black;
 }
 
+span.signal-value {
+    font-weight: bold;
+}
+
+span.signal-value::before {
+    content: " ";
+}
+
 span.signal-unit {
     color: grey;
     font-style: italic;
@@ -172,7 +180,7 @@ span.signal-unit {
 }
 
 span.signal-unit::before {
-    content: '[';
+    content: ' [';
     font-style: normal;
 }
 
@@ -277,6 +285,7 @@ div[class*="-widget"] label {
 .slider-widget.horizontal span {
     flex: 0 0 50pt;
 }
+
 
 .slider-widget.horizontal label {
     padding-right: 10px;
