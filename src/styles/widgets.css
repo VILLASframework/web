@@ -265,6 +265,7 @@ div[class*="-widget"] label {
     display: flex;
     align-items: center;
     justify-content: space-around;
+    padding-top: 1mm;
 }
 
 .slider-widget label {
