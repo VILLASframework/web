@@ -166,8 +166,8 @@ export default function CreateControls(widgetType = null, widget = null, session
         case 'NumberInput':
             DialogControls.push(
                 <EditWidgetTextControl key={0} style={topStyle} widget={widget} controlId={'name'} label={'Text'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
-                <EditWidgetSignalControl key={2} style={midStyle} widget={widget} controlId={'signalIDs'} input  signals={signals} handleChange={(e) => handleChange(e)} direction={'in'}/>,
-                <EditWidgetCheckboxControl key={1} style={bottomStyle} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />
+                <EditWidgetSignalControl key={1} style={midStyle} widget={widget} controlId={'signalIDs'} input  signals={signals} handleChange={(e) => handleChange(e)} direction={'in'}/>,
+                <EditWidgetCheckboxControl key={2} style={bottomStyle} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Line':

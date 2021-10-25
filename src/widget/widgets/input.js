@@ -90,6 +90,13 @@ class WidgetInput extends Component {
               <Form.Group>
                   <Col as={Form.Label}>
                     {this.props.widget.name}
+                    {this.props.widget.customProperties.showUnit? (
+                      " [" + this.state.unit + "]"
+
+                    ):(
+                      ""
+                    )}
+
                   </Col>
                   <Col>
                     <InputGroup>
@@ -103,13 +110,7 @@ class WidgetInput extends Component {
                         placeholder="Enter value"
                         value={ this.state.value }
                       />
-                    {this.props.widget.customProperties.showUnit? (
-                      <InputGroup.Append>
-                        <InputGroup.Text>{this.state.unit}</InputGroup.Text>
-                      </InputGroup.Append>
-                    ):(
-                      <div></div>
-                    )}
+
                     </InputGroup>
                   </Col>
                 </Form.Group>
