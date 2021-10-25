@@ -83,6 +83,10 @@ class ScenarioUsersTable extends Component {
       return (<Redirect to="/scenarios" />);
     }
 
+    const buttonStyle = {
+      marginLeft: '5px',
+    }
+
     return (
       <div>
         {/*Scenario Users table*/}
@@ -140,6 +144,7 @@ class ScenarioUsersTable extends Component {
             icon='plus'
             disabled={this.props.locked}
             hidetooltip={this.props.locked}
+            buttonStyle={buttonStyle}
           />
           </span>
         </InputGroup>
