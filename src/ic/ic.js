@@ -58,6 +58,11 @@ class InfrastructureComponent extends React.Component {
 
     AppDispatcher.dispatch({
       type: 'ics/start-load',
+      token: this.state.sessionToken,
+    });
+
+    AppDispatcher.dispatch({
+      type: 'ics/start-load',
       data: icID,
       token: this.state.sessionToken,
     });
