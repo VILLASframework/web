@@ -26,6 +26,7 @@
   --borderradius: 0px;
   --mainfont: 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --maincolor: #4d4d4d;
+  --bgtext:#fff;
 }
 
 * {
@@ -80,18 +81,23 @@ a:active {
 }
 
 
+.funding-logos img {
+  height: 70px;
+  margin: 0 10px;
+}
 
 .app-footer {
   width: 100%;
 
-  margin-top: 20px;
-  padding-bottom: 10px;
-  color: var(--secondarytext);
+  margin-top: 2em;
+  padding-bottom: 2em;
+  color: var(--bgtext);
   text-align: center;
 }
 
 .app-footer a {
   text-decoration: underline;
+  color: var(--bgtext);
 }
 
 .app-body-spacing {

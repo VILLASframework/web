@@ -30,7 +30,6 @@ class DefaultICPage extends React.Component {
     return (<div className='section'>
         <h1>{this.props.ic.name}
           <span className='icon-button'>
-
             <IconButton
               childKey={1}
               tooltip='Refresh'
@@ -41,19 +40,16 @@ class DefaultICPage extends React.Component {
             />
           </span>
         </h1>
-        <Container>
-          <Row>
-            <Col>
-              {ICParamsTable(this.props.ic)}
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <b>Raw Status</b>
-              {rawDataTable(this.props.ic.statusupdateraw)}
-            </Col>
-          </Row>
-        </Container>
+        <Row>
+          <Col>
+            <h4>Properties</h4>
+            {ICParamsTable(this.props.ic)}
+          </Col>
+          <Col>
+            <h4>Raw Status</h4>
+            {rawDataTable(this.props.ic.statusupdateraw)}
+          </Col>
+        </Row>
       </div>
     )
   }

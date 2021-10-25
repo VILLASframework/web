@@ -126,29 +126,32 @@ class InfrastructureComponent extends React.Component {
   static ICParamsTable(ic) {
     return (
       <Table striped size="sm">
+        <thead>
+          <tr><th>Property</th><th>Value</th></tr>
+        </thead>
         <tbody>
-        <tr><td>Name</td><td>{ic.name}</td></tr>
-        <tr><td>Description</td><td>{ic.description}</td></tr>
-        <tr><td>UUID</td><td>{ic.uuid}</td></tr>
-        <tr><td>State</td><td>{ic.state}</td></tr>
-        <tr><td>Category</td><td>{ic.category}</td></tr>
-        <tr><td>Type</td><td>{ic.type}</td></tr>
-        <tr><td>Uptime</td><td>{moment.duration(ic.uptime, "seconds").humanize()}</td></tr>
-        <tr><td>Location</td><td>{ic.location}</td></tr>
-        <tr><td>Websocket URL</td><td>{ic.websocketurl}</td></tr>
-        <tr><td>API URL</td><td>{ic.apiurl}</td></tr>
-        <tr><td>Start parameter schema</td><td>
-            {InfrastructureComponent.isJSON(ic.startparameterschema) ?
-              <ReactJson
-                src={ic.startparameterschema}
-                name={false}
-                displayDataTypes={false}
-                displayObjectSize={false}
-                enableClipboard={false}
-                collapsed={0}
-              /> : <div>No Start parameter schema JSON available.</div>}
-          </td>
-        </tr>
+          <tr><td>Name</td><td>{ic.name}</td></tr>
+          <tr><td>Description</td><td>{ic.description}</td></tr>
+          <tr><td>UUID</td><td>{ic.uuid}</td></tr>
+          <tr><td>State</td><td>{ic.state}</td></tr>
+          <tr><td>Category</td><td>{ic.category}</td></tr>
+          <tr><td>Type</td><td>{ic.type}</td></tr>
+          <tr><td>Uptime</td><td>{moment.duration(ic.uptime, "seconds").humanize()}</td></tr>
+          <tr><td>Location</td><td>{ic.location}</td></tr>
+          <tr><td>Websocket URL</td><td>{ic.websocketurl}</td></tr>
+          <tr><td>API URL</td><td>{ic.apiurl}</td></tr>
+          <tr><td>Start parameter schema</td><td>
+              {InfrastructureComponent.isJSON(ic.startparameterschema) ?
+                <ReactJson
+                  src={ic.startparameterschema}
+                  name={false}
+                  displayDataTypes={false}
+                  displayObjectSize={false}
+                  enableClipboard={false}
+                  collapsed={0}
+                /> : <div>No Start parameter schema JSON available.</div>}
+            </td>
+          </tr>
         </tbody>
       </Table>
     )
@@ -167,17 +170,17 @@ class InfrastructureComponent extends React.Component {
       height: '25px',
       width: '25px'
     }
-    let page = <>IC page not defined</>
+
     if (this.state.ic.category ==="gateway" && this.state.ic.type === "villas-node")  {
-      page = <GatewayVillasNode
+      return <GatewayVillasNode
         ic = {this.state.ic}
         currentUser = {this.state.currentUser}
         sessionToken = {this.state.sessionToken}
         buttonStyle = {buttonStyle}
         iconStyle = {iconStyle}
       />
-    }else if (this.state.ic.category ==="manager" && this.state.ic.type === "villas-node"){
-      page = <ManagerVillasNode
+    } else if (this.state.ic.category ==="manager" && this.state.ic.type === "villas-node") {
+      return <ManagerVillasNode
         ic = {this.state.ic}
         ics = {this.state.ics}
         currentUser = {this.state.currentUser}
@@ -186,7 +189,7 @@ class InfrastructureComponent extends React.Component {
         iconStyle = {iconStyle}
       />
     } else if (this.state.ic.category ==="manager" && this.state.ic.type === "villas-relay") {
-      page = <ManagerVillasRelay
+      return <ManagerVillasRelay
         ic = {this.state.ic}
         ics = {this.state.ics}
         currentUser = {this.state.currentUser}
@@ -194,8 +197,8 @@ class InfrastructureComponent extends React.Component {
         buttonStyle = {buttonStyle}
         iconStyle = {iconStyle}
       />
-    }else if (this.state.ic.category ==="manager") {
-      page = <DefaultManagerPage
+    } else if (this.state.ic.category ==="manager") {
+      return <DefaultManagerPage
         ic = {this.state.ic}
         ics = {this.state.ics}
         currentUser = {this.state.currentUser}
@@ -204,34 +207,23 @@ class InfrastructureComponent extends React.Component {
         iconStyle = {iconStyle}
       />
     } else if (this.state.ic.category === "simulator" && this.state.ic.type === "kubernetes") {
-
-      let rancherURL = ""
-      let k8sCluster = ""
-      if (this.state.config != null)
-      {
-        rancherURL = this.state.config.rancherURL
-        k8sCluster = this.state.config.k8sCluster
-      }
-
-      page = <KubernetesICPage
-      ic={this.state.ic}
-      ics={this.state.ics}
-      currentUser={this.state.currentUser}
-      sessionToken={this.state.sessionToken}
-      buttonStyle={buttonStyle}
-      iconStyle={iconStyle}
-      rancherURL={rancherURL}
-      k8sCluster={k8sCluster}
+      return <KubernetesICPage
+        ic={this.state.ic}
+        ics={this.state.ics}
+        config={this.state.config}
+        currentUser={this.state.currentUser}
+        sessionToken={this.state.sessionToken}
+        buttonStyle={buttonStyle}
+        iconStyle={iconStyle}
       />
-    }else {
-      page = <DefaultICPage
+    } else {
+      return <DefaultICPage
         ic = {this.state.ic}
         sessionToken = {this.state.sessionToken}
         buttonStyle = {buttonStyle}
         iconStyle = {iconStyle}
       />
     }
-    return page
   }
 }
 
