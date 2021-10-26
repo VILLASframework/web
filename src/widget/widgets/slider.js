@@ -47,9 +47,8 @@ class WidgetSlider extends Component {
     if(props.widget.customProperties.hasOwnProperty('value') && props.widget.customProperties.value !== state.value){
       // set value to customProperties.value if this property exists and the value is different from current state
       value = Number(props.widget.customProperties.value);
-    } else if (props.widget.customProperties.hasOwnProperty('default_value') && state.value === ''){
-      // if customProperties.default_value exists and value has been assigned yet, set the value to the default_value
-      value = Number(props.widget.customProperties.default_value)
+    } else if (state.value === '') {
+      value = 0.0;
     }
 
     // Update unit (assuming there is exactly one signal for this widget)

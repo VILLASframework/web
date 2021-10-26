@@ -155,7 +155,6 @@ class WidgetFactory {
                 widget.customProperties.rangeUseMinMax = true;
                 widget.customProperties.showUnit = false;
                 widget.customProperties.continous_update = false;
-                widget.customProperties.default_value = '0';
                 widget.customProperties.value = '';
                 widget.customProperties.resizeLeftRightLock = false;
                 widget.customProperties.resizeTopBottomLock = true;

@@ -122,7 +122,6 @@ export default function CreateControls(widgetType = null, widget = null, session
                 <EditWidgetCheckboxControl key={4} style={midStyle} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />,
                 <EditWidgetMinMaxControl key={5} style={midStyle} widget={widget} controlId={'customProperties.range'} handleChange={e => handleChange(e)} />,
                 <EditWidgetNumberControl key={6} style={midStyle} widget={widget} controlId={'customProperties.step'} label={'Step Size'} defaultValue={0.1} handleChange={(e) => handleChange(e)} />,
-                <EditWidgetNumberControl key={7} style={bottomStyle} widget={widget} controlId={'customProperties.default_value'} label={'Default Value'} defaultValue={50} handleChange={(e) => handleChange(e)} />
             );
             break;
         case 'Button':
