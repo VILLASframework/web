@@ -40,7 +40,8 @@ class NewICDialog extends React.Component {
       location: '',
       manager: '',
       properties: {},
-      schema: {}
+      schema: {},
+      formData: {},
     };
   }
 
@@ -125,7 +126,7 @@ class NewICDialog extends React.Component {
   };
 
   handleFormChange({formData}) {
-    this.setState({properties: formData})
+    this.setState({properties: formData, formData: formData})
   }
 
   resetState() {
