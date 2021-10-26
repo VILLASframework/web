@@ -16,6 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Menu, Item, Separator } from 'react-contexify';
 import "react-contexify/dist/ReactContexify.css";
@@ -94,7 +95,8 @@ class WidgetContextMenu extends React.Component {
     }
   };
 
-  render() {
+
+  renderContextMenu() {
     const isLocked = this.props.widget.locked;
 
     let dim = {
@@ -122,6 +124,15 @@ class WidgetContextMenu extends React.Component {
           <Item disabled={isLocked === false} onClick={this.unlockWidget}>Unlock</Item>
         </Menu>
       </div>
+    )
+  }
+
+
+  render() {
+
+    return ReactDOM.createPortal(
+      this.renderContextMenu(),
+      document.body
     );
   }
 }
