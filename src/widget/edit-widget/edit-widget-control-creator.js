@@ -32,12 +32,13 @@ import EditWidgetColorZonesControl from './edit-widget-color-zones-control';
 import EditWidgetMinMaxControl from './edit-widget-min-max-control';
 import EditWidgetParametersControl from './edit-widget-parameters-control';
 import EditWidgetICSelect from './edit-widget-ic-select';
+import EditWidgetConfigSelect from './edit-widget-config-select';
 import EditWidgetPlotColorsControl from './edit-widget-plot-colors-control';
 import EditWidgetPlotModeControl from './edit-widget-plot-mode-control';
 import EditWidgetRotationControl from './edit-widget-rotation-control';
 //import EditWidgetHTMLContent from './edit-widget-html-content';
 
-export default function CreateControls(widgetType = null, widget = null, sessionToken = null, files = null,ics = null, signals, handleChange) {
+export default function CreateControls(widgetType = null, widget = null, sessionToken = null, files = null,ics = null, configs = null, signals, handleChange) {
     // Use a list to concatenate the controls according to the widget type
     var DialogControls = [];
 
@@ -185,6 +186,13 @@ export default function CreateControls(widgetType = null, widget = null, session
                 <EditWidgetCheckboxControl key={3} style={midStyle} widget={widget} controlId={'customProperties.horizontal'} input text="Horizontal" handleChange={e => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={4} style={midStyle} widget={widget} controlId={'customProperties.showName'} input text="showName" handleChange={e => handleChange(e)} />,
                 <EditWidgetCheckboxControl key={5} style={bottomStyle} widget={widget} controlId={'customProperties.showOffset'} input text="showOffset" handleChange={e => handleChange(e)} />,
+            );
+            break;
+
+        case 'Player':
+            DialogControls.push(
+                <EditWidgetConfigSelect key={0} style={topStyle} widget={widget} controlId={'customProperties.configID'} input configs={configs} handleChange={(e) => handleChange(e)}/>,
+                <EditWidgetCheckboxControl key={1} style={midStyle} widget={widget} disabled={true} controlId={'customProperties.uploadResults'} input text="Upload Results" handleChange={e => handleChange(e)}/>,
             );
             break;
 

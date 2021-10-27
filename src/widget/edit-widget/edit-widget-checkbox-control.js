@@ -53,6 +53,7 @@ class EditWidgetCheckboxControl extends React.Component {
         label={this.props.text}
         defaultChecked={this.state.isChecked}
         onChange={e => this.handleCheckboxChange(e)}
+        disabled={this.props.disabled !== 'undefined' ? this.props.disabled : true}
       />
     </Form.Group>;
   }

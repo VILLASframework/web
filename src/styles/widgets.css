@@ -422,3 +422,50 @@ div[class*="-widget"] label {
     font-weight: 600;
 }
 /* End time offset widget */
+
+/* Begin player widget */
+.player {
+  width: 144px;
+  height: 224px;
+  border-radius: 5pt;
+  padding-top: 10pt;
+  background-color: #8ebae5;
+  position: relative;
+}
+
+.play-button .btn{
+  border-color: #c7ddf2;
+  background-color: #c7ddf2;
+  border-radius: 10%;
+  margin-top: 10px;
+}
+/* #bfd0d1    */
+.play-button .btn:hover{
+  border-color: #407fb7;
+  background-color: #c7ddf2;
+}
+
+.play-button .btn:disabled{
+  border-color: #8ebae5;
+  background-color: #8ebae5;
+}
+
+.config-button .btn{
+  margin-top: 8px;
+  border-radius: 5%;
+}
+
+.play-color {
+  color: var(--highlights);
+}
+
+.config-box {
+  width: 100%;
+  height: 100%;
+  padding-top: 10pt;
+  border-radius: 5pt;
+  background-color: #bccecf;
+  position: relative;
+}
+
+/* End player widget */

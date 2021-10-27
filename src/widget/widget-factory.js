@@ -218,6 +218,15 @@ class WidgetFactory {
                 widget.customProperties.showName = true;
                 break;
 
+            case 'Player':
+                widget.minWidth = 144;
+                widget.minHeight = 220;
+                widget.width = 400;
+                widget.height = 600;
+                widget.customProperties.configIDs = [];
+                widget.customProperties.uploadResults = false;
+                break;
+
             default:
                 widget.width = 100;
                 widget.height = 100;

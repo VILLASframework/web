@@ -24,6 +24,7 @@ import ConfigsStore from '../componentconfig/config-store';
 import FileStore from '../file/file-store';
 import SignalStore from '../signal/signal-store'
 import WebsocketStore from './websocket-store'
+import ResultStore from '../result/result-store';
 
 import WidgetCustomAction from './widgets/custom-action';
 import WidgetAction from './widgets/action';
@@ -41,6 +42,7 @@ import WidgetBox from './widgets/box';
 import WidgetTopology from './widgets/topology';
 import WidgetLine from './widgets/line';
 import WidgetTimeOffset from './widgets/time-offset';
+import WidgetPlayer from './widgets/player';
 import WidgetICstatus from './widgets/icstatus';
 //import WidgetHTML from './widgets/html';
 
@@ -49,7 +51,7 @@ import '../styles/widgets.css';
 
 class Widget extends React.Component {
   static getStores() {
-    return [ ICDataStore, ConfigsStore, FileStore, SignalStore, WebsocketStore];
+    return [ ICDataStore, ConfigsStore, FileStore, SignalStore, WebsocketStore, ResultStore];
   }
 
   static calculateState(prevState, props) {
@@ -88,7 +90,8 @@ class Widget extends React.Component {
       signals: signals,
       icIDs: icIDs,
       files: FileStore.getState(),
-      sessionToken: localStorage.getItem("token")
+      sessionToken: localStorage.getItem("token"),
+      results: ResultStore.getState(),
     };
   }
 
@@ -242,6 +245,16 @@ class Widget extends React.Component {
       return <WidgetICstatus
         widget={widget}
         ics={this.props.ics}
+      />
+    } else if (widget.type === 'Player') {
+      return <WidgetPlayer
+        widget={widget}
+        editing={this.props.editing}
+        configs={this.props.configs}
+        onChange={this.props.onChange}
+        ics={this.props.ics}
+        results={this.state.results}
+        files={this.state.files}
       />
     }
 

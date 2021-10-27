@@ -26,12 +26,12 @@
  
    render() {
      let defaultButtonStyle = {
-      height: '40px',
+      height: '36px',
       width: '100px',
       fontSize: '11px'
      }
  
-     return (<span className='icon-button'><Button
+     return (<span className={this.props.className ? this.props.className : 'icon-button'}><Button
      variant={this.props.variant ? this.props.variant : 'light'}
      disabled={this.props.disabled}
      onClick={this.props.onClick}
@@ -40,7 +40,6 @@
      {this.props.text}
      <Icon
        icon={this.props.icon}
-       classname={'icon-color'}
        style={this.props.iconStyle}
      />
    </Button></span>);

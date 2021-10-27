@@ -186,6 +186,7 @@ class WidgetToolbox extends React.Component {
       <ToolboxItem name='Button' type='widget' icon = 'plus'/>
       <ToolboxItem name='NumberInput' type='widget' icon = 'plus'/>
       <ToolboxItem name='Slider' type='widget' icon = 'plus'/>
+      <ToolboxItem name='Player' type='widget' icon='plus' disabled={false}/> {/* disable if dashboard already has player? */}
       <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"?"}`}> Drag and drop widgets onto the dashboard </Tooltip>} >
       <span>
       <Button disabled={true} variant="light" size="sm" key={0}  >

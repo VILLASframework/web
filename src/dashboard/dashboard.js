@@ -585,7 +585,9 @@ class Dashboard extends Component {
                   editing={this.state.editing}
                   index={parseInt(widgetKey, 10)}
                   paused={this.state.paused}
+                  onChange={this.onChange}
                   ics={this.state.ics}
+                  configs={this.state.configs}
                 />
               </WidgetContainer>
 
@@ -603,6 +605,7 @@ class Dashboard extends Component {
           signals={this.state.signals}
           files={this.state.files}
           ics={this.state.ics}
+          configs={this.state.configs}
         />
 
         <EditFilesDialog
