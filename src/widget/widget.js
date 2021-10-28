@@ -69,7 +69,7 @@ class Widget extends React.Component {
     }
 
     // Get the IC IDs and signal indexes for all signals of the widget
-    let configs = ConfigsStore.getState();
+    let configs = ConfigsStore.getState().filter(c => c.scenarioID === parseInt(props.scenarioID, 10));
     // TODO make sure that the signals are only the signals that belong to the scenario at hand
     let signals = SignalStore.getState();
     let icIDs = [];
@@ -84,6 +84,8 @@ class Widget extends React.Component {
       }
     }
 
+    let results = ResultStore.getState().filter(r => r.scenarioID === parseInt(props.scenarioID, 10));
+
     return {
       websockets: websockets,
       icData: icData,
@@ -91,7 +93,7 @@ class Widget extends React.Component {
       icIDs: icIDs,
       files: FileStore.getState(),
       sessionToken: localStorage.getItem("token"),
-      results: ResultStore.getState(),
+      results: results,
     };
   }
 
@@ -255,6 +257,7 @@ class Widget extends React.Component {
         ics={this.props.ics}
         results={this.state.results}
         files={this.state.files}
+        scenarioID={this.props.scenarioID}
       />
     }
 

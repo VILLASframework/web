@@ -588,6 +588,7 @@ class Dashboard extends Component {
                   onChange={this.onChange}
                   ics={this.state.ics}
                   configs={this.state.configs}
+                  scenarioID={this.state.dashboard.scenarioID}
                 />
               </WidgetContainer>
 
@@ -606,6 +607,7 @@ class Dashboard extends Component {
           files={this.state.files}
           ics={this.state.ics}
           configs={this.state.configs}
+          scenarioID={this.state.dashboard.scenarioID}
         />
 
         <EditFilesDialog

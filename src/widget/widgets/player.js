@@ -16,6 +16,9 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
+import JSZip from 'jszip';
+
 import IconButton from '../../common/buttons/icon-button';
 import IconTextButton from '../../common/buttons/icon-text-button';
 import ParametersEditor from '../../common/parameters-editor';
@@ -23,23 +26,21 @@ import ICAction from '../../ic/ic-action';
 import ResultPythonDialog from "../../result/result-python-dialog";
 import AppDispatcher from "../../common/app-dispatcher";
 
-import { Container, Row, Col } from 'react-bootstrap';
 import { playerMachine } from '../widget-player/player-machine';
-
 import { interpret } from 'xstate';
 
 
 const playerService = interpret(playerMachine);
 
 function transitionState(currentState, playerEvent) {
-  return playerMachine.transition(currentState, { type: playerEvent})
+  return playerMachine.transition(currentState, { type: playerEvent })
 }
 
 
 class WidgetPlayer extends Component {
   constructor(props) {
     super(props);
-    //console.log("player constructor, service start")
+
     playerService.start();
 
     this.state = {
@@ -55,12 +56,36 @@ class WidgetPlayer extends Component {
       uploadResults: false,
       sessionToken: localStorage.getItem("token"),
       pythonResultsModal: false,
-      resultID: ''
+      resultArrayId: 0,
+      filesToDownload: [],
+      showWarning: true,
+      warningText: 'no config selected'
     };
   }
 
+  componentDidUpdate() {
+    if (this.props.results && this.props.results.length - 1 !== this.state.resultArrayId) {
+      this.setState({ resultArrayId: this.props.results.length - 1 });
+    }
+    // zip download files
+    if (this.state.filesToDownload && this.state.filesToDownload.length > 0) {
+
+      let filesToDownload = this.props.files.filter(file => this.state.filesToDownload.includes(file.id) && file.data);
+      if (filesToDownload.length === this.state.filesToDownload.length) { // all requested files have been loaded
+        var zip = new JSZip();
+        filesToDownload.forEach(file => {
+          zip.file(file.name, file.data);
+        });
+        let zipname = "results_" + (new Date()).toISOString();
+        zip.generateAsync({ type: "blob" }).then(function (content) {
+          saveAs(content, zipname);
+        });
+        this.setState({ filesToDownload: [] });
+      }
+    }
+  }
+
   componentWillUnmount() {
-    //console.log("player unmount, service stop")
     playerService.stop();
   }
 
@@ -69,7 +94,6 @@ class WidgetPlayer extends Component {
     // configID was changed via edit control
     if (typeof props.widget.customProperties.configID !== "undefined"
       && state.configID !== props.widget.customProperties.configID) {
-      //console.log("configID changed")
       let configID = props.widget.customProperties.configID
       let config = props.configs.find(cfg => cfg.id === parseInt(configID, 10));
       if (config) {
@@ -81,7 +105,6 @@ class WidgetPlayer extends Component {
           } else {
             afterCreateState = transitionState(state.playerState, 'ICBUSY')
           }
-          //console.log(props.widget.customProperties.uploadResults)
           return {
             configID: configID,
             config: config,
@@ -90,51 +113,40 @@ class WidgetPlayer extends Component {
             icState: playeric.state,
             configBtnText: playeric.name,
             uploadResults: props.widget.customProperties.uploadResults,
-            playerState: afterCreateState
+            playerState: afterCreateState,
+            showWarning: false,
+            warningText: ''
           };
-        } 
+        }
       }
     }
 
     // upload results was un-/checked via edit control
     if (props.widget.customProperties.uploadResults !== state.uploadResults) {
-      //console.log("results checkbox changed")
       return { uploadResults: props.widget.customProperties.uploadResults }
     }
 
     // IC state changed
     if (state.ic && state.ic.state != state.icState) {
-      //console.log("IC state changed")
       var newState;
       switch (state.ic.state) {
-        case 'error':
-          newState = transitionState(state.playerState, 'ERROR')
-          return { playerState: newState, icState: state.ic.state }
-        case 'stopping':
-          AppDispatcher.dispatch({
-            type: 'results/start-load',
-            data: state.resultID,
-            token: state.sessionToken,
-          });
+        case 'stopping': // if configured, show results
+          if (state.uploadResults) {
+            AppDispatcher.dispatch({
+              type: 'results/start-load',
+              param: '?scenarioID=' + props.scenarioID,
+              token: state.sessionToken,
+            })
+          }
           newState = transitionState(state.playerState, 'FINISH')
           return { playerState: newState, icState: state.ic.state }
         case 'idle':
-          newState = transitionState(state.playerState, 'RESETTED')
+          newState = transitionState(state.playerState, 'ICIDLE')
           return { playerState: newState, icState: state.ic.state }
-        case 'starting':
-          return { icState: state.ic.state }
-        case 'running':
-          newState = transitionState(state.playerState, 'STARTED')
+        default:
+          newState = transitionState(state.playerState, 'ICBUSY')
           return { playerState: newState, icState: state.ic.state }
-        default: // unexpected ic state change
-          newState = transitionState(state.playerState, 'ERROR')
-          return { playerState: newState, icState: state.ic.state }
-        }
       }
-
-    if (props.results && state.playerState && state.playerState.matches('finished')) {
-      // TODO: show results
-      //console.log(props.results[props.results.length - 1])
     }
 
     return {};
@@ -152,8 +164,40 @@ class WidgetPlayer extends Component {
 
   clickReset() {
     ICAction.reset(this.state.ic.id, Date.now(), this.state.sessionToken)
-    let newState = transitionState(this.state.playerState, 'RESET')
-    this.setState({ playerState: newState })
+  }
+
+  openPythonDialog() {
+    if (this.props.results.length <= this.state.resultArrayId) {
+      this.setState({ showWarning: true, warningText: 'no new result' });
+      return
+    }
+
+    this.setState({ pythonResultsModal: true })
+  }
+
+  downloadResultFiles() {
+    if (this.props.results.length <= this.state.resultArrayId) {
+      this.setState({ showWarning: true, warningText: 'no new result' });
+      return
+    }
+
+    let result = this.props.results[this.state.resultArrayId]
+    let toDownload = result.resultFileIDs;
+
+    if (toDownload.length <= 0) {
+      this.setState({ showWarning: true, warningText: 'no result files' });
+      return
+    }
+
+    this.setState({ filesToDownload: toDownload });
+
+    toDownload.forEach(fileid => {
+      AppDispatcher.dispatch({
+        type: 'files/start-download',
+        data: fileid,
+        token: this.state.sessionToken
+      });
+    });
   }
 
   render() {
@@ -216,32 +260,32 @@ class WidgetPlayer extends Component {
             </Row>
 
             {this.state.uploadResults ?
-            <div>
-              <p style={{marginTop: '8px', marginBottom: '0px', textAlign: 'center'}}>Results</p>
-              <Row style={{marginTop: '0px'}}>
-                <Col lg={{ span: 6 }}>
-                  <span className='play-button'>
-                    <IconButton
-                      childKey={0}
-                      onClick={() => this.setState({pythonResultsModal: true})}
-                      icon={['fab', 'python']}
-                      disabled={(this.state.playerState && this.state.playerState.matches('finished')) ? false : true}
-                      iconStyle={iconStyle}
-                    />
-                  </span>
-                </Col>
-                <Col lg={{ span: 6 }}>
-                  <span className='play-button'>
-                    <IconButton
-                      childKey={1}
-                      onClick={() => console.log("TODO")}
-                      icon='file-download'
-                      disabled={(this.state.playerState && this.state.playerState.matches('finished')) ? false : true}
-                      iconStyle={iconStyle}
-                    />
-                  </span>
-                </Col>
-              </Row>
+              <div>
+                <p style={{ marginTop: '8px', marginBottom: '0px', textAlign: 'center' }}>Results</p>
+                <Row style={{ marginTop: '0px' }}>
+                  <Col lg={{ span: 6 }}>
+                    <span className='play-button'>
+                      <IconButton
+                        childKey={0}
+                        onClick={() => this.openPythonDialog()}
+                        icon={['fab', 'python']}
+                        disabled={(this.state.playerState && this.state.playerState.matches('finished')) ? false : true}
+                        iconStyle={iconStyle}
+                      />
+                    </span>
+                  </Col>
+                  <Col lg={{ span: 6 }}>
+                    <span className='play-button'>
+                      <IconButton
+                        childKey={1}
+                        onClick={() => this.downloadResultFiles()}
+                        icon='file-download'
+                        disabled={(this.state.playerState && this.state.playerState.matches('finished')) ? false : true}
+                        iconStyle={iconStyle}
+                      />
+                    </span>
+                  </Col>
+                </Row>
               </div>
               : <></>
             }
@@ -257,15 +301,15 @@ class WidgetPlayer extends Component {
             /></div>
           : <></>
         }
-        {!this.state.config ?
-          <p> no config selected</p> : <></>
+        {this.state.showWarning ?
+          <p>{this.state.warningText}</p> : <></>
         }
         <ResultPythonDialog
           show={this.state.pythonResultsModal}
           files={this.props.files}
           results={this.props.results}
-          resultId={this.state.modalResultsIndex}
-          onClose={() => this.setState({pythonResultsModal: false})}
+          resultId={this.state.resultArrayId}
+          onClose={() => this.setState({ pythonResultsModal: false })}
         />
       </div>
     );

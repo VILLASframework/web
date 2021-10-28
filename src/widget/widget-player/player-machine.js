@@ -25,43 +25,25 @@ import { createMachine } from 'xstate';
     created: {
       on: {
         ICIDLE: 'startable',
-        ICBUSY: 'invalid'
+        ICBUSY: 'default'
       }
     },
-    invalid: {
+    default: {
       on: {
-        RESET: 'resetting',
-        RESETTED: 'startable'
-      }
-    },
-    resetting: {
-      on: {
-        RESETTED: 'startable',
-        STARTED: 'running'
+        ICIDLE: 'startable',
+        FINISH: 'finished'
       }
     },
     startable: {
       on: {
-        START: 'starting'
-      }
-    },
-    starting: {
-      on: {
-        STARTED: 'running',
-        ERROR: 'invalid'
-      }
-    },
-    running: {
-      on: {
-        RESET: 'resetting',
-        FINISH: 'finished',
-        ERROR: 'invalid'
+        START: 'default',
+        ICBUSY: 'default'
       }
     },
     finished: {
       on: {
-        RESET: 'resetting',
-        RESETTED: 'startable',
+        ICBUSY: 'default',
+        ICIDLE: 'startable',
       }
     },
     

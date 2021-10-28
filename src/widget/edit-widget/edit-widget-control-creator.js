@@ -192,7 +192,7 @@ export default function CreateControls(widgetType = null, widget = null, session
         case 'Player':
             DialogControls.push(
                 <EditWidgetConfigSelect key={0} style={topStyle} widget={widget} controlId={'customProperties.configID'} input configs={configs} handleChange={(e) => handleChange(e)}/>,
-                <EditWidgetCheckboxControl key={1} style={midStyle} widget={widget} disabled={true} controlId={'customProperties.uploadResults'} input text="Upload Results" handleChange={e => handleChange(e)}/>,
+                <EditWidgetCheckboxControl key={1} style={midStyle} widget={widget} controlId={'customProperties.uploadResults'} input text="Upload Results" handleChange={e => handleChange(e)}/>,
             );
             break;
 
