@@ -63,29 +63,31 @@ class WidgetPlayer extends Component {
     };
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (this.props.results && this.props.results.length - 1 !== this.state.resultArrayId) {
       this.setState({ resultArrayId: this.props.results.length - 1 });
     }
     // zip download files
     if (this.state.filesToDownload && this.state.filesToDownload.length > 0) {
-      console.log("componentDidUpdate")
-      console.log(this.state.filesToDownload)
-      console.log(this.props.files)
+      if (this.props.files !== prevProps.files) {
+        console.log("componentDidUpdate")
+        console.log(this.state.filesToDownload)
+        console.log(this.props.files)
 
-      let filesToDownload = this.props.files.filter(file => this.state.filesToDownload.includes(file.id) && file.data);
-      console.log(filesToDownload)
+        let filesToDownload = this.props.files.filter(file => this.state.filesToDownload.includes(file.id) && file.data);
+        console.log(filesToDownload)
 
-      if (filesToDownload.length === this.state.filesToDownload.length) { // all requested files have been loaded
-        var zip = new JSZip();
-        filesToDownload.forEach(file => {
-          zip.file(file.name, file.data);
-        });
-        let zipname = "results_" + (new Date()).toISOString();
-        zip.generateAsync({ type: "blob" }).then(function (content) {
-          saveAs(content, zipname);
-        });
-        this.setState({ filesToDownload: [] });
+        if (filesToDownload.length === this.state.filesToDownload.length) { // all requested files have been loaded
+          var zip = new JSZip();
+          filesToDownload.forEach(file => {
+            zip.file(file.name, file.data);
+          });
+          let zipname = "results_" + (new Date()).toISOString();
+          zip.generateAsync({ type: "blob" }).then(function (content) {
+            saveAs(content, zipname);
+          });
+          this.setState({ filesToDownload: [] });
+        }
       }
     }
   }
@@ -161,7 +163,7 @@ class WidgetPlayer extends Component {
     let config = this.state.config
     config.startParameters = this.state.startParameters
     ICAction.start([config], '{}', [this.state.ic], new Date(), this.state.sessionToken, this.state.uploadResults)
-    
+
     let newState = transitionState(this.state.playerState, 'START')
     this.setState({ playerState: newState })
   }
@@ -197,8 +199,6 @@ class WidgetPlayer extends Component {
       return
     }
 
-    this.setState({ filesToDownload: toDownload });
-
     toDownload.forEach(fileid => {
       AppDispatcher.dispatch({
         type: 'files/start-download',
@@ -206,6 +206,8 @@ class WidgetPlayer extends Component {
         token: this.state.sessionToken
       });
     });
+
+    this.setState({ filesToDownload: toDownload });
   }
 
   render() {
