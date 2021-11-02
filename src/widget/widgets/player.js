@@ -155,14 +155,14 @@ class WidgetPlayer extends Component {
   clickStart() {
     let config = this.state.config
     config.startParameters = this.state.startParameters
-    ICAction.start([config], '{}', [this.state.ic], Date.now(), this.state.sessionToken, this.state.uploadResults)
+    ICAction.start([config], '{}', [this.state.ic], new Date(), this.state.sessionToken, this.state.uploadResults)
     
     let newState = transitionState(this.state.playerState, 'START')
     this.setState({ playerState: newState })
   }
 
   clickReset() {
-    ICAction.reset(this.state.ic.id, Date.now(), this.state.sessionToken)
+    ICAction.reset(this.state.ic.id, new Date(), this.state.sessionToken)
   }
 
   openPythonDialog() {
