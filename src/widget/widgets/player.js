@@ -304,13 +304,15 @@ class WidgetPlayer extends Component {
         {this.state.showWarning ?
           <p>{this.state.warningText}</p> : <></>
         }
-        <ResultPythonDialog
-          show={this.state.pythonResultsModal}
-          files={this.props.files}
-          results={this.props.results}
-          resultId={this.state.resultArrayId}
-          onClose={() => this.setState({ pythonResultsModal: false })}
-        />
+        {this.state.uploadResults ?
+          <ResultPythonDialog
+            show={this.state.pythonResultsModal}
+            files={this.props.files}
+            results={this.props.results}
+            resultId={this.state.resultArrayId}
+            onClose={() => this.setState({ pythonResultsModal: false })}
+          /> : <></>
+        }
       </div>
     );
   }
