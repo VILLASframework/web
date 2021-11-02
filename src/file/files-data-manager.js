@@ -51,6 +51,7 @@ class FilesDataManager extends RestDataManager {
 
   download(action){
     RestAPI.download(this.makeURL(this.url), action.token, action.data).then(response => {
+      console.log("file(s) successfully downloaded")
       AppDispatcher.dispatch({
         type: 'files/downloaded',
         data: response,

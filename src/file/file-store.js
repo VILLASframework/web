@@ -50,6 +50,7 @@ class FileStore extends ArrayStore {
   reduce(state, action) {
     switch (action.type) {
       case 'files/start-download':
+        console.log("downloading file(s)..")
         FilesDataManager.download(action)
         return state
 

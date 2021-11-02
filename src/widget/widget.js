@@ -85,13 +85,14 @@ class Widget extends React.Component {
     }
 
     let results = ResultStore.getState().filter(r => r.scenarioID === parseInt(props.scenarioID, 10));
+    let files = FileStore.getState().filter(f => f.scenarioID === parseInt(props.scenarioID, 10));
 
     return {
       websockets: websockets,
       icData: icData,
       signals: signals,
       icIDs: icIDs,
-      files: FileStore.getState(),
+      files: files,
       sessionToken: localStorage.getItem("token"),
       results: results,
     };
