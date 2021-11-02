@@ -153,12 +153,11 @@ class WidgetPlayer extends Component {
   }
 
   clickStart() {
+    let config = this.state.config
+    config.startParameters = this.state.startParameters
+    ICAction.start([config], '{}', [this.state.ic], Date.now(), this.state.sessionToken, this.state.uploadResults)
+    
     let newState = transitionState(this.state.playerState, 'START')
-    if (newState.matches('starting')) {
-      let config = this.state.config
-      config.startParameters = this.state.startParameters
-      ICAction.start([config], '{}', [this.state.ic], Date.now(), this.state.sessionToken, this.state.uploadResults)
-    }
     this.setState({ playerState: newState })
   }
 
