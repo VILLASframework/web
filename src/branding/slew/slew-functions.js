@@ -43,7 +43,7 @@ export function slew_home() {
             <h3>Contacts</h3>
             <ul>
               <li><a href="mailto:jdinkelbach@eonerc.rwth-aachen.de">Jan Dinkelbach</a></li>
-              <li><a href="mailto:mmirz@eonerc.rwth-aachen.de">Markus Mirz</a></li>
+              <li><a href="mailto:ikoester@eonerc.rwth-aachen.de">Iris Köster</a></li>
               <li><a href="mailto:stvogel@eonerc.rwth-aachen.de">Steffen Vogel</a></li>
             </ul>
 
