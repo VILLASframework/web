@@ -220,9 +220,9 @@ class WidgetFactory {
 
             case 'Player':
                 widget.minWidth = 144;
-                widget.minHeight = 220;
+                widget.minHeight = 226;
                 widget.width = 400;
-                widget.height = 600;
+                widget.height = 606;
                 widget.customProperties.configIDs = [];
                 widget.customProperties.uploadResults = false;
                 break;
