@@ -70,12 +70,7 @@ class WidgetPlayer extends Component {
     // zip download files
     if (this.state.filesToDownload && this.state.filesToDownload.length > 0) {
       if (this.props.files !== prevProps.files) {
-        console.log("componentDidUpdate")
-        console.log(this.state.filesToDownload)
-        console.log(this.props.files)
-
         let filesToDownload = this.props.files.filter(file => this.state.filesToDownload.includes(file.id) && file.data);
-        console.log(filesToDownload)
 
         if (filesToDownload.length === this.state.filesToDownload.length) { // all requested files have been loaded
           var zip = new JSZip();
@@ -144,6 +139,12 @@ class WidgetPlayer extends Component {
               param: '?scenarioID=' + props.scenarioID,
               token: state.sessionToken,
             })
+
+            AppDispatcher.dispatch({
+              type: 'files/start-load',
+              token: state.sessionToken,
+              param: '?scenarioID=' + props.scenarioID,
+            });
           }
           newState = transitionState(state.playerState, 'FINISH')
           return { playerState: newState, icState: state.ic.state }
@@ -190,17 +191,12 @@ class WidgetPlayer extends Component {
     let result = this.props.results[this.state.resultArrayId]
     let toDownload = result.resultFileIDs;
 
-    console.log("downloadResultFiles")
-    console.log(result)
-    console.log(toDownload)
-
     if (toDownload.length <= 0) {
       this.setState({ showWarning: true, warningText: 'no result files' });
       return
     }
 
     toDownload.forEach(fileid => {
-      console.log(fileid)
       AppDispatcher.dispatch({
         type: 'files/start-download',
         data: fileid,
