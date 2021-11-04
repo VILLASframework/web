@@ -37,10 +37,12 @@ class WidgetTimeOffset extends Component {
       return {icID: props.widget.customProperties.icID};
     }
 
-    var ic, websocket;
+    var selectedIC, websocket;
     if (props.ics) {
-      ic = props.ics.find(ic => ic.id === parseInt(state.icID, 10));
-      websocket = props.websockets.find(ws => ws.url === ic.websocketurl);
+      selectedIC = props.ics.find(ic => ic.id === parseInt(state.icID, 10));
+      if (selectedIC) {
+        websocket = props.websockets.find(ws => ws.url === selectedIC.websocketurl);
+      }
     } 
 
     if (props.data == null
