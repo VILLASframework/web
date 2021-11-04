@@ -227,6 +227,10 @@ class WidgetFactory {
                 widget.customProperties.uploadResults = false;
                 break;
 
+            case 'ICstatus':
+              widget.customProperties.checkedIDs = []
+              break;
+
             default:
                 widget.width = 100;
                 widget.height = 100;

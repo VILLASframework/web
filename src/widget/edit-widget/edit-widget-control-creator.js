@@ -28,6 +28,7 @@ import EditWidgetOrientation from './edit-widget-orientation';
 import EditWidgetAspectControl from './edit-widget-aspect-control';
 import EditWidgetTextSizeControl from './edit-widget-text-size-control';
 import EditWidgetCheckboxControl from './edit-widget-checkbox-control';
+import EditWidgetCheckboxList from './edit-widget-checkbox-list';
 import EditWidgetColorZonesControl from './edit-widget-color-zones-control';
 import EditWidgetMinMaxControl from './edit-widget-min-max-control';
 import EditWidgetParametersControl from './edit-widget-parameters-control';
@@ -192,9 +193,15 @@ export default function CreateControls(widgetType = null, widget = null, session
         case 'Player':
             DialogControls.push(
                 <EditWidgetConfigSelect key={0} style={topStyle} widget={widget} controlId={'customProperties.configID'} input configs={configs} handleChange={(e) => handleChange(e)}/>,
-                <EditWidgetCheckboxControl key={1} style={midStyle} widget={widget} controlId={'customProperties.uploadResults'} input text="Upload Results" handleChange={e => handleChange(e)}/>,
+                <EditWidgetCheckboxControl key={1} style={midStyle} widget={widget} controlId={'customProperties.uploadResults'} input text='Upload Results' handleChange={e => handleChange(e)}/>,
             );
             break;
+
+        case 'ICstatus':
+          DialogControls.push(
+              <EditWidgetCheckboxList key={0} style={midStyle} widget={widget} controlId={'customProperties.checkedIDs'} input label='Select ICs to show' list={ics} handleChange={e => handleChange(e)}/>
+          );
+          break;
 
         default:
             console.log('Non-valid widget type: ' + widgetType);

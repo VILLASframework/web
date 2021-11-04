@@ -54,8 +54,15 @@ class WidgetICstatus extends React.Component {
 
   render() {
     let badges = []
+    let checkedICs = []
+    if (this.props.widget) {
+      checkedICs = this.props.widget.customProperties.checkedIDs
+    }
     if (this.props.ics) {
       this.props.ics.forEach(ic => {
+        if (!checkedICs.includes(ic.id)) {
+          return
+        }
         let badgeStyle = stateLabelStyle(ic.state, ic)
         badges.push(<Badge
           key={ic.id}

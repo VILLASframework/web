@@ -254,6 +254,15 @@ class Dashboard extends Component {
   handleDrop(widget) {
     widget.dashboardID = this.state.dashboard.id;
 
+    if (widget.type === 'ICstatus') {
+      // initially show all ICs
+      let allICids = []
+      this.state.ics.forEach(ic => {
+        allICids.push(ic.id)
+      })
+      widget.customProperties.checkedIDs = allICids
+    }
+
     AppDispatcher.dispatch({
       type: 'widgets/start-add',
       token: this.state.sessionToken,
