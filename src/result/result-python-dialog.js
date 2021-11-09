@@ -33,15 +33,17 @@ class ResultPythonDialog extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.resultId !== prevProps.resultId) {
+    if (this.props.results && this.props.resultId !== prevProps.resultId) {
       const result = this.props.results[this.props.resultId];
-      const output = this.getJupyterNotebook(result);
-      const blob = new Blob([JSON.stringify(output)], {
-        'type': 'application/x-ipynb+json'
-      });
-      const url = URL.createObjectURL(blob);
+      if (result) {
+        const output = this.getJupyterNotebook(result);
+        const blob = new Blob([JSON.stringify(output)], {
+          'type': 'application/x-ipynb+json'
+        });
+        const url = URL.createObjectURL(blob);
 
-      this.setState({ fileDownloadUrl: url })
+        this.setState({ fileDownloadUrl: url })
+      }
     }
   }
 
@@ -62,8 +64,8 @@ class ResultPythonDialog extends React.Component {
     a.click();
 
     setTimeout(function(){
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
     }, 100);
   }
 
@@ -209,21 +211,21 @@ f${file.id} = f${file.id}.load()`;
       cells: ipynb_cells,
       metadata: {
         kernelspec: {
-        display_name: 'Python 3',
-        language: 'python',
-        name: 'python3'
+          display_name: 'Python 3',
+          language: 'python',
+          name: 'python3'
         },
         language_info: {
-        codemirror_mode: {
-          name: 'ipython',
-          version: 3
-        },
-        file_extension: '.py',
-        mimetype: 'text/x-python',
-        name: 'python',
-        nbconvert_exporter: 'python',
-        pygments_lexer: 'ipython3',
-        version: '3.9.5'
+          codemirror_mode: {
+            name: 'ipython',
+            version: 3
+          },
+          file_extension: '.py',
+          mimetype: 'text/x-python',
+          name: 'python',
+          nbconvert_exporter: 'python',
+          pygments_lexer: 'ipython3',
+          version: '3.9.5'
         }
       },
       nbformat: 4,
@@ -255,14 +257,14 @@ f${file.id} = f${file.id}.load()`;
         <SyntaxHighlighter
           language="bash"
           style={github}>
-            {this.getPythonDependencies(false)}
+          {this.getPythonDependencies(false)}
         </SyntaxHighlighter>
 
         <p><b>2a)</b> Insert the following snippet your Python code:</p>
         <SyntaxHighlighter
           language="python"
           style={github}>
-            {code}
+          {code}
         </SyntaxHighlighter>
 
         <CopyToClipboard text={code}>
@@ -272,7 +274,7 @@ f${file.id} = f${file.id}.load()`;
           </Button>
         </CopyToClipboard>
         <p style={{marginTop: '2em'}}><b>2b)</b> Or alternatively, download the following generated Jupyter notebook to get started:</p>
-        <Button onClick={(e) => this.downloadJupyterNotebook(e)}>
+        <Button onClick={this.downloadJupyterNotebook.bind(this)}>
           <Icon style={{color: 'white'}} icon='download'/>&nbsp;
           Download Jupyter Notebook
         </Button>

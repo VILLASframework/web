@@ -121,6 +121,7 @@ class EditFilesDialog extends React.Component {
           <TableColumn
             title='ID'
             dataKey='id'
+            width={50}
           />
           <TableColumn
             title='Name'
