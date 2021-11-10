@@ -58,7 +58,7 @@ class WidgetICstatus extends React.Component {
     if (this.props.widget) {
       checkedICs = this.props.widget.customProperties.checkedIDs
     }
-    if (this.props.ics) {
+    if (this.props.ics && checkedICs.length > 0) {
       this.props.ics.forEach(ic => {
         if (!checkedICs.includes(ic.id)) {
           return
