@@ -129,7 +129,9 @@ class App extends React.Component {
               : '' }
               { pages.account ? <Route path="/account" component={User} /> : '' }
               <Route path="/users" component={Users} />
-              { pages.api ? <Route path="/api" component={APIBrowser} /> : '' }
+              { currentUser.role === "Admin" || pages.api ?
+                <Route path="/api" component={APIBrowser} />
+              : '' }
             </div>
           </div>
 
