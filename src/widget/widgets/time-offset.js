@@ -60,7 +60,7 @@ class WidgetTimeOffset extends Component {
     if(typeof websocket === 'undefined'){
       return {timeOffset: Number.parseFloat(absoluteOffset/1000).toPrecision(5)}
     }
-    return {timeOffset: Number.parseFloat(absoluteOffset/1000).toPrecision(5), websocketOpen: websocket.connected, icName: ic.name};
+    return {timeOffset: Number.parseFloat(absoluteOffset/1000).toPrecision(5), websocketOpen: websocket.connected, icName: selectedIC.name};
   }
 
   render() {
