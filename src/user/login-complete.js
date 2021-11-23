@@ -46,7 +46,7 @@ class LoginComplete extends React.Component {
 
   componentDidMount() {
     this.startTimer();
-    this.setState({secondsToWait: 5});
+    this.setState({secondsToWait: 20});
   }
 
   static getStores(){
