@@ -19,6 +19,8 @@ import React from 'react';
 import { Form, Col, Row } from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
 import ParametersEditor from '../common/parameters-editor';
+import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
+import NotificationsFactory from "../common/data-managers/notifications-factory";
 
 class EditICDialog extends React.Component {
   valid = true;
@@ -121,6 +123,7 @@ class EditICDialog extends React.Component {
 
     if (!file.type.match('application/json')) {
       console.error("Not a json file. Will not process file '" + file.name + "'.")
+      NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR("Not a json file. Will not process file \'" + file.name + "\'."));
       return;
     }
 
@@ -226,22 +229,16 @@ class EditICDialog extends React.Component {
             <Form.Control.Feedback />
           </Form.Group>
           <hr/>
-          <Form.Group controlId='startParameterSchema'>
-            <Row>
-            <Col xs lg="5">
-              <Form.Label column={false}>Start parameter schema of IC</Form.Label>
-            </Col>
-            <Col xs lg="4">
-              <Form.Control type='file' onChange={(event) => this.selectStartParamsFile(event)} />
-            </Col>
-            </Row>
+          <Form.Group controlId='startParameterSchema' >
+            <Form.Label column={false}>Start parameter schema of IC</Form.Label>
             <ParametersEditor
               content={this.state.startparameterschema}
               onChange={(data) => this.handleStartParameterSchemaChange(data)}
-              disabled={false}
+              disabled={true}
             />
+            <Form.Label style={{marginTop: '15px'}} column={false}>Select JSON file to update start parameter schema: </Form.Label>
+            <Form.Control type='file' onChange={(event) => this.selectStartParamsFile(event)} />
           </Form.Group>
-
         </Form>
       </Dialog>
     );
