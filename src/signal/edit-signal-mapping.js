@@ -156,12 +156,20 @@ class EditSignalMappingDialog extends React.Component {
       configID = this.props.configID;
     }
 
+    // find largest signal index in this.state.signals
+    let largest_index = -1;
+    for (let sig of this.state.signals){
+      if (sig.index > largest_index){
+        largest_index = sig.index;
+      }
+    }
+
     let newSignal = {
       configID: configID,
       direction: this.state.dir,
       name: "PlaceholderName",
       unit: "PlaceholderUnit",
-      index: 999,
+      index: largest_index + 1,
       scalingFactor: 1.0
     };
 
