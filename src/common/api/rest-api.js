@@ -28,12 +28,19 @@ function isNetworkError(err, url) {
 
 
   if (err.status === 500 && err.response != null){
-    let notification = NotificationsFactory.INTERNAL_SERVER_ERROR(err.response)
-    NotificationsDataManager.addNotification(notification);
+    console.log("500 error:", err.response)
+    if (err.response.text.includes("ECONNREFUSED")){
+      let notification = NotificationsFactory.SERVER_NOT_REACHABLE(err.response.text, url)
+      NotificationsDataManager.addNotification(notification);
+      result = true;
+    } else {
+      let notification = NotificationsFactory.INTERNAL_SERVER_ERROR(err.response)
+      NotificationsDataManager.addNotification(notification);
+    }
   } else if (err.status == null || err.status === 500 || err.response == null) {
     // If not status nor response fields, it is a network error. TODO: Handle timeouts
     result = true;
-    let notification = err.timeout? NotificationsFactory.REQUEST_TIMEOUT : NotificationsFactory.SERVER_NOT_REACHABLE(url);
+    let notification = err.timeout? NotificationsFactory.REQUEST_TIMEOUT : NotificationsFactory.SERVER_NOT_REACHABLE("", url);
     NotificationsDataManager.addNotification(notification);
   }
   return result;

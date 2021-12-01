@@ -26,10 +26,10 @@ class NotificationsFactory {
       };
   }
 
-  static SERVER_NOT_REACHABLE(url) {
+  static SERVER_NOT_REACHABLE(msg, url) {
     return {
-      title: 'Server not reachable',
-      message: 'The url ' + url +' could not be reached. Please try again later.',
+      title: 'Server ' + url + ' not reachable',
+      message: msg,
       level: 'error'
     };
   }
