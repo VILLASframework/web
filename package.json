@@ -36,12 +36,12 @@
     "prop-types": "^15.7.2",
     "rc-slider": "^9.7.4",
     "react": "^17.0.2",
-    "react-bootstrap": "^2.0.0-rc.1",
-    "react-collapse": "^5.1.0",
+    "react-bootstrap": "^2.0.3",
+    "react-collapse": "^5.1.1",
     "react-color": "^2.19.3",
     "react-contexify": "^5.0.0",
     "react-copy-to-clipboard": "^5.0.4",
-    "react-datetime-picker": "^3.4.2",
+    "react-datetime-picker": "^3.4.3",
     "react-dnd": "^14.0.4",
     "react-dnd-html5-backend": "^14.0.2",
     "react-dom": "^17.0.2",
@@ -51,12 +51,12 @@
     "react-rnd": "^10.3.5",
     "react-router-dom": "^5.3.0",
     "react-svg-pan-zoom": "^3.10.0",
-    "react-syntax-highlighter": "^15.4.4",
+    "react-syntax-highlighter": "^15.4.5",
     "react-trafficlight": "^5.2.1",
     "superagent": "^6.1.0",
     "swagger-ui-react": "^3.52.5",
-    "typescript": "^4.4.4",
-    "xstate": "^4.23.1"
+    "typescript": "^4.5.2",
+    "xstate": "^4.26.1"
   },
   "devDependencies": {
     "react-scripts": "^4.0.3"
