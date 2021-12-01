@@ -54,7 +54,7 @@
     "react-syntax-highlighter": "^15.4.5",
     "react-trafficlight": "^5.2.1",
     "superagent": "^6.1.0",
-    "swagger-ui-react": "^3.52.5",
+    "swagger-ui-react": "^4.1.2",
     "typescript": "^4.5.2",
     "xstate": "^4.26.1"
   },
