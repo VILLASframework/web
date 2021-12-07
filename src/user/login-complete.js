@@ -35,7 +35,7 @@ class LoginComplete extends React.Component {
       loginMessage: '',
       token: '',
       currentUser: '',
-      secondsToWait: 99,
+      secondsToWait: 65,
     }
 
     this.timer = 0;
@@ -46,7 +46,6 @@ class LoginComplete extends React.Component {
 
   componentDidMount() {
     this.startTimer();
-    this.setState({secondsToWait: 20});
   }
 
   static getStores(){
@@ -86,6 +85,16 @@ class LoginComplete extends React.Component {
   }
 
   render() {
+    let waitingMsg = "Please wait"
+    if (this.state.secondsToWait < 20) {
+      waitingMsg = "Almost there .."
+    } else if (this.state.secondsToWait < 45) {
+      waitingMsg = "..."
+    } else if (this.state.secondsToWait < 55) {
+      waitingMsg = "Configuring Simulators .."
+    } else if (this.state.secondsToWait < 60) {
+      waitingMsg = "Loading Scenarios .."
+    }
     if (this.state.currentUser && this.state.currentUser !== "") {
       this.stopTimer();
       return (<Redirect to="/home" />);
@@ -98,7 +107,8 @@ class LoginComplete extends React.Component {
         <img
           style={{height: 80}}
           src={require('../img/ajax-loader.gif').default}
-          alt="Waiting Dog" />
+          alt="Logging in.." />
+        <p>{waitingMsg}</p>
       </div>;
     }
   }

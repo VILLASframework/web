@@ -70,18 +70,19 @@ class RestAPI {
     });
   }
 
-  post(url, body, token) {
+  post(url, body, token, timeout = 5000) {
     return new Promise(function (resolve, reject) {
-      let req = request.post(url).send(body).timeout({ response: 5000 }); // Simple response start timeout (3s)
+      let req = request.post(url).send(body).timeout({ response: timeout }); // Simple response start timeout
 
       if (token != null) {
         req.set('Authorization', "Bearer " + token);
       }
 
       req.end(function (error, res) {
+        console.log("req.end in post request")
         if (res == null || res.status !== 200) {
 
-          error.handled = isNetworkError(error);
+          error.handled = isNetworkError(error, url);
 
           reject(error);
         } else {
