@@ -32,7 +32,7 @@ class WidgetICstatus extends React.Component {
 
   componentDidMount() {
     // Start timer for periodic refresh
-    this.timer = window.setInterval(() => this.refresh(), 5000);
+    this.timer = window.setInterval(() => this.refresh(), 3000);
   }
 
   componentWillUnmount() {
