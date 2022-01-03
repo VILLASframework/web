@@ -46,7 +46,7 @@ class WidgetValue extends Component {
       if (props.data == null || props.data[icID] == null || props.data[icID].output == null || props.data[icID].output.values == null) {
         // no data
       } else {
-        const data = props.data[icID].output.values[signal[0].index - 1];
+        const data = props.data[icID].output.values[signal[0].index];
         if (data != null) {
           value = signal[0].scalingFactor * data[data.length - 1].y;
         }

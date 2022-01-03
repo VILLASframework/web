@@ -157,7 +157,7 @@ class EditSignalMappingDialog extends React.Component {
     }
 
     // find largest signal index in this.state.signals
-    let largest_index = 0;
+    let largest_index = -1;
     for (let sig of this.state.signals){
       if (sig.index > largest_index){
         largest_index = sig.index;
