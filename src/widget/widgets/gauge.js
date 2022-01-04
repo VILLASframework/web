@@ -253,8 +253,16 @@ class WidgetGauge extends Component {
 
   render() {
     const componentClass = this.props.editing ? "gauge-widget editing" : "gauge-widget";
+
+    let showScalingFactor;
+    if (this.props.widget.customProperties.showScalingFactor !== undefined){ // this line ensures backwards compatibility with older versions of VILLASweb
+      showScalingFactor = this.props.widget.customProperties.showScalingFactor;
+    } else {
+      showScalingFactor = (this.state.scalingFactor !== 1);
+    }
+
     let scaleText = "";
-    if(this.state.scalingFactor !== 1){
+    if(showScalingFactor){
       scaleText = " (x" + this.state.scalingFactor + ")"
     }
 

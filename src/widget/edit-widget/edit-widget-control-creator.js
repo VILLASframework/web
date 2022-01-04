@@ -70,7 +70,8 @@ export default function CreateControls(widgetType = null, widget = null, session
                 <EditWidgetTextControl key={0} style={topStyle} widget={widget} controlId={'name'} label={'Signal name'} placeholder={'Enter text'} handleChange={e => handleChange(e)} />,
                 <EditWidgetSignalControl key={1} style={midStyle} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
                 <EditWidgetTextSizeControl key={2} style={midStyle} widget={widget} handleChange={e => handleChange(e)} />,
-                <EditWidgetCheckboxControl key={3} style={bottomStyle} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />
+                <EditWidgetCheckboxControl key={3} style={midStyle} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={4} style={bottomStyle} widget={widget} controlId={'customProperties.showScalingFactor'} input text="Show scaling factor" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Lamp':
@@ -95,7 +96,8 @@ export default function CreateControls(widgetType = null, widget = null, session
         case 'Table':
             DialogControls.push(
                 <EditWidgetSignalsControl key={0} style={topStyle} widget={widget} controlId={'signalIDs'}  signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
-                <EditWidgetCheckboxControl key={1} style={bottomStyle} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />
+                <EditWidgetCheckboxControl key={1} style={midStyle} widget={widget} controlId={'customProperties.showUnit'} input text="Show unit" handleChange={e => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={2} style={bottomStyle} widget={widget} controlId={'customProperties.showScalingFactor'} input text="Show scaling factor" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Image':
@@ -112,7 +114,8 @@ export default function CreateControls(widgetType = null, widget = null, session
                 <EditWidgetSignalControl key={1} style={midStyle} widget={widget} controlId={'signalIDs'} signals={signals} handleChange={(e) => handleChange(e)} direction={'out'}/>,
                 <EditWidgetCheckboxControl key={2} style={midStyle} widget={widget} controlId="customProperties.colorZones" input text="Show color zones" handleChange={e => handleChange(e)} />,
                 <EditWidgetColorZonesControl key={3} style={midStyle} widget={widget} controlId="customProperties.zones" handleChange={e => handleChange(e)} disableOpacity={true}/>,
-                <EditWidgetMinMaxControl key={4} style={bottomStyle} widget={widget} controlId="customProperties.value" handleChange={e => handleChange(e)} />
+                <EditWidgetMinMaxControl key={4} style={midStyle} widget={widget} controlId="customProperties.value" handleChange={e => handleChange(e)} />,
+                <EditWidgetCheckboxControl key={5} style={bottomStyle} widget={widget} controlId={'customProperties.showScalingFactor'} input text="Show scaling factor" handleChange={e => handleChange(e)} />
             );
             break;
         case 'Slider':

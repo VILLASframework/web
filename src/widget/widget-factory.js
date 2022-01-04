@@ -78,6 +78,7 @@ class WidgetFactory {
                 widget.name = 'Value';
                 widget.customProperties.showUnit = false;
                 widget.customProperties.resizeTopBottomLock = true;
+                widget.customProperties.showScalingFactor = true;
                 break;
             case 'Plot':
                 widget.customProperties.ylabel = '';
@@ -99,6 +100,7 @@ class WidgetFactory {
                 widget.width = 300;
                 widget.height = 200;
                 widget.customProperties.showUnit = false;
+                widget.customProperties.showScalingFactor = true;
                 break;
           case 'Label':
                 widget.minWidth = 20;
@@ -171,6 +173,7 @@ class WidgetFactory {
                 widget.customProperties.valueMax = 1;
                 widget.customProperties.valueUseMinMax = false;
                 widget.customProperties.lockAspect = true;
+                widget.customProperties.showScalingFactor = true;
                 break;
             case 'Box':
                 widget.minWidth = 50;

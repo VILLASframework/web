@@ -73,7 +73,14 @@ class WidgetValue extends Component {
     let value_to_render = this.state.value;
     let value_width = this.props.widget.customProperties.textSize*(Math.abs(value_to_render) < 1000 ? (5):(8));
     let unit_width = this.props.widget.customProperties.textSize*(this.state.unit.length + 0.7);
-    const showScalingFactor = (this.state.scalingFactor !== 1);
+
+    let showScalingFactor;
+    if (this.props.widget.customProperties.showScalingFactor !== undefined){ // this line ensures backwards compatibility with older versions of VILLASweb
+      showScalingFactor = this.props.widget.customProperties.showScalingFactor;
+    } else {
+      showScalingFactor = (this.state.scalingFactor !== 1);
+    }
+
     return (
       <div className="single-value-widget">
         <strong style={{ fontSize: this.props.widget.customProperties.textSize + 'px', flex: '1 1 auto'}}>{this.props.widget.name}</strong>

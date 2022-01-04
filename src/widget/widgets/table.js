@@ -94,6 +94,14 @@ class WidgetTable extends Component {
 
   render() {
 
+
+    let showScalingFactor;
+    if (this.props.widget.customProperties.showScalingFactor !== undefined){ // this line ensures backwards compatibility with older versions of VILLASweb
+      showScalingFactor = this.props.widget.customProperties.showScalingFactor;
+    } else {
+      showScalingFactor = true;
+    }
+
     let rows = this.state.rows;
 
     if(rows.length === 0){
@@ -102,14 +110,19 @@ class WidgetTable extends Component {
       })
     }
 
-    var columns = [
+    let columns = [
       <TableColumn key={1} title="Signal" dataKey="name" width={120} />,
       <TableColumn key={2} title="Value" dataKey="value" modifier={format('.4f')} />,
-      <TableColumn key={3} title="Scale" dataKey="scalingFactor" modifier={format('.2f')} />
     ];
 
-    if (this.props.widget.customProperties.showUnit)
-      columns.push(<TableColumn key={4} title="Unit" dataKey="unit" />)
+    let nextKey = 3;
+    if (showScalingFactor) {
+      columns.push(<TableColumn key={nextKey} title="Scale" dataKey="scalingFactor" modifier={format('.2f')}/>);
+      nextKey++;
+    }
+    if (this.props.widget.customProperties.showUnit) {
+      columns.push(<TableColumn key={nextKey} title="Unit" dataKey="unit"/>);
+    }
 
     return (
       <div className="table-widget" style={{width: this.props.widget.width, height: this.props.widget.height, overflowY: 'auto'}}>
