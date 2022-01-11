@@ -349,7 +349,7 @@ class InfrastructureComponents extends Component {
   }
 
   getICCategoryTable(ics, title, isManager = false) {
-    if (ics && ics.length > 0) {
+    if (ics && (ics.length > 0 || isManager)) {
       return (<div>
         <h2>
           {title}
