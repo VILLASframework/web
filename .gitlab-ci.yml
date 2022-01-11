@@ -62,5 +62,6 @@ deploy:slew:
       --dockerfile ${CI_PROJECT_DIR}/Dockerfile
       --destination ${DOCKER_IMAGE}:${DOCKER_TAG}-slew
       --snapshotMode=redo
+      --single-snapshot
   dependencies:
     - build
