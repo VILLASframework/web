@@ -224,16 +224,16 @@ class EditSignalMappingDialog extends React.Component {
 
       return <Dialog
         show={this.props.show}
-        title="Edit Signal Mapping"
-        buttonTitle="Save"
-        blendOutCancel = {false}
+        title={"Edit Signal " + this.props.direction +" Mapping"}
+        buttonTitle="Close"
+        blendOutCancel = {true}
         onClose={(c) => this.onClose(c)}
         onReset={() => this.resetState()}
         valid={true}
       >
         <Form.Group>
-          <Form.Label>{this.props.direction} Mapping</Form.Label>
-          <Form.Text>Click <i>Index</i>, <i>Name</i> or <i>Unit</i> cell to edit</Form.Text>
+          <Form.Label style={{background: '#eb4d2a', color: 'white'}}>IMPORTANT: Signal configurations that were created before January 2022 have to be fixed manually. Signal indices have to start at 0 and not 1.</Form.Label>
+          <Form.Label> <i>Click in table cell to edit</i></Form.Label>
           <Table breakWord={true} checkbox onChecked={(signal) => this.onSignalChecked(signal)} data={this.state.signals}>
               <TableColumn
                 checkbox
