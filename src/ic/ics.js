@@ -417,7 +417,7 @@ class InfrastructureComponents extends Component {
               showEditButton ={(index) => InfrastructureComponents.isLocalIC(index, ics)}
               exportButton
               deleteButton
-              showDeleteButton = {(index) => InfrastructureComponents.isLocalIC(index, ics)}
+              showDeleteButton = {null}
               onEdit={index => this.setState({editModal: true, modalIC: ics[index], modalIndex: index})}
               onExport={index => this.exportIC(index)}
               onDelete={index => this.setState({deleteModal: true, modalIC: ics[index], modalIndex: index})}
