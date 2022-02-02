@@ -188,6 +188,8 @@ class InfrastructureComponents extends Component {
 
 
   closeDeleteModal(confirmDelete) {
+    this.setState({ deleteModal: false});
+
     if (confirmDelete === false) {
       return;
     }
@@ -197,8 +199,6 @@ class InfrastructureComponents extends Component {
       data: this.state.modalIC,
       token: this.state.sessionToken,
     });
-
-    this.setState({ deleteModal: false, modalIC: {} });
   }
 
   exportIC(index) {
