@@ -44,8 +44,8 @@ class WidgetTable extends Component {
           // distinguish between input and output signals
           if (sig.direction === "out") {
             if (props.data[icID] != null && props.data[icID].output != null && props.data[icID].output.values != null) {
-              if (props.data[icID].output.values[sig.index-1] !== undefined) {
-                let data = props.data[icID].output.values[sig.index-1];
+              if (props.data[icID].output.values[sig.index] !== undefined) {
+                let data = props.data[icID].output.values[sig.index];
                 rows.push({
                   name: sig.name,
                   unit: sig.unit,
@@ -65,8 +65,8 @@ class WidgetTable extends Component {
             }
           } else if (sig.direction === "in") {
             if (props.data[icID] != null && props.data[icID].input != null && props.data[icID].input.values != null) {
-              if (props.data[icID].input.values[sig.index-1] !== undefined) {
-                let data = props.data[icID].input.values[sig.index-1];
+              if (props.data[icID].input.values[sig.index] !== undefined) {
+                let data = props.data[icID].input.values[sig.index];
                 rows.push({
                   name: sig.name,
                   unit: sig.unit,

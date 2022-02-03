@@ -95,8 +95,8 @@ class SignalsDataManager extends RestDataManager{
           continue;
         }
         // signals are not yet configured:
-        let index_in = 1
-        let index_out = 1
+        let index_in = 0
+        let index_out = 0
 
         if(!nodeConfig.in.hasOwnProperty("signals")){
           NotificationsDataManager.addNotification(
@@ -161,7 +161,7 @@ class SignalsDataManager extends RestDataManager{
           }
         }
 
-        console.log("Configured", index_in-1, "input signals and", index_out-1, "output signals");
+        console.log("Configured", index_in, "input signals and", index_out, "output signals");
         configured=true;
       } else {
         console.log("ignoring node with name ",nodeConfig.name, " expecting ", socketname )

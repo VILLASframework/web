@@ -118,7 +118,7 @@ class WidgetGauge extends Component {
       let updateMaxValue = false;
 
       // Check if value has changed
-      const data = props.data[icID].output.values[signal[0].index - 1];
+      const data = props.data[icID].output.values[signal[0].index];
       // Take just 3 decimal positions
       // Note: Favor this method over Number.toFixed(n) in order to avoid a type conversion, since it returns a String
       if (data != null) {
