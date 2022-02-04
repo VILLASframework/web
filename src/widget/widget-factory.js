@@ -160,6 +160,7 @@ class WidgetFactory {
                 widget.customProperties.value = '';
                 widget.customProperties.resizeLeftRightLock = false;
                 widget.customProperties.resizeTopBottomLock = true;
+                widget.customProperties.simStartedSendValue = false;
 
                 break;
             case 'Gauge':

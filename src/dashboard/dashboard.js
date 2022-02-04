@@ -287,6 +287,21 @@ class Dashboard extends Component {
     });
   }
 
+  onStartSimulation() {
+    // tell slider widgets to initiate sending their current value
+    // otherwise the slider values will not be known at simulation start
+    this.state.widgets.forEach((widget) => {
+      if (widget.type === 'Slider') {
+        widget.customProperties.simStartedSendValue = true
+        AppDispatcher.dispatch({
+          type: 'widgets/start-edit',
+          token: this.state.sessionToken,
+          data: widget
+        });
+      }
+    })
+  }
+
   editWidget(widget, index) {
     this.setState({ editModal: true, modalData: widget, modalIndex: index });
   };
@@ -594,7 +609,7 @@ class Dashboard extends Component {
                   editing={this.state.editing}
                   index={parseInt(widgetKey, 10)}
                   paused={this.state.paused}
-                  onChange={this.onChange}
+                  onStartSimulation={this.onStartSimulation.bind(this)}
                   ics={this.state.ics}
                   configs={this.state.configs}
                   scenarioID={this.state.dashboard.scenarioID}

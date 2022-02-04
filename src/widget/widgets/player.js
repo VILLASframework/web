@@ -166,6 +166,7 @@ class WidgetPlayer extends Component {
     ICAction.start([config], '{}', [this.state.ic], new Date(), this.state.sessionToken, this.state.uploadResults)
 
     let newState = transitionState(this.state.playerState, 'START')
+    this.props.onStart()
     this.setState({ playerState: newState })
   }
 

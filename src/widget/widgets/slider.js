@@ -20,6 +20,8 @@ import { format } from 'd3';
 import classNames from 'classnames';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import AppDispatcher from '../../common/app-dispatcher';
+
 
 class WidgetSlider extends Component {
 
@@ -35,8 +37,35 @@ class WidgetSlider extends Component {
 
     this.state = {
         unit: '',
-
+        value: '',
     };
+  }
+
+  componentDidMount() {
+    let widget = this.props.widget
+    widget.customProperties.simStartedSendValue = false
+    AppDispatcher.dispatch({
+      type: 'widgets/start-edit',
+      token: this.props.token,
+      data: widget
+    });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // a simulaton was started, make an update
+    // TODO: - make sure the code is only executed once (currently twice per slider)
+    // - checking prevProps to see whether simStartedSendValue was false before does not work, why?
+    // - make sure that the if statement checks the bool value of simStartedSendValue not the existence
+    if (this.props.widget.customProperties.simStartedSendValue) {
+      this.props.onInputChanged(this.state.value, 'value', this.state.value, false);
+      let widget = this.props.widget
+      widget.customProperties.simStartedSendValue = false
+      AppDispatcher.dispatch({
+        type: 'widgets/start-edit',
+        token: this.props.token,
+        data: widget
+      });
+    }
   }
 
   static getDerivedStateFromProps(props, state){
