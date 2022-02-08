@@ -254,7 +254,7 @@ class Widget extends React.Component {
         widget={widget}
         editing={this.props.editing}
         configs={this.props.configs}
-        onStart={this.props.onStartSimulation}
+        onStarted={this.props.onSimulationStarted}
         ics={this.props.ics}
         results={this.state.results}
         files={this.state.files}

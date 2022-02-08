@@ -287,7 +287,7 @@ class Dashboard extends Component {
     });
   }
 
-  onStartSimulation() {
+  onSimulationStarted() {
     // tell slider widgets to initiate sending their current value
     // otherwise the slider values will not be known at simulation start
     this.state.widgets.forEach((widget) => {
@@ -609,7 +609,7 @@ class Dashboard extends Component {
                   editing={this.state.editing}
                   index={parseInt(widgetKey, 10)}
                   paused={this.state.paused}
-                  onStartSimulation={this.onStartSimulation.bind(this)}
+                  onSimulationStarted={this.onSimulationStarted.bind(this)}
                   ics={this.state.ics}
                   configs={this.state.configs}
                   scenarioID={this.state.dashboard.scenarioID}

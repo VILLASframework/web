@@ -53,9 +53,6 @@ class WidgetSlider extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     // a simulaton was started, make an update
-    // TODO: - make sure the code is only executed once (currently twice per slider)
-    // - checking prevProps to see whether simStartedSendValue was false before does not work, why?
-    // - make sure that the if statement checks the bool value of simStartedSendValue not the existence
     if (this.props.widget.customProperties.simStartedSendValue) {
       this.props.onInputChanged(this.state.value, 'value', this.state.value, false);
       let widget = this.props.widget

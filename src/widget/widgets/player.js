@@ -152,6 +152,9 @@ class WidgetPlayer extends Component {
           newState = transitionState(state.playerState, 'ICIDLE')
           return { playerState: newState, icState: state.ic.state }
         default:
+          if (state.ic.state === 'running') {
+            props.onStarted()
+          }
           newState = transitionState(state.playerState, 'ICBUSY')
           return { playerState: newState, icState: state.ic.state }
       }
@@ -166,7 +169,6 @@ class WidgetPlayer extends Component {
     ICAction.start([config], '{}', [this.state.ic], new Date(), this.state.sessionToken, this.state.uploadResults)
 
     let newState = transitionState(this.state.playerState, 'START')
-    this.props.onStart()
     this.setState({ playerState: newState })
   }
 
