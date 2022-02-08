@@ -79,7 +79,6 @@ class RestAPI {
       }
 
       req.end(function (error, res) {
-        console.log("req.end in post request")
         if (res == null || res.status !== 200) {
 
           error.handled = isNetworkError(error, url);
