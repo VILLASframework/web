@@ -17,6 +17,7 @@
 
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
+import AppDispatcher from '../../common/app-dispatcher';
 
 class WidgetButton extends Component {
 
@@ -25,6 +26,30 @@ class WidgetButton extends Component {
 
     this.state = {
       pressed: props.widget.customProperties.pressed
+    }
+  }
+
+  componentDidMount() {
+    let widget = this.props.widget
+    widget.customProperties.simStartedSendValue = false
+    AppDispatcher.dispatch({
+      type: 'widgets/start-edit',
+      token: this.props.token,
+      data: widget
+    });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // a simulaton was started, make an update
+    if (this.props.widget.customProperties.simStartedSendValue) {
+      this.valueChanged(this.props.widget.customProperties.on_value, true);
+      let widget = this.props.widget
+      widget.customProperties.simStartedSendValue = false
+      AppDispatcher.dispatch({
+        type: 'widgets/start-edit',
+        token: this.props.token,
+        data: widget
+      });
     }
   }
 

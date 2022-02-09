@@ -136,6 +136,7 @@ class WidgetFactory {
                 widget.customProperties.off_value = 0;
                 widget.customProperties.toggle = false;
                 widget.customProperties.pressed = false;
+                widget.customProperties.simStartedSendValue = false;
                 break;
             case 'NumberInput':
                 widget.minWidth = 150;
@@ -145,6 +146,7 @@ class WidgetFactory {
                 widget.customProperties.showUnit = false;
                 widget.customProperties.resizeTopBottomLock = true;
                 widget.customProperties.value = '';
+                widget.customProperties.simStartedSendValue = false;
                 break;
             case 'Slider':
                 widget.minWidth = 380;

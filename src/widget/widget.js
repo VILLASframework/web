@@ -192,6 +192,7 @@ class Widget extends React.Component {
         editing={this.props.editing}
         onInputChanged={(value, controlID, controlValue, isFinalChange) => this.inputDataChanged(widget, value, controlID, controlValue, isFinalChange)}
         signals={this.state.signals}
+        token={this.state.sessionToken}
       />
     } else if (widget.type === 'NumberInput') {
       return <WidgetInput
@@ -199,6 +200,7 @@ class Widget extends React.Component {
         editing={this.props.editing}
         onInputChanged={(value, controlID, controlValue, isFinalChange) => this.inputDataChanged(widget, value, controlID, controlValue, isFinalChange)}
         signals={this.state.signals}
+        token={this.state.sessionToken}
       />
     } else if (widget.type === 'Slider') {
       return <WidgetSlider
