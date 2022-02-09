@@ -201,6 +201,7 @@ class ICActionBoard extends React.Component {
             <DateTimePicker
               onChange={(newTime) => this.setState({time: newTime})}
               value={this.state.time}
+              disableClock={true}
               />
           </Form>
         </Col>
