@@ -51,7 +51,8 @@ class WidgetInput extends Component {
         data: widget
       });
 
-      this.valueChanged(this.state.value)
+      // send value, don't change widget
+      this.props.onInputChanged(Number(this.state.value), '', '', false);
     }
   }
 

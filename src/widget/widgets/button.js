@@ -52,9 +52,8 @@ class WidgetButton extends Component {
         data: widget
       });
 
-      let pressed = widget.customProperties.pressed
-      let value = pressed ? widget.customProperties.on_value : widget.customProperties.off_value
-      this.props.onInputChanged(value, 'pressed', pressed, true);
+      // send value, don't change widget
+      this.props.onInputChanged(widget.customProperties.off_value, '', false, false);
     }
   }
 
@@ -71,14 +70,11 @@ class WidgetButton extends Component {
   }
 
   onRelease(e) {
-    console.log("onRelease")
-    console.log(e)
     if (e.button === 0) {
       let nextState = false;
       if (this.props.widget.customProperties.toggle) {
         nextState = !this.state.pressed;
       }
-      console.log(nextState)
       this.valueChanged(nextState ? this.props.widget.customProperties.on_value : this.props.widget.customProperties.off_value, nextState);
     }
   }

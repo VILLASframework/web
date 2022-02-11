@@ -62,7 +62,8 @@ class WidgetSlider extends Component {
         data: widget
       });
 
-      this.props.onInputChanged(this.state.value, 'value', this.state.value, false);
+      // send value, don't change widget
+      this.props.onInputChanged(this.state.value, '', '', false);
     }
   }
 
