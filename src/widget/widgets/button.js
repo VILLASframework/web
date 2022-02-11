@@ -90,12 +90,12 @@ class WidgetButton extends Component {
   }
 
   render() {
-
+    let opacity = this.props.widget.customProperties.background_color_opacity
     const buttonStyle = {
       backgroundColor: this.props.widget.customProperties.background_color,
       borderColor: this.props.widget.customProperties.border_color,
       color: this.props.widget.customProperties.font_color,
-      opacity: this.props.widget.customProperties.background_color_opacity
+      opacity: this.state.pressed ? (opacity + 1)/4 : opacity,
     };
 
     return (
