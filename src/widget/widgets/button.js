@@ -41,18 +41,20 @@ class WidgetButton extends Component {
     });
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
     // a simulaton was started, make an update
     if (this.props.widget.customProperties.simStartedSendValue) {
+      // update widget, 'unpress' button at each simulation start
       let widget = this.props.widget
       widget.customProperties.simStartedSendValue = false
+      widget.customProperties.pressed = false
       AppDispatcher.dispatch({
         type: 'widgets/start-edit',
         token: this.props.token,
         data: widget
       });
 
-      // send value, don't change widget
+      // send value without changing widget
       this.props.onInputChanged(widget.customProperties.off_value, '', false, false);
     }
   }

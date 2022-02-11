@@ -51,7 +51,7 @@ class WidgetSlider extends Component {
     });
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
     // a simulaton was started, make an update
     if (this.props.widget.customProperties.simStartedSendValue) {
       let widget = this.props.widget
@@ -62,8 +62,8 @@ class WidgetSlider extends Component {
         data: widget
       });
 
-      // send value, don't change widget
-      this.props.onInputChanged(this.state.value, '', '', false);
+      // send value without changing widget
+      this.props.onInputChanged(widget.customProperties.value , '', '', false);
     }
   }
 
