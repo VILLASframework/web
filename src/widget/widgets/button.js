@@ -32,6 +32,8 @@ class WidgetButton extends Component {
   componentDidMount() {
     let widget = this.props.widget
     widget.customProperties.simStartedSendValue = false
+    widget.customProperties.pressed = false
+
     AppDispatcher.dispatch({
       type: 'widgets/start-edit',
       token: this.props.token,
@@ -42,7 +44,6 @@ class WidgetButton extends Component {
   componentDidUpdate(prevProps, prevState) {
     // a simulaton was started, make an update
     if (this.props.widget.customProperties.simStartedSendValue) {
-      this.valueChanged(this.props.widget.customProperties.on_value, true);
       let widget = this.props.widget
       widget.customProperties.simStartedSendValue = false
       AppDispatcher.dispatch({
@@ -50,6 +51,10 @@ class WidgetButton extends Component {
         token: this.props.token,
         data: widget
       });
+
+      let pressed = widget.customProperties.pressed
+      let value = pressed ? widget.customProperties.on_value : widget.customProperties.off_value
+      this.props.onInputChanged(value, 'pressed', pressed, true);
     }
   }
 
@@ -60,19 +65,20 @@ class WidgetButton extends Component {
   }
 
   onPress(e) {
-
     if (e.button === 0 && !this.props.widget.customProperties.toggle) {
       this.valueChanged(this.props.widget.customProperties.on_value, true);
     }
   }
 
   onRelease(e) {
-
+    console.log("onRelease")
+    console.log(e)
     if (e.button === 0) {
       let nextState = false;
       if (this.props.widget.customProperties.toggle) {
         nextState = !this.state.pressed;
       }
+      console.log(nextState)
       this.valueChanged(nextState ? this.props.widget.customProperties.on_value : this.props.widget.customProperties.off_value, nextState);
     }
   }

@@ -54,7 +54,6 @@ class WidgetSlider extends Component {
   componentDidUpdate(prevProps, prevState) {
     // a simulaton was started, make an update
     if (this.props.widget.customProperties.simStartedSendValue) {
-      this.props.onInputChanged(this.state.value, 'value', this.state.value, false);
       let widget = this.props.widget
       widget.customProperties.simStartedSendValue = false
       AppDispatcher.dispatch({
@@ -62,6 +61,8 @@ class WidgetSlider extends Component {
         token: this.props.token,
         data: widget
       });
+
+      this.props.onInputChanged(this.state.value, 'value', this.state.value, false);
     }
   }
 

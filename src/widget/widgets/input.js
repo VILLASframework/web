@@ -43,7 +43,6 @@ class WidgetInput extends Component {
   componentDidUpdate(prevProps, prevState) {
     // a simulaton was started, make an update
     if (this.props.widget.customProperties.simStartedSendValue) {
-      this.valueChanged(this.state.value)
       let widget = this.props.widget
       widget.customProperties.simStartedSendValue = false
       AppDispatcher.dispatch({
@@ -51,6 +50,8 @@ class WidgetInput extends Component {
         token: this.props.token,
         data: widget
       });
+
+      this.valueChanged(this.state.value)
     }
   }
 
