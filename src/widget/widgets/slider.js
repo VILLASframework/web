@@ -20,6 +20,8 @@ import { format } from 'd3';
 import classNames from 'classnames';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import AppDispatcher from '../../common/app-dispatcher';
+
 
 class WidgetSlider extends Component {
 
@@ -35,8 +37,34 @@ class WidgetSlider extends Component {
 
     this.state = {
         unit: '',
-
+        value: '',
     };
+  }
+
+  componentDidMount() {
+    let widget = this.props.widget
+    widget.customProperties.simStartedSendValue = false
+    AppDispatcher.dispatch({
+      type: 'widgets/start-edit',
+      token: this.props.token,
+      data: widget
+    });
+  }
+
+  componentDidUpdate() {
+    // a simulaton was started, make an update
+    if (this.props.widget.customProperties.simStartedSendValue) {
+      let widget = this.props.widget
+      widget.customProperties.simStartedSendValue = false
+      AppDispatcher.dispatch({
+        type: 'widgets/start-edit',
+        token: this.props.token,
+        data: widget
+      });
+
+      // send value without changing widget
+      this.props.onInputChanged(widget.customProperties.value , '', '', false);
+    }
   }
 
   static getDerivedStateFromProps(props, state){

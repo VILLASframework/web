@@ -102,16 +102,15 @@ class Widget extends React.Component {
     // controlID is the path to the widget customProperty that is changed (for example 'value')
 
     // modify the widget customProperty
-    if (controlID !== '') {
+    if (controlID !== '' && isFinalChange) {
       let updatedWidget = JSON.parse(JSON.stringify(widget));
       updatedWidget.customProperties[controlID] = controlValue;
-      if(isFinalChange) {
-        AppDispatcher.dispatch({
-          type: 'widgets/start-edit',
-          token: this.state.sessionToken,
-          data: updatedWidget
-        });
-      }
+
+      AppDispatcher.dispatch({
+        type: 'widgets/start-edit',
+        token: this.state.sessionToken,
+        data: updatedWidget
+      });
     }
 
     // The following assumes that a widget modifies/ uses exactly one signal
@@ -193,6 +192,7 @@ class Widget extends React.Component {
         editing={this.props.editing}
         onInputChanged={(value, controlID, controlValue, isFinalChange) => this.inputDataChanged(widget, value, controlID, controlValue, isFinalChange)}
         signals={this.state.signals}
+        token={this.state.sessionToken}
       />
     } else if (widget.type === 'NumberInput') {
       return <WidgetInput
@@ -200,6 +200,7 @@ class Widget extends React.Component {
         editing={this.props.editing}
         onInputChanged={(value, controlID, controlValue, isFinalChange) => this.inputDataChanged(widget, value, controlID, controlValue, isFinalChange)}
         signals={this.state.signals}
+        token={this.state.sessionToken}
       />
     } else if (widget.type === 'Slider') {
       return <WidgetSlider
@@ -207,6 +208,7 @@ class Widget extends React.Component {
         editing={this.props.editing}
         onInputChanged={(value, controlID, controlValue, isFinalChange) => this.inputDataChanged(widget, value, controlID, controlValue, isFinalChange)}
         signals={this.state.signals}
+        token={this.state.sessionToken}
       />
     } else if (widget.type === 'Gauge') {
       return <WidgetGauge
@@ -254,7 +256,7 @@ class Widget extends React.Component {
         widget={widget}
         editing={this.props.editing}
         configs={this.props.configs}
-        onChange={this.props.onChange}
+        onStarted={this.props.onSimulationStarted}
         ics={this.props.ics}
         results={this.state.results}
         files={this.state.files}

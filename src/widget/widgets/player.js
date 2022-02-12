@@ -152,6 +152,9 @@ class WidgetPlayer extends Component {
           newState = transitionState(state.playerState, 'ICIDLE')
           return { playerState: newState, icState: state.ic.state }
         default:
+          if (state.ic.state === 'running') {
+            props.onStarted()
+          }
           newState = transitionState(state.playerState, 'ICBUSY')
           return { playerState: newState, icState: state.ic.state }
       }

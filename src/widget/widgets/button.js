@@ -17,6 +17,7 @@
 
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
+import AppDispatcher from '../../common/app-dispatcher';
 
 class WidgetButton extends Component {
 
@@ -28,6 +29,36 @@ class WidgetButton extends Component {
     }
   }
 
+  componentDidMount() {
+    let widget = this.props.widget
+    widget.customProperties.simStartedSendValue = false
+    widget.customProperties.pressed = false
+
+    AppDispatcher.dispatch({
+      type: 'widgets/start-edit',
+      token: this.props.token,
+      data: widget
+    });
+  }
+
+  componentDidUpdate() {
+    // a simulaton was started, make an update
+    if (this.props.widget.customProperties.simStartedSendValue) {
+      // update widget, 'unpress' button at each simulation start
+      let widget = this.props.widget
+      widget.customProperties.simStartedSendValue = false
+      widget.customProperties.pressed = false
+      AppDispatcher.dispatch({
+        type: 'widgets/start-edit',
+        token: this.props.token,
+        data: widget
+      });
+
+      // send value without changing widget
+      this.props.onInputChanged(widget.customProperties.off_value, '', false, false);
+    }
+  }
+
   static getDerivedStateFromProps(props, state){
     return {
       pressed: props.widget.customProperties.pressed
@@ -35,14 +66,12 @@ class WidgetButton extends Component {
   }
 
   onPress(e) {
-
     if (e.button === 0 && !this.props.widget.customProperties.toggle) {
       this.valueChanged(this.props.widget.customProperties.on_value, true);
     }
   }
 
   onRelease(e) {
-
     if (e.button === 0) {
       let nextState = false;
       if (this.props.widget.customProperties.toggle) {
@@ -59,12 +88,12 @@ class WidgetButton extends Component {
   }
 
   render() {
-
+    let opacity = this.props.widget.customProperties.background_color_opacity
     const buttonStyle = {
       backgroundColor: this.props.widget.customProperties.background_color,
       borderColor: this.props.widget.customProperties.border_color,
       color: this.props.widget.customProperties.font_color,
-      opacity: this.props.widget.customProperties.background_color_opacity
+      opacity: this.state.pressed ? (opacity + 1)/4 : opacity,
     };
 
     return (

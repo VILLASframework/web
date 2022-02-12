@@ -40,6 +40,9 @@ import 'react-contexify/dist/ReactContexify.min.css';
 import WidgetContainer from '../widget/widget-container';
 import Widget from "../widget/widget";
 
+// (manipulation) widgets which should send their current values at simulation start
+const startUpdaterWidgets = new Set(['Slider', 'Button', 'NumberInput'])
+
 class Dashboard extends Component {
 
   static lastWidgetKey = 0;
@@ -285,6 +288,22 @@ class Dashboard extends Component {
       token: this.state.sessionToken,
       data: widget
     });
+  }
+
+
+  onSimulationStarted() {
+    // tell widgets to initiate sending their current value
+    // otherwise the values will not be known at simulation start
+    this.state.widgets.forEach((widget) => {
+      if (startUpdaterWidgets.has(widget.type)) {
+        widget.customProperties.simStartedSendValue = true
+        AppDispatcher.dispatch({
+          type: 'widgets/start-edit',
+          token: this.state.sessionToken,
+          data: widget
+        });
+      }
+    })
   }
 
   editWidget(widget, index) {
@@ -594,7 +613,7 @@ class Dashboard extends Component {
                   editing={this.state.editing}
                   index={parseInt(widgetKey, 10)}
                   paused={this.state.paused}
-                  onChange={this.onChange}
+                  onSimulationStarted={this.onSimulationStarted.bind(this)}
                   ics={this.state.ics}
                   configs={this.state.configs}
                   scenarioID={this.state.dashboard.scenarioID}

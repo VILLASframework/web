@@ -17,6 +17,7 @@
 
 import React, { Component } from 'react';
 import { Form, Col, InputGroup } from 'react-bootstrap';
+import AppDispatcher from '../../common/app-dispatcher';
 
 class WidgetInput extends Component {
 
@@ -27,6 +28,32 @@ class WidgetInput extends Component {
         value: '',
         unit: ''
     };
+  }
+
+  componentDidMount() {
+    let widget = this.props.widget
+    widget.customProperties.simStartedSendValue = false
+    AppDispatcher.dispatch({
+      type: 'widgets/start-edit',
+      token: this.props.token,
+      data: widget
+    });
+  }
+
+  componentDidUpdate() {
+    // a simulaton was started, make an update
+    if (this.props.widget.customProperties.simStartedSendValue) {
+      let widget = this.props.widget
+      widget.customProperties.simStartedSendValue = false
+      AppDispatcher.dispatch({
+        type: 'widgets/start-edit',
+        token: this.props.token,
+        data: widget
+      });
+
+      // send value without changing widget
+      this.props.onInputChanged(Number(this.state.value), '', '', false);
+    }
   }
 
   static getDerivedStateFromProps(props, state){
