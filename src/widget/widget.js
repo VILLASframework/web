@@ -128,7 +128,8 @@ class Widget extends React.Component {
     AppDispatcher.dispatch({
       type: 'icData/inputChanged',
       ic: icID,
-      signal: signal[0].index,
+      signalID: signal[0].id,
+      signalIndex: signal[0].index,
       data: signal[0].scalingFactor * data
     });
   }

@@ -88,6 +88,7 @@ class ICDataStore extends ReduceStore {
 
           // check if msg is loopback msg
           if (smp.source_index !== 0) {
+            console.log("processing loopback message through VILLASrelay", action.data)
             // TODO process loopback message
             return state;
           }
@@ -125,11 +126,11 @@ class ICDataStore extends ReduceStore {
         // update message properties
         state[action.ic].input.timestamp = Date.now();
         state[action.ic].input.sequence++;
-        state[action.ic].input.values[action.signal] = action.data;
+        state[action.ic].input.values[action.signalIndex] = action.data;
         state[action.ic].input.length = state[action.ic].input.values.length;
-        state[action.ic].input.source_index = action.signal;
-        // The previous line sets the index of the source signal, can only be mapped to correct signal upon loopback
-        // if exactly one WS is used by the dashboard for sending signals
+        state[action.ic].input.source_index = action.signalID;
+        // The previous line sets the source_index field of the message to the ID of the signal
+        // so that upon loopback through VILLASrelay the value can be mapped to correct signal
 
         // copy of state needed because changes are not yet propagated
         let input = JSON.parse(JSON.stringify(state[action.ic].input));
