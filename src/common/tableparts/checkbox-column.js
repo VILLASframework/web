@@ -15,20 +15,27 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import Table from './tableparts/custom-table';
-import ButtonColumn from './tableparts/button-column';
-import CheckboxColumn from './tableparts/checkbox-column';
-import DataColumn from './tableparts/data-column'
-import LabelColumn from './tableparts/label-column';
-import LinkColumn from './tableparts/link-column';
-import LinkbuttonColumn from './tableparts/linkbutton-column';
+import React, { Component } from 'react';
+import TableColumn from './table-column';
 
-export {
-  Table,
-  ButtonColumn,
-  CheckboxColumn,
-  DataColumn,
-  LabelColumn,
-  LinkColumn,
-  LinkbuttonColumn
+class CheckboxColumn extends Component {
+  static defaultProps = {
+    columnType: 'checkbox',
+    modifier: null,
+    inlineEditable: false,
+    inputType: 'text',
+    checkboxKey: '',
+    checkboxDisabled: null,
+    enableCheckAll: false,
+  };
+
+  render() {
+    return <TableColumn
+      align={this.props.align}
+      width={this.props.width}
+      title={this.props.title}
+    />;
+  }
 }
+
+export default CheckboxColumn;

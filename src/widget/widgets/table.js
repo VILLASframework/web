@@ -18,8 +18,7 @@
 import React, { Component } from 'react';
 import { format } from 'd3';
 
-import Table from '../../common/table';
-import TableColumn from '../../common/table-column';
+import { Table, DataColumn } from '../../common/table';
 
 class WidgetTable extends Component {
   constructor(props) {
@@ -111,17 +110,17 @@ class WidgetTable extends Component {
     }
 
     let columns = [
-      <TableColumn key={1} title="Signal" dataKey="name" width={120} />,
-      <TableColumn key={2} title="Value" dataKey="value" modifier={format('.4f')} />,
+      <DataColumn key={1} title="Signal" dataKey="name" width={120} />,
+      <DataColumn key={2} title="Value" dataKey="value" modifier={format('.4f')} />,
     ];
 
     let nextKey = 3;
     if (showScalingFactor) {
-      columns.push(<TableColumn key={nextKey} title="Scale" dataKey="scalingFactor" modifier={format('.2f')}/>);
+      columns.push(<DataColumn key={nextKey} title="Scale" dataKey="scalingFactor" modifier={format('.2f')}/>);
       nextKey++;
     }
     if (this.props.widget.customProperties.showUnit) {
-      columns.push(<TableColumn key={nextKey} title="Unit" dataKey="unit"/>);
+      columns.push(<DataColumn key={nextKey} title="Unit" dataKey="unit"/>);
     }
 
     return (

@@ -19,8 +19,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Collapse } from 'react-collapse';
-import Table from '../common/table';
-import TableColumn from '../common/table-column';
+import { Table, ButtonColumn, CheckboxColumn, DataColumn } from '../common/table';
 import Dialog from "../common/dialogs/dialog";
 import Icon from "../common/icon";
 import AppDispatcher from "../common/app-dispatcher";
@@ -235,41 +234,40 @@ class EditSignalMappingDialog extends React.Component {
           <Form.Label style={{background: '#eb4d2a', color: 'white'}}>IMPORTANT: Signal configurations that were created before January 2022 have to be fixed manually. Signal indices have to start at 0 and not 1.</Form.Label>
           <Form.Label> <i>Click in table cell to edit</i></Form.Label>
           <Table breakWord={true} checkbox onChecked={(signal) => this.onSignalChecked(signal)} data={this.state.signals}>
-              <TableColumn
-                checkbox
+              <CheckboxColumn
                 onChecked={(index, event) => this.onSignalChecked(index, event)}
                 checkboxKey='checked'
                 width='30'
               />
-              <TableColumn
+              <DataColumn
                 title='Index'
                 dataKey='index'
                 inlineEditable
                 inputType='number'
                 onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)}
               />
-              <TableColumn
+              <DataColumn
                 title='Name'
                 dataKey='name'
                 inlineEditable
                 inputType='text'
                 onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)}
               />
-              <TableColumn
+              <DataColumn
                 title='Unit'
                 dataKey='unit'
                 inlineEditable
                 inputType='text'
                 onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)}
               />
-              <TableColumn
+              <DataColumn
                 title='Scaling Factor'
                 dataKey='scalingFactor'
                 inlineEditable
                 inputType='number'
                 onInlineChange={(e, row, column) => this.handleMappingChange(e, row, column)}
               />
-              <TableColumn
+              <ButtonColumn
                 title='Remove'
                 deleteButton
                 onDelete={(index) => this.handleDelete(index)}

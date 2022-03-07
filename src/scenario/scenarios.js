@@ -30,8 +30,7 @@ import LoginStore from '../user/login-store'
 import UsersStore from '../user/users-store'
 import ICStore from '../ic/ic-store'
 import ICDataStore from '../ic/ic-data-store'
-import Table from '../common/table';
-import TableColumn from '../common/table-column';
+import { Table, ButtonColumn, DataColumn, LinkColumn } from '../common/table';
 import NewScenarioDialog from './new-scenario';
 import EditScenarioDialog from './edit-scenario';
 import ImportScenarioDialog from './import-scenario';
@@ -277,29 +276,28 @@ class Scenarios extends Component {
 
       <Table data={this.state.scenarios}>
         {this.state.currentUser.role === "Admin" ?
-          <TableColumn
+          <DataColumn
             title='ID'
             dataKey='id'
           />
           : <></>
         }
-        <TableColumn
+        <LinkColumn
           title='Name'
           dataKey='name'
           link='/scenarios/'
           linkKey='id'
         />
         {this.state.currentUser.role === "Admin" ?
-          <TableColumn
+          <ButtonColumn
             title='Locked'
             lockButton
-            checkboxKey='isLocked'
             onChangeLock={(index, event) => this.onLock(index)}
             isLocked={index => this.isLocked(index)}
           />
           : <></>
         }
-        <TableColumn
+        <ButtonColumn
           width='200'
           align='right'
           editButton

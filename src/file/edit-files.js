@@ -19,8 +19,7 @@ import React from 'react';
 import {Form, Button, Col, ProgressBar, Row} from 'react-bootstrap';
 import Dialog from '../common/dialogs/dialog';
 import AppDispatcher from "../common/app-dispatcher";
-import Table from "../common/table";
-import TableColumn from "../common/table-column";
+import { Table, ButtonColumn, DataColumn } from "../common/table";
 import EditFileContent from  "./edit-file-content";
 
 
@@ -118,25 +117,24 @@ class EditFilesDialog extends React.Component {
         valid={true}
       >
         <Table breakWord={true} data={this.props.files}>
-          <TableColumn
+          <DataColumn
             title='ID'
             dataKey='id'
             width={50}
           />
-          <TableColumn
+          <DataColumn
             title='Name'
             dataKey='name'
           />
-          <TableColumn
+          <DataColumn
             title='Size (bytes)'
             dataKey='size'
           />
-          <TableColumn
+          <DataColumn
             title='Type'
             dataKey='type'
           />
-          <TableColumn
-            title=''
+          <ButtonColumn
             align='right'
             deleteButton
             onDelete={(index) => this.deleteFile(index)}

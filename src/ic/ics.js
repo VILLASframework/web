@@ -26,8 +26,9 @@ import moment from 'moment'
 import AppDispatcher from '../common/app-dispatcher';
 import InfrastructureComponentStore from './ic-store';
 
-import Table from '../common/table';
-import TableColumn from '../common/table-column';
+import {Table, ButtonColumn, CheckboxColumn, DataColumn, LabelColumn, LinkColumn } from '../common/table';
+
+
 import NewICDialog from './new-ic';
 import EditICDialog from './edit-ic';
 import ImportICDialog from './import-ic';
@@ -369,48 +370,46 @@ class InfrastructureComponents extends Component {
           }
         </h2>
         <Table data={ics}>
-          <TableColumn
-            checkbox
+          <CheckboxColumn
             checkboxDisabled={(index) => InfrastructureComponents.isLocalIC(index, ics) === true}
             onChecked={(ic, event) => this.onICChecked(ic, event)}
             width='30'
           />
           {this.state.currentUser.role === "Admin" ?
-            <TableColumn
+            <DataColumn
               title='ID'
               dataKey='id'
             />
             : <></>
           }
-          <TableColumn
+          <LinkColumn
             title='Name'
             dataKeys={['name']}
             link='/infrastructure/'
             linkKey='id'
           />
-          <TableColumn
+          <LabelColumn
             title='State'
             labelKey='state'
-            tooltipKey='error'
             labelStyle={(state, component) => InfrastructureComponents.stateLabelStyle(state, component)}
           />
-          <TableColumn
+          <DataColumn
             title='Type'
             dataKeys={['type']}
           />
-          <TableColumn
+          <DataColumn
             title='Uptime'
             dataKey='uptime'
             modifier={(uptime, component) => InfrastructureComponents.modifyUptimeColumn(uptime, component)}
           />
-          <TableColumn
+          <DataColumn
             title='Last Update'
             dataKey='stateUpdateAt'
             modifier={(stateUpdateAt, component) => InfrastructureComponents.stateUpdateModifier(stateUpdateAt, component)}
           />
 
           {this.state.currentUser.role === "Admin" ?
-            <TableColumn
+            <ButtonColumn
               width='150'
               align='right'
               editButton
@@ -423,7 +422,7 @@ class InfrastructureComponents extends Component {
               onDelete={index => this.setState({deleteModal: true, modalIC: ics[index], modalIndex: index})}
             />
             :
-            <TableColumn
+            <ButtonColumn
               width='50'
               exportButton
               onExport={index => this.exportIC(index)}

@@ -20,10 +20,7 @@ import { Form, Col, Row, Button, ProgressBar } from 'react-bootstrap';
 import AppDispatcher from "../common/app-dispatcher";
 import FileStore from "../file/file-store"
 
-
-import Table from "../common/table";
-import TableColumn from "../common/table-column";
-
+import { Table, ButtonColumn, DataColumn } from "../common/table";
 import Dialog from '../common/dialogs/dialog';
 
 class EditResultDialog extends React.Component {
@@ -166,23 +163,23 @@ class EditResultDialog extends React.Component {
       </Form.Group>
 
       <Table breakWord={true} data={this.state.files}>
-        <TableColumn
+        <DataColumn
           title='ID'
           dataKey='id'
         />
-        <TableColumn
+        <DataColumn
           title='Name'
           dataKey='name'
         />
-        <TableColumn
+        <DataColumn
           title='Size (bytes)'
           dataKey='size'
         />
-        <TableColumn
+        <DataColumn
           title='Type'
           dataKey='type'
         />
-        <TableColumn
+        <ButtonColumn
           title=''
           deleteButton
           onDelete={(index) => this.deleteFile(index)}

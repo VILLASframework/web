@@ -18,8 +18,7 @@
 import React, { Component } from "react";
 import FileSaver from 'file-saver';
 import IconButton from "../common/buttons/icon-button";
-import Table from "../common/table";
-import TableColumn from "../common/table-column";
+import { Table, ButtonColumn, CheckboxColumn, DataColumn } from "../common/table";
 import NewDialog from "../common/dialogs/new-dialog";
 import DeleteDialog from "../common/dialogs/delete-dialog";
 import AppDispatcher from "../common/app-dispatcher";
@@ -340,26 +339,25 @@ class ConfigTable extends Component {
           </span>
         </h2>
         <Table data={this.props.configs}>
-          <TableColumn
-            checkbox
+          <CheckboxColumn
             checkboxDisabled={(index) => !this.usesExternalIC(index)}
             onChecked={(index, event) => this.onConfigChecked(index, event)}
             width={20}
           />
           {this.props.currentUser.role === "Admin" ?
-            <TableColumn
+            <DataColumn
               title='ID'
               dataKey='id'
               width={70}
             />
             : <></>
           }
-          <TableColumn
+          <DataColumn
             title='Name'
             dataKey='name'
             width={250}
           />
-          <TableColumn
+          <ButtonColumn
             title='# Output Signals'
             dataKey='id'
             editButton
@@ -368,7 +366,7 @@ class ConfigTable extends Component {
             locked={this.props.locked}
             modifier={(component) => this.computeNumberOfSignals(component, "out")}
           />
-          <TableColumn
+          <ButtonColumn
             title='# Input Signals'
             dataKey='id'
             editButton
@@ -377,20 +375,20 @@ class ConfigTable extends Component {
             locked={this.props.locked}
             modifier={(component) => this.computeNumberOfSignals(component, "in")}
           />
-          <TableColumn
+          <ButtonColumn
             title='Autoconfigure Signals'
             signalButton
             onAutoConf={(index) => this.signalsAutoConf(index)}
             width={170}
             locked={this.props.locked}
           />
-          <TableColumn
+          <DataColumn
             title='Infrastructure Component'
             dataKey='icID'
             modifier={(icID) => this.getICName(icID)}
             width={200}
           />
-          <TableColumn
+          <ButtonColumn
             title=''
             width={200}
             align='right'

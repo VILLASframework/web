@@ -24,8 +24,7 @@ import ScenarioStore from '../scenario/scenario-store';
 import Icon from '../common/icon';
 import IconButton from '../common/buttons/icon-button';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
-import Table from '../common/table';
-import TableColumn from '../common/table-column';
+import { Table, ButtonColumn, CheckboxColumn, DataColumn } from '../common/table';
 import NewUserDialog from './new-user';
 import EditUserDialog from './edit-user';
 import UsersToScenarioDialog from './users-to-scenario';
@@ -172,41 +171,40 @@ class Users extends Component {
 
       <Table data={this.state.users}>
         {this.state.currentUser.role === "Admin" ?
-          <TableColumn
+          <DataColumn
             title='ID'
             dataKey='id'
           />
           : <></>
         }
         {this.state.currentUser.role === "Admin" ?
-          <TableColumn
+          <CheckboxColumn
             title='Add'
-            checkbox
             onChecked={(index, event) => this.onUserChecked(index, event)}
             checkboxKey='checked'
             width='30'
           />
           : <></>
         }
-        <TableColumn
+        <DataColumn
           title='Username'
           width='150'
           dataKey='username'
         />
-        <TableColumn
+        <DataColumn
           title='E-mail'
           dataKey='mail'
         />
-        <TableColumn
+        <DataColumn
           title='Role'
           dataKey='role'
         />
-        <TableColumn
+        <DataColumn
           title='Active'
           dataKey='active'
           modifier={(active) => this.modifyActiveColumn(active)}
         />
-        <TableColumn
+        <ButtonColumn
           width='200'
           align='right'
           editButton

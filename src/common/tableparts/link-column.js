@@ -16,46 +16,25 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
+import TableColumn from './table-column';
 
-class TableColumn extends Component {
+class LinkColumn extends Component {
   static defaultProps = {
-    title: '',
+    columnType: 'link',
     modifier: null,
-    width: null,
-    editButton: false,
-    showEditButton: null,
-    deleteButton: false,
-    showDeleteButton: null,
-    exportButton: false,
-    signalButton: false,
-    duplicateButton: false,
-    isLocked: null,
-    locked: false,
     link: '/',
     linkKey: '',
-    dataIndex: false,
     inlineEditable: false,
     inputType: 'text',
-    clickable: false,
-    labelKey: null,
-    checkbox: false,
-    checkboxKey: '',
-    checkboxDisabled: null,
-    labelStyle: null,
-    labelModifier: null,
-    align: 'left'
   };
 
   render() {
-    let style = {
-      textAlign: this.props.align,
-      width: this.props.width
-    };
-
-    return <th style={style}>
-      {this.props.title}
-    </th>;
+    return <TableColumn
+      align={this.props.align}
+      width={this.props.width}
+      title={this.props.title}
+    />;
   }
 }
 
-export default TableColumn;
+export default LinkColumn;
