@@ -165,6 +165,14 @@ class IcDataDataManager {
 
     return buffer;
   }
+
+  updateSignalValueInWidgets(signalID, newValues){
+    AppDispatcher.dispatch({
+      type: 'widgets/signal-value-changed',
+      signalID: signalID,
+      values: newValues,
+    });
+  }
 }
 
 export default new IcDataDataManager();

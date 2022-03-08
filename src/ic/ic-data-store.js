@@ -88,29 +88,52 @@ class ICDataStore extends ReduceStore {
 
           // check if msg is loopback msg
           if (smp.source_index !== 0) {
-            console.log("processing loopback message through VILLASrelay", action.data)
-            // TODO process loopback message
-            return state;
-          }
+            // process loopback message
 
-          // add data to infrastructure component
-          for (let i = 0; i < smp.length; i++) {
-            while (state[action.id].output.values.length < i + 1) {
-              state[action.id].output.values.push([]);
+            // add data to infrastructure component
+            for (let i = 0; i < smp.length; i++) {
+              while (state[action.id].input.values.length < i + 1) {
+                state[action.id].input.values.push([]);
+              }
+
+              // this assumes that input signals are always single values, not arrays
+              state[action.id].input.values[i] = smp.values[i];
+
+              // erase old values
+              if (state[action.id].input.values[i].length > MAX_VALUES) {
+                const pos = state[action.id].input.values[i].length - MAX_VALUES;
+                state[action.id].input.values[i].splice(0, pos);
+              }
+
+            }
+            // trigger updates of widgets that use this signal
+            ICDataDataManager.updateSignalValueInWidgets(smp.source_index, smp.values)
+
+            // update metadata
+            state[action.id].input.timestamp = smp.timestamp;
+            state[action.id].input.sequence = smp.sequence;
+
+          } else {
+
+            // add data to infrastructure component
+            for (let i = 0; i < smp.length; i++) {
+              while (state[action.id].output.values.length < i + 1) {
+                state[action.id].output.values.push([]);
+              }
+
+              state[action.id].output.values[i].push({x: smp.timestamp, y: smp.values[i]});
+
+              // erase old values
+              if (state[action.id].output.values[i].length > MAX_VALUES) {
+                const pos = state[action.id].output.values[i].length - MAX_VALUES;
+                state[action.id].output.values[i].splice(0, pos);
+              }
             }
 
-            state[action.id].output.values[i].push({ x: smp.timestamp, y: smp.values[i] });
-
-            // erase old values
-            if (state[action.id].output.values[i].length > MAX_VALUES) {
-              const pos = state[action.id].output.values[i].length - MAX_VALUES;
-              state[action.id].output.values[i].splice(0, pos);
-            }
+            // update metadata
+            state[action.id].output.timestamp = smp.timestamp;
+            state[action.id].output.sequence = smp.sequence;
           }
-
-          // update metadata
-          state[action.id].output.timestamp = smp.timestamp;
-          state[action.id].output.sequence = smp.sequence;
         }
 
         // explicit call to prevent array copy
