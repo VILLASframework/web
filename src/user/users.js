@@ -45,7 +45,7 @@ class Users extends Component {
       token: localStorage.getItem("token"),
       users: UsersStore.getState(),
       scenarios: ScenarioStore.getState(),
-      usersToAdd: prevState.usersToAdd || new Map(),
+      usersToAdd: prevState.usersToAdd || [],
       selectedScenarioID: prevState.selectedScenarioID || null,
       selectedScenario: prevState.selectedScenario || '',
 
@@ -54,7 +54,8 @@ class Users extends Component {
       editModal: false,
       deleteModal: false,
       modalData: {},
-      currentUser: JSON.parse(localStorage.getItem("currentUser"))
+      currentUser: JSON.parse(localStorage.getItem("currentUser")),
+      allUsersChecked: prevState.allUsersChecked || false,
     };
   }
 
@@ -110,15 +111,55 @@ class Users extends Component {
     }
   }
 
- onUserChecked(user) {
-    let temp = this.state.usersToAdd;
-    const found = temp.get(user.id);
-    if (!found) {
-      temp.set(user.id, user.username);
-    } else {
-      temp.delete(user.id)
+  onUserChecked(index, event) {
+    const usersToAdd = Object.assign([], this.state.usersToAdd);
+
+    /* update existing entry */
+    for (let key in usersToAdd) {
+      if (usersToAdd[key] === index) {
+        // update existing entry
+        if (event.target.checked) {
+          return;
+        }
+
+        usersToAdd.splice(key, 1);
+
+        this.setState({ usersToAdd: usersToAdd });
+        return;
+      }
     }
-    this.setState({ usersToAdd: temp });
+
+    /* add new entry */
+    if (event.target.checked === false) {
+      return;
+    }
+    usersToAdd.push(index);
+    this.setState({ usersToAdd: usersToAdd });
+  }
+
+  checkAllUsers() {
+    if (this.state.allUsersChecked) {
+      this.setState({ usersToAdd: [], allUsersChecked: !this.state.allUsersChecked });
+      return
+    }
+
+    let usersToAdd = []
+    this.state.users.forEach(usr => {
+      usersToAdd.push(usr)
+    })
+    this.setState({ usersToAdd: usersToAdd, allUsersChecked: !this.state.allUsersChecked })
+  }
+
+  isUserChecked(index) {
+    let user = this.state.users[index] // ist das richtig?
+
+    const foundObj = this.state.usersToAdd.find(usr => {
+      if (usr.id === user.id) {
+        return true
+      }
+    })
+
+    return typeof foundObj !== 'undefined' ? true : false;
   }
 
   setScenario(ID) {
@@ -128,15 +169,17 @@ class Users extends Component {
     this.setState({ selectedScenarioID: scenario.id, selectedScenario: scenario.name, addUsersModal: true })
   };
 
-  closeAddUsersModal() {
-    this.state.usersToAdd.forEach((value, key) => {
-      AppDispatcher.dispatch({
-        type: 'scenarios/add-user',
-        data: this.state.selectedScenarioID,
-        username: value,
-        token: this.state.token
-      });
-    })
+  closeAddUsersModal(canceled) {
+    if (!canceled) {
+      this.state.usersToAdd.forEach(user => {
+        AppDispatcher.dispatch({
+          type: 'scenarios/add-user',
+          data: this.state.selectedScenarioID,
+          username: user.username,
+          token: this.state.token
+        });
+      })
+    }
 
     this.setState({ addUsersModal: false, selectedScenarioID: null })
   }
@@ -157,7 +200,7 @@ class Users extends Component {
 
     return <div>
       <h1>Users
-          <span className='icon-button'>
+        <span className='icon-button'>
           <IconButton
             childKey={0}
             tooltip='Add User'
@@ -169,7 +212,10 @@ class Users extends Component {
         </span>
       </h1>
 
-      <Table data={this.state.users}>
+      <Table
+        data={this.state.users}
+        allRowsChecked={this.state.allUsersChecked}
+      >
         {this.state.currentUser.role === "Admin" ?
           <DataColumn
             title='ID'
@@ -179,9 +225,11 @@ class Users extends Component {
         }
         {this.state.currentUser.role === "Admin" ?
           <CheckboxColumn
-            title='Add'
+            enableCheckAll
+            onCheckAll={() => this.checkAllUsers()}
+            allChecked={this.state.allUserssChecked}
+            checked={(index) => this.isUserChecked(index)}
             onChecked={(index, event) => this.onUserChecked(index, event)}
-            checkboxKey='checked'
             width='30'
           />
           : <></>
@@ -234,7 +282,7 @@ class Users extends Component {
         show={this.state.addUsersModal}
         users={this.state.usersToAdd}
         scenario={this.state.selectedScenario}
-        onClose={() => this.closeAddUsersModal()}
+        onClose={(c) => this.closeAddUsersModal(c)}
       />
       <NewUserDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
       <EditUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />

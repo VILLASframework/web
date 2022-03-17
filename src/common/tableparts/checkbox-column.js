@@ -16,20 +16,33 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
+import { Form } from 'react-bootstrap';
 import TableColumn from './table-column';
+
 
 class CheckboxColumn extends Component {
   static defaultProps = {
     columnType: 'checkbox',
-    modifier: null,
-    inlineEditable: false,
-    inputType: 'text',
-    checkboxKey: '',
     checkboxDisabled: null,
     enableCheckAll: false,
   };
 
   render() {
+    let style = {
+      textAlign: this.props.align,
+      width: this.props.width
+    };
+
+    if (this.props.enableCheckAll) {
+      return <th style={style}>
+        <Form.Check
+          className="table-control-checkbox"
+          checked={this.props.allChecked}
+          onChange={(e) => this.props.onCheckAll(e)}
+        />
+      </th>;
+
+    }
     return <TableColumn
       align={this.props.align}
       width={this.props.width}

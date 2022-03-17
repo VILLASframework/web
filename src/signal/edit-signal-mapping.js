@@ -236,7 +236,6 @@ class EditSignalMappingDialog extends React.Component {
           <Table breakWord={true} checkbox onChecked={(signal) => this.onSignalChecked(signal)} data={this.state.signals}>
               <CheckboxColumn
                 onChecked={(index, event) => this.onSignalChecked(index, event)}
-                checkboxKey='checked'
                 width='30'
               />
               <DataColumn

@@ -45,6 +45,50 @@ class CustomTable extends Component {
     this.setState({ editCell: [column, row] }); // x, y
   }
 
+  static getRows(props) {
+    if (props.data == null) {
+      return [];
+    }
+
+    return props.data.map((data, index) => {
+      // check if multiple columns
+      if (Array.isArray(props.children) === false) {
+        // table only has a single column
+        return [CustomTable.addCell(data, index, props.children)];
+      }
+
+      const row = [];
+
+      for (let child of props.children) {
+        // check whether empty <></> object has been given
+        if (Object.keys(child.props).length !== 0) {
+          row.push(CustomTable.addCell(data, index, child));
+        }
+      }
+
+      return row;
+    });
+  }
+
+  static addCell(data, index, child) {
+    switch (child.props.columnType) {
+      case 'data':
+        return this.addDataCell(data, child);
+      case 'label':
+        return this.addLabelCell(data, child);
+      case 'checkbox':
+        return this.addCheckbox(data, index, child)
+      case 'button':
+        return this.addButtonCell(data, index, child)
+      case 'link':
+        return this.addLinkCell(data, child);
+      case 'linkButton':
+        return this.addLinkButtonCell(data, child);
+      default:
+        return [];
+    }
+  }
+
   static addDataCell(data, child) {
     let content = null;
 
@@ -94,7 +138,6 @@ class CustomTable extends Component {
   }
 
   static addCheckbox(data, index, child) {
-    const checkboxKey = child.props.checkboxKey;
     let isDisabled = child.props.checkboxDisabled != null
       ? child.props.checkboxDisabled(index)
       : false;
@@ -102,9 +145,10 @@ class CustomTable extends Component {
     let cell = [];
     cell.push(
       <Form.Check
-        className="table-control-checkbox"
+        key={data.id+'_'+data.createdAt}
+        className='table-control-checkbox'
         disabled={isDisabled}
-        checked={checkboxKey ? data[checkboxKey] : null}
+        checked={typeof child.props.checked !== 'undefined' ? child.props.checked(index) : null}
         onChange={e => child.props.onChecked(data, e)}
       />
     );
@@ -178,13 +222,21 @@ class CustomTable extends Component {
     return cell;
   }
 
+  static getBtn(childkey, icon, tooltip, index, onClick, isLocked) {
+    return <IconButton
+      key={childkey++}
+      childKey={childkey++}
+      icon={icon}
+      tooltip={tooltip}
+      tipPlacement={'bottom'}
+      disabled={onClick == null || isLocked}
+      hidetooltip={isLocked}
+      onClick={() => onClick(index)}
+      variant={'table-control-button'}
+    />
+  }
+
   static addButtonCell(data, index, child) {
-    let isLocked = child.props.locked || (child.props.isLocked != null && child.props.isLocked(index));
-
-    let showEditButton = child.props.showEditButton !== null && child.props.showEditButton !== undefined
-      ? child.props.showEditButton(index)
-      : true;
-
     let cell = [];
     if ('dataKey' in child.props) {
       let content = _.get(data, child.props.dataKey);
@@ -197,20 +249,7 @@ class CustomTable extends Component {
     }
 
     let childkey = 0;
-    if (child.props.editButton && showEditButton) {
-      cell.push(
-        <IconButton
-          key={childkey++}
-          childKey={childkey++}
-          icon={'edit'}
-          disabled={child.props.onEdit == null || isLocked}
-          hidetooltip={isLocked}
-          tooltip={"Edit"}
-          tipPlacement={'bottom'}
-          onClick={() => child.props.onEdit(index)}
-          variant={'table-control-button'}
-        />)
-    }
+    let isLocked = child.props.locked || (child.props.isLocked != null && child.props.isLocked(index));
 
     if (child.props.lockButton) {
       cell.push(
@@ -229,91 +268,36 @@ class CustomTable extends Component {
       );
     }
 
+    let showEditButton = child.props.showEditButton !== null && child.props.showEditButton !== undefined
+      ? child.props.showEditButton(index)
+      : true;
+    if (child.props.editButton && showEditButton) {
+      cell.push(this.getBtn(childkey, 'edit', 'Edit', index, child.props.onEdit, isLocked))
+    }
+
     if (child.props.exportButton) {
-      cell.push(
-        <IconButton
-          key={childkey++}
-          childKey={childkey++}
-          icon={'download'}
-          disabled={child.props.onExport == null}
-          tooltip={"Export"}
-          tipPlacement={'bottom'}
-          onClick={() => child.props.onExport(index)}
-          variant={'table-control-button'}
-        />);
+      cell.push(this.getBtn(childkey, 'download', 'Export', index, child.props.onExport))
     }
 
     if (child.props.signalButton) {
-      cell.push(
-        <IconButton
-          key={childkey++}
-          childKey={childkey++}
-          icon={'wave-square'}
-          disabled={child.props.onAutoConf == null || child.props.locked}
-          hidetooltip={isLocked}
-          tooltip={"Autoconfigure Signals"}
-          tipPlacement={'bottom'}
-          onClick={() => child.props.onAutoConf(index)}
-          variant={'table-control-button'}
-        />);
+      cell.push(this.getBtn(childkey, 'wave-square', 'Autoconfigure Signals', index, child.props.onAutoConf, isLocked))
     }
 
     if (child.props.duplicateButton) {
-      cell.push(
-        <IconButton
-          key={childkey++}
-          childKey={childkey++}
-          icon={'copy'}
-          disabled={child.props.onDuplicate == null || child.props.locked}
-          hidetooltip={isLocked}
-          tooltip={"Duplicate"}
-          tipPlacement={'bottom'}
-          onClick={() => child.props.onDuplicate(index)}
-          variant={'table-control-button'}
-        />);
+      cell.push(this.getBtn(childkey, 'copy', 'Duplicate', index, child.props.onDuplicate, isLocked))
     }
 
     if (child.props.addRemoveFilesButton) {
-      cell.push(
-        <IconButton
-          key={childkey++}
-          childKey={childkey++}
-          icon={'file'}
-          disabled={child.props.onAddRemove == null || isLocked}
-          hidetooltip={isLocked}
-          tooltip={"Add/remove File(s)"}
-          tipPlacement={'bottom'}
-          onClick={() => child.props.onAddRemove(index)}
-          variant={'table-control-button'}
-        />);
+      cell.push(this.getBtn(childkey, 'file', 'Add/remove File(s)', index, child.props.onAddRemove, isLocked))
     }
 
     if (child.props.pythonResultsButton) {
-      cell.push(
-        <IconButton
-          key={childkey++}
-          childKey={childkey++}
-          icon={['fab', 'python']}
-          disabled={child.props.onPythonResults == null}
-          tooltip={"Get Python code"}
-          tipPlacement={'bottom'}
-          onClick={() => child.props.onPythonResults(index)}
-          variant={'table-control-button'}
-        />);
+      let icon = ['fab', 'python']
+      cell.push(this.getBtn(childkey, icon, 'Get Python code', index, child.props.onPythonResults))
     }
 
     if (child.props.downloadAllButton) {
-      cell.push(
-        <IconButton
-          key={childkey++}
-          childKey={childkey++}
-          icon={'file-download'}
-          disabled={child.props.onDownloadAll == null}
-          tooltip={"Download All Files"}
-          tipPlacement={'bottom'}
-          onClick={() => child.props.onDownloadAll(index)}
-          variant={'table-control-button'}
-        />);
+      cell.push(this.getBtn(childkey, 'file-download', 'Download All Files', index, child.props.onDownloadAll))
     }
 
     let showDeleteButton = child.props.showDeleteButton !== null && child.props.showDeleteButton !== undefined
@@ -321,39 +305,10 @@ class CustomTable extends Component {
       : true;
 
     if (child.props.deleteButton && showDeleteButton) {
-      cell.push(
-        <IconButton
-          key={childkey++}
-          childKey={childkey++}
-          icon={'trash'}
-          disabled={child.props.onDelete == null || isLocked}
-          hidetooltip={isLocked}
-          tooltip={"Delete"}
-          tipPlacement={'bottom'}
-          onClick={() => child.props.onDelete(index)}
-          variant={'table-control-button'}
-        />);
+      cell.push(this.getBtn(childkey, 'trash', 'Delete', index, child.props.onDelete, isLocked))
     }
-    return cell;
-  }
 
-  static addCell(data, index, child) {
-    switch (child.props.columnType) {
-      case 'data':
-        return this.addDataCell(data, child);
-      case 'label':
-        return this.addLabelCell(data, child);
-      case 'checkbox':
-        return this.addCheckbox(data, index, child)
-      case 'button':
-        return this.addButtonCell(data, index, child)
-      case 'link':
-        return this.addLinkCell(data, child);
-      case 'linkButton':
-        return this.addLinkButtonCell(data, child);
-      default:
-        return [];
-    }
+    return cell;
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -376,32 +331,7 @@ class CustomTable extends Component {
   cellLostFocus() {
     // Reset cell selection state
     this.setState({ editCell: [-1, -1] });
-  }
-
-  static getRows(props) {
-    if (props.data == null) {
-      return [];
-    }
-
-    return props.data.map((data, index) => {
-      // check if multiple columns
-      if (Array.isArray(props.children) === false) {
-        // table only has a single column
-        return [CustomTable.addCell(data, index, props.children)];
-      }
-
-      const row = [];
-
-      for (let child of props.children) {
-        // check whether empty <></> object has been given
-        if (Object.keys(child.props).length !== 0) {
-          row.push(CustomTable.addCell(data, index, child));
-        }
-      }
-
-      return row;
-    });
-  }
+  }  
 
   render() {
     // get children

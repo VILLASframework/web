@@ -40,6 +40,7 @@ class ConfigTable extends Component {
       newConfigModal: false,
       deleteConfigModal: false,
       importConfigModal: false,
+      allConfigsChecked: false,
       selectedConfigs: [],
       ExternalICInUse: false,
       editOutputSignalsModal: false,
@@ -172,29 +173,56 @@ class ConfigTable extends Component {
     });
   }
 
-  onConfigChecked(index, event) {
+  onConfigChecked(config, event) {
     const selectedConfigs = Object.assign([], this.state.selectedConfigs);
+
+    /* update existing entry */
     for (let key in selectedConfigs) {
-      if (selectedConfigs[key] === index) {
-        // update existing entry
+      if (selectedConfigs[key] === config) {
         if (event.target.checked) {
           return;
         }
 
         selectedConfigs.splice(key, 1);
-
         this.setState({ selectedConfigs: selectedConfigs });
         return;
       }
     }
 
-    // add new entry
+    /* add new entry */
     if (event.target.checked === false) {
       return;
     }
-
-    selectedConfigs.push(index);
+    selectedConfigs.push(config);
     this.setState({ selectedConfigs: selectedConfigs });
+  }
+
+  checkAllConfigs() {
+    if (this.state.allConfigsChecked) {
+      this.setState({ selectedConfigs: [], allConfigsChecked: !this.state.allConfigsChecked })
+      return
+    }
+
+    let index = 0
+    let checkedConfigs = []
+    this.props.configs.forEach(cfg => {
+      if (this.usesExternalIC(index)) {
+        checkedConfigs.push(cfg)
+      }
+      index++
+    })
+    this.setState({ selectedConfigs: checkedConfigs, allConfigsChecked: !this.state.allConfigsChecked })
+  }
+
+  isConfigChecked(index) {
+    let config = this.props.configs[index]
+    const foundObj = this.state.selectedConfigs.find(cfg => {
+      if (cfg.id === config.id) {
+        return true
+      }
+    })
+
+    return typeof foundObj !== 'undefined' ? true : false;
   }
 
   usesExternalIC(index) {
@@ -216,7 +244,7 @@ class ConfigTable extends Component {
     }
   }
 
-  computeNumberOfSignals(configID, direction){
+  computeNumberOfSignals(configID, direction) {
     let signals = this.props.signals.filter(s => (s.configID === configID && s.direction === direction))
     return <span>{signals.length}</span>
   }
@@ -338,8 +366,15 @@ class ConfigTable extends Component {
             />
           </span>
         </h2>
-        <Table data={this.props.configs}>
+        <Table
+          data={this.props.configs}
+          allRowsChecked={this.state.allConfigsChecked}
+        >
           <CheckboxColumn
+            enableCheckAll
+            onCheckAll={() => this.checkAllConfigs()}
+            allChecked={this.state.allConfigsChecked}
+            checked={(index) => this.isConfigChecked(index)}
             checkboxDisabled={(index) => !this.usesExternalIC(index)}
             onChecked={(index, event) => this.onConfigChecked(index, event)}
             width={20}
@@ -422,7 +457,7 @@ class ConfigTable extends Component {
               doRecreate={false}
             />
           </div>
-          : <div/>
+          : <div />
         }
 
         <EditConfigDialog
