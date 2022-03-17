@@ -457,7 +457,7 @@ class ConfigTable extends Component {
               doRecreate={false}
             />
           </div>
-          : <div />
+          : <div/>
         }
 
         <EditConfigDialog

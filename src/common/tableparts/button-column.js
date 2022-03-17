@@ -33,8 +33,6 @@ class ButtonColumn extends Component {
     onChangeLock: null,
     isLocked: null,
     locked: false,
-    inlineEditable: false,
-    inputType: 'text',
   };
 
   render() {

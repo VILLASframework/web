@@ -117,7 +117,6 @@ class Users extends Component {
     /* update existing entry */
     for (let key in usersToAdd) {
       if (usersToAdd[key] === index) {
-        // update existing entry
         if (event.target.checked) {
           return;
         }

@@ -24,8 +24,6 @@ class LinkColumn extends Component {
     modifier: null,
     link: '/',
     linkKey: '',
-    inlineEditable: false,
-    inputType: 'text',
   };
 
   render() {

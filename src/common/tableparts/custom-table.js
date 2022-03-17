@@ -157,6 +157,7 @@ class CustomTable extends Component {
   }
 
   static addLinkButtonCell(data, child) {
+    // currently only used for file buttons
     let content = null;
 
     if ('data' in child.props && 'dataKey' in child.props) {
@@ -212,7 +213,6 @@ class CustomTable extends Component {
 
     let cell = [];
     if (content != null) {
-      // check if cell should be a link
       const linkKey = child.props.linkKey;
       if (linkKey && data[linkKey] != null) {
         cell.push(<Link to={child.props.link + data[linkKey]}>{content}</Link>);

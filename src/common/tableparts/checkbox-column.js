@@ -25,6 +25,9 @@ class CheckboxColumn extends Component {
     columnType: 'checkbox',
     checkboxDisabled: null,
     enableCheckAll: false,
+    allChecked: false,
+    checked: null,
+    onChecked: null
   };
 
   render() {
