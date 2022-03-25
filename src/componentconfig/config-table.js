@@ -18,8 +18,7 @@
 import React, { Component } from "react";
 import FileSaver from 'file-saver';
 import IconButton from "../common/buttons/icon-button";
-import Table from "../common/table";
-import TableColumn from "../common/table-column";
+import { Table, ButtonColumn, CheckboxColumn, DataColumn } from "../common/table";
 import NewDialog from "../common/dialogs/new-dialog";
 import DeleteDialog from "../common/dialogs/delete-dialog";
 import AppDispatcher from "../common/app-dispatcher";
@@ -41,6 +40,7 @@ class ConfigTable extends Component {
       newConfigModal: false,
       deleteConfigModal: false,
       importConfigModal: false,
+      allConfigsChecked: false,
       selectedConfigs: [],
       ExternalICInUse: false,
       editOutputSignalsModal: false,
@@ -173,29 +173,56 @@ class ConfigTable extends Component {
     });
   }
 
-  onConfigChecked(index, event) {
+  onConfigChecked(config, event) {
     const selectedConfigs = Object.assign([], this.state.selectedConfigs);
+
+    /* update existing entry */
     for (let key in selectedConfigs) {
-      if (selectedConfigs[key] === index) {
-        // update existing entry
+      if (selectedConfigs[key] === config) {
         if (event.target.checked) {
           return;
         }
 
         selectedConfigs.splice(key, 1);
-
         this.setState({ selectedConfigs: selectedConfigs });
         return;
       }
     }
 
-    // add new entry
+    /* add new entry */
     if (event.target.checked === false) {
       return;
     }
-
-    selectedConfigs.push(index);
+    selectedConfigs.push(config);
     this.setState({ selectedConfigs: selectedConfigs });
+  }
+
+  checkAllConfigs() {
+    if (this.state.allConfigsChecked) {
+      this.setState({ selectedConfigs: [], allConfigsChecked: !this.state.allConfigsChecked })
+      return
+    }
+
+    let index = 0
+    let checkedConfigs = []
+    this.props.configs.forEach(cfg => {
+      if (this.usesExternalIC(index)) {
+        checkedConfigs.push(cfg)
+      }
+      index++
+    })
+    this.setState({ selectedConfigs: checkedConfigs, allConfigsChecked: !this.state.allConfigsChecked })
+  }
+
+  isConfigChecked(index) {
+    let config = this.props.configs[index]
+    const foundObj = this.state.selectedConfigs.find(cfg => {
+      if (cfg.id === config.id) {
+        return true
+      }
+    })
+
+    return typeof foundObj !== 'undefined' ? true : false;
   }
 
   usesExternalIC(index) {
@@ -217,7 +244,7 @@ class ConfigTable extends Component {
     }
   }
 
-  computeNumberOfSignals(configID, direction){
+  computeNumberOfSignals(configID, direction) {
     let signals = this.props.signals.filter(s => (s.configID === configID && s.direction === direction))
     return <span>{signals.length}</span>
   }
@@ -339,27 +366,33 @@ class ConfigTable extends Component {
             />
           </span>
         </h2>
-        <Table data={this.props.configs}>
-          <TableColumn
-            checkbox
+        <Table
+          data={this.props.configs}
+          allRowsChecked={this.state.allConfigsChecked}
+        >
+          <CheckboxColumn
+            enableCheckAll
+            onCheckAll={() => this.checkAllConfigs()}
+            allChecked={this.state.allConfigsChecked}
+            checked={(index) => this.isConfigChecked(index)}
             checkboxDisabled={(index) => !this.usesExternalIC(index)}
             onChecked={(index, event) => this.onConfigChecked(index, event)}
             width={20}
           />
           {this.props.currentUser.role === "Admin" ?
-            <TableColumn
+            <DataColumn
               title='ID'
               dataKey='id'
               width={70}
             />
             : <></>
           }
-          <TableColumn
+          <DataColumn
             title='Name'
             dataKey='name'
             width={250}
           />
-          <TableColumn
+          <ButtonColumn
             title='# Output Signals'
             dataKey='id'
             editButton
@@ -368,7 +401,7 @@ class ConfigTable extends Component {
             locked={this.props.locked}
             modifier={(component) => this.computeNumberOfSignals(component, "out")}
           />
-          <TableColumn
+          <ButtonColumn
             title='# Input Signals'
             dataKey='id'
             editButton
@@ -377,20 +410,20 @@ class ConfigTable extends Component {
             locked={this.props.locked}
             modifier={(component) => this.computeNumberOfSignals(component, "in")}
           />
-          <TableColumn
+          <ButtonColumn
             title='Autoconfigure Signals'
             signalButton
             onAutoConf={(index) => this.signalsAutoConf(index)}
             width={170}
             locked={this.props.locked}
           />
-          <TableColumn
+          <DataColumn
             title='Infrastructure Component'
             dataKey='icID'
             modifier={(icID) => this.getICName(icID)}
             width={200}
           />
-          <TableColumn
+          <ButtonColumn
             title=''
             width={200}
             align='right'

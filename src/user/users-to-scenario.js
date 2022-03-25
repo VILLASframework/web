@@ -23,9 +23,9 @@ import Dialog from '../common/dialogs/dialog';
 class UsersToScenarioDialog extends React.Component {
   valid = true;
 
-  onClose() {
+  onClose(canceled) {
     if (this.props.onClose != null) {
-      this.props.onClose();
+      this.props.onClose(canceled);
     }
   };
 
@@ -38,8 +38,8 @@ class UsersToScenarioDialog extends React.Component {
 
   renderData() {
     let arr = [];
-    this.props.users.forEach((value, key) => {
-      arr.push(this.renderRow(value,key))
+    this.props.users.forEach(user => {
+      arr.push(this.renderRow(user.username, user.id))
     })
     return arr;
   }
@@ -50,7 +50,7 @@ class UsersToScenarioDialog extends React.Component {
       show={this.props.show}
       title={'Add to \'' + this.props.scenario + '\'?'}
       buttonTitle='Confirm'
-      onClose={() => this.onClose()}
+      onClose={(c) => this.onClose(c)}
       valid={true}
     >
       <Table size='sm' striped>

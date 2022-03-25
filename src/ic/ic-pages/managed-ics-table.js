@@ -16,8 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
-import Table from '../../common/table';
-import TableColumn from '../../common/table-column';
+import { Table, LabelColumn, LinkColumn, DataColumn } from '../../common/table';
 import { stateLabelStyle } from "../ics";
 
 
@@ -29,25 +28,24 @@ class ManagedICsTable extends React.Component {
       <h3>Managed ICs:</h3>
       <Table data={this.props.managedICs}>
         {this.props.currentUser.role === "Admin" ?
-          <TableColumn
+          <DataColumn
             title='ID'
             dataKey='id'
           />
           : <></>
         }
-        <TableColumn
+        <LinkColumn
           title='Name'
           dataKeys={['name']}
           link='/infrastructure/'
           linkKey='id'
         />
-        <TableColumn
+        <LabelColumn
           title='State'
           labelKey='state'
-          tooltipKey='error'
           labelStyle={(state, component) => stateLabelStyle(state, component)}
         />
-        <TableColumn
+        <DataColumn
           title='Type'
           dataKeys={['type']}
         />

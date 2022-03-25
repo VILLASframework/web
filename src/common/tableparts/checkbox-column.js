@@ -16,34 +16,18 @@
  ******************************************************************************/
 
 import React, { Component } from 'react';
+import { Form } from 'react-bootstrap';
+import TableColumn from './table-column';
 
-class TableColumn extends Component {
+
+class CheckboxColumn extends Component {
   static defaultProps = {
-    title: '',
-    modifier: null,
-    width: null,
-    editButton: false,
-    showEditButton: null,
-    deleteButton: false,
-    showDeleteButton: null,
-    exportButton: false,
-    signalButton: false,
-    duplicateButton: false,
-    isLocked: null,
-    locked: false,
-    link: '/',
-    linkKey: '',
-    dataIndex: false,
-    inlineEditable: false,
-    inputType: 'text',
-    clickable: false,
-    labelKey: null,
-    checkbox: false,
-    checkboxKey: '',
+    columnType: 'checkbox',
     checkboxDisabled: null,
-    labelStyle: null,
-    labelModifier: null,
-    align: 'left'
+    enableCheckAll: false,
+    allChecked: false,
+    checked: null,
+    onChecked: null
   };
 
   render() {
@@ -52,10 +36,22 @@ class TableColumn extends Component {
       width: this.props.width
     };
 
-    return <th style={style}>
-      {this.props.title}
-    </th>;
+    if (this.props.enableCheckAll) {
+      return <th style={style}>
+        <Form.Check
+          className="table-control-checkbox"
+          checked={this.props.allChecked}
+          onChange={(e) => this.props.onCheckAll(e)}
+        />
+      </th>;
+
+    }
+    return <TableColumn
+      align={this.props.align}
+      width={this.props.width}
+      title={this.props.title}
+    />;
   }
 }
 
-export default TableColumn;
+export default CheckboxColumn;

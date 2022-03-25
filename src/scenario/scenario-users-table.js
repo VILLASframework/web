@@ -18,8 +18,7 @@
 import React, {Component} from "react";
 import { Form, InputGroup} from "react-bootstrap";
 import {Redirect} from "react-router-dom";
-import Table from "../common/table";
-import TableColumn from "../common/table-column";
+import { Table, ButtonColumn, DataColumn } from "../common/table";
 import IconButton from "../common/buttons/icon-button";
 import DeleteDialog from "../common/dialogs/delete-dialog";
 import AppDispatcher from "../common/app-dispatcher";
@@ -93,24 +92,24 @@ class ScenarioUsersTable extends Component {
         <h2 style={this.props.tableHeadingStyle}>Users sharing this scenario</h2>
         <Table data={this.props.scenario.users}>
           {this.props.currentUser.role === "Admin" ?
-            <TableColumn
+            <DataColumn
               title='ID'
               dataKey='id'
               width={70}
             />
             : <></>
           }
-          <TableColumn
+          <DataColumn
             title='Name'
             dataKey='username'
             width={300}
           />
-          <TableColumn
+          <DataColumn
             title='Role'
             dataKey='role'
             width={100}
           />
-          <TableColumn
+          <ButtonColumn
             title=''
             width={30}
             align='right'

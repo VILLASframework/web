@@ -91,7 +91,7 @@ class SelectFile extends React.Component {
           <Form.Group>
               <Form.Label sm={3} md={2}>
                   {this.props.name}
-              </For.m.Label>
+              </Form.Label>
 
               <Form.Group as={Col} sm={9} md={10}>
                   <Form.Control

@@ -18,8 +18,7 @@
 import React, {Component} from "react";
 import FileSaver from 'file-saver';
 import IconButton from "../common/buttons/icon-button";
-import Table from "../common/table";
-import TableColumn from "../common/table-column";
+import { Table, ButtonColumn, LinkColumn, DataColumn } from "../common/table";
 import EditDashboardDialog from "./edit-dashboard";
 import ImportDashboardDialog from "./import-dashboard";
 import DeleteDialog from "../common/dialogs/delete-dialog";
@@ -175,27 +174,27 @@ class DashboardTable extends Component {
         </h2>
         <Table data={this.props.dashboards}>
           {this.props.currentUser.role === "Admin" ?
-            <TableColumn
+            <DataColumn
               title='ID'
               dataKey='id'
               width={70}
             />
             : <></>
           }
-          <TableColumn
+          <LinkColumn
             title='Name'
             dataKey='name'
             link='/dashboards/'
             linkKey='id'
             width={300}
           />
-          <TableColumn
+          <DataColumn
             title='Grid'
             dataKey='grid'
             width={100}
           />
 
-          <TableColumn
+          <ButtonColumn
             title=''
             width={200}
             align='right'

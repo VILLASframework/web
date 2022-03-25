@@ -21,8 +21,7 @@ import {Button} from "react-bootstrap";
 import FileSaver from 'file-saver';
 import AppDispatcher from "../common/app-dispatcher";
 import IconButton from "../common/buttons/icon-button";
-import Table from "../common/table";
-import TableColumn from "../common/table-column";
+import { Table, ButtonColumn, DataColumn, LinkbuttonColumn } from "../common/table";
 import DeleteDialog from "../common/dialogs/delete-dialog";
 import EditResultDialog from "./edit-result";
 import ResultConfigDialog from "./result-configs-dialog";
@@ -191,28 +190,28 @@ class ResultTable extends Component {
         </h2>
 
         <Table data={this.props.results}>
-          <TableColumn
+          <DataColumn
             title='ID'
             dataKey='id'
             modifier={(id, result) => this.modifyResultNoColumn(id, result)}
             width={70}
           />
-          <TableColumn
+          <DataColumn
             title='Description'
             dataKey='description'
             width={300}
           />
-          <TableColumn
+          <DataColumn
             title='Created at'
             dataKey='createdAt'
             width={200}
           />
-          <TableColumn
+          <DataColumn
             title='Last update'
             dataKey='updatedAt'
             width={200}
           />
-          <TableColumn
+          <LinkbuttonColumn
             title='Files'
             dataKey='resultFileIDs'
             linkKey='filebuttons'
@@ -220,7 +219,7 @@ class ResultTable extends Component {
             onDownload={(index) => this.downloadResultData(index)}
             width={300}
           />
-          <TableColumn
+          <ButtonColumn
             width={200}
             align='right'
             editButton
