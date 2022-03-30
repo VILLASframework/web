@@ -108,6 +108,11 @@ class InfrastructureComponents extends Component {
       selectedICs: prevState.selectedICs || [],
       currentUser: JSON.parse(localStorage.getItem("currentUser")),
       showGeneric: prevState.showGeneric || false,
+      allManagersChecked: prevState.allManagersChecked || false,
+      allSimulatorsChecked: prevState.allSimulatorsChecked || false,
+      allGateWaysChecked: prevState.allGateWaysChecked || false,
+      allServicesChecked: prevState.allServicesChecked || false,
+      allEquipmentChecked: prevState.allEquipmentChecked || false,
     };
   }
 
@@ -225,29 +230,82 @@ class InfrastructureComponents extends Component {
   }
 
   onICChecked(ic, event) {
-    let index = this.state.ics.indexOf(ic);
-    const selectedICs = Object.assign([], this.state.selectedICs);
-    for (let key in selectedICs) {
-      if (selectedICs[key] === index) {
-        // update existing entry
-        if (event.target.checked) {
-          return;
-        }
+    var selectedICs = []
+    const foundObj = this.state.selectedICs.find(selIC => selIC.id === ic.id)
 
-        selectedICs.splice(key, 1);
-
-        this.setState({ selectedICs: selectedICs });
-        return;
-      }
-    }
-
-    // add new entry
-    if (event.target.checked === false) {
+    // IC was already selected
+    if (typeof foundObj !== 'undefined') {
+      selectedICs = this.state.selectedICs.filter(selIC => selIC.id !== foundObj.id)
+      this.setState({ selectedICs: selectedICs });
       return;
     }
 
-    selectedICs.push(index);
-    this.setState({ selectedICs: selectedICs });
+    // add IC to selected
+    this.setState({ selectedICs: [ ...this.state.selectedICs, ic] });
+  }
+
+  isICchecked(ic) {
+    if (!ic) return false
+
+    return this.state.selectedICs.includes(ic)
+  }
+
+  checkAllICsOfCategory(ics, category, allAreChecked) {
+    var selectedICs;
+
+    if (allAreChecked) {
+      selectedICs = Object.assign([], this.state.selectedICs.filter(ic => ic.category !== category))
+    } else {
+      selectedICs = Object.assign([], this.state.selectedICs)
+      selectedICs = selectedICs.concat(ics.filter(ic => ic.managedexternally))
+    }
+    return selectedICs
+  }
+
+  checkAllICs(ics, ictype) {
+    let selectedICs = []
+
+    switch(ictype.trim()) {
+      case 'IC Managers'.trim():
+        selectedICs = this.checkAllICsOfCategory(ics, 'manager', this.state.allManagersChecked)
+        this.setState({ selectedICs: selectedICs, allManagersChecked: !this.state.allManagersChecked })
+        return;
+      case 'Simulators':
+        selectedICs = this.checkAllICsOfCategory(ics, 'simulator', this.state.allSimulatorsChecked)
+        this.setState({ selectedICs: selectedICs, allSimulatorsChecked: !this.state.allSimulatorsChecked })
+        return;
+      case 'Gateways':
+        selectedICs = this.checkAllICsOfCategory(ics, 'gateway', this.state.allGateWaysChecked)
+        this.setState({ selectedICs: selectedICs, allGateWaysChecked: !this.state.allGateWaysChecked })
+        return;
+      case 'Services':
+        selectedICs = this.checkAllICsOfCategory(ics, 'service', this.state.allServicesChecked)
+        this.setState({ selectedICs: selectedICs, allServicesChecked: !this.state.allServicesChecked })
+        return;
+      case 'Equipment':
+        selectedICs = this.checkAllICsOfCategory(ics, 'equipment', this.state.allEquipmentChecked)
+        this.setState({ selectedICs: selectedICs, allEquipmentChecked: !this.state.allEquipmentChecked })
+        return;
+      default:
+        break;
+    }
+  }
+
+  areAllChecked(title) {
+    switch(title.trim()) {
+      case 'IC Managers'.trim():
+        return this.state.allManagersChecked;
+      case 'Simulators':
+        return this.state.allSimulatorsChecked;
+      case 'Gateways':
+        return this.state.allGateWaysChecked;
+      case 'Services':
+        return this.state.allServicesChecked;
+      case 'Equipment':
+        return this.state.allEquipmentChecked;
+      default:
+        return false;
+    }
   }
 
   static isICOutdated(component) {
@@ -371,7 +429,11 @@ class InfrastructureComponents extends Component {
         </h2>
         <Table data={ics}>
           <CheckboxColumn
+            enableCheckAll
+            onCheckAll={() => this.checkAllICs(ics, title)}
+            allChecked={this.areAllChecked(title)}
             checkboxDisabled={(index) => InfrastructureComponents.isLocalIC(index, ics) === true}
+            checked={(ic) => this.isICchecked(ic)}
             onChecked={(ic, event) => this.onICChecked(ic, event)}
             width='30'
           />

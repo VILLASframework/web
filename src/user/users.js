@@ -111,29 +111,19 @@ class Users extends Component {
     }
   }
 
-  onUserChecked(index, event) {
-    const usersToAdd = Object.assign([], this.state.usersToAdd);
+  onUserChecked(user) {
+    var usersToAdd = []
+    const foundObj = this.state.usersToAdd.find(selUser => selUser.id === user.id)
 
-    /* update existing entry */
-    for (let key in usersToAdd) {
-      if (usersToAdd[key] === index) {
-        if (event.target.checked) {
-          return;
-        }
-
-        usersToAdd.splice(key, 1);
-
-        this.setState({ usersToAdd: usersToAdd });
-        return;
-      }
-    }
-
-    /* add new entry */
-    if (event.target.checked === false) {
+    // User was already selected
+    if (typeof foundObj !== 'undefined') {
+      usersToAdd = this.state.usersToAdd.filter(selUser => selUser.id !== foundObj.id)
+      this.setState({ usersToAdd: usersToAdd });
       return;
     }
-    usersToAdd.push(index);
-    this.setState({ usersToAdd: usersToAdd });
+
+    // add User to selected
+    this.setState({ usersToAdd: [ ...this.state.usersToAdd, user] });
   }
 
   checkAllUsers() {
@@ -142,23 +132,13 @@ class Users extends Component {
       return
     }
 
-    let usersToAdd = []
-    this.state.users.forEach(usr => {
-      usersToAdd.push(usr)
-    })
-    this.setState({ usersToAdd: usersToAdd, allUsersChecked: !this.state.allUsersChecked })
+    this.setState({ usersToAdd: this.state.users, allUsersChecked: !this.state.allUsersChecked })
   }
 
-  isUserChecked(index) {
-    let user = this.state.users[index] // ist das richtig?
+  isUserChecked(user) {
+    if (!user) return false
 
-    const foundObj = this.state.usersToAdd.find(usr => {
-      if (usr.id === user.id) {
-        return true
-      }
-    })
-
-    return typeof foundObj !== 'undefined' ? true : false;
+    return this.state.usersToAdd.includes(user)
   }
 
   setScenario(ID) {
@@ -226,8 +206,8 @@ class Users extends Component {
           <CheckboxColumn
             enableCheckAll
             onCheckAll={() => this.checkAllUsers()}
-            allChecked={this.state.allUserssChecked}
-            checked={(index) => this.isUserChecked(index)}
+            allChecked={this.state.allUsersChecked}
+            checked={(user) => this.isUserChecked(user)}
             onChecked={(index, event) => this.onUserChecked(index, event)}
             width='30'
           />
