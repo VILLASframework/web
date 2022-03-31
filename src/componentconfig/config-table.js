@@ -211,18 +211,14 @@ class ConfigTable extends Component {
       }
       index++
     })
+
     this.setState({ selectedConfigs: checkedConfigs, allConfigsChecked: !this.state.allConfigsChecked })
   }
 
-  isConfigChecked(index) {
-    let config = this.props.configs[index]
-    const foundObj = this.state.selectedConfigs.find(cfg => {
-      if (cfg.id === config.id) {
-        return true
-      }
-    })
+  isConfigChecked(cfg) {
+    if (!cfg) return false
 
-    return typeof foundObj !== 'undefined' ? true : false;
+    return this.state.selectedConfigs.includes(cfg)
   }
 
   usesExternalIC(index) {
@@ -374,7 +370,7 @@ class ConfigTable extends Component {
             enableCheckAll
             onCheckAll={() => this.checkAllConfigs()}
             allChecked={this.state.allConfigsChecked}
-            checked={(index) => this.isConfigChecked(index)}
+            checked={(cfg) => this.isConfigChecked(cfg)}
             checkboxDisabled={(index) => !this.usesExternalIC(index)}
             onChecked={(index, event) => this.onConfigChecked(index, event)}
             width={20}

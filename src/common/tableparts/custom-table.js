@@ -148,7 +148,7 @@ class CustomTable extends Component {
         key={data.id+'_'+data.createdAt}
         className='table-control-checkbox'
         disabled={isDisabled}
-        checked={typeof child.props.checked !== 'undefined' ? child.props.checked(index) : null}
+        checked={typeof child.props.checked !== 'undefined' ? child.props.checked(data) : null}
         onChange={e => child.props.onChecked(data, e)}
       />
     );
