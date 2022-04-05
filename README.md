@@ -14,7 +14,7 @@ More details on the setup and usage of VILLASweb is available [in the VILLAS doc
 
 ## Copyright
 
-2020, Institute for Automation of Complex Power Systems, EONERC  
+2022, Institute for Automation of Complex Power Systems, EONERC  
 
 ## License
 
