@@ -176,10 +176,6 @@ For more information on branches and git usage see [Git workflow tutorial](https
   - At the top of each file must be the following header:
     ```(javascript)
     /**
-     * File: <filename>
-     * Author: <author> <email>
-     * Date: <creation date>
-     *
      * This file is part of VILLASweb.
      *
      * VILLASweb is free software: you can redistribute it and/or  modify
