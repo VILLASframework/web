@@ -47,6 +47,28 @@ deploy:default:
       --single-snapshot
   dependencies:
     - build
+  rules:
+    - if: 'CI_COMMIT_BRANCH != "master"'
+
+deploy:default-latest:
+  stage: deploy
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [ "" ]
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context ${CI_PROJECT_DIR}
+      --build-arg REACT_APP_BRAND=villasweb
+      --dockerfile ${CI_PROJECT_DIR}/Dockerfile
+      --destination ${DOCKER_IMAGE}:latest
+      --snapshotMode=redo
+      --single-snapshot
+  dependencies:
+    - build
+  rules:
+    - if: 'CI_COMMIT_BRANCH == "master"'
 
 deploy:slew:
   stage: deploy
@@ -65,3 +87,25 @@ deploy:slew:
       --single-snapshot
   dependencies:
     - build
+  rules:
+    - if: 'CI_COMMIT_BRANCH != "master"'
+
+deploy:slew-latest:
+  stage: deploy
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [ "" ]
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context ${CI_PROJECT_DIR}
+      --build-arg REACT_APP_BRAND=slew
+      --dockerfile ${CI_PROJECT_DIR}/Dockerfile
+      --destination ${DOCKER_IMAGE}:latest-slew
+      --snapshotMode=redo
+      --single-snapshot
+  dependencies:
+    - build
+  rules:
+    - if: 'CI_COMMIT_BRANCH == "master"'
