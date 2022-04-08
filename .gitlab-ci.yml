@@ -47,8 +47,9 @@ deploy:default:
       --single-snapshot
   dependencies:
     - build
-  rules:
-    - if: 'CI_COMMIT_BRANCH != "master"'
+  except:
+    refs:
+      - master
 
 deploy:default-latest:
   stage: deploy
@@ -67,8 +68,9 @@ deploy:default-latest:
       --single-snapshot
   dependencies:
     - build
-  rules:
-    - if: 'CI_COMMIT_BRANCH == "master"'
+  only:
+    refs:
+      - master
 
 deploy:slew:
   stage: deploy
@@ -87,8 +89,9 @@ deploy:slew:
       --single-snapshot
   dependencies:
     - build
-  rules:
-    - if: 'CI_COMMIT_BRANCH != "master"'
+  except:
+    refs:
+      - master
 
 deploy:slew-latest:
   stage: deploy
@@ -107,5 +110,6 @@ deploy:slew-latest:
       --single-snapshot
   dependencies:
     - build
-  rules:
-    - if: 'CI_COMMIT_BRANCH == "master"'
+  only:
+    refs:
+      - master
