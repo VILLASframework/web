@@ -23,6 +23,13 @@ import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Icon from "../common/icon";
 import ToolboxItem from './toolbox-item';
 
+let hasPintura = true;
+try{
+  let cimsvg = require('libcimsvg')
+} catch (err) {
+  hasPintura = false;
+}
+
 class WidgetToolbox extends React.Component {
   constructor(props) {
     super(props);
@@ -104,8 +111,8 @@ class WidgetToolbox extends React.Component {
       height: '40px',
     }
 
-    const thereIsTopologyWidget = this.props.widgets != null && Object.values(this.props.widgets).filter(w => w.type === 'Topology').length > 0;
-    const topologyItemMsg = thereIsTopologyWidget? 'Currently only one is supported' : '';
+    let disableTopologyWidget = this.props.widgets != null && Object.values(this.props.widgets).filter(w => w.type === 'Topology').length > 0;
+    let topologyItemMsg = disableTopologyWidget? 'Currently only one is supported' : '';
 
     return (
 
@@ -170,7 +177,8 @@ class WidgetToolbox extends React.Component {
       <ToolboxItem name='Value' type='widget' icon = 'plus' />
       <ToolboxItem name='Lamp' type='widget' icon = 'plus' />
       <ToolboxItem name='Gauge' type='widget' icon = 'plus'/>
-      <ToolboxItem name='Topology' type='widget' disabled={thereIsTopologyWidget} title={topologyItemMsg} icon = 'plus'/>
+      {hasPintura ? <ToolboxItem name='Topology' type='widget' disabled={disableTopologyWidget} title={topologyItemMsg} icon = 'plus'/> : <></>}
+
       <ToolboxItem name='TimeOffset' type='widget' icon = 'plus' />
       <ToolboxItem name='ICstatus' type='widget' icon = 'plus' />
       <OverlayTrigger key={0} placement={'bottom'} overlay={<Tooltip id={`tooltip-${"?"}`}> Drag and drop widgets onto the dashboard </Tooltip>} >
