@@ -29,7 +29,8 @@ RUN npm install --force
 # Install app dependencies
 ARG REACT_APP_BRAND
 COPY . /usr/src/app
-RUN npm run build
+# Production build, CI=false prevents warnings from being treated as errors
+RUN CI=false npm run build
 
 FROM nginx
 

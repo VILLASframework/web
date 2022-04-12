@@ -23,7 +23,7 @@ build.npm:
     - mkdir -p build
   script:
     - npm install --force
-    - npm run build
+    - CI=false npm run build
 #  artifacts:
 #    paths:
 #      - build/
