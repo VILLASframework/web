@@ -16,6 +16,7 @@
  ******************************************************************************/
 
 import WebsocketAPI from '../common/api/websocket-api';
+import WebRTC from '../common/api/webrtc';
 import AppDispatcher from '../common/app-dispatcher';
 import RestAPI from "../common/api/rest-api";
 
@@ -25,6 +26,7 @@ const OFFSET_VERSION = 4;
 class IcDataDataManager {
   constructor() {
     this._sockets = {};
+    this._webrtc = null;
   }
 
   open(websocketurl, identifier) {
@@ -33,6 +35,10 @@ class IcDataDataManager {
       return; // already open?
 
     this._sockets[identifier] = new WebsocketAPI(websocketurl, { onOpen: (event) => this.onOpen(event, identifier, true), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier) });
+  }
+
+  openWebRTC(sessionurl, identifier) {
+    this._webrtc = new WebRTC(sessionurl, identifier)
   }
 
   update(websocketurl, identifier) {
@@ -51,6 +57,10 @@ class IcDataDataManager {
         this._sockets[identifier].close(4000);
         delete this._sockets[identifier];
       }
+    }
+
+    if (this._webrtc) {
+      this._webrtc.disconnectPeers();
     }
   }
 
@@ -166,7 +176,7 @@ class IcDataDataManager {
     return buffer;
   }
 
-  updateSignalValueInWidgets(signalID, newValues){
+  updateSignalValueInWidgets(signalID, newValues) {
     AppDispatcher.dispatch({
       type: 'widgets/signal-value-changed',
       signalID: signalID,
