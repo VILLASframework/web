@@ -17,21 +17,10 @@
 
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-
 import App from './app';
 import Login from './user/login';
 import Logout from './user/logout';
-import Home from './common/home';
-import Scenarios from './scenario/scenarios';
-import Scenario from './scenario/scenario';
-import Dashboard from './dashboard/dashboard'
-import InfrastructureComponents from './ic/ics';
-import InfrastructureComponent from './ic/ic';
-import Users from './user/users';
-import User from "./user/user";
 import LoginComplete from './user/login-complete'
-
-
 
 class Root extends React.Component {
   render() {
@@ -42,15 +31,6 @@ class Root extends React.Component {
           <Route path='/login' component={Login} />
           <Route path='/logout' component={Logout} />
           <Route path='/' component={App} />
-          <Route path='/home' component={Home} />
-          <Route path='/scenarios' component={Scenarios} />
-          <Route path='/scenarios/:scenario' component={Scenario} />
-          <Route path='/dashboards/:dashboard' component={Dashboard} />
-          <Route path='/infrastructure' component={InfrastructureComponents} />
-          <Route path='/infrastructure/:ic' component={InfrastructureComponent} />
-          <Route path='/users' component={Users} />
-          <Route path='/account' component={User} />
-
         </Switch>
       </BrowserRouter>
     );

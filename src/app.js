@@ -118,17 +118,21 @@ class App extends React.Component {
             <div className='app-content app-content-margin-left'>
               <Route exact path="/" component={Home} />
               { pages.home ? <Route path="/home" component={Home} /> : '' }
-              { pages.scenarios ? <Route exact path="/scenarios" component={Scenarios} /> : '' }
-              { pages.scenarios ? <Route path="/scenarios/:scenario" component={Scenario} /> : '' }
-              { pages.scenarios ? <Route path="/dashboards/:dashboard" component={Dashboard} /> : '' }
-              { currentUser.role === "Admin" || pages.infrastructure ?
-                <Route exact path="/infrastructure" component={InfrastructureComponents} />
+              { pages.scenarios ? <>
+                <Route exact path="/scenarios" component={Scenarios}/>
+                <Route path="/scenarios/:scenario" component={Scenario} />
+                <Route path="/dashboards/:dashboard" component={Dashboard} />
+                </>
               : '' }
-              { currentUser.role === "Admin" || pages.infrastructure ?
+              { currentUser.role === "Admin" || pages.infrastructure ? <>
+                <Route exact path="/infrastructure" component={InfrastructureComponents} />
                 <Route path="/infrastructure/:ic" component={InfrastructureComponent} />
+                </>
               : '' }
               { pages.account ? <Route path="/account" component={User} /> : '' }
-              <Route path="/users" component={Users} />
+              { currentUser.role === "Admin" ?
+                <Route path="/users" component={Users} />
+              : '' }
               { currentUser.role === "Admin" || pages.api ?
                 <Route path="/api" component={APIBrowser} />
               : '' }

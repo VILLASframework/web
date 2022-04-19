@@ -154,7 +154,8 @@ class Scenario extends React.Component {
 
     let tooltip = this.state.scenario.isLocked ? "View files of scenario" : "Add, edit or delete files of scenario";
 
-    return <div className='section'>
+    return  (
+      <div className='section'>
       <div className='section-buttons-group-right'>
         <IconButton
           childKey="0"
@@ -234,6 +235,7 @@ class Scenario extends React.Component {
       />
 
     </div>
+    );
   }
 }
 

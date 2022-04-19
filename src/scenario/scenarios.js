@@ -252,7 +252,8 @@ class Scenarios extends Component {
       width: '30px'
     }
 
-    return <div className='section'>
+    return (
+    <div className='section'>
       <h1>Scenarios
           <span className='icon-button'>
           <IconButton
@@ -317,7 +318,8 @@ class Scenarios extends Component {
       <ImportScenarioDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} nodes={this.state.nodes} />
 
       <DeleteDialog title="scenario" name={this.state.modalScenario.name} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
-    </div>;
+    </div>
+  );
   }
 }
 

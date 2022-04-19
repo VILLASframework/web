@@ -177,7 +177,7 @@ class Users extends Component {
       width: '30px'
     }
 
-    return <div>
+    return (<div>
       <h1>Users
         <span className='icon-button'>
           <IconButton
@@ -266,7 +266,8 @@ class Users extends Component {
       <NewUserDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
       <EditUserDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} user={this.state.modalData} />
       <DeleteDialog title="user" name={this.state.modalData.username} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
-    </div>;
+    </div>
+  );
   }
 }
 
