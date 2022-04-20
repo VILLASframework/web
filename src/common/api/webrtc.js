@@ -16,6 +16,9 @@
  ******************************************************************************/
 import AppDispatcher from '../app-dispatcher';
 
+const OFFSET_TYPE = 2;
+const OFFSET_VERSION = 4;
+
 class WebRTC {
   constructor(sessionurl, identifier) {
     this.identifier = identifier
@@ -112,8 +115,7 @@ class WebRTC {
   handleNewDataChannel(e) {
     console.info('New datachannel', e.channel)
 
-    //this.handleDataChannel(e.channel);
-    this.handleDataChannel(e.channel).bind(this);
+    this.handleDataChannel(e.channel);
   }
 
   handleDataChannel(ch) {
@@ -182,67 +184,37 @@ class WebRTC {
       console.error(err);
     }
   }
-
-  handleDataChannel(channel) {
-    this.dataChannel = channel;
-    this.dataChannel.onopen = () => console.info('Datachannel opened');
-    this.dataChannel.onclose = () => console.info('Datachannel closed');
-    this.dataChannel.onmessage = this.handleDataChannelMessage;
-  }
-
-  async jsonToMessageArray(msgJson) {
-    // parse incoming message into usable data
-    if (msgJson.length === 0) {
-      return null;
-    }
-
-    const ts = msgJson.ts.origin[0] * 1e3 + msgJson.ts.origin[1] * 1e-6
-
-    return {
-      version: 2,
-      type: 0,
-      source_index: 0,
-      length: length,
-      sequence: msgJson.sequence,
-      timestamp: ts,
-      values: msgJson.data,
-      blob: new DataView(msgJson.data),
-      // id: id
-    };
-  }
     
   // Handle onmessage events for the receiving channel.
   // These are the data messages sent by the sending channel.
   async handleDataChannelMessage(event) {
-    var dec = new TextDecoder();
+    let data = new DataView(await event.data.arrayBuffer())
 
-    var raw = event.data;
-    var msg = dec.decode(await raw.arrayBuffer());
-    var msgJson = JSON.parse(msg);
+    if (data.byteLength === 0) {
+      return null;
+    }
 
-    console.info('Received message', msgJson);
-    let msgarr = null
+    const source_index = data.getUint8(1);
+    const bits = data.getUint8(0);
+    const length = data.getUint16(0x02, 1);
+    const bytes = length * 4 + 16;
 
-    
-    const ts = msgJson[0].ts.origin[0] * 1e3 + msgJson[0].ts.origin[1] * 1e-6
-    let buffer = new Float64Array(msgJson[0].data).buffer
-
-    msgarr = {
-      version: 2,
-      type: 0,
-      source_index: 0,
-      length: 5,
-      sequence: msgJson[0].sequence,
-      timestamp: ts,
-      values: msgJson[0].data,
-      blob: new DataView(buffer)
+    let msgarr = {
+      version: (bits >> OFFSET_VERSION) & 0xF,
+      type: (bits >> OFFSET_TYPE) & 0x3,
+      source_index: source_index,
+      length: length,
+      sequence: data.getUint32(0x04, 1),
+      timestamp: data.getUint32(0x08, 1) * 1e3 + data.getUint32(0x0C, 1) * 1e-6,
+      values: new Float32Array(data.buffer, data.byteOffset + 0x10, length),
+      blob: new DataView(data.buffer, data.byteOffset + 0x00, bytes),
     };
 
     if (msgarr) {
       AppDispatcher.dispatch({
         type: 'icData/data-changed',
         data: [msgarr],
-        id: 547648
+        id: this.identifier
       });
     }
   }
@@ -250,14 +222,20 @@ class WebRTC {
   disconnectPeers() {
     console.log("disconnecting peers")
 
-    if (this.signalingClient)
+    if (this.signalingClient) {
+      console.info("close signaling client")
       this.signalingClient.close()
+    }
 
-    if (this.dataChannel)
+    if (this.dataChannel) {
+      console.info("close data channel")
       this.dataChannel.close();
+    }
 
-    if (this.peerConnection)
+    if (this.peerConnection) {
+      console.info("close peer connection")
       this.peerConnection.close();
+    }
 
     this.dataChannel = null;
     this.peerConnection = null;
