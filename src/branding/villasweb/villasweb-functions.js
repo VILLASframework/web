@@ -67,7 +67,7 @@ export function villasweb_home(title, username, userid, role) {
         <li><a href="http://www.re-serve.eu">RESERVE:</a> An EU Horizon 2020 research and innovation project (grant agreement No 727481)</li>
         <li><a href="http://www.jara.org/en/research/energy">JARA-ENERGY:</a> Jülich-Aachen Research Alliance (JARA) is an initiative of RWTH Aachen University and Forschungszentrum Jülich.</li>
       </ul>
-      <p class="funding-logos">
+      <p className="funding-logos">
         <img src={require('./img/uel_efre.jpeg').default} alt="Logo UEL OP EFRE NRW" />
         <img src={require('./img/uel.png').default} alt="Logo UEL" />
         <img src={require('./img/european_commission.svg').default} alt="Logo EU" />

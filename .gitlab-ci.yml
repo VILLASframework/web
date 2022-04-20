@@ -1,6 +1,5 @@
 variables:
   GIT_SUBMODULE_STRATEGY: normal
-  DOCKER_TAG: ${CI_COMMIT_BRANCH}
   DOCKER_IMAGE: ${CI_REGISTRY_IMAGE}
   FF_GITLAB_REGISTRY_HELPER_IMAGE: 1
 
@@ -17,51 +16,52 @@ stages:
   - build
   - deploy
 
-build:
+build.npm:
   stage: build
   image: node:16.5
   before_script:
     - mkdir -p build
   script:
     - npm install --force
-    - npm run build
+    - CI=false npm run build
 #  artifacts:
 #    paths:
 #      - build/
 #    expire_in: 1 week
 
-deploy:default:
+deploy.default:
   stage: deploy
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [ "" ]
+  variables:
+    BRANDING: villasweb
+    DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
   script:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor
       --context ${CI_PROJECT_DIR}
-      --build-arg REACT_APP_BRAND=villasweb
+      --build-arg REACT_APP_BRAND=${BRANDING}
       --dockerfile ${CI_PROJECT_DIR}/Dockerfile
       --destination ${DOCKER_IMAGE}:${DOCKER_TAG}
       --snapshotMode=redo
       --single-snapshot
   dependencies:
-    - build
+    - build.npm
 
-deploy:slew:
-  stage: deploy
-  image:
-    name: gcr.io/kaniko-project/executor:debug
-    entrypoint: [ "" ]
-  script:
-    - mkdir -p /kaniko/.docker
-    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor
-      --context ${CI_PROJECT_DIR}
-      --build-arg REACT_APP_BRAND=slew
-      --dockerfile ${CI_PROJECT_DIR}/Dockerfile
-      --destination ${DOCKER_IMAGE}:${DOCKER_TAG}-slew
-      --snapshotMode=redo
-      --single-snapshot
-  dependencies:
-    - build
+deploy.slew:
+  variables:
+    BRANDING: slew
+    DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
+  extends: deploy.default
+
+# deploy latest tag on master branch
+deploy.latest:
+  variables:
+    BRANDING: villasweb
+    DOCKER_TAG: latest
+  extends: deploy.default
+  only:
+    refs:
+      - master

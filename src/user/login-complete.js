@@ -103,13 +103,15 @@ class LoginComplete extends React.Component {
       this.stopTimer();
       return (<Redirect to="/login" />);
     } else {
-      return <div className="verticalhorizontal">
+      return (
+        <div className="verticalhorizontal">
         <img
           style={{height: 80}}
           src={require('../img/ajax-loader.gif').default}
           alt="Logging in.." />
         <p>{waitingMsg}</p>
-      </div>;
+      </div>
+      );
     }
   }
 }

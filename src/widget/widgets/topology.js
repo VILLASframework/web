@@ -18,7 +18,6 @@
 import React from 'react';
 import { UncontrolledReactSVGPanZoom } from 'react-svg-pan-zoom';
 import '../../styles/simple-spinner.css';
-import { cimsvg } from 'libcimsvg';
 import AppDispatcher from "../../common/app-dispatcher";
 
 // Do not show Pintura's grid
@@ -153,23 +152,30 @@ class WidgetTopology extends React.Component {
   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
 
     if(this.state.dashboardState === 'ready'){
-      // Topology file incl data downloaded, init SVG (should happen only once!)
-      if (this.svgElem) {
-        let cimsvgInstance = new cimsvg(this.svgElem.current);
-        cimsvg.setCimsvg(cimsvgInstance);
-        cimsvgInstance.setFileCount(1);
-        // transform data blob into string format
-        this.state.file.data.text().then(function(content) {
-          cimsvgInstance.loadFile(content);
-          cimsvgInstance.fit();
-          attachComponentEvents();
-        });
-        this.setState({dashboardState: 'loaded'});
+      try{
+        // Topology file incl data downloaded, init SVG (should happen only once!)
+        if (this.svgElem) {
+          let cimsvg = require('libcimsvg');
+          let cimsvgInstance = new cimsvg(this.svgElem.current);
+          cimsvg.setCimsvg(cimsvgInstance);
+          cimsvgInstance.setFileCount(1);
+          // transform data blob into string format
+          this.state.file.data.text().then(function (content) {
+            cimsvgInstance.loadFile(content);
+            cimsvgInstance.fit();
+            attachComponentEvents();
+          });
+          this.setState({dashboardState: 'loaded'});
+        } else {
+          console.error("The svgElem variable is not initialized before the attempt to create the cimsvg instance.");
+        }
+      }catch(err) {
+        this.setState(
+          {
+            dashboardState: 'show_message',
+            message: 'The topology widget is not supported in this instance of VILLASweb. Contact an administrator for more details.'
+          });
       }
-      else {
-        console.error("The svgElem variable is not initialized before the attempt to create the cimsvg instance.");
-      }
-
     }
   }
 

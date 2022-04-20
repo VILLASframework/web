@@ -198,6 +198,12 @@ class EditSignalMappingDialog extends React.Component {
     this.setState({signals: tempSignals});
   }
 
+  isSignalChecked(signal) {
+    if (!signal) return false
+
+    return signal.checked
+  }
+
   checkAll() {
     let tempSignals = this.state.signals;
     let allChecked = true;
@@ -236,6 +242,7 @@ class EditSignalMappingDialog extends React.Component {
           <Table breakWord={true} checkbox onChecked={(signal) => this.onSignalChecked(signal)} data={this.state.signals}>
               <CheckboxColumn
                 onChecked={(index, event) => this.onSignalChecked(index, event)}
+                checked={(signal) => this.isSignalChecked(signal)}
                 width='30'
               />
               <DataColumn

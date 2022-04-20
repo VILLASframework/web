@@ -61,42 +61,32 @@ class ICActionBoard extends React.Component {
   }
 
   onReset = () => {
-    this.props.selectedICs.forEach(index => {
-      let ic = this.props.ics[index];
-      ICAction.reset(ic.id, this.state.time, this.props.token)
+    this.props.selectedICs.forEach(selIC => {
+      ICAction.reset(selIC.id, this.state.time, this.props.token)
     })
   }
 
   onShutdown = () => {
-    this.props.selectedICs.forEach(index => {
-      let ic = this.props.ics[index];
-      ICAction.shutdown(ic.id, this.state.time, this.props.token)
+    this.props.selectedICs.forEach(selIC => {
+      ICAction.shutdown(selIC.id, this.state.time, this.props.token)
     })
   }
 
   onDelete = () => {
-    this.props.selectedICs.forEach(index => {
-      let ic = this.props.ics[index];
-      let managerIC = null;
-      for (let i of this.props.ics) {
-        if (i.uuid === ic.manager) {
-          managerIC = i;
-        }
+    this.props.selectedICs.forEach(selIC => {
+      let managerIC = this.props.ics.find(ic => ic.uuid === selIC.manager)
+      if (typeof managerIC !== 'undefined') {
+        ICAction.deleteIC(selIC, managerIC, this.state.time, this.props.token)
       }
-      ICAction.deleteIC(ic, managerIC, this.state.time, this.props.token)
     })
   }
 
   onRecreate = () => {
-    this.props.selectedICs.forEach(index => {
-      let ic = this.props.ics[index];
-      let managerIC = null;
-      for (let i of this.props.ics) {
-        if (i.uuid === ic.manager) {
-          managerIC = i;
-        }
+    this.props.selectedICs.forEach(selIC => {
+      let managerIC = this.props.ics.find(ic => ic.uuid === selIC.manager)
+      if (typeof managerIC !== 'undefined') {
+        ICAction.recreate(selIC, managerIC, this.state.time, this.props.token)
       }
-      ICAction.recreate(ic, managerIC, this.state.time, this.props.token)
     })
   }
 
