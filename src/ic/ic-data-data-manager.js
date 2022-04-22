@@ -26,7 +26,7 @@ const OFFSET_VERSION = 4;
 class IcDataDataManager {
   constructor() {
     this._sockets = {};
-    this._webrtc = null;
+    this._webrtc_connections = {};
   }
 
   open(websocketurl, identifier) {
@@ -34,11 +34,14 @@ class IcDataDataManager {
     if (this._sockets[identifier] != null)
       return; // already open?
 
-    this._sockets[identifier] = new WebsocketAPI(websocketurl, { onOpen: (event) => this.onOpen(event, identifier, true), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier) });
+    this._sockets[identifier] = new WebsocketAPI(websocketurl, { onOpen: (event) => this.onOpen(event, identifier, true), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event.data, identifier) });
   }
 
   openWebRTC(sessionurl, identifier) {
-    this._webrtc = new WebRTC(sessionurl, identifier)
+    if (this._webrtc_connections[identifier] != null)
+      return; // already connected
+
+    this._webrtc_connections[identifier] = new WebRTC(sessionurl, identifier, { onOpen: (event) => this.onOpen(event, identifier, true), onClose: (event) => this.onClose(event, identifier), onMessage: (event) => this.onMessage(event, identifier) });
   }
 
   update(websocketurl, identifier) {
@@ -59,8 +62,12 @@ class IcDataDataManager {
       }
     }
 
-    if (this._webrtc) {
-      this._webrtc.disconnectPeers();
+    // close all open WebRTC connections
+    for (var rtc_id in this._webrtc_connections) {
+      if (this._webrtc_connections.hasOwnProperty(rtc_id)) {
+        this._webrtc_connections[rtc_id].disconnectPeers();
+        delete this._webrtc_connections[rtc_id];
+      }
     }
   }
 
@@ -95,8 +102,9 @@ class IcDataDataManager {
     delete this._sockets[identifier];
   }
 
-  onMessage(event, identifier) {
-    var msgs = this.bufferToMessageArray(event.data);
+  onMessage(dataBuffer, identifier) {
+    console.log(dataBuffer)
+    var msgs = this.bufferToMessageArray(dataBuffer);
 
     if (msgs.length > 0) {
       AppDispatcher.dispatch({

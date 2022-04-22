@@ -20,7 +20,7 @@ const OFFSET_TYPE = 2;
 const OFFSET_VERSION = 4;
 
 class WebRTC {
-  constructor(sessionurl, identifier) {
+  constructor(sessionurl, identifier, callbacks) {
     this.identifier = identifier
     this.first = false;
     this.polite = false;
@@ -39,13 +39,14 @@ class WebRTC {
       'turn:turn.0l.de:3478?transport=tcp'
     ];
 
-    this.connectPeers(sessionurl)
+    console.log(callbacks)
+    this.onOpen = callbacks.onOpen.bind(this);
+    this.onMessage = callbacks.onMessage.bind(this);
+    this.onClose = callbacks.onClose.bind(this);
+    this.connectPeers(sessionurl, callbacks);
   }
 
-  // Connect the two peers. Normally you look for and connect to a remote
-  // machine here, but we're just connecting two local objects, so we can
-  // bypass that step.
-  connectPeers(sessionurl) {
+  connectPeers(sessionurl, callbacks) {
     // Create the local connection and its event listeners
     this.peerConnection = new RTCPeerConnection({
       iceServers: [{
@@ -184,39 +185,12 @@ class WebRTC {
       console.error(err);
     }
   }
-    
+
   // Handle onmessage events for the receiving channel.
   // These are the data messages sent by the sending channel.
-  async handleDataChannelMessage(event) {
-    let data = new DataView(await event.data.arrayBuffer())
-
-    if (data.byteLength === 0) {
-      return null;
-    }
-
-    const source_index = data.getUint8(1);
-    const bits = data.getUint8(0);
-    const length = data.getUint16(0x02, 1);
-    const bytes = length * 4 + 16;
-
-    let msgarr = {
-      version: (bits >> OFFSET_VERSION) & 0xF,
-      type: (bits >> OFFSET_TYPE) & 0x3,
-      source_index: source_index,
-      length: length,
-      sequence: data.getUint32(0x04, 1),
-      timestamp: data.getUint32(0x08, 1) * 1e3 + data.getUint32(0x0C, 1) * 1e-6,
-      values: new Float32Array(data.buffer, data.byteOffset + 0x10, length),
-      blob: new DataView(data.buffer, data.byteOffset + 0x00, bytes),
-    };
-
-    if (msgarr) {
-      AppDispatcher.dispatch({
-        type: 'icData/data-changed',
-        data: [msgarr],
-        id: this.identifier
-      });
-    }
+   async handleDataChannelMessage(event) {
+    let data = await event.data.arrayBuffer()
+    this.onMessage(data, this.identifier)
   }
 
   disconnectPeers() {
