@@ -48,6 +48,12 @@ class InfrastructureComponentStore extends ArrayStore {
         for (let ic of action.data) {
           if (ic.websocketurl	!= null && ic.websocketurl !== '') {
             ICDataDataManager.open(ic.websocketurl, ic.id);
+          } else if (ic.statusupdateraw != null && ic.statusupdateraw.properties != null) {
+            let rawProps = ic.statusupdateraw.properties
+            if (rawProps != null && typeof rawProps.server !== 'undefined') {
+              let url = rawProps.server + '/' + rawProps.session
+              ICDataDataManager.openWebRTC(url, ic.id);
+            }
           } else {
             NotificationsDataManager.addNotification(NotificationsFactory.WEBSOCKET_URL_WARN(ic.name, ic.uuid));
           }
