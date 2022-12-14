@@ -48,7 +48,7 @@ export function villasweb_home(title, username, userid, role) {
       <img height={60} src={require('./img/eonerc_rwth.svg').default} alt="Logo ACS" />
       <ul>
         <li><a href="mailto:ikoester@eonerc.rwth-aachen.de">Iris Köster</a></li>
-        <li><a href="mailto:stvogel@eonerc.rwth-aachen.de">Steffen Vogel</a></li>
+        <li><a href="mailto:post@steffenvogel.de">Steffen Vogel</a></li>
       </ul>
       <h3>Links</h3>
       <ul>
