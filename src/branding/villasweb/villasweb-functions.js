@@ -47,14 +47,14 @@ export function villasweb_home(title, username, userid, role) {
       <p>VILLASweb is an open source project developed by the <a href="http://acs.eonerc.rwth-aachen.de">Institute for Automation of Complex Power Systems</a> at <a href="https;//www.rwth-aachen.de">RWTH Aachen University</a>.</p>
       <img height={60} src={require('./img/eonerc_rwth.svg').default} alt="Logo ACS" />
       <ul>
+        <li><a href="mailto:ikoester@eonerc.rwth-aachen.de">Iris Köster</a></li>
         <li><a href="mailto:stvogel@eonerc.rwth-aachen.de">Steffen Vogel</a></li>
-        <li><a href="mailto:sonja.happ@eonerc.rwth-aachen.de">Sonja Happ</a></li>
       </ul>
       <h3>Links</h3>
       <ul>
         <li><NavLink to="/api">VILLASweb API browser</NavLink></li>
         <li><a href="http://fein-aachen.org/projects/villas-framework/">FEIN Aachen e.V. project page of VILLASframework</a></li>
-        <li><a href="https://villas.fein-aachen.org/doc/web.html">Documentation of VILLASweb</a></li>
+        <li><a href="https://villas.fein-aachen.org/docs/web">Documentation of VILLASweb</a></li>
         <li><a href="https://git.rwth-aachen.de/acs/public/villas/web">Source Code of VILLASweb frontend</a></li>
         <li><a href="https://git.rwth-aachen.de/acs/public/villas/web-backend-go">Source Code of VILLASweb backend</a></li>
       </ul>
