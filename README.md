@@ -4,13 +4,9 @@
 
 VILLASweb is a tool to configure real-time co-simulations and display simulation real-time data in the web browser.
 
-
-
-
-
 ## Documentation
 
-More details on the setup and usage of VILLASweb is available [in the VILLAS documentation](https://villas.fein-aachen.org/doc/web.html).
+More details on the setup and usage of VILLASweb is available [in the VILLAS documentation](https://villas.fein-aachen.org/docs/web).
 
 ## Copyright
 
@@ -47,7 +43,7 @@ For other licensing options please consult [Prof. Antonello Monti](mailto:amonti
 [![EONERC ACS Logo](doc/pictures/eonerc_logo.png)](http://www.acs.eonerc.rwth-aachen.de)
 
  - Steffen Vogel <post@steffenvogel.de>
- - Sonja Happ <sonja.happ@eonerc.rwth-aachen.de>
+ - Iris Köster <ikoester@eonerc.rwth-aachen.de>
 
 [Institute for Automation of Complex Power Systems (ACS)](http://www.acs.eonerc.rwth-aachen.de)  
 [EON Energy Research Center (EONERC)](http://www.eonerc.rwth-aachen.de)  
