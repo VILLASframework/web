@@ -20,30 +20,31 @@
  */
 
 :root {
-  --bg: #eceded;
+  --main: #4d4d4d;
+  --background: #eceded;
   --highlights: #527984;
-  --secondarytext: #818181;
-  --borderradius: 0px;
-  --mainfont: 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --maincolor: #4d4d4d;
-  --bgtext:#fff;
+  --secondaryText: #818181;
+  --borderRadius: 0px;
+  --fontFamily: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --backgroundText:#fff;
 }
 
 * {
-  color: var(--maincolor);
+  color: var(--main);
 }
 
 body {
-  background-color: var(--bg) !important;
+  background-color: var(--background) !important;
+  font-family: var(--fontFamily) !important;
 }
 
 .app {
   height: 100vh;
-  color: var(--maincolor);
-  border-radius: var(--borderradius);
+  color: var(--main);
+  border-radius: var(--borderRadius);
 
 
-  font: var(--mainfont);
+  font: 16px;
   hyphens: auto;
 }
 
@@ -91,13 +92,13 @@ a:active {
 
   margin-top: 2em;
   padding-bottom: 2em;
-  color: var(--bgtext);
+  color: var(--backgroundText);
   text-align: center;
 }
 
 .app-footer a {
   text-decoration: underline;
-  color: var(--bgtext);
+  color: var(--backgroundText);
 }
 
 .app-body-spacing {
@@ -110,7 +111,7 @@ a:active {
 
 .app-content {
   padding: 15px 20px 20px 20px;
-  border-radius: var(--borderradius);
+  border-radius: var(--borderRadius);
 
 
   width: auto;
@@ -145,7 +146,7 @@ a:active {
   padding: 20px;
   margin-bottom: 20px;
   width: 160px;
-  border-radius: var(--borderradius);
+  border-radius: var(--borderRadius);
 
 
   background-color: #fff;
@@ -159,7 +160,7 @@ a:active {
   text-align: center;
   margin-bottom: 20px;
   width: 160px;
-  border-radius: var(--borderradius);
+  border-radius: var(--borderRadius);
 
   background-color: #fff;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),

@@ -21,251 +21,194 @@ import villasweb_values from './villasweb/villasweb-values';
 import { slew_home, slew_welcome } from './slew/slew-functions';
 import slew_values from './slew/slew-values';
 
+import { opalrt_home, opalrt_welcome } from './opalrt/opalrt-functions';
+import opalrt_values from './opalrt/opalrt-values';
+
 import { template_welcome, template_home, template_footer } from './template/template-functions';
 import template_values from './template/template-values';
 
 class Branding {
-    constructor(chosenbrand) {
-        this.brand = chosenbrand;
-        this.setValues();
-        this.checkValues();
-        this.applyStyle();
+  constructor(brand) {
+    this.brand = brand;
 
-        Branding.branding = this;
+    this.setValues();
+    this.checkValues();
+    this.applyStyle();
+
+    Branding.branding = this;
+  }
+
+  setValues() {
+    switch (this.brand) {
+      case 'villasweb':
+        this.values = villasweb_values;
+        break;
+      case 'slew':
+        this.values = slew_values;
+        break;
+      case 'opalrt':
+        this.values = opalrt_values;
+        break;
+      case 'template':
+        this.values = template_values;
+        break;
+      default:
+        console.error("Branding '" + this.brand + "' not available, will use 'villasweb' branding");
+        this.brand = 'villasweb';
+        this.values = villasweb_values;
+        break;
+    }
+  }
+
+  getHome(username = '', userid = '', role = '') {
+    var homepage = '';
+    switch (this.brand) {
+      case 'villasweb':
+        homepage = villasweb_home(this.getTitle(), username, userid, role);
+        break;
+      case 'slew':
+        homepage = slew_home();
+        break;
+      case 'opalrt':
+        homepage = opalrt_home();
+        break;
+      case 'template':
+        homepage = template_home();
+        break;
+      default:
+        homepage = villasweb_home(this.getTitle(), username, userid, role);
+        break;
+    }
+    return homepage;
+  }
+
+  getFooter() {
+    var footer = '';
+    switch (this.brand) {
+      case 'template':
+        footer = template_footer();
+        break;
+      default:
+        footer = villasweb_footer();
+        break;
+    }
+    return footer;
+  }
+
+  getWelcome() {
+    var welcome = '';
+    switch (this.brand) {
+      case 'villasweb':
+        welcome = villasweb_welcome();
+        break;
+      case 'slew':
+        welcome = slew_welcome();
+        break;
+      case 'opalrt':
+        welcome = opalrt_welcome();
+        break;
+      case 'template':
+        welcome = template_welcome();
+        break;
+      default:
+        welcome = this.defaultWelcome();
+        break;
+    }
+    return welcome;
+  }
+
+  defaultWelcome() {
+    return (<div><h1>Welcome!</h1><p>This is the welcome page and you are very welcome here.</p></div>);
+  }
+
+  // if icon cannot be found, the default favicon will be used
+  changeHead() {
+    // set title of document
+    let title = this.getTitle();
+    if (this.getSubtitle()) {
+      title += " " + this.getSubtitle();
+    }
+    document.title = title;
+
+    // set document icon
+    if (!this.values.icon) {
+      return;
+    }
+    var oldlink = document.getElementById('dynamic-favicon');
+
+    var link = document.createElement('link');
+    link.id = 'dynamic-favicon';
+    link.rel = 'shortcut icon'
+    link.href = '/' + this.values.icon;
+
+    if (oldlink) {
+      document.head.removeChild(oldlink);
+    }
+    document.head.appendChild(link);
+  }
+
+  checkValues() {
+    if (!this.values.hasOwnProperty('pages')) {
+      let pages = {};
+      pages.home = true;
+      pages.scenarios = true;
+      pages.infrastructure = true;
+      pages.users = true;
+      pages.account = true;
+      pages.api = true;
+
+      this.values.pages = pages;
+    } else {
+      if (!this.values.pages.hasOwnProperty('home')) {
+        this.values.pages['home'] = false;
+      }
+      if (!this.values.pages.hasOwnProperty('scenarios')) {
+        this.values.pages['scenarios'] = false;
+      }
+      if (!this.values.pages.hasOwnProperty('infrastructure')) {
+        this.values.pages['infrastructure'] = false;
+      }
+      if (!this.values.pages.hasOwnProperty('users')) {
+        this.values.pages['users'] = false;
+      }
+      if (!this.values.pages.hasOwnProperty('account')) {
+        this.values.pages['account'] = false;
+      }
+      if (!this.values.pages.hasOwnProperty('api')) {
+        this.values.pages['api'] = false;
+      }
+    }
+  }
+
+  applyStyle() {
+    this.changeHead();
+
+    const rootEl = document.querySelector(':root');
+
+    for (const [key, value] of Object.entries(this.values.style)) {
+      rootEl.style.setProperty('--' + key, value);
+    }
+  }
+
+  getLogo(style) {
+    let image = null;
+
+    try {
+      image = <img style={style} src={require('./' + this.brand + '/img/' + this.values.logo).default} alt={'Logo ' + this.values.title} />
+    } catch (err) {
+      console.error("cannot find './" + this.brand + '/img/' + this.values.logo + "'");
     }
 
-    setValues() {
-        switch (this.brand) {
-            case 'villasweb':
-                this.values = villasweb_values;
-                break;
-            case 'slew':
-                this.values = slew_values;
-                break;
-            case 'template':
-                this.values = template_values;
-                break;
-            default:
-                console.error("Branding '" + this.brand + "' not available, will use 'villasweb' branding");
-                this.brand = 'villasweb';
-                this.values = villasweb_values;
-                break;
-        }
-    }
+    return image;
+  }
 
-    getHome(username = '', userid = '', role = '') {
-        var homepage = '';
-        switch (this.brand) {
-            case 'villasweb':
-                homepage = villasweb_home(this.getTitle(), username, userid, role);
-                break;
-            case 'slew':
-                homepage = slew_home();
-                break;
-            case 'template':
-                homepage = template_home();
-                break;
-            default:
-                homepage = villasweb_home(this.getTitle(), username, userid, role);
-                break;
-        }
-        return homepage;
-    }
+  getTitle() {
+    return this.values.title ? this.values.title : "No Title!";
+  }
 
-    getFooter() {
-        var footer = '';
-        switch(this.brand) {
-            case 'template':
-                footer = template_footer();
-                break;
-            default:
-                footer = villasweb_footer();
-                break;
-        }
-        return footer;
-    }
-
-    getWelcome() {
-        var welcome = '';
-        switch (this.brand) {
-            case 'villasweb':
-                welcome = villasweb_welcome();
-                break;
-            case 'slew':
-                welcome = slew_welcome();
-                break;
-            case 'template':
-                welcome = template_welcome();
-                break;
-            default:
-                welcome = this.defaultWelcome();
-                break;
-        }
-        return welcome;
-    }
-
-    defaultWelcome() {
-        return (<div><h1>Welcome!</h1><p>This is the welcome page and you are very welcome here.</p></div>);
-    }
-
-    // if icon cannot be found, the default favicon will be used
-    changeHead() {
-        // set title of document
-        let title = this.getTitle();
-        if (this.getSubtitle()) {
-            title += " " + this.getSubtitle();
-        }
-        document.title = title;
-
-        // set document icon
-        if (!this.values.icon) {
-            return;
-        }
-        var oldlink = document.getElementById('dynamic-favicon');
-
-        var link = document.createElement('link');
-        link.id = 'dynamic-favicon';
-        link.rel = 'shortcut icon'
-        link.href = '/' + this.values.icon;
-
-        if (oldlink) {
-            document.head.removeChild(oldlink);
-        }
-        document.head.appendChild(link);
-    }
-
-    checkValues() {
-        if (!this.values.hasOwnProperty('pages'))  {
-            let pages = {};
-            pages.home =  true;
-            pages.scenarios = true;
-            pages.infrastructure = true;
-            pages.users = true;
-            pages.account = true;
-            pages.api = true;
-
-            this.values.pages = pages;
-        } else {
-            if (!this.values.pages.hasOwnProperty('home')) {
-                this.values.pages['home'] = false;
-            }
-            if (!this.values.pages.hasOwnProperty('scenarios')) {
-                this.values.pages['scenarios'] = false;
-            }
-            if (!this.values.pages.hasOwnProperty('infrastructure')) {
-                this.values.pages['infrastructure'] = false;
-            }
-            if (!this.values.pages.hasOwnProperty('users')) {
-                this.values.pages['users'] = false;
-            }
-            if (!this.values.pages.hasOwnProperty('account')) {
-                this.values.pages['account'] = false;
-            }
-            if (!this.values.pages.hasOwnProperty('api')) {
-                this.values.pages['api'] = false;
-            }
-        }
-    }
-
-    applyStyle() {
-        this.changeHead();
-
-        const rootEl = document.querySelector(':root');
-
-        let background = this.getBackgroundColor();
-        if (background) {
-            rootEl.style.setProperty('--bg', background);
-        } else {
-            console.log(document.body.style.backgroundColor)
-        }
-
-        let maincolor = this.getMainColor();
-        if (maincolor) {
-            rootEl.style.setProperty('--maincolor', maincolor);
-        }
-
-        let highlight = this.getHighlightColor();
-        if (highlight) {
-            rootEl.style.setProperty('--highlights', highlight);
-        }
-
-        let secondary = this.getSecondaryTextColor();
-        if (secondary) {
-            rootEl.style.setProperty('--secondarytext', secondary);
-        }
-
-        let font = this.getFont();
-        if (font) {
-            rootEl.style.setProperty('--mainfont', font);
-        }
-
-        let borderradius = this.getBorderRadius();
-        if (borderradius) {
-            rootEl.style.setProperty('--borderradius', borderradius);
-        }
-    }
-
-    getLogo(style) {
-        let image = null;
-
-        try {
-            image =  <img style={style} src={require('./' + this.brand + '/img/' + this.values.logo).default} alt={'Logo ' + this.values.title} />
-        } catch (err) {
-            console.error("cannot find './" + this.brand + '/img/' + this.values.logo + "'");
-        }
- 
-        return image;
-    }
-
-    getBackgroundColor() {
-        if (this.values.style && this.values.style.background) {
-            return this.values.style.background;
-        }
-        return null;
-    }
-
-    getMainColor() {
-        if (this.values.style && this.values.style.maincolor) {
-            return this.values.style.maincolor;
-        }
-        return null;
-    }
-
-    getHighlightColor() {
-        if (this.values.style && this.values.style.highlights) {
-            return this.values.style.highlights;
-        }
-        return null;
-    }
-
-    getSecondaryTextColor() {
-        if (this.values.style && this.values.style.secondarytext) {
-            return this.values.style.secondarytext;
-        }
-        return null;
-    }
-
-    getFont() {
-        if (this.values.style && this.values.style.font) {
-            return this.values.style.secondarytext;
-        }
-        return null;
-    }
-
-    getBorderRadius() {
-        if (this.values.style && this.values.style.borderradius) {
-            return this.values.style.borderradius;
-        }
-        return null;
-    }
-
-    getTitle() {
-        return this.values.title ? this.values.title : "No Title!";
-    }
-
-    getSubtitle() {
-        return this.values.subtitle ? this.values.subtitle : null;
-    }
+  getSubtitle() {
+    return this.values.subtitle ? this.values.subtitle : null;
+  }
 };
 
 var branding = new Branding(process.env.REACT_APP_BRAND);

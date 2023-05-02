@@ -24,26 +24,16 @@ build.slew:
     DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
   extends: build
 
-deploy.latest:
-  stage: deploy
+build.opalrt:
   variables:
-    DOCKER_TAG: latest
-  before_script:
-  - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
-  script:
-  - docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
-  only:
-    refs:
-    - master
-  tags:
-  - docker
-  dependencies:
-  - build
+    BRANDING: opalrt
+    DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
+  extends: build
 
-deploy.slew:
+deploy:
   stage: deploy
   variables:
-    BRANDING: slew
+    BRANDING: villasweb
     DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
   before_script:
   - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
@@ -52,4 +42,24 @@ deploy.slew:
   tags:
   - docker
   dependencies:
-  - build.slew
+  - build
+
+deploy.slew:
+  extends: deploy
+  variables:
+    BRANDING: slew
+    DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
+
+deploy.opalrt:
+  extends: deploy
+  variables:
+    BRANDING: opalrt
+    DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
+
+deploy.latest:
+  extends: deploy
+  variables:
+    DOCKER_TAG: latest
+  only:
+    refs:
+    - master

@@ -16,8 +16,8 @@
  ******************************************************************************/
 
 const villasweb_values = {
-  title: 'VILLASweb',
-  subtitle: 'ACS',
+  title: 'OPAL-RT VILLASweb',
+  //  subtitle: 'OPAL-RT Web Dashboards',
   logo: 'villas_web.svg',
   pages: {
     home: true,
@@ -27,10 +27,13 @@ const villasweb_values = {
     api: true,
   },
   style: {
-    background: '#6EA2B0',
-    highlights: '#527984',
-    main: '#4d4d4d',
-    secondaryText: '#818181',
+    background: '#f0f4f7',
+    backgroundText: '#000000',
+    highlights: '#1158a2',
+    main: '#092f56',
+    secondaryText: '#c4c4c4',
+    fontFamily: 'Open Sans',
+    // borderRadius: ''
   }
 }
 
