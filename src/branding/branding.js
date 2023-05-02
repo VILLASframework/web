@@ -21,6 +21,9 @@ import villasweb_values from './villasweb/villasweb-values';
 import { slew_home, slew_welcome } from './slew/slew-functions';
 import slew_values from './slew/slew-values';
 
+import { opalrt_home, opalrt_welcome } from './opalrt/opalrt-functions';
+import opalrt_values from './opalrt/opalrt-values';
+
 import { template_welcome, template_home, template_footer } from './template/template-functions';
 import template_values from './template/template-values';
 
@@ -42,6 +45,9 @@ class Branding {
             case 'slew':
                 this.values = slew_values;
                 break;
+            case 'opalrt':
+                this.values = opalrt_values;
+                break;
             case 'template':
                 this.values = template_values;
                 break;
@@ -61,6 +67,9 @@ class Branding {
                 break;
             case 'slew':
                 homepage = slew_home();
+                break;
+            case 'opalrt':
+                homepage = opalrt_home();
                 break;
             case 'template':
                 homepage = template_home();
@@ -93,6 +102,9 @@ class Branding {
                 break;
             case 'slew':
                 welcome = slew_welcome();
+                break;
+            case 'opalrt':
+                welcome = opalrt_welcome();
                 break;
             case 'template':
                 welcome = template_welcome();
