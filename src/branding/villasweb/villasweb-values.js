@@ -29,8 +29,8 @@ const villasweb_values = {
    style: {
       background: '#6EA2B0',
       highlights: '#527984',
-      maincolor: '#4d4d4d',
-      secondarytext: '#818181',
+      main: '#4d4d4d',
+      secondaryText: '#818181',
    }
 }
 

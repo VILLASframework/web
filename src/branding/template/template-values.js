@@ -34,11 +34,11 @@
     style: {
        background: 'rgba(50,30,90, 0.6)',
        highlights: 'rgba(0,230,5, 0.75)',
-       maincolor: 'rgba(255,0,0, 1)',
-       secondarytext: 'rgba(0,0,100, 0.8)',
-       font: "16px Comic Sans, sans-serif",
-       borderradius: "60px"
+       main: 'rgba(255,0,0, 1)',
+       secondaryText: 'rgba(0,0,100, 0.8)',
+       fontFamily: "Comic Sans, sans-serif",
+       borderRadius: "60px"
     }
  }
- 
+
  export default template_values;

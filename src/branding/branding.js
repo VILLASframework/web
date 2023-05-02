@@ -172,36 +172,8 @@ class Branding {
 
         const rootEl = document.querySelector(':root');
 
-        let background = this.getBackgroundColor();
-        if (background) {
-            rootEl.style.setProperty('--bg', background);
-        } else {
-            console.log(document.body.style.backgroundColor)
-        }
-
-        let maincolor = this.getMainColor();
-        if (maincolor) {
-            rootEl.style.setProperty('--maincolor', maincolor);
-        }
-
-        let highlight = this.getHighlightColor();
-        if (highlight) {
-            rootEl.style.setProperty('--highlights', highlight);
-        }
-
-        let secondary = this.getSecondaryTextColor();
-        if (secondary) {
-            rootEl.style.setProperty('--secondarytext', secondary);
-        }
-
-        let font = this.getFont();
-        if (font) {
-            rootEl.style.setProperty('--mainfont', font);
-        }
-
-        let borderradius = this.getBorderRadius();
-        if (borderradius) {
-            rootEl.style.setProperty('--borderradius', borderradius);
+        for (const [key, value] of Object.entries(this.values.style)) {
+          rootEl.style.setProperty('--' + key, value);
         }
     }
 
@@ -213,51 +185,11 @@ class Branding {
         } catch (err) {
             console.error("cannot find './" + this.brand + '/img/' + this.values.logo + "'");
         }
- 
+
         return image;
     }
 
-    getBackgroundColor() {
-        if (this.values.style && this.values.style.background) {
-            return this.values.style.background;
-        }
-        return null;
-    }
 
-    getMainColor() {
-        if (this.values.style && this.values.style.maincolor) {
-            return this.values.style.maincolor;
-        }
-        return null;
-    }
-
-    getHighlightColor() {
-        if (this.values.style && this.values.style.highlights) {
-            return this.values.style.highlights;
-        }
-        return null;
-    }
-
-    getSecondaryTextColor() {
-        if (this.values.style && this.values.style.secondarytext) {
-            return this.values.style.secondarytext;
-        }
-        return null;
-    }
-
-    getFont() {
-        if (this.values.style && this.values.style.font) {
-            return this.values.style.secondarytext;
-        }
-        return null;
-    }
-
-    getBorderRadius() {
-        if (this.values.style && this.values.style.borderradius) {
-            return this.values.style.borderradius;
-        }
-        return null;
-    }
 
     getTitle() {
         return this.values.title ? this.values.title : "No Title!";
