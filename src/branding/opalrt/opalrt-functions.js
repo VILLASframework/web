@@ -56,7 +56,7 @@ export function opalrt_home(title, username, userid, role) {
       </ul>
       <h3>Credits</h3>
       <p>
-        VILLASweb is an open source project developed by the <a href="http://acs.eonerc.rwth-aachen.de">Institute for Automation of Complex Power Systems</a> at <a href="https;//www.rwth-aachen.de">RWTH Aachen University</a>.<br />
+        VILLASweb is an open source project developed by the <a href="http://acs.eonerc.rwth-aachen.de">Institute for Automation of Complex Power Systems</a> at <a href="https;//www.rwth-aachen.de">RWTH Aachen University</a> with the support of other open-source contributors.<br />
         This instance is operated by OPAL-RT Technologies Inc.
       </p>
       <p>
