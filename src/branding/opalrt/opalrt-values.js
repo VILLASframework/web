@@ -18,7 +18,7 @@
 const villasweb_values = {
   title: 'OPAL-RT VILLASweb',
   //  subtitle: 'OPAL-RT Web Dashboards',
-  logo: 'villas_web.svg',
+  logo: 'logo_opalrt_square.svg',
   pages: {
     home: true,
     scenarios: true,

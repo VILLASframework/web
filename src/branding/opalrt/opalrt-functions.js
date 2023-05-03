@@ -34,7 +34,6 @@ export function opalrt_welcome() {
 export function opalrt_home(title, username, userid, role) {
   return (
     <div className="home-container">
-      <img style={{ height: 120, float: 'right' }} src={require('./img/villas_web.svg').default} alt="Logo VILLASweb" />
       <h1>Home</h1>
       <p>
         Welcome to <b>{title}</b>!
@@ -42,28 +41,35 @@ export function opalrt_home(title, username, userid, role) {
       <p>
         You are logged in as user <b>{username}</b> with <b>ID {userid}</b> and role <b>{role}</b>.
       </p>
-      <h3>Credits</h3>
-      <p>VILLASweb is an open source project developed by the <a href="http://acs.eonerc.rwth-aachen.de">Institute for Automation of Complex Power Systems</a> at <a href="https;//www.rwth-aachen.de">RWTH Aachen University</a>.</p>
-      <img height={60} src={require('./img/eonerc_rwth.svg').default} alt="Logo ACS" />
+      <h3>Contacts</h3>
       <ul>
-        <li><a href="mailto:steffen.vogel@opal-rt.com">Steffen Vogel</a></li>
-        <li><a href="mailto:ikoester@eonerc.rwth-aachen.de">Iris Köster</a></li>
+        <li><a href="mailto:steffen.vogel@opal-rt.com">Steffen Vogel</a> (OPAL-RT)</li>
+        <li><a href="mailto:ikoester@eonerc.rwth-aachen.de">Iris Köster</a> (RWTH)</li>
       </ul>
       <h3>Links</h3>
       <ul>
-        <li><NavLink to="/api">VILLASweb API browser</NavLink></li>
-        <li><a href="http://fein-aachen.org/projects/villas-framework/">FEIN Aachen e.V. project page of VILLASframework</a></li>
-        <li><a href="https://villas.fein-aachen.org/docs/web">Documentation of VILLASweb</a></li>
-        <li><a href="https://git.rwth-aachen.de/acs/public/villas/web">Source Code of VILLASweb frontend</a></li>
-        <li><a href="https://git.rwth-aachen.de/acs/public/villas/web-backend-go">Source Code of VILLASweb backend</a></li>
+        <li><a href="https://opal-rt.com/">OPAL-RT Technologies</a></li>
+        <li><NavLink to="/api">API browser</NavLink></li>
+        <li><a href="https://fein-aachen.org/projects/villas-framework/">Project page of VILLASframework</a></li>
+        <li><a href="https://villas.fein-aachen.org/docs/web">Documentation</a></li>
+        <li>Source Code of <a href="https://github.com/VILLASframework/web">frontend</a> &amp; <a href="https://github.com/VILLASframework/web-backend">backend</a></li>
       </ul>
+      <h3>Credits</h3>
+      <p>
+        VILLASweb is an open source project developed by the <a href="http://acs.eonerc.rwth-aachen.de">Institute for Automation of Complex Power Systems</a> at <a href="https;//www.rwth-aachen.de">RWTH Aachen University</a>.<br />
+        This instance is operated by OPAL-RT Technologies Inc.
+      </p>
+      <p>
+        <a href="https://opal-rt.com/"><img height={60} src={require('./img/logo_opalrt.svg').default} alt="Logo OPAL-RT" style={{marginRight: 15}}  /></a>
+        <a href="https://www.acs.rwth-aachen.de"><img height={60} src={require('./img/eonerc_rwth.svg').default} alt="Logo ACS" /></a>
+      </p>
     </div>)
 }
 
 export function opalrt_footer() {
   return (
     <footer className="app-footer">
-      Copyright &copy; {new Date().getFullYear()} - <a href="https://www.acs.eonerc.rwth-aachen.de">Institute for Automation of Complex Power Systems</a> - <a href="https://www.rwth-aachen.de">RWTH Aachen University</a>
+      Copyright &copy; {new Date().getFullYear()} - <a href="https://opal-rt.com/">OPAL-RT Technologies</a> - <a href="https://www.acs.rwth-aachen.de">RWTH Aachen University</a>
     </footer>
   );
 }
