@@ -15,15 +15,21 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 
-import Router from './router';
+import Router from "./router";
 
-import 'bootstrap/dist/css/bootstrap.css';
-import './styles/index.css';
+// Redux
+import { Provider } from "react-redux";
+import store from "./redux/store";
+
+import "bootstrap/dist/css/bootstrap.css";
+import "./styles/index.css";
 
 ReactDOM.render(
-  <Router />,
-  document.getElementById('root')
+  <Provider store={store}>
+    <Router />
+  </Provider>,
+  document.getElementById("root")
 );

@@ -15,33 +15,61 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
-import { Container } from 'flux/utils';
-import FileSaver from 'file-saver';
-import AppDispatcher from '../common/app-dispatcher';
-import ScenarioStore from './scenario-store';
-import DashboardStore from '../dashboard/dashboard-store';
+import React, { Component } from "react";
+import { Container } from "flux/utils";
+import FileSaver from "file-saver";
+import AppDispatcher from "../common/app-dispatcher";
+import ScenarioStore from "./scenario-store";
+import DashboardStore from "../dashboard/dashboard-store";
 import WidgetStore from "../widget/widget-store";
-import ComponentConfigStore from '../componentconfig/config-store';
-import SignalStore from '../signal/signal-store'
-import ResultStore from '../result/result-store'
-import FileStore from '../file/file-store'
-import LoginStore from '../user/login-store'
-import UsersStore from '../user/users-store'
-import ICStore from '../ic/ic-store'
-import ICDataStore from '../ic/ic-data-store'
-import { Table, ButtonColumn, DataColumn, LinkColumn } from '../common/table';
-import NewScenarioDialog from './new-scenario';
-import EditScenarioDialog from './edit-scenario';
-import ImportScenarioDialog from './import-scenario';
-import DeleteDialog from '../common/dialogs/delete-dialog';
-import IconButton from '../common/buttons/icon-button';
+import ComponentConfigStore from "../componentconfig/config-store";
+import SignalStore from "../signal/signal-store";
+import ResultStore from "../result/result-store";
+import FileStore from "../file/file-store";
+import LoginStore from "../user/login-store";
+import UsersStore from "../user/users-store";
+import ICStore from "../ic/ic-store";
+import ICDataStore from "../ic/ic-data-store";
+import { Table, ButtonColumn, DataColumn, LinkColumn } from "../common/table";
+import NewScenarioDialog from "./new-scenario";
+import EditScenarioDialog from "./edit-scenario";
+import ImportScenarioDialog from "./import-scenario";
+import DeleteDialog from "../common/dialogs/delete-dialog";
+import IconButton from "../common/buttons/icon-button";
 
+import { connect } from "react-redux";
+import { addTodo } from "../redux/actions";
+import { getTodos } from "../redux/selectors";
 
 class Scenarios extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { input: "" };
+  }
+
+  updateInput = (input) => {
+    this.setState({ input });
+  };
+
+  handleAddTodo = () => {
+    this.props.addTodo(this.state.input);
+    this.setState({ input: "" });
+  };
 
   static getStores() {
-    return [ScenarioStore, DashboardStore, WidgetStore, ComponentConfigStore, SignalStore, ResultStore, FileStore,LoginStore, UsersStore, ICStore, ICDataStore];
+    return [
+      ScenarioStore,
+      DashboardStore,
+      WidgetStore,
+      ComponentConfigStore,
+      SignalStore,
+      ResultStore,
+      FileStore,
+      LoginStore,
+      UsersStore,
+      ICStore,
+      ICDataStore,
+    ];
   }
 
   static calculateState(prevState, props) {
@@ -62,21 +90,21 @@ class Scenarios extends Component {
       importModal: false,
       modalScenario: {},
       selectedScenarios: prevState.selectedScenarios || [],
-      currentUser: JSON.parse(localStorage.getItem("currentUser"))
+      currentUser: JSON.parse(localStorage.getItem("currentUser")),
     };
   }
 
   componentDidMount() {
     AppDispatcher.dispatch({
-      type: 'scenarios/start-load',
-      token: this.state.sessionToken
+      type: "scenarios/start-load",
+      token: this.state.sessionToken,
     });
   }
 
   closeNewModal(data) {
     if (data) {
       AppDispatcher.dispatch({
-        type: 'scenarios/start-add',
+        type: "scenarios/start-add",
         data: data,
         token: this.state.sessionToken,
       });
@@ -107,28 +135,28 @@ class Scenarios extends Component {
     this.state.dashboards.forEach((dashboard) => {
       if (dashboard.id === this.state.modalScenario.id) {
         AppDispatcher.dispatch({
-          type: 'dashboards/start-remove',
+          type: "dashboards/start-remove",
           data: dashboard,
-          token: this.state.sessionToken
-        })
+          token: this.state.sessionToken,
+        });
       }
     });
 
     AppDispatcher.dispatch({
-      type: 'scenarios/start-remove',
+      type: "scenarios/start-remove",
       data: this.state.modalScenario,
-      token: this.state.sessionToken
+      token: this.state.sessionToken,
     });
-  };
+  }
 
   closeEditModal(data) {
     this.setState({ editModal: false });
 
     if (data != null) {
       AppDispatcher.dispatch({
-        type: 'scenarios/start-edit',
+        type: "scenarios/start-edit",
         data,
-        token: this.state.sessionToken
+        token: this.state.sessionToken,
       });
     }
   }
@@ -138,7 +166,7 @@ class Scenarios extends Component {
 
     if (data) {
       AppDispatcher.dispatch({
-        type: 'scenarios/start-add',
+        type: "scenarios/start-add",
         data: data,
         token: this.state.sessionToken,
       });
@@ -146,7 +174,7 @@ class Scenarios extends Component {
   }
 
   onModalKeyPress = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       event.preventDefault();
 
       this.confirmDeleteModal();
@@ -154,17 +182,27 @@ class Scenarios extends Component {
   };
 
   getConfigs(scenarioID) {
-    let configs = JSON.parse(JSON.stringify(this.state.configs.filter(config => config.scenarioID === scenarioID)));
+    let configs = JSON.parse(
+      JSON.stringify(
+        this.state.configs.filter((config) => config.scenarioID === scenarioID)
+      )
+    );
     configs.forEach((config) => {
-      let signals = JSON.parse(JSON.stringify(SignalStore.getState().filter(s => s.configID === parseInt(config.id, 10))));
+      let signals = JSON.parse(
+        JSON.stringify(
+          SignalStore.getState().filter(
+            (s) => s.configID === parseInt(config.id, 10)
+          )
+        )
+      );
       signals.forEach((signal) => {
         delete signal.configID;
         delete signal.id;
-      })
+      });
 
       // two separate lists for inputMapping and outputMapping
-      let inputSignals = signals.filter(s => s.direction === 'in');
-      let outputSignals = signals.filter(s => s.direction === 'out');
+      let inputSignals = signals.filter((s) => s.direction === "in");
+      let outputSignals = signals.filter((s) => s.direction === "out");
 
       // add signal mappings to config
       config["inputMapping"] = inputSignals;
@@ -172,20 +210,30 @@ class Scenarios extends Component {
 
       delete config.id;
       delete config.scenarioID;
-    })
+    });
 
     return configs;
   }
 
   getDashboards(scenarioID) {
-    let dashboards = JSON.parse(JSON.stringify(this.state.dashboards.filter(dashb => dashb.scenarioID === scenarioID)));
+    let dashboards = JSON.parse(
+      JSON.stringify(
+        this.state.dashboards.filter((dashb) => dashb.scenarioID === scenarioID)
+      )
+    );
     // add Dashboards and Widgets to JSON object
     dashboards.forEach((dboard) => {
-      let widgets = JSON.parse(JSON.stringify(WidgetStore.getState().filter(w => w.dashboardID === parseInt(dboard.id, 10))));
+      let widgets = JSON.parse(
+        JSON.stringify(
+          WidgetStore.getState().filter(
+            (w) => w.dashboardID === parseInt(dboard.id, 10)
+          )
+        )
+      );
       widgets.forEach((widget) => {
         delete widget.dashboardID;
         delete widget.id;
-      })
+      });
       dboard["widgets"] = widgets;
       delete dboard.scenarioID;
       delete dboard.id;
@@ -205,13 +253,15 @@ class Scenarios extends Component {
     jsonObj["dashboards"] = this.getDashboards(scenarioID);
 
     // create JSON string and show save dialog
-    const blob = new Blob([JSON.stringify(jsonObj, null, 2)], { type: 'application/json' });
-    FileSaver.saveAs(blob, 'scenario - ' + scenario.name + '.json');
+    const blob = new Blob([JSON.stringify(jsonObj, null, 2)], {
+      type: "application/json",
+    });
+    FileSaver.saveAs(blob, "scenario - " + scenario.name + ".json");
   }
 
   duplicateScenario(index) {
     let scenario = JSON.parse(JSON.stringify(this.state.scenarios[index]));
-    scenario.name = scenario.name + '_copy';
+    scenario.name = scenario.name + "_copy";
     let jsonObj = scenario;
 
     jsonObj["configs"] = this.getConfigs(scenario.id);
@@ -219,7 +269,7 @@ class Scenarios extends Component {
 
     if (jsonObj) {
       AppDispatcher.dispatch({
-        type: 'scenarios/start-add',
+        type: "scenarios/start-add",
         data: jsonObj,
         token: this.state.sessionToken,
       });
@@ -236,92 +286,152 @@ class Scenarios extends Component {
     data.isLocked = !this.state.scenarios[index].isLocked;
 
     AppDispatcher.dispatch({
-      type: 'scenarios/start-edit',
+      type: "scenarios/start-edit",
       data,
-      token: this.state.sessionToken
+      token: this.state.sessionToken,
     });
   }
 
   render() {
     const buttonStyle = {
-      marginLeft: '10px',
-    }
+      marginLeft: "10px",
+    };
 
     const iconStyle = {
-      height: '30px',
-      width: '30px'
-    }
+      height: "30px",
+      width: "30px",
+    };
+
+    const { todos } = this.props;
 
     return (
-    <div className='section'>
-      <h1>Scenarios
-          <span className='icon-button'>
-          <IconButton
-            childKey={0}
-            tooltip='Add Scenario'
-            onClick={() => this.setState({ newModal: true })}
-            icon='plus'
-            buttonStyle={buttonStyle}
-            iconStyle={iconStyle}
+      <div className="section">
+        <div>
+          <input
+            onChange={(e) => this.updateInput(e.target.value)}
+            value={this.state.input}
           />
-          <IconButton
-            childKey={1}
-            tooltip='Import Scenario'
-            onClick={() => this.setState({ importModal: true })}
-            icon='upload'
-            buttonStyle={buttonStyle}
-            iconStyle={iconStyle}
-          />
-        </span>
-      </h1>
+          <button className="add-todo" onClick={this.handleAddTodo}>
+            Add Todo
+          </button>
+        </div>
+        <div>
+          <ul>
+            {todos.map((todo, index) => (
+              <li key={index}>{todo.content}</li>
+            ))}
+          </ul>
+        </div>
 
-      <Table data={this.state.scenarios}>
-        {this.state.currentUser.role === "Admin" ?
-          <DataColumn
-            title='ID'
-            dataKey='id'
+        <h1>
+          Scenarios
+          <span className="icon-button">
+            <IconButton
+              childKey={0}
+              tooltip="Add Scenario"
+              onClick={() => this.setState({ newModal: true })}
+              icon="plus"
+              buttonStyle={buttonStyle}
+              iconStyle={iconStyle}
+            />
+            <IconButton
+              childKey={1}
+              tooltip="Import Scenario"
+              onClick={() => this.setState({ importModal: true })}
+              icon="upload"
+              buttonStyle={buttonStyle}
+              iconStyle={iconStyle}
+            />
+          </span>
+        </h1>
+
+        <Table data={this.state.scenarios}>
+          {this.state.currentUser.role === "Admin" ? (
+            <DataColumn title="ID" dataKey="id" />
+          ) : (
+            <></>
+          )}
+          <LinkColumn
+            title="Name"
+            dataKey="name"
+            link="/scenarios/"
+            linkKey="id"
           />
-          : <></>
-        }
-        <LinkColumn
-          title='Name'
-          dataKey='name'
-          link='/scenarios/'
-          linkKey='id'
-        />
-        {this.state.currentUser.role === "Admin" ?
+          {this.state.currentUser.role === "Admin" ? (
+            <ButtonColumn
+              title="Locked"
+              lockButton
+              onChangeLock={(index, event) => this.onLock(index)}
+              isLocked={(index) => this.isLocked(index)}
+            />
+          ) : (
+            <></>
+          )}
+
           <ButtonColumn
-            title='Locked'
-            lockButton
-            onChangeLock={(index, event) => this.onLock(index)}
-            isLocked={index => this.isLocked(index)}
+            width="200"
+            align="right"
+            editButton
+            deleteButton
+            exportButton
+            duplicateButton
+            onEdit={(index) =>
+              this.setState({
+                editModal: true,
+                modalScenario: this.state.scenarios[index],
+              })
+            }
+            onDelete={(index) =>
+              this.setState({
+                deleteModal: true,
+                modalScenario: this.state.scenarios[index],
+              })
+            }
+            onExport={(index) => this.exportScenario(index)}
+            onDuplicate={(index) => this.duplicateScenario(index)}
+            isLocked={(index) => this.isLocked(index)}
           />
-          : <></>
-        }
-        <ButtonColumn
-          width='200'
-          align='right'
-          editButton
-          deleteButton
-          exportButton
-          duplicateButton
-          onEdit={index => this.setState({ editModal: true, modalScenario: this.state.scenarios[index] })}
-          onDelete={index => this.setState({ deleteModal: true, modalScenario: this.state.scenarios[index] })}
-          onExport={index => this.exportScenario(index)}
-          onDuplicate={index => this.duplicateScenario(index)}
-          isLocked={index => this.isLocked(index)}
+        </Table>
+
+        <NewScenarioDialog
+          show={this.state.newModal}
+          onClose={(data) => this.closeNewModal(data)}
         />
-      </Table>
+        <EditScenarioDialog
+          show={this.state.editModal}
+          onClose={(data) => this.closeEditModal(data)}
+          scenario={this.state.modalScenario}
+        />
+        <ImportScenarioDialog
+          show={this.state.importModal}
+          onClose={(data) => this.closeImportModal(data)}
+          nodes={this.state.nodes}
+        />
 
-      <NewScenarioDialog show={this.state.newModal} onClose={(data) => this.closeNewModal(data)} />
-      <EditScenarioDialog show={this.state.editModal} onClose={(data) => this.closeEditModal(data)} scenario={this.state.modalScenario} />
-      <ImportScenarioDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} nodes={this.state.nodes} />
-
-      <DeleteDialog title="scenario" name={this.state.modalScenario.name} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} />
-    </div>
-  );
+        <DeleteDialog
+          title="scenario"
+          name={this.state.modalScenario.name}
+          show={this.state.deleteModal}
+          onClose={(e) => this.closeDeleteModal(e)}
+        />
+      </div>
+    );
   }
 }
 
-let fluxContainerConverter = require('../common/FluxContainerConverter');
-export default Container.create(fluxContainerConverter.convert(Scenarios));
+let fluxContainerConverter = require("../common/FluxContainerConverter");
+// export default Container.create(fluxContainerConverter.convert(Scenarios));
+
+const mapStateToProps = (state) => ({
+  todos: getTodos(state), // Assuming you have a selector called getTodos
+});
+
+// Map the actions to the component's props
+const mapDispatchToProps = {
+  addTodo,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Container.create(fluxContainerConverter.convert(Scenarios)));
