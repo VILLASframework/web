@@ -15,29 +15,30 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import RestDataManager from './common/data-managers/rest-data-manager';
-import RestAPI from './common/api/rest-api';
-import AppDispatcher from './common/app-dispatcher';
-
+import RestDataManager from "./common/data-managers/rest-data-manager";
+import RestAPI from "./common/api/rest-api";
+import AppDispatcher from "./common/app-dispatcher";
 
 class ConfigReader extends RestDataManager {
   constructor() {
-    super('config', '/config');
+    super("config", "/config");
   }
 
   loadConfig() {
-    RestAPI.get(this.makeURL('/config'), null).then(response => {
-      AppDispatcher.dispatch({
-        type: 'config/loaded',
-        data: response,
+    RestAPI.get(this.makeURL("/config"), null)
+      .then((response) => {
+        AppDispatcher.dispatch({
+          type: "config/loaded",
+          data: response,
+        });
+      })
+      .catch((error) => {
+        AppDispatcher.dispatch({
+          type: "config/load-error",
+          error: error,
+        });
       });
-    }).catch(error => {
-      AppDispatcher.dispatch({
-        type: 'config/load-error',
-        error: error,
-      });
-    });
   }
-};
+}
 
 export default new ConfigReader();

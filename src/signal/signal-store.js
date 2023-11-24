@@ -20,7 +20,7 @@ import SignalsDataManager from './signals-data-manager'
 import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
 import NotificationsFactory from "../common/data-managers/notifications-factory";
 
-class SignalStore extends  ArrayStore{
+class SignalStore extends ArrayStore{
   constructor() {
     super('signals', SignalsDataManager);
   }
