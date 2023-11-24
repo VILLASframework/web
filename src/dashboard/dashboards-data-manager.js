@@ -18,7 +18,7 @@
 import RestDataManager from '../common/data-managers/rest-data-manager';
 import AppDispatcher from "../common/app-dispatcher";
 
-class DashboardsDataManager extends RestDataManager{
+class DashboardsDataManager extends RestDataManager {
   constructor() {
     super('dashboard', '/dashboards');
     this.onLoad = this.onDashboardsLoad
