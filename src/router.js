@@ -15,24 +15,26 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import App from './app';
-import Login from './user/login';
-import Logout from './user/logout';
-import LoginComplete from './user/login-complete'
+import React from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import App from "./app";
+import Login from "./user/login";
+import Logout from "./user/logout";
+import LoginComplete from "./user/login-complete";
 
 class Root extends React.Component {
   render() {
     return (
-      <BrowserRouter>
-        <Switch>
-          <Route path='/login/complete' component={LoginComplete} />
-          <Route path='/login' component={Login} />
-          <Route path='/logout' component={Logout} />
-          <Route path='/' component={App} />
-        </Switch>
-      </BrowserRouter>
+      
+        <BrowserRouter>
+          <Switch>
+            <Route path="/login/complete" component={LoginComplete} />
+            <Route path="/login" component={Login} />
+            <Route path="/logout" component={Logout} />
+            <Route path="/" component={App} />
+          </Switch>
+        </BrowserRouter>
+      
     );
   }
 }
