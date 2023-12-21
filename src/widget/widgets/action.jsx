@@ -15,12 +15,28 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
+import React from "react";
+import { Button, ButtonGroup } from "react-bootstrap";
+import Icon from "../../common/icon";
 
-class WidgetHTML extends React.Component {
-  render() {
-    return <div dangerouslySetInnerHTML={{__html: this.props.widget.customProperties.content }} />
-  }
-}
+const WidgetAction = (props) => {
+  const onClick = (e) => {
+    // Put your onClick logic here
+  };
 
-export default WidgetHTML;
+  return (
+    <ButtonGroup>
+      <Button onClick={onClick}>
+        <Icon icon="play" /> Start
+      </Button>
+      <Button onClick={onClick}>
+        <Icon icon="pause" /> Pause
+      </Button>
+      <Button onClick={onClick}>
+        <Icon icon="stop" /> Stop
+      </Button>
+    </ButtonGroup>
+  );
+};
+
+export default WidgetAction;

@@ -15,23 +15,20 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
+import React from "react";
 
+const WidgetLabel = (props) => {
+  const style = {
+    fontSize: props.widget.customProperties.textSize + "px",
+    color: props.widget.customProperties.fontColor,
+    opacity: props.widget.customProperties.fontColor_opacity,
+  };
 
-class WidgetLabel extends Component {
-  render() {
-      const style = {
-      fontSize: this.props.widget.customProperties.textSize + 'px',
-      color: this.props.widget.customProperties.fontColor,
-      opacity: this.props.widget.customProperties.fontColor_opacity,
-    };
-
-    return (
-      <div className="label-widget">
-        <h4 style={style}>{this.props.widget.name}</h4>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="label-widget">
+      <h4 style={style}>{props.widget.name}</h4>
+    </div>
+  );
+};
 
 export default WidgetLabel;
