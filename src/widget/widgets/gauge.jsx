@@ -15,8 +15,10 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
-import { Gauge } from 'gaugeJS';
+import React, { Component } from "react";
+import { Gauge } from "gaugeJS";
+
+import { useState } from "react";
 
 class WidgetGauge extends Component {
   constructor(props) {
@@ -27,9 +29,9 @@ class WidgetGauge extends Component {
 
     this.state = {
       value: 0,
-      unit: '',
+      unit: "",
       scalingFactor: 1.0,
-      signalID: '',
+      signalID: "",
       minValue: null,
       maxValue: null,
       colorZones: [],
@@ -38,8 +40,12 @@ class WidgetGauge extends Component {
     };
   }
 
+  // const [gauge, setGauge] = useState(null);
+
   componentDidMount() {
-    this.gauge = new Gauge(this.gaugeCanvas).setOptions(this.computeGaugeOptions(this.props.widget));
+    this.gauge = new Gauge(this.gaugeCanvas).setOptions(
+      this.computeGaugeOptions(this.props.widget)
+    );
     this.gauge.maxValue = this.state.maxValue;
     this.gauge.setMinValue(this.state.minValue);
     this.gauge.animationSpeed = 30;
@@ -48,44 +54,53 @@ class WidgetGauge extends Component {
     this.updateLabels(this.state.minValue, this.state.maxValue);
   }
 
-  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS): void {
-
+  componentDidUpdate(
+    prevProps: Readonly<P>,
+    prevState: Readonly<S>,
+    snapshot: SS
+  ): void {
     // update gauge's value
-    if(prevState.value !== this.state.value){
-      this.gauge.set(this.state.value)
+    if (prevState.value !== this.state.value) {
+      this.gauge.set(this.state.value);
     }
 
-    if(prevState.useMinMax === true && this.state.useMinMax === false){
-      this.setState({useMinMaxChange: true});
+    if (prevState.useMinMax === true && this.state.useMinMax === false) {
+      this.setState({ useMinMaxChange: true });
     }
 
     // update labels
-    if(prevState.minValue !== this.state.minValue || prevState.maxValue !== this.state.maxValue || prevState.colorZones !== this.state.colorZones
-      || prevState.useMinMax !== this.state.useMinMax || prevState.signalID !== this.state.signalID){
-        this.gauge = new Gauge(this.gaugeCanvas).setOptions(this.computeGaugeOptions(this.props.widget));
-        this.gauge.maxValue = this.state.maxValue;
-        this.gauge.setMinValue(this.state.minValue);
-        this.gauge.animationSpeed = 30;
-        this.gauge.set(this.state.value);
-        this.updateLabels(this.state.minValue, this.state.maxValue)
+    if (
+      prevState.minValue !== this.state.minValue ||
+      prevState.maxValue !== this.state.maxValue ||
+      prevState.colorZones !== this.state.colorZones ||
+      prevState.useMinMax !== this.state.useMinMax ||
+      prevState.signalID !== this.state.signalID
+    ) {
+      this.gauge = new Gauge(this.gaugeCanvas).setOptions(
+        this.computeGaugeOptions(this.props.widget)
+      );
+      this.gauge.maxValue = this.state.maxValue;
+      this.gauge.setMinValue(this.state.minValue);
+      this.gauge.animationSpeed = 30;
+      this.gauge.set(this.state.value);
+      this.updateLabels(this.state.minValue, this.state.maxValue);
     }
   }
 
-  static getDerivedStateFromProps(props, state){
-
-    if(props.widget.signalIDs.length === 0){
-      return{ value: 0, minValue: 0, maxValue: 10};
+  static getDerivedStateFromProps(props, state) {
+    if (props.widget.signalIDs.length === 0) {
+      return { value: 0, minValue: 0, maxValue: 10 };
     }
 
     // Get the signal with the selected signal ID
     let signalID = props.widget.signalIDs[0];
-    let signal = props.signals.filter(s => s.id === signalID)
+    let signal = props.signals.filter((s) => s.id === signalID);
 
-    if(signal.length > 0) {
+    if (signal.length > 0) {
       // Determine ID of infrastructure component related to signal[0] (there is only one signal for a lamp widget)
       let icID = props.icIDs[signal[0].id];
 
-      let returnState = {}
+      let returnState = {};
 
       returnState["colorZones"] = props.widget.customProperties.zones;
 
@@ -101,11 +116,12 @@ class WidgetGauge extends Component {
       // Update value
 
       // Check if data available
-      if (props.data == null
-        || props.data[icID] == null
-        || props.data[icID].output == null
-        || props.data[icID].output.values == null) {
-
+      if (
+        props.data == null ||
+        props.data[icID] == null ||
+        props.data[icID].output == null ||
+        props.data[icID].output.values == null
+      ) {
         returnState["value"] = 0;
         returnState["minValue"] = 0;
         returnState["maxValue"] = 10;
@@ -122,11 +138,18 @@ class WidgetGauge extends Component {
       // Take just 3 decimal positions
       // Note: Favor this method over Number.toFixed(n) in order to avoid a type conversion, since it returns a String
       if (data != null) {
-        const value = signal[0].scalingFactor * Math.round(data[data.length - 1].y * 1e3) / 1e3;
+        const value =
+          (signal[0].scalingFactor *
+            Math.round(data[data.length - 1].y * 1e3)) /
+          1e3;
         let minValue = null;
         let maxValue = null;
 
-        if ((state.value !== value && value != null) || props.widget.customProperties.valueUseMinMax || state.useMinMaxChange) {
+        if (
+          (state.value !== value && value != null) ||
+          props.widget.customProperties.valueUseMinMax ||
+          state.useMinMaxChange
+        ) {
           // Value has changed
           updateValue = true;
 
@@ -136,13 +159,23 @@ class WidgetGauge extends Component {
           minValue = state.minValue;
           maxValue = state.maxValue;
 
-          if (minValue == null || (!props.widget.customProperties.valueUseMinMax && (value < minValue || signalID !== state.signalID)) || state.useMinMaxChange) {
+          if (
+            minValue == null ||
+            (!props.widget.customProperties.valueUseMinMax &&
+              (value < minValue || signalID !== state.signalID)) ||
+            state.useMinMaxChange
+          ) {
             minValue = value - 0.5;
             updateLabels = true;
             updateMinValue = true;
           }
 
-          if (maxValue == null || (!props.widget.customProperties.valueUseMinMax && (value > maxValue || signalID !== state.signalID)) || state.useMinMaxChange) {
+          if (
+            maxValue == null ||
+            (!props.widget.customProperties.valueUseMinMax &&
+              (value > maxValue || signalID !== state.signalID)) ||
+            state.useMinMaxChange
+          ) {
             maxValue = value + 0.5;
             updateLabels = true;
             updateMaxValue = true;
@@ -172,7 +205,8 @@ class WidgetGauge extends Component {
         }
 
         if (props.widget.customProperties.valueUseMinMax !== state.useMinMax) {
-          returnState["useMinMax"] = props.widget.customProperties.valueUseMinMax;
+          returnState["useMinMax"] =
+            props.widget.customProperties.valueUseMinMax;
         }
 
         // Prepare returned state
@@ -185,8 +219,6 @@ class WidgetGauge extends Component {
         if (updateMaxValue === true) {
           returnState["maxValue"] = maxValue;
         }
-
-
       } // If there is signal data
 
       if (JSON.stringify(returnState) !== JSON.stringify({})) {
@@ -210,25 +242,31 @@ class WidgetGauge extends Component {
     }
 
     // calculate zones
-    let zones = this.props.widget.customProperties.colorZones ? this.props.widget.customProperties.zones : null;
+    let zones = this.props.widget.customProperties.colorZones
+      ? this.props.widget.customProperties.zones
+      : null;
     if (zones != null) {
       // adapt range 0-100 to actual min-max
       const step = (maxValue - minValue) / 100;
 
-      zones = zones.map(zone => {
-        return Object.assign({}, zone, { min: (zone.min * step) + +minValue, max: zone.max * step + +minValue, strokeStyle: zone.strokeStyle });
+      zones = zones.map((zone) => {
+        return Object.assign({}, zone, {
+          min: zone.min * step + +minValue,
+          max: zone.max * step + +minValue,
+          strokeStyle: zone.strokeStyle,
+        });
       });
     }
 
-    if (this.state.signalID !== '') {
+    if (this.state.signalID !== "") {
       this.gauge.setOptions({
         staticLabels: {
           font: '10px "Helvetica Neue"',
           labels,
           color: "#000000",
-          fractionDigits: 1
+          fractionDigits: 1,
         },
-        staticZones: zones
+        staticZones: zones,
       });
     }
   }
@@ -238,40 +276,43 @@ class WidgetGauge extends Component {
       angle: -0.25,
       lineWidth: 0.2,
       pointer: {
-          length: 0.6,
-          strokeWidth: 0.035
+        length: 0.6,
+        strokeWidth: 0.035,
       },
       radiusScale: 0.8,
-      colorStart: '#6EA2B0',
-      colorStop: '#6EA2B0',
-      strokeColor: '#E0E0E0',
+      colorStart: "#6EA2B0",
+      colorStop: "#6EA2B0",
+      strokeColor: "#E0E0E0",
       highDpiSupport: true,
       limitMax: widget.customProperties.valueUseMinMax || false,
-      limitMin: widget.customProperties.valueUseMinMax || false
+      limitMin: widget.customProperties.valueUseMinMax || false,
     };
   }
 
   render() {
-    const componentClass = this.props.editing ? "gauge-widget editing" : "gauge-widget";
+    const componentClass = this.props.editing
+      ? "gauge-widget editing"
+      : "gauge-widget";
 
     let showScalingFactor;
-    if (this.props.widget.customProperties.showScalingFactor !== undefined){ // this line ensures backwards compatibility with older versions of VILLASweb
+    if (this.props.widget.customProperties.showScalingFactor !== undefined) {
+      // this line ensures backwards compatibility with older versions of VILLASweb
       showScalingFactor = this.props.widget.customProperties.showScalingFactor;
     } else {
-      showScalingFactor = (this.state.scalingFactor !== 1);
+      showScalingFactor = this.state.scalingFactor !== 1;
     }
 
     let scaleText = "";
-    if(showScalingFactor){
-      scaleText = " (x" + this.state.scalingFactor + ")"
+    if (showScalingFactor) {
+      scaleText = " (x" + this.state.scalingFactor + ")";
     }
 
     return (
       <div className={componentClass}>
-          <div className="gauge-name">{this.props.widget.name}</div>
-          <canvas ref={node => this.gaugeCanvas = node} />
-          <div className="gauge-unit">{this.state.unit + scaleText}</div>
-          <div className="gauge-value">{this.state.value}</div>
+        <div className="gauge-name">{this.props.widget.name}</div>
+        <canvas ref={(node) => (this.gaugeCanvas = node)} />
+        <div className="gauge-unit">{this.state.unit + scaleText}</div>
+        <div className="gauge-value">{this.state.value}</div>
       </div>
     );
   }
