@@ -44,17 +44,7 @@ import { getTodos } from "../redux/selectors";
 class Scenarios extends Component {
   constructor(props) {
     super(props);
-    this.state = { input: "" };
   }
-
-  updateInput = (input) => {
-    this.setState({ input });
-  };
-
-  handleAddTodo = () => {
-    this.props.addTodo(this.state.input);
-    this.setState({ input: "" });
-  };
 
   static getStores() {
     return [
@@ -302,27 +292,8 @@ class Scenarios extends Component {
       width: "30px",
     };
 
-    const { todos } = this.props;
-
     return (
       <div className="section">
-        <div>
-          <input
-            onChange={(e) => this.updateInput(e.target.value)}
-            value={this.state.input}
-          />
-          <button className="add-todo" onClick={this.handleAddTodo}>
-            Add Todo
-          </button>
-        </div>
-        <div>
-          <ul>
-            {todos.map((todo, index) => (
-              <li key={index}>{todo.content}</li>
-            ))}
-          </ul>
-        </div>
-
         <h1>
           Scenarios
           <span className="icon-button">
