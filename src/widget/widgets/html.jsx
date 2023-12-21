@@ -15,25 +15,16 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
+import React from "react";
 
+const WidgetHTML = (props) => {
+  return (
+    <div
+      dangerouslySetInnerHTML={{
+        __html: props.widget.customProperties.content,
+      }}
+    />
+  );
+};
 
-class WidgetBox extends Component {
-  render() {
-
-    let colorStyle = {
-      borderColor: this.props.widget.customProperties.border_color,
-      backgroundColor: this.props.widget.customProperties.background_color,
-      opacity: this.props.widget.customProperties.background_color_opacity,
-      borderWidth: this.props.widget.customProperties.border_width + 'px'
-    }
-
-    return (
-      <div className="box-widget full" style={colorStyle}>
-          {  }
-      </div>
-    );
-  }
-}
-
-export default WidgetBox;
+export default WidgetHTML;

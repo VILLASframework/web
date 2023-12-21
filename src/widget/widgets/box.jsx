@@ -15,29 +15,21 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { Component } from 'react';
-import { Button, ButtonGroup } from 'react-bootstrap';
-import Icon from '../../common/icon';
+import React from "react";
 
-class WidgetAction extends Component {
-  constructor(props) {
-    super(props);
+const WidgetBox = (props) => {
+  let colorStyle = {
+    borderColor: props.widget.customProperties.border_color,
+    backgroundColor: props.widget.customProperties.background_color,
+    opacity: props.widget.customProperties.background_color_opacity,
+    borderWidth: props.widget.customProperties.border_width + "px",
+  };
 
-    this.state = {
-    };
-  }
+  return (
+    <div className="box-widget full" style={colorStyle}>
+      {}
+    </div>
+  );
+};
 
-  onClick(e) {
-
-  }
-
-  render() {
-    return <ButtonGroup>
-            <Button onClick={this.onClick} ><Icon icon="play" /> Start</Button>
-            <Button onClick={this.onClick} ><Icon icon="pause" /> Pause</Button>
-            <Button onClick={this.onClick} ><Icon icon="stop" /> Stop</Button>
-          </ButtonGroup>;
-  }
-}
-
-export default WidgetAction;
+export default WidgetBox;
