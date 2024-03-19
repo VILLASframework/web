@@ -41,6 +41,9 @@ import EditFilesDialog from '../file/edit-files'
 import ScenarioUsersTable from "./scenario-users-table";
 
 
+import { useSelector, useDispatch } from "react-redux";
+import { decrement, increment } from "../new_redux/slices/counterSlice";
+
 class Scenario extends React.Component {
 
   constructor(props) {
@@ -49,6 +52,8 @@ class Scenario extends React.Component {
     this.state = {
       filesEditModal: false,
       filesEditSaveState:  [],
+      // count: useSelector((state) => state.counter.value),
+      // dispatch: useDispatch(),
     }
   }
 

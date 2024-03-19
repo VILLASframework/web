@@ -15,30 +15,20 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import RestDataManager from "./common/data-managers/rest-data-manager";
-import RestAPI from "./common/api/rest-api";
-import AppDispatcher from "./common/app-dispatcher";
+import React from "react";
 
-class ConfigReader extends RestDataManager {
-  constructor() {
-    super("config", "/config");
-  }
+const WidgetLabel = (props) => {
+  const style = {
+    fontSize: props.widget.customProperties.textSize + "px",
+    color: props.widget.customProperties.fontColor,
+    opacity: props.widget.customProperties.fontColor_opacity,
+  };
 
-  loadConfig() {
-    RestAPI.get(this.makeURL("/config"), null)
-      .then((response) => {
-        AppDispatcher.dispatch({
-          type: "config/loaded",
-          data: response,
-        });
-      })
-      .catch((error) => {
-        AppDispatcher.dispatch({
-          type: "config/load-error",
-          error: error,
-        });
-      });
-  }
-}
+  return (
+    <div className="label-widget">
+      <h4 style={style}>{props.widget.name}</h4>
+    </div>
+  );
+};
 
-export default new ConfigReader();
+export default WidgetLabel;

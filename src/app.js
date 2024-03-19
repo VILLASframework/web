@@ -122,6 +122,7 @@ class App extends React.Component {
                 <Route exact path="/scenarios" component={Scenarios}/>
                 <Route path="/scenarios/:scenario" component={Scenario} />
                 <Route path="/dashboards/:dashboard" component={Dashboard} />
+                <Route path="/dashboards-new/:dashboard" component={Dashboard} />
                 </>
               : '' }
               { currentUser.role === "Admin" || pages.infrastructure ? <>

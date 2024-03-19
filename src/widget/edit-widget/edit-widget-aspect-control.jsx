@@ -14,29 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import App from "./app";
-import Login from "./user/login";
-import Logout from "./user/logout";
-import LoginComplete from "./user/login-complete";
+import { Form } from "react-bootstrap";
 
-class Root extends React.Component {
-  render() {
-    return (
-      
-        <BrowserRouter>
-          <Switch>
-            <Route path="/login/complete" component={LoginComplete} />
-            <Route path="/login" component={Login} />
-            <Route path="/logout" component={Logout} />
-            <Route path="/" component={App} />
-          </Switch>
-        </BrowserRouter>
-      
-    );
-  }
+function EditWidgetAspectControl(props) {
+  // As we are not using state for any purpose other than direct reflection of props,
+  // we will directly utilize props instead of maintaining a separate state.
+  const widget = props.widget;
+
+  let parts = props.controlId.split(".");
+  let isCustomProperty = parts.length > 1;
+
+  return (
+    <Form.Group style={props.style}>
+      <Form.Check
+        type="checkbox"
+        id={props.controlId}
+        checked={
+          isCustomProperty
+            ? widget[parts[0]][parts[1]]
+            : widget[props.controlId]
+        }
+        label={"Lock Aspect Ratio"}
+        onChange={props.handleChange}
+      />
+    </Form.Group>
+  );
 }
 
-export default Root;
+export default EditWidgetAspectControl;
