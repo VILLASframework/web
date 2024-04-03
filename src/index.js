@@ -20,10 +20,15 @@ import ReactDOM from 'react-dom';
 
 import Router from './router';
 
+import {Provider} from 'react-redux'
+import {store} from './store'
+
 import 'bootstrap/dist/css/bootstrap.css';
 import './styles/index.css';
 
 ReactDOM.render(
-  <Router />,
+  <Provider store={store}>
+    <Router />
+  </Provider>,
   document.getElementById('root')
 );
