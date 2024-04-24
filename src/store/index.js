@@ -15,25 +15,12 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
-import { Redirect } from 'react-router-dom';
-import AppDispatcher from '../common/app-dispatcher';
+import { configureStore } from "@reduxjs/toolkit"
+import userReducer from './userSlice'
 
-class Logout extends React.Component {
-
-  componentDidMount() {
-    AppDispatcher.dispatch({
-      type: 'users/logout'
-    });
-
-    // The Login Store and local storage are deleted automatically
-  }
-
-  render() {
-    return (
-      <Redirect to="/login" />
-    );
-  }
-}
-
-export default Logout;
+export const store = configureStore({
+    reducer: {
+        user: userReducer
+    },
+    devTools: true
+})
