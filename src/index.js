@@ -22,7 +22,7 @@ import Router from "./router";
 
 // Redux
 import { Provider } from "react-redux";
-import store from "./redux/store";
+import {store} from "./store/index";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "./styles/index.css";

@@ -15,30 +15,26 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import App from "./app";
-import Login from "./pages/login/login";
-import Logout from "./pages/login/logout";
-import LoginComplete from "./user/login-complete";
+import React, {useEffect} from 'react';
+import { Redirect } from 'react-router-dom';
 
-class Root extends React.Component {
-  render() {
-    return (
-        <BrowserRouter>
-          <Switch>
-            <Route path="/login/complete" component={LoginComplete} />
-            <Route path='/login'>
-              <Login />
-            </Route>
-            <Route path='/logout'>
-              <Logout />
-            </Route>
-            <Route path="/" component={App} />
-          </Switch>
-        </BrowserRouter>
-    );
-  }
+import { useDispatch } from 'react-redux'
+import { logout } from '../../store/userSlice';
+
+const Logout = () => {
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    let isMounted = true;
+    if(isMounted) dispatch(logout());
+
+    return () => {isMounted = false};
+  }, []);
+
+  return (
+    <Redirect to="/login" />
+  )
 }
 
-export default Root;
+export default Logout;
