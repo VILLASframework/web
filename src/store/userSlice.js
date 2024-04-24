@@ -66,6 +66,7 @@ export const login = createAsyncThunk(
     async (userData, thunkAPI) => {
         try {
             const res = await RestAPI.post('/api/v2/authenticate/internal', userData)
+            
             return {user: res.user, token: res.token}
         } catch(error) {
             console.log('Error while trying to log in: ', error)
