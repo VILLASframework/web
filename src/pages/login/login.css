@@ -15,30 +15,28 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import App from "./app";
-import Login from "./pages/login/login";
-import Logout from "./pages/login/logout";
-import LoginComplete from "./user/login-complete";
-
-class Root extends React.Component {
-  render() {
-    return (
-        <BrowserRouter>
-          <Switch>
-            <Route path="/login/complete" component={LoginComplete} />
-            <Route path='/login'>
-              <Login />
-            </Route>
-            <Route path='/logout'>
-              <Logout />
-            </Route>
-            <Route path="/" component={App} />
-          </Switch>
-        </BrowserRouter>
-    );
-  }
+.login-parent {
+    display: flex;
+    max-width: 800px;
+    margin: 30px auto;
 }
 
-export default Root;
+.login-welcome {
+    float: right;
+    max-width: 400px;
+    padding: 15px 20px;
+    border-radius: var(--borderradius) 0px 0px var(--borderradius); 
+    background-color: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
+                0 9px 18px 0 rgba(0, 0, 0, 0.1);
+}
+
+.login-container {
+    float: left;
+    max-width: 400px;
+    border-radius: 0px var(--borderradius) var(--borderradius) 0px;
+    padding: 15px 20px; 
+    background-color: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
+                0 9px 18px 0 rgba(0, 0, 0, 0.1);
+}
