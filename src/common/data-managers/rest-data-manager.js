@@ -87,6 +87,7 @@ class RestDataManager {
   load(id, token = null,param = null) {
       if (id != null) {
         // load single object
+        console.log(this.requestURL('load/add',id,param))
         RestAPI.get(this.requestURL('load/add',id,param), token).then(response => {
           let data;
           if (response.hasOwnProperty(this.type)) {
@@ -113,6 +114,7 @@ class RestDataManager {
         });
       } else {
         // load all objects
+        console.log(this.requestURL('load/add',id,param))
         RestAPI.get(this.requestURL('load/add',id,param), token).then(response => {
           const data = response[this.type + 's'].map(element => {
             return this.filterKeys(element);

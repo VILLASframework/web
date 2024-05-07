@@ -38,8 +38,6 @@ import DeleteDialog from "../common/dialogs/delete-dialog";
 import IconButton from "../common/buttons/icon-button";
 
 import { connect } from "react-redux";
-import { addTodo } from "../redux/actions";
-import { getTodos } from "../redux/selectors";
 
 class Scenarios extends Component {
   constructor(props) {
@@ -394,12 +392,12 @@ let fluxContainerConverter = require("../common/FluxContainerConverter");
 // export default Container.create(fluxContainerConverter.convert(Scenarios));
 
 const mapStateToProps = (state) => ({
-  todos: getTodos(state), // Assuming you have a selector called getTodos
+  todos: {}, // Assuming you have a selector called getTodos
 });
 
 // Map the actions to the component's props
 const mapDispatchToProps = {
-  addTodo,
+
 };
 
 export default connect(

@@ -20,7 +20,7 @@ import AppDispatcher from '../common/app-dispatcher';
 import RestAPI from "../common/api/rest-api";
 
 const OFFSET_TYPE = 2;
-const OFFSET_VERSION = 4;
+const OFFSET_VERSION = 4; 
 
 class IcDataDataManager {
   constructor() {

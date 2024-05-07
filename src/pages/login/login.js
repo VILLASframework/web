@@ -28,12 +28,13 @@ import NotificationsDataManager from '../../common/data-managers/notifications-d
 import AppDispatcher from '../../common/app-dispatcher';
 import branding from '../../branding/branding';
 
-import './login.css';
+import { useDispatch } from 'react-redux';
+import { loadAllICs } from '../../store/icSlice';
+import { login } from '../../store/userSlice';
 
 const Login = (props) => {
 
   const notificationSystem = useRef()
-
 
   useEffect(() => {
     NotificationsDataManager.setSystem(notificationSystem);
