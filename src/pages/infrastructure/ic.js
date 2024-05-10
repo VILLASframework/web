@@ -27,6 +27,7 @@ import GatewayVillasNode from "./ic-pages/gateway-villas-node";
 import ManagerVillasNode from "./ic-pages/manager-villas-node";
 import ManagerVillasRelay from "./ic-pages/manager-villas-relay";
 import KubernetesICPage from "./ic-pages/kubernetes-ic-page";
+import DefaultICPage from "./ic-pages/default-ic-page";
 
 const InfrastructureComponent = (props) => {
     const params = useParams();
@@ -37,9 +38,6 @@ const InfrastructureComponent = (props) => {
     const isICLoading = useSelector(state => state.infrastructure.isCurrentICLoading);
 
     useEffect(() => {
-
-        console.log(ic)
-
         dispatch(loadAllICs({token: sessionToken}));
         dispatch(loadICbyId({token: sessionToken, id: id}));
         dispatch(loadConfig({token: sessionToken}));
@@ -58,7 +56,7 @@ const InfrastructureComponent = (props) => {
     } else if(ic.category === "simulator" && ic.type === "kubernetes"){
         return <KubernetesICPage ic={ic}/>
     } else {
-        return <div>Loading...</div>
+        return <DefaultICPage ic={ic} />
     }
 }
 

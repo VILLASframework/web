@@ -89,7 +89,7 @@ const KubernetesICPage = (props) => {
   let rancherTableRows = []
 
   if (rancherURL != null && clusterName != null) {
-    let baseURL = "https://" + rancherURL + "/dashboard/c/" + clusterName + "/explorer";
+    let baseURL = rancherURL + "/dashboard/c/" + clusterName + "/explorer";
 
     if (namespace != null) {
       if (jobName != null) {
