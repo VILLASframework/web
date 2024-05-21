@@ -15,17 +15,28 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import { configureStore } from "@reduxjs/toolkit";
+.login-parent {
+    display: flex;
+    max-width: 800px;
+    margin: 30px auto;
+}
 
-import userReducer from './userSlice';
-import icReducer from './icSlice';
-import configReducer from './configSlice'
+.login-welcome {
+    float: right;
+    max-width: 400px;
+    padding: 15px 20px;
+    border-radius: var(--borderradius) 0px 0px var(--borderradius); 
+    background-color: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
+                0 9px 18px 0 rgba(0, 0, 0, 0.1);
+}
 
-export const store = configureStore({
-    reducer: {
-        user: userReducer,
-        infrastructure: icReducer,
-        config: configReducer
-    },
-    devTools: true
-})
+.login-container {
+    float: left;
+    max-width: 400px;
+    border-radius: 0px var(--borderradius) var(--borderradius) 0px;
+    padding: 15px 20px; 
+    background-color: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
+                0 9px 18px 0 rgba(0, 0, 0, 0.1);
+}
