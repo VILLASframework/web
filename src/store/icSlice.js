@@ -28,7 +28,6 @@ const icSlice = createSlice({
         isLoading: false,
         currentIC: {},
         isCurrentICLoading: false
-
     },
     reducers: {
         checkICsByCategory: (state, args) => {
