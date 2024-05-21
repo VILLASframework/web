@@ -22,8 +22,6 @@ import { useDispatch } from 'react-redux'
 import { login } from '../../store/userSlice';
 import _ from 'lodash';
 
-import "./login.css";
-
 const LoginForm = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
