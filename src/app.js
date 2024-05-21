@@ -29,21 +29,20 @@ import Home from './common/home';
 import Header from './common/header';
 import Menu from './common/menu';
 
-import InfrastructureComponents from './ic/ics';
-import InfrastructureComponent from './ic/ic';
+import InfrastructureComponent from './pages/infrastructure/ic';
 import Dashboard from './dashboard/dashboard';
 import Scenarios from './scenario/scenarios';
 import Scenario from './scenario/scenario';
 import Users from './user/users';
 import User from './user/user';
 import APIBrowser from './common/api-browser';
-import LoginStore from './user/login-store'
 
 
 import './styles/app.css';
+import './styles/login.css';
 import branding from './branding/branding';
 
-
+import Infrastructure from './pages/infrastructure/infrastructure'
 
 class App extends React.Component {
 
@@ -51,10 +50,6 @@ class App extends React.Component {
     super(props);
 
     this.state = {}
-  }
-
-  static getStores() {
-    return [LoginStore]
   }
 
   componentDidMount() {
@@ -126,8 +121,12 @@ class App extends React.Component {
                 </>
               : '' }
               { currentUser.role === "Admin" || pages.infrastructure ? <>
-                <Route exact path="/infrastructure" component={InfrastructureComponents} />
-                <Route path="/infrastructure/:ic" component={InfrastructureComponent} />
+                <Route exact path="/infrastructure">
+                  <Infrastructure />
+                </Route>
+                <Route path="/infrastructure/:ic">
+                  <InfrastructureComponent />
+                </Route>
                 </>
               : '' }
               { pages.account ? <Route path="/account" component={User} /> : '' }
