@@ -21,8 +21,12 @@ import RestAPI from '../common/api/rest-api';
 import ICDataDataManager from '../ic/ic-data-data-manager';
 
 const userSlice = createSlice({
-    name: 'login',
-    initialState: {currentUser: null, currentToken: null, isLoading: false, loginMessage: ''},
+    name: 'user',
+    initialState: {
+        currentUser: null, 
+        currentToken: null,
+        isLoading: false, 
+        loginMessage: ''},
     extraReducers: (builder) => {
         builder
         .addCase(login.pending, (state, action) => {
@@ -62,7 +66,6 @@ export const login = createAsyncThunk(
     async (userData, thunkAPI) => {
         try {
             const res = await RestAPI.post('/api/v2/authenticate/internal', userData)
-            
             return {user: res.user, token: res.token}
         } catch(error) {
             console.log('Error while trying to log in: ', error)
