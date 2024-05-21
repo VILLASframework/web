@@ -15,17 +15,6 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import { configureStore } from "@reduxjs/toolkit";
-
-import userReducer from './userSlice';
-import icReducer from './icSlice';
-import configReducer from './configSlice'
-
-export const store = configureStore({
-    reducer: {
-        user: userReducer,
-        infrastructure: icReducer,
-        config: configReducer
-    },
-    devTools: true
-})
+//authentication
+export const sessionToken = localStorage.getItem("token");
+export const currentUser = JSON.parse(localStorage.getItem("currentUser"));
