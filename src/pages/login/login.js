@@ -28,8 +28,6 @@ import NotificationsDataManager from '../../common/data-managers/notifications-d
 import AppDispatcher from '../../common/app-dispatcher';
 import branding from '../../branding/branding';
 
-import './login.css';
-
 const Login = (props) => {
 
   const notificationSystem = useRef()
