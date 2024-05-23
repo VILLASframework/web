@@ -19,20 +19,19 @@ import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { Badge } from 'react-bootstrap';
-
 import { loadAllICs, loadICbyId } from "../../store/icSlice";
 import { set } from "lodash";
-
 import IconButton from "../../common/buttons/icon-button";
-
 import ICCategoryTable from "./ic-category-table";
-
 import { sessionToken, currentUser } from "../../localStorage";
+import ICActionBoard from "./ic-action-board";
 
 const Infrastructure = (props) => {
     const dispatch = useDispatch();
 
     const ICsArray = useSelector(state => state.infrastructure.ICsArray);
+    const externalICs = ICsArray.filter(ic => ic.managedexternally === true)
+    const checkedICsIds = useSelector(state => state.infrastructure.checkedICsIds);
 
     //track status of the modals
     const [isEditModalOpened, setIsEditModalOpened]  = useState(false);
@@ -40,9 +39,7 @@ const Infrastructure = (props) => {
     const [isImportModalOpened, setIsImportModalOpened] = useState(false);
     const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false);
     const [isICModalOpened, setIsICModalOpened] = useState(false);
-
     const [checkedICs, setCheckedICs] = useState([]);
-
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
     useEffect(() => {
@@ -54,6 +51,10 @@ const Infrastructure = (props) => {
             window.clearInterval(timer);
         }
     }, []);
+
+    useEffect(() => {
+        console.log("checked: ", checkedICsIds)
+    }, [checkedICsIds])
 
     const refresh = () => {
         //if none of the modals are currently opened, we reload ics array
@@ -124,6 +125,9 @@ const Infrastructure = (props) => {
                     title={"Equipment"}
                     category={"equipment"} 
                 />
+
+                {/* {currentUser.role === "Admin" && externalICs.length > 0 ? <ICActionBoard /> : null} */}
+                <ICActionBoard />
 
             </div>
 

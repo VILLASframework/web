@@ -15,29 +15,23 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
 import {Table, ButtonColumn, CheckboxColumn, DataColumn, LabelColumn, LinkColumn } from '../../common/table';
 import { Badge } from 'react-bootstrap';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 import moment from 'moment'
 import IconToggleButton from "../../common/buttons/icon-toggle-button";
-
-import { checkICsByCategory } from "../../store/icSlice";
-import { useState } from "react";
-
+import { updateCheckedICs } from "../../store/icSlice";
 import { stateLabelStyle } from "./styles";
+import { currentUser } from "../../localStorage";
 
 //a Table of IC components of specific category from props.category
 //titled with props.title
 const ICCategoryTable = (props) => {
-
+    const dispatch = useDispatch();
     const ics = useSelector(state => state.infrastructure.ICsArray);
-
-    let currentUser = JSON.parse(localStorage.getItem("currentUser"));
-
-    const checkedICs = useSelector(state => state.infrastructure.checkedICsArray);
 
     const [isGenericDisplayed, setIsGenericDisplayed] = useState(false)
 
@@ -90,7 +84,6 @@ const ICCategoryTable = (props) => {
       }
     }
 
-
     //if category of the table is manager we need to filter the generic-typed ics
     //according to the state of IconToggleButton
     let tableData = [];
@@ -113,27 +106,50 @@ const ICCategoryTable = (props) => {
       }
     })
 
-    const isLocalIC = (index, ics) => {
-      let ic = ics[index]
+    const [checkedICs, setCheckedICs] = useState({});
+    const [areAllICsChecked, setAreAllICsChecked] = useState(false);
+
+    useEffect(() => {
+      if(tableData.length > 0){
+        for(let ic in tableData){
+          if(!checkedICs.hasOwnProperty(tableData[ic].id) && !isLocalIC(tableData[ic])){
+            setCheckedICs(prevState => ({...prevState, [tableData[ic].id]: false}));
+          }
+        }
+      }
+    }, [tableData])
+
+    useEffect(() => {
+      dispatch(updateCheckedICs(checkedICs));
+
+      //every time some ic is checked we need to check wether or not all ics are checked afterwards
+      if(Object.keys(checkedICs).length > 0){
+        setAreAllICsChecked(Object.values(checkedICs).every((value)=> value))
+      }
+    }, [checkedICs])
+
+    const isLocalIC = (ic) => {
       return !ic.managedexternally
     }
 
-    const checkAllICs = (ics, title) => {
-      //TODO
+    const checkAllICs = () => {
+      if(areAllICsChecked){
+        for(const id in checkedICs){
+          setCheckedICs(prevState => ({...prevState, [id]: false}));
+        }
+      } else {
+        for(const id in checkedICs){
+          setCheckedICs(prevState => ({...prevState, [id]: true}));
+        }
+      }
     }
 
-    const isICchecked = (ic) => {
-      //TODO
-      return false
-    }
-
-    const areAllChecked = (title) => {
-      //TODO
-      return false
-    }
-
-    const onICChecked = (ic, event) => {
-      //TODO
+    const toggleCheck = (id) => {
+      setCheckedICs(prevState => {
+        return {
+          ...prevState, [id]: !prevState[id]
+        }
+      })
     }
 
     return (<div>
@@ -157,11 +173,11 @@ const ICCategoryTable = (props) => {
         <Table data={tableData}>
           <CheckboxColumn
             enableCheckAll
-            onCheckAll={() => checkAllICs(ics, props.title)}
-            allChecked={areAllChecked(props.title)}
-            checkboxDisabled={(index) => isLocalIC(index, ics) === true}
-            checked={(ic) => isICchecked(ic)}
-            onChecked={(ic, event) => onICChecked(ic, event)}
+            onCheckAll={() => checkAllICs()}
+            allChecked={areAllICsChecked}
+            checkboxDisabled={(index) => isLocalIC(tableData[index])}
+            checked={(ic) => checkedICs[ic.id]}
+            onChecked={(ic, event) => toggleCheck(ic.id)}
             width='30'
           />
           {currentUser.role === "Admin" ?

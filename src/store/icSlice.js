@@ -24,18 +24,31 @@ const icSlice = createSlice({
     name: 'infrastructure',
     initialState: {
         ICsArray: [],
-        checkedICsArray: [],
+        checkedICsIds: [],
         isLoading: false,
         currentIC: {},
         isCurrentICLoading: false
     },
     reducers: {
-        checkICsByCategory: (state, args) => {
-            const category = args.payload;
+        updateCheckedICs: (state, args) => {
+            // each table has an object that maps IDs of all its ICs to boolean values
+            // which indicates wether or note user picked it in checbox column
+            const checkboxValues = args.payload;
+            let checkedICsIds = [...state.checkedICsIds];
 
-            for(const ic in state.ICsArray){
-                if (ic.category == category) state.checkedICsArray.push(ic)
+            for(const id in checkboxValues){
+                if(checkedICsIds.includes(id)){
+                    if(!checkboxValues[id]){
+                        checkedICsIds = checkedICsIds.filter((checkedId) => checkedId != id);
+                    }
+                } else {
+                    if(checkboxValues[id]){
+                        checkedICsIds.push(id);
+                    }
+                }
             }
+
+            state.checkedICsIds = checkedICsIds;
         }
     },
     extraReducers: builder => {
@@ -125,6 +138,6 @@ export const shutdownIC = createAsyncThunk(
     }
 )
 
-export const {checkICsByCategory} = icSlice.actions;
+export const {updateCheckedICs} = icSlice.actions;
 
 export default icSlice.reducer;
