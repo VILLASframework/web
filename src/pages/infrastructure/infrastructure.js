@@ -19,28 +19,32 @@ import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { Badge } from 'react-bootstrap';
-import { loadAllICs, loadICbyId } from "../../store/icSlice";
+import { loadAllICs, loadICbyId, addIC, sendActionToIC, closeDeleteModal, closeEditModal, editIC, deleteIC } from "../../store/icSlice";
 import { set } from "lodash";
 import IconButton from "../../common/buttons/icon-button";
 import ICCategoryTable from "./ic-category-table";
 import { sessionToken, currentUser } from "../../localStorage";
 import ICActionBoard from "./ic-action-board";
+import { buttonStyle, iconStyle } from "./styles";
+import NewICDialog from "../../ic/new-ic";
+import ImportICDialog from "../../ic/import-ic";
+import EditICDialog from "../../ic/edit-ic";
+import DeleteDialog from "../../common/dialogs/delete-dialog";
+import NotificationsDataManager from "../../common/data-managers/notifications-data-manager";
+import NotificationsFactory from "../../common/data-managers/notifications-factory";
 
 const Infrastructure = (props) => {
     const dispatch = useDispatch();
 
-    const ICsArray = useSelector(state => state.infrastructure.ICsArray);
-    const externalICs = ICsArray.filter(ic => ic.managedexternally === true)
+    const ics = useSelector(state => state.infrastructure.ICsArray);
+    const externalICs = ics.filter(ic => ic.managedexternally === true)
     const checkedICsIds = useSelector(state => state.infrastructure.checkedICsIds);
 
     //track status of the modals
-    const [isEditModalOpened, setIsEditModalOpened]  = useState(false);
     const [isNewModalOpened, setIsNewModalOpened] = useState(false);
     const [isImportModalOpened, setIsImportModalOpened] = useState(false);
-    const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false);
     const [isICModalOpened, setIsICModalOpened] = useState(false);
     const [checkedICs, setCheckedICs] = useState([]);
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
     useEffect(() => {
         //load array of ics and start a timer for periodic refresh
@@ -63,21 +67,74 @@ const Infrastructure = (props) => {
         }
     }
 
-    const buttonStyle = {
-        marginLeft: '10px',
+    //modal actions and selectors
+
+    const isEditModalOpened = useSelector(state => state.infrastructure.isEditModalOpened);
+    const isDeleteModalOpened = useSelector(state => state.infrastructure.isDeleteModalOpened);
+    const editModalIC = useSelector(state => state.infrastructure.editModalIC);
+    const deleteModalIC = useSelector(state => state.infrastructure.deleteModalIC);
+
+    const onNewModalClose = (data) => {
+        setIsNewModalOpened(false);
+
+        console.log("Adding ic. External: ", !data.managedexternally)
+
+        if(data){
+            if(!data.managedexternally){
+                dispatch(addIC({token: sessionToken, ic: data}));
+                dispatch(loadAllICs({token: sessionToken}));
+            }else {
+                // externally managed IC: dispatch create action to selected manager
+                let newAction = {};
+        
+                newAction["action"] = "create";
+                newAction["parameters"] = data.parameters;
+                newAction["when"] = new Date();
+        
+                // find the manager IC
+                const managerIC = ics.find(ic => ic.uuid === data.manager)
+                if (managerIC === null || managerIC === undefined) {
+                  NotificationsDataManager.addNotification(NotificationsFactory.ADD_ERROR("Could not find manager IC with UUID " + data.manager));
+                  return;
+                }
+
+                dispatch(sendActionToIC({token: sessionToken, id: managerIC.id, actions: newAction}));
+                dispatch(loadAllICs({token: sessionToken}));
+            }
+        }
     }
-  
-    const iconStyle = {
-      height: '30px',
-      width: '30px'
+
+    const onImportModalClose = (data) => {
+        setIsImportModalOpened(false);
+
+        dispatch(addIC({token: sessionToken, ic: data}));
     }
+
+    const onEditModalClose = (data) => {
+        if(data){
+            //some changes where done
+            dispatch(editIC({token: sessionToken, ic: data}));
+            dispatch(loadAllICs({token: sessionToken}));
+        }
+        dispatch(closeEditModal(data));
+    }
+
+    const onCloseDeleteModal = (isDeleteConfirmed) => {
+        if(isDeleteConfirmed){
+            dispatch(deleteIC({token: sessionToken, id:deleteModalIC.id}));
+            dispatch(loadAllICs({token: sessionToken}));
+        }
+        dispatch(closeDeleteModal());
+    }
+
+    //getting list of managers for the new IC modal
+    const managers = ics.filter(ic => ic.category === "manager");
 
     return (
         <div>
             <div className='section'>
                 <h1>Infrastructure
-                    {//TODO
-                    /* {currentUser.role === "Admin" ?
+                    {currentUser.role === "Admin" ?
                         <span className='icon-button'>
                             <IconButton
                                 childKey={1}
@@ -98,17 +155,17 @@ const Infrastructure = (props) => {
                         </span>
                         : 
                         <span />
-                    } */}
+                    }
                 </h1>
 
                 <ICCategoryTable
                     title={"IC Managers"}
-                    category={"manager"} 
+                    category={"manager"}
                 />
 
                 <ICCategoryTable
                     title={"Simulators"}
-                    category={"simulator"} 
+                    category={"simulator"}
                 />
 
                 <ICCategoryTable 
@@ -118,7 +175,7 @@ const Infrastructure = (props) => {
 
                 <ICCategoryTable 
                     title={"Services"}
-                    category={"service"} 
+                    category={"service"}
                 />
 
                 <ICCategoryTable 
@@ -131,12 +188,19 @@ const Infrastructure = (props) => {
 
             </div>
 
-    {//TODO
-    /* <NewICDialog show={this.state.newModal} onClose={data => this.closeNewModal(data)} managers={this.state.managers} />
-        <EditICDialog show={this.state.editModal} onClose={data => this.closeEditModal(data)} ic={this.state.modalIC} />
-        <ImportICDialog show={this.state.importModal} onClose={data => this.closeImportModal(data)} />
-        <DeleteDialog title="infrastructure-component" name={this.state.modalIC.name || 'Unknown'} show={this.state.deleteModal} onClose={(e) => this.closeDeleteModal(e)} /> */}
-    
+            <NewICDialog show={isNewModalOpened} onClose={data => onNewModalClose(data)} managers={managers} />
+            <ImportICDialog show={isImportModalOpened} onClose={data => onImportModalClose(data)} />
+            <EditICDialog 
+                show={isEditModalOpened} 
+                onClose={data => onEditModalClose(data)} 
+                ic={editModalIC ? editModalIC : {}} 
+            />
+            <DeleteDialog 
+                title="infrastructure-component" 
+                name={deleteModalIC ? deleteModalIC.name : 'Unknown'} 
+                show={isDeleteModalOpened} 
+                onClose={(e) => onCloseDeleteModal(e)} 
+            />
         </div>
       );
 }

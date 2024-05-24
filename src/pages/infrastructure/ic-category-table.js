@@ -23,7 +23,7 @@ import FileSaver from 'file-saver';
 import _ from 'lodash';
 import moment from 'moment'
 import IconToggleButton from "../../common/buttons/icon-toggle-button";
-import { updateCheckedICs } from "../../store/icSlice";
+import { updateCheckedICs, openDeleteModal, openEditModal } from "../../store/icSlice";
 import { stateLabelStyle } from "./styles";
 import { currentUser } from "../../localStorage";
 
@@ -32,18 +32,7 @@ import { currentUser } from "../../localStorage";
 const ICCategoryTable = (props) => {
     const dispatch = useDispatch();
     const ics = useSelector(state => state.infrastructure.ICsArray);
-
-    const [isGenericDisplayed, setIsGenericDisplayed] = useState(false)
-
-    const exportIC = (index) => {
-      // filter properties
-      let ic = Object.assign({}, ics[index]);
-      delete ic.id;
-  
-      // show save dialog
-      const blob = new Blob([JSON.stringify(ic, null, 2)], { type: 'application/json' });
-      FileSaver.saveAs(blob, 'ic-' + (_.get(ic, 'name') || 'undefined') + '.json');
-    }
+    const [isGenericDisplayed, setIsGenericDisplayed] = useState(false);
 
     const modifyUptimeColumn = (uptime, component) => {
       if (uptime >= 0) {
@@ -127,6 +116,18 @@ const ICCategoryTable = (props) => {
         setAreAllICsChecked(Object.values(checkedICs).every((value)=> value))
       }
     }, [checkedICs])
+
+    const exportIC = (index) => {
+      // filter properties
+      let toExport = {...tableData[index]};
+      delete toExport.id;
+
+      const fileName = toExport.name.replace(/\s+/g, '-').toLowerCase();
+      
+      // show save dialog
+      const blob = new Blob([JSON.stringify(toExport, null, 2)], { type: 'application/json' });
+      FileSaver.saveAs(blob, 'ic-' + fileName + '.json');
+    }
 
     const isLocalIC = (ic) => {
       return !ic.managedexternally
@@ -218,13 +219,13 @@ const ICCategoryTable = (props) => {
               width='150'
               align='right'
               editButton
-              showEditButton ={(index) => isLocalIC(index, ics)}
+              showEditButton ={(index) => isLocalIC(tableData[index])}
               exportButton
               deleteButton
               showDeleteButton = {null}
-              onEdit={index => {}}
+              onEdit={index => {dispatch(openEditModal(tableData[index]))}}
               onExport={index => exportIC(index)}
-              onDelete={index => {}}
+              onDelete={index => {dispatch(openDeleteModal(tableData[index]))}}
             />
             :
             <ButtonColumn
