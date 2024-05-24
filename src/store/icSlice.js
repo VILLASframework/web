@@ -57,6 +57,9 @@ const icSlice = createSlice({
 
             state.checkedICsIds = checkedICsIds;
         },
+        clearCheckedICs: (state, args) => {
+            state.checkedICsIds = [];
+        },
         openEditModal: (state, args) => {
             state.isEditModalOpened = true;
             state.editModalIC = args.payload;
@@ -100,6 +103,9 @@ const icSlice = createSlice({
            })
            .addCase(editIC.rejected, (state, action) => {
                NotificationsDataManager.addNotification(NotificationsFactory.ADD_ERROR("Error while trying to update an infrastructural component: " + action.error.message));
+           })
+           .addCase(deleteIC.rejected, (state, action) => {
+               NotificationsDataManager.addNotification(NotificationsFactory.ADD_ERROR("Error while trying to delete an infrastructural component: " + action.error.message));
            })
            //TODO
            // .addCase(restartIC.fullfilled, (state, action) => {
@@ -177,7 +183,7 @@ export const sendActionToIC = createAsyncThunk(
             }
 
             const res = await RestAPI.post('/api/v2/ic/'+id+'/action', actions, token);
-            console.log(res);
+            NotificationsDataManager.addNotification(NotificationsFactory.ACTION_INFO());
             return res;
          } catch (error) {
             console.log("Error sending an action to IC: ", error);
@@ -209,7 +215,6 @@ export const deleteIC = createAsyncThunk(
             //post request body: ic object that is to be added
             const {token, id} = data;
             const res = await RestAPI.delete('/api/v2/ic/'+id, token);
-            console.log("Delete answer: ", res);
             return res;
         } catch (error) {
             console.log("Error updating IC: ", error);
@@ -235,7 +240,7 @@ export const restartIC = createAsyncThunk(
     }
 )
 
-//restarts ICs
+//shut ICs down
 export const shutdownIC = createAsyncThunk(
     'infrastructure/shutdownIC',
     async (data) => {
@@ -250,6 +255,6 @@ export const shutdownIC = createAsyncThunk(
     }
 )
 
-export const {updateCheckedICs, openEditModal, openDeleteModal, closeDeleteModal, closeEditModal} = icSlice.actions;
+export const {updateCheckedICs, clearCheckedICs, openEditModal, openDeleteModal, closeDeleteModal, closeEditModal} = icSlice.actions;
 
 export default icSlice.reducer;

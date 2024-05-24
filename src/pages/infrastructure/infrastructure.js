@@ -37,8 +37,7 @@ const Infrastructure = (props) => {
     const dispatch = useDispatch();
 
     const ics = useSelector(state => state.infrastructure.ICsArray);
-    const externalICs = ics.filter(ic => ic.managedexternally === true)
-    const checkedICsIds = useSelector(state => state.infrastructure.checkedICsIds);
+    const externalICs = ics.filter(ic => ic.managedexternally === true);
 
     //track status of the modals
     const [isNewModalOpened, setIsNewModalOpened] = useState(false);
@@ -55,10 +54,6 @@ const Infrastructure = (props) => {
             window.clearInterval(timer);
         }
     }, []);
-
-    useEffect(() => {
-        console.log("checked: ", checkedICsIds)
-    }, [checkedICsIds])
 
     const refresh = () => {
         //if none of the modals are currently opened, we reload ics array
@@ -81,8 +76,7 @@ const Infrastructure = (props) => {
 
         if(data){
             if(!data.managedexternally){
-                dispatch(addIC({token: sessionToken, ic: data}));
-                dispatch(loadAllICs({token: sessionToken}));
+                dispatch(addIC({token: sessionToken, ic: data})).then(res => dispatch(loadAllICs({token: sessionToken})));
             }else {
                 // externally managed IC: dispatch create action to selected manager
                 let newAction = {};
@@ -98,8 +92,7 @@ const Infrastructure = (props) => {
                   return;
                 }
 
-                dispatch(sendActionToIC({token: sessionToken, id: managerIC.id, actions: newAction}));
-                dispatch(loadAllICs({token: sessionToken}));
+                dispatch(sendActionToIC({token: sessionToken, id: managerIC.id, actions: newAction})).then(res => dispatch(loadAllICs({token: sessionToken})));
             }
         }
     }
@@ -107,22 +100,20 @@ const Infrastructure = (props) => {
     const onImportModalClose = (data) => {
         setIsImportModalOpened(false);
 
-        dispatch(addIC({token: sessionToken, ic: data}));
+        dispatch(addIC({token: sessionToken, ic: data})).then(res => dispatch(loadAllICs({token: sessionToken})));
     }
 
     const onEditModalClose = (data) => {
         if(data){
             //some changes where done
-            dispatch(editIC({token: sessionToken, ic: data}));
-            dispatch(loadAllICs({token: sessionToken}));
+            dispatch(editIC({token: sessionToken, ic: data})).then(res => dispatch(loadAllICs({token: sessionToken})));
         }
         dispatch(closeEditModal(data));
     }
 
     const onCloseDeleteModal = (isDeleteConfirmed) => {
         if(isDeleteConfirmed){
-            dispatch(deleteIC({token: sessionToken, id:deleteModalIC.id}));
-            dispatch(loadAllICs({token: sessionToken}));
+            dispatch(deleteIC({token: sessionToken, id:deleteModalIC.id})).then(res => dispatch(loadAllICs({token: sessionToken})));
         }
         dispatch(closeDeleteModal());
     }
