@@ -17,15 +17,16 @@
 
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import RestAPI from '../common/api/rest-api';
-
 import { sessionToken } from '../localStorage';
 import NotificationsDataManager from '../common/data-managers/notifications-data-manager';
 import NotificationsFactory from '../common/data-managers/notifications-factory';
+
 
 const icSlice = createSlice({
     name: 'infrastructure',
     initialState: {
         ICsArray: [],
+
         checkedICsIds: [],
         isLoading: false,
         currentIC: {},
@@ -76,6 +77,7 @@ const icSlice = createSlice({
         closeDeleteModal: (state, args) => {
             state.deleteModalIC = null;
             state.isDeleteModalOpened = false;
+
         }
     },
     extraReducers: builder => {
@@ -90,6 +92,7 @@ const icSlice = createSlice({
            .addCase(loadICbyId.pending, (state, action) => {
                 state.isCurrentICLoading = true
             })
+
            .addCase(loadICbyId.fulfilled, (state, action) => {
                    state.isCurrentICLoading = false
                    state.currentIC = action.payload;
@@ -223,6 +226,7 @@ export const deleteIC = createAsyncThunk(
     }
 )
 
+
 //TODO
 
 //restarts ICs
@@ -240,6 +244,7 @@ export const restartIC = createAsyncThunk(
     }
 )
 
+
 //shut ICs down
 export const shutdownIC = createAsyncThunk(
     'infrastructure/shutdownIC',
@@ -255,6 +260,8 @@ export const shutdownIC = createAsyncThunk(
     }
 )
 
+
 export const {updateCheckedICs, clearCheckedICs, openEditModal, openDeleteModal, closeDeleteModal, closeEditModal} = icSlice.actions;
 
 export default icSlice.reducer;
+

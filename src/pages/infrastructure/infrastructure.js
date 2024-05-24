@@ -33,6 +33,7 @@ import DeleteDialog from "../../common/dialogs/delete-dialog";
 import NotificationsDataManager from "../../common/data-managers/notifications-data-manager";
 import NotificationsFactory from "../../common/data-managers/notifications-factory";
 
+
 const Infrastructure = (props) => {
     const dispatch = useDispatch();
 
@@ -44,7 +45,6 @@ const Infrastructure = (props) => {
     const [isImportModalOpened, setIsImportModalOpened] = useState(false);
     const [isICModalOpened, setIsICModalOpened] = useState(false);
     const [checkedICs, setCheckedICs] = useState([]);
-
     useEffect(() => {
         //load array of ics and start a timer for periodic refresh
         dispatch(loadAllICs({token: sessionToken}));
@@ -120,7 +120,6 @@ const Infrastructure = (props) => {
 
     //getting list of managers for the new IC modal
     const managers = ics.filter(ic => ic.category === "manager");
-
     return (
         <div>
             <div className='section'>
@@ -145,8 +144,7 @@ const Infrastructure = (props) => {
                             />
                         </span>
                         : 
-                        <span />
-                    }
+                        <span />}
                 </h1>
 
                 <ICCategoryTable
@@ -156,7 +154,7 @@ const Infrastructure = (props) => {
 
                 <ICCategoryTable
                     title={"Simulators"}
-                    category={"simulator"}
+                    category={"simulator"} 
                 />
 
                 <ICCategoryTable 
@@ -166,7 +164,7 @@ const Infrastructure = (props) => {
 
                 <ICCategoryTable 
                     title={"Services"}
-                    category={"service"}
+                    category={"service"} 
                 />
 
                 <ICCategoryTable 

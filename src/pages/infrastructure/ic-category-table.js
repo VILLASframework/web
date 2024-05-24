@@ -15,6 +15,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
+
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {Table, ButtonColumn, CheckboxColumn, DataColumn, LabelColumn, LinkColumn } from '../../common/table';
@@ -29,10 +30,10 @@ import { currentUser } from "../../localStorage";
 
 //a Table of IC components of specific category from props.category
 //titled with props.title
-const ICCategoryTable = (props) => {
+const ICCategoryTable = (props) => {\
     const dispatch = useDispatch();
     const ics = useSelector(state => state.infrastructure.ICsArray);
-    const [isGenericDisplayed, setIsGenericDisplayed] = useState(false);
+    const [isGenericDisplayed, setIsGenericDisplayed] = useState(false);\
 
     const modifyUptimeColumn = (uptime, component) => {
       if (uptime >= 0) {
@@ -72,7 +73,6 @@ const ICCategoryTable = (props) => {
           return 99;
       }
     }
-
     //if category of the table is manager we need to filter the generic-typed ics
     //according to the state of IconToggleButton
     let tableData = [];
@@ -151,7 +151,6 @@ const ICCategoryTable = (props) => {
           ...prevState, [id]: !prevState[id]
         }
       })
-    }
 
     return (<div>
       <h2>
