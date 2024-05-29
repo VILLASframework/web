@@ -40,10 +40,6 @@ import ConfigTable from "../componentconfig/config-table";
 import EditFilesDialog from '../file/edit-files'
 import ScenarioUsersTable from "./scenario-users-table";
 
-
-import { useSelector, useDispatch } from "react-redux";
-import { decrement, increment } from "../new_redux/slices/counterSlice";
-
 class Scenario extends React.Component {
 
   constructor(props) {
