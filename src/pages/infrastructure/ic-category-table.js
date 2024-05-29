@@ -30,10 +30,10 @@ import { currentUser } from "../../localStorage";
 
 //a Table of IC components of specific category from props.category
 //titled with props.title
-const ICCategoryTable = (props) => {\
+const ICCategoryTable = (props) => {
     const dispatch = useDispatch();
     const ics = useSelector(state => state.infrastructure.ICsArray);
-    const [isGenericDisplayed, setIsGenericDisplayed] = useState(false);\
+    const [isGenericDisplayed, setIsGenericDisplayed] = useState(false);
 
     const modifyUptimeColumn = (uptime, component) => {
       if (uptime >= 0) {
@@ -151,7 +151,7 @@ const ICCategoryTable = (props) => {\
           ...prevState, [id]: !prevState[id]
         }
       })
-
+    }  
     return (<div>
       <h2>
           {props.title}
