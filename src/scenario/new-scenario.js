@@ -50,15 +50,7 @@ class NewScenarioDialog extends React.Component {
 
   handleChange = event => {
     this.setState({ [event.target.id]: event.target.value });
-
-    // check all controls
-    let name = true;
-
-    if (this.state.name === '') {
-      name = false;
-    }
-
-    this.valid =  name;
+    this.valid = this.state.name.trim().length == 0 || this.state.name[0] == '';
   }
 
   resetState = () => {

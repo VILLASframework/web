@@ -290,6 +290,16 @@ class Scenarios extends Component {
       width: "30px",
     };
 
+    render() {
+    const buttonStyle = {
+      marginLeft: "10px",
+    };
+
+    const iconStyle = {
+      height: "30px",
+      width: "30px",
+    };
+
     return (
       <div className="section">
         <h1>
