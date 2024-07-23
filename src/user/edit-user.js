@@ -25,7 +25,7 @@ import NotificationsFactory from "../common/data-managers/notifications-factory"
 class EditUserDialog extends React.Component {
   constructor(props) {
     super(props);
-
+    
     this.state = {
       username: '',
       mail: '',
@@ -59,11 +59,24 @@ class EditUserDialog extends React.Component {
         user.active = this.state.active
       }
 
-      if (this.state.password !== '' && this.state.oldPassword !== '' && this.state.password === this.state.confirmPassword) {
+      if(this.state.password!== null){
+        if(this.state.confirmPassword!== null){
+          if(this.state.adminPassword!== null){
+            user.password = this.state.password;
+            user.oldPassword = this.state.oldPassword;
+          } else {
+            NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR("Admin password needed to update user's password"))
+          }
+        } else {
+          NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR("New password not correctly confirmed"))
+        }
+      }
+
+      if (this.state.password !== '' && this.state.password === this.state.confirmPassword) {
         user.password = this.state.password;
-        user.oldpassword = this.state.oldPassword
+        console.log('old', this.state.oldPassword)
       } else if (this.state.password !== '' && this.state.password !== this.state.confirmPassword){
-        NotificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR("New password not correctly confirmed"))
+        
       }
 
       this.props.onClose(user);
@@ -89,6 +102,7 @@ class EditUserDialog extends React.Component {
   }
 
   render() {
+    console.log(this.props.user)
     return (
       <Dialog show={this.props.show} title="Edit user" buttonTitle="Save" onClose={(c) => this.onClose(c)} onReset={() => this.resetState()} valid={true}>
         <Form>
