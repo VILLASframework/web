@@ -17,7 +17,7 @@
 
 import { Form, Row, Col } from 'react-bootstrap';
 import DateTimePicker from 'react-datetime-picker';
-import ICButtonGroup from "./ic-button-group";
+import ActionBoardButtonGroup from '../../common/buttons/action-board-button-group';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -85,7 +85,7 @@ const ICActionBoard = (props) => {
           </Form>
         </Col>
         <Col style={{padding: '20px'}} md='auto' lg='auto'>
-          <ICButtonGroup
+          <ActionBoardButtonGroup
             disabled={checkedICsIds.length == 0}
             onReset={() => onReset()}
             onShutdown={() => onShutdown()}

@@ -172,7 +172,7 @@ const Infrastructure = (props) => {
                     category={"equipment"} 
                 />
 
-                {currentUser.role === "Admin" && externalICs.length > 0 ? <ICActionBoard /> : null}
+                {currentUser.role === "Admin" ? <ICActionBoard /> : null}
 
             </div>
 

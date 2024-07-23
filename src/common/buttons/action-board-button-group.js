@@ -17,8 +17,8 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import IconButton from '../../common/buttons/icon-button';
-import IconToggleButton from '../../common/buttons/icon-toggle-button';
+import IconButton from './icon-button';
+import IconToggleButton from './icon-toggle-button';
 
 const buttonStyle = {
   marginLeft: '12px',
@@ -36,7 +36,7 @@ const iconStyle = {
 
 let buttonkey = 0;
 
-class ICButtonGroup extends React.Component {
+class ActionBoardButtonGroup extends React.Component {
 
   getBtn(icon, tooltip, clickFn, disabled = false) {
     return <IconButton
@@ -108,7 +108,7 @@ class ICButtonGroup extends React.Component {
   }
 }
 
-ICButtonGroup.propTypes = {
+ActionBoardButtonGroup.propTypes = {
   onReset: PropTypes.func,
   onShutdown: PropTypes.func,
   onDelete: PropTypes.func,
@@ -118,4 +118,4 @@ ICButtonGroup.propTypes = {
   onPauseResume: PropTypes.func
 };
 
-export default ICButtonGroup;
+export default ActionBoardButtonGroup;
