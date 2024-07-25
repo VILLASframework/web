@@ -16,210 +16,187 @@
  ******************************************************************************/
 
 import React from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import branding from '../branding/branding';
-import { Container } from 'flux/utils';
-import LoginStore from '../user/login-store';
-import AppDispatcher from './app-dispatcher';
+import { useGetConfigQuery } from '../store/apiSlice';
+import { currentUser } from '../localStorage';
 
+const SideBarMenu = (props) => {
 
-class SidebarMenu extends React.Component {
-  constructor(props) {
-    super(props);
+  const values = branding.values;
+  const [isExternalAuth, setIsExternalAuth] = useState(false);
+  const [logoutLink, setLogoutLink] = useState('');
 
-    this.state = {
-      externalAuth: false,
-      logoutLink: "",
+  const {data: configRes} = useGetConfigQuery();
+
+  useEffect(() => {
+    if(configRes) {
+      setLogoutLink(configRes.authentication.logout_url);
     }
+  }, [configRes])
+
+  const logout = async () => {
+
   }
 
-  static getStores() {
-    return [LoginStore]
-  }
+  const getLinks = () => {
+    let links = [];
 
-  static calculateState(prevState, props) {
-    let config = LoginStore.getState().config;
-    let externalauth = _.get(config, ['authentication', 'external', 'enabled']);
-    let logout_url = _.get(config, ['authentication', 'logout_url']);
-
-    if (externalauth && logout_url) {
-      return {
-        externalAuth: true,
-        logoutLink: logout_url,
-      }
-    }
-
-    return {
-      externalAuth: false,
-      logoutLink: "/logout",
-    }
-  }
-
-  logout() {
-    AppDispatcher.dispatch({
-      type: 'users/logout'
-    });
-    // The Login Store and local storage are deleted automatically
-  }
-
-  render() {
-    const values = branding.values;
-    let links = []
     if (values.links) {
       Object.keys(values.links).forEach(key => {
         links.push(<li key={key}><a href={values.links[key]} title={key}>{key}</a></li>);
       })
     }
-    var logoStyle = { width: 110, margin: 'auto' };
-    var logo = branding.getLogo(logoStyle);
 
-    return (
-      <div className="menucontainer">
-        { logo ?
-          <div className="menulogo">
-            {logo}
-          </div>
-          : ''
-        }
-        <div className="menu">
-          <h2>Menu</h2>
+    return links;
+  }
 
-          {this.state.externalAuth ?
-            <ul>
-              <li hidden={!values.pages.home}>
+  return (
+    <div className="menucontainer">
+      { branding.getLogo() ?
+        <div className="menulogo">
+          {branding.getLogo({ width: 110, margin: 'auto' })}
+        </div>
+        : ''
+      }
+      <div className="menu">
+        <h2>Menu</h2>
+
+        {isExternalAuth ?
+          <ul>
+            <li hidden={!values.pages.home}>
+              <NavLink
+                to="/home"
+                className={({isActive}) => (isActive ? "active" : "")}
+                title="Home">
+                Home
+              </NavLink>
+            </li>
+            <li hidden={!values.pages.scenarios}>
+              <NavLink
+                to="/scenarios"
+                className={({isActive}) => (isActive ? "active" : "")}
+                title="Scenarios">
+                Scenarios
+              </NavLink>
+            </li>
+            {currentUser.role === 'Admin' || values.pages.infrastructure ?
+              <li>
                 <NavLink
-                  to="/home"
+                  to="/infrastructure"
                   className={({isActive}) => (isActive ? "active" : "")}
-                  title="Home">
-                  Home
+                  title="Infrastructure">
+                  Infrastructure
                 </NavLink>
-              </li>
-              <li hidden={!values.pages.scenarios}>
+              </li> : ''
+            }
+            {currentUser.role === 'Admin' ?
+              <li>
                 <NavLink
-                  to="/scenarios"
+                  to="/users"
                   className={({isActive}) => (isActive ? "active" : "")}
-                  title="Scenarios">
-                  Scenarios
+                  title="Users">
+                  Users
                 </NavLink>
-              </li>
-              {this.props.currentRole === 'Admin' || values.pages.infrastructure ?
-                <li>
-                  <NavLink
-                    to="/infrastructure"
-                    className={({isActive}) => (isActive ? "active" : "")}
-                    title="Infrastructure">
-                    Infrastructure
-                  </NavLink>
-                </li> : ''
-              }
-              {this.props.currentRole === 'Admin' ?
-                <li>
-                  <NavLink
-                    to="/users"
-                    className={({isActive}) => (isActive ? "active" : "")}
-                    title="Users">
-                    Users
-                  </NavLink>
-                </li> : ''
-              }
-              <li hidden={!values.pages.account}>
+              </li> : ''
+            }
+            <li hidden={!values.pages.account}>
+              <NavLink
+                to="/account"
+                title="Account">
+                Account
+              </NavLink>
+            </li>
+            <a
+              onClick={logout()}
+              href={''}>
+              Logout
+            </a>
+            <li hidden={!values.pages.api}>
+              <NavLink
+                to="/api"
+                title="API Browser">
+                API Browser
+              </NavLink>
+            </li>
+          </ul>
+          : <ul>
+            <li hidden={!values.pages.home}>
+              <NavLink
+                to="/home"
+                className={({isActive}) => (isActive ? "active" : "")}
+                title="Home">
+                Home
+              </NavLink>
+            </li>
+            <li hidden={!values.pages.scenarios}>
+              <NavLink
+                to="/scenarios"
+                className={({isActive}) => (isActive ? "active" : "")}
+                title="Scenarios">
+                Scenarios
+              </NavLink>
+            </li>
+            {currentUser.role === 'Admin' || values.pages.infrastructure ?
+              <li>
                 <NavLink
-                  to="/account"
-                  title="Account">
-                  Account
+                  to="/infrastructure"
+                  className={({isActive}) => (isActive ? "active" : "")}
+                  title="Infrastructure">
+                  Infrastructure
                 </NavLink>
-              </li>
-              <a
-                onClick={this.logout.bind(this)}
-                href={this.state.logoutLink}>
+              </li> : ''
+            }
+            {currentUser.role === 'Admin' ?
+              <li>
+                <NavLink
+                  to="/users"
+                  className={({isActive}) => (isActive ? "active" : "")}
+                  title="Users">
+                  Users
+                </NavLink>
+              </li> : ''
+            }
+            <li hidden={!values.pages.account}>
+              <NavLink
+                to="/account"
+                title="Account">
+                Account
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/logout"
+                title="Logout">
                 Logout
-              </a>
-              <li hidden={!values.pages.api}>
+              </NavLink>
+            </li>
+            {currentUser.role === 'Admin' || values.pages.api ?
+              <li>
                 <NavLink
                   to="/api"
                   title="API Browser">
                   API Browser
                 </NavLink>
-              </li>
-            </ul>
-            : <ul>
-              <li hidden={!values.pages.home}>
-                <NavLink
-                  to="/home"
-                  className={({isActive}) => (isActive ? "active" : "")}
-                  title="Home">
-                  Home
-                </NavLink>
-              </li>
-              <li hidden={!values.pages.scenarios}>
-                <NavLink
-                  to="/scenarios"
-                  className={({isActive}) => (isActive ? "active" : "")}
-                  title="Scenarios">
-                  Scenarios
-                </NavLink>
-              </li>
-              {this.props.currentRole === 'Admin' || values.pages.infrastructure ?
-                <li>
-                  <NavLink
-                    to="/infrastructure"
-                    className={({isActive}) => (isActive ? "active" : "")}
-                    title="Infrastructure">
-                    Infrastructure
-                  </NavLink>
-                </li> : ''
-              }
-              {this.props.currentRole === 'Admin' ?
-                <li>
-                  <NavLink
-                    to="/users"
-                    className={({isActive}) => (isActive ? "active" : "")}
-                    title="Users">
-                    Users
-                  </NavLink>
-                </li> : ''
-              }
-              <li hidden={!values.pages.account}>
-                <NavLink
-                  to="/account"
-                  title="Account">
-                  Account
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to={this.state.logoutLink}
-                  title="Logout">
-                  Logout
-                </NavLink>
-              </li>
-              {this.props.currentRole === 'Admin' || values.pages.api ?
-                <li>
-                  <NavLink
-                    to="/api"
-                    title="API Browser">
-                    API Browser
-                  </NavLink>
-                </li > : ''
-              }
-            </ul>}
+              </li> : ''
+            }
+          </ul>}
 
-          {
-            links.length > 0 ?
-              <div>
-                <br></br>
-                <h4> Links</h4>
-                <ul> {links} </ul>
-              </div>
-              : ''
-          }
-        </div>
-
-
+        {
+          getLinks().length > 0 ?
+            <div>
+              <br></br>
+              <h4> Links</h4>
+              <ul> {getLinks()} </ul>
+            </div>
+            : ''
+        }
       </div>
-    );
-  }
+
+
+    </div>
+  );
 }
 
-let fluxContainerConverter = require('../common/FluxContainerConverter');
-export default Container.create(fluxContainerConverter.convert(SidebarMenu));
+export default SideBarMenu;
