@@ -16,9 +16,7 @@
  ******************************************************************************/
 
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
-
 import RestAPI from '../common/api/rest-api';
-import ICDataDataManager from '../ic/ic-data-data-manager';
 
 const userSlice = createSlice({
     name: 'user',
@@ -91,12 +89,8 @@ export const loginExternal = createAsyncThunk(
 export const logout = createAsyncThunk(
     'user/logout',
     async () => {
-        // disconnect from all infrastructure components
-        ICDataDataManager.closeAll();
         //remove token and current user from local storage
         localStorage.clear();
-
-        console.log("logged out")
     }
 )
 
