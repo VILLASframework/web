@@ -19,30 +19,18 @@ import React, {useEffect, useRef} from 'react';
 import { NavbarBrand } from 'react-bootstrap';
 import NotificationSystem from 'react-notification-system';
 import { Redirect } from 'react-router-dom';
-
 import { useSelector } from 'react-redux';
-
 import LoginForm from './login-form';
 import Header from '../../common/header';
 import NotificationsDataManager from '../../common/data-managers/notifications-data-manager';
-import AppDispatcher from '../../common/app-dispatcher';
 import branding from '../../branding/branding';
 
 const Login = (props) => {
 
   const notificationSystem = useRef()
 
-
   useEffect(() => {
     NotificationsDataManager.setSystem(notificationSystem);
-
-    console.log("redirected to login", currentUser)
-
-    // load config in case the user goes directly to /login
-    // otherwise it will be loaded in app constructor
-    AppDispatcher.dispatch({
-      type: 'config/load',
-    });
   }, []);
 
   const config = null
@@ -63,7 +51,6 @@ const Login = (props) => {
     
           <div className="login-container">
             <NavbarBrand>Login</NavbarBrand>
-    
             <LoginForm loginMessage={loginMessage} config={config} />
           </div>
         </div>
