@@ -521,3 +521,9 @@ hr {
 .swagger-ui .info {
   margin-top: 10px;
 }
+
+.table thead th {
+  background-color: var(--highlights);
+  color: #fff;
+  padding: 0.5em 0.5em !important;
+}
