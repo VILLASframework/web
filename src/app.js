@@ -20,27 +20,22 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend }from 'react-dnd-html5-backend';
 import NotificationSystem from 'react-notification-system';
 import { Redirect, Route } from 'react-router-dom';
-import jwt from 'jsonwebtoken'
-
-import AppDispatcher from './common/app-dispatcher';
+import jwt from 'jsonwebtoken';
 import NotificationsDataManager from './common/data-managers/notifications-data-manager';
-
 import Home from './common/home';
 import Header from './common/header';
 import Menu from './common/menu';
-
 import InfrastructureComponent from './pages/infrastructure/ic';
-import Dashboard from './dashboard/dashboard';
-import Scenarios from './scenario/scenarios';
-import Scenario from './scenario/scenario';
-import Users from './user/users';
-import User from './user/user';
+import Scenarios from './pages/scenarios/scenarios';
 import APIBrowser from './common/api-browser';
-
-
+import Scenario from './pages/scenarios/scenario';
+import Users from './pages/users/users';
+import Dashboard from './pages/dashboards/dashboard';
+import Account from './pages/account/account';
 import './styles/app.css';
 import './styles/login.css';
 import branding from './branding/branding';
+import Logout from './pages/login/logout';
 
 import Infrastructure from './pages/infrastructure/infrastructure'
 
@@ -54,31 +49,7 @@ class App extends React.Component {
 
   componentDidMount() {
     NotificationsDataManager.setSystem(this.refs.notificationSystem);
-
-    AppDispatcher.dispatch({
-      type: 'config/load',
-    });
-
-    // if token stored locally, we are already logged-in
     let token = localStorage.getItem("token");
-    if (token != null && token !== '') {
-
-      let isExpired = this.tokenIsExpired(token);
-      if (isExpired) {
-        console.log("Token expired")
-        AppDispatcher.dispatch({
-          type: 'users/logout'
-        });
-      } else {
-        let currentUser = JSON.parse(localStorage.getItem("currentUser"));
-        console.log("Logged-in as user ", currentUser.username)
-        AppDispatcher.dispatch({
-          type: 'users/logged-in',
-          token: token,
-          currentUser: currentUser
-        });
-      }
-    }
   }
 
   tokenIsExpired(token){
@@ -114,10 +85,21 @@ class App extends React.Component {
               <Route exact path="/" component={Home} />
               { pages.home ? <Route path="/home" component={Home} /> : '' }
               { pages.scenarios ? <>
-                <Route exact path="/scenarios" component={Scenarios}/>
-                <Route path="/scenarios/:scenario" component={Scenario} />
-                <Route path="/dashboards/:dashboard" component={Dashboard} />
-                <Route path="/dashboards-new/:dashboard" component={Dashboard} />
+                <Route exact path="/scenarios">
+                  <Scenarios />
+                </Route>
+                <Route exact path="/logout">
+                  <Logout />
+                </Route>
+                <Route path="/scenarios/:scenario">
+                  <Scenario />
+                </Route>
+                <Route path="/dashboards/:dashboard">
+                  <Dashboard />
+                </Route>
+                <Route path="/dashboards-new/:dashboard">
+                  <Dashboard />
+                </Route>
                 </>
               : '' }
               { currentUser.role === "Admin" || pages.infrastructure ? <>
@@ -129,9 +111,11 @@ class App extends React.Component {
                 </Route>
                 </>
               : '' }
-              { pages.account ? <Route path="/account" component={User} /> : '' }
+              { pages.account ? <Route path="/account"><Account /></Route> : '' }
               { currentUser.role === "Admin" ?
-                <Route path="/users" component={Users} />
+                <Route path="/users">
+                  <Users />
+                </Route>
               : '' }
               { currentUser.role === "Admin" || pages.api ?
                 <Route path="/api" component={APIBrowser} />
@@ -145,5 +129,4 @@ class App extends React.Component {
   }
 }
 
-
-export default App
+export default App;
