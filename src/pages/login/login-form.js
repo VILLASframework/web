@@ -17,8 +17,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Col } from 'react-bootstrap';
-import RecoverPassword from '../../user/recover-password'
-import { useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux';
 import { login } from '../../store/userSlice';
 import _ from 'lodash';
 
@@ -84,7 +83,7 @@ const LoginForm = (props) => {
         </Col>
       </Form.Group>
 
-      <RecoverPassword show={forgottenPassword} onClose={() => setForgottenPassword(false)} sessionToken={props.sessionToken} />
+      {/* <RecoverPassword show={forgottenPassword} onClose={() => setForgottenPassword(false)} sessionToken={props.sessionToken} /> */}
     </Form>
   );
 
