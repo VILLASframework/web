@@ -16,16 +16,19 @@
  ******************************************************************************/
 
 import { configureStore } from "@reduxjs/toolkit";
-
 import userReducer from './userSlice';
 import icReducer from './icSlice';
 import configReducer from './configSlice'
+import { apiSlice } from "./apiSlice";
 
 export const store = configureStore({
     reducer: {
         user: userReducer,
         infrastructure: icReducer,
-        config: configReducer
+        config: configReducer,
+        [apiSlice.reducerPath]: apiSlice.reducer,
     },
-    devTools: true
+    middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(apiSlice.middleware),
+    devTools: true,
 })
