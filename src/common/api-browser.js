@@ -21,7 +21,6 @@ import SwaggerUI from 'swagger-ui-react'
 import 'swagger-ui-react/swagger-ui.css'
 import '../styles/swagger-ui.css';
 import RestAPI from './api/rest-api';
-import RestDataManager from './data-managers/rest-data-manager';
 
 class APIBrowser extends React.Component {
 
