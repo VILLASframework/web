@@ -36,96 +36,76 @@ import './styles/app.css';
 import './styles/login.css';
 import branding from './branding/branding';
 import Logout from './pages/login/logout';
+import Infrastructure from './pages/infrastructure/infrastructure';
+import { currentUser, sessionToken } from './localStorage';
 
-import Infrastructure from './pages/infrastructure/infrastructure'
-
-class App extends React.Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {}
-  }
-
-  componentDidMount() {
-    NotificationsDataManager.setSystem(this.refs.notificationSystem);
-    let token = localStorage.getItem("token");
-  }
-
-  tokenIsExpired(token){
+const App = () => {
+  
+  const isTokenExpired = (token) => {
     let decodedToken = jwt.decode(token);
     let timeNow = (new Date().getTime() + 1) / 1000;
     return decodedToken.exp < timeNow;
   }
 
-  render() {
+  if ((sessionToken == null || sessionToken === "" || currentUser == null || currentUser === "") || isTokenExpired(sessionToken)) {
+    console.log("APP redirecting to logout/login")
+    return (<Redirect to="/logout" />);
+  } else {
+    const pages = branding.values.pages;
 
-    let token = localStorage.getItem("token");
-    let currentUserRaw = localStorage.getItem("currentUser");
+    return (<DndProvider backend={HTML5Backend} >
+      <div className="app">
+        <NotificationSystem />
+        <Header />
 
-    if ((token == null || token === "" || currentUserRaw == null || currentUserRaw === "") || this.tokenIsExpired(token)) {
-      console.log("APP redirecting to logout/ login")
-      return (<Redirect to="/logout" />);
-    }
+        <div className='app-body app-body-spacing'>
+          <Menu currentRole={currentUser.role} />
 
-    let currentUser = JSON.parse(currentUserRaw);
-    let pages = branding.values.pages;
-
-    return <DndProvider backend={HTML5Backend} >
-        <div className="app">
-          <NotificationSystem
-            ref="notificationSystem"
-          />
-          <Header />
-
-          <div className='app-body app-body-spacing'>
-            <Menu currentRole={currentUser.role} />
-
-            <div className='app-content app-content-margin-left'>
-              <Route exact path="/" component={Home} />
-              { pages.home ? <Route path="/home" component={Home} /> : '' }
-              { pages.scenarios ? <>
-                <Route exact path="/scenarios">
-                  <Scenarios />
-                </Route>
-                <Route exact path="/logout">
-                  <Logout />
-                </Route>
-                <Route path="/scenarios/:scenario">
-                  <Scenario />
-                </Route>
-                <Route path="/dashboards/:dashboard">
-                  <Dashboard />
-                </Route>
-                <Route path="/dashboards-new/:dashboard">
-                  <Dashboard />
-                </Route>
-                </>
-              : '' }
-              { currentUser.role === "Admin" || pages.infrastructure ? <>
-                <Route exact path="/infrastructure">
-                  <Infrastructure />
-                </Route>
-                <Route path="/infrastructure/:ic">
-                  <InfrastructureComponent />
-                </Route>
-                </>
-              : '' }
-              { pages.account ? <Route path="/account"><Account /></Route> : '' }
-              { currentUser.role === "Admin" ?
-                <Route path="/users">
-                  <Users />
-                </Route>
-              : '' }
-              { currentUser.role === "Admin" || pages.api ?
-                <Route path="/api" component={APIBrowser} />
-              : '' }
-            </div>
+          <div className='app-content app-content-margin-left'>
+            <Route exact path="/" component={Home} />
+            { pages.home ? <Route path="/home" component={Home} /> : '' }
+            { pages.scenarios ? <>
+              <Route exact path="/scenarios">
+                <Scenarios />
+              </Route>
+              <Route exact path="/logout">
+                <Logout />
+              </Route>
+              <Route path="/scenarios/:scenario">
+                <Scenario />
+              </Route>
+              <Route path="/dashboards/:dashboard">
+                <Dashboard />
+              </Route>
+              <Route path="/dashboards-new/:dashboard">
+                <Dashboard />
+              </Route>
+              </>
+            : '' }
+            { currentUser.role === "Admin" || pages.infrastructure ? <>
+              <Route exact path="/infrastructure">
+                <Infrastructure />
+              </Route>
+              <Route path="/infrastructure/:ic">
+                <InfrastructureComponent />
+              </Route>
+              </>
+            : '' }
+            { pages.account ? <Route path="/account"><Account /></Route> : '' }
+            { currentUser.role === "Admin" ?
+              <Route path="/users">
+                <Users />
+              </Route>
+            : '' }
+            { currentUser.role === "Admin" || pages.api ?
+              <Route path="/api" component={APIBrowser} />
+            : '' }
           </div>
-
-          {branding.getFooter()}
         </div>
-    </DndProvider>
+
+        {branding.getFooter()}
+      </div>
+  </DndProvider>)
   }
 }
 
