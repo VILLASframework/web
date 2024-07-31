@@ -37,20 +37,25 @@ import './styles/login.css';
 import branding from './branding/branding';
 import Logout from './pages/login/logout';
 import Infrastructure from './pages/infrastructure/infrastructure';
-import { currentUser, sessionToken } from './localStorage';
+import { useSelector } from 'react-redux';
 
 const App = () => {
   
   const isTokenExpired = (token) => {
+    console.log("decoded, ", jwt.decode(token))
     let decodedToken = jwt.decode(token);
     let timeNow = (new Date().getTime() + 1) / 1000;
     return decodedToken.exp < timeNow;
   }
 
-  if ((sessionToken == null || sessionToken === "" || currentUser == null || currentUser === "") || isTokenExpired(sessionToken)) {
-    console.log("APP redirecting to logout/login")
+  const { isAuthenticated, token, user } = useSelector((state) => state.auth);
+
+  if (!isAuthenticated || isTokenExpired(token)) {
+    console.log("APP redirecting to logout/login");
     return (<Redirect to="/logout" />);
   } else {
+
+    console.log("APP rendering app");
     const pages = branding.values.pages;
 
     return (<DndProvider backend={HTML5Backend} >
@@ -59,7 +64,7 @@ const App = () => {
         <Header />
 
         <div className='app-body app-body-spacing'>
-          <Menu currentRole={currentUser.role} />
+          <Menu currentRole={user.role} />
 
           <div className='app-content app-content-margin-left'>
             <Route exact path="/" component={Home} />
@@ -82,7 +87,7 @@ const App = () => {
               </Route>
               </>
             : '' }
-            { currentUser.role === "Admin" || pages.infrastructure ? <>
+            { user.role === "Admin" || pages.infrastructure ? <>
               <Route exact path="/infrastructure">
                 <Infrastructure />
               </Route>
@@ -92,12 +97,12 @@ const App = () => {
               </>
             : '' }
             { pages.account ? <Route path="/account"><Account /></Route> : '' }
-            { currentUser.role === "Admin" ?
+            { user.role === "Admin" ?
               <Route path="/users">
                 <Users />
               </Route>
             : '' }
-            { currentUser.role === "Admin" || pages.api ?
+            { user.role === "Admin" || pages.api ?
               <Route path="/api" component={APIBrowser} />
             : '' }
           </div>

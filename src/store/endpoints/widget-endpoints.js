@@ -15,22 +15,34 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import { configureStore } from "@reduxjs/toolkit";
-import userReducer from './userSlice';
-import icReducer from './icSlice';
-import configReducer from './configSlice'
-import { apiSlice } from "./apiSlice";
-import authReducer from './authSlice';
-
-export const store = configureStore({
-    reducer: {
-        auth: authReducer,
-        user: userReducer,
-        infrastructure: icReducer,
-        config: configReducer,
-        [apiSlice.reducerPath]: apiSlice.reducer,
-    },
-    middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
-    devTools: true,
-})
+export const widgetEndpoints = (builder) => ({
+  getWidgets: builder.query({
+    query: (dashboardID) => ({
+      url: 'widgets',
+      params: { dashboardID },
+    }),
+  }),
+  addWidget: builder.mutation({
+    query: (widget) => ({
+      url: 'widgets',
+      method: 'POST',
+      body: { widget },
+    }),
+  }),
+  getWidget: builder.query({
+    query: (widgetID) => `/widgets/${widgetID}`,
+  }),
+  updateWidget: builder.mutation({
+    query: ({ widgetID, updatedWidget }) => ({
+      url: `/widgets/${widgetID}`,
+      method: 'PUT',
+      body: updatedWidget,
+    }),
+  }),
+  deleteWidget: builder.mutation({
+    query: (widgetID) => ({
+      url: `/widgets/${widgetID}`,
+      method: 'DELETE',
+    }),
+  }),
+});

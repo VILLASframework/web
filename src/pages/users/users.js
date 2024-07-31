@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { Table, ButtonColumn, CheckboxColumn, DataColumn } from "../../common/table";
 import Icon from "../../common/icon";
@@ -8,7 +9,6 @@ import EditUserDialog from "./dialogs/edit-user";
 import UsersToScenarioDialog from "./dialogs/users-to-scenario";
 import DeleteDialog from "../../common/dialogs/delete-dialog";
 import { buttonStyle, iconStyle } from "./styles";
-import {currentUser} from '../../localStorage';
 import NotificationsFactory from "../../common/data-managers/notifications-factory";
 import notificationsDataManager from "../../common/data-managers/notifications-data-manager";
 import { 
@@ -21,6 +21,8 @@ import {
 } from "../../store/apiSlice";
 
 const Users = ({}) => {
+
+    const { user: currentUser, token: sessionToken } = useSelector((state) => state.auth);
 
     const {data: fetchedUsers, refetch: refetchUsers} = useGetUsersQuery();
     const users = fetchedUsers ? fetchedUsers.users : [];

@@ -19,8 +19,6 @@ import { useState, useEffect } from "react";
 import IconButton from "../../../common/buttons/icon-button";
 import { Table, ButtonColumn, DataColumn, LinkbuttonColumn } from "../../../common/table";
 import { buttonStyle, tableHeadingStyle, iconStyle } from "../styles";
-import { currentUser, sessionToken } from "../../../localStorage";
-import { InputGroup, Form } from "react-bootstrap";
 import DeleteDialog from "../../../common/dialogs/delete-dialog";
 import ResultConfigDialog from "../dialogs/result-configs-dialog";
 import ResultPythonDialog from "../dialogs/result-python-dialog";
@@ -34,12 +32,8 @@ import {
   useAddResultMutation,
   useDeleteResultMutation,
   useGetFilesQuery,
-  useAddFileMutation,
   useLazyDownloadFileQuery,
-  useUpdateFileMutation,
-  useDeleteFileMutation,
  } from "../../../store/apiSlice";
-import { set } from "lodash";
 import JSZip from 'jszip';
 
 const ResultsTable = (props) => {

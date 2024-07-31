@@ -16,11 +16,9 @@
  ******************************************************************************/
 
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import IconButton from "../../common/buttons/icon-button";
 import { Table, ButtonColumn, DataColumn, LinkColumn } from "../../common/table";
 import { buttonStyle, iconStyle } from "./styles";
-import { currentUser } from "../../localStorage";
 import NewScenarioDialog from "./dialogs/new-scenario";
 import ImportScenarioDialog from "./dialogs/import-scenario";
 import DeleteDialog from "../../common/dialogs/delete-dialog";
@@ -34,12 +32,14 @@ import {
   useGetConfigsQuery,
   useGetDashboardsQuery,
 } from "../../store/apiSlice";
+import { useSelector } from "react-redux";
 
 const Scenarios = (props) => {
 
     const { data , error, refetch: refetchScenarios } = useGetScenariosQuery();
     const scenarios = data?.scenarios;
-    const dispatch = useDispatch();
+
+    const { user: currentUser, token: sessionToken } = useSelector((state) => state.auth);
 
     const [modalScenario, setModalScenario] = useState({name: 'error'});
     const [isNewModalOpened, setIsNewModalOpened] = useState(false);

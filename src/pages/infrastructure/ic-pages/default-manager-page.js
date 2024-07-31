@@ -16,16 +16,12 @@
  ******************************************************************************/
 
 import React, { useEffect, useState } from 'react';
+import { useSelector } from "react-redux";
 import {Col, Row} from "react-bootstrap";
 import IconButton from '../../../common/buttons/icon-button';
 import ManagedICsTable from "./managed-ics-table";
-
 import { useDispatch } from 'react-redux';
 import { loadICbyId } from '../../../store/icSlice';
-import { sessionToken, currentUser } from '../../../localStorage';
-import { loadConfig } from '../../../store/configSlice';
-import { useSelector } from 'react-redux';
-import {refresh, rawDataTable} from "../ic"
 
 import ICParamsTable from '../ic-params-table';
 import RawDataTable from '../../../common/rawDataTable';
@@ -36,6 +32,8 @@ const DefaultManagerPage = (props) => {
   const ic = props.ic;
 
   const ics = useSelector((state) => state.infrastructure.ICsArray);
+
+  const { user: currentUser, token: sessionToken } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
 

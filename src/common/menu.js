@@ -20,13 +20,15 @@ import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import branding from '../branding/branding';
 import { useGetConfigQuery } from '../store/apiSlice';
-import { currentUser } from '../localStorage';
+import { useSelector } from 'react-redux';
 
 const SideBarMenu = (props) => {
 
   const values = branding.values;
   const [isExternalAuth, setIsExternalAuth] = useState(false);
   const [logoutLink, setLogoutLink] = useState('');
+  
+  const { user: currentUser } = useSelector((state) => state.auth);
 
   const {data: configRes} = useGetConfigQuery();
 
@@ -34,11 +36,7 @@ const SideBarMenu = (props) => {
     if(configRes) {
       setLogoutLink(configRes.authentication.logout_url);
     }
-  }, [configRes])
-
-  const logout = async () => {
-
-  }
+  }, [configRes]);
 
   const getLinks = () => {
     let links = [];
