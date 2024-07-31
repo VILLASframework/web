@@ -32,7 +32,9 @@ class Root extends React.Component {
             <Route path='/logout'>
               <Logout />
             </Route>
-            <Route path="/" component={App} />
+            <Route path="/">
+              <App />
+            </Route>
           </Switch>
         </BrowserRouter>
     );
