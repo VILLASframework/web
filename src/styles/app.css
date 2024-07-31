@@ -525,5 +525,4 @@ hr {
 .table thead th {
   background-color: var(--highlights);
   color: #fff;
-  padding: 0.5em 0.5em !important;
 }
