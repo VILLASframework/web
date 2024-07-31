@@ -36,10 +36,9 @@ const Login = (props) => {
 
   const {data: config} = useGetConfigQuery();
 
-  const currentUser = useSelector(state => state.user.currentUser);
-  const loginMessage = useSelector(state => state.user.loginMessage);
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
-  return currentUser == null ? 
+  return !isAuthenticated ? 
     (
       <div>
         <NotificationSystem ref={notificationSystem} />
@@ -52,7 +51,7 @@ const Login = (props) => {
     
           <div className="login-container">
             <NavbarBrand>Login</NavbarBrand>
-            <LoginForm loginMessage={loginMessage} config={config} />
+            <LoginForm config={config} />
           </div>
         </div>
     

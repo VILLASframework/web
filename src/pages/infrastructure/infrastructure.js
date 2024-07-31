@@ -16,12 +16,10 @@
  ******************************************************************************/
 
 import { useEffect, useState } from "react"
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loadAllICs, loadICbyId, addIC, sendActionToIC, closeDeleteModal, closeEditModal, editIC, deleteIC } from "../../store/icSlice";
 import IconButton from "../../common/buttons/icon-button";
 import ICCategoryTable from "./ic-category-table";
-import { sessionToken, currentUser } from "../../localStorage";
 import ICActionBoard from "./ic-action-board";
 import { buttonStyle, iconStyle } from "./styles";
 import NewICDialog from "./dialogs/new-ic-dialog";
@@ -34,6 +32,8 @@ import NotificationsFactory from "../../common/data-managers/notifications-facto
 
 const Infrastructure = (props) => {
     const dispatch = useDispatch();
+
+    const { user: currentUser, token: sessionToken } = useSelector((state) => state.auth);
 
     const ics = useSelector(state => state.infrastructure.ICsArray);
     const externalICs = ics.filter(ic => ic.managedexternally === true);
