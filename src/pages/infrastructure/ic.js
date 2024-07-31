@@ -15,8 +15,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import { useEffect, useRef } from "react";
-import { sessionToken, currentUser } from "../../localStorage";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from 'react-router-dom';
 import { loadAllICs, loadICbyId } from "../../store/icSlice";
@@ -33,6 +32,8 @@ const InfrastructureComponent = (props) => {
     const params = useParams();
     const id = params.ic;
     const dispatch = useDispatch();
+
+    const { token: sessionToken } = useSelector((state) => state.auth);
 
     const ic = useSelector(state => state.infrastructure.currentIC);
     const isICLoading = useSelector(state => state.infrastructure.isCurrentICLoading);

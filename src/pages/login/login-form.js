@@ -15,27 +15,48 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Form, Button, Col } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import { login } from '../../store/userSlice';
 import _ from 'lodash';
-import { sessionToken } from '../../localStorage';
 import RecoverPassword from './recover-password';
+import NotificationsFactory from '../../common/data-managers/notifications-factory';
+import notificationsDataManager from '../../common/data-managers/notifications-data-manager';
+import { useAuthenticateUserMutation } from '../../store/apiSlice';
+import { setUser } from '../../store/authSlice';
 
-const LoginForm = ({loginMessage, config}) => {
+const LoginForm = ({config}) => {
+  const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [forgottenPassword, setForgottenPassword] = useState(false)
+  const [forgottenPassword, setForgottenPassword] = useState(false);
+  const [loginMessage, setLoginMessage] = useState('');
+  const [authenticationRequest] = useAuthenticateUserMutation();
 
   //this variable is used to disable login button if either username or password is empty
   const isInputValid = username !== '' && password !== '';
 
-  const dispatch = useDispatch();
-
   const loginEvent = (event) => {
     event.preventDefault();
-    dispatch(login({username, password}))
+    authenticateUser();
+  }
+
+  const authenticateUser = async () => {
+    try {
+      const res = await authenticationRequest({mechanism: "internal", username: username, password: password});
+      if(res.error) {
+        setLoginMessage(res.error.data.message);
+      } else {
+        dispatch(setUser({user: res.data.user, token: res.data.token}));
+        setLoginMessage('');
+      }
+    } catch (err) {
+      if(err.data){
+        notificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR(err.data.message));
+      } else {
+        console.log('Error', err);
+      }
+    }
   }
 
   const villasLogin = (

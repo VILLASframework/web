@@ -16,10 +16,10 @@
  ******************************************************************************/
 
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import IconButton from "../../common/buttons/icon-button";
 import { Form, Row, Col } from 'react-bootstrap';
 import EditOwnUserDialog from "./edit-own-user";
-import { currentUser } from "../../localStorage";
 import NotificationsFactory from "../../common/data-managers/notifications-factory";
 import notificationsDataManager from "../../common/data-managers/notifications-data-manager";
 import { useUpdateUserMutation } from "../../store/apiSlice";
@@ -28,6 +28,7 @@ const Account = () => {
 
     const [isEditModalOpened, setIsEditModalOpened] = useState(false);
     const [updateUser] = useUpdateUserMutation();
+    const { user: currentUser } = useSelector((state) => state.auth);
 
     const buttonStyle = {
       marginLeft: '10px',

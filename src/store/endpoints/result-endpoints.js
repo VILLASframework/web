@@ -15,22 +15,24 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import { configureStore } from "@reduxjs/toolkit";
-import userReducer from './userSlice';
-import icReducer from './icSlice';
-import configReducer from './configSlice'
-import { apiSlice } from "./apiSlice";
-import authReducer from './authSlice';
-
-export const store = configureStore({
-    reducer: {
-        auth: authReducer,
-        user: userReducer,
-        infrastructure: icReducer,
-        config: configReducer,
-        [apiSlice.reducerPath]: apiSlice.reducer,
-    },
-    middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
-    devTools: true,
-})
+export const resultEndpoints = (builder) => ({
+    getResults: builder.query({
+      query: (scenarioID) => ({
+        url: 'results',
+        params: { scenarioID },
+      }),
+    }),
+    addResult: builder.mutation({
+      query: (result) => ({
+        url: 'results',
+        method: 'POST',
+        body: result,
+      }),
+    }),
+    deleteResult: builder.mutation({
+      query: (resultID) => ({
+        url: `results/${resultID}`,
+        method: 'DELETE',
+      }),
+    }),
+});

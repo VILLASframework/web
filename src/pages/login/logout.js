@@ -18,7 +18,7 @@
 import React, {useEffect} from 'react';
 import { Redirect } from 'react-router-dom';
 import { useDispatch } from 'react-redux'
-import { logout } from '../../store/userSlice';
+import { deleteUser } from '../../store/authSlice';
 
 const Logout = () => {
 
@@ -26,7 +26,7 @@ const Logout = () => {
 
   useEffect(() => {
     let isMounted = true;
-    if(isMounted) dispatch(logout());
+    if(isMounted) dispatch(deleteUser());
 
     return () => {isMounted = false};
   }, []);

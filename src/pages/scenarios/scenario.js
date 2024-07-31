@@ -16,14 +16,13 @@
  ******************************************************************************/
 
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { useSelector } from "react-redux";
 import { useGetScenarioByIdQuery } from "../../store/apiSlice";
 import IconButton from "../../common/buttons/icon-button";
-import { currentUser, sessionToken } from "../../localStorage";
 import IconToggleButton from "../../common/buttons/icon-toggle-button";
 import ConfigsTable from "./tables/configs-table";
 import DashboardsTable from "./tables/dashboards-table";
 import ResultsTable from "./tables/results-table";
-import { tableHeadingStyle } from "./styles";
 import UsersTable from "./tables/users-table";
 import {
   useUpdateScenarioMutation,
@@ -33,6 +32,8 @@ import {
 const Scenario = (props) => {
     const params = useParams();
     const id = params.scenario;
+
+    const { user: currentUser, token: sessionToken } = useSelector((state) => state.auth);
 
     const { data: fetchedScenarios, isLoading: isScenarioLoading, refetch: refetchScenario } = useGetScenarioByIdQuery(id);
     const scenario = fetchedScenarios?.scenario;

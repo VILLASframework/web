@@ -15,22 +15,21 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Col, Row } from "react-bootstrap";
 import IconButton from "../../../common/buttons/icon-button";
 import ManagedICsTable from "./managed-ics-table";
-import FileSaver from 'file-saver';
 import RawDataTable from "../../../common/rawDataTable";
 import { downloadGraph } from "../../../utils/icUtils";
-import { sessionToken, currentUser } from "../../../localStorage";
-import { useDispatch, useSelector } from "react-redux";
-import { loadAllICs, loadICbyId } from "../../../store/icSlice";
+import { loadICbyId } from "../../../store/icSlice";
 
 import ICParamsTable from "../ic-params-table";
 
 import { iconStyle, buttonStyle } from "../styles";
 
 const ManagerVillasNode = (props) => {
+
+  const { user: currentUser, token: sessionToken } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
 
