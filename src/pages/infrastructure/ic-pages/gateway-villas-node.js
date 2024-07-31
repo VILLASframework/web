@@ -1,13 +1,10 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-
 import ICParamsTable from "../ic-params-table";
 import RawDataTable from '../../../common/rawDataTable';
-
 import { restartIC, shutdownIC, loadICbyId } from "../../../store/icSlice";
-import { sessionToken, currentUser } from "../../../localStorage";
 import { buttonStyle, iconStyle } from "../styles";
-
 import IconButton from "../../../common/buttons/icon-button";
 import {Button, Col, Container, Row} from "react-bootstrap";
 import ConfirmCommand from "../../../common/confirm-command";
@@ -19,6 +16,8 @@ const GatewayVillasNode = (props) => {
 
     const [command, setCommand] = useState("");
     const [isCommandConfirmed, setIsCommandConfirmed] = useState(false);
+
+    const { user: currentUser, token: sessionToken } = useSelector((state) => state.auth);
 
     const sendControlCommand = () => {
         switch(command){

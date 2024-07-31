@@ -16,10 +16,10 @@
  ******************************************************************************/
 
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import IconButton from "../../../common/buttons/icon-button";
 import { Table, ButtonColumn, DataColumn } from "../../../common/table";
 import { buttonStyle, tableHeadingStyle } from "../styles";
-import { currentUser } from "../../../localStorage";
 import { InputGroup, Form } from "react-bootstrap";
 import DeleteDialog from "../../../common/dialogs/delete-dialog";
 import NotificationsFactory from "../../../common/data-managers/notifications-factory";
@@ -35,6 +35,8 @@ const UsersTable = (props) => {
     const [isDeleteUserModalOpened, setIsDeleteUserModalOpened] = useState(false);
     const [usernameToAdd, setUsernameToAdd] = useState("");
     const [usernameToDelete, setUsernameToDelete] = useState("");
+
+    const { user: currentUser, token: sessionToken } = useSelector((state) => state.auth);
 
     const addUser = async () => {
       if(usernameToAdd.trim() === ''){

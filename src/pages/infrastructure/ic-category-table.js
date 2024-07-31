@@ -26,7 +26,6 @@ import moment from 'moment'
 import IconToggleButton from "../../common/buttons/icon-toggle-button";
 import { updateCheckedICs, openDeleteModal, openEditModal } from "../../store/icSlice";
 import { stateLabelStyle } from "./styles";
-import { currentUser } from "../../localStorage";
 
 //a Table of IC components of specific category from props.category
 //titled with props.title
@@ -34,6 +33,8 @@ const ICCategoryTable = (props) => {
     const dispatch = useDispatch();
     const ics = useSelector(state => state.infrastructure.ICsArray);
     const [isGenericDisplayed, setIsGenericDisplayed] = useState(false);
+
+    const { user: currentUser } = useSelector((state) => state.auth);
 
     const modifyUptimeColumn = (uptime, component) => {
       if (uptime >= 0) {

@@ -15,12 +15,10 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import { useState, useEffect } from "react";
 import { Col, Row, Container } from "react-bootstrap";
 import IconButton from "../../../common/buttons/icon-button";
 import ManagedICsTable from "./managed-ics-table";
 import RawDataTable from "../../../common/rawDataTable";
-import { sessionToken, currentUser } from "../../../localStorage";
 import { useDispatch, useSelector } from "react-redux";
 import { loadAllICs, loadICbyId } from "../../../store/icSlice";
 
@@ -31,6 +29,8 @@ import { iconStyle, buttonStyle } from "../styles";
 const ManagerVillasRelay = (props) => {
 
   const dispatch = useDispatch();
+
+  const { user: currentUser, token: sessionToken } = useSelector((state) => state.auth);
 
   const ic = props.ic;
 

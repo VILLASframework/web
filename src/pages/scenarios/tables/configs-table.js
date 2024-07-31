@@ -16,10 +16,10 @@
  ******************************************************************************/
 
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import IconButton from "../../../common/buttons/icon-button";
 import { Table, ButtonColumn, CheckboxColumn, DataColumn } from "../../../common/table";
 import { tableHeadingStyle, buttonStyle, iconStyle } from "../styles";
-import { currentUser, sessionToken } from "../../../localStorage";
 import NewDialog from "../../../common/dialogs/new-dialog";
 import ImportConfigDialog from "../dialogs/import-config";
 import DeleteDialog from "../../../common/dialogs/delete-dialog";
@@ -55,6 +55,8 @@ const ConfigsTable = ({scenario, ics}) => {
     const [configToDelete, setConfigToDelete] = useState({name: ''});
     const [checkedConfigsIDs, setCheckedConfigsIDs] = useState([]);
     const [areAllConfigsChecked, setAreAllConfigsChecked] = useState(false);
+
+    const { user: currentUser, token: sessionToken } = useSelector((state) => state.auth);
 
     useEffect(() => {
       if(configs.length > 0) {
