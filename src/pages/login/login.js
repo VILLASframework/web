@@ -24,6 +24,7 @@ import LoginForm from './login-form';
 import Header from '../../common/header';
 import NotificationsDataManager from '../../common/data-managers/notifications-data-manager';
 import branding from '../../branding/branding';
+import { useGetConfigQuery } from '../../store/apiSlice';
 
 const Login = (props) => {
 
@@ -33,7 +34,7 @@ const Login = (props) => {
     NotificationsDataManager.setSystem(notificationSystem);
   }, []);
 
-  const config = null
+  const {data: config} = useGetConfigQuery();
 
   const currentUser = useSelector(state => state.user.currentUser);
   const loginMessage = useSelector(state => state.user.loginMessage);
