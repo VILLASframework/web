@@ -20,8 +20,10 @@ import { Form, Button, Col } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { login } from '../../store/userSlice';
 import _ from 'lodash';
+import { sessionToken } from '../../localStorage';
+import RecoverPassword from './recover-password';
 
-const LoginForm = (props) => {
+const LoginForm = ({loginMessage, config}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [forgottenPassword, setForgottenPassword] = useState(false)
@@ -66,10 +68,10 @@ const LoginForm = (props) => {
         </Col>
       </Form.Group>
 
-      {props.loginMessage &&
+      {loginMessage &&
         <div style={{ marginBottom: '20px', color: 'red', fontSize: 'small' }}>
           <Col sm={{ span: 10, offset: 2 }} style={{ paddingLeft: '5px' }}>
-            <i>Error: </i>{props.loginMessage}
+            <i>Error: </i>{loginMessage}
           </Col>
         </div>
       }
@@ -83,14 +85,14 @@ const LoginForm = (props) => {
         </Col>
       </Form.Group>
 
-      {/* <RecoverPassword show={forgottenPassword} onClose={() => setForgottenPassword(false)} sessionToken={props.sessionToken} /> */}
+      <RecoverPassword show={forgottenPassword} onClose={() => setForgottenPassword(false)} config={config} />
     </Form>
   );
 
-  if (props.config) {
-    let externalLogin = _.get(props.config, ['authentication', 'external', 'enabled'])
-    let provider = _.get(props.config, ['authentication', 'external', 'provider_name'])
-    let url = _.get(props.config, ['authentication', 'external', 'authorize_url']) + "?rd=/login/complete"
+  if (config) {
+    let externalLogin = _.get(config, ['authentication', 'external', 'enabled'])
+    let provider = _.get(config, ['authentication', 'external', 'provider_name'])
+    let url = _.get(config, ['authentication', 'external', 'authorize_url']) + "?rd=/login/complete"
 
     if (externalLogin && provider && url) {
       return [
