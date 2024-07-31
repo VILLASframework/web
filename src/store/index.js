@@ -16,7 +16,6 @@
  ******************************************************************************/
 
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from './userSlice';
 import icReducer from './icSlice';
 import configReducer from './configSlice'
 import { apiSlice } from "./apiSlice";
@@ -25,7 +24,6 @@ import authReducer from './authSlice';
 export const store = configureStore({
     reducer: {
         auth: authReducer,
-        user: userReducer,
         infrastructure: icReducer,
         config: configReducer,
         [apiSlice.reducerPath]: apiSlice.reducer,
