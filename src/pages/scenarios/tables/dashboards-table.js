@@ -16,10 +16,10 @@
  ******************************************************************************/
 
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import IconButton from "../../../common/buttons/icon-button";
 import { Table, ButtonColumn, LinkColumn, DataColumn } from "../../../common/table";
 import { buttonStyle, tableHeadingStyle, iconStyle } from "../styles";
-import { currentUser, sessionToken } from "../../../localStorage";
 import { InputGroup, Form } from "react-bootstrap";
 import { useGetDashboardsQuery } from "../../../store/apiSlice";
 import {Button} from "react-bootstrap";
@@ -45,6 +45,8 @@ const DashboardsTable = ({scenario}) => {
     const [deleteDashboard] = useDeleteDashboardMutation();
     const [updateDashboard] = useUpdateDashboardMutation();
     const [addWidgetToDashboard] = useAddWidgetMutation();
+
+    const { user: currentUser, token: sessionToken } = useSelector((state) => state.auth);
 
     const [triggerGetWidgets, { isLoading: isWidgetsLoading, data: widgets, error: widgetsError }] = useLazyGetWidgetsQuery();
 
