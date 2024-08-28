@@ -47,7 +47,6 @@ class WidgetContainer extends React.Component {
     widget.x = this.snapToGrid(data.x);
     widget.y = this.snapToGrid(data.y);
 
-
     if (widget.x !== data.x || widget.y !== data.y) {
       this.rnd.updatePosition({ x: widget.x, y: widget.y });
     }

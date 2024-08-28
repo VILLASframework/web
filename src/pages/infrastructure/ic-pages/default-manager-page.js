@@ -22,6 +22,7 @@ import IconButton from '../../../common/buttons/icon-button';
 import ManagedICsTable from "./managed-ics-table";
 import { useDispatch } from 'react-redux';
 import { loadICbyId } from '../../../store/icSlice';
+import { useGetICSQuery } from '../../../store/apiSlice';
 
 import ICParamsTable from '../ic-params-table';
 import RawDataTable from '../../../common/rawDataTable';
@@ -31,7 +32,8 @@ import { iconStyle, buttonStyle } from "../styles";
 const DefaultManagerPage = (props) => {
   const ic = props.ic;
 
-  const ics = useSelector((state) => state.infrastructure.ICsArray);
+  const {data: icsRes, isLoading, refetch: refetchICs} = useGetICSQuery();
+  const ics = icsRes ? icsRes.ics : [];
 
   const { user: currentUser, token: sessionToken } = useSelector((state) => state.auth);
 

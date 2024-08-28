@@ -18,7 +18,7 @@
 import React from "react";
 import { DragSource } from "react-dnd";
 import classNames from "classnames";
-import Icon from "../common/icon";
+import Icon from "../../../common/icon";
 
 // Drag source specification
 const toolboxItemSource = {

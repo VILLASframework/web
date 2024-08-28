@@ -42,7 +42,6 @@ import { useSelector } from 'react-redux';
 const App = () => {
   
   const isTokenExpired = (token) => {
-    console.log("decoded, ", jwt.decode(token))
     let decodedToken = jwt.decode(token);
     let timeNow = (new Date().getTime() + 1) / 1000;
     return decodedToken.exp < timeNow;

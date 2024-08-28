@@ -14,101 +14,87 @@
  * You should have received a copy of the GNU General Public License
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-import NotificationsDataManager from "../data-managers/notifications-data-manager";
-import NotificationsFactory from "../data-managers/notifications-factory";
-import AppDispatcher from '../app-dispatcher';
 
-class WebsocketAPI {
-  constructor(websocketurl, callbacks) {
-    this.websocketurl = websocketurl;
-    this.callbacks = callbacks;
+const OFFSET_TYPE = 2;
+const OFFSET_VERSION = 4;
 
-    this.wasConnected = false;
-    this.isClosing = false;
-
-    this.connect(websocketurl, callbacks);
+class WebSocketManager {
+  constructor() {
+    this.socket = null;
   }
 
-  connect(websocketurl, callbacks) {
-    // create web socket client
-    this.socket = new WebSocket(WebsocketAPI.getURL(websocketurl), 'live');
-    this.socket.binaryType = 'arraybuffer';
-    this.socket.onclose = this.onClose;
-    this.socket.onopen = this.onOpen;
-    this.socket.onerror = this.onError;
+  id = null;
 
-    // register callbacks
-    if (callbacks.onMessage)
-        this.socket.onmessage = callbacks.onMessage;
-  }
-
-  reconnect() {
-    //console.log("Reconnecting: " + this.websocketurl);
-    this.connect(this.websocketurl, this.callbacks);
-  }
-
-  get url() {
-    return WebsocketAPI.getURL(this.websocketurl);
-  }
-
-  send(data) {
-    this.socket.send(data);
-  }
-
-  close(code, reason) {
-    this.isClosing = true;
-    this.socket.close(code, reason);
-  }
-
-  onError = e => {
-    console.error('Error on WebSocket connection to: ' + this.websocketurl + ':', e);
-
-    if ('onError' in this.callbacks)
-      this.callbacks.onError(e);
-  }
-
-  onOpen = e => {
-    AppDispatcher.dispatch({
-      type: 'websocket/connected',
-      data: this.websocketurl,
-    });
-    this.wasConnected = true;
-
-    if ('onOpen' in this.callbacks)
-        this.callbacks.onOpen(e);
-  }
-
-  onClose = e => {
-    if (this.isClosing) {
-      if ('onClose' in this.callbacks)
-        this.callbacks.onClose(e);
+  connect(url, onMessage, onOpen, onClose) {
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      console.log('Already connected to:', url);
+      return;
     }
-    else {
-      if (this.wasConnected) {
-        AppDispatcher.dispatch({
-          type: 'websocket/connection-error',
-          data: this.websocketurl,
-        });
 
-        NotificationsDataManager.addNotification(NotificationsFactory.WEBSOCKET_CONNECTION_WARN(this.websocketurl));
-        console.log("Connection to " + this.websocketurl + " dropped. Attempt reconnect in 1 sec");
-        window.setTimeout(() => { this.reconnect(); }, 1000);
+    if (this.socket) {
+      this.socket.close();
+    }
+
+    this.socket = new WebSocket(url, 'live');
+    this.socket.binaryType = 'arraybuffer';
+
+    this.socket.onopen = onOpen;
+    this.socket.onmessage = (event) => {
+      const msgs = this.bufferToMessageArray(event.data);
+      onMessage(msgs);
+    };
+    this.socket.onclose = onClose;
+  }
+
+  disconnect() {
+    if (this.socket) {
+      this.socket.close();
+      this.socket = null;
+      console.log('WebSocket connection closed');
+    }
+  }
+
+  bufferToMessageArray(blob) {
+    /* some local variables for parsing */
+    let offset = 0;
+    const msgs = [];
+
+    /* for every msg in vector */
+    while (offset < blob.byteLength) {
+      const msg = this.bufferToMessage(new DataView(blob, offset));
+
+      if (msg !== undefined) {
+        msgs.push(msg);
+        offset += msg.blob.byteLength;
       }
     }
-  }
 
-  static getURL(websocketurl) {
-    // create an anchor element (note: no need to append this element to the document)
-    var link = document.createElement('a');
-    link.href = websocketurl;
-
-    if (link.protocol === 'https:')
-      link.protocol = 'wss:';
-    else
-      link.protocol = 'ws:';
-
-    return link.href;
-  }
+    return msgs;
 }
 
-export default WebsocketAPI;
+  bufferToMessage(data) {
+    // parse incoming message into usable data
+    if (data.byteLength === 0) {
+        return null;
+      }
+  
+      const source_index = data.getUint8(1);
+      const bits = data.getUint8(0);
+      const length = data.getUint16(0x02, 1);
+      const bytes = length * 4 + 16;
+  
+      return {
+        version: (bits >> OFFSET_VERSION) & 0xF,
+        type: (bits >> OFFSET_TYPE) & 0x3,
+        source_index: source_index,
+        length: length,
+        sequence: data.getUint32(0x04, 1),
+        timestamp: data.getUint32(0x08, 1) * 1e3 + data.getUint32(0x0C, 1) * 1e-6,
+        values: new Float32Array(data.buffer, data.byteOffset + 0x10, length),
+        blob: new DataView(data.buffer, data.byteOffset + 0x00, bytes),
+        // id: id
+      };
+}
+}
+
+export const wsManager = new WebSocketManager();

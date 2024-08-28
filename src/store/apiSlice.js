@@ -10,6 +10,7 @@ import { fileEndpoints } from './endpoints/file-endpoints';
 import { signalEndpoints } from './endpoints/signal-endpoints';
 import { resultEndpoints } from './endpoints/result-endpoints';
 import { authEndpoints } from './endpoints/auth-endpoints';
+import { websocketEndpoints } from './endpoints/websocket-endpoints';
 
 export const apiSlice = createApi({
   reducerPath: 'api',
@@ -34,6 +35,7 @@ export const apiSlice = createApi({
     ...resultEndpoints(builder),
     ...signalEndpoints(builder),
     ...authEndpoints(builder),
+    ...websocketEndpoints(builder),
   }),
 });
 
@@ -80,4 +82,7 @@ export const {
   useDeleteWidgetMutation,
   useGetConfigQuery,
   useAuthenticateUserMutation,
+  useLazyGetFilesQuery,
+  useUpdateSignalMutation,
+  useGetIcDataQuery
 } = apiSlice;
