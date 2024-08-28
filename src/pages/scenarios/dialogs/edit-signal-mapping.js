@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Form, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Table, ButtonColumn, CheckboxColumn, DataColumn } from '../../../common/table';
 import { dialogWarningLabel, signalDialogCheckButton, buttonStyle } from "../styles";
 import Dialog from "../../../common/dialogs/dialog";
 import Icon from "../../../common/icon";
-import { useGetSignalsQuery, useAddSignalMutation, useDeleteSignalMutation } from "../../../store/apiSlice";
+import { useGetSignalsQuery, useAddSignalMutation, useDeleteSignalMutation, useUpdateSignalMutation } from "../../../store/apiSlice";
 import { Collapse } from 'react-collapse';
 
 const ExportSignalMappingDialog = ({isShown, direction, onClose, configID}) => {
@@ -14,10 +14,44 @@ const ExportSignalMappingDialog = ({isShown, direction, onClose, configID}) => {
     const {data, refetch: refetchSignals } = useGetSignalsQuery({configID: configID, direction: direction});
     const [addSignalToConfig] = useAddSignalMutation();
     const [deleteSignal] = useDeleteSignalMutation();
+    const [updateSignal] = useUpdateSignalMutation();
     const signals = data ? data.signals : [];
 
+    const [updatedSignals, setUpdatedSignals] = useState([]);
+    const [updatedSignalsIDs, setUpdatedSignalsIDs] = useState([]);
+
+    useEffect(() => {
+        if (signals.length > 0) {
+            setUpdatedSignals([...signals]);
+        }
+    }, [signals]);
+
     const handleMappingChange = (e, row, column) => {
-        console.log(e.target.value, row, column);
+        const signalToUpdate = {...updatedSignals[row]};
+        switch (column) {
+            case 1:
+                signalToUpdate.index = e.target.value;
+                break;
+            case 2:
+                signalToUpdate.name = e.target.value;
+                break;
+            case 3:
+                signalToUpdate.unit = e.target.value;
+                break;
+            case 4:
+                signalToUpdate.scalingFactor = e.target.value;
+                break;
+            default:
+                break;
+        }
+
+        setUpdatedSignals(prevState => 
+            prevState.map((signal, index) => 
+                index === row ? signalToUpdate : signal
+            )
+        );
+
+        setUpdatedSignalsIDs(prevState => ([signalToUpdate.id, ...prevState]));
     }
 
     const handleAdd = async () => {
@@ -56,6 +90,24 @@ const ExportSignalMappingDialog = ({isShown, direction, onClose, configID}) => {
         }
 
         refetchSignals();
+    }
+
+    const handleUpdate = async () => {
+        try {
+            for (let id of updatedSignalsIDs) {
+                
+                const signalToUpdate = updatedSignals.find(signal => signal.id === id);
+                
+                if (signalToUpdate) {
+                    await updateSignal({ signalID: id, updatedSignal: signalToUpdate }).unwrap();
+                }
+            }
+
+            refetchSignals();
+            setUpdatedSignalsIDs([]);
+        } catch (error) {
+            console.error("Error updating signals:", error);
+        }
     }
 
     const onSignalChecked = (signal, event) => {
@@ -102,14 +154,17 @@ const ExportSignalMappingDialog = ({isShown, direction, onClose, configID}) => {
             title={"Edit Signal " + direction +" Mapping"}
             buttonTitle="Close"
             blendOutCancel = {true}
-            onClose={(c) => onClose(c)}
+            onClose={(c) => {
+                handleUpdate();
+                onClose(c)
+            }}
             onReset={() => {}}
             valid={true}
         >
             <Form.Group>
             <Form.Label style={dialogWarningLabel}>IMPORTANT: Signal configurations that were created before January 2022 have to be fixed manually. Signal indices have to start at 0 and not 1.</Form.Label>
             <Form.Label> <i>Click in table cell to edit</i></Form.Label>
-            <Table breakWord={true} checkbox onChecked={(signal) => onSignalChecked(signal)} data={signals}>
+            <Table breakWord={true} checkbox onChecked={(signal) => onSignalChecked(signal)} data={updatedSignals}>
                 <CheckboxColumn
                     onChecked={(index, event) => onSignalChecked(index, event)}
                     checked={(signal) => isSignalChecked(signal)}

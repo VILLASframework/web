@@ -17,11 +17,9 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import Dropzone from './dropzone';
 import Grid from './grid';
-
-import WidgetFactory from '../../widget/widget-factory';
+import WidgetFactory from './widget/widget-factory';
 
 class WidgetArea extends React.Component {
   snapToGrid(value) {

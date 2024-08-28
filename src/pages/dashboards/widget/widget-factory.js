@@ -15,7 +15,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import WidgetSlider from './widgets/slider';
+//import WidgetSlider from './widgets/slider';
 
 class WidgetFactory {
 
@@ -148,23 +148,23 @@ class WidgetFactory {
                 widget.customProperties.value = '';
                 widget.customProperties.simStartedSendValue = false;
                 break;
-            case 'Slider':
-                widget.minWidth = 380;
-                widget.minHeight = 30;
-                widget.width = 400;
-                widget.height = 50;
-                widget.customProperties.orientation = WidgetSlider.OrientationTypes.HORIZONTAL.value; // Assign default orientation
-                widget.customProperties.rangeMin = 0;
-                widget.customProperties.rangeMax = 200;
-                widget.customProperties.rangeUseMinMax = true;
-                widget.customProperties.showUnit = false;
-                widget.customProperties.continous_update = false;
-                widget.customProperties.value = '';
-                widget.customProperties.resizeLeftRightLock = false;
-                widget.customProperties.resizeTopBottomLock = true;
-                widget.customProperties.simStartedSendValue = false;
+            // case 'Slider':
+            //     widget.minWidth = 380;
+            //     widget.minHeight = 30;
+            //     widget.width = 400;
+            //     widget.height = 50;
+            //     widget.customProperties.orientation = WidgetSlider.OrientationTypes.HORIZONTAL.value; // Assign default orientation
+            //     widget.customProperties.rangeMin = 0;
+            //     widget.customProperties.rangeMax = 200;
+            //     widget.customProperties.rangeUseMinMax = true;
+            //     widget.customProperties.showUnit = false;
+            //     widget.customProperties.continous_update = false;
+            //     widget.customProperties.value = '';
+            //     widget.customProperties.resizeLeftRightLock = false;
+            //     widget.customProperties.resizeTopBottomLock = true;
+            //     widget.customProperties.simStartedSendValue = false;
 
-                break;
+            //     break;
             case 'Gauge':
                 widget.minWidth = 100;
                 widget.minHeight = 150;

@@ -20,6 +20,7 @@ import IconButton from "../../../common/buttons/icon-button";
 import RawDataTable from "../../../common/rawDataTable";
 import { useDispatch, useSelector } from "react-redux";
 import { loadICbyId } from "../../../store/icSlice";
+import { useGetICSQuery } from "../../../store/apiSlice";
 
 import ICParamsTable from "../ic-params-table";
 
@@ -33,7 +34,8 @@ const KubernetesICPage = (props) => {
   const { user: currentUser, token: sessionToken } = useSelector((state) => state.auth);
   const ic = props.ic;
 
-  const ics = useSelector((state) => state.infrastructure.ICsArray);
+  const {data: icsRes, isLoading, refetch: refetchICs} = useGetICSQuery();
+    const ics = icsRes ? icsRes.ics : [];
   const config = useSelector((state) => state.config.config);
   //const managedICs = ics.filter(managedIC => managedIC.category !== "manager" && managedIC.manager === ic.uuid);
 

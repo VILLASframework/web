@@ -17,7 +17,7 @@
 
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { loadAllICs, loadICbyId, addIC, sendActionToIC, closeDeleteModal, closeEditModal, editIC, deleteIC } from "../../store/icSlice";
+import { addIC, sendActionToIC, closeDeleteModal, closeEditModal, editIC, deleteIC } from "../../store/icSlice";
 import IconButton from "../../common/buttons/icon-button";
 import ICCategoryTable from "./ic-category-table";
 import ICActionBoard from "./ic-action-board";
@@ -28,14 +28,16 @@ import EditICDialog from "./dialogs/edit-ic-dialog";
 import DeleteDialog from "../../common/dialogs/delete-dialog";
 import NotificationsDataManager from "../../common/data-managers/notifications-data-manager";
 import NotificationsFactory from "../../common/data-managers/notifications-factory";
+import {useGetICSQuery} from '../../store/apiSlice';
 
-
-const Infrastructure = (props) => {
+const Infrastructure = () => {
     const dispatch = useDispatch();
 
     const { user: currentUser, token: sessionToken } = useSelector((state) => state.auth);
 
-    const ics = useSelector(state => state.infrastructure.ICsArray);
+    const {data: icsRes, isLoading, refetch: refetchICs} = useGetICSQuery();
+    const ics = icsRes ? icsRes.ics : [];
+
     const externalICs = ics.filter(ic => ic.managedexternally === true);
 
     //track status of the modals
@@ -45,21 +47,13 @@ const Infrastructure = (props) => {
     const [checkedICs, setCheckedICs] = useState([]);
     
     useEffect(() => {
-        //load array of ics and start a timer for periodic refresh
-        dispatch(loadAllICs({token: sessionToken}));
-        let timer = window.setInterval(() => refresh(), 10000);
+        //start a timer for periodic refresh
+        let timer = window.setInterval(() => refetchICs(), 10000);
 
         return () => {
             window.clearInterval(timer);
         }
     }, []);
-
-    const refresh = () => {
-        //if none of the modals are currently opened, we reload ics array
-        if(!(isEditModalOpened || isDeleteModalOpened || isICModalOpened)){
-            dispatch(loadAllICs({token: sessionToken}));
-        }
-    }
 
     //modal actions and selectors
 
@@ -75,7 +69,7 @@ const Infrastructure = (props) => {
 
         if(data){
             if(!data.managedexternally){
-                dispatch(addIC({token: sessionToken, ic: data})).then(res => dispatch(loadAllICs({token: sessionToken})));
+                dispatch(addIC({token: sessionToken, ic: data}))
             }else {
                 // externally managed IC: dispatch create action to selected manager
                 let newAction = {};
@@ -91,7 +85,7 @@ const Infrastructure = (props) => {
                   return;
                 }
 
-                dispatch(sendActionToIC({token: sessionToken, id: managerIC.id, actions: newAction})).then(res => dispatch(loadAllICs({token: sessionToken})));
+                dispatch(sendActionToIC({token: sessionToken, id: managerIC.id, actions: newAction}))
             }
         }
     }
@@ -99,20 +93,20 @@ const Infrastructure = (props) => {
     const onImportModalClose = (data) => {
         setIsImportModalOpened(false);
 
-        dispatch(addIC({token: sessionToken, ic: data})).then(res => dispatch(loadAllICs({token: sessionToken})));
+        dispatch(addIC({token: sessionToken, ic: data}))
     }
 
     const onEditModalClose = (data) => {
         if(data){
             //some changes where done
-            dispatch(editIC({token: sessionToken, ic: data})).then(res => dispatch(loadAllICs({token: sessionToken})));
+            dispatch(editIC({token: sessionToken, ic: data}))
         }
         dispatch(closeEditModal(data));
     }
 
     const onCloseDeleteModal = (isDeleteConfirmed) => {
         if(isDeleteConfirmed){
-            dispatch(deleteIC({token: sessionToken, id:deleteModalIC.id})).then(res => dispatch(loadAllICs({token: sessionToken})));
+            dispatch(deleteIC({token: sessionToken, id:deleteModalIC.id}))
         }
         dispatch(closeDeleteModal());
     }

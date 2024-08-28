@@ -20,7 +20,6 @@ import { format } from "d3";
 import classNames from "classnames";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import AppDispatcher from "../../common/app-dispatcher";
 
 const WidgetSlider = (props) => {
   const [value, setValue] = useState("");
@@ -29,11 +28,11 @@ const WidgetSlider = (props) => {
   useEffect(() => {
     let widget = { ...props.widget };
     widget.customProperties.simStartedSendValue = false;
-    AppDispatcher.dispatch({
-      type: "widgets/start-edit",
-      token: props.token,
-      data: widget,
-    });
+    // AppDispatcher.dispatch({
+    //   type: "widgets/start-edit",
+    //   token: props.token,
+    //   data: widget,
+    // });
   }, [props.token, props.widget]);
 
   useEffect(() => {

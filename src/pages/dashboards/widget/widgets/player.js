@@ -18,17 +18,14 @@
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import JSZip from 'jszip';
-
 import IconButton from '../../common/buttons/icon-button';
 import IconTextButton from '../../common/buttons/icon-text-button';
 import ParametersEditor from '../../common/parameters-editor';
 import ICAction from '../../ic/ic-action';
 import ResultPythonDialog from "../../pages/scenarios/dialogs/result-python-dialog";
 import AppDispatcher from "../../common/app-dispatcher";
-
 import { playerMachine } from '../widget-player/player-machine';
 import { interpret } from 'xstate';
-
 
 const playerService = interpret(playerMachine);
 

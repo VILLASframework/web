@@ -17,7 +17,6 @@
 
 import React, { Component } from 'react';
 import { Col, Row, Form } from 'react-bootstrap';
-
 import WidgetSlider from '../widgets/slider';
 
 class EditWidgetOrientation extends Component {

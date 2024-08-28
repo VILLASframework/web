@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Container, Row, Col, OverlayTrigger, Tooltip, Button} from 'react-bootstrap';
-import ColorPicker from '../../common/color-picker';
-import Icon from "../../common/icon";
+import ColorPicker from '../../../../common/color-picker';
+import Icon from "../../../../common/icon";
 
 const EditWidgetColorControl = (props) => {
   const [color, setColor] = useState(null);

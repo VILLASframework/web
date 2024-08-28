@@ -29,6 +29,13 @@ export const signalEndpoints = (builder) => ({
         body: { signal },
       }),
     }),
+    updateSignal: builder.mutation({
+      query: ({ signalID, updatedSignal }) => ({
+        url: `signals/${signalID}`,
+        method: 'PUT',
+        body: { signal: updatedSignal },
+      }),
+    }),
     deleteSignal: builder.mutation({
       query: (signalID) => ({
         url: `signals/${signalID}`,
