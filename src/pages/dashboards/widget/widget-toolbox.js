@@ -20,7 +20,7 @@ import { Collapse } from 'react-collapse';
 import PropTypes from 'prop-types';
 import Slider from 'rc-slider';
 import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import Icon from "../common/icon";
+import Icon from '../../../common/icon';
 import ToolboxItem from './toolbox-item';
 
 let hasPintura = true;

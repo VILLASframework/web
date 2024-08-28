@@ -20,12 +20,14 @@ import icReducer from './icSlice';
 import configReducer from './configSlice'
 import { apiSlice } from "./apiSlice";
 import authReducer from './authSlice';
+import websocketReducer from './websocketSlice';
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
         infrastructure: icReducer,
         config: configReducer,
+        websocket: websocketReducer,
         [apiSlice.reducerPath]: apiSlice.reducer,
     },
     middleware: (getDefaultMiddleware) =>

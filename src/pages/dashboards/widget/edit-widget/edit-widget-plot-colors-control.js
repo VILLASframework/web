@@ -17,8 +17,8 @@
 
 import React, { Component } from 'react';
 import { OverlayTrigger, Tooltip , Button, Form } from 'react-bootstrap';
-import ColorPicker from '../../common/color-picker'
-import Icon from "../../common/icon";
+import ColorPicker from '../../../../common/color-picker'
+import Icon from "../../../../common/icon";
 import {schemeCategory10} from "d3-scale-chromatic";
 
 class EditWidgetPlotColorsControl extends Component {
