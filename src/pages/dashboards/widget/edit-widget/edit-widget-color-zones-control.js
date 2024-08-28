@@ -17,8 +17,8 @@
 
 import React from 'react';
 import { Form, Table, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
-import ColorPicker from '../../common/color-picker'
-import Icon from '../../common/icon';
+import ColorPicker from '../../../../common/color-picker'
+import Icon from '../../../../common/icon';
 import { Collapse } from 'react-collapse';
 
 class EditWidgetColorZonesControl extends React.Component {

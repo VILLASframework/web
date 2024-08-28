@@ -17,7 +17,7 @@
 
 import React from 'react';
 import { Form } from 'react-bootstrap';
-import Dialog from '../../common/dialogs/dialog';
+import Dialog from '../../../../common/dialogs/dialog';
 import CreateControls from './edit-widget-control-creator';
 
 class EditWidgetDialog extends React.Component {
@@ -92,6 +92,8 @@ class EditWidgetDialog extends React.Component {
   handleChange(e) {
     // TODO: check what we really need in this function. Can we reduce its complexity?
     let parts = e.target.id.split('.');
+    // creating a deep copy of an object to be updated
+    //let changeObject = JSON.parse(JSON.stringify(this.state.temporal));;
     let changeObject = this.state.temporal;
     let customProperty = true;
     if (parts.length === 1) {
@@ -146,9 +148,10 @@ class EditWidgetDialog extends React.Component {
     } else {
       customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value ;
     }
+    
+    console.log(changeObject)
 
     this.setState({ temporal: changeObject});
-
   }
 
   resetState() {

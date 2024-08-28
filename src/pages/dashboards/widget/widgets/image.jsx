@@ -16,41 +16,43 @@
  ******************************************************************************/
 
 import React, { useState, useEffect } from "react";
-import AppDispatcher from "../../common/app-dispatcher";
 
 const WidgetImage = (props) => {
-  const [file, setFile] = useState(undefined);
+  const [file, setFile] = useState(null);
+
+  const widget = JSON.parse(JSON.stringify(props.widget));
 
   useEffect(() => {
-    let widgetFile = props.widget.customProperties.file;
-    if (widgetFile !== -1 && file === undefined) {
-      AppDispatcher.dispatch({
-        type: "files/start-download",
-        data: widgetFile,
-        token: props.token,
-      });
+    let widgetFile = widget.customProperties.file;
+    if (widgetFile !== -1 && file === null) {
+      // AppDispatcher.dispatch({
+      //   type: "files/start-download",
+      //   data: widgetFile,
+      //   token: props.token,
+      // });
     }
-  }, [file, props.token, props.widget.customProperties.file]);
+  }, [file, props.token, widget.customProperties.file]);
 
   useEffect(() => {
-    if (props.widget.customProperties.file === -1) {
-      props.widget.customProperties.update = false;
-      if (file !== undefined) setFile(undefined);
+    if (widget.customProperties.file === -1) {
+      widget.customProperties.update = false;
+      if (file !== null) setFile(null);
     } else {
+      console.log("looking in", props.files)
       let foundFile = props.files.find(
-        (f) => f.id === parseInt(props.widget.customProperties.file, 10)
+        (f) => f.id === parseInt(widget.customProperties.file, 10)
       );
-      if (foundFile && props.widget.customProperties.update) {
-        props.widget.customProperties.update = false;
-        AppDispatcher.dispatch({
-          type: "files/start-download",
-          data: foundFile.id,
-          token: props.token,
-        });
+      if (foundFile && widget.customProperties.update) {
+        widget.customProperties.update = false;
+        // AppDispatcher.dispatch({
+        //   type: "files/start-download",
+        //   data: foundFile.id,
+        //   token: props.token,
+        // });
         setFile(foundFile);
       }
     }
-  }, [props.widget.customProperties, props.files, props.token, file]);
+  }, [widget.customProperties, props.files, props.token, file]);
 
   const imageError = (e) => {
     console.error("Image error:", e);

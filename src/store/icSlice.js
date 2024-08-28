@@ -77,18 +77,10 @@ const icSlice = createSlice({
         closeDeleteModal: (state, args) => {
             state.deleteModalIC = null;
             state.isDeleteModalOpened = false;
-
         }
     },
     extraReducers: builder => {
         builder
-           .addCase(loadAllICs.pending, (state, action) => {
-                state.isLoading = true
-           })
-           .addCase(loadAllICs.fulfilled, (state, action) => {
-                state.ICsArray = action.payload;
-                console.log("fetched ICs")
-           })
            .addCase(loadICbyId.pending, (state, action) => {
                 state.isCurrentICLoading = true
             })
@@ -121,19 +113,6 @@ const icSlice = createSlice({
            // })
     }
 });
-
-//loads all ICs and saves them in the store
-export const loadAllICs = createAsyncThunk(
-    'infrastructure/loadAllICs',
-    async (data) => {
-        try {
-            const res = await RestAPI.get('/api/v2/ic', data.token);
-            return res.ics;
-        } catch (error) {
-            console.log("Error loading ICs data: ", error);
-        }
-    }
-);
 
 //loads one IC by its id
 export const loadICbyId = createAsyncThunk(

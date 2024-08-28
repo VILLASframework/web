@@ -156,42 +156,40 @@ const ConfigsTable = ({scenario, ics}) => {
 
     const copyConfig = async (configToCopy) => {
       let copiedConfig = JSON.parse(JSON.stringify(configToCopy));
-
+    
       try {
-        const signalsInRes = await triggerGetSignals({configID: configToCopy.id, direction: "in"}, ).unwrap();
-        const signalsOutRes = await triggerGetSignals({configID: configToCopy.id, direction: "out"}, ).unwrap();
-
+        const signalsInRes = await triggerGetSignals({configID: configToCopy.id, direction: "in"}).unwrap();
+        const signalsOutRes = await triggerGetSignals({configID: configToCopy.id, direction: "out"}).unwrap();
+    
         let parsedInSignals = [];
         let parsedOutSignals = [];
-        
-        if(signalsInRes.signals.length > 0){
-          for(let signal of signalsInRes.signals){
-            delete signal.configID;
-            delete signal.id;
-            parsedInSignals.push(signal);
+    
+        if (signalsInRes.signals.length > 0) {
+          for (let signal of signalsInRes.signals) {
+            const { configID, id, ...rest } = signal;
+            parsedInSignals.push(rest);
           }
         }
-
-        if(signalsOutRes.signals.length > 0){
-          for(let signal of signalsOutRes.signals){
-            delete signal.configID;
-            delete signal.id;
-            parsedOutSignals.push(signal);
+    
+        if (signalsOutRes.signals.length > 0) {
+          for (let signal of signalsOutRes.signals) {
+            const { configID, id, ...rest } = signal;
+            parsedOutSignals.push(rest);
           }
         }
-
+    
         copiedConfig["inputMapping"] = parsedInSignals;
         copiedConfig["outputMapping"] = parsedOutSignals;
-
-        delete copiedConfig.id;
-        delete copiedConfig.scenarioID;
-
-        return copiedConfig;
+    
+        const { id, scenarioID, ...finalConfig } = copiedConfig;
+    
+        return finalConfig;
       } catch (err) {
         console.log(err);
         return null;
       }
     }
+    
 
     const handleConfigExport = async (config) => {
       try {
@@ -234,7 +232,11 @@ const ConfigsTable = ({scenario, ics}) => {
           }
         }
       } catch (err) {
-        notificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR(err.data.message));
+        if(err.data){
+          notificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR(err.data.message));
+        } else {
+          console.log(err)
+        }
       }
 
       refetchConfigs();

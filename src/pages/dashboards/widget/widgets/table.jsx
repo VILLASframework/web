@@ -16,7 +16,7 @@
  ******************************************************************************/
 import React, { useState, useEffect } from "react";
 import { format } from "d3";
-import { Table, DataColumn } from "../../common/table";
+import { Table, DataColumn } from "../../../../common/table";
 
 const WidgetTable = (props) => {
   const [rows, setRows] = useState([]);
