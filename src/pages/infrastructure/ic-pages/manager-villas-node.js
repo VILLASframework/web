@@ -22,6 +22,7 @@ import ManagedICsTable from "./managed-ics-table";
 import RawDataTable from "../../../common/rawDataTable";
 import { downloadGraph } from "../../../utils/icUtils";
 import { loadICbyId } from "../../../store/icSlice";
+import { useGetICSQuery } from "../../../store/apiSlice";
 
 import ICParamsTable from "../ic-params-table";
 
@@ -35,7 +36,8 @@ const ManagerVillasNode = (props) => {
 
   const ic = props.ic;
 
-  const ics = useSelector((state) => state.infrastructure.ICsArray);
+  const {data: icsRes, isLoading, refetch: refetchICs} = useGetICSQuery();
+  const ics = icsRes ? icsRes.ics : [];
   const managedICs = ics.filter(managedIC => managedIC.category !== "manager" && managedIC.manager === ic.uuid);
   const graphURL = ic.apiurl !== "" ? ic.apiurl + "/graph.svg" : "";
 

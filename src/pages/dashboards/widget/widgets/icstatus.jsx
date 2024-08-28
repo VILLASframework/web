@@ -17,8 +17,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Badge } from "react-bootstrap";
-import { stateLabelStyle } from "../../ic/ics";
-import AppDispatcher from "../../common/app-dispatcher";
+import {stateLabelStyle} from "../../../infrastructure/styles";
 
 const WidgetICstatus = (props) => {
   const [sessionToken, setSessionToken] = useState(
@@ -31,11 +30,6 @@ const WidgetICstatus = (props) => {
       if (props.ics) {
         props.ics.forEach((ic) => {
           let icID = parseInt(ic.id, 10);
-          AppDispatcher.dispatch({
-            type: "ics/start-load",
-            data: icID,
-            token: sessionToken,
-          });
         });
       }
     };

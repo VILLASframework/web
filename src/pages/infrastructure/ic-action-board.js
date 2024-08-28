@@ -22,10 +22,12 @@ import classNames from 'classnames';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { sessionToken } from '../../localStorage';
-import { clearCheckedICs, deleteIC, loadAllICs, sendActionToIC } from '../../store/icSlice';
+import { clearCheckedICs, deleteIC, sendActionToIC } from '../../store/icSlice';
+import { useGetICSQuery } from '../../store/apiSlice';
 
 const ICActionBoard = (props) => {
   const dispatch = useDispatch();
+  const {refetch: refetchICs} = useGetICSQuery();
   const checkedICsIds = useSelector(state => state.infrastructure.checkedICsIds);
 
   let pickedTime = new Date();
@@ -60,7 +62,7 @@ const ICActionBoard = (props) => {
     });
 
     dispatch(clearCheckedICs());
-    dispatch(loadAllICs({token: sessionToken}));
+    refetchICs();
   }
 
   const onShutdown = () => {

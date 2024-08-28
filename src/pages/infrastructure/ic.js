@@ -18,7 +18,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from 'react-router-dom';
-import { loadAllICs, loadICbyId } from "../../store/icSlice";
+import { loadICbyId } from "../../store/icSlice";
 import { loadConfig } from "../../store/configSlice";
 
 import DefaultManagerPage from "./ic-pages/default-manager-page";
@@ -36,10 +36,8 @@ const InfrastructureComponent = (props) => {
     const { token: sessionToken } = useSelector((state) => state.auth);
 
     const ic = useSelector(state => state.infrastructure.currentIC);
-    const isICLoading = useSelector(state => state.infrastructure.isCurrentICLoading);
 
     useEffect(() => {
-        dispatch(loadAllICs({token: sessionToken}));
         dispatch(loadICbyId({token: sessionToken, id: id}));
         dispatch(loadConfig({token: sessionToken}));
     }, []);

@@ -28,7 +28,7 @@ const buttonStyle = {
 const iconStyle = {
   height: '25px',
   width: '25px'
-}
+};
 
 let buttonkey = 0;
 

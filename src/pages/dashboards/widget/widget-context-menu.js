@@ -145,4 +145,4 @@ WidgetContextMenu.propTypes = {
   onChange: PropTypes.func.isRequired
 };
 
-export default WidgetContextMenu
+export default WidgetContextMenu;
