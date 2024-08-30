@@ -84,5 +84,7 @@ export const {
   useAuthenticateUserMutation,
   useLazyGetFilesQuery,
   useUpdateSignalMutation,
-  useGetIcDataQuery
+  useGetIcDataQuery,
+  useLazyDownloadImageQuery,
+  useUpdateComponentConfigMutation
 } = apiSlice;
