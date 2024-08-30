@@ -42,7 +42,7 @@ class EditConfigDialog extends React.Component {
   onClose(canceled) {
     if (canceled === false) {
       if (this.valid) {
-        let data = this.props.config;
+        let data = JSON.parse(JSON.stringify(this.props.config));
         if (this.state.name !== '' && this.props.config.name !== this.state.name) {
           data.name = this.state.name;
         }
