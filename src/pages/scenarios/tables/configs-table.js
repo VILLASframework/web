@@ -103,6 +103,7 @@ const ConfigsTable = ({scenario, ics}) => {
 
     const importConfig = async (data) => {
       if(data){
+        //imported config
         const config = {
           config: {
             ScenarioID: scenario.id,
@@ -114,7 +115,20 @@ const ConfigsTable = ({scenario, ics}) => {
         }
 
         try {
-          await addComponentConfig(config).unwrap();
+          const res = await addComponentConfig(config).unwrap();
+          if(res.config){
+            if(data.config.inputMapping){
+              //after importing new config, we need to import according signals
+              for(let i = 0; i < data.config.inputMapping.length; i++){
+                data.config.inputMapping[i].configID = res.config.id;
+                await addSignalToConfig(data.config.inputMapping[i]).unwrap();
+              }
+              for(let i = 0; i < data.config.outputMapping.length; i++){
+                data.config.outputMapping[i].configID = res.config.id;
+                await addSignalToConfig(data.config.outputMapping[i]).unwrap();
+              }
+            }
+          }
         } catch (err) {
           notificationsDataManager.addNotification(NotificationsFactory.LOAD_ERROR(err.data.message));
         }
@@ -125,8 +139,6 @@ const ConfigsTable = ({scenario, ics}) => {
     }
 
     const exportConfig = (index) => {
-      
-  
       // show save dialog
       const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
       FileSaver.saveAs(blob, 'config-' + config.name + '.json');
@@ -248,10 +260,6 @@ const ConfigsTable = ({scenario, ics}) => {
       } else {
         return 0;
       }
-    }
-
-    const handleSignalMapping = () => {
-      
     }
 
     const toggleCheckAllConfigs = () => {
