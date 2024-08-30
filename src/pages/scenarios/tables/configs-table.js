@@ -26,6 +26,7 @@ import DeleteDialog from "../../../common/dialogs/delete-dialog";
 import NotificationsFactory from "../../../common/data-managers/notifications-factory";
 import notificationsDataManager from "../../../common/data-managers/notifications-data-manager";
 import EditSignalMappingDialog from '../dialogs/edit-signal-mapping';
+import EditConfigDialog from '../dialogs/edit-config';
 import FileSaver from "file-saver";
 import {
   useGetConfigsQuery, 
@@ -33,20 +34,26 @@ import {
   useDeleteComponentConfigMutation,
   useLazyGetSignalsQuery,
   useAddSignalMutation,
+  useGetFilesQuery,
+  useUpdateComponentConfigMutation
 } from "../../../store/apiSlice";
 import ConfigActionBoard from "./config-action-board";
-
 
 const ConfigsTable = ({scenario, ics}) => {
     const {data, refetch: refetchConfigs } = useGetConfigsQuery(scenario.id);
     const [addComponentConfig] = useAddComponentConfigMutation();
+    const [updateComponentConfig] = useUpdateComponentConfigMutation();
     const [deleteComponentConfig] = useDeleteComponentConfigMutation();
     const [addSignalToConfig] = useAddSignalMutation();
     const [triggerGetSignals] = useLazyGetSignalsQuery();
+
     const configs = data ? data.configs : [];
     const [signals, setSignals] = useState({});
+    const {data: filesData } = useGetFilesQuery(scenario.id);
+    const files = filesData ? filesData.files : [];
 
     const [isNewModalOpened, setIsNewModalOpened] = useState(false);
+    const [isEditModalOpened, setIsEditModalOpened] = useState(false);
     const [isImportModalOpened, setIsImportModalOpened] = useState(false);
     const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false);
     const [isEditSignalMappingModalOpened, setIsEditSignalMappingModalOpened] = useState(false);
@@ -55,7 +62,7 @@ const ConfigsTable = ({scenario, ics}) => {
     const [configToDelete, setConfigToDelete] = useState({name: ''});
     const [checkedConfigsIDs, setCheckedConfigsIDs] = useState([]);
     const [areAllConfigsChecked, setAreAllConfigsChecked] = useState(false);
-
+    const [editModalConfig, setEditModalConfig] = useState({});
     const { user: currentUser, token: sessionToken } = useSelector((state) => state.auth);
 
     useEffect(() => {
@@ -136,6 +143,19 @@ const ConfigsTable = ({scenario, ics}) => {
 
       refetchConfigs();
       setIsImportModalOpened(false);
+    }
+
+    const editConfig = async (data) => {
+      if(data){
+        try {
+          await updateComponentConfig({id: data.id, config: {config: data}}).unwrap();
+          refetchConfigs();
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      setEditModalConfig({});
+      setIsEditModalOpened(false);
     }
 
     const exportConfig = (index) => {
@@ -400,7 +420,10 @@ const ConfigsTable = ({scenario, ics}) => {
             deleteButton
             exportButton
             duplicateButton
-            onEdit={index => {}}
+            onEdit={index => {
+              setEditModalConfig(configs[index]);
+              setIsEditModalOpened(true);
+            }}
             onDelete={(index) => {
               setConfigToDelete(configs[index])
               setIsDeleteModalOpened(true);
@@ -426,6 +449,14 @@ const ConfigsTable = ({scenario, ics}) => {
         inputLabel="Name"
         placeholder="Enter name"
         onClose={data => newConfig(data)}
+      />
+      <EditConfigDialog
+        show={isEditModalOpened}
+        onClose={data => editConfig(data)}
+        config={editModalConfig}
+        ics={ics}
+        files={files}
+        sessionToken={sessionToken}
       />
       <ImportConfigDialog
         show={isImportModalOpened}
