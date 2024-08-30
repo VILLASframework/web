@@ -16,20 +16,36 @@
  ******************************************************************************/
 
 import React, { useState, useEffect } from "react";
+import { useLazyDownloadImageQuery } from "../../../../store/apiSlice";
+import FileSaver from "file-saver";
 
 const WidgetImage = (props) => {
   const [file, setFile] = useState(null);
+  const [objectURL, setObjectURL] = useState("");
 
   const widget = JSON.parse(JSON.stringify(props.widget));
+
+  const [triggerDownloadImage] = useLazyDownloadImageQuery();
+
+  const handleDownloadFile = async (fileID) => {
+    try {
+        const res = await triggerDownloadImage(fileID);
+        const blob = await res.data; // This is where you get the blob directly
+        setObjectURL(URL.createObjectURL(blob))
+    } catch (error) {
+        console.error(`Failed to download file with ID ${fileID}`, error);
+    }
+  }
+
+  useEffect(() => {
+    if(file !== null){
+      handleDownloadFile(file.id);
+    }
+  }, [file])
 
   useEffect(() => {
     let widgetFile = widget.customProperties.file;
     if (widgetFile !== -1 && file === null) {
-      // AppDispatcher.dispatch({
-      //   type: "files/start-download",
-      //   data: widgetFile,
-      //   token: props.token,
-      // });
     }
   }, [file, props.token, widget.customProperties.file]);
 
@@ -38,17 +54,11 @@ const WidgetImage = (props) => {
       widget.customProperties.update = false;
       if (file !== null) setFile(null);
     } else {
-      console.log("looking in", props.files)
       let foundFile = props.files.find(
         (f) => f.id === parseInt(widget.customProperties.file, 10)
       );
       if (foundFile && widget.customProperties.update) {
         widget.customProperties.update = false;
-        // AppDispatcher.dispatch({
-        //   type: "files/start-download",
-        //   data: foundFile.id,
-        //   token: props.token,
-        // });
         setFile(foundFile);
       }
     }
@@ -58,7 +68,14 @@ const WidgetImage = (props) => {
     console.error("Image error:", e);
   };
 
-  let objectURL = file && file.objectURL ? file.objectURL : "";
+  //revoke object url when component unmounts
+  useEffect(() => {
+    return () => {
+        if (objectURL) {
+            URL.revokeObjectURL(objectURL);
+        }
+    };
+}, [objectURL]);
 
   return (
     <div className="full">
