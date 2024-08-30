@@ -1,14 +1,39 @@
+/**
+ * This file is part of VILLASweb.
+ *
+ * VILLASweb is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * VILLASweb is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { wsManager } from "../common/api/websocket-api";
 import { current } from "@reduxjs/toolkit";
 
 export const connectWebSocket = createAsyncThunk(
     'websocket/connect',
-    async ({ url, id, length }, { dispatch }) => {
+    async ({ url, id, length }, { dispatch, getState }) => {
+
+      console.log('Want to connect to', url);
+
+      //check if we are already connected to this socket
+      if(getState().websocket.activeSocketURLs.includes(url)) return;  
+      
       return new Promise((resolve, reject) => {
+        dispatch(addActiveSocket({parameters: {id: id, url: url, length: length}}));
         wsManager.connect(
+          id,
           url,
-          (msgs) => {
+          (msgs, id) => {
             const icdata = {
               input: {
                 sequence: -1,
@@ -63,14 +88,13 @@ export const connectWebSocket = createAsyncThunk(
                   icdata.output.sequence = smp.sequence;
                 }
               }
-  
+              
               // Dispatch the action to update the Redux state
               dispatch(updateIcData({ id, newIcData: icdata }));
             }
           },
           () => {
             console.log('WebSocket connected to:', url);
-            dispatch(setConnectedUrl({ url })); // Optional: Track the connected URL
             resolve(); // Resolve the promise on successful connection
           },
           () => {
@@ -86,21 +110,30 @@ export const connectWebSocket = createAsyncThunk(
 const websocketSlice = createSlice({
   name: 'websocket',
   initialState: {
-    connectedUrl: null,
     icdata: {},
+    activeSocketURLs: []
   },
   reducers: {
-    setConnectedUrl: (state, action) => {
-      state.connectedUrl = action.payload.url;
+    addActiveSocket: (state, action) => {
+        const {url, id, length} = action.payload.parameters;
+        const currentSockets = current(state.activeSocketURLs);
+        state.activeSocketURLs = [...currentSockets, url];
+        state.icdata[id] = {input: {
+            sequence: -1,
+            length: length,
+            version: 2,
+            type: 0,
+            timestamp: Date.now(),
+            values: new Array(length).fill(0)
+        }, output: {}};
     },
-    disconnect: (state) => {
-      wsManager.disconnect(); // Ensure the WebSocket is disconnected
-      state.connectedUrl = null;
+    disconnect: (state, action) => {
+      wsManager.disconnect(action.payload.id); // Ensure the WebSocket is disconnected
     },
     updateIcData: (state, action) => {
       const { id, newIcData } = action.payload;
       const currentICdata = current(state.icdata);
-      if(currentICdata[id]){
+      if(currentICdata[id].output.values){
         const {values, ...rest} = newIcData.output;
         let oldValues = [...currentICdata[id].output.values];
         for(let i = 0; i < newIcData.output.values.length; i++){
@@ -119,16 +152,36 @@ const websocketSlice = createSlice({
         };
       }
     },
+    sendMessageToWebSocket: (state, action) => {
+        const { ic, signalID, signalIndex, data} = action.payload.message;
+        const currentICdata = current(state.icdata);
+
+        if (!(ic == null || currentICdata[ic].input == null)) {
+            const inputAction = JSON.parse(JSON.stringify(currentICdata[ic].input));
+            // update message properties
+            inputAction.timestamp = Date.now();
+            inputAction.sequence++;
+            inputAction.values[signalIndex] = data;
+            inputAction.length = inputAction.values.length;
+            inputAction.source_index = signalID;
+            // The previous line sets the source_index field of the message to the ID of the signal
+            // so that upon loopback through VILLASrelay the value can be mapped to correct signal
+    
+            state.icdata[ic].input = inputAction;
+            let input = JSON.parse(JSON.stringify(inputAction));
+            wsManager.send(ic, input);
+        }
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(connectWebSocket.fulfilled, (state, action) => {
       // Handle the fulfilled state if needed
     });
     builder.addCase(connectWebSocket.rejected, (state, action) => {
-      // Handle the rejected state if needed
+      console.log('error', action);
     });
   },
 });
 
-export const { setConnectedUrl, disconnect, updateIcData } = websocketSlice.actions;
+export const { disconnect, updateIcData, addActiveSocket, sendMessageToWebSocket } = websocketSlice.actions;
 export default websocketSlice.reducer;

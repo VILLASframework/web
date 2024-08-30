@@ -17,7 +17,7 @@
 
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import WidgetLabel from './widgets/label';
 import WidgetLine from './widgets/line';
 import WidgetBox from './widgets/box';
@@ -31,22 +31,39 @@ import WidgetTimeOffset from './widgets/time-offset';
 import WidgetICstatus from './widgets/icstatus';
 // import WidgetCustomAction from './widgets/custom-action';
 // import WidgetAction from './widgets/action';
-// import WidgetButton from './widgets/button';
-// import WidgetInput from './widgets/input';
-// import WidgetSlider from './widgets/slider';
+import WidgetButton from './widgets/button';
+import WidgetInput from './widgets/input';
+import WidgetSlider from './widgets/slider';
 // import WidgetTopology from './widgets/topology';
-// import WidgetPlayer from './widgets/player';
+import WidgetPlayer from './widgets/player';
 //import WidgetHTML from './widgets/html';
 import '../../../styles/widgets.css';
 import { useGetICSQuery, useGetSignalsQuery, useGetConfigsQuery } from '../../../store/apiSlice';
+import { sessionToken } from '../../../localStorage';
+import { useUpdateWidgetMutation } from '../../../store/apiSlice';
+import { sendMessageToWebSocket } from '../../../store/websocketSlice';
+import { useGetResultsQuery } from '../../../store/apiSlice';
 
-const Widget = ({widget, editing, files, configs, signals, paused, ics, icData}) => {
-
+const Widget = ({widget, editing, files, configs, signals, paused, ics, scenarioID, onSimulationStarted}) => {
+  const dispatch = useDispatch();
   const { token: sessionToken } = useSelector((state) => state.auth);
-
+  const {data, refetch: refetchResults } = useGetResultsQuery(scenarioID);
+  const results = data ? data.results : [];
   const [icIDs, setICIDs] = useState([]);
 
   const icdata = useSelector((state) => state.websocket.icdata);
+
+  const [websockets, setWebsockets] = useState([]);
+  const activeSocketURLs = useSelector((state) => state.websocket.activeSocketURLs);
+  const [update] = useUpdateWidgetMutation();
+
+  useEffect(() => {
+    if(activeSocketURLs.length > 0){
+      activeSocketURLs.forEach(url => {
+        setWebsockets(prevState=>([...prevState, { url: url.replace(/^wss:\/\//, "https://"), connected:true}]))
+      })
+    }
+  }, [activeSocketURLs])
 
   useEffect(() => {
     if(signals.length > 0){
@@ -66,387 +83,110 @@ const Widget = ({widget, editing, files, configs, signals, paused, ics, icData})
     }
   }, [signals])
 
-  // const {data: signals, isLoading: signalsLoading} = useGetSignalsQuery({})
+  const inputDataChanged = (widget, data, controlID, controlValue, isFinalChange) => {
+    if (controlID !== '' && isFinalChange) {
+      let updatedWidget = JSON.parse(JSON.stringify(widget));
+      updatedWidget.customProperties[controlID] = controlValue;
 
+      updateWidget(updatedWidget);
+    }
 
-  switch(widget.type){
-    //Cosmetic widgets
-    case 'Line':
-      return <WidgetLine widget={widget} editing={editing} />
-    case 'Box':
-      return <WidgetBox widget={widget} editing={editing} />
-    case 'Label':
-      return <WidgetLabel widget={widget}/>;
-    case 'Image':
-      return <WidgetImage widget={widget} files={files} token={sessionToken} />
-    //Displaying widgets
-    case 'Plot':
-      return <WidgetPlot widget={widget} data={icdata} signals={signals} icIDs={icIDs} paused={paused} />
-    case 'Table':
-      return <WidgetTable widget={widget} data={icdata} signals={signals} icIDs={icIDs} />
-    case 'Value':
-      return <WidgetValue widget={widget} data={icdata} signals={signals} icIDs={icIDs} />
-    case 'Lamp':
-      return <WidgetLamp widget={widget} data={icdata} signals={signals} icIDs={icIDs} />
-    case 'Gauge':
-      return <WidgetGauge widget={widget} data={icdata} signals={signals} icIDs={icIDs} editing={editing} />
-    case 'TimeOffset':
-      return <WidgetTimeOffset widget={widget} data={icdata} signals={signals} icIDs={icIDs} editing={editing} />
-    case 'ICstatus':
-      return <WidgetICstatus widget={widget} ics={ics} />
-    //Manipulation widgets
-    default:
-      return <div>Error: Widget not found!</div>
+    let signalID = widget.signalIDs[0];
+    let signal = signals.filter(s => s.id === signalID)
+    if (signal.length === 0){
+      console.warn("Unable to send signal for signal ID", signalID, ". Signal not found.");
+      return;
+    }
+    // determine ID of infrastructure component related to signal[0]
+    // Remark: there is only one selected signal for an input type widget
+    let icID = icIDs[signal[0].id];
+    dispatch(sendMessageToWebSocket({message: {ic: icID, signalID: signal[0].id, signalIndex: signal[0].index, data: signal[0].scalingFactor * data}}));
   }
-  
 
-  // if (widget.type === 'CustomAction') {
-  //   return <WidgetCustomAction
-  //     widget={widget}
-  //     data={this.state.icData}
-  //     signals={this.state.signals}
-  //     icIDs={this.state.icIDs}
-  //   />
-  // } else if (widget.type === 'Action') {
-  //   return <WidgetAction
-  //     widget={widget}
-  //     data={this.state.icData}
-  //   />
-  // } else if (widget.type === 'Lamp') {
-  //   return <WidgetLamp
-  //     widget={widget}
-  //     data={this.state.icData}
-  //     signals={this.state.signals}
-  //     icIDs={this.state.icIDs}
-  //   />
-  // } else if (widget.type === 'Value') {
-  //   return <WidgetValue
-  //     widget={widget}
-  //     data={this.state.icData}
-  //     signals={this.state.signals}
-  //     icIDs={this.state.icIDs}
-  //   />
-  // } else if (widget.type === 'Plot') {
-  //   return <WidgetPlot
-  //     widget={widget}
-  //     data={this.state.icData}
-  //     signals={this.state.signals}
-  //     icIDs={this.state.icIDs}
-  //     paused={this.props.paused}
-  //   />
-  // } else if (widget.type === 'Table') {
-  //   return <WidgetTable
-  //     widget={widget}
-  //     data={this.state.icData}
-  //     signals={this.state.signals}
-  //     icIDs={this.state.icIDs}
-  //   />
-  // } else if (widget.type === 'Label') {
-  //   return <WidgetLabel
-  //     widget={widget}
-  //   />
-  // } else if (widget.type === 'Image') {
-  //   return <WidgetImage
-  //     widget={widget}
-  //     files={this.state.files}
-  //     token={this.state.sessionToken}
-  //   />
-  // } else if (widget.type === 'Button') {
-  //   return <WidgetButton
-  //     widget={widget}
-  //     editing={this.props.editing}
-  //     onInputChanged={(value, controlID, controlValue, isFinalChange) => this.inputDataChanged(widget, value, controlID, controlValue, isFinalChange)}
-  //     signals={this.state.signals}
-  //     token={this.state.sessionToken}
-  //   />
-  // } else if (widget.type === 'NumberInput') {
-  //   return <WidgetInput
-  //     widget={widget}
-  //     editing={this.props.editing}
-  //     onInputChanged={(value, controlID, controlValue, isFinalChange) => this.inputDataChanged(widget, value, controlID, controlValue, isFinalChange)}
-  //     signals={this.state.signals}
-  //     token={this.state.sessionToken}
-  //   />
-  // } else if (widget.type === 'Slider') {
-  //   return <WidgetSlider
-  //     widget={widget}
-  //     editing={this.props.editing}
-  //     onInputChanged={(value, controlID, controlValue, isFinalChange) => this.inputDataChanged(widget, value, controlID, controlValue, isFinalChange)}
-  //     signals={this.state.signals}
-  //     token={this.state.sessionToken}
-  //   />
-  // } else if (widget.type === 'Gauge') {
-  //   return <WidgetGauge
-  //     widget={widget}
-  //     data={this.state.icData}
-  //     editing={this.props.editing}
-  //     signals={this.state.signals}
-  //     icIDs={this.state.icIDs}
-  //   />
-  // //} else if (widget.type === 'HTML') {
-  //   //return <WidgetHTML
-  //   //  widget={widget}
-  //   //  editing={this.props.editing}
-  //   ///>
-  // } else if (widget.type === 'Topology') {
-  //   return <WidgetTopology
-  //     widget={widget}
-  //     files={this.state.files}
-  //     token={this.state.sessionToken}
-  //   />
-  // } else if (widget.type === 'TimeOffset') {
-  //   return <WidgetTimeOffset
-  //     widget={widget}
-  //     data={this.state.icData}
-  //     websockets={this.state.websockets}
-  //     ics={this.props.ics}
-  //   />
-  // } else if (widget.type === 'ICstatus') {
-  //   return <WidgetICstatus
-  //     widget={widget}
-  //     ics={this.props.ics}
-  //   />
-  // } else if (widget.type === 'Player') {
-  //   return <WidgetPlayer
-  //     widget={widget}
-  //     editing={this.props.editing}
-  //     configs={this.props.configs}
-  //     onStarted={this.props.onSimulationStarted}
-  //     ics={this.props.ics}
-  //     results={this.state.results}
-  //     files={this.state.files}
-  //     scenarioID={this.props.scenarioID}
-  //   />
-  // }
+  const updateWidget = async (updatedWidget) => {
+    try {
+      await update({ widgetID: widget.id, updatedWidget: { widget: updatedWidget } }).unwrap();
+    } catch (err) {
+      console.log('error', err);
+    }
+  }
 
-  return null;
+
+  if (widget.type === 'Line') {
+    return <WidgetLine widget={widget} editing={editing} />;
+  } else if (widget.type === 'Box') {
+      return <WidgetBox widget={widget} editing={editing} />;
+  } else if (widget.type === 'Label') {
+      return <WidgetLabel widget={widget} />;
+  } else if (widget.type === 'Image') {
+      return <WidgetImage widget={widget} files={files} token={sessionToken} />;
+  } else if (widget.type === 'Plot') {
+      return <WidgetPlot widget={widget} data={icdata} signals={signals} icIDs={icIDs} paused={paused} />;
+  } else if (widget.type === 'Table') {
+      return <WidgetTable widget={widget} data={icdata} signals={signals} icIDs={icIDs} />;
+  } else if (widget.type === 'Value') {
+      return <WidgetValue widget={widget} data={icdata} signals={signals} icIDs={icIDs} />;
+  } else if (widget.type === 'Lamp') {
+      return <WidgetLamp widget={widget} data={icdata} signals={signals} icIDs={icIDs} />;
+  } else if (widget.type === 'Gauge') {
+      return <WidgetGauge widget={widget} data={icdata} signals={signals} icIDs={icIDs} editing={editing} />;
+  } else if (widget.type === 'TimeOffset') {
+      return <WidgetTimeOffset widget={widget} data={icdata} signals={signals} ics={ics} editing={editing} websockets={websockets} />;
+  } else if (widget.type === 'ICstatus') {
+      return <WidgetICstatus widget={widget} ics={ics} />;
+  } else if (widget.type === 'Button') {
+      return (
+          <WidgetButton 
+              widget={widget} 
+              editing={editing} 
+              onInputChanged={(value, controlID, controlValue, isFinalChange) => 
+                  inputDataChanged(widget, value, controlID, controlValue, isFinalChange)
+              }
+              signals={signals}
+              token={sessionToken}
+          />
+      );
+  } else if (widget.type === 'NumberInput') {
+      return (
+          <WidgetInput
+              widget={widget}
+              editing={editing}
+              onInputChanged={(value, controlID, controlValue, isFinalChange) => 
+                  inputDataChanged(widget, value, controlID, controlValue, isFinalChange)
+              }
+              signals={signals}
+              token={sessionToken}
+          />
+      );
+  } else if (widget.type === 'Slider') {
+      return (
+          <WidgetSlider
+              widget={widget}
+              editing={editing}
+              onInputChanged={(value, controlID, controlValue, isFinalChange) => 
+                  inputDataChanged(widget, value, controlID, controlValue, isFinalChange)
+              }
+              signals={signals}
+              token={sessionToken}
+          />
+      );
+  } else if (widget.type === 'Player') {
+    return (
+      <WidgetPlayer
+        widget={widget}
+        editing={editing}
+        configs={configs}
+        onStarted={onSimulationStarted}
+        ics={ics}
+        results={results}
+        files={files}
+        scenarioID={scenarioID}
+      />
+    );
+  } else {
+      console.log('Unknown widget type', widget.type);
+      return <div>Error: Widget not found!</div>;
+  }
 }
-
-// class Widget extends React.Component {
-//   static getStores() {
-//     return [ ICDataStore, ConfigsStore, FileStore, SignalStore, WebsocketStore, ResultStore];
-//   }
-
-//   static calculateState(prevState, props) {
-
-//     let websockets = WebsocketStore.getState();
-
-//     let icData = {};
-
-//     if (props.paused) {
-//       if (prevState && prevState.icData) {
-//         icData = JSON.parse(JSON.stringify(prevState.icData));
-//       }
-//     } else {
-//       icData = ICDataStore.getState();
-//     }
-
-//     // Get the IC IDs and signal indexes for all signals of the widget
-//     let configs = ConfigsStore.getState().filter(c => c.scenarioID === parseInt(props.scenarioID, 10));
-//     // TODO make sure that the signals are only the signals that belong to the scenario at hand
-//     let signals = SignalStore.getState();
-//     let icIDs = [];
-
-//     for (let id of props.data.signalIDs){
-//       let signal = signals.find(s => s.id === id);
-//       if (signal !== undefined) {
-//         let config = configs.find(m => m.id === signal.configID);
-//         if (config !== undefined){
-//           icIDs[signal.id] = config.icID;
-//         }
-//       }
-//     }
-
-//     let results = ResultStore.getState().filter(r => r.scenarioID === parseInt(props.scenarioID, 10));
-//     let files = FileStore.getState().filter(f => f.scenarioID === parseInt(props.scenarioID, 10));
-
-//     return {
-//       websockets: websockets,
-//       icData: icData,
-//       signals: signals,
-//       icIDs: icIDs,
-//       files: files,
-//       sessionToken: localStorage.getItem("token"),
-//       results: results,
-//     };
-//   }
-
-//   inputDataChanged(widget, data, controlID, controlValue, isFinalChange) {
-//     // controlID is the path to the widget customProperty that is changed (for example 'value')
-
-//     // modify the widget customProperty
-//     if (controlID !== '' && isFinalChange) {
-//       let updatedWidget = JSON.parse(JSON.stringify(widget));
-//       updatedWidget.customProperties[controlID] = controlValue;
-
-//       AppDispatcher.dispatch({
-//         type: 'widgets/start-edit',
-//         token: this.state.sessionToken,
-//         data: updatedWidget
-//       });
-//     }
-
-//     // The following assumes that a widget modifies/ uses exactly one signal
-
-//     // get the signal with the selected signal ID
-//     let signalID = widget.signalIDs[0];
-//     let signal = this.state.signals.filter(s => s.id === signalID)
-//     if (signal.length === 0){
-//       console.warn("Unable to send signal for signal ID", signalID, ". Signal not found.");
-//       return;
-//     }
-//     // determine ID of infrastructure component related to signal[0]
-//     // Remark: there is only one selected signal for an input type widget
-//     let icID = this.state.icIDs[signal[0].id];
-//     AppDispatcher.dispatch({
-//       type: 'icData/inputChanged',
-//       ic: icID,
-//       signalID: signal[0].id,
-//       signalIndex: signal[0].index,
-//       data: signal[0].scalingFactor * data
-//     });
-//   }
-
-//   createWidget(widget) {
-
-//     if (widget.type === 'CustomAction') {
-//       return <WidgetCustomAction
-//         widget={widget}
-//         data={this.state.icData}
-//         signals={this.state.signals}
-//         icIDs={this.state.icIDs}
-//       />
-//     } else if (widget.type === 'Action') {
-//       return <WidgetAction
-//         widget={widget}
-//         data={this.state.icData}
-//       />
-//     } else if (widget.type === 'Lamp') {
-//       return <WidgetLamp
-//         widget={widget}
-//         data={this.state.icData}
-//         signals={this.state.signals}
-//         icIDs={this.state.icIDs}
-//       />
-//     } else if (widget.type === 'Value') {
-//       return <WidgetValue
-//         widget={widget}
-//         data={this.state.icData}
-//         signals={this.state.signals}
-//         icIDs={this.state.icIDs}
-//       />
-//     } else if (widget.type === 'Plot') {
-//       return <WidgetPlot
-//         widget={widget}
-//         data={this.state.icData}
-//         signals={this.state.signals}
-//         icIDs={this.state.icIDs}
-//         paused={this.props.paused}
-//       />
-//     } else if (widget.type === 'Table') {
-//       return <WidgetTable
-//         widget={widget}
-//         data={this.state.icData}
-//         signals={this.state.signals}
-//         icIDs={this.state.icIDs}
-//       />
-//     } else if (widget.type === 'Label') {
-//       return <WidgetLabel
-//         widget={widget}
-//       />
-//     } else if (widget.type === 'Image') {
-//       return <WidgetImage
-//         widget={widget}
-//         files={this.state.files}
-//         token={this.state.sessionToken}
-//       />
-//     } else if (widget.type === 'Button') {
-//       return <WidgetButton
-//         widget={widget}
-//         editing={this.props.editing}
-//         onInputChanged={(value, controlID, controlValue, isFinalChange) => this.inputDataChanged(widget, value, controlID, controlValue, isFinalChange)}
-//         signals={this.state.signals}
-//         token={this.state.sessionToken}
-//       />
-//     } else if (widget.type === 'NumberInput') {
-//       return <WidgetInput
-//         widget={widget}
-//         editing={this.props.editing}
-//         onInputChanged={(value, controlID, controlValue, isFinalChange) => this.inputDataChanged(widget, value, controlID, controlValue, isFinalChange)}
-//         signals={this.state.signals}
-//         token={this.state.sessionToken}
-//       />
-//     } else if (widget.type === 'Slider') {
-//       return <WidgetSlider
-//         widget={widget}
-//         editing={this.props.editing}
-//         onInputChanged={(value, controlID, controlValue, isFinalChange) => this.inputDataChanged(widget, value, controlID, controlValue, isFinalChange)}
-//         signals={this.state.signals}
-//         token={this.state.sessionToken}
-//       />
-//     } else if (widget.type === 'Gauge') {
-//       return <WidgetGauge
-//         widget={widget}
-//         data={this.state.icData}
-//         editing={this.props.editing}
-//         signals={this.state.signals}
-//         icIDs={this.state.icIDs}
-//       />
-//     } else if (widget.type === 'Box') {
-//       return <WidgetBox
-//         widget={widget}
-//         editing={this.props.editing}
-//       />
-//     //} else if (widget.type === 'HTML') {
-//       //return <WidgetHTML
-//       //  widget={widget}
-//       //  editing={this.props.editing}
-//       ///>
-//     } else if (widget.type === 'Topology') {
-//       return <WidgetTopology
-//         widget={widget}
-//         files={this.state.files}
-//         token={this.state.sessionToken}
-//       />
-//     } else if (widget.type === 'Line') {
-//       return <WidgetLine
-//         widget={widget}
-//         editing={this.props.editing}
-//       />
-//     } else if (widget.type === 'TimeOffset') {
-//       return <WidgetTimeOffset
-//         widget={widget}
-//         data={this.state.icData}
-//         websockets={this.state.websockets}
-//         ics={this.props.ics}
-//       />
-//     } else if (widget.type === 'ICstatus') {
-//       return <WidgetICstatus
-//         widget={widget}
-//         ics={this.props.ics}
-//       />
-//     } else if (widget.type === 'Player') {
-//       return <WidgetPlayer
-//         widget={widget}
-//         editing={this.props.editing}
-//         configs={this.props.configs}
-//         onStarted={this.props.onSimulationStarted}
-//         ics={this.props.ics}
-//         results={this.state.results}
-//         files={this.state.files}
-//         scenarioID={this.props.scenarioID}
-//       />
-//     }
-
-//     return null;
-//   }
-
-//   render() {
-//     return this.createWidget(this.props.data);
-//   }
-// }
-
-// let fluxContainerConverter = require('../common/FluxContainerConverter');
-// export default Container.create(fluxContainerConverter.convert(Widget), { withProps: true });
 
 export default Widget;

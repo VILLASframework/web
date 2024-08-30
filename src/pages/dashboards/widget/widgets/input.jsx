@@ -16,7 +16,6 @@
  ******************************************************************************/
 import React, { useState, useEffect } from "react";
 import { Form, Col, InputGroup } from "react-bootstrap";
-import AppDispatcher from "../../common/app-dispatcher";
 
 function WidgetInput(props) {
   const [value, setValue] = useState("");
@@ -26,11 +25,11 @@ function WidgetInput(props) {
     const widget = { ...props.widget };
     widget.customProperties.simStartedSendValue = false;
 
-    AppDispatcher.dispatch({
-      type: "widgets/start-edit",
-      token: props.token,
-      data: widget,
-    });
+    // AppDispatcher.dispatch({
+    //   type: "widgets/start-edit",
+    //   token: props.token,
+    //   data: widget,
+    // });
   }, [props.token, props.widget]);
 
   useEffect(() => {

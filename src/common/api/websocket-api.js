@@ -20,46 +20,82 @@ const OFFSET_VERSION = 4;
 
 class WebSocketManager {
   constructor() {
-    this.socket = null;
+    this.sockets = []; // Array to store multiple socket objects
   }
 
-  id = null;
-
-  connect(url, onMessage, onOpen, onClose) {
-    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+  connect(id, url, onMessage, onOpen, onClose) {
+    const existingSocket = this.sockets.find(s => s.id === id);
+    if (existingSocket && existingSocket.socket.readyState === WebSocket.OPEN) {
       console.log('Already connected to:', url);
       return;
     }
 
-    if (this.socket) {
-      this.socket.close();
-    }
+    const socket = new WebSocket(url, 'live');
+    socket.binaryType = 'arraybuffer';
 
-    this.socket = new WebSocket(url, 'live');
-    this.socket.binaryType = 'arraybuffer';
-
-    this.socket.onopen = onOpen;
-    this.socket.onmessage = (event) => {
+    socket.onopen = onOpen;
+    socket.onmessage = (event) => {
       const msgs = this.bufferToMessageArray(event.data);
-      onMessage(msgs);
+      onMessage(msgs, id);
     };
-    this.socket.onclose = onClose;
+    socket.onclose = onClose;
+
+    // Store the new socket along with its id
+    this.sockets.push({ id, socket });
   }
 
-  disconnect() {
-    if (this.socket) {
-      this.socket.close();
-      this.socket = null;
-      console.log('WebSocket connection closed');
+  disconnect(id) {
+    const socket = this.sockets.find(s => s.id === id);
+    if (socket) {
+      socket.socket.close();
+      this.sockets = this.sockets.filter(s => s.id !== id);
+      console.log('WebSocket connection closed for id:', id);
     }
+  }
+
+  send(id, message) {
+    const socket = this.sockets.find(s => s.id === id);
+    if (socket == null) {
+      return false;
+    }
+    console.log("Sending to IC", id, "message: ", message);
+    const data = this.messageToBuffer(message);
+    socket.socket.send(data);
+
+    return true;
+  }
+
+  messageToBuffer(message) {
+    const buffer = new ArrayBuffer(16 + 4 * message.length);
+    const view = new DataView(buffer);
+
+    let bits = 0;
+    bits |= (message.version & 0xF) << OFFSET_VERSION;
+    bits |= (message.type & 0x3) << OFFSET_TYPE;
+
+    let source_index = 0;
+    source_index |= (message.source_index & 0xFF);
+
+    const sec = Math.floor(message.timestamp / 1e3);
+    const nsec = (message.timestamp - sec * 1e3) * 1e6;
+
+    view.setUint8(0x00, bits, true);
+    view.setUint8(0x01, source_index, true);
+    view.setUint16(0x02, message.length, true);
+    view.setUint32(0x04, message.sequence, true);
+    view.setUint32(0x08, sec, true);
+    view.setUint32(0x0C, nsec, true);
+
+    const data = new Float32Array(buffer, 0x10, message.length);
+    data.set(message.values);
+
+    return buffer;
   }
 
   bufferToMessageArray(blob) {
-    /* some local variables for parsing */
     let offset = 0;
     const msgs = [];
 
-    /* for every msg in vector */
     while (offset < blob.byteLength) {
       const msg = this.bufferToMessage(new DataView(blob, offset));
 
@@ -70,31 +106,39 @@ class WebSocketManager {
     }
 
     return msgs;
-}
+  }
 
   bufferToMessage(data) {
-    // parse incoming message into usable data
     if (data.byteLength === 0) {
-        return null;
-      }
-  
-      const source_index = data.getUint8(1);
-      const bits = data.getUint8(0);
-      const length = data.getUint16(0x02, 1);
-      const bytes = length * 4 + 16;
-  
-      return {
-        version: (bits >> OFFSET_VERSION) & 0xF,
-        type: (bits >> OFFSET_TYPE) & 0x3,
-        source_index: source_index,
-        length: length,
-        sequence: data.getUint32(0x04, 1),
-        timestamp: data.getUint32(0x08, 1) * 1e3 + data.getUint32(0x0C, 1) * 1e-6,
-        values: new Float32Array(data.buffer, data.byteOffset + 0x10, length),
-        blob: new DataView(data.buffer, data.byteOffset + 0x00, bytes),
-        // id: id
-      };
-}
+      return null;
+    }
+
+    const source_index = data.getUint8(1);
+    const bits = data.getUint8(0);
+    const length = data.getUint16(0x02, 1);
+    const bytes = length * 4 + 16;
+
+    return {
+      version: (bits >> OFFSET_VERSION) & 0xF,
+      type: (bits >> OFFSET_TYPE) & 0x3,
+      source_index: source_index,
+      length: length,
+      sequence: data.getUint32(0x04, 1),
+      timestamp: data.getUint32(0x08, 1) * 1e3 + data.getUint32(0x0C, 1) * 1e-6,
+      values: new Float32Array(data.buffer, data.byteOffset + 0x10, length),
+      blob: new DataView(data.buffer, data.byteOffset + 0x00, bytes),
+    };
+  }
+
+  getSocketById(id) {
+    const socketEntry = this.sockets.find(s => s.id === id);
+    return socketEntry ? socketEntry.socket : null;
+  }
+
+  isConnected(id) {
+    const socket = this.getSocketById(id);
+    return socket && socket.readyState === WebSocket.OPEN;
+  }
 }
 
 export const wsManager = new WebSocketManager();

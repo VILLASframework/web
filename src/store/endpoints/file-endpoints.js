@@ -40,6 +40,13 @@ export const fileEndpoints = (builder) => ({
         responseType: 'blob',
       }),
     }),
+    downloadImage: builder.query({
+      query: (fileID) => ({
+        url: `files/${fileID}`,
+        method: 'GET',
+        responseHandler: (response) => response.blob(),
+      }),
+    }),
     updateFile: builder.mutation({
       query: ({ fileID, file }) => {
         const formData = new FormData();
