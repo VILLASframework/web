@@ -26,6 +26,13 @@ export const configEndpoints = (builder) => ({
         body: config,
       }),
     }),
+    updateComponentConfig: builder.mutation({
+      query: ({id, config}) => ({
+        url: `configs/${id}`,
+        method: 'PUT',
+        body: config,
+      }),
+    }),
     deleteComponentConfig: builder.mutation({
       query: (configID) => ({
         url: `configs/${configID}`,
