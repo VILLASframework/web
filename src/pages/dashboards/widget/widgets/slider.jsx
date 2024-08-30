@@ -40,11 +40,11 @@ const WidgetSlider = (props) => {
     if (props.widget.customProperties.simStartedSendValue) {
       let widget = { ...props.widget };
       widget.customProperties.simStartedSendValue = false;
-      AppDispatcher.dispatch({
-        type: "widgets/start-edit",
-        token: props.token,
-        data: widget,
-      });
+      // AppDispatcher.dispatch({
+      //   type: "widgets/start-edit",
+      //   token: props.token,
+      //   data: widget,
+      // });
 
       // Send value without changing widget
       props.onInputChanged(widget.customProperties.value, "", "", false);

@@ -18,12 +18,10 @@
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import JSZip from 'jszip';
-import IconButton from '../../common/buttons/icon-button';
-import IconTextButton from '../../common/buttons/icon-text-button';
-import ParametersEditor from '../../common/parameters-editor';
-import ICAction from '../../ic/ic-action';
-import ResultPythonDialog from "../../pages/scenarios/dialogs/result-python-dialog";
-import AppDispatcher from "../../common/app-dispatcher";
+import IconButton from '../../../../common/buttons/icon-button';
+import IconTextButton from '../../../../common/buttons/icon-text-button';
+import ParametersEditor from '../../../../common/parameters-editor';
+import ResultPythonDialog from '../../../scenarios/dialogs/result-python-dialog';
 import { playerMachine } from '../widget-player/player-machine';
 import { interpret } from 'xstate';
 
@@ -32,7 +30,6 @@ const playerService = interpret(playerMachine);
 function transitionState(currentState, playerEvent) {
   return playerMachine.transition(currentState, { type: playerEvent })
 }
-
 
 class WidgetPlayer extends Component {
   constructor(props) {
@@ -131,17 +128,17 @@ class WidgetPlayer extends Component {
       switch (state.ic.state) {
         case 'stopping': // if configured, show results
           if (state.uploadResults) {
-            AppDispatcher.dispatch({
-              type: 'results/start-load',
-              param: '?scenarioID=' + props.scenarioID,
-              token: state.sessionToken,
-            })
+            // AppDispatcher.dispatch({
+            //   type: 'results/start-load',
+            //   param: '?scenarioID=' + props.scenarioID,
+            //   token: state.sessionToken,
+            // })
 
-            AppDispatcher.dispatch({
-              type: 'files/start-load',
-              token: state.sessionToken,
-              param: '?scenarioID=' + props.scenarioID,
-            });
+            // AppDispatcher.dispatch({
+            //   type: 'files/start-load',
+            //   token: state.sessionToken,
+            //   param: '?scenarioID=' + props.scenarioID,
+            // });
           }
           newState = transitionState(state.playerState, 'FINISH')
           return { playerState: newState, icState: state.ic.state }
@@ -163,14 +160,14 @@ class WidgetPlayer extends Component {
   clickStart() {
     let config = this.state.config
     config.startParameters = this.state.startParameters
-    ICAction.start([config], '{}', [this.state.ic], new Date(), this.state.sessionToken, this.state.uploadResults)
+    // dispatch(sendActionToIC({token: sessionToken, id: id, actions: newAction}));
 
     let newState = transitionState(this.state.playerState, 'START')
     this.setState({ playerState: newState })
   }
 
   clickReset() {
-    ICAction.reset(this.state.ic.id, new Date(), this.state.sessionToken)
+    //dispatch(sendActionToIC({token: sessionToken, id: id, actions: newAction}));
   }
 
   openPythonDialog() {
@@ -197,11 +194,11 @@ class WidgetPlayer extends Component {
     }
 
     toDownload.forEach(fileid => {
-      AppDispatcher.dispatch({
-        type: 'files/start-download',
-        data: fileid,
-        token: this.state.sessionToken
-      });
+      // AppDispatcher.dispatch({
+      //   type: 'files/start-download',
+      //   data: fileid,
+      //   token: this.state.sessionToken
+      // });
     });
 
     this.setState({ filesToDownload: toDownload });
