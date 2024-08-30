@@ -1,4 +1,21 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+/**
+ * This file is part of VILLASweb.
+ *
+ * VILLASweb is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * VILLASweb is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
+
+import React, { useState, useEffect, useCallback, useRef, act } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Fullscreenable from 'react-fullscreenable';
@@ -71,24 +88,46 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
   const [grid, setGrid] = useState(50);
   const [newHeightValue, setNewHeightValue] = useState(0);
 
+  //ics that are included in configurations
+  const [activeICS, setActiveICS] = useState([]);
 
   useEffect(() => {
-    const wsUrl = 'wss://villas.k8s.eonerc.rwth-aachen.de/ws/ws_sig';
-    dispatch(connectWebSocket({ url: wsUrl, id: 547627 }));
+    let usedICS = [];
+    for(const config of configs){
+      usedICS.push(config.icID);
+    }
+    setActiveICS(ics.filter((i) => usedICS.includes(i.id)));
+  }, [configs])
+
+  const activeSocketURLs = useSelector((state) => state.websocket.activeSocketURLs);
+
+  //connect to websockets
+  useEffect(() => {
+    activeICS.forEach((i) => {
+      if(i.websocketurl){
+        if(!activeSocketURLs.includes(i.websocketurl)) 
+          dispatch(connectWebSocket({ url: i.websocketurl, id: i.id }));
+      }
+    })
 
     return () => {
-      dispatch(disconnect());
+      activeICS.forEach((i) => {
+        dispatch(disconnect({ id: i.id }));
+      });
     };
-  }, [dispatch]);
+
+  }, [activeICS]);
 
 
+  //as soon as dashboard is loaded, load widgets, configs, signals and files for this dashboard
   useEffect(() => {
     if (dashboard.id) {
-      //as soon as dashboard is loaded, load widgets, configs, signals and files for this dashboard
       fetchWidgets(dashboard.id);
       fetchWidgetData(dashboard.scenarioID);
       setHeight(dashboard.height);
       setGrid(dashboard.grid);
+      
+      console.log('widgets', widgets);
     }
   }, [dashboard]);
 
@@ -471,8 +510,9 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
                   configs={configs}
                   signals={signals}
                   paused={paused}
-                  ics={ics}
-                  icData={[]}
+                  ics={activeICS}
+                  scenarioID={dashboard.scenarioID}
+                  onSimulationStarted={() => onSimulationStarted()}
                 />
               </WidgetContainer>
             </div>

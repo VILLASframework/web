@@ -17,7 +17,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
-import AppDispatcher from '../../common/app-dispatcher';
 
 const WidgetButton = (props) => {
   const [pressed, setPressed] = useState(props.widget.customProperties.pressed);
@@ -27,11 +26,11 @@ const WidgetButton = (props) => {
     widget.customProperties.simStartedSendValue = false;
     widget.customProperties.pressed = false;
 
-    AppDispatcher.dispatch({
-      type: 'widgets/start-edit',
-      token: props.token,
-      data: widget
-    });
+    // AppDispatcher.dispatch({
+    //   type: 'widgets/start-edit',
+    //   token: props.token,
+    //   data: widget
+    // });
 
     // Effect cleanup
     return () => {
