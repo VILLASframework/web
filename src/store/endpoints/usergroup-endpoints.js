@@ -19,6 +19,9 @@ export const usergroupEndpoints = (builder) => ({
     getUsergroups: builder.query({
       query: () => 'usergroups',
     }),
+    getUserGroupById: builder.query({
+      query: (usergroupID) => `/usergroups/${usergroupID}`,
+    }),
     addUsergroup: builder.mutation({
       query: (usergroup) => ({
         url: '/usergroups',
