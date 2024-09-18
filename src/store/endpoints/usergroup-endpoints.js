@@ -19,7 +19,7 @@ export const usergroupEndpoints = (builder) => ({
     getUsergroups: builder.query({
       query: () => 'usergroups',
     }),
-    getUserGroupById: builder.query({
+    getUsergroupById: builder.query({
       query: (usergroupID) => `/usergroups/${usergroupID}`,
     }),
     addUsergroup: builder.mutation({
@@ -30,6 +30,9 @@ export const usergroupEndpoints = (builder) => ({
           userGroup: usergroup
         },
       }),
+    }),
+    getUsersByUsergroupId: builder.query({
+      query: (usergroupID) => `/usergroups/${usergroupID}/users`,
     }),
     deleteUsergroup: builder.mutation({
       query: (usergroupID) => ({

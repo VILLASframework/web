@@ -15,8 +15,51 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-const UsergroupUsersTable = (props) => {
-    return <div></div>
+import { useGetUsersByUsergroupIdQuery } from "../../../store/apiSlice";
+import { Table, DataColumn, LinkColumn, ButtonColumn } from "../../../common/table";
+import { iconStyle, buttonStyle } from "../styles";
+import IconButton from "../../../common/buttons/icon-button";
+
+const UsergroupUsersTable = ({usergroupID}) => {
+    const {data: {users}=[], isLoading} = useGetUsersByUsergroupIdQuery(usergroupID);
+
+    const handleAddUser = () => {
+
+    }
+
+    if(isLoading) return <div>Loading...</div>;
+
+    return (<div className="section"> 
+        <h2>
+        Users
+        <span className="icon-button">
+            <IconButton
+                childKey={0}
+                tooltip="Add Users"
+                onClick={() => handleAddUser()}
+                icon="plus"
+                buttonStyle={buttonStyle}
+                iconStyle={iconStyle}
+            />
+        </span>
+        </h2>
+        <Table data={users}>
+            <DataColumn
+                title='ID'
+                dataKey='id'
+                width={70}
+            />
+            <DataColumn
+                title="Name"
+                dataKey="name"
+                width={70}
+            />
+            {/* <ButtonColumn
+            width="200"
+            align="right"
+            /> */}
+        </Table>
+    </div>);
 }
 
 export default UsergroupUsersTable;

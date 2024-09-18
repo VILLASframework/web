@@ -20,25 +20,23 @@ import { Table, DataColumn, LinkColumn } from "../../common/table";
 import { Row, Col } from "react-bootstrap";
 import UsergroupScenariosTable from "./tables/usergroup-scenarios-table";
 import UsergroupUsersTable from "./tables/usergroup-users-table";
-import { useGetUserGroupByIdQuery } from "../../store/apiSlice";
+import { useGetUsergroupByIdQuery } from "../../store/apiSlice";
 
 const Usergroup = (props) => {
     const params = useParams();
     const usergroupID = params.usergroup;
-    const {data: {usergroup} = {}, isLoading} = useGetUserGroupByIdQuery(usergroupID);
+    const {data: {usergroup} = {}, isLoading} = useGetUsergroupByIdQuery(usergroupID);
 
     if(isLoading) return <div className='loading'>Loading...</div>;
 
     return (
         <div className='section'>
             <h1>{usergroup.name}</h1>
-            <Row>
+            <Row className="mt-4">
                 <Col>
-                    <h4>Users</h4>
                     <UsergroupUsersTable usergroupID={usergroupID} />
                 </Col>
                 <Col>
-                    <h4>Scenario Mappings</h4>
                     <UsergroupScenariosTable usergroupID={usergroupID} />
                 </Col>
             </Row>

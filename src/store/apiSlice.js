@@ -109,5 +109,6 @@ export const {
   useGetUsergroupsQuery,
   useAddUsergroupMutation,
   useDeleteUsergroupMutation,
-  useGetUserGroupByIdQuery
+  useGetUsergroupByIdQuery,
+  useGetUsersByUsergroupIdQuery
 } = apiSlice;
