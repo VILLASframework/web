@@ -15,8 +15,48 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-const UsergroupScenariosTable = (props) => {
-    return <div></div>
+import { useGetUsergroupByIdQuery } from "../../../store/apiSlice";
+import { Table, DataColumn, LinkColumn, ButtonColumn } from "../../../common/table";
+import { iconStyle, buttonStyle } from "../styles";
+import IconButton from "../../../common/buttons/icon-button";
+
+const UsergroupScenariosTable = ({usergroupID}) => {
+    const {data: {usergroup} = {}, isLoading} = useGetUsergroupByIdQuery(usergroupID);
+
+    const handleAddScenarioMapping = () => {
+
+    }
+
+    const getDuplicateLabel = (duplicate) => {
+        return duplicate ? <div>yes</div> : <div>no</div>;
+    }
+
+    if(isLoading) return <div>Loading...</div>;
+
+    return (<div className="section"> 
+        <h2>
+        Scenario Mappings
+        <span className="icon-button">
+            <IconButton
+                childKey={0}
+                tooltip="Add Scenario Mapping"
+                onClick={() => handleAddScenarioMapping()}
+                icon="plus"
+                buttonStyle={buttonStyle}
+                iconStyle={iconStyle}
+            />
+        </span>
+        </h2>
+        <Table data={usergroup.scenarioMappings}>
+            <DataColumn title='ID' dataKey='id' width={70}/>
+            <LinkColumn title="Scenario ID" dataKey="scenarioID" link="/scenarios/" linkKey="id" />
+            <DataColumn title='Duplicate' dataKey='duplicate' modifier={(duplicate) => getDuplicateLabel(duplicate)}/>
+            {/* <ButtonColumn
+            width="200"
+            align="right"
+            /> */}
+        </Table>
+    </div>);
 }
 
 export default UsergroupScenariosTable;
