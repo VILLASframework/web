@@ -15,24 +15,17 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-const villasweb_values = {
-  title: 'VILLASweb',
-  subtitle: 'ACS',
-  logo: 'villas_web.svg',
-  pages: {
-    home: true,
-    scenarios: true,
-    infrastructure: true,
-    usergroups: true,
-    account: true,
-    api: true,
-  },
-  style: {
-    background: '#6EA2B0',
-    highlights: '#527984',
-    main: '#4d4d4d',
-    secondaryText: '#818181',
-  }
-}
-
-export default villasweb_values;
+export const usergroupEndpoints = (builder) => ({
+    getUsergroups: builder.query({
+      query: () => 'usergroups',
+    }),
+    addUserGroup: builder.mutation({
+      query: (usergroup) => ({
+        url: '/usergroups',
+        method: 'POST',
+        body: {
+          userGroup: usergroup
+        },
+      }),
+    }),
+});

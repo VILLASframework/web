@@ -157,6 +157,7 @@ class Branding {
       pages.scenarios = true;
       pages.infrastructure = true;
       pages.users = true;
+      pages.usergroups = true;
       pages.account = true;
       pages.api = true;
 
