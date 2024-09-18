@@ -107,5 +107,6 @@ export const {
   useLazyDownloadImageQuery,
   useUpdateComponentConfigMutation,
   useGetUsergroupsQuery,
-  useAddUserGroupMutation
+  useAddUsergroupMutation,
+  useDeleteUsergroupMutation
 } = apiSlice;

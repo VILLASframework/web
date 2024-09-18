@@ -16,24 +16,28 @@
  ******************************************************************************/
 
 import { useState } from "react";
-import { useGetUsergroupsQuery, useAddUserGroupMutation } from "../../store/apiSlice";
-import { Table, DataColumn, LinkColumn } from "../../common/table";
+import { useGetUsergroupsQuery, useAddUsergroupMutation,useDeleteUsergroupMutation } from "../../store/apiSlice";
+import { Table, DataColumn, LinkColumn, ButtonColumn } from "../../common/table";
 import IconButton from "../../common/buttons/icon-button";
 import { buttonStyle, iconStyle } from "./styles";
 import AddUsergroupDialog from "./dialogs/addUsergroupDialog";
+import DeleteDialog from "../../common/dialogs/delete-dialog";
 
 const Usergroups = (props) => {
     const {data: {usergroups} = {}, refetch: refetchUsergroups, isLoading} = useGetUsergroupsQuery();
-    const [addUserGroup] = useAddUserGroupMutation();
+    const [addUsergroup] = useAddUsergroupMutation();
+    const [deleteUsergroup] = useDeleteUsergroupMutation();
     
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [dialogUsegroup, setDialogUsergroup] = useState({});
 
     const handleAddNewGroup = async (response) => {
       if(response){
         try {
           //put data in correct structure
           const usergroup = {Name: response.name, ScenarioMappings: [{Duplicate: response.isDuplicateSelected, ScenarioID: Number(response.scenarioID)}]};
-          await addUserGroup(usergroup).unwrap();
+          await addUsergroup(usergroup).unwrap();
       
           refetchUsergroups();
         } catch (err) {
@@ -41,6 +45,20 @@ const Usergroups = (props) => {
         }
       }
       setIsAddDialogOpen(false);
+    }
+
+    const handleDeleteUsergroup = async (isConfirmed) => {
+      if(isConfirmed){
+        try{
+          await deleteUsergroup(dialogUsegroup.id);
+          refetchUsergroups();
+        } catch(error){
+          console.log('Error deleting usergroup', error)
+        }
+      }
+
+      setDialogUsergroup({});
+      setIsDeleteDialogOpen(false);
     }
     
     if(isLoading) return <div>Loading</div>;
@@ -72,9 +90,24 @@ const Usergroups = (props) => {
               link="/usergroup/"
               linkKey="id"
             />
+            <ButtonColumn
+              width="200"
+              align="right"
+              deleteButton
+              onDelete={(index) => {
+                setDialogUsergroup(usergroups[index]);
+                setIsDeleteDialogOpen(true);
+              }}
+            />
         </Table>
 
         <AddUsergroupDialog isModalOpened={isAddDialogOpen} onClose={handleAddNewGroup} />
+        <DeleteDialog
+            title="scenario"
+            name={dialogUsegroup.name}
+            show={isDeleteDialogOpen}
+            onClose={(isConfirmed) => handleDeleteUsergroup(isConfirmed)}
+          />
     </div>);
     }
 }
