@@ -108,5 +108,6 @@ export const {
   useUpdateComponentConfigMutation,
   useGetUsergroupsQuery,
   useAddUsergroupMutation,
-  useDeleteUsergroupMutation
+  useDeleteUsergroupMutation,
+  useGetUserGroupByIdQuery
 } = apiSlice;
