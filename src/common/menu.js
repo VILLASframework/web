@@ -99,6 +99,13 @@ const SideBarMenu = (props) => {
                 </NavLink>
               </li> : ''
             }
+            <li>
+              <NavLink
+                to="/usergroups"
+                title="Usegroups">
+                Usergroups
+              </NavLink>
+            </li>
             <li hidden={!values.pages.account}>
               <NavLink
                 to="/account"
@@ -156,6 +163,13 @@ const SideBarMenu = (props) => {
                 </NavLink>
               </li> : ''
             }
+            <li>
+              <NavLink
+                to="/usergroups"
+                title="Usegroups">
+                Usergroups
+              </NavLink>
+            </li>
             <li hidden={!values.pages.account}>
               <NavLink
                 to="/account"
