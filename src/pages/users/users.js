@@ -62,6 +62,10 @@ const Users = ({}) => {
         setIsNewModalOpened(false);
     }
 
+    const getIconForActiveColumn = (active) => {
+        return <Icon icon={active ? 'check' : 'times'} />
+    }
+
     const handleEditUser = async (data) => {
         if(data){
             try {
@@ -188,7 +192,7 @@ const Users = ({}) => {
                 <DataColumn title='Username' width='150' dataKey='username' />
                 <DataColumn title='E-mail' dataKey='mail'/>
                 <DataColumn title='Role' dataKey='role'/>
-                <DataColumn title='Active' dataKey='active' modifier={(active) => {}}/>
+                <DataColumn title='Active' dataKey='active' modifier={(active) => getIconForActiveColumn(active)}/>
                 <ButtonColumn
                     width='200'
                     align='right'
