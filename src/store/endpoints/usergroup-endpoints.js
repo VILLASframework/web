@@ -19,13 +19,19 @@ export const usergroupEndpoints = (builder) => ({
     getUsergroups: builder.query({
       query: () => 'usergroups',
     }),
-    addUserGroup: builder.mutation({
+    addUsergroup: builder.mutation({
       query: (usergroup) => ({
         url: '/usergroups',
         method: 'POST',
         body: {
           userGroup: usergroup
         },
+      }),
+    }),
+    deleteUsergroup: builder.mutation({
+      query: (usergroupID) => ({
+        url: `usergroups/${usergroupID}`,
+        method: 'DELETE',
       }),
     }),
 });
