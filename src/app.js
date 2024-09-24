@@ -16,6 +16,7 @@
  ******************************************************************************/
 
 import React from 'react';
+import { useRef, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend }from 'react-dnd-html5-backend';
 import NotificationSystem from 'react-notification-system';
@@ -49,19 +50,28 @@ const App = () => {
     return decodedToken.exp < timeNow;
   }
 
+  const notificationSystem = useRef(null);
+
+  useEffect(() => {
+    NotificationsDataManager.setSystem(notificationSystem.current);
+
+    return () => {
+      NotificationsDataManager.setSystem(null);
+    };
+  }, []);
+
   const { isAuthenticated, token, user } = useSelector((state) => state.auth);
 
   if (!isAuthenticated || isTokenExpired(token)) {
     console.log("APP redirecting to logout/login");
     return (<Redirect to="/logout" />);
   } else {
-
     console.log("APP rendering app");
     const pages = branding.values.pages;
 
     return (<DndProvider backend={HTML5Backend} >
       <div className="app">
-        <NotificationSystem />
+        <NotificationSystem ref={notificationSystem} />
         <Header />
 
         <div className='app-body app-body-spacing'>
