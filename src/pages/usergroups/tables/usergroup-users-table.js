@@ -15,16 +15,40 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import { useGetUsersByUsergroupIdQuery } from "../../../store/apiSlice";
+import { useState } from "react";
+import { useGetUsersByUsergroupIdQuery, useAddUserToUsergroupMutation, useDeleteUserFromUsergroupMutation  } from "../../../store/apiSlice";
 import { Table, DataColumn, LinkColumn, ButtonColumn } from "../../../common/table";
 import { iconStyle, buttonStyle } from "../styles";
 import IconButton from "../../../common/buttons/icon-button";
+import AddUserToUsergroupDialog from "../dialogs/addUserToUsergroupDialog";
+import NotificationsFactory from "../../../common/data-managers/notifications-factory";
+import notificationsDataManager from "../../../common/data-managers/notifications-data-manager";
 
 const UsergroupUsersTable = ({usergroupID}) => {
-    const {data: {users}=[], isLoading} = useGetUsersByUsergroupIdQuery(usergroupID);
+    const {data: {users}=[], isLoading, refetch} = useGetUsersByUsergroupIdQuery(usergroupID);
+    const [isAddUserDialogOpen, setIsAddUserDialogOpen] = useState(false);
+    const [addUserToUsergroup] = useAddUserToUsergroupMutation();
+    const [removeUserFromGroup] = useDeleteUserFromUsergroupMutation();
 
-    const handleAddUser = () => {
+    const handleAddUser = async (selectedUsers) => {
+        if(selectedUsers.length > 0){
+            try {
+                await Promise.all(selectedUsers.map(user => addUserToUsergroup({usergroupID: usergroupID, username: user.username}).unwrap()));
+                refetch();
+            } catch (error) {
+                console.log('Error adding users', error);
+            }
+        }
+        setIsAddUserDialogOpen(false);
+    }
 
+    const handleRemoveUser = async (user) => {
+        try{
+            await removeUserFromGroup({usergroupID: usergroupID, username: user.username}).unwrap();
+            refetch();
+        } catch(error) {
+            console.log('Error removing users', error);
+        }
     }
 
     if(isLoading) return <div>Loading...</div>;
@@ -36,7 +60,7 @@ const UsergroupUsersTable = ({usergroupID}) => {
             <IconButton
                 childKey={0}
                 tooltip="Add Users"
-                onClick={() => handleAddUser()}
+                onClick={() => setIsAddUserDialogOpen(true)}
                 icon="plus"
                 buttonStyle={buttonStyle}
                 iconStyle={iconStyle}
@@ -44,21 +68,20 @@ const UsergroupUsersTable = ({usergroupID}) => {
         </span>
         </h2>
         <Table data={users}>
-            <DataColumn
-                title='ID'
-                dataKey='id'
-                width={70}
+            <DataColumn title='ID' dataKey='id' width={70} />
+            <DataColumn title="Username" dataKey="username" width={150} />
+            <ButtonColumn
+              width="200"
+              align="right"
+              deleteButton
+              onDelete={(index) => handleRemoveUser(users[index])}
             />
-            <DataColumn
-                title="Name"
-                dataKey="name"
-                width={70}
-            />
-            {/* <ButtonColumn
-            width="200"
-            align="right"
-            /> */}
         </Table>
+        <AddUserToUsergroupDialog 
+            isModalOpened={isAddUserDialogOpen} 
+            onClose={(selectedUsers) => handleAddUser(selectedUsers)}
+            currentUsers={users}
+        />
     </div>);
 }
 
