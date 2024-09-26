@@ -23,6 +23,8 @@ import IconButton from "../../../common/buttons/icon-button";
 import AddScenarioMappingDialog from "../dialogs/addScenarioMappingDialog";
 import { useUpdateUsergroupMutation } from "../../../store/apiSlice";
 import DeleteDialog from "../../../common/dialogs/delete-dialog";
+import notificationsDataManager from "../../../common/data-managers/notifications-data-manager";
+import NotificationsFactory from "../../../common/data-managers/notifications-factory";
 
 const UsergroupScenariosTable = ({usergroupID}) => {
     const {data: {usergroup} = {}, isLoading, refetch} = useGetUsergroupByIdQuery(usergroupID);
@@ -39,8 +41,8 @@ const UsergroupScenariosTable = ({usergroupID}) => {
                 const oldMappings = usergroup.scenarioMappings.length > 0 ? [...usergroup.scenarioMappings] : [];
                 await updateUsergroup({usergroupID: usergroupID, usergroup: {name: usergroup.name, scenarioMappings: [...oldMappings, newMapping]}}).unwrap();
                 refetch();
-            } catch(error) {
-                console.log("Error updating mappings", error);
+            } catch (err) {
+                notificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR(err.data.message));
             }
         }
         setIsAddScenarioDialogOpen(false);

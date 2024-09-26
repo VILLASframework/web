@@ -24,6 +24,8 @@ import IconButton from "../../common/buttons/icon-button";
 import { buttonStyle, iconStyle } from "./styles";
 import { useGetUsergroupByIdQuery, useUpdateUsergroupMutation } from "../../store/apiSlice";
 import RenameUsergroupDialog from "./dialogs/renameGroupDialog";
+import notificationsDataManager from "../../common/data-managers/notifications-data-manager";
+import NotificationsFactory from "../../common/data-managers/notifications-factory";
 
 const Usergroup = () => {
     const params = useParams();
@@ -38,8 +40,8 @@ const Usergroup = () => {
                 //update only the name
                 await updateUsergroup({usergroupID: usergroup.id, usergroup: {name: newName, ScenarioMappings: usergroup.ScenarioMappings}}).unwrap();
                 refetch();
-            } catch (error) {
-                console.log('Error updating group', error);
+            } catch (err) {
+                notificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR(err.data.message));
             }
         }
 
