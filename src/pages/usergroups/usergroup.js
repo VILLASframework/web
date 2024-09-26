@@ -15,23 +15,55 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
+import { useState } from "react";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
-import { Table, DataColumn, LinkColumn } from "../../common/table";
 import { Row, Col } from "react-bootstrap";
 import UsergroupScenariosTable from "./tables/usergroup-scenarios-table";
 import UsergroupUsersTable from "./tables/usergroup-users-table";
-import { useGetUsergroupByIdQuery } from "../../store/apiSlice";
+import IconButton from "../../common/buttons/icon-button";
+import { buttonStyle, iconStyle } from "./styles";
+import { useGetUsergroupByIdQuery, useUpdateUsergroupMutation } from "../../store/apiSlice";
+import RenameUsergroupDialog from "./dialogs/renameGroupDialog";
 
-const Usergroup = (props) => {
+const Usergroup = () => {
     const params = useParams();
     const usergroupID = params.usergroup;
-    const {data: {usergroup} = {}, isLoading} = useGetUsergroupByIdQuery(usergroupID);
+    const {data: {usergroup} = {}, isLoading, refetch} = useGetUsergroupByIdQuery(usergroupID);
+    const [isRenameModalOpened, setIsRenameModalOpened] = useState(false);
+    const [updateUsergroup] = useUpdateUsergroupMutation();
+
+    const handleRename = async (newName) => {
+        if(newName){
+            try {
+                //update only the name
+                await updateUsergroup({usergroupID: usergroup.id, usergroup: {name: newName, ScenarioMappings: usergroup.ScenarioMappings}}).unwrap();
+                refetch();
+            } catch (error) {
+                console.log('Error updating group', error);
+            }
+        }
+
+        setIsRenameModalOpened(false);
+    }
 
     if(isLoading) return <div className='loading'>Loading...</div>;
 
     return (
         <div className='section'>
-            <h1>{usergroup.name}</h1>
+            <h1>
+                {usergroup.name}
+                <span className="icon-button">
+                    <IconButton
+                        childKey={1}
+                        tooltip='Change name'
+                        onClick={() => setIsRenameModalOpened(true)}
+                        icon='edit'
+                        buttonStyle={buttonStyle}
+                        iconStyle={iconStyle}
+                    />
+                </span>
+            </h1>
+            
             <Row className="mt-4">
                 <Col>
                     <UsergroupUsersTable usergroupID={usergroupID} />
@@ -40,6 +72,12 @@ const Usergroup = (props) => {
                     <UsergroupScenariosTable usergroupID={usergroupID} />
                 </Col>
             </Row>
+
+            <RenameUsergroupDialog 
+                isModalOpened={isRenameModalOpened} 
+                onClose={handleRename}
+                oldName={usergroup.name}
+            /> 
         </div>
     );
 }

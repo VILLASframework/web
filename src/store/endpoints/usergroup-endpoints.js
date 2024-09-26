@@ -31,6 +31,27 @@ export const usergroupEndpoints = (builder) => ({
         },
       }),
     }),
+    updateUsergroup: builder.mutation({
+      query: ({ usergroupID, usergroup }) => ({
+        url: `/usergroups/${usergroupID}`,
+        method: 'PUT',
+        body: { usergroup },
+      }),
+    }),
+    addUserToUsergroup: builder.mutation({
+      query: ({ usergroupID, username }) => ({
+        url: `/usergroups/${usergroupID}/user`,
+        method: 'PUT',
+        params: { username },
+      }),
+    }),
+    deleteUserFromUsergroup: builder.mutation({
+      query: ({ usergroupID, username }) => ({
+        url: `/usergroups/${usergroupID}/user`,
+        method: 'DELETE',
+        params: { username },
+      }),
+    }),
     getUsersByUsergroupId: builder.query({
       query: (usergroupID) => `/usergroups/${usergroupID}/users`,
     }),
