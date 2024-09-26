@@ -29,13 +29,14 @@ import { resultEndpoints } from './endpoints/result-endpoints';
 import { authEndpoints } from './endpoints/auth-endpoints';
 import { websocketEndpoints } from './endpoints/websocket-endpoints';
 import { usergroupEndpoints } from './endpoints/usergroup-endpoints';
+import { selectToken } from './authSlice';
 
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl: '/api/v2',
-    prepareHeaders: (headers) => {
-      const token = sessionToken;
+    prepareHeaders: (headers, {getState}) => {
+      const token = selectToken(getState());
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }
