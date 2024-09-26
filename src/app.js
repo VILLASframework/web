@@ -84,12 +84,6 @@ const App = () => {
               <Route exact path="/scenarios">
                 <Scenarios />
               </Route>
-              <Route path="/usergroups">
-                  <Usergroups />
-              </Route>
-              <Route path="/usergroup/:usergroup">
-                  <Usergroup />
-              </Route>
               <Route exact path="/logout">
                 <Logout />
               </Route>
@@ -114,10 +108,18 @@ const App = () => {
               </>
             : '' }
             { pages.account ? <Route path="/account"><Account /></Route> : '' }
-            { user.role === "Admin" ?
-              <Route path="/users">
-                <Users />
-              </Route>
+            { user.role === "Admin" ? 
+              <>
+                <Route path="/users">
+                  <Users />
+                </Route>
+                <Route path="/usergroups">
+                    <Usergroups />
+                </Route>
+                <Route path="/usergroup/:usergroup">
+                    <Usergroup />
+                </Route>
+              </>
             : '' }
             { user.role === "Admin" || pages.api ?
               <Route path="/api" component={APIBrowser} />
