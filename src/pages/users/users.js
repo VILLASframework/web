@@ -110,7 +110,6 @@ const Users = ({}) => {
                     await addUserToScenarioMutation({ scenarioID: scenario.id, username: users.find(u => u.id === checkedUsersIDs[i]).username }).unwrap();
                 }
             } catch (error) {
-                console.log('ERROR', error)
                 if(error.data){
                     notificationsDataManager.addNotification(NotificationsFactory.LOAD_ERROR(error.data.message));
                 } else {

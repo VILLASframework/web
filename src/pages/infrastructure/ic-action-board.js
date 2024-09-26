@@ -57,7 +57,6 @@ const ICActionBoard = (props) => {
 
   const onDelete = () => {
     checkedICsIds.forEach((id) => {
-      console.log(id)
       dispatch(deleteIC({token: sessionToken, id: id}));
     });
 
