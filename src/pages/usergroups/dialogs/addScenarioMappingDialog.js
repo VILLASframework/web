@@ -23,7 +23,6 @@ import { useGetScenariosQuery } from '../../../store/apiSlice';
 
 const AddScenarioMappingDialog = ({isDialogOpened, onClose, mappings}) => {
 
-    const [name, setName] = useState('');
     const [isValid, setIsValid] = useState(false);
     const [selectedOption, setSelectedOption] = useState('addUsersToScenario');
     const [selectedScenarioID, setSelectedScenarioID] = useState('');
