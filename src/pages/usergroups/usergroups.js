@@ -22,6 +22,7 @@ import IconButton from "../../common/buttons/icon-button";
 import { buttonStyle, iconStyle } from "./styles";
 import AddUsergroupDialog from "./dialogs/addUsergroupDialog";
 import DeleteDialog from "../../common/dialogs/delete-dialog";
+import moment from "moment";
 
 const Usergroups = (props) => {
     const {data: {usergroups} = {}, refetch: refetchUsergroups, isLoading} = useGetUsergroupsQuery();
@@ -60,6 +61,11 @@ const Usergroups = (props) => {
       setDialogUsergroup({});
       setIsDeleteDialogOpen(false);
     }
+
+    const stateUpdateModifier = (dateString) => {
+      const date = moment(dateString);
+      return `${date.fromNow()}`;
+    };
     
     if(isLoading) return <div>Loading</div>;
 
@@ -69,12 +75,12 @@ const Usergroups = (props) => {
           User Groups
           <span className="icon-button">
               <IconButton
-              childKey={0}
-              tooltip="Add Usergroup"
-              onClick={() => setIsAddDialogOpen(true)}
-              icon="plus"
-              buttonStyle={buttonStyle}
-              iconStyle={iconStyle}
+                childKey={0}
+                tooltip="Add Usergroup"
+                onClick={() => setIsAddDialogOpen(true)}
+                icon="plus"
+                buttonStyle={buttonStyle}
+                iconStyle={iconStyle}
               />
           </span>
         </h1>
@@ -90,6 +96,11 @@ const Usergroups = (props) => {
               link="/usergroup/"
               linkKey="id"
             />
+            <DataColumn
+              title='Last Update'
+              dataKey='updatedAt'
+              modifier={(updatedAt) => stateUpdateModifier(updatedAt)}
+            />
             <ButtonColumn
               width="200"
               align="right"
@@ -103,11 +114,11 @@ const Usergroups = (props) => {
 
         <AddUsergroupDialog isModalOpened={isAddDialogOpen} onClose={handleAddNewGroup} />
         <DeleteDialog
-            title="scenario"
-            name={dialogUsegroup.name}
-            show={isDeleteDialogOpen}
-            onClose={(isConfirmed) => handleDeleteUsergroup(isConfirmed)}
-          />
+          title="scenario"
+          name={dialogUsegroup.name}
+          show={isDeleteDialogOpen}
+          onClose={(isConfirmed) => handleDeleteUsergroup(isConfirmed)}
+        />
     </div>);
     }
 }

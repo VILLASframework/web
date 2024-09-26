@@ -27,6 +27,7 @@ import {Button} from "react-bootstrap";
 import NotificationsFactory from "../../../common/data-managers/notifications-factory";
 import notificationsDataManager from "../../../common/data-managers/notifications-data-manager";
 import FileSaver from "file-saver";
+import moment from "moment";
 import { 
   useGetResultsQuery,
   useAddResultMutation,
@@ -142,6 +143,11 @@ const ResultsTable = (props) => {
       setIsDeleteModalOpened(false);
       setResultToDelete({});
     }
+
+    const stateUpdateModifier = (dateString) => {
+      const date = moment(dateString);
+      return `${date.fromNow()}`;
+    };
     
     return (
         <div>
@@ -175,11 +181,13 @@ const ResultsTable = (props) => {
             <DataColumn
               title='Created at'
               dataKey='createdAt'
+              modifier={(createdAt) => stateUpdateModifier(createdAt)}
               width={200}
             />
             <DataColumn
               title='Last update'
               dataKey='updatedAt'
+              modifier={(updatedAt) => stateUpdateModifier(updatedAt)}
               width={200}
             />
             <LinkbuttonColumn
