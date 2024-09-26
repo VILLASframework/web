@@ -35,8 +35,8 @@ const UsergroupUsersTable = ({usergroupID}) => {
             try {
                 await Promise.all(selectedUsers.map(user => addUserToUsergroup({usergroupID: usergroupID, username: user.username}).unwrap()));
                 refetch();
-            } catch (error) {
-                console.log('Error adding users', error);
+            } catch (err) {
+                notificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR(err.data.message));
             }
         }
         setIsAddUserDialogOpen(false);
@@ -46,8 +46,8 @@ const UsergroupUsersTable = ({usergroupID}) => {
         try{
             await removeUserFromGroup({usergroupID: usergroupID, username: user.username}).unwrap();
             refetch();
-        } catch(error) {
-            console.log('Error removing users', error);
+        } catch (err) {
+            notificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR(err.data.message));
         }
     }
 

@@ -23,8 +23,6 @@ export const connectWebSocket = createAsyncThunk(
     'websocket/connect',
     async ({ url, id, length }, { dispatch, getState }) => {
 
-      console.log('Want to connect to', url);
-
       //check if we are already connected to this socket
       if(getState().websocket.activeSocketURLs.includes(url)) return;  
       

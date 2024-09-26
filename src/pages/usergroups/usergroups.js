@@ -23,6 +23,8 @@ import { buttonStyle, iconStyle } from "./styles";
 import AddUsergroupDialog from "./dialogs/addUsergroupDialog";
 import DeleteDialog from "../../common/dialogs/delete-dialog";
 import moment from "moment";
+import notificationsDataManager from "../../common/data-managers/notifications-data-manager";
+import NotificationsFactory from "../../common/data-managers/notifications-factory";
 
 const Usergroups = (props) => {
     const {data: {usergroups} = {}, refetch: refetchUsergroups, isLoading} = useGetUsergroupsQuery();
@@ -42,7 +44,7 @@ const Usergroups = (props) => {
       
           refetchUsergroups();
         } catch (err) {
-          console.log("Error adding usergroup: ", err);
+          notificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR(err.data.message));
         }
       }
       setIsAddDialogOpen(false);
@@ -53,8 +55,8 @@ const Usergroups = (props) => {
         try{
           await deleteUsergroup(dialogUsegroup.id);
           refetchUsergroups();
-        } catch(error){
-          console.log('Error deleting usergroup', error)
+        } catch (err) {
+          notificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR(err.data.message));
         }
       }
 
