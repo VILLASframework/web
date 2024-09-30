@@ -25,8 +25,9 @@ import DeleteDialog from "../../common/dialogs/delete-dialog";
 import moment from "moment";
 import notificationsDataManager from "../../common/data-managers/notifications-data-manager";
 import NotificationsFactory from "../../common/data-managers/notifications-factory";
+import { Spinner } from "react-bootstrap";
 
-const Usergroups = (props) => {
+const Usergroups = () => {
     const {data: {usergroups} = {}, refetch: refetchUsergroups, isLoading} = useGetUsergroupsQuery();
     const [addUsergroup] = useAddUsergroupMutation();
     const [deleteUsergroup] = useDeleteUsergroupMutation();
@@ -69,7 +70,7 @@ const Usergroups = (props) => {
       return `${date.fromNow()}`;
     };
     
-    if(isLoading) return <div>Loading</div>;
+    if(isLoading) return <Spinner />;
 
     if(usergroups){
       return (<div className="section"> 
