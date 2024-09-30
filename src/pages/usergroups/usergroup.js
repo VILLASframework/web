@@ -17,7 +17,7 @@
 
 import { useState } from "react";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Spinner } from "react-bootstrap";
 import UsergroupScenariosTable from "./tables/usergroup-scenarios-table";
 import UsergroupUsersTable from "./tables/usergroup-users-table";
 import IconButton from "../../common/buttons/icon-button";
@@ -48,7 +48,7 @@ const Usergroup = () => {
         setIsRenameModalOpened(false);
     }
 
-    if(isLoading) return <div className='loading'>Loading...</div>;
+    if(isLoading) return <Spinner />;
 
     return (
         <div className='section'>
