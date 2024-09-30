@@ -99,13 +99,6 @@ const SideBarMenu = (props) => {
                 </NavLink>
               </li> : ''
             }
-            <li>
-              <NavLink
-                to="/usergroups"
-                title="Usegroups">
-                Usergroups
-              </NavLink>
-            </li>
             <li hidden={!values.pages.account}>
               <NavLink
                 to="/account"
@@ -160,15 +153,6 @@ const SideBarMenu = (props) => {
                   className={({isActive}) => (isActive ? "active" : "")}
                   title="Users">
                   Users
-                </NavLink>
-              </li> : ''
-            }
-            {currentUser.role === 'Admin' ?
-              <li>
-                <NavLink
-                  to="/usergroups"
-                  title="Usegroups">
-                  Usergroups
                 </NavLink>
               </li> : ''
             }

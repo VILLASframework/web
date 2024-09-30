@@ -38,7 +38,6 @@ import './styles/login.css';
 import branding from './branding/branding';
 import Logout from './pages/login/logout';
 import Infrastructure from './pages/infrastructure/infrastructure';
-import Usergroups from './pages/usergroups/usergroups';
 import Usergroup from './pages/usergroups/usergroup';
 import { useSelector } from 'react-redux';
 
@@ -112,9 +111,6 @@ const App = () => {
               <>
                 <Route path="/users">
                   <Users />
-                </Route>
-                <Route path="/usergroups">
-                    <Usergroups />
                 </Route>
                 <Route path="/usergroup/:usergroup">
                     <Usergroup />
