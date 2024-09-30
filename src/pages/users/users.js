@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { Dropdown, DropdownButton, Spinner, Row, Col } from 'react-bootstrap';
 import { Table, ButtonColumn, CheckboxColumn, DataColumn } from "../../common/table";
 import Icon from "../../common/icon";
 import IconButton from "../../common/buttons/icon-button";
@@ -11,6 +11,7 @@ import DeleteDialog from "../../common/dialogs/delete-dialog";
 import { buttonStyle, iconStyle } from "./styles";
 import NotificationsFactory from "../../common/data-managers/notifications-factory";
 import notificationsDataManager from "../../common/data-managers/notifications-data-manager";
+import Usergroups from "../usergroups/usergroups";
 import { 
     useGetUsersQuery, 
     useAddUserMutation,
@@ -18,26 +19,31 @@ import {
     useDeleteUserMutation,
     useGetScenariosQuery,
     useAddUserToScenarioMutation,
+    useGetUsergroupsQuery,
+    useAddUserToUsergroupMutation
 } from "../../store/apiSlice";
 
-const Users = ({}) => {
+const Users = () => {
 
     const { user: currentUser, token: sessionToken } = useSelector((state) => state.auth);
 
     const {data: fetchedUsers, refetch: refetchUsers} = useGetUsersQuery();
     const users = fetchedUsers ? fetchedUsers.users : [];
-    const { data: fetchedScenarios } = useGetScenariosQuery();
-    const scenarios = fetchedScenarios ? fetchedScenarios.scenarios : [];
+    const { data: {scenarios} = [], isLoading: isLoadingScenarios } = useGetScenariosQuery();
+    const {data: {usergroups} = [], isLoading: isLoadingUsergroups } = useGetUsergroupsQuery();
     const [checkedUsersIDs, setCheckedUsersIDs] = useState([]);
     const [addUserMutation] = useAddUserMutation();
     const [updateUserMutation] = useUpdateUserMutation();
     const [deleteUserMutation] = useDeleteUserMutation();
     const [addUserToScenarioMutation] = useAddUserToScenarioMutation();
+    const [addUserToUsergroup] = useAddUserToUsergroupMutation();
     const [isNewModalOpened, setIsNewModalOpened] = useState(false);
     const [isEditModalOpened, setIsEditModalOpened] = useState(false);
     const [isDeleteModalOpened, setIsDeleteModalOpened] = useState(false);
     const [scenario, setScenario] = useState({name: ''});
+    const [usergroup, setUsergroup] = useState({name: ''});
     const [isUsersToScenarioModalOpened, setUsersToScenarioModalOpened] = useState(false);
+    const [isUsersToUsegroupModalOpened, setUsersToUsegroupModalOpened] = useState(false);
     const [userToEdit, setUserToEdit] = useState({});
     const [userToDelete, setUserToDelete] = useState({});
     const [areAllUsersChecked, setAreAllUsersChecked] = useState(false);
@@ -124,6 +130,28 @@ const Users = ({}) => {
         setAreAllUsersChecked(false);
     }
 
+    const handleAddUsersToUsergroup = async (isCanceled) => {
+        if(!isCanceled){
+            try {
+                for(let i = 0; i < checkedUsersIDs.length; i++){
+                    await addUserToUsergroup({ usergroupID: usergroup.id, username: users.find(u => u.id === checkedUsersIDs[i]).username }).unwrap();
+                }
+            } catch (error) {
+                if(error.data){
+                    notificationsDataManager.addNotification(NotificationsFactory.LOAD_ERROR(error.data.message));
+                } else {
+                console.log("error", error)
+                  notificationsDataManager.addNotification(NotificationsFactory.LOAD_ERROR("Unknown error"));
+                }
+            }
+        }
+        
+        setUsersToUsegroupModalOpened(false);
+        setCheckedUsersIDs([]);
+        setUsergroup({name: ''});
+        setAreAllUsersChecked(false);
+    }
+
     const toggleCheckAllUsers = () => {
         if(checkedUsersIDs.length === users.length){
             setCheckedUsersIDs([]);
@@ -207,30 +235,69 @@ const Users = ({}) => {
                     }}
                 />
             </Table>
-            <span className='solid-button'>
-                <DropdownButton
-                    title='Add to Scenario'
-                    onSelect={(id) => {
-                        let scenario;
-                        if(scenarios.length > 0) {
-                            scenario = scenarios.find(s => s.id == id);
-                        }
-                        setScenario(scenario);
-                        setUsersToScenarioModalOpened(true);
-                    }}
-                >
-                {scenarios.map(scenario => (
-                    <Dropdown.Item key={scenario.id} eventKey={scenario.id}>{scenario.name}</Dropdown.Item>
-                ))}
-                </DropdownButton>
-            </span>
 
-            <UsersToScenarioDialog
-                show={isUsersToScenarioModalOpened}
-                users={users.filter(user => checkedUsersIDs.includes(user.id))}
-                scenario={scenario.name}
-                onClose={(canceled) => handleAddUserToScenario(canceled)}
-            />
+            <Row>
+                <Col md="auto">
+                    {isLoadingScenarios? <Spinner /> : <>
+                            <span className='solid-button'>
+                                <DropdownButton
+                                    title='Add to Scenario'
+                                    onSelect={(id) => {
+                                        let scenario;
+                                        if(scenarios.length > 0) {
+                                            scenario = scenarios.find(s => s.id == id);
+                                        }
+                                        setScenario(scenario);
+                                        setUsersToScenarioModalOpened(true);
+                                    }}
+                                >
+                                {scenarios.map(scenario => (
+                                    <Dropdown.Item key={scenario.id} eventKey={scenario.id}>{scenario.name}</Dropdown.Item>
+                                ))}
+                                </DropdownButton>
+                            </span>
+                            
+
+                            <UsersToScenarioDialog
+                                show={isUsersToScenarioModalOpened}
+                                users={users.filter(user => checkedUsersIDs.includes(user.id))}
+                                scenario={scenario.name}
+                                onClose={(canceled) => handleAddUserToScenario(canceled)}
+                            />
+                    </>}
+                </Col>
+
+                <Col md="auto">
+                {isLoadingUsergroups? <Spinner /> : <>
+                        <span className='solid-button'>
+                            <DropdownButton
+                                title='Add to Usegroup'
+                                onSelect={(id) => {
+                                    let usergroup;
+                                    if(usergroups.length > 0) {
+                                        usergroup = usergroups.find(s => s.id == id);
+                                    }
+                                    setUsergroup(usergroup);
+                                    setUsersToUsegroupModalOpened(true);
+                                }}
+                            >
+                            {usergroups.map(usergroup => (
+                                <Dropdown.Item key={usergroup.id} eventKey={usergroup.id}>{usergroup.name}</Dropdown.Item>
+                            ))}
+                            </DropdownButton>
+                        </span>
+
+                        {/* re-using same modal to implement adding suers to usergroup */}
+                        <UsersToScenarioDialog
+                            show={isUsersToUsegroupModalOpened}
+                            users={users.filter(user => checkedUsersIDs.includes(user.id))}
+                            scenario={usergroup.name}
+                            onClose={(canceled) => handleAddUsersToUsergroup(canceled)}
+                        />
+                    </>}
+                </Col>
+            </Row>
+
             <NewUserDialog 
                 show={isNewModalOpened} 
                 onClose={(data) => handleAddNewUser(data)} 
@@ -246,6 +313,10 @@ const Users = ({}) => {
                 show={isDeleteModalOpened} 
                 onClose={(e) => handleDeleteUser(e)} 
             />
+
+            <div className="mt-4">
+                <Usergroups />
+            </div>
         </div>
     )
 }
