@@ -163,7 +163,7 @@ const websocketSlice = createSlice({
             inputAction.sequence++;
             inputAction.values[signalIndex] = data;
             inputAction.length = inputAction.values.length;
-            inputAction.source_index = signalID;
+            inputAction.source_index = signalIndex;
             // The previous line sets the source_index field of the message to the ID of the signal
             // so that upon loopback through VILLASrelay the value can be mapped to correct signal
     
