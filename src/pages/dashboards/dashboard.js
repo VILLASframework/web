@@ -68,6 +68,8 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
   const [widgetsToUpdate, setWidgetsToUpdate] = useState([]);
   const [configs, setConfigs] = useState([]);
   const [signals, setSignals] = useState([]);
+  const [length,setLength] = useState(0);
+  const [final,setFinal] = useState(false)
   const [sessionToken, setSessionToken] = useState(localStorage.getItem("token"));
   const [files, setFiles] = useState([]);
   const [editing, setEditing] = useState(false);
@@ -103,10 +105,12 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
 
   //connect to websockets
   useEffect(() => {
+    if(!final)
+      return
     activeICS.forEach((i) => {
       if(i.websocketurl){
         if(!activeSocketURLs.includes(i.websocketurl)) 
-          dispatch(connectWebSocket({ url: i.websocketurl, id: i.id }));
+          dispatch(connectWebSocket({ url: i.websocketurl, id: i.id ,length:length}));
       }
     })
 
@@ -116,7 +120,7 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
       });
     };
 
-  }, [activeICS]);
+  }, [activeICS,final]);
 
 
   //as soon as dashboard is loaded, load widgets, configs, signals and files for this dashboard
@@ -156,9 +160,11 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
         if(configsRes.configs.length > 0){
           for(const config of configsRes.configs){
             const signalsInRes = await triggerGetSignals({configID: config.id, direction: "in"}).unwrap();
+            setLength(signalsInRes.signals.length)
             const signalsOutRes = await triggerGetSignals({configID: config.id, direction: "out"}).unwrap();
             setSignals(prevState => ([...signalsInRes.signals, ...signalsOutRes.signals, ...prevState]));
           }
+          setFinal(true)
         }
         
       }
