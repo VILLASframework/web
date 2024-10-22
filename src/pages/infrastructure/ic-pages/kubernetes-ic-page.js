@@ -15,7 +15,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import { Col, Row } from "react-bootstrap";
+import { Col, Row,Table } from "react-bootstrap";
 import IconButton from "../../../common/buttons/icon-button";
 import RawDataTable from "../../../common/rawDataTable";
 import { useDispatch, useSelector } from "react-redux";
