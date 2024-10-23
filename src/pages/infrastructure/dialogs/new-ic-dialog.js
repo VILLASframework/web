@@ -27,7 +27,6 @@ class NewICDialog extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       name: '',
       websocketurl: '',
@@ -103,9 +102,9 @@ class NewICDialog extends React.Component {
 
   setManager(e) {
     this.setState({ [e.target.id]: e.target.value });
-
     if (this.props.managers) {
-      let schema = this.props.managers.find(m => m.uuid === e.target.value).createparameterschema
+      let manager = this.props.managers.find(m => m.uuid === e.target.value)
+      let schema = manager ? manager.createparameterschema : false
       if (schema) {
         $RefParser.dereference(schema, (err, deref) => {
           if (err) {
@@ -115,6 +114,9 @@ class NewICDialog extends React.Component {
             this.setState({schema: schema})
           }
         })
+      }
+      else{
+        this.setState({schema:{}})
       }
     }
   }
