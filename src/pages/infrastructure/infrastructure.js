@@ -77,14 +77,30 @@ const Infrastructure = () => {
                 newAction["action"] = "create";
                 newAction["parameters"] = data.parameters;
                 newAction["when"] = new Date();
-        
                 // find the manager IC
                 const managerIC = ics.find(ic => ic.uuid === data.manager)
                 if (managerIC === null || managerIC === undefined) {
                   NotificationsDataManager.addNotification(NotificationsFactory.ADD_ERROR("Could not find manager IC with UUID " + data.manager));
                   return;
                 }
-
+                switch (managerIC.type){
+                    case "kubernetes","kubernetes-simple":
+                        newAction["parameters"]["type"] = "kubernetes"
+                        newAction["parameters"]["category"] = "simulator"
+                        delete newAction.parameters.location
+                        delete newAction.parameters.description
+                        if (newAction.parameters.uuid === undefined){
+                            delete newAction.parameters.uuid
+                        }
+                        break;
+                    case "generic":
+                        // should check that the form contains following VALID MANDATORY fields:
+                        // name, type , owner,realm,ws_url,api_url,category and location <= generic create action schema
+                        break;
+                    default:
+                        NotificationsDataManager.addNotification(NotificationsFactory.ADD_ERROR("Creation not supported for manager type " + managerIC.type));
+                        return;
+                }
                 dispatch(sendActionToIC({token: sessionToken, id: managerIC.id, actions: newAction}))
             }
         }

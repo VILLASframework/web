@@ -35,7 +35,7 @@ import WidgetButton from './widgets/button';
 import WidgetInput from './widgets/input';
 import WidgetSlider from './widgets/slider';
 // import WidgetTopology from './widgets/topology';
-import WidgetPlayer from './widgets/player';
+import WidgetPlayer from './widgets/player.jsx';
 //import WidgetHTML from './widgets/html';
 import '../../../styles/widgets.css';
 import { useGetICSQuery, useGetSignalsQuery, useGetConfigsQuery } from '../../../store/apiSlice';
