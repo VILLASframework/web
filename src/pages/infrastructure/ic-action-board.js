@@ -89,7 +89,6 @@ const ICActionBoard = (props) => {
           <ActionBoardButtonGroup
             disabled={checkedICsIds.length == 0}
             onReset={() => onReset()}
-            onShutdown={() => onShutdown()}
             onDelete={() => onDelete()}
             onRecreate={() => onRecreate()}
             paused={false}
