@@ -30,7 +30,7 @@ import IconToggleButton from '../../common/buttons/icon-toggle-button';
 import WidgetContainer from "./widget/widget-container";
 import Widget from "./widget/widget";
 
-import { connectWebSocket, disconnect } from '../../store/websocketSlice';
+import { connectWebSocket, disconnect,reportLength } from '../../store/websocketSlice';
 
 import { 
   useGetDashboardQuery, 
@@ -127,7 +127,6 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
       setHeight(dashboard.height);
       setGrid(dashboard.grid);
       
-      console.log('widgets', widgets);
     }
   }, [dashboard]);
 
@@ -157,6 +156,7 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
           for(const config of configsRes.configs){
             const signalsInRes = await triggerGetSignals({configID: config.id, direction: "in"}).unwrap();
             const signalsOutRes = await triggerGetSignals({configID: config.id, direction: "out"}).unwrap();
+            dispatch(reportLength(signalsInRes.signals.length))
             setSignals(prevState => ([...signalsInRes.signals, ...signalsOutRes.signals, ...prevState]));
           }
         }
@@ -232,9 +232,10 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
   const onSimulationStarted = () => {
     widgets.forEach(async (widget) => {
       if (startUpdaterWidgets.has(widget.type)) {
-        widget.customProperties.simStartedSendValue = true;
+        let updatedWidget = structuredClone(widget)
+        updatedWidget.customProperties.simStartedSendValue = true;
         try {
-          await updateWidget({ widgetID: widget.id, updatedWidget: { widget } }).unwrap();
+          await updateWidget({ widgetID: widget.id, updatedWidget:  {widget:updatedWidget}  }).unwrap();
         } catch (err) {
           console.log('error', err);
         }

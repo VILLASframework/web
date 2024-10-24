@@ -65,8 +65,6 @@ const Infrastructure = () => {
     const onNewModalClose = (data) => {
         setIsNewModalOpened(false);
 
-        console.log("Adding ic. External: ", !data.managedexternally)
-
         if(data){
             if(!data.managedexternally){
                 dispatch(addIC({token: sessionToken, ic: data}))
@@ -84,7 +82,8 @@ const Infrastructure = () => {
                   return;
                 }
                 switch (managerIC.type){
-                    case "kubernetes","kubernetes-simple":
+                    case "kubernetes":
+                    case "kubernetes-simple":
                         newAction["parameters"]["type"] = "kubernetes"
                         newAction["parameters"]["category"] = "simulator"
                         delete newAction.parameters.location
@@ -181,7 +180,7 @@ const Infrastructure = () => {
                     category={"equipment"} 
                 />
 
-                {currentUser.role === "Admin" ? <ICActionBoard /> : null}
+                {currentUser.role === "Admin" ? <ICActionBoard externalICs={ics} /> : null}
 
             </div>
 

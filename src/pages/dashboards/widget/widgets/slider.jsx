@@ -28,28 +28,10 @@ const WidgetSlider = (props) => {
   useEffect(() => {
     let widget = { ...props.widget };
     widget.customProperties.simStartedSendValue = false;
-    // AppDispatcher.dispatch({
-    //   type: "widgets/start-edit",
-    //   token: props.token,
-    //   data: widget,
-    // });
-  }, [props.token, props.widget]);
-
-  useEffect(() => {
-    // A simulation was started, make an update
-    if (props.widget.customProperties.simStartedSendValue) {
-      let widget = { ...props.widget };
-      widget.customProperties.simStartedSendValue = false;
-      // AppDispatcher.dispatch({
-      //   type: "widgets/start-edit",
-      //   token: props.token,
-      //   data: widget,
-      // });
-
-      // Send value without changing widget
+    if(props.onInputChanged && props.signals && props.signals.length > 0){
       props.onInputChanged(widget.customProperties.value, "", "", false);
     }
-  }, [props.token, props.widget, props.onInputChanged]);
+  }, [props.widget]);
 
   useEffect(() => {
     let newValue = "";
@@ -109,7 +91,7 @@ const WidgetSlider = (props) => {
         disabled={props.editing}
         vertical={isVertical}
         onChange={valueIsChanging}
-        onAfterChange={(v) => valueChanged(v, true)}
+        onChangeComplete={(v) => valueChanged(v, true)}
       />
     ),
     value: (

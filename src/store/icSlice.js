@@ -88,7 +88,6 @@ const icSlice = createSlice({
            .addCase(loadICbyId.fulfilled, (state, action) => {
                    state.isCurrentICLoading = false
                    state.currentIC = action.payload;
-                   console.log("fetched IC", state.currentIC.name)
            })
            .addCase(addIC.rejected, (state, action) => {
                NotificationsDataManager.addNotification(NotificationsFactory.ADD_ERROR("Error while adding infrastructural component: " + action.error.message));
@@ -151,8 +150,6 @@ export const sendActionToIC = createAsyncThunk(
             const token = data.token;
             const id = data.id;
             let actions = data.actions;
-
-            console.log("actions: ", actions)
 
             if (!Array.isArray(actions))
                 actions = [ actions ]

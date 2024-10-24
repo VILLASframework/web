@@ -21,11 +21,17 @@ import villasweb_values from './villasweb/villasweb-values';
 import { slew_home, slew_welcome } from './slew/slew-functions';
 import slew_values from './slew/slew-values';
 
+import { enershare_footer, enershare_home, enershare_welcome } from './enershare/enershare-functions';
+import enershare_values from './enershare/enershare-values';
+
 import { opalrt_footer, opalrt_home, opalrt_welcome } from './opalrt/opalrt-functions';
 import opalrt_values from './opalrt/opalrt-values';
 
 import { template_welcome, template_home, template_footer } from './template/template-functions';
 import template_values from './template/template-values';
+
+import {kopernikus_home,kopernikus_welcome} from "./kopernikus/kopernikus-functions";
+import kopernikus_values from "./kopernikus/kopernikus-values";
 
 class Branding {
   constructor(brand) {
@@ -49,8 +55,14 @@ class Branding {
       case 'opalrt':
         this.values = opalrt_values;
         break;
+      case 'enershare':
+        this.values = enershare_values;
+        break;  
       case 'template':
         this.values = template_values;
+        break;
+      case 'kopernikus':
+        this.values = kopernikus_values
         break;
       default:
         console.error("Branding '" + this.brand + "' not available, will use 'villasweb' branding");
@@ -72,8 +84,14 @@ class Branding {
       case 'opalrt':
         homepage = opalrt_home(this.getTitle(), username, userid, role);
         break;
+      case 'enershare':
+        homepage = enershare_home(this.getTitle(), username, userid, role);
+        break;  
       case 'template':
         homepage = template_home();
+        break;
+      case "kopernikus":
+        homepage = kopernikus_home();
         break;
       default:
         homepage = villasweb_home(this.getTitle(), username, userid, role);
@@ -91,6 +109,9 @@ class Branding {
       case 'opalrt':
         footer = opalrt_footer();
         break;
+      case 'enershare':
+        footer = enershare_footer();
+        break;  
       default:
         footer = villasweb_footer();
         break;
@@ -110,8 +131,14 @@ class Branding {
       case 'opalrt':
         welcome = opalrt_welcome();
         break;
+      case 'enershare':
+        welcome = enershare_welcome();
+        break;  
       case 'template':
         welcome = template_welcome();
+        break;
+      case "kopernikus":
+        welcome = kopernikus_welcome();
         break;
       default:
         welcome = this.defaultWelcome();

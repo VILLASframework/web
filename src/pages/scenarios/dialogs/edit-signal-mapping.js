@@ -79,7 +79,6 @@ const ExportSignalMappingDialog = ({isShown, direction, onClose, configID}) => {
         }
 
         refetchSignals();
-        console.log(signals)
     }
 
     const handleDelete = async (signalID) => {

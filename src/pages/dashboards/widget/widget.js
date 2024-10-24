@@ -38,10 +38,8 @@ import WidgetSlider from './widgets/slider';
 import WidgetPlayer from './widgets/player.jsx';
 //import WidgetHTML from './widgets/html';
 import '../../../styles/widgets.css';
-import { useGetICSQuery, useGetSignalsQuery, useGetConfigsQuery } from '../../../store/apiSlice';
-import { sessionToken } from '../../../localStorage';
 import { useUpdateWidgetMutation } from '../../../store/apiSlice';
-import { sendMessageToWebSocket } from '../../../store/websocketSlice';
+import { initValue, sendMessageToWebSocket } from '../../../store/websocketSlice';
 import { useGetResultsQuery } from '../../../store/apiSlice';
 
 const Widget = ({widget, editing, files, configs, signals, paused, ics, scenarioID, onSimulationStarted}) => {
@@ -87,7 +85,6 @@ const Widget = ({widget, editing, files, configs, signals, paused, ics, scenario
     if (controlID !== '' && isFinalChange) {
       let updatedWidget = JSON.parse(JSON.stringify(widget));
       updatedWidget.customProperties[controlID] = controlValue;
-
       updateWidget(updatedWidget);
     }
 
@@ -95,6 +92,10 @@ const Widget = ({widget, editing, files, configs, signals, paused, ics, scenario
     let signal = signals.filter(s => s.id === signalID)
     if (signal.length === 0){
       console.warn("Unable to send signal for signal ID", signalID, ". Signal not found.");
+      return;
+    }
+    if(!isFinalChange){
+      dispatch(initValue({idx:signal[0].index,initVal:data}))
       return;
     }
     // determine ID of infrastructure component related to signal[0]
@@ -143,7 +144,6 @@ const Widget = ({widget, editing, files, configs, signals, paused, ics, scenario
                   inputDataChanged(widget, value, controlID, controlValue, isFinalChange)
               }
               signals={signals}
-              token={sessionToken}
           />
       );
   } else if (widget.type === 'NumberInput') {
@@ -155,7 +155,6 @@ const Widget = ({widget, editing, files, configs, signals, paused, ics, scenario
                   inputDataChanged(widget, value, controlID, controlValue, isFinalChange)
               }
               signals={signals}
-              token={sessionToken}
           />
       );
   } else if (widget.type === 'Slider') {
@@ -167,7 +166,6 @@ const Widget = ({widget, editing, files, configs, signals, paused, ics, scenario
                   inputDataChanged(widget, value, controlID, controlValue, isFinalChange)
               }
               signals={signals}
-              token={sessionToken}
           />
       );
   } else if (widget.type === 'Player') {
@@ -184,7 +182,7 @@ const Widget = ({widget, editing, files, configs, signals, paused, ics, scenario
       />
     );
   } else {
-      console.log('Unknown widget type', widget.type);
+      console.log('Unknown widget type', widget);
       return <div>Error: Widget not found!</div>;
   }
 }
