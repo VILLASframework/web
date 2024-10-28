@@ -20,7 +20,6 @@ import DateTimePicker from 'react-datetime-picker';
 import ActionBoardButtonGroup from '../../../common/buttons/action-board-button-group';
 import classNames from 'classnames';
 import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { sessionToken } from '../../../localStorage';
 import { useSendActionMutation, useAddResultMutation, useLazyGetSignalsQuery, useGetResultsQuery } from '../../../store/apiSlice';
 import NotificationsFactory from "../../../common/data-managers/notifications-factory";
@@ -83,7 +82,6 @@ const ConfigActionBoard = ({selectedConfigs, scenarioID}) => {
           const res = await addResult({result: newResult}).unwrap();
           
           if(!isErrorAddingResult){
-            console.log("result", res)
             const url = window.location.origin;
             action.results = {
               url: `https://slew.k8s.eonerc.rwth-aachen.de/api/v2/results/${res.result.id}/file`,

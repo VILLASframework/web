@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-
+import JSZip from 'jszip';
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col,Form } from 'react-bootstrap';
 import {sendActionToIC,loadICbyId} from "../../../../store/icSlice";
 import { sessionToken } from '../../../../localStorage';
 import IconButton from '../../../../common/buttons/icon-button';
@@ -25,20 +25,21 @@ import ParametersEditor from '../../../../common/parameters-editor';
 import ResultPythonDialog from '../../../scenarios/dialogs/result-python-dialog';
 import { playerMachine } from '../widget-player/player-machine';
 import { interpret } from 'xstate';
-import { useSendActionMutation, useLazyDownloadFileQuery, useGetResultsQuery, useGetFilesQuery } from '../../../../store/apiSlice';
+import { useAddResultMutation, useLazyDownloadFileQuery, useGetResultsQuery, useGetFilesQuery } from '../../../../store/apiSlice';
 import notificationsDataManager from '../../../../common/data-managers/notifications-data-manager';
 import NotificationsFactory from '../../../../common/data-managers/notifications-factory';
 import { start } from 'xstate/lib/actions';
+import FileSaver from "file-saver";
 import { useDispatch } from 'react-redux';
 
 const WidgetPlayer = (
   {widget, editing, configs, onStarted, ics, results, files, scenarioID}) => {
     const dispatch = useDispatch()
+    const zip = new JSZip()
     const [triggerDownloadFile] = useLazyDownloadFileQuery();
     const {refetch: refetchResults} = useGetResultsQuery(scenarioID);
     const {refetch: refetchFiles} = useGetFilesQuery(scenarioID);
-
-
+    const [addResult, {isError: isErrorAddingResult}] = useAddResultMutation();
     const [playerState, setPlayerState] = useState(playerMachine.initialState);
     const [configID, setConfigID] = useState(-1);
     const [config, setConfig] = useState({});
@@ -109,7 +110,9 @@ const WidgetPlayer = (
           case 'stopping': // if configured, show results
             if (isUploadResultsChecked) {
               refetchResults();
-              refetchFiles();
+              refetchFiles().then(v=>{
+              setFilesToDownload(v.data.files)
+              });
             }
             newState = transitionState(playerState, 'FINISH')
             setPlayerState(newState);
@@ -133,11 +136,24 @@ const WidgetPlayer = (
     }
 
     const clickStart = async () => {
-      const startConfig = { ...config };
-      startConfig.startParameters = startParameters;
-      
       try {
-        dispatch(sendActionToIC({token:sessionToken,id:config.icID,actions:[{action:"start",when:Math.round((new Date()).getTime() / 1000),parameters:{...config.startParameters}}]}))
+          let pld = {action:"start",when:Math.round((new Date()).getTime() / 1000),parameters:{...config.startParameters}}
+          if(isUploadResultsChecked){
+            addResult({result: {
+              scenarioID: scenarioID
+            }})
+            .then(v=>{
+              pld.results = {
+                url: `https://slew.k8s.eonerc.rwth-aachen.de/api/v2/results/${v.data.result.id}/file`,
+                type: "url",
+                token: sessionToken
+              }
+              dispatch(sendActionToIC({token:sessionToken,id:config.icID,actions:[pld]}))
+            })
+            .catch(e=>{
+              notificationsDataManager.addNotification(NotificationsFactory.LOAD_ERROR(e.toString()));
+            })
+          }
         //sendAction({ icid: startConfig.icID, action: "start", when: Math.round((new Date()).getTime() / 1000), parameters: {...startParameters } }).unwrap();
       } catch(error) {
         notificationsDataManager.addNotification(NotificationsFactory.LOAD_ERROR(error?.data?.message));
@@ -175,18 +191,28 @@ const WidgetPlayer = (
       }
 
       setFilesToDownload(toDownload);
-
     }
 
     const handleDownloadFile = async (fileID) => {
-      try {
-        const res = await triggerDownloadFile(fileID);
-        const file = files.find(f => f.id === fileID);
-        const blob = new Blob([res], { type: 'application/octet-stream' });
+      triggerDownloadFile(fileID)
+      .then(v=>{
+        console.log(filesToDownload)
+        const file = filesToDownload.find(f => f.id === fileID);
+        const blob = new Blob([v.data], { type: 'application/octet-stream' });
         zip.file(file.name, blob);
-      } catch (error) {
-        notificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR(error?.data?.message));
-      }
+        zip.generateAsync({ type: 'blob' })
+        .then((content) => {
+          FileSaver.saveAs(content, `result-${file.id}.zip`);
+        })
+        .catch((err) => {
+          notificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR('Failed to create ZIP archive'));
+          console.error('Failed to create ZIP archive', err);
+        });
+      })
+      .catch(e=>{
+        notificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR(e));
+      })
+        
     }
 
     const openPythonDialog = () => {
@@ -255,10 +281,21 @@ const WidgetPlayer = (
                 </span>
               </Col>
             </Row>
+            <Row className="justify-content-md-center">
+              <Col lg='auto'>
+                <Form.Group controlId="resultCheck">
+                  <Form.Check 
+                    type="checkbox" 
+                    label="Results"
+                    checked={isUploadResultsChecked}
+                    onChange={() => setIsUploadResultsChecked(prevState => !prevState)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
 
             {isUploadResultsChecked ?
               <div>
-                <p style={{ marginTop: '8px', marginBottom: '0px', textAlign: 'center' }}>Results</p>
                 <Row style={{ marginTop: '0px' }}>
                   <Col lg={{ span: 6 }}>
                     <span className='play-button'>
@@ -266,7 +303,7 @@ const WidgetPlayer = (
                         childKey={0}
                         onClick={() => openPythonDialog()}
                         icon={['fab', 'python']}
-                        disabled={(playerState && playerState.matches('finished')) ? false : true}
+                        disabled={(playerState && playerState.matches('finished')&& isUploadResultsChecked) ? false : true}
                         iconStyle={iconStyle}
                       />
                     </span>
@@ -277,7 +314,7 @@ const WidgetPlayer = (
                         childKey={1}
                         onClick={() => downloadResultFiles()}
                         icon='file-download'
-                        disabled={(playerState && playerState.matches('finished')) ? false : true}
+                        disabled={(playerState && playerState.matches('finished') ) ? false : true}
                         iconStyle={iconStyle}
                       />
                     </span>
