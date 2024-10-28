@@ -126,7 +126,9 @@ const websocketSlice = createSlice({
         }, output: {}};
     },
     disconnect: (state, action) => {
-      wsManager.disconnect(action.payload.id); // Ensure the WebSocket is disconnected
+      if(action.payload){
+        wsManager.disconnect(action.payload.id); // Ensure the WebSocket is disconnected
+      }
     },
     updateIcData: (state, action) => {
       const { id, newIcData } = action.payload;
