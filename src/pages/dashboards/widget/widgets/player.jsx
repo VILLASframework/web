@@ -17,7 +17,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import {sendActionToIC} from "../../../../store/icSlice";
+import {sendActionToIC,loadICbyId} from "../../../../store/icSlice";
 import { sessionToken } from '../../../../localStorage';
 import IconButton from '../../../../common/buttons/icon-button';
 import IconTextButton from '../../../../common/buttons/icon-text-button';
@@ -34,7 +34,6 @@ import { useDispatch } from 'react-redux';
 const WidgetPlayer = (
   {widget, editing, configs, onStarted, ics, results, files, scenarioID}) => {
     const dispatch = useDispatch()
-    const [sendAction] = useSendActionMutation();
     const [triggerDownloadFile] = useLazyDownloadFileQuery();
     const {refetch: refetchResults} = useGetResultsQuery(scenarioID);
     const {refetch: refetchFiles} = useGetFilesQuery(scenarioID);
@@ -43,39 +42,52 @@ const WidgetPlayer = (
     const [playerState, setPlayerState] = useState(playerMachine.initialState);
     const [configID, setConfigID] = useState(-1);
     const [config, setConfig] = useState({});
-    const [ic, setIC] = useState(null);
     const [icState, setICState] = useState("unknown");
     const [startParameters, setStartParameters] = useState({});
     const [playerIC, setPlayerIC] = useState({name: ""});
     const [showPythonModal, setShowPythonModal] = useState(false);
     const [showConfig, setShowConfig] = useState(false);
-    const [isUploadResultsChecked, setIsUploadResultsChecked] = useState(false);
+    const [isUploadResultsChecked, setIsUploadResultsChecked] = useState(widget.customProperties.uploadResults);
     const [resultArrayId, setResultArrayId] = useState(0);
     const [filesToDownload, setFilesToDownload] = useState([]);
-
     const [showWarning, setShowWarning] = useState(false);
     const [warningText, setWarningText] = useState("");
     const [configBtnText, setConfigBtnText] = useState("Component Configuration");
 
     const playerService = interpret(playerMachine);
     playerService.start();
+    useEffect(()=>{
+      setIsUploadResultsChecked(widget.customProperties.uploadResults)
+    },[widget.customProperties.uploadResults])
 
+    useEffect(()=>{
+      if(playerIC.name.length !== 0){
+        const refresh = async() => {
+          const res = await dispatch(loadICbyId({id: playerIC.id, token:sessionToken}));
+          setICState(res.payload.state)
+        }
+        const timer = window.setInterval(() => refresh(), 3000);
+        return () => {
+          window.clearInterval(timer);
+        };
+      }
+    },[playerIC])
+    
     useEffect(() => {
       if (typeof widget.customProperties.configID !== "undefined"
         && configID !== widget.customProperties.configID) {
           let configID = widget.customProperties.configID;
           let config = configs.find(cfg => cfg.id === parseInt(configID, 10));
           if (config) {
-            let playeric = ics.find(ic => ic.id === parseInt(config.icID, 10));
-            if (playeric) {
+            let t_playeric = ics.find(ic => ic.id === parseInt(config.icID, 10));
+            if (t_playeric) {
               var afterCreateState = '';
-              if (playeric.state === 'idle') {
+              if (t_playeric.state === 'idle') {
                 afterCreateState = transitionState(playerState, 'ICIDLE');
               } else {
                 afterCreateState = transitionState(playerState, 'ICBUSY');
               }
-              
-              setPlayerIC(playeric);
+              setPlayerIC(t_playeric);
               setConfigID(configID);
               setPlayerState(afterCreateState);
               setConfig(config);
@@ -92,27 +104,28 @@ const WidgetPlayer = (
     }, [results]);
 
     useEffect(() => {
-      if (ic && ic?.state != icState){
         var newState = "";
-        switch (ic.state) {
+        switch (icState) {
           case 'stopping': // if configured, show results
             if (isUploadResultsChecked) {
               refetchResults();
               refetchFiles();
             }
             newState = transitionState(playerState, 'FINISH')
-            return { playerState: newState, icState: ic.state }
+            setPlayerState(newState);
+            return { playerState: newState, icState: icState }
           case 'idle':
             newState = transitionState(playerState, 'ICIDLE')
-            return { playerState: newState, icState: ic.state }
+            setPlayerState(newState);
+            return { playerState: newState, icState: icState }
           default:
-            if (ic.state === 'running') {
+            if (icState === 'running') {
               onStarted()
             }
             newState = transitionState(playerState, 'ICBUSY')
-            return { playerState: newState, icState: ic.state }
+            setPlayerState(newState);
+            return { playerState: newState, icState: icState }
         }
-      }
     }, [icState]);
 
     const transitionState = (currentState, playerEvent) => {
@@ -130,7 +143,7 @@ const WidgetPlayer = (
         notificationsDataManager.addNotification(NotificationsFactory.LOAD_ERROR(error?.data?.message));
       }
       
-      setPlayerState(transitionState(playerState, 'START'));
+      
     }
 
     const clickReset = async () => {
@@ -141,6 +154,7 @@ const WidgetPlayer = (
         notificationsDataManager.addNotification(NotificationsFactory.LOAD_ERROR(error?.data?.message));
         console.log(error);
       }
+      
     }
 
     const downloadResultFiles = () => {

@@ -38,8 +38,6 @@ import WidgetSlider from './widgets/slider';
 import WidgetPlayer from './widgets/player.jsx';
 //import WidgetHTML from './widgets/html';
 import '../../../styles/widgets.css';
-import { useGetICSQuery, useGetSignalsQuery, useGetConfigsQuery } from '../../../store/apiSlice';
-import { sessionToken } from '../../../localStorage';
 import { useUpdateWidgetMutation } from '../../../store/apiSlice';
 import { sendMessageToWebSocket } from '../../../store/websocketSlice';
 import { useGetResultsQuery } from '../../../store/apiSlice';
