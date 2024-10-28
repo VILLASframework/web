@@ -22,13 +22,11 @@ import { loadICbyId } from "../../../../store/icSlice";
 import { sessionToken } from "../../../../localStorage";
 import { useDispatch } from "react-redux";
 
+let timer = null
 const WidgetICstatus = (props) => {
   const dispatch = useDispatch()
   const [ics,setIcs] = useState(props.ics)
-
-  useEffect(() => {
-    // Function to refresh data
-    const refresh = async() => {
+  const refresh = async() => {
     if (props.ics) {
       let iccs = [];
       for(let ic of props.ics){
@@ -38,10 +36,11 @@ const WidgetICstatus = (props) => {
       setIcs(iccs)
     }
   };
+  useEffect(() => {
+    window.clearInterval(timer)
+    timer = window.setInterval(refresh,3000)
+    // Function to refresh data
     refresh()
-    // Start timer for periodic refresh
-    const timer = window.setInterval(() => refresh(), 3000);
-
     // Cleanup function equivalent to componentWillUnmount
     return () => {
       window.clearInterval(timer);
