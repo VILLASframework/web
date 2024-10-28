@@ -17,7 +17,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import JSZip from 'jszip';
+import {sendActionToIC} from "../../../../store/icSlice";
+import { sessionToken } from '../../../../localStorage';
 import IconButton from '../../../../common/buttons/icon-button';
 import IconTextButton from '../../../../common/buttons/icon-text-button';
 import ParametersEditor from '../../../../common/parameters-editor';
@@ -28,10 +29,11 @@ import { useSendActionMutation, useLazyDownloadFileQuery, useGetResultsQuery, us
 import notificationsDataManager from '../../../../common/data-managers/notifications-data-manager';
 import NotificationsFactory from '../../../../common/data-managers/notifications-factory';
 import { start } from 'xstate/lib/actions';
+import { useDispatch } from 'react-redux';
 
 const WidgetPlayer = (
   {widget, editing, configs, onStarted, ics, results, files, scenarioID}) => {
-
+    const dispatch = useDispatch()
     const [sendAction] = useSendActionMutation();
     const [triggerDownloadFile] = useLazyDownloadFileQuery();
     const {refetch: refetchResults} = useGetResultsQuery(scenarioID);
@@ -81,7 +83,7 @@ const WidgetPlayer = (
             }
           }
       }
-    }, [configs]);
+    }, [configs,ics]);
 
     useEffect(() => {
       if (results && results.length != resultArrayId) {
@@ -122,7 +124,8 @@ const WidgetPlayer = (
       startConfig.startParameters = startParameters;
       
       try {
-        sendAction({ icid: startConfig.icID, action: "start", when: Math.round((new Date()).getTime() / 1000), parameters: {...startParameters } }).unwrap();
+        dispatch(sendActionToIC({token:sessionToken,id:config.icID,actions:[{action:"start",when:Math.round((new Date()).getTime() / 1000),parameters:{...config.startParameters}}]}))
+        //sendAction({ icid: startConfig.icID, action: "start", when: Math.round((new Date()).getTime() / 1000), parameters: {...startParameters } }).unwrap();
       } catch(error) {
         notificationsDataManager.addNotification(NotificationsFactory.LOAD_ERROR(error?.data?.message));
       }
@@ -132,7 +135,8 @@ const WidgetPlayer = (
 
     const clickReset = async () => {
       try {
-        sendAction({ icid: ic.id, action: "reset", when: Math.round((new Date()).getTime() / 1000), parameters: {...startParameters } }).unwrap();
+        dispatch(sendActionToIC({token:sessionToken,id:config.icID,actions:[{action:"reset",when:Math.round((new Date()).getTime() / 1000)}]}))
+        //sendAction({ icid: ic.id, action: "reset", when: Math.round((new Date()).getTime() / 1000), parameters: {...startParameters } }).unwrap();
       } catch(error) {
         notificationsDataManager.addNotification(NotificationsFactory.LOAD_ERROR(error?.data?.message));
         console.log(error);
@@ -275,7 +279,7 @@ const WidgetPlayer = (
         {showConfig && config ?
           <div className="config-box">
             <ParametersEditor
-              content={config}
+              content={startParameters}
               onChange={(data) => setStartParameters(data)}
             /></div>
           : <></>
