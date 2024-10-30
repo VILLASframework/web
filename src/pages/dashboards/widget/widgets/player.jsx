@@ -67,7 +67,7 @@ const WidgetPlayer = (
           const res = await dispatch(loadICbyId({id: playerIC.id, token:sessionToken}));
           setICState(res.payload.state)
         }
-        const timer = window.setInterval(() => refresh(), 3000);
+        const timer = window.setInterval(() => refresh(), 1000);
         return () => {
           window.clearInterval(timer);
         };
@@ -137,6 +137,7 @@ const WidgetPlayer = (
 
     const clickStart = async () => {
       try {
+          setPlayerState(transitionState(playerState, 'ICBUSY'));
           let pld = {action:"start",when:Math.round((new Date()).getTime() / 1000),parameters:{...config.startParameters}}
           if(isUploadResultsChecked){
             addResult({result: {
@@ -161,8 +162,6 @@ const WidgetPlayer = (
       } catch(error) {
         notificationsDataManager.addNotification(NotificationsFactory.LOAD_ERROR(error?.data?.message));
       }
-      
-      
     }
 
     const clickReset = async () => {
