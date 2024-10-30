@@ -75,10 +75,12 @@ const WidgetPlayer = (
     },[playerIC])
     
     useEffect(() => {
+      console.log(widget.customProperties.configID)
       if (typeof widget.customProperties.configID !== "undefined"
         && configID !== widget.customProperties.configID) {
           let configID = widget.customProperties.configID;
           let config = configs.find(cfg => cfg.id === parseInt(configID, 10));
+          console.log(configID)
           if (config) {
             let t_playeric = ics.find(ic => ic.id === parseInt(config.icID, 10));
             if (t_playeric) {
