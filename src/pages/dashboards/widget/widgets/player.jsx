@@ -154,6 +154,9 @@ const WidgetPlayer = (
               notificationsDataManager.addNotification(NotificationsFactory.LOAD_ERROR(e.toString()));
             })
           }
+          else{
+            dispatch(sendActionToIC({token:sessionToken,id:config.icID,actions:[pld]}))
+          }
         //sendAction({ icid: startConfig.icID, action: "start", when: Math.round((new Date()).getTime() / 1000), parameters: {...startParameters } }).unwrap();
       } catch(error) {
         notificationsDataManager.addNotification(NotificationsFactory.LOAD_ERROR(error?.data?.message));
