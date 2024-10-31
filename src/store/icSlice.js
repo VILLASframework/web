@@ -151,8 +151,6 @@ export const sendActionToIC = createAsyncThunk(
             const id = data.id;
             let actions = data.actions;
 
-            console.log("actions: ", actions)
-
             if (!Array.isArray(actions))
                 actions = [ actions ]
 
