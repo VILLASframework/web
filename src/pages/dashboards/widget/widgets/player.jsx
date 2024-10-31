@@ -25,7 +25,7 @@ import ParametersEditor from '../../../../common/parameters-editor';
 import ResultPythonDialog from '../../../scenarios/dialogs/result-python-dialog';
 import { playerMachine } from '../widget-player/player-machine';
 import { interpret } from 'xstate';
-import { useAddResultMutation, useLazyDownloadFileQuery, useGetResultsQuery, useGetFilesQuery } from '../../../../store/apiSlice';
+import { useAddResultMutation, useLazyDownloadFileQuery, useGetResultsQuery, useGetFilesQuery,useUpdateComponentConfigMutation } from '../../../../store/apiSlice';
 import notificationsDataManager from '../../../../common/data-managers/notifications-data-manager';
 import NotificationsFactory from '../../../../common/data-managers/notifications-factory';
 import { start } from 'xstate/lib/actions';
@@ -38,6 +38,7 @@ const WidgetPlayer = (
     const zip = new JSZip()
     const [triggerDownloadFile] = useLazyDownloadFileQuery();
     const {refetch: refetchResults} = useGetResultsQuery(scenarioID);
+    const [updateComponentConfig] = useUpdateComponentConfigMutation();
     const {refetch: refetchFiles} = useGetFilesQuery(scenarioID);
     const [addResult, {isError: isErrorAddingResult}] = useAddResultMutation();
     const [playerState, setPlayerState] = useState(playerMachine.initialState);
@@ -173,6 +174,24 @@ const WidgetPlayer = (
         console.log(error);
       }
       
+    }
+
+    const updateStartParameters = async (data)=>{
+      let copy = structuredClone(config)
+      copy.startParameters = data
+      if (copy.fileIDs === null){
+        copy.fileIDs = []
+      }
+      console.log(copy)
+      const newConf = {id: config.id, config: {config:copy}}
+      updateComponentConfig(newConf)
+      .then(v=>{
+        setStartParameters(data)
+        notificationsDataManager.addNotification(NotificationsFactory.ACTION_INFO());
+      })
+      .catch((error)=>{
+        notificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR(error?.data?.message));
+      })
     }
 
     const downloadResultFiles = () => {
@@ -332,7 +351,7 @@ const WidgetPlayer = (
           <div className="config-box">
             <ParametersEditor
               content={startParameters}
-              onChange={(data) => setStartParameters(data)}
+              onChange={(data) => updateStartParameters(data)}
             /></div>
           : <></>
         }
