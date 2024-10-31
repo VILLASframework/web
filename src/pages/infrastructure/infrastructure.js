@@ -65,8 +65,6 @@ const Infrastructure = () => {
     const onNewModalClose = (data) => {
         setIsNewModalOpened(false);
 
-        console.log("Adding ic. External: ", !data.managedexternally)
-
         if(data){
             if(!data.managedexternally){
                 dispatch(addIC({token: sessionToken, ic: data}))

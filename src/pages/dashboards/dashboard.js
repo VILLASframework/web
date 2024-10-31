@@ -127,7 +127,6 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
       setHeight(dashboard.height);
       setGrid(dashboard.grid);
       
-      console.log('widgets', widgets);
     }
   }, [dashboard]);
 

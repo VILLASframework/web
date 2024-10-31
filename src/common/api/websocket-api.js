@@ -58,7 +58,6 @@ class WebSocketManager {
     if (socket == null) {
       return false;
     }
-    console.log("Sending to IC", id, "message: ", message);
     const data = this.messageToBuffer(message);
     socket.socket.send(data);
 
