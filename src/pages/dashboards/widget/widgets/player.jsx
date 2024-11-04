@@ -139,7 +139,7 @@ const WidgetPlayer = (
     const clickStart = async () => {
       try {
           setPlayerState(transitionState(playerState, 'ICBUSY'));
-          let pld = {action:"start",when:Math.round((new Date()).getTime() / 1000),parameters:{...config.startParameters}}
+          let pld = {action:"start",when:Math.round((new Date()).getTime() / 1000),parameters:{...startParameters}}
           if(isUploadResultsChecked){
             addResult({result: {
               scenarioID: scenarioID
