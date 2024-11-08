@@ -16,8 +16,17 @@
  ******************************************************************************/
 
 import { useState } from "react";
-import { useGetUsergroupsQuery, useAddUsergroupMutation,useDeleteUsergroupMutation } from "../../store/apiSlice";
-import { Table, DataColumn, LinkColumn, ButtonColumn } from "../../common/table";
+import {
+  useGetUsergroupsQuery,
+  useAddUsergroupMutation,
+  useDeleteUsergroupMutation,
+} from "../../store/apiSlice";
+import {
+  Table,
+  DataColumn,
+  LinkColumn,
+  ButtonColumn,
+} from "../../common/table";
 import IconButton from "../../common/buttons/icon-button";
 import { buttonStyle, iconStyle } from "./styles";
 import AddUsergroupDialog from "./dialogs/addUsergroupDialog";
@@ -28,102 +37,114 @@ import NotificationsFactory from "../../common/data-managers/notifications-facto
 import { Spinner } from "react-bootstrap";
 
 const Usergroups = () => {
-    const {data: {usergroups} = {}, refetch: refetchUsergroups, isLoading} = useGetUsergroupsQuery();
-    const [addUsergroup] = useAddUsergroupMutation();
-    const [deleteUsergroup] = useDeleteUsergroupMutation();
-    
-    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-    const [dialogUsegroup, setDialogUsergroup] = useState({});
+  const {
+    data: { usergroups } = {},
+    refetch: refetchUsergroups,
+    isLoading,
+  } = useGetUsergroupsQuery();
+  const [addUsergroup] = useAddUsergroupMutation();
+  const [deleteUsergroup] = useDeleteUsergroupMutation();
 
-    const handleAddNewGroup = async (response) => {
-      if(response){
-        try {
-          //put data in correct structure
-          const usergroup = {Name: response.name, ScenarioMappings: [{Duplicate: response.isDuplicateSelected, ScenarioID: Number(response.scenarioID)}]};
-          await addUsergroup(usergroup).unwrap();
-      
-          refetchUsergroups();
-        } catch (err) {
-          notificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR(err.data.message));
-        }
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [dialogUsegroup, setDialogUsergroup] = useState({});
+
+  const handleAddNewGroup = async (response) => {
+    if (response) {
+      try {
+        //put data in correct structure
+        const usergroup = {
+          name: response.name,
+          scenarioMappings: response.scenarioMappings,
+        };
+        await addUsergroup(usergroup).unwrap();
+
+        refetchUsergroups();
+      } catch (err) {
+        notificationsDataManager.addNotification(
+          NotificationsFactory.UPDATE_ERROR(err.data.message)
+        );
       }
-      setIsAddDialogOpen(false);
+    }
+    setIsAddDialogOpen(false);
+  };
+
+  const handleDeleteUsergroup = async (isConfirmed) => {
+    if (isConfirmed) {
+      try {
+        await deleteUsergroup(dialogUsegroup.id);
+        refetchUsergroups();
+      } catch (err) {
+        notificationsDataManager.addNotification(
+          NotificationsFactory.UPDATE_ERROR(err.data.message)
+        );
+      }
     }
 
-    const handleDeleteUsergroup = async (isConfirmed) => {
-      if(isConfirmed){
-        try{
-          await deleteUsergroup(dialogUsegroup.id);
-          refetchUsergroups();
-        } catch (err) {
-          notificationsDataManager.addNotification(NotificationsFactory.UPDATE_ERROR(err.data.message));
-        }
-      }
+    setDialogUsergroup({});
+    setIsDeleteDialogOpen(false);
+  };
 
-      setDialogUsergroup({});
-      setIsDeleteDialogOpen(false);
-    }
+  const stateUpdateModifier = (dateString) => {
+    const date = moment(dateString);
+    return `${date.fromNow()}`;
+  };
 
-    const stateUpdateModifier = (dateString) => {
-      const date = moment(dateString);
-      return `${date.fromNow()}`;
-    };
-    
-    if(isLoading) return <Spinner />;
+  if (isLoading) return <Spinner />;
 
-    if(usergroups){
-      return (<div className="section"> 
+  if (usergroups) {
+    return (
+      <div className="section">
         <h1>
           User Groups
           <span className="icon-button">
-              <IconButton
-                childKey={0}
-                tooltip="Add Usergroup"
-                onClick={() => setIsAddDialogOpen(true)}
-                icon="plus"
-                buttonStyle={buttonStyle}
-                iconStyle={iconStyle}
-              />
+            <IconButton
+              childKey={0}
+              tooltip="Add Usergroup"
+              onClick={() => setIsAddDialogOpen(true)}
+              icon="plus"
+              buttonStyle={buttonStyle}
+              iconStyle={iconStyle}
+            />
           </span>
         </h1>
         <Table data={usergroups}>
-            <DataColumn
-              title='ID'
-              dataKey='id'
-              width={70}
-            />
-            <LinkColumn
-              title="Name"
-              dataKey="name"
-              link="/usergroup/"
-              linkKey="id"
-            />
-            <DataColumn
-              title='Last Update'
-              dataKey='updatedAt'
-              modifier={(updatedAt) => stateUpdateModifier(updatedAt)}
-            />
-            <ButtonColumn
-              width="200"
-              align="right"
-              deleteButton
-              onDelete={(index) => {
-                setDialogUsergroup(usergroups[index]);
-                setIsDeleteDialogOpen(true);
-              }}
-            />
+          <DataColumn title="ID" dataKey="id" width={70} />
+          <LinkColumn
+            title="Name"
+            dataKey="name"
+            link="/usergroup/"
+            linkKey="id"
+          />
+          <DataColumn
+            title="Last Update"
+            dataKey="updatedAt"
+            modifier={(updatedAt) => stateUpdateModifier(updatedAt)}
+          />
+          <ButtonColumn
+            width="200"
+            align="right"
+            deleteButton
+            onDelete={(index) => {
+              setDialogUsergroup(usergroups[index]);
+              setIsDeleteDialogOpen(true);
+            }}
+          />
         </Table>
 
-        <AddUsergroupDialog isModalOpened={isAddDialogOpen} onClose={handleAddNewGroup} />
+        <AddUsergroupDialog
+          isModalOpened={isAddDialogOpen}
+          onClose={handleAddNewGroup}
+        />
         <DeleteDialog
           title="scenario"
           name={dialogUsegroup.name}
           show={isDeleteDialogOpen}
           onClose={(isConfirmed) => handleDeleteUsergroup(isConfirmed)}
         />
-    </div>);
-    }
-}
+      </div>
+    );
+  }
+};
 
 export default Usergroups;
