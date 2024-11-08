@@ -56,7 +56,6 @@ const Infrastructure = () => {
   useEffect(() => {
     //start a timer for periodic refresh
     let timer = window.setInterval(() => refetchICs(), 10000);
-
     return () => {
       window.clearInterval(timer);
     };

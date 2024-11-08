@@ -18,36 +18,40 @@
 import React, { useState, useEffect } from "react";
 import { Badge } from "react-bootstrap";
 import {stateLabelStyle} from "../../../infrastructure/styles";
+import { loadICbyId } from "../../../../store/icSlice";
+import { sessionToken } from "../../../../localStorage";
+import { useDispatch } from "react-redux";
 
+let timer = null
 const WidgetICstatus = (props) => {
-  const [sessionToken, setSessionToken] = useState(
-    localStorage.getItem("token")
-  );
-
-  useEffect(() => {
-    // Function to refresh data
-    const refresh = () => {
-      if (props.ics) {
-        props.ics.forEach((ic) => {
-          let icID = parseInt(ic.id, 10);
-        });
+  const dispatch = useDispatch()
+  const [ics,setIcs] = useState(props.ics)
+  const refresh = async() => {
+    if (props.ics) {
+      let iccs = [];
+      for(let ic of props.ics){
+        const res = await dispatch(loadICbyId({id: ic.id, token:sessionToken}));
+        iccs.push(res.payload)
       }
-    };
-
-    // Start timer for periodic refresh
-    const timer = window.setInterval(() => refresh(), 3000);
-
+      setIcs(iccs)
+    }
+  };
+  useEffect(() => {
+    window.clearInterval(timer)
+    timer = window.setInterval(refresh,3000)
+    // Function to refresh data
+    refresh()
     // Cleanup function equivalent to componentWillUnmount
     return () => {
       window.clearInterval(timer);
     };
-  }, [props.ics, sessionToken]);
+  }, [props.ics]);
 
   let badges = [];
   let checkedICs = props.widget ? props.widget.customProperties.checkedIDs : [];
 
   if (props.ics && checkedICs) {
-    badges = props.ics
+    badges = ics
       .filter((ic) => checkedICs.includes(ic.id))
       .map((ic) => {
         let badgeStyle = stateLabelStyle(ic.state, ic);
