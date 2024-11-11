@@ -19,13 +19,13 @@ import { Form, Row, Col } from 'react-bootstrap';
 import DateTimePicker from 'react-datetime-picker';
 import ActionBoardButtonGroup from '../../common/buttons/action-board-button-group';
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { sessionToken } from '../../localStorage';
-import { clearCheckedICs, deleteIC, sendActionToIC } from '../../store/icSlice';
+import { clearCheckedICs, deleteIC, loadICbyId, sendActionToIC } from '../../store/icSlice';
 import { useGetICSQuery } from '../../store/apiSlice';
 
-const ICActionBoard = (props) => {
+const ICActionBoard = ({externalICs}) => {
   const dispatch = useDispatch();
   const {refetch: refetchICs} = useGetICSQuery();
   const checkedICsIds = useSelector(state => state.infrastructure.checkedICsIds);
@@ -45,14 +45,26 @@ const ICActionBoard = (props) => {
     });
   }
 
-  const onRecreate = () => {
+  const onRecreate =() => {
+    console.log(externalICs)
     let newAction = {};
     newAction['action'] = 'create';
     newAction['when'] = time;
-
-    checkedICsIds.forEach((id) => {
-      dispatch(sendActionToIC({token: sessionToken, id: id, actions: newAction}));
-    });
+    for (let checkedIC of checkedICsIds){
+      let IC = externalICs.find(e=>{
+        return e.id == checkedIC
+      })
+      if(IC){
+        let manager = externalICs.find(e=>{
+          return e.uuid == IC.manager
+        })
+        if(manager){
+          newAction['parameters'] = IC.properties ? IC.properties : IC.statusupdateraw.properties
+          dispatch(sendActionToIC({token:sessionToken,id:manager.id,actions:newAction}))
+        }
+        
+      }
+    }
   }
 
   const onDelete = () => {
