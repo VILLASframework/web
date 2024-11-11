@@ -179,7 +179,7 @@ const Infrastructure = () => {
                     category={"equipment"} 
                 />
 
-                {currentUser.role === "Admin" ? <ICActionBoard /> : null}
+                {currentUser.role === "Admin" ? <ICActionBoard externalICs={ics} /> : null}
 
             </div>
 
