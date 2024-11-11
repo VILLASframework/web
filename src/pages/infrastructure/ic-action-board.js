@@ -46,7 +46,6 @@ const ICActionBoard = ({externalICs}) => {
   }
 
   const onRecreate =() => {
-    console.log(externalICs)
     let newAction = {};
     newAction['action'] = 'create';
     newAction['when'] = time;
