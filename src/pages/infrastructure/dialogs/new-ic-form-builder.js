@@ -98,7 +98,7 @@ const FormFromParameterSchema = forwardRef(
             //filter the type and category fields as they are always in the parent form
 
             if (key != "type" || key != "category") {
-              //right now only text field and checkbox are supported. Text filed is default
+              //right now only text field and checkbox are supported. Text field is default
               return property.type != "boolean" ? (
                 <Form.Group key={key} controlId={key}>
                   {isRequired ? (
