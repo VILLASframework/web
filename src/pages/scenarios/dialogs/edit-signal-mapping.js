@@ -7,7 +7,7 @@ import Icon from "../../../common/icon";
 import { useGetSignalsQuery, useAddSignalMutation, useDeleteSignalMutation, useUpdateSignalMutation } from "../../../store/apiSlice";
 import { Collapse } from 'react-collapse';
 
-const ExportSignalMappingDialog = ({isShown, direction, onClose, configID}) => {
+const EditSignalMappingDialog = ({isShown, direction, onClose, configID}) => {
 
     const [isCollapseOpened, setCollapseOpened] = useState(false);
     const [checkedSignalsIDs, setCheckedSignalsIDs] = useState([]);
@@ -256,4 +256,4 @@ const ExportSignalMappingDialog = ({isShown, direction, onClose, configID}) => {
     return isShown ? DialogWindow : <></>
 }
 
-export default ExportSignalMappingDialog;
+export default EditSignalMappingDialog;
