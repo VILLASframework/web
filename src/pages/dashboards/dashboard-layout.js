@@ -83,10 +83,47 @@ const DashboardLayout = ({ isFullscreen, toggleFullscreen }) => {
     }
   }, [widgets]);
 
+  const fetchWidgetData = async (scenarioID) => {
+    try {
+      const configsRes = await triggerGetConfigs(scenarioID).unwrap();
+      if (configsRes.configs) {
+        setConfigs(configsRes.configs);
+        //load signals if there are any configs
+
+        if (configsRes.configs.length > 0) {
+          for (const config of configsRes.configs) {
+            const signalsInRes = await triggerGetSignals({
+              configID: config.id,
+              direction: "in",
+            }).unwrap();
+            const signalsOutRes = await triggerGetSignals({
+              configID: config.id,
+              direction: "out",
+            }).unwrap();
+            setSignals((prevState) => [
+              ...signalsInRes.signals,
+              ...signalsOutRes.signals,
+              ...prevState,
+            ]);
+          }
+        }
+      }
+    } catch (err) {
+      console.log("error fetching data", err);
+    }
+  };
+
   const [gridParameters, setGridParameters] = useState({
     height: 10,
     grid: 50,
   });
+
+  useEffect(() => {
+    if (!isFetchingDashboard) {
+      setGridParameters({ height: dashboard.height, grid: dashboard.grid });
+      fetchWidgetData(dashboard.scenarioID);
+    }
+  }, [isFetchingDashboard]);
 
   const boxClasses = classNames("section", "box", {
     "fullscreen-padding": isFullscreen,
