@@ -1,6 +1,6 @@
 import React from "react";
 
-class DashboardErrorBoundary extends React.Component {
+class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false };
@@ -27,4 +27,4 @@ class DashboardErrorBoundary extends React.Component {
   }
 }
 
-export default DashboardErrorBoundary;
+export default ErrorBoundary;
