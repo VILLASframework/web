@@ -15,11 +15,11 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import Dropzone from './dropzone';
-import Grid from './grid';
-import WidgetFactory from './widget/widget-factory';
+import React from "react";
+import PropTypes from "prop-types";
+import Dropzone from "./dropzone";
+import Grid from "./grid";
+import WidgetFactory from "../widget/widget-factory";
 
 class WidgetArea extends React.Component {
   snapToGrid(value) {
@@ -39,23 +39,24 @@ class WidgetArea extends React.Component {
     if (this.props.onWidgetAdded != null) {
       this.props.onWidgetAdded(widget);
     }
-  }
+  };
 
   render() {
+    return (
+      <Dropzone
+        height={this.props.dropZoneHeight}
+        onDrop={this.handleDrop}
+        editing={this.props.editing}
+        widgets={this.props.widgets}
+      >
+        {this.props.children}
 
-    return <Dropzone
-      height={this.props.dropZoneHeight}
-      onDrop={this.handleDrop}
-      editing={this.props.editing}
-      widgets={this.props.widgets}
-    >
-      {this.props.children}
-
-      <Grid
-        size={this.props.grid}
-        disabled={this.props.grid === 1 || this.props.editing !== true}
-      />
-    </Dropzone>;
+        <Grid
+          size={this.props.grid}
+          disabled={this.props.grid === 1 || this.props.editing !== true}
+        />
+      </Dropzone>
+    );
   }
 }
 
@@ -64,11 +65,11 @@ WidgetArea.propTypes = {
   editing: PropTypes.bool,
   grid: PropTypes.number,
   //widgets: PropTypes.array,
-  onWidgetAdded: PropTypes.func
+  onWidgetAdded: PropTypes.func,
 };
 
 WidgetArea.defaultProps = {
-  widgets: {}
+  widgets: {},
 };
 
 export default WidgetArea;
