@@ -15,30 +15,30 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { sessionToken } from '../localStorage';
-import { widgetEndpoints } from './endpoints/widget-endpoints';
-import { scenarioEndpoints } from './endpoints/scenario-endpoints';
-import { dashboardEndpoints } from './endpoints/dashboard-endpoints';
-import { icEndpoints } from './endpoints/ic-endpoints';
-import { configEndpoints } from './endpoints/config-endpoints';
-import { userEndpoints } from './endpoints/user-endpoints';
-import { fileEndpoints } from './endpoints/file-endpoints';
-import { signalEndpoints } from './endpoints/signal-endpoints';
-import { resultEndpoints } from './endpoints/result-endpoints';
-import { authEndpoints } from './endpoints/auth-endpoints';
-import { websocketEndpoints } from './endpoints/websocket-endpoints';
-import { usergroupEndpoints } from './endpoints/usergroup-endpoints';
-import { selectToken } from './authSlice';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { sessionToken } from "../localStorage";
+import { widgetEndpoints } from "./endpoints/widget-endpoints";
+import { scenarioEndpoints } from "./endpoints/scenario-endpoints";
+import { dashboardEndpoints } from "./endpoints/dashboard-endpoints";
+import { icEndpoints } from "./endpoints/ic-endpoints";
+import { configEndpoints } from "./endpoints/config-endpoints";
+import { userEndpoints } from "./endpoints/user-endpoints";
+import { fileEndpoints } from "./endpoints/file-endpoints";
+import { signalEndpoints } from "./endpoints/signal-endpoints";
+import { resultEndpoints } from "./endpoints/result-endpoints";
+import { authEndpoints } from "./endpoints/auth-endpoints";
+import { websocketEndpoints } from "./endpoints/websocket-endpoints";
+import { usergroupEndpoints } from "./endpoints/usergroup-endpoints";
+import { selectToken } from "./authSlice";
 
 export const apiSlice = createApi({
-  reducerPath: 'api',
+  reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: '/api/v2',
-    prepareHeaders: (headers, {getState}) => {
+    baseUrl: "/api/v2",
+    prepareHeaders: (headers, { getState }) => {
       const token = selectToken(getState());
       if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
+        headers.set("Authorization", `Bearer ${token}`);
       }
       return headers;
     },
@@ -59,14 +59,14 @@ export const apiSlice = createApi({
   }),
 });
 
-export const { 
-  useGetScenariosQuery, 
-  useGetScenarioByIdQuery, 
-  useGetConfigsQuery, 
+export const {
+  useGetScenariosQuery,
+  useGetScenarioByIdQuery,
+  useGetConfigsQuery,
   useLazyGetConfigsQuery,
-  useGetDashboardsQuery, 
+  useGetDashboardsQuery,
   useGetICSQuery,
-  useAddScenarioMutation,   
+  useAddScenarioMutation,
   useDeleteScenarioMutation,
   useUpdateScenarioMutation,
   useGetUsersOfScenarioQuery,
@@ -114,5 +114,6 @@ export const {
   useGetUsersByUsergroupIdQuery,
   useAddUserToUsergroupMutation,
   useDeleteUserFromUsergroupMutation,
-  useUpdateUsergroupMutation
+  useUpdateUsergroupMutation,
+  useGetWidgetsQuery,
 } = apiSlice;
