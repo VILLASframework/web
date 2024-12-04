@@ -39,15 +39,6 @@ import {
 } from "./template/template-functions";
 import template_values from "./template/template-values";
 
-import {
-  kopernikus_home,
-  kopernikus_welcome,
-} from "./kopernikus/kopernikus-functions";
-import kopernikus_values from "./kopernikus/kopernikus-values";
-
-import {kopernikus_home,kopernikus_welcome} from "./kopernikus/kopernikus-functions";
-import kopernikus_values from "./kopernikus/kopernikus-values";
-
 class Branding {
   constructor(brand) {
     this.brand = brand;
@@ -72,9 +63,6 @@ class Branding {
         break;
       case "template":
         this.values = template_values;
-        break;
-      case "kopernikus":
-        this.values = kopernikus_values;
         break;
       default:
         console.error(
@@ -102,9 +90,6 @@ class Branding {
         break;
       case "template":
         homepage = template_home();
-        break;
-      case "kopernikus":
-        homepage = kopernikus_home();
         break;
       default:
         homepage = villasweb_home(this.getTitle(), username, userid, role);
@@ -147,10 +132,6 @@ class Branding {
       case "template":
         welcome = template_welcome();
         break;
-      case "kopernikus":
-        welcome = kopernikus_welcome();
-        break;
-
       default:
         welcome = this.defaultWelcome();
         break;
