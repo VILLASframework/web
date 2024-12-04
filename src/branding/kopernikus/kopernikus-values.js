@@ -16,28 +16,28 @@
  ******************************************************************************/
 
 const kopernikus_values = {
-    title: "Kopernikus Projekte",
-    subtitle: "ENSURE",
-    logo: "kopernikus_logo.jpg",
-    pages: {
-      home: true,
-      scenarios: true,
-      infrastructure: false,
-      account: false,
-      api: false,
-    },
-    links: {
-      "DPsim Simulator": "https://dpsim.fein-aachen.org",
-      VILLASframework: "https://villas.fein-aachen.org/doc",
-    },
-    style: {
-      background: "rgba(189, 195, 199 , 1)",
-      highlights: "rgba(2,36,97, 0.75)",
-      main: "rgba(80,80,80, 1)",
-      secondaryText: "rgba(80,80,80, 0.9)",
-      fontFamily: "Roboto, sans-serif",
-      borderRadius: "10px",
-    },
-  };
-  
-  export default kopernikus_values;
+  title: "Kopernikus Projekte",
+  subtitle: "ENSURE",
+  logo: "kopernikus_logo.jpg",
+  pages: {
+    home: true,
+    scenarios: true,
+    infrastructure: false,
+    account: false,
+    api: false,
+  },
+  links: {
+    "DPsim Simulator": "https://dpsim.fein-aachen.org",
+    VILLASframework: "https://villas.fein-aachen.org/doc",
+  },
+  style: {
+    background: "rgba(189, 195, 199 , 1)",
+    highlights: "rgba(2,36,97, 0.75)",
+    main: "rgba(80,80,80, 1)",
+    secondaryText: "rgba(80,80,80, 0.9)",
+    fontFamily: "Roboto, sans-serif",
+    borderRadius: "10px",
+  },
+};
+
+export default kopernikus_values;

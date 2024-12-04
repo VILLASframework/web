@@ -39,6 +39,12 @@ import {
 } from "./template/template-functions";
 import template_values from "./template/template-values";
 
+import {
+  kopernikus_home,
+  kopernikus_welcome,
+} from "./kopernikus/kopernikus-functions";
+import kopernikus_values from "./kopernikus/kopernikus-values";
+
 import {kopernikus_home,kopernikus_welcome} from "./kopernikus/kopernikus-functions";
 import kopernikus_values from "./kopernikus/kopernikus-values";
 
@@ -67,8 +73,8 @@ class Branding {
       case "template":
         this.values = template_values;
         break;
-      case 'kopernikus':
-        this.values = kopernikus_values
+      case "kopernikus":
+        this.values = kopernikus_values;
         break;
       default:
         console.error(
@@ -144,6 +150,7 @@ class Branding {
       case "kopernikus":
         welcome = kopernikus_welcome();
         break;
+
       default:
         welcome = this.defaultWelcome();
         break;
