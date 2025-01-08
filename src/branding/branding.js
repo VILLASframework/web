@@ -27,6 +27,9 @@ import opalrt_values from './opalrt/opalrt-values';
 import { template_welcome, template_home, template_footer } from './template/template-functions';
 import template_values from './template/template-values';
 
+import {kopernikus_home,kopernikus_welcome} from "./kopernikus/kopernikus-functions";
+import kopernikus_values from "./kopernikus/kopernikus-values";
+
 class Branding {
   constructor(brand) {
     this.brand = brand;

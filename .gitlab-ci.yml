@@ -30,6 +30,12 @@ build.opalrt:
     DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
   extends: build
 
+build.kopernikus:
+  variables:
+    BRANDING: kopernikus
+    DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
+  extends: build
+
 deploy:
   stage: deploy
   variables:
@@ -54,6 +60,12 @@ deploy.opalrt:
   extends: deploy
   variables:
     BRANDING: opalrt
+    DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
+
+deploy.kopernikus:
+  extends: deploy
+  variables:
+    BRANDING: kopernikus
     DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
 
 deploy.latest:
