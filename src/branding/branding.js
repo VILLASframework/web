@@ -55,6 +55,9 @@ class Branding {
       case 'template':
         this.values = template_values;
         break;
+      case 'kopernikus':
+        this.values = kopernikus_values
+        break;
       default:
         console.error("Branding '" + this.brand + "' not available, will use 'villasweb' branding");
         this.brand = 'villasweb';
@@ -77,6 +80,9 @@ class Branding {
         break;
       case 'template':
         homepage = template_home();
+        break;
+      case "kopernikus":
+        homepage = kopernikus_home();
         break;
       default:
         homepage = villasweb_home(this.getTitle(), username, userid, role);
@@ -115,6 +121,9 @@ class Branding {
         break;
       case 'template':
         welcome = template_welcome();
+        break;
+      case "kopernikus":
+        welcome = kopernikus_welcome();
         break;
       default:
         welcome = this.defaultWelcome();
