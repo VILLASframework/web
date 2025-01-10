@@ -82,7 +82,8 @@ const Infrastructure = () => {
                   return;
                 }
                 switch (managerIC.type){
-                    case "kubernetes","kubernetes-simple":
+                    case "kubernetes":
+                    case "kubernetes-simple":
                         newAction["parameters"]["type"] = "kubernetes"
                         newAction["parameters"]["category"] = "simulator"
                         delete newAction.parameters.location
