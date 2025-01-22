@@ -17,74 +17,49 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
+import { useUpdateWidgetMutation } from "../../../../store/apiSlice";
 
 const WidgetButton = ({ widget, editing }) => {
   const [pressed, setPressed] = useState(widget.customProperties.pressed);
-
-  // useEffect(() => {
-  //   let widget = props.widget;
-  //   widget.customProperties.simStartedSendValue = false;
-  //   widget.customProperties.pressed = false;
-
-  //   // AppDispatcher.dispatch({
-  //   //   type: 'widgets/start-edit',
-  //   //   token: props.token,
-  //   //   data: widget
-  //   // });
-
-  //   // Effect cleanup
-  //   return () => {
-  //     // Clean up if needed
-  //   };
-  // }, [props.token, props.widget]);
-
-  // useEffect(() => {
-  //   if (props.widget.customProperties.simStartedSendValue) {
-  //     let widget = props.widget;
-  //     widget.customProperties.simStartedSendValue = false;
-  //     widget.customProperties.pressed = false;
-  //     AppDispatcher.dispatch({
-  //       type: 'widgets/start-edit',
-  //       token: props.token,
-  //       data: widget
-  //     });
-
-  //     props.onInputChanged(widget.customProperties.off_value, '', false, false);
-  //   }
-  // }, [props, setPressed]);
-
-  // useEffect(() => {
-  //   setPressed(props.widget.customProperties.pressed);
-  // }, [props.widget.customProperties.pressed]);
-
-  // const onPress = (e) => {
-  //   if (e.button === 0 && !props.widget.customProperties.toggle) {
-  //     valueChanged(props.widget.customProperties.on_value, true);
-  //   }
-  // };
-
-  // const onRelease = (e) => {
-  //   if (e.button === 0) {
-  //     let nextState = false;
-  //     if (props.widget.customProperties.toggle) {
-  //       nextState = !pressed;
-  //     }
-  //     valueChanged(nextState ? props.widget.customProperties.on_value : props.widget.customProperties.off_value, nextState);
-  //   }
-  // };
-
-  // const valueChanged = (newValue, newPressed) => {
-  //   if (props.onInputChanged) {
-  //     props.onInputChanged(newValue, 'pressed', newPressed, true);
-  //   }
-  //   setPressed(newPressed);
-  // };
+  const [updateWidget] = useUpdateWidgetMutation();
 
   useEffect(() => {
-    if (pressed) {
-      console.log("Yo");
+    updateSimStartedAndPressedValues(false, false);
+  }, [widget]);
+
+  const updateSimStartedAndPressedValues = async (isSimStarted, isPressed) => {
+    try {
+      await updateWidget({
+        widgetID: widget.id,
+        updatedWidget: {
+          widget: {
+            ...widget,
+            customProperties: {
+              ...widget.customProperties,
+              simStartedSendValue: isSimStarted,
+              pressed: isPressed,
+            },
+          },
+        },
+      }).unwrap();
+    } catch (err) {
+      console.log("error", err);
+    }
+  };
+
+  useEffect(() => {
+    if (widget.customProperties.simStartedSendValue) {
+      let widget = widget;
+      widget.customProperties.simStartedSendValue = false;
+      widget.customProperties.pressed = false;
+
+      onInputChanged(widget.customProperties.off_value, "", false, false);
     }
   }, [pressed]);
+
+  useEffect(() => {
+    setPressed(widget.customProperties.pressed);
+  }, [widget.customProperties.pressed]);
 
   let opacity = widget.customProperties.background_color_opacity;
   const buttonStyle = {

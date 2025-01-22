@@ -115,4 +115,5 @@ export const {
   useDeleteUserFromUsergroupMutation,
   useUpdateUsergroupMutation,
   useGetWidgetsQuery,
+  useLazyGetICbyIdQuery,
 } = apiSlice;

@@ -29,14 +29,10 @@ import WidgetLamp from "./widgets/lamp.jsx";
 import WidgetGauge from "./widgets/gauge.jsx";
 import WidgetTimeOffset from "./widgets/time-offset.jsx";
 import WidgetICstatus from "./widgets/icstatus.jsx";
-// import WidgetCustomAction from './widgets/custom-action';
-// import WidgetAction from './widgets/action';
 import WidgetButton from "./widgets/button.jsx";
 import WidgetInput from "./widgets/input.jsx";
 import WidgetSlider from "./widgets/slider.jsx";
-// import WidgetTopology from './widgets/topology';
 import WidgetPlayer from "./widgets/player.jsx";
-//import WidgetHTML from './widgets/html';
 import "../../../styles/widgets.css";
 import { useUpdateWidgetMutation } from "../../../store/apiSlice.js";
 import { sendMessageToWebSocket } from "../../../store/websocketSlice.js";
@@ -146,16 +142,12 @@ const Widget = ({
     }
   };
 
-  if (widget.type === "Line") {
-    return <WidgetLine widget={widget} editing={editing} />;
-  } else if (widget.type === "Box") {
-    return <WidgetBox widget={widget} editing={editing} />;
-  } else if (widget.type === "Label") {
-    return <WidgetLabel widget={widget} />;
-  } else if (widget.type === "Image") {
-    return <WidgetImage widget={widget} files={files} token={sessionToken} />;
-  } else if (widget.type === "Plot") {
-    return (
+  const widgetMap = {
+    Line: <WidgetLine widget={widget} editing={editing} />,
+    Box: <WidgetBox widget={widget} editing={editing} />,
+    Label: <WidgetLabel widget={widget} />,
+    Image: <WidgetImage widget={widget} files={files} token={sessionToken} />,
+    Plot: (
       <WidgetPlot
         widget={widget}
         data={icdata}
@@ -163,36 +155,32 @@ const Widget = ({
         icIDs={icIDs}
         paused={paused}
       />
-    );
-  } else if (widget.type === "Table") {
-    return (
+    ),
+    Table: (
       <WidgetTable
         widget={widget}
         data={icdata}
         signals={signals}
         icIDs={icIDs}
       />
-    );
-  } else if (widget.type === "Value") {
-    return (
+    ),
+    Value: (
       <WidgetValue
         widget={widget}
         data={icdata}
         signals={signals}
         icIDs={icIDs}
       />
-    );
-  } else if (widget.type === "Lamp") {
-    return (
+    ),
+    Lamp: (
       <WidgetLamp
         widget={widget}
         data={icdata}
         signals={signals}
         icIDs={icIDs}
       />
-    );
-  } else if (widget.type === "Gauge") {
-    return (
+    ),
+    Gauge: (
       <WidgetGauge
         widget={widget}
         data={icdata}
@@ -200,9 +188,8 @@ const Widget = ({
         icIDs={icIDs}
         editing={editing}
       />
-    );
-  } else if (widget.type === "TimeOffset") {
-    return (
+    ),
+    TimeOffset: (
       <WidgetTimeOffset
         widget={widget}
         data={icdata}
@@ -211,11 +198,9 @@ const Widget = ({
         editing={editing}
         websockets={websockets}
       />
-    );
-  } else if (widget.type === "ICstatus") {
-    return <WidgetICstatus widget={widget} ics={ics} />;
-  } else if (widget.type === "Button") {
-    return (
+    ),
+    ICstatus: <WidgetICstatus widget={widget} ics={ics} />,
+    Button: (
       <WidgetButton
         widget={widget}
         editing={editing}
@@ -231,9 +216,8 @@ const Widget = ({
         signals={signals}
         token={sessionToken}
       />
-    );
-  } else if (widget.type === "NumberInput") {
-    return (
+    ),
+    NumberInput: (
       <WidgetInput
         widget={widget}
         editing={editing}
@@ -249,9 +233,8 @@ const Widget = ({
         signals={signals}
         token={sessionToken}
       />
-    );
-  } else if (widget.type === "Slider") {
-    return (
+    ),
+    Slider: (
       <WidgetSlider
         widget={widget}
         editing={editing}
@@ -267,9 +250,8 @@ const Widget = ({
         signals={signals}
         token={sessionToken}
       />
-    );
-  } else if (widget.type === "Player") {
-    return (
+    ),
+    Player: (
       <WidgetPlayer
         widget={widget}
         editing={editing}
@@ -280,11 +262,10 @@ const Widget = ({
         files={files}
         scenarioID={scenarioID}
       />
-    );
-  } else {
-    console.log("Unknown widget type", widget.type);
-    return <div>Error: Widget not found!</div>;
-  }
+    ),
+  };
+
+  return widgetMap[widget.type] || <div>Error: Widget not found!</div>;
 };
 
 export default Widget;

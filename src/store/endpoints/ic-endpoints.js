@@ -16,14 +16,18 @@
  ******************************************************************************/
 
 export const icEndpoints = (builder) => ({
-    getICS: builder.query({
-      query: () => 'ic',
+  getICS: builder.query({
+    query: () => "ic",
+  }),
+  sendAction: builder.mutation({
+    query: (params) => ({
+      url: `/ic/${params.icid}/action`,
+      method: "POST",
+      body: [params],
     }),
-    sendAction: builder.mutation({
-      query: (params) => ({
-        url: `/ic/${params.icid}/action`,
-        method: 'POST',
-        body: [params],
-      }),
-    }),
+  }),
+
+  getICbyId: builder.query({
+    query: (icID) => `/dashboards/${icID}`,
+  }),
 });

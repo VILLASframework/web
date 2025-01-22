@@ -17,30 +17,36 @@
 
 import React, { useState, useEffect } from "react";
 import { Badge } from "react-bootstrap";
-import {stateLabelStyle} from "../../../infrastructure/styles";
+import { stateLabelStyle } from "../../../infrastructure/styles";
 import { loadICbyId } from "../../../../store/icSlice";
 import { sessionToken } from "../../../../localStorage";
 import { useDispatch } from "react-redux";
+import { useLazyGetICbyIdQuery } from "../../../../store/apiSlice";
 
-let timer = null
+let timer = null;
 const WidgetICstatus = (props) => {
-  const dispatch = useDispatch()
-  const [ics,setIcs] = useState(props.ics)
-  const refresh = async() => {
+  const dispatch = useDispatch();
+  const [ics, setIcs] = useState(props.ics);
+  const [triggerGetICbyId] = useLazyGetICbyIdQuery();
+  const refresh = async () => {
     if (props.ics) {
-      let iccs = [];
-      for(let ic of props.ics){
-        const res = await dispatch(loadICbyId({id: ic.id, token:sessionToken}));
-        iccs.push(res.payload)
+      try {
+        const requests = props.ics.map((ic) =>
+          triggerGetICbyId({ id: ic.id, token: sessionToken }).unwrap()
+        );
+
+        const results = await Promise.all(requests);
+        setIcs(results);
+      } catch (error) {
+        console.error("Error loading ICs:", error);
       }
-      setIcs(iccs)
     }
   };
   useEffect(() => {
-    window.clearInterval(timer)
-    timer = window.setInterval(refresh,3000)
+    window.clearInterval(timer);
+    timer = window.setInterval(refresh, 3000);
     // Function to refresh data
-    refresh()
+    refresh();
     // Cleanup function equivalent to componentWillUnmount
     return () => {
       window.clearInterval(timer);
