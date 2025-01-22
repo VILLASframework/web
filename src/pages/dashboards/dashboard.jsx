@@ -19,7 +19,6 @@ import React, { useState, useEffect, useCallback, useRef, act } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Fullscreenable from "react-fullscreenable";
-import classNames from "classnames";
 import "react-contexify/dist/ReactContexify.min.css";
 import EditWidget from "./widget/edit-widget/edit-widget";
 import EditSignalMappingDialog from "../scenarios/dialogs/edit-signal-mapping";
@@ -28,7 +27,7 @@ import WidgetArea from "./grid/widget-area";
 import DashboardButtonGroup from "./grid/dashboard-button-group";
 import IconToggleButton from "../../common/buttons/icon-toggle-button";
 import WidgetContainer from "./widget/widget-container";
-import Widget from "./widget/widget-old";
+import Widget from "./widget/widget.jsx";
 
 import { connectWebSocket, disconnect } from "../../store/websocketSlice";
 
@@ -44,11 +43,13 @@ import {
   useGetICSQuery,
   useLazyGetSignalsQuery,
 } from "../../store/apiSlice";
+import { Spinner } from "react-bootstrap";
 
 const startUpdaterWidgets = new Set(["Slider", "Button", "NumberInput"]);
 
 const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
   const dispatch = useDispatch();
+  const { token: sessionToken } = useSelector((state) => state.auth);
   const params = useParams();
   const {
     data: dashboardRes,
@@ -72,9 +73,6 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
   const [widgetsToUpdate, setWidgetsToUpdate] = useState([]);
   const [configs, setConfigs] = useState([]);
   const [signals, setSignals] = useState([]);
-  const [sessionToken, setSessionToken] = useState(
-    localStorage.getItem("token")
-  );
   const [files, setFiles] = useState([]);
   const [editing, setEditing] = useState(false);
   const [paused, setPaused] = useState(false);
@@ -85,14 +83,11 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
   const [filesEditSaveState, setFilesEditSaveState] = useState([]);
   const [modalData, setModalData] = useState(null);
   const [modalIndex, setModalIndex] = useState(null);
-  const [widgetChangeData, setWidgetChangeData] = useState([]);
   const [widgetOrigIDs, setWidgetOrigIDs] = useState([]);
-  const [maxWidgetHeight, setMaxWidgetHeight] = useState(null);
   const [locked, setLocked] = useState(false);
 
   const [height, setHeight] = useState(10);
   const [grid, setGrid] = useState(50);
-  const [newHeightValue, setNewHeightValue] = useState(0);
 
   //ics that are included in configurations
   const [activeICS, setActiveICS] = useState([]);
@@ -233,12 +228,15 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
       prevWidgets.map((w) => (w.id === widget.id ? { ...widget } : w))
     );
 
-    // try {
-    //   await updateWidget({ widgetID: widget.id, updatedWidget: { widget } }).unwrap();
-    //   fetchWidgets(dashboard.id);
-    // } catch (err) {
-    //   console.log('error', err);
-    // }
+    try {
+      await updateWidget({
+        widgetID: widget.id,
+        updatedWidget: { widget },
+      }).unwrap();
+      fetchWidgets(dashboard.id);
+    } catch (err) {
+      console.log("error", err);
+    }
   };
 
   const onChange = async (widget) => {
@@ -368,16 +366,19 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
   };
 
   const saveEditing = async () => {
-    // widgets.forEach(async (widget) => {
-    //   if (widget.type === 'Image') {
-    //     widget.customProperties.update = true;
-    //   }
-    //   try {
-    //     await updateWidget({ widgetID: widget.id, updatedWidget: { widget } }).unwrap();
-    //   } catch (err) {
-    //     console.log('error', err);
-    //   }
-    // });
+    widgets.forEach(async (widget) => {
+      if (widget.type === "Image") {
+        widget.customProperties.update = true;
+      }
+      try {
+        await updateWidget({
+          widgetID: widget.id,
+          updatedWidget: { widget },
+        }).unwrap();
+      } catch (err) {
+        console.log("error", err);
+      }
+    });
 
     if (height !== dashboard.height || grid !== dashboard.grid) {
       try {
@@ -410,25 +411,23 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
     }
 
     setEditing(false);
-    setWidgetChangeData([]);
   };
 
   const cancelEditing = () => {
-    // widgets.forEach(async (widget) => {
-    //   if (widget.type === 'Image') {
-    //     widget.customProperties.update = true;
-    //   }
-    //   if (!widgetOrigIDs.includes(widget.id)) {
-    //     try {
-    //       await deleteWidget(widget.id).unwrap();
-    //     } catch (err) {
-    //       console.log('error', err);
-    //     }
-    //   }
-    // });
+    widgets.forEach(async (widget) => {
+      if (widget.type === "Image") {
+        widget.customProperties.update = true;
+      }
+      if (!widgetOrigIDs.includes(widget.id)) {
+        try {
+          await deleteWidget(widget.id).unwrap();
+        } catch (err) {
+          console.log("error", err);
+        }
+      }
+    });
     fetchWidgets(dashboard.id);
     setEditing(false);
-    setWidgetChangeData([]);
     setHeight(dashboard.height);
     setGrid(dashboard.grid);
   };
@@ -465,14 +464,8 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
     }
   };
 
-  const buttonStyle = { marginLeft: "10px" };
-  const iconStyle = { height: "25px", width: "25px" };
-  const boxClasses = classNames("section", "box", {
-    "fullscreen-padding": isFullscreen,
-  });
-
   if (isDashboardLoading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
 
   if (dashboardError) {
@@ -480,7 +473,11 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
   }
 
   return (
-    <div className={boxClasses}>
+    <div
+      className={`section box ${
+        isFullscreen ? "fullscreen-padding" : ""
+      }`.trim()}
+    >
       <div key={"header-box"} className="section-header box-header">
         <div key={"title"} className="section-title">
           <h2>
@@ -494,9 +491,9 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
                 uncheckedIcon="lock-open"
                 tooltipChecked="Dashboard is locked, cannot be edited"
                 tooltipUnchecked="Dashboard is unlocked, can be edited"
-                disabled={true}
-                buttonStyle={buttonStyle}
-                iconStyle={iconStyle}
+                onChange={() => setLocked(!locked)}
+                buttonStyle={{ marginLeft: "10px" }}
+                iconStyle={{ height: "25px", width: "25px" }}
               />
             </span>
           </h2>
@@ -588,17 +585,6 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
           configs={configs}
           scenarioID={dashboard.scenarioID}
         />
-
-        {/* <EditFilesDialog
-          key={"edit-files-dialog"}
-          sessionToken={this.state.sessionToken}
-          show={this.state.filesEditModal}
-          onClose={this.closeEditFiles.bind(this)}
-          signals={this.state.signals}
-          files={this.state.files}
-          scenarioID={this.state.dashboard.scenarioID}
-          locked={this.state.locked}
-        /> */}
 
         <EditSignalMappingDialog
           key={"edit-signal-mapping-input-dialog"}

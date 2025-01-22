@@ -20,18 +20,50 @@ import { format } from "d3";
 import classNames from "classnames";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
+import { useUpdateWidgetMutation } from "../../../../store/apiSlice";
 
 const WidgetSlider = (props) => {
   const [value, setValue] = useState("");
   const [unit, setUnit] = useState("");
 
+  const [updateWidget] = useUpdateWidgetMutation();
+
   useEffect(() => {
     let widget = { ...props.widget };
     widget.customProperties.simStartedSendValue = false;
-    if(props.onInputChanged && props.signals && props.signals.length > 0){
+    updateWidgetSimStatus(false);
+  }, [props.token, props.widget]);
+
+  useEffect(() => {
+    // A simulation was started, make an update
+    if (props.widget.customProperties.simStartedSendValue) {
+      let widget = { ...props.widget };
+      widget.customProperties.simStartedSendValue = false;
+      updateWidgetSimStatus(true);
+
+      // Send value without changing widget
       props.onInputChanged(widget.customProperties.value, "", "", false);
     }
   }, [props.widget]);
+
+  const updateWidgetSimStatus = async (isSimStarted) => {
+    try {
+      await updateWidget({
+        widgetID: props.widget.id,
+        updatedWidget: {
+          widget: {
+            ...props.widget,
+            customProperties: {
+              ...props.widget.customProperties,
+              simStartedSendValue: isSimStarted,
+            },
+          },
+        },
+      }).unwrap();
+    } catch (err) {
+      console.log("error", err);
+    }
+  };
 
   useEffect(() => {
     let newValue = "";
