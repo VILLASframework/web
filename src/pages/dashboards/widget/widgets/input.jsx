@@ -16,20 +16,19 @@
  ******************************************************************************/
 import React, { useState, useEffect } from "react";
 import { Form, Col, InputGroup } from "react-bootstrap";
+import { useUpdateWidgetMutation } from "../../../../store/apiSlice";
 
 function WidgetInput(props) {
   const [value, setValue] = useState("");
   const [unit, setUnit] = useState("");
 
+  const [updateWidget] = useUpdateWidgetMutation();
+
   useEffect(() => {
     const widget = { ...props.widget };
     widget.customProperties.simStartedSendValue = false;
 
-    // AppDispatcher.dispatch({
-    //   type: "widgets/start-edit",
-    //   token: props.token,
-    //   data: widget,
-    // });
+    updateWidgetSimStatus(true);
   }, [props.token, props.widget]);
 
   useEffect(() => {
@@ -37,15 +36,30 @@ function WidgetInput(props) {
       const widget = { ...props.widget };
       widget.customProperties.simStartedSendValue = false;
 
-      AppDispatcher.dispatch({
-        type: "widgets/start-edit",
-        token: props.token,
-        data: widget,
-      });
+      updateWidgetSimStatus(false);
 
       props.onInputChanged(Number(value), "", "", false);
     }
   }, [props, value]);
+
+  const updateWidgetSimStatus = async (isSimStarted) => {
+    try {
+      await updateWidget({
+        widgetID: widget.id,
+        updatedWidget: {
+          widget: {
+            ...widget,
+            customProperties: {
+              ...widget.customProperties,
+              simStartedSendValue: isSimStarted,
+            },
+          },
+        },
+      }).unwrap();
+    } catch (err) {
+      console.log("error", err);
+    }
+  };
 
   useEffect(() => {
     let newValue = "";
