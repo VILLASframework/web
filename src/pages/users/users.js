@@ -338,7 +338,7 @@ const Users = () => {
             <>
               <span className="solid-button">
                 <DropdownButton
-                  title="Add to Usegroup"
+                  title="Add to Usergroup"
                   onSelect={(id) => {
                     let usergroup;
                     if (usergroups.length > 0) {
