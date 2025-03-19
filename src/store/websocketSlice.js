@@ -134,6 +134,10 @@ const websocketSlice = createSlice({
         values:new Array(action.payload).fill(0)
       }
     },
+    initValue:(state,action)=>{
+      let {idx,initVal} = action.payload
+     state.values.splice(idx,1,initVal)
+    },
     disconnect: (state, action) => {
       if(action.payload){
         wsManager.disconnect(action.payload.id); // Ensure the WebSocket is disconnected
@@ -193,5 +197,5 @@ const websocketSlice = createSlice({
   },
 });
 
-export const { disconnect, updateIcData, addActiveSocket, sendMessageToWebSocket,reportLength } = websocketSlice.actions;
+export const { disconnect, updateIcData, addActiveSocket, sendMessageToWebSocket,reportLength,initValue } = websocketSlice.actions;
 export default websocketSlice.reducer;

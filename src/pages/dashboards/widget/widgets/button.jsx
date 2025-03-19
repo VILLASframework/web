@@ -22,33 +22,19 @@ const WidgetButton = (props) => {
   const [pressed, setPressed] = useState(props.widget.customProperties.pressed);
 
   useEffect(() => {
-    let widget = props.widget;
-    widget.customProperties.simStartedSendValue = false;
-    widget.customProperties.pressed = false;
-
-    // AppDispatcher.dispatch({
-    //   type: 'widgets/start-edit',
-    //   token: props.token,
-    //   data: widget
-    // });
-
-    // Effect cleanup
-    return () => {
-      // Clean up if needed
-    };
-  }, [props.token, props.widget]);
+      let widget = { ...props.widget };
+      widget.customProperties.simStartedSendValue = false;
+      widget.customProperties.pressed = false;
+      if(props.onInputChanged && props.signals && props.signals.length > 0){
+        props.onInputChanged(widget.customProperties.value, "", "", false);
+      }
+    }, [props.widget]);
 
   useEffect(() => {
     if (props.widget.customProperties.simStartedSendValue) {
       let widget = props.widget;
       widget.customProperties.simStartedSendValue = false;
       widget.customProperties.pressed = false;
-      AppDispatcher.dispatch({
-        type: 'widgets/start-edit',
-        token: props.token,
-        data: widget
-      });
-
       props.onInputChanged(widget.customProperties.off_value, '', false, false);
     }
   }, [props, setPressed]);

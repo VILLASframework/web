@@ -22,30 +22,13 @@ function WidgetInput(props) {
   const [unit, setUnit] = useState("");
 
   useEffect(() => {
-    const widget = { ...props.widget };
-    widget.customProperties.simStartedSendValue = false;
-
-    // AppDispatcher.dispatch({
-    //   type: "widgets/start-edit",
-    //   token: props.token,
-    //   data: widget,
-    // });
-  }, [props.token, props.widget]);
-
-  useEffect(() => {
-    if (props.widget.customProperties.simStartedSendValue) {
-      const widget = { ...props.widget };
+      let widget = { ...props.widget };
       widget.customProperties.simStartedSendValue = false;
+      if(props.onInputChanged && props.signals && props.signals.length > 0){
+        props.onInputChanged(widget.customProperties.value, "", "", false);
+      }
+    }, [props.widget]);
 
-      AppDispatcher.dispatch({
-        type: "widgets/start-edit",
-        token: props.token,
-        data: widget,
-      });
-
-      props.onInputChanged(Number(value), "", "", false);
-    }
-  }, [props, value]);
 
   useEffect(() => {
     let newValue = "";
