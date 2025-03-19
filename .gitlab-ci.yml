@@ -36,6 +36,12 @@ build.kopernikus:
     DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
   extends: build
 
+build.enershare:
+  variables:
+    BRANDING: enershare
+    DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
+  extends: build
+
 deploy:
   stage: deploy
   variables:
@@ -67,6 +73,12 @@ deploy.kopernikus:
   variables:
     BRANDING: kopernikus
     DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
+
+deploy.enershare:
+  variables:
+    BRANDING: enershare
+    DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
+  extends: deploy
 
 deploy.latest:
   extends: deploy
