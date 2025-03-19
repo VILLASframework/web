@@ -148,9 +148,6 @@ class EditWidgetDialog extends React.Component {
     } else {
       customProperty ? changeObject[parts[0]][parts[1]] = e.target.value : changeObject[e.target.id] = e.target.value ;
     }
-    
-    console.log(changeObject)
-
     this.setState({ temporal: changeObject});
   }
 

@@ -111,7 +111,8 @@ const websocketSlice = createSlice({
   name: 'websocket',
   initialState: {
     icdata: {},
-    activeSocketURLs: []
+    activeSocketURLs: [],
+    values:[]
   },
   reducers: {
     addActiveSocket: (state, action) => {
@@ -126,6 +127,12 @@ const websocketSlice = createSlice({
             timestamp: Date.now(),
             values: new Array(length).fill(0)
         }, output: {}};
+    },
+    reportLength:(state,action)=>{
+      return {
+        ...state,
+        values:new Array(action.payload).fill(0)
+      }
     },
     disconnect: (state, action) => {
       if(action.payload){
@@ -157,13 +164,14 @@ const websocketSlice = createSlice({
     sendMessageToWebSocket: (state, action) => {
         const { ic, signalID, signalIndex, data} = action.payload.message;
         const currentICdata = current(state.icdata);
-
+        state.values[signalIndex] = data
+        const values = current(state.values);
         if (!(ic == null || currentICdata[ic].input == null)) {
             const inputAction = JSON.parse(JSON.stringify(currentICdata[ic].input));
             // update message properties
             inputAction.timestamp = Date.now();
             inputAction.sequence++;
-            inputAction.values[signalIndex] = data;
+            inputAction.values = values;
             inputAction.length = inputAction.values.length;
             inputAction.source_index = signalID;
             // The previous line sets the source_index field of the message to the ID of the signal
@@ -185,5 +193,5 @@ const websocketSlice = createSlice({
   },
 });
 
-export const { disconnect, updateIcData, addActiveSocket, sendMessageToWebSocket } = websocketSlice.actions;
+export const { disconnect, updateIcData, addActiveSocket, sendMessageToWebSocket,reportLength } = websocketSlice.actions;
 export default websocketSlice.reducer;

@@ -182,7 +182,7 @@ const Widget = ({widget, editing, files, configs, signals, paused, ics, scenario
       />
     );
   } else {
-      console.log('Unknown widget type', widget.type);
+      console.log('Unknown widget type', widget);
       return <div>Error: Widget not found!</div>;
   }
 }
