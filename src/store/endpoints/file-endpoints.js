@@ -16,52 +16,52 @@
  ******************************************************************************/
 
 export const fileEndpoints = (builder) => ({
-    getFiles: builder.query({
-      query: (scenarioID) => ({
-        url: 'files',
-        params: { scenarioID },
-      }),
+  getFiles: builder.query({
+    query: (scenarioID) => ({
+      url: "files",
+      params: { scenarioID },
     }),
-    addFile: builder.mutation({
-      query: ({ scenarioID, file }) => {
-        const formData = new FormData();
-        formData.append('inputFile', file);
-        return {
-          url: `files?scenarioID=${scenarioID}`,
-          method: 'POST',
-          body: formData,
-        };
-      },
+  }),
+  addFile: builder.mutation({
+    query: ({ scenarioID, file }) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      return {
+        url: `files?scenarioID=${scenarioID}`,
+        method: "POST",
+        body: formData,
+      };
+    },
+  }),
+  downloadFile: builder.query({
+    query: (fileID) => ({
+      url: `files/${fileID}`,
+      responseHandler: "blob",
+      responseType: "blob",
     }),
-    downloadFile: builder.query({
-      query: (fileID) => ({
+  }),
+  downloadImage: builder.query({
+    query: (fileID) => ({
+      url: `files/${fileID}`,
+      method: "GET",
+      responseHandler: (response) => response.blob(),
+    }),
+  }),
+  updateFile: builder.mutation({
+    query: ({ fileID, file }) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      return {
         url: `files/${fileID}`,
-        responseHandler: 'blob',
-        responseType: 'blob',
-      }),
+        method: "PUT",
+        body: formData,
+      };
+    },
+  }),
+  deleteFile: builder.mutation({
+    query: (fileID) => ({
+      url: `files/${fileID}`,
+      method: "DELETE",
     }),
-    downloadImage: builder.query({
-      query: (fileID) => ({
-        url: `files/${fileID}`,
-        method: 'GET',
-        responseHandler: (response) => response.blob(),
-      }),
-    }),
-    updateFile: builder.mutation({
-      query: ({ fileID, file }) => {
-        const formData = new FormData();
-        formData.append('inputFile', file);
-        return {
-          url: `files/${fileID}`,
-          method: 'PUT',
-          body: formData,
-        };
-      },
-    }),
-    deleteFile: builder.mutation({
-      query: (fileID) => ({
-        url: `files/${fileID}`,
-        method: 'DELETE',
-      }),
-    }),
+  }),
 });
