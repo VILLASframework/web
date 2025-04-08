@@ -15,33 +15,37 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { useState, useEffect, useCallback, useRef, act } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Fullscreenable from "react-fullscreenable";
 import "react-contexify/dist/ReactContexify.min.css";
 import EditWidget from "./widget/edit-widget/edit-widget";
-import EditSignalMappingDialog from "../scenarios/dialogs/edit-signal-mapping";
+import EditSignalMappingDialog from "./dialogs/edit-signal-mapping.jsx";
 import WidgetToolbox from "./widget/widget-toolbox";
 import WidgetArea from "./grid/widget-area";
 import DashboardButtonGroup from "./grid/dashboard-button-group";
 import IconToggleButton from "../../common/buttons/icon-toggle-button";
 import WidgetContainer from "./widget/widget-container";
 import Widget from "./widget/widget.jsx";
+import EditFilesDialog from "./dialogs/edit-files-dialog.jsx";
 
-import { connectWebSocket, disconnect } from "../../store/websocketSlice";
+import { disconnect } from "../../store/websocketSlice";
+import { useDashboardData } from "./hooks/use-dashboard-data.js";
+import useWebSocketConnection from "./hooks/use-websocket-connection.js";
 
 import {
   useGetDashboardQuery,
   useLazyGetWidgetsQuery,
-  useLazyGetConfigsQuery,
+  useLazyGetFilesQuery,
   useAddWidgetMutation,
   useUpdateWidgetMutation,
   useDeleteWidgetMutation,
-  useLazyGetFilesQuery,
   useUpdateDashboardMutation,
   useGetICSQuery,
-  useLazyGetSignalsQuery,
+  useDeleteFileMutation,
+  useAddFileMutation,
+  useUpdateFileMutation,
 } from "../../store/apiSlice";
 import { Spinner } from "react-bootstrap";
 
@@ -51,84 +55,60 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
   const dispatch = useDispatch();
   const { token: sessionToken } = useSelector((state) => state.auth);
   const params = useParams();
+
   const {
-    data: dashboardRes,
+    data: { dashboard } = { dashboard: {} },
     error: dashboardError,
     isLoading: isDashboardLoading,
   } = useGetDashboardQuery(params.dashboard);
-  const dashboard = dashboardRes ? dashboardRes.dashboard : {};
-  const { data: icsRes } = useGetICSQuery();
-  const ics = icsRes ? icsRes.ics : [];
+  const { data: { ics } = {} } = useGetICSQuery();
 
   const [triggerGetWidgets] = useLazyGetWidgetsQuery();
-  const [triggerGetConfigs] = useLazyGetConfigsQuery();
-  const [triggerGetFiles] = useLazyGetFilesQuery();
-  const [triggerGetSignals] = useLazyGetSignalsQuery();
+  const [triggerDeleteFile] = useDeleteFileMutation();
+  const [triggerUploadFile] = useAddFileMutation();
   const [addWidget] = useAddWidgetMutation();
   const [updateWidget] = useUpdateWidgetMutation();
   const [deleteWidgetMutation] = useDeleteWidgetMutation();
   const [updateDashboard] = useUpdateDashboardMutation();
+  const [triggerUpdateFile] = useUpdateFileMutation();
+  const [triggerGetFiles] = useLazyGetFilesQuery();
 
   const [widgets, setWidgets] = useState([]);
   const [widgetsToUpdate, setWidgetsToUpdate] = useState([]);
-  const [configs, setConfigs] = useState([]);
-  const [signals, setSignals] = useState([]);
-  const [files, setFiles] = useState([]);
   const [editing, setEditing] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [locked, setLocked] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [editOutputSignalsModal, setEditOutputSignalsModal] = useState(false);
   const [editInputSignalsModal, setEditInputSignalsModal] = useState(false);
   const [filesEditModal, setFilesEditModal] = useState(false);
-  const [filesEditSaveState, setFilesEditSaveState] = useState([]);
   const [modalData, setModalData] = useState(null);
-  const [modalIndex, setModalIndex] = useState(null);
   const [widgetOrigIDs, setWidgetOrigIDs] = useState([]);
-  const [locked, setLocked] = useState(false);
-
   const [height, setHeight] = useState(10);
   const [grid, setGrid] = useState(50);
 
-  //ics that are included in configurations
-  const [activeICS, setActiveICS] = useState([]);
-
-  useEffect(() => {
-    let usedICS = [];
-    for (const config of configs) {
-      usedICS.push(config.icID);
-    }
-    setActiveICS(ics.filter((i) => usedICS.includes(i.id)));
-  }, [configs]);
-
-  const activeSocketURLs = useSelector(
-    (state) => state.websocket.activeSocketURLs
-  );
-
-  //connect to websockets
-  useEffect(() => {
-    activeICS.forEach((i) => {
-      if (i.websocketurl) {
-        if (!activeSocketURLs.includes(i.websocketurl))
-          dispatch(connectWebSocket({ url: i.websocketurl, id: i.id }));
-      }
-    });
-
-    return () => {
-      activeICS.forEach((i) => {
-        dispatch(disconnect({ id: i.id }));
-      });
-    };
-  }, [activeICS]);
+  const { files, configs, signals, activeICS, refetchDashboardData } =
+    useDashboardData(dashboard.scenarioID);
 
   //as soon as dashboard is loaded, load widgets, configs, signals and files for this dashboard
   useEffect(() => {
     if (dashboard.id) {
       fetchWidgets(dashboard.id);
-      fetchWidgetData(dashboard.scenarioID);
       setHeight(dashboard.height);
       setGrid(dashboard.grid);
     }
   }, [dashboard]);
+
+  useWebSocketConnection(activeICS, signals, widgets);
+
+  //disconnect from the websocket on component unmount
+  useEffect(() => {
+    return () => {
+      activeICS.forEach((ic) => {
+        dispatch(disconnect({ id: ic.id }));
+      });
+    };
+  }, []);
 
   const fetchWidgets = async (dashboardID) => {
     try {
@@ -141,55 +121,15 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
     }
   };
 
-  const fetchWidgetData = async (scenarioID) => {
-    try {
-      const filesRes = await triggerGetFiles(scenarioID).unwrap();
-      if (filesRes.files) {
-        setFiles(filesRes.files);
-      }
-      const configsRes = await triggerGetConfigs(scenarioID).unwrap();
-      if (configsRes.configs) {
-        setConfigs(configsRes.configs);
-        //load signals if there are any configs
-
-        if (configsRes.configs.length > 0) {
-          for (const config of configsRes.configs) {
-            const signalsInRes = await triggerGetSignals({
-              configID: config.id,
-              direction: "in",
-            }).unwrap();
-            const signalsOutRes = await triggerGetSignals({
-              configID: config.id,
-              direction: "out",
-            }).unwrap();
-            setSignals((prevState) => [
-              ...signalsInRes.signals,
-              ...signalsOutRes.signals,
-              ...prevState,
-            ]);
-          }
-        }
-      }
-    } catch (err) {
-      console.log("error fetching data", err);
-    }
-  };
-
   const handleKeydown = useCallback(
-    (e) => {
-      switch (e.key) {
-        case " ":
-        case "p":
-          setPaused((prevPaused) => !prevPaused);
-          break;
-        case "e":
-          setEditing((prevEditing) => !prevEditing);
-          break;
-        case "f":
-          toggleFullscreen();
-          break;
-        default:
-      }
+    ({ key }) => {
+      const actions = {
+        " ": () => setPaused((prev) => !prev),
+        p: () => setPaused((prev) => !prev),
+        e: () => setEditing((prev) => !prev),
+        f: toggleFullscreen,
+      };
+      if (actions[key]) actions[key]();
     },
     [toggleFullscreen]
   );
@@ -254,23 +194,30 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
   const onSimulationStarted = () => {
     widgets.forEach(async (widget) => {
       if (startUpdaterWidgets.has(widget.type)) {
-        widget.customProperties.simStartedSendValue = true;
+        const updatedWidget = {
+          ...widget,
+          customProperties: {
+            ...widget.customProperties,
+            simStartedSendValue: true,
+          },
+        };
         try {
           await updateWidget({
             widgetID: widget.id,
-            updatedWidget: { widget },
+            updatedWidget: { widget: updatedWidget },
           }).unwrap();
         } catch (err) {
           console.log("error", err);
         }
       }
     });
+
+    fetchWidgets(dashboard.id);
   };
 
   const editWidget = (widget, index) => {
     setEditModal(true);
     setModalData({ ...widget });
-    setModalIndex(index);
   };
 
   const duplicateWidget = async (widget) => {
@@ -290,12 +237,6 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
     }
   };
 
-  const startEditFiles = () => {
-    let tempFiles = files.map((file) => ({ id: file.id, name: file.name }));
-    setFilesEditModal(true);
-    setFilesEditSaveState(tempFiles);
-  };
-
   const closeEditFiles = () => {
     widgets.forEach((widget) => {
       if (widget.type === "Image") {
@@ -309,13 +250,14 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
     if (!data) {
       setEditModal(false);
       setModalData(null);
-      setModalIndex(null);
       return;
     }
 
     if (data.type === "Image") {
       data.customProperties.update = true;
     }
+
+    console.log("UPDATING WIDGET", data);
 
     try {
       await updateWidget({
@@ -329,7 +271,6 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
 
     setEditModal(false);
     setModalData(null);
-    setModalIndex(null);
   };
 
   const deleteWidget = async (widgetID) => {
@@ -432,6 +373,60 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
     setGrid(dashboard.grid);
   };
 
+  const uploadFile = async (file) => {
+    await triggerUploadFile({
+      scenarioID: dashboard.scenarioID,
+      file: file,
+    })
+      .then(async () => {
+        await triggerGetFiles(dashboard.scenarioID).then((fs) => {
+          setFiles(fs.data.files);
+        });
+      })
+      .catch((e) => {
+        console.log(`File upload failed: ${e}`);
+      });
+  };
+
+  const deleteFile = async (index) => {
+    let file = files[index];
+    if (file !== undefined) {
+      await triggerDeleteFile(file.id)
+        .then(async () => {
+          await triggerGetFiles(dashboard.scenarioID)
+            .then((fs) => {
+              setFiles(fs.data.files);
+            })
+            .catch((e) => {
+              console.log(`Error fetching files: ${e}`);
+            });
+        })
+        .catch((e) => {
+          console.log(`Error deleting: ${e}`);
+        });
+    }
+  };
+
+  const updateFile = async (fileId, file) => {
+    try {
+      await triggerUpdateFile({ fileID: fileId, file: file })
+        .then(async () => {
+          await triggerGetFiles(dashboard.scenarioID)
+            .then((fs) => {
+              setFiles(fs.data.files);
+            })
+            .catch((e) => {
+              console.log(`Error fetching files: ${e}`);
+            });
+        })
+        .catch((e) => {
+          console.log(`Error deleting: ${e}`);
+        });
+    } catch (error) {
+      console.error("Error updating file:", error);
+    }
+  };
+
   const updateGrid = (value) => {
     setGrid(value);
   };
@@ -451,25 +446,12 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
     }
   };
 
-  const pauseData = () => setPaused(true);
-  const unpauseData = () => setPaused(false);
-  const editInputSignals = () => setEditInputSignalsModal(true);
-  const editOutputSignals = () => setEditOutputSignalsModal(true);
-
-  const closeEditSignalsModal = (direction) => {
-    if (direction === "in") {
-      setEditInputSignalsModal(false);
-    } else if (direction === "out") {
-      setEditOutputSignalsModal(false);
-    }
-  };
-
   if (isDashboardLoading) {
     return <Spinner />;
   }
 
   if (dashboardError) {
-    return <div>Error. Dashboard not found</div>;
+    return <div>Error. Dashboard not found!</div>;
   }
 
   return (
@@ -509,11 +491,11 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
           onSave={saveEditing}
           onCancel={cancelEditing}
           onFullscreen={toggleFullscreen}
-          onPause={pauseData}
-          onUnpause={unpauseData}
-          onEditFiles={startEditFiles}
-          onEditOutputSignals={editOutputSignals}
-          onEditInputSignals={editInputSignals}
+          onPause={() => setPaused(true)}
+          onUnpause={() => setPaused(false)}
+          onEditFiles={() => setFilesEditModal(true)}
+          onEditOutputSignals={() => setEditOutputSignalsModal(true)}
+          onEditInputSignals={() => setEditInputSignalsModal(true)}
         />
       </div>
 
@@ -589,12 +571,38 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
         <EditSignalMappingDialog
           key={"edit-signal-mapping-input-dialog"}
           show={editInputSignalsModal}
-          onCloseEdit={closeEditSignalsModal}
-          direction="Input"
-          signals={signals}
+          onClose={() => setEditInputSignalsModal(false)}
+          direction="in"
+          signals={[...signals].filter((s) => s.direction == "in")}
           configID={null}
           configs={configs}
           sessionToken={sessionToken}
+          refetch={refetchDashboardData}
+        />
+
+        <EditSignalMappingDialog
+          key={"edit-signal-mapping-output-dialog"}
+          show={editOutputSignalsModal}
+          onClose={() => setEditOutputSignalsModal(false)}
+          direction="out"
+          signals={[...signals].filter((s) => s.direction == "out")}
+          configID={null}
+          configs={configs}
+          sessionToken={sessionToken}
+          refetch={refetchDashboardData}
+        />
+
+        <EditFilesDialog
+          key={"edit-files-dialog"}
+          sessionToken={sessionToken}
+          show={filesEditModal}
+          uploadFile={uploadFile}
+          updateFile={updateFile}
+          deleteFile={deleteFile}
+          onClose={closeEditFiles}
+          files={files}
+          scenarioID={dashboard.scenarioID}
+          locked={locked}
         />
       </div>
     </div>

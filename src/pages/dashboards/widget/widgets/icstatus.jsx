@@ -16,10 +16,8 @@
  ******************************************************************************/
 
 import React, { useState, useEffect } from "react";
-import { Badge } from "react-bootstrap";
+import { Badge, Spinner } from "react-bootstrap";
 import { stateLabelStyle } from "../../../infrastructure/styles";
-import { loadICbyId } from "../../../../store/icSlice";
-import { sessionToken } from "../../../../localStorage";
 import { useDispatch } from "react-redux";
 import { useLazyGetICbyIdQuery } from "../../../../store/apiSlice";
 
@@ -32,7 +30,7 @@ const WidgetICstatus = (props) => {
     if (props.ics) {
       try {
         const requests = props.ics.map((ic) =>
-          triggerGetICbyId({ id: ic.id, token: sessionToken }).unwrap()
+          triggerGetICbyId(ic.id).unwrap()
         );
 
         const results = await Promise.all(requests);
@@ -45,9 +43,9 @@ const WidgetICstatus = (props) => {
   useEffect(() => {
     window.clearInterval(timer);
     timer = window.setInterval(refresh, 3000);
-    // Function to refresh data
+
     refresh();
-    // Cleanup function equivalent to componentWillUnmount
+
     return () => {
       window.clearInterval(timer);
     };
@@ -58,8 +56,8 @@ const WidgetICstatus = (props) => {
 
   if (props.ics && checkedICs) {
     badges = ics
-      .filter((ic) => checkedICs.includes(ic.id))
-      .map((ic) => {
+      .filter(({ ic }) => checkedICs.includes(ic?.id))
+      .map(({ ic }) => {
         let badgeStyle = stateLabelStyle(ic.state, ic);
         return (
           <Badge key={ic.id} bg={badgeStyle[0]} className={badgeStyle[1]}>
@@ -69,7 +67,7 @@ const WidgetICstatus = (props) => {
       });
   }
 
-  return <div>{badges}</div>;
+  return badges.length > 0 ? <div>{badges}</div> : <Spinner />;
 };
 
 export default WidgetICstatus;

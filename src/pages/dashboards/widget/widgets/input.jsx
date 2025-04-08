@@ -18,29 +18,62 @@ import React, { useState, useEffect } from "react";
 import { Form, Col, InputGroup } from "react-bootstrap";
 import { useUpdateWidgetMutation } from "../../../../store/apiSlice";
 
-function WidgetInput(props) {
-  const [value, setValue] = useState("");
+const WidgetInput = ({ signals, widget, editing, onInputChanged }) => {
+  const initialValue =
+    widget.customProperties.value !== undefined
+      ? Number(widget.customProperties.value)
+      : widget.customProperties.default_value !== undefined
+      ? Number(widget.customProperties.default_value)
+      : "";
+  const [value, setValue] = useState(initialValue);
   const [unit, setUnit] = useState("");
 
   const [updateWidget] = useUpdateWidgetMutation();
 
   useEffect(() => {
-    const widget = { ...props.widget };
-    widget.customProperties.simStartedSendValue = false;
-
-    updateWidgetSimStatus(true);
-  }, [props.token, props.widget]);
-
-  useEffect(() => {
-    if (props.widget.customProperties.simStartedSendValue) {
-      const widget = { ...props.widget };
+    if (widget.customProperties.simStartedSendValue) {
       widget.customProperties.simStartedSendValue = false;
 
       updateWidgetSimStatus(false);
 
-      props.onInputChanged(Number(value), "", "", false);
+      onInputChanged(Number(value), "", false, false);
     }
-  }, [props, value]);
+  }, [value]);
+
+  //once widget is mounted, update status
+  useEffect(() => {
+    updateWidgetSimStatus(true);
+  }, [widget.id]);
+
+  useEffect(() => {
+    if (widget.customProperties.simStartedSendValue) {
+      updateWidgetSimStatus(false);
+      if (onInputChanged) {
+        onInputChanged(Number(value), "", false, false);
+      }
+    }
+  }, [value]);
+
+  useEffect(() => {
+    let newValue = widget.customProperties.value;
+    if (
+      newValue === undefined &&
+      widget.customProperties.default_value !== undefined
+    ) {
+      newValue = widget.customProperties.default_value;
+    }
+    if (newValue !== undefined && Number(newValue) !== Number(value)) {
+      setValue(Number(newValue));
+    }
+
+    if (widget.signalIDs && widget.signalIDs.length > 0) {
+      const signalID = widget.signalIDs[0];
+      const signal = signals.find((sig) => sig.id === signalID);
+      if (signal && signal.unit !== unit) {
+        setUnit(signal.unit);
+      }
+    }
+  }, [widget, signals]);
 
   const updateWidgetSimStatus = async (isSimStarted) => {
     try {
@@ -57,52 +90,19 @@ function WidgetInput(props) {
         },
       }).unwrap();
     } catch (err) {
-      console.log("error", err);
+      console.log("Error updating simulation status:", err);
     }
   };
-
-  useEffect(() => {
-    let newValue = "";
-    let newUnit = "";
-
-    if (
-      props.widget.customProperties.hasOwnProperty("value") &&
-      props.widget.customProperties.value !== value
-    ) {
-      newValue = Number(props.widget.customProperties.value);
-    } else if (
-      props.widget.customProperties.hasOwnProperty("default_value") &&
-      value === ""
-    ) {
-      newValue = Number(props.widget.customProperties.default_value);
-    }
-
-    if (props.widget.signalIDs.length > 0) {
-      const signalID = props.widget.signalIDs[0];
-      const signal = props.signals.find((sig) => sig.id === signalID);
-      if (signal !== undefined) {
-        newUnit = signal.unit;
-      }
-    }
-
-    if (newUnit !== unit) {
-      setUnit(newUnit);
-    }
-
-    if (newValue !== value) {
-      setValue(newValue);
-    }
-  }, [props, value, unit]);
 
   const valueIsChanging = (newValue) => {
     const numericalValue = Number(newValue);
     setValue(numericalValue);
-    props.widget.customProperties.value = numericalValue;
+    widget.customProperties.value = numericalValue;
   };
 
   const valueChanged = (newValue) => {
-    if (props.onInputChanged) {
-      props.onInputChanged(Number(newValue), "value", Number(newValue), true);
+    if (onInputChanged) {
+      onInputChanged(Number(newValue), "value", Number(newValue), true);
     }
   };
 
@@ -117,15 +117,15 @@ function WidgetInput(props) {
       <Form>
         <Form.Group>
           <Col as={Form.Label}>
-            {props.widget.name}
-            {props.widget.customProperties.showUnit ? ` [${unit}]` : ""}
+            {widget.name}
+            {widget.customProperties.showUnit ? ` [${unit}]` : ""}
           </Col>
           <Col>
             <InputGroup>
               <Form.Control
                 type="number"
                 step="any"
-                disabled={props.editing}
+                disabled={editing}
                 onKeyPress={handleKeyPress}
                 onBlur={() => valueChanged(value)}
                 onChange={(e) => valueIsChanging(e.target.value)}
@@ -138,6 +138,6 @@ function WidgetInput(props) {
       </Form>
     </div>
   );
-}
+};
 
 export default WidgetInput;

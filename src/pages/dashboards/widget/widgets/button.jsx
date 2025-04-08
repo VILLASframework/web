@@ -49,9 +49,9 @@ const WidgetButton = ({ widget, editing }) => {
 
   useEffect(() => {
     if (widget.customProperties.simStartedSendValue) {
-      let widget = widget;
-      widget.customProperties.simStartedSendValue = false;
-      widget.customProperties.pressed = false;
+      let widgetCopy = { ...widget };
+      widgetCopy.customProperties.simStartedSendValue = false;
+      widgetCopy.customProperties.pressed = false;
 
       onInputChanged(widget.customProperties.off_value, "", false, false);
     }
