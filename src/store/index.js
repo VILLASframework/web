@@ -16,21 +16,21 @@
  ******************************************************************************/
 
 import { configureStore } from "@reduxjs/toolkit";
-import icReducer from './icSlice';
-import configReducer from './configSlice'
+import icReducer from "./icSlice";
+import configReducer from "./configSlice";
 import { apiSlice } from "./apiSlice";
-import authReducer from './authSlice';
-import websocketReducer from './websocketSlice';
+import authReducer from "./authSlice";
+import websocketReducer from "./websocketSlice";
 
 export const store = configureStore({
-    reducer: {
-        auth: authReducer,
-        infrastructure: icReducer,
-        config: configReducer,
-        websocket: websocketReducer,
-        [apiSlice.reducerPath]: apiSlice.reducer,
-    },
-    middleware: (getDefaultMiddleware) =>
+  reducer: {
+    auth: authReducer,
+    infrastructure: icReducer,
+    config: configReducer,
+    websocket: websocketReducer,
+    [apiSlice.reducerPath]: apiSlice.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),
-    devTools: true,
-})
+  devTools: true,
+});

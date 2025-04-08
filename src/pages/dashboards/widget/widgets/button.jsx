@@ -81,8 +81,36 @@ const WidgetButton = ({ widget, editing }) => {
   // };
 
   useEffect(() => {
-    if (pressed) {
-      console.log("Yo");
+    updateSimStartedAndPressedValues(false, false);
+  }, [widget]);
+
+  const updateSimStartedAndPressedValues = async (isSimStarted, isPressed) => {
+    try {
+      await updateWidget({
+        widgetID: widget.id,
+        updatedWidget: {
+          widget: {
+            ...widget,
+            customProperties: {
+              ...widget.customProperties,
+              simStartedSendValue: isSimStarted,
+              pressed: isPressed,
+            },
+          },
+        },
+      }).unwrap();
+    } catch (err) {
+      console.log("error", err);
+    }
+  };
+
+  useEffect(() => {
+    if (widget.customProperties.simStartedSendValue) {
+      let widgetCopy = { ...widget };
+      widgetCopy.customProperties.simStartedSendValue = false;
+      widgetCopy.customProperties.pressed = false;
+
+      onInputChanged(widget.customProperties.off_value, "", false, false);
     }
   }, [pressed]);
 

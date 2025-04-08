@@ -28,6 +28,6 @@ export const icEndpoints = (builder) => ({
   }),
 
   getICbyId: builder.query({
-    query: (icID) => `/dashboards/${icID}`,
+    query: (icID) => `/ic/${icID}`,
   }),
 });
