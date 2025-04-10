@@ -49,7 +49,7 @@ class EditConfigDialog extends React.Component {
         if (this.state.icID !== '' && this.props.config.icID !== parseInt(this.state.icID)) {
           data.icID = parseInt(this.state.icID, 10);
         }
-        if (Object.keys(this.state.startParameters).length !== 0 && this.state.startParameters.constructor === Object &&
+        if (Object.keys(this.state.startParameters).length === 0 && this.state.startParameters.constructor === Object &&
           JSON.stringify(this.props.config.startParameters) !== JSON.stringify(this.state.startParameters)) {
           data.startParameters = this.state.startParameters;
         }

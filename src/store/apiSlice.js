@@ -1,20 +1,3 @@
-/**
- * This file is part of VILLASweb.
- *
- * VILLASweb is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * VILLASweb is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
- ******************************************************************************/
-
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { sessionToken } from '../localStorage';
 import { widgetEndpoints } from './endpoints/widget-endpoints';
@@ -28,15 +11,13 @@ import { signalEndpoints } from './endpoints/signal-endpoints';
 import { resultEndpoints } from './endpoints/result-endpoints';
 import { authEndpoints } from './endpoints/auth-endpoints';
 import { websocketEndpoints } from './endpoints/websocket-endpoints';
-import { usergroupEndpoints } from './endpoints/usergroup-endpoints';
-import { selectToken } from './authSlice';
 
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl: '/api/v2',
-    prepareHeaders: (headers, {getState}) => {
-      const token = selectToken(getState());
+    prepareHeaders: (headers) => {
+      const token = sessionToken;
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }
@@ -55,7 +36,6 @@ export const apiSlice = createApi({
     ...signalEndpoints(builder),
     ...authEndpoints(builder),
     ...websocketEndpoints(builder),
-    ...usergroupEndpoints(builder),
   }),
 });
 
@@ -106,13 +86,5 @@ export const {
   useUpdateSignalMutation,
   useGetIcDataQuery,
   useLazyDownloadImageQuery,
-  useUpdateComponentConfigMutation,
-  useGetUsergroupsQuery,
-  useAddUsergroupMutation,
-  useDeleteUsergroupMutation,
-  useGetUsergroupByIdQuery,
-  useGetUsersByUsergroupIdQuery,
-  useAddUserToUsergroupMutation,
-  useDeleteUserFromUsergroupMutation,
-  useUpdateUsergroupMutation
+  useUpdateComponentConfigMutation
 } = apiSlice;
