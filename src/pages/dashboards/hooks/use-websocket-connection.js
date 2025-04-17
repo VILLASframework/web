@@ -51,12 +51,14 @@ const useWebSocketConnection = (activeICS, signals, widgets) => {
                 );
                 if (
                   matchingSignal &&
-                  typeof matchingSignal.index === "number" &&
+                  !isNaN(matchingSignal.index) &&
                   matchingSignal.index < inputValues.length
                 ) {
                   if (widget.type == "Button") {
-                    inputValues[matchingSignal.index] =
-                      widget.customProperties.off_value;
+                    inputValues[matchingSignal.index] = widget.customProperties
+                      .pressed
+                      ? widget.customProperties.on_value
+                      : widget.customProperties.off_value;
                   } else {
                     inputValues[matchingSignal.index] =
                       widget.customProperties.value;
