@@ -204,8 +204,8 @@ const widgetsMap = {
   Player: {
     minWidth: 144,
     minHeight: 226,
-    width: 400,
-    height: 606,
+    width: 144,
+    height: 226,
     customProperties: {
       configIDs: [],
       uploadResults: false,

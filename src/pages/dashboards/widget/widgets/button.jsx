@@ -15,16 +15,27 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 import { useUpdateWidgetMutation } from "../../../../store/apiSlice";
 
-const WidgetButton = ({ widget, editing }) => {
+const WidgetButton = ({ widget, editing, onInputChanged }) => {
   const [pressed, setPressed] = useState(widget.customProperties.pressed);
+  const [toggle, setToggle] = useState(widget.customProperties.toggle);
   const [updateWidget] = useUpdateWidgetMutation();
 
+  //this ref is used for capturing last value of pressed so that it can be saved and sent on unmount
+  const pressedRef = useRef(pressed);
+
   useEffect(() => {
-    updateSimStartedAndPressedValues(false, false);
+    return () => {
+      //if button is in toggle-mode, we want to save its pressed state for future reloads of dashboard
+      if (toggle) updateSimStartedAndPressedValues(false, pressedRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    setToggle(widget.customProperties.toggle);
   }, [widget]);
 
   const updateSimStartedAndPressedValues = async (isSimStarted, isPressed) => {
@@ -48,13 +59,16 @@ const WidgetButton = ({ widget, editing }) => {
   };
 
   useEffect(() => {
-    if (widget.customProperties.simStartedSendValue) {
-      let widgetCopy = { ...widget };
-      widgetCopy.customProperties.simStartedSendValue = false;
-      widgetCopy.customProperties.pressed = false;
+    pressedRef.current = pressed;
 
-      onInputChanged(widget.customProperties.off_value, "", false, false);
-    }
+    onInputChanged(
+      pressed
+        ? widget.customProperties.on_value
+        : widget.customProperties.off_value,
+      "",
+      false,
+      false
+    );
   }, [pressed]);
 
   useEffect(() => {
@@ -76,8 +90,13 @@ const WidgetButton = ({ widget, editing }) => {
         style={buttonStyle}
         active={pressed}
         disabled={editing}
-        onMouseDown={(e) => setPressed(true)}
-        onMouseUp={(e) => setPressed(false)}
+        onMouseDown={(e) => {
+          if (!toggle) setPressed(true);
+          else setPressed(!pressed);
+        }}
+        onMouseUp={(e) => {
+          if (!toggle) setPressed(false);
+        }}
       >
         {widget.name}
       </Button>

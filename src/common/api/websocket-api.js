@@ -54,7 +54,6 @@ class WebSocketManager {
   }
 
   send(id, message) {
-    console.log("MESSAGE", message);
     const socket = this.sockets.find((s) => s.id === id);
     if (socket == null) {
       return false;
