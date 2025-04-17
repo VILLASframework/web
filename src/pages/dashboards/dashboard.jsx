@@ -36,7 +36,6 @@ import useWebSocketConnection from "./hooks/use-websocket-connection.js";
 
 import {
   useGetDashboardQuery,
-  useGetICSQuery,
   useLazyGetWidgetsQuery,
   useLazyGetFilesQuery,
   useAddWidgetMutation,
@@ -48,9 +47,7 @@ import {
   useAddFileMutation,
   useUpdateFileMutation,
 } from "../../store/apiSlice";
-import { useState } from "react";
-import DashboardLayout from "./dashboard-layout";
-import ErrorBoundary from "./dashboard-error-boundry";
+import { Spinner } from "react-bootstrap";
 
 const startUpdaterWidgets = new Set(["Slider", "Button", "NumberInput"]);
 
@@ -612,4 +609,4 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
   );
 };
 
-export default Dashboard;
+export default Fullscreenable()(Dashboard);

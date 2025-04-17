@@ -49,6 +49,16 @@ const App = () => {
     return decodedToken.exp < timeNow;
   };
 
+  const notificationSystem = useRef(null);
+
+  useEffect(() => {
+    NotificationsDataManager.setSystem(notificationSystem.current);
+
+    return () => {
+      NotificationsDataManager.setSystem(null);
+    };
+  }, []);
+
   const { isAuthenticated, token, user } = useSelector((state) => state.auth);
 
   if (!isAuthenticated || isTokenExpired(token)) {

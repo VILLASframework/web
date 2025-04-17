@@ -52,7 +52,6 @@ export const useDashboardData = (scenarioID) => {
 
       // Fetch configs and signals
       const configsRes = await triggerGetConfigs(scenarioID).unwrap();
-      console.log("GOT CONFIGS", configsRes);
       if (configsRes?.configs) {
         setConfigs(configsRes.configs);
 
