@@ -36,8 +36,6 @@ const WidgetInput = ({ signals, widget, editing, onInputChanged }) => {
       if(props.onInputChanged && props.signals && props.signals.length > 0){
         props.onInputChanged(widget.customProperties.value, "", "", false);
       }
-    }, [props.widget]);
-
       updateWidgetSimStatus(false);
 
       onInputChanged(Number(value), "", false, false);

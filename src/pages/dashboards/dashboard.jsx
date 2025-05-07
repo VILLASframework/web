@@ -43,12 +43,10 @@ import {
   useUpdateWidgetMutation,
   useDeleteWidgetMutation,
   useUpdateDashboardMutation,
-  useGetICSQuery,
   useDeleteFileMutation,
   useAddFileMutation,
   useUpdateFileMutation,
 } from "../../store/apiSlice";
-import { useState } from "react";
 import DashboardLayout from "./dashboard-layout";
 import ErrorBoundary from "./dashboard-error-boundry";
 
