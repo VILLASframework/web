@@ -470,7 +470,7 @@ const ConfigsTable = ({scenario, ics}) => {
         onClose={(c) => deleteConfig(c)}
       />
       <EditSignalMappingDialog
-        isShown={isEditSignalMappingModalOpened}
+        show={isEditSignalMappingModalOpened}
         direction={mappingModalDirection}
         onClose={() => setIsEditSignalMappingModalOpened(false)}
         configID={signalMappingConfigID}

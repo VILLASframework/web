@@ -59,7 +59,7 @@ class WebSocketManager {
       return false;
     }
     const data = this.messageToBuffer(message);
-    console.log("📤 Sending binary buffer to server:", new Uint8Array(data));
+    console.log("📤 Sending binary buffer to server:", message.values);
     socket.socket.send(data);
 
     return true;

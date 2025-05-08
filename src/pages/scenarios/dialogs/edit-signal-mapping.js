@@ -46,7 +46,7 @@ const EditSignalMappingDialog = ({ show, direction, onClose, configID }) => {
     const signalToUpdate = { ...updatedSignals[row] };
     switch (column) {
       case 1:
-        signalToUpdate.index = e.target.value;
+        signalToUpdate.index = Number(e.target.value);
         break;
       case 2:
         signalToUpdate.name = e.target.value;
@@ -114,6 +114,7 @@ const EditSignalMappingDialog = ({ show, direction, onClose, configID }) => {
         );
 
         if (signalToUpdate) {
+          console.log(signalToUpdate)
           await updateSignal({
             signalID: id,
             updatedSignal: signalToUpdate,

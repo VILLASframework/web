@@ -33,8 +33,8 @@ const WidgetInput = ({ signals, widget, editing, onInputChanged }) => {
   useEffect(() => {
     if (widget.customProperties.simStartedSendValue) {
       widget.customProperties.simStartedSendValue = false;
-      if(props.onInputChanged && props.signals && props.signals.length > 0){
-        props.onInputChanged(widget.customProperties.value, "", "", false);
+      if(onInputChanged && signals && signals.length > 0){
+        onInputChanged(widget.customProperties.value, "", "", false);
       }
       updateWidgetSimStatus(false);
 

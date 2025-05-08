@@ -17,7 +17,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
-
+import { useUpdateWidgetMutation } from "../../../../store/apiSlice";
 const WidgetButton = ({ widget, editing, onInputChanged }) => {
   const [pressed, setPressed] = useState(widget.customProperties.pressed);
   const [toggle, setToggle] = useState(widget.customProperties.toggle);
