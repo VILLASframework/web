@@ -16,40 +16,48 @@
  ******************************************************************************/
 
 import React, { useState, useEffect } from "react";
-import { Badge } from "react-bootstrap";
-import {stateLabelStyle} from "../../../infrastructure/styles";
+import { Badge, Spinner } from "react-bootstrap";
+import { stateLabelStyle } from "../../../infrastructure/styles";
+import { useDispatch } from "react-redux";
+import { useLazyGetICbyIdQuery } from "../../../../store/apiSlice";
 
+let timer = null;
 const WidgetICstatus = (props) => {
-  const [sessionToken, setSessionToken] = useState(
-    localStorage.getItem("token")
-  );
+  const dispatch = useDispatch();
+  const [ics, setIcs] = useState(props.ics);
+  const [triggerGetICbyId] = useLazyGetICbyIdQuery();
+  const refresh = async () => {
+    if (props.ics) {
+      try {
+        const requests = props.ics.map((ic) =>
+          triggerGetICbyId(ic.id).unwrap()
+        );
 
-  useEffect(() => {
-    // Function to refresh data
-    const refresh = () => {
-      if (props.ics) {
-        props.ics.forEach((ic) => {
-          let icID = parseInt(ic.id, 10);
-        });
+        const results = await Promise.all(requests);
+        setIcs(results);
+      } catch (error) {
+        console.error("Error loading ICs:", error);
       }
-    };
+    }
+  };
+  useEffect(() => {
+    window.clearInterval(timer);
+    timer = window.setInterval(refresh, 3000);
 
-    // Start timer for periodic refresh
-    const timer = window.setInterval(() => refresh(), 3000);
+    refresh();
 
-    // Cleanup function equivalent to componentWillUnmount
     return () => {
       window.clearInterval(timer);
     };
-  }, [props.ics, sessionToken]);
+  }, [props.ics]);
 
   let badges = [];
   let checkedICs = props.widget ? props.widget.customProperties.checkedIDs : [];
 
   if (props.ics && checkedICs) {
-    badges = props.ics
-      .filter((ic) => checkedICs.includes(ic.id))
-      .map((ic) => {
+    badges = ics
+      .filter(({ ic }) => checkedICs.includes(ic?.id))
+      .map(({ ic }) => {
         let badgeStyle = stateLabelStyle(ic.state, ic);
         return (
           <Badge key={ic.id} bg={badgeStyle[0]} className={badgeStyle[1]}>
@@ -59,7 +67,7 @@ const WidgetICstatus = (props) => {
       });
   }
 
-  return <div>{badges}</div>;
+  return badges.length > 0 ? <div>{badges}</div> : <Spinner />;
 };
 
 export default WidgetICstatus;
