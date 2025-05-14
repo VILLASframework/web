@@ -148,17 +148,30 @@ const websocketSlice = createSlice({
         for (let i = 0; i < newIcData.output.values.length; i++) {
           oldValues[i] = [...oldValues[i], ...values[i]];
         }
-        state.icdata[id] = {
-          input: newIcData.input,
-          output: {
-            ...rest,
-            values: oldValues,
-          },
-        };
+        return {
+          ...state,
+          icdata:{
+            ...state.icdata,
+            [id]:{
+              ...state.icdata[id],
+              output:{
+                ...rest,
+                values:oldValues
+              }
+            }
+          }
+        }
       } else {
-        state.icdata[id] = {
-          ...newIcData,
-        };
+        console.log(newIcData)
+        return {
+          ...state,
+          icdata:{
+            ...state.icdata,
+            [id]:{
+              ...newIcData
+            }
+          }
+        }
       }
     },
     //widget changes a value in input values array and they are sent to the websocket
