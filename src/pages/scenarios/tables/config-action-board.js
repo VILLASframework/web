@@ -20,7 +20,6 @@ import DateTimePicker from 'react-datetime-picker';
 import ActionBoardButtonGroup from '../../../common/buttons/action-board-button-group';
 import classNames from 'classnames';
 import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { sessionToken } from '../../../localStorage';
 import { useSendActionMutation, useAddResultMutation, useLazyGetSignalsQuery, useGetResultsQuery } from '../../../store/apiSlice';
 import NotificationsFactory from "../../../common/data-managers/notifications-factory";
@@ -33,7 +32,7 @@ const ConfigActionBoard = ({selectedConfigs, scenarioID}) => {
   const [triggerGetSignals] = useLazyGetSignalsQuery();
 
   const [sendAction] = useSendActionMutation();
-  const [addResult] = useAddResultMutation();
+  const [addResult, {isError: isErrorAddingResult}] = useAddResultMutation();
   //we only need to update results table in case new result being added
   const { refetch: refetchResults } = useGetResultsQuery(scenarioID);
 
@@ -43,8 +42,14 @@ const ConfigActionBoard = ({selectedConfigs, scenarioID}) => {
   const handleConfigStart = async () => {
     for(const config of selectedConfigs){
       try {
-        if(isResultRequested){
+        const action = {
+          icid: config.icID, 
+          action: "start", 
+          when: Math.round(new Date(time).getTime() / 1000), 
+          parameters: {...config.startParameters}
+        }
 
+        if(isResultRequested){
           const signalsInRes = await triggerGetSignals({configID: config.id, direction: "in"}, ).unwrap();
           const signalsOutRes = await triggerGetSignals({configID: config.id, direction: "out"}, ).unwrap();
 
@@ -73,10 +78,27 @@ const ConfigActionBoard = ({selectedConfigs, scenarioID}) => {
             }
           }
 
-          await addResult({result: newResult})
+          //get result id (if successfull) before sending an action
+          const res = await addResult({result: newResult}).unwrap();
+          
+          if(!isErrorAddingResult){
+            const url = window.location.origin;
+            action.results = {
+              url: `https://slew.k8s.eonerc.rwth-aachen.de/api/v2/results/${res.result.id}/file`,
+              type: "url",
+              token: sessionToken
+            }
+            await sendAction(action).unwrap();
+          } else {
+            notificationsDataManager.addNotification(NotificationsFactory.LOAD_ERROR("Error adding result"));
+          }
+
           refetchResults();
+        } else {
+          await sendAction(action).unwrap();
         }
-        await sendAction({ icid: config.icID, action: "start", when: Math.round(new Date(time).getTime() / 1000), parameters: {} }).unwrap();
+
+        notificationsDataManager.addNotification(NotificationsFactory.ACTION_INFO());
       } catch (err) {
         if(err.data){
           notificationsDataManager.addNotification(NotificationsFactory.LOAD_ERROR(err.data.message));
