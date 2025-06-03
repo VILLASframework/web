@@ -146,7 +146,7 @@ class Branding {
         welcome = template_welcome();
         break;
       case 'enershare':
-        footer = enershare_welcome();
+        welcome = enershare_welcome();
         break;  
       default:
         welcome = this.defaultWelcome();
