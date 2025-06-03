@@ -33,6 +33,13 @@ import {
 import opalrt_values from "./opalrt/opalrt-values";
 
 import {
+  enershare_welcome,
+  enershare_home,
+  enershare_footer,
+} from "./enershare/enershare-functions";
+import enershare_values from "./enershare/enershare-values";
+
+import {
   template_welcome,
   template_home,
   template_footer,
@@ -64,6 +71,9 @@ class Branding {
       case "template":
         this.values = template_values;
         break;
+      case "enershare":
+        this.values = enershare_values;
+        break;
       default:
         console.error(
           "Branding '" +
@@ -90,6 +100,9 @@ class Branding {
         break;
       case "template":
         homepage = template_home();
+        break;
+      case "enershare":
+        homepage = enershare_home();
         break;
       default:
         homepage = villasweb_home(this.getTitle(), username, userid, role);
@@ -132,6 +145,9 @@ class Branding {
       case "template":
         welcome = template_welcome();
         break;
+      case 'enershare':
+        footer = enershare_welcome();
+        break;  
       default:
         welcome = this.defaultWelcome();
         break;
