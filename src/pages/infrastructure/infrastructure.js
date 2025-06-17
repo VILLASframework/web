@@ -166,7 +166,7 @@ const Infrastructure = () => {
 
         <ICCategoryTable title={"Equipment"} category={"equipment"} />
 
-        {currentUser.role === "Admin" ? <ICActionBoard /> : null}
+        {currentUser.role === "Admin" ? <ICActionBoard externalICs={externalICs}/> : null}
       </div>
       <NewICDiallog
         show={isNewModalOpened}
