@@ -15,12 +15,12 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { Rnd } from 'react-rnd';
-import WidgetContextMenu from '../widget/widget-context-menu';
-import {contextMenu} from "react-contexify";
+import React from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
+import { Rnd } from "react-rnd";
+import WidgetContextMenu from "../widget/widget-context-menu.jsx";
+import { contextMenu } from "react-contexify";
 
 class WidgetContainer extends React.Component {
   constructor(props) {
@@ -36,7 +36,7 @@ class WidgetContainer extends React.Component {
     return Math.round(value / this.props.grid) * this.props.grid;
   }
 
-  borderWasClicked = event => {
+  borderWasClicked = (event) => {
     if (event.button !== 2) {
       return;
     }
@@ -60,11 +60,19 @@ class WidgetContainer extends React.Component {
     const widget = this.props.widget;
 
     // resize depends on direction
-    if (direction === 'left' || direction === 'topLeft' || direction === 'bottomLeft') {
+    if (
+      direction === "left" ||
+      direction === "topLeft" ||
+      direction === "bottomLeft"
+    ) {
       widget.x -= delta.width;
     }
 
-    if (direction === 'top' || direction === 'topLeft' || direction === 'topRight') {
+    if (
+      direction === "top" ||
+      direction === "topLeft" ||
+      direction === "topRight"
+    ) {
       widget.y -= delta.height;
     }
 
@@ -87,16 +95,15 @@ class WidgetContainer extends React.Component {
     e.preventDefault();
     contextMenu.show({
       event: e,
-      id: 'widgetMenu' + index,
-    })
+      id: "widgetMenu" + index,
+    });
   }
 
   render() {
-
     const widget = this.props.widget;
     let contextMenu = (
       <WidgetContextMenu
-        key={"widget-context-menu"+this.props.index}
+        key={"widget-context-menu" + this.props.index}
         index={this.props.index}
         widget={this.props.widget}
         onEdit={this.props.onEdit}
@@ -105,26 +112,38 @@ class WidgetContainer extends React.Component {
         onChange={this.props.onChange}
         editing={this.props.editing}
         paused={this.props.paused}
-    />)
+      />
+    );
 
-    if ( !this.props.editing ){
+    if (!this.props.editing) {
       const containerStyle = {
         width: Number(widget.width),
         height: Number(widget.height),
         left: Number(widget.x),
         top: Number(widget.y),
         zIndex: Number(widget.z),
-        position: 'absolute'
+        position: "absolute",
       };
 
-      return <div className='widget' style={containerStyle}  onContextMenu={(e) => this.showMenu(e, this.props.index, this.props.editing)}>
-        {this.props.children}
-        {contextMenu}
-      </div>;
+      return (
+        <div
+          className="widget"
+          style={containerStyle}
+          onContextMenu={(e) =>
+            this.showMenu(e, this.props.index, this.props.editing)
+          }
+        >
+          {this.props.children}
+          {contextMenu}
+        </div>
+      );
     }
 
     let resizingRestricted = false;
-    if (widget.customProperties.resizeLeftRightLock || widget.customProperties.resizeTopBottomLock) {
+    if (
+      widget.customProperties.resizeLeftRightLock ||
+      widget.customProperties.resizeTopBottomLock
+    ) {
       resizingRestricted = true;
     }
 
@@ -136,40 +155,51 @@ class WidgetContainer extends React.Component {
       right: !(widget.customProperties.resizeLeftRightLock || widget.isLocked),
       top: !(widget.customProperties.resizeTopBottomLock || widget.isLocked),
       topLeft: !(resizingRestricted || widget.isLocked),
-      topRight: !(resizingRestricted || widget.isLocked)
+      topRight: !(resizingRestricted || widget.isLocked),
     };
 
     const gridArray = [this.props.grid, this.props.grid];
 
     const widgetClasses = classNames({
-      'editing-widget': true,
-      'locked': widget.isLocked
+      "editing-widget": true,
+      locked: widget.isLocked,
     });
 
-    return ( <div key={"widget-rnd-context" + this.props.index} className='widget' style={{zIndex: Number(widget.z), position: 'relative'}} onContextMenu={(e) => this.showMenu(e, this.props.index, this.props.editing)}>
-      <Rnd
-        key={"widget-rnd" + this.props.index}
-        ref={c => { this.rnd = c; }}
-        size={{width: Number(widget.width), height: Number(widget.height)}}
-        position={{x: Number(widget.x), y: Number(widget.y)}}
-        minWidth={widget.minWidth}
-        minHeight={widget.minHeight}
-        lockAspectRatio={Boolean(widget.customProperties.lockAspect)}
-        bounds={'.toolbox-dropzone'}
-        className={widgetClasses}
-        onResizeStart={this.borderWasClicked}
-        onResizeStop={this.resizeStop}
-        onDragStop={this.dragStop}
-        dragGrid={gridArray}
-        resizeGrid={gridArray}
-        enableResizing={resizing}
-        disableDragging={widget.isLocked}
+    return (
+      <div
+        key={"widget-rnd-context" + this.props.index}
+        className="widget"
+        style={{ zIndex: Number(widget.z), position: "relative" }}
+        onContextMenu={(e) =>
+          this.showMenu(e, this.props.index, this.props.editing)
+        }
       >
-        {this.props.children}
-      </Rnd>
+        <Rnd
+          key={"widget-rnd" + this.props.index}
+          ref={(c) => {
+            this.rnd = c;
+          }}
+          size={{ width: Number(widget.width), height: Number(widget.height) }}
+          position={{ x: Number(widget.x), y: Number(widget.y) }}
+          minWidth={widget.minWidth}
+          minHeight={widget.minHeight}
+          lockAspectRatio={Boolean(widget.customProperties.lockAspect)}
+          bounds={".toolbox-dropzone"}
+          className={widgetClasses}
+          onResizeStart={this.borderWasClicked}
+          onResizeStop={this.resizeStop}
+          onDragStop={this.dragStop}
+          dragGrid={gridArray}
+          resizeGrid={gridArray}
+          enableResizing={resizing}
+          disableDragging={widget.isLocked}
+        >
+          {this.props.children}
+        </Rnd>
 
-      {contextMenu}
-    </div>);
+        {contextMenu}
+      </div>
+    );
   }
 }
 
@@ -182,4 +212,4 @@ WidgetContainer.propTypes = {
   editing: PropTypes.bool.isRequired,
 };
 
-export default WidgetContainer
+export default WidgetContainer;

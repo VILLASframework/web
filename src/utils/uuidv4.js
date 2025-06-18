@@ -15,22 +15,13 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import { configureStore } from "@reduxjs/toolkit";
-import icReducer from "./icSlice";
-import configReducer from "./configSlice";
-import { apiSlice } from "./apiSlice";
-import authReducer from "./authSlice";
-import websocketReducer from "./websocketSlice";
+const uuidv4 = () => {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    // eslint-disable-next-line
+    var r = (Math.random() * 16) | 0,
+      v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+};
 
-export const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    infrastructure: icReducer,
-    config: configReducer,
-    websocket: websocketReducer,
-    [apiSlice.reducerPath]: apiSlice.reducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
-  devTools: true,
-});
+export default uuidv4;

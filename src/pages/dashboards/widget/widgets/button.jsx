@@ -15,76 +15,66 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { useState, useEffect } from 'react';
-import { Button } from 'react-bootstrap';
+import React, { useState, useEffect, useRef } from "react";
+import { Button } from "react-bootstrap";
+import { useUpdateWidgetMutation } from "../../../../store/apiSlice";
+const WidgetButton = ({ widget, editing, onInputChanged }) => {
+  const [pressed, setPressed] = useState(widget.customProperties.pressed);
+  const [toggle, setToggle] = useState(widget.customProperties.toggle);
+  const [updateWidget] = useUpdateWidgetMutation();
 
-const WidgetButton = (props) => {
-  const [pressed, setPressed] = useState(props.widget.customProperties.pressed);
+  //this ref is used for capturing last value of pressed so that it can be saved and sent on unmount
+  const pressedRef = useRef(pressed);
 
   useEffect(() => {
-    let widget = props.widget;
-    widget.customProperties.simStartedSendValue = false;
-    widget.customProperties.pressed = false;
-
-    // AppDispatcher.dispatch({
-    //   type: 'widgets/start-edit',
-    //   token: props.token,
-    //   data: widget
-    // });
-
-    // Effect cleanup
     return () => {
-      // Clean up if needed
+      //if button is in toggle-mode, we want to save its pressed state for future reloads of dashboard
+      if (toggle) updateSimStartedAndPressedValues(false, pressedRef.current);
     };
-  }, [props.token, props.widget]);
+  }, []);
 
   useEffect(() => {
-    if (props.widget.customProperties.simStartedSendValue) {
-      let widget = props.widget;
-      widget.customProperties.simStartedSendValue = false;
-      widget.customProperties.pressed = false;
-      AppDispatcher.dispatch({
-        type: 'widgets/start-edit',
-        token: props.token,
-        data: widget
-      });
+    setToggle(widget.customProperties.toggle);
+  }, [widget]);
 
-      props.onInputChanged(widget.customProperties.off_value, '', false, false);
+  const updateSimStartedAndPressedValues = async (isSimStarted, isPressed) => {
+    try {
+      await updateWidget({
+        widgetID: widget.id,
+        updatedWidget: {
+          widget: {
+            ...widget,
+            customProperties: {
+              ...widget.customProperties,
+              simStartedSendValue: isSimStarted,
+              pressed: isPressed,
+            },
+          },
+        },
+      }).unwrap();
+    } catch (err) {
+      console.log("error", err);
     }
-  }, [props, setPressed]);
+  };
 
   useEffect(() => {
-    setPressed(props.widget.customProperties.pressed);
-  }, [props.widget.customProperties.pressed]);
+    pressedRef.current = pressed;
 
-  const onPress = (e) => {
-    if (e.button === 0 && !props.widget.customProperties.toggle) {
-      valueChanged(props.widget.customProperties.on_value, true);
-    }
-  };
+    onInputChanged(
+      pressed
+        ? widget.customProperties.on_value
+        : widget.customProperties.off_value,
+      "",
+      false,
+      false
+    );
+  }, [pressed]);
 
-  const onRelease = (e) => {
-    if (e.button === 0) {
-      let nextState = false;
-      if (props.widget.customProperties.toggle) {
-        nextState = !pressed;
-      }
-      valueChanged(nextState ? props.widget.customProperties.on_value : props.widget.customProperties.off_value, nextState);
-    }
-  };
-
-  const valueChanged = (newValue, newPressed) => {
-    if (props.onInputChanged) {
-      props.onInputChanged(newValue, 'pressed', newPressed, true);
-    }
-    setPressed(newPressed);
-  };
-
-  let opacity = props.widget.customProperties.background_color_opacity;
+  let opacity = widget.customProperties.background_color_opacity;
   const buttonStyle = {
-    backgroundColor: props.widget.customProperties.background_color,
-    borderColor: props.widget.customProperties.border_color,
-    color: props.widget.customProperties.font_color,
+    backgroundColor: widget.customProperties.background_color,
+    borderColor: widget.customProperties.border_color,
+    color: widget.customProperties.font_color,
     opacity: pressed ? (opacity + 1) / 4 : opacity,
   };
 
@@ -94,11 +84,16 @@ const WidgetButton = (props) => {
         className="full"
         style={buttonStyle}
         active={pressed}
-        disabled={props.editing}
-        onMouseDown={(e) => onPress(e)}
-        onMouseUp={(e) => onRelease(e)}
+        disabled={editing}
+        onMouseDown={(e) => {
+          if (!toggle) setPressed(true);
+          else setPressed(!pressed);
+        }}
+        onMouseUp={(e) => {
+          if (!toggle) setPressed(false);
+        }}
       >
-        {props.widget.name}
+        {widget.name}
       </Button>
     </div>
   );

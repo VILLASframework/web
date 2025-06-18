@@ -15,44 +15,48 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { useState, useEffect, useCallback, useRef, act } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import Fullscreenable from 'react-fullscreenable';
-import classNames from 'classnames';
-import 'react-contexify/dist/ReactContexify.min.css';
-import EditWidget from './widget/edit-widget/edit-widget';
-import EditSignalMappingDialog from '../scenarios/dialogs/edit-signal-mapping'
-import WidgetToolbox from './widget/widget-toolbox';
-import WidgetArea from './widget-area';
-import DashboardButtonGroup from './dashboard-button-group';
-import IconToggleButton from '../../common/buttons/icon-toggle-button';
+import React, { useState, useEffect, useCallback, useRef, act } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import Fullscreenable from "react-fullscreenable";
+import classNames from "classnames";
+import "react-contexify/dist/ReactContexify.min.css";
+import EditWidget from "./widget/edit-widget/edit-widget";
+import EditSignalMappingDialog from "../scenarios/dialogs/edit-signal-mapping";
+import WidgetToolbox from "./widget/widget-toolbox";
+import WidgetArea from "./grid/widget-area";
+import DashboardButtonGroup from "./grid/dashboard-button-group";
+import IconToggleButton from "../../common/buttons/icon-toggle-button";
 import WidgetContainer from "./widget/widget-container";
-import Widget from "./widget/widget";
+import Widget from "./widget/widget-old";
 
-import { connectWebSocket, disconnect } from '../../store/websocketSlice';
+import { connectWebSocket, disconnect } from "../../store/websocketSlice";
 
-import { 
-  useGetDashboardQuery, 
-  useLazyGetWidgetsQuery, 
-  useLazyGetConfigsQuery, 
-  useAddWidgetMutation, 
-  useUpdateWidgetMutation, 
+import {
+  useGetDashboardQuery,
+  useLazyGetWidgetsQuery,
+  useLazyGetConfigsQuery,
+  useAddWidgetMutation,
+  useUpdateWidgetMutation,
   useDeleteWidgetMutation,
   useLazyGetFilesQuery,
   useUpdateDashboardMutation,
   useGetICSQuery,
-  useLazyGetSignalsQuery
-} from '../../store/apiSlice';
+  useLazyGetSignalsQuery,
+} from "../../store/apiSlice";
 
-const startUpdaterWidgets = new Set(['Slider', 'Button', 'NumberInput']);
+const startUpdaterWidgets = new Set(["Slider", "Button", "NumberInput"]);
 
 const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
   const dispatch = useDispatch();
   const params = useParams();
-  const { data: dashboardRes, error: dashboardError, isLoading: isDashboardLoading } = useGetDashboardQuery(params.dashboard);
+  const {
+    data: dashboardRes,
+    error: dashboardError,
+    isLoading: isDashboardLoading,
+  } = useGetDashboardQuery(params.dashboard);
   const dashboard = dashboardRes ? dashboardRes.dashboard : {};
-  const {data: icsRes} = useGetICSQuery();
+  const { data: icsRes } = useGetICSQuery();
   const ics = icsRes ? icsRes.ics : [];
 
   const [triggerGetWidgets] = useLazyGetWidgetsQuery();
@@ -68,7 +72,9 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
   const [widgetsToUpdate, setWidgetsToUpdate] = useState([]);
   const [configs, setConfigs] = useState([]);
   const [signals, setSignals] = useState([]);
-  const [sessionToken, setSessionToken] = useState(localStorage.getItem("token"));
+  const [sessionToken, setSessionToken] = useState(
+    localStorage.getItem("token")
+  );
   const [files, setFiles] = useState([]);
   const [editing, setEditing] = useState(false);
   const [paused, setPaused] = useState(false);
@@ -93,31 +99,31 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
 
   useEffect(() => {
     let usedICS = [];
-    for(const config of configs){
+    for (const config of configs) {
       usedICS.push(config.icID);
     }
     setActiveICS(ics.filter((i) => usedICS.includes(i.id)));
-  }, [configs])
+  }, [configs]);
 
-  const activeSocketURLs = useSelector((state) => state.websocket.activeSocketURLs);
+  const activeSocketURLs = useSelector(
+    (state) => state.websocket.activeSocketURLs
+  );
 
   //connect to websockets
   useEffect(() => {
     activeICS.forEach((i) => {
-      if(i.websocketurl){
-        if(!activeSocketURLs.includes(i.websocketurl)) 
+      if (i.websocketurl) {
+        if (!activeSocketURLs.includes(i.websocketurl))
           dispatch(connectWebSocket({ url: i.websocketurl, id: i.id }));
       }
-    })
+    });
 
     return () => {
       activeICS.forEach((i) => {
         dispatch(disconnect({ id: i.id }));
       });
     };
-
   }, [activeICS]);
-
 
   //as soon as dashboard is loaded, load widgets, configs, signals and files for this dashboard
   useEffect(() => {
@@ -126,8 +132,6 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
       fetchWidgetData(dashboard.scenarioID);
       setHeight(dashboard.height);
       setGrid(dashboard.grid);
-      
-      console.log('widgets', widgets);
     }
   }, [dashboard]);
 
@@ -138,9 +142,9 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
         setWidgets(widgetsRes.widgets);
       }
     } catch (err) {
-      console.log('error fetching data', err);
+      console.log("error fetching data", err);
     }
-  }
+  };
 
   const fetchWidgetData = async (scenarioID) => {
     try {
@@ -153,48 +157,60 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
         setConfigs(configsRes.configs);
         //load signals if there are any configs
 
-        if(configsRes.configs.length > 0){
-          for(const config of configsRes.configs){
-            const signalsInRes = await triggerGetSignals({configID: config.id, direction: "in"}).unwrap();
-            const signalsOutRes = await triggerGetSignals({configID: config.id, direction: "out"}).unwrap();
-            setSignals(prevState => ([...signalsInRes.signals, ...signalsOutRes.signals, ...prevState]));
+        if (configsRes.configs.length > 0) {
+          for (const config of configsRes.configs) {
+            const signalsInRes = await triggerGetSignals({
+              configID: config.id,
+              direction: "in",
+            }).unwrap();
+            const signalsOutRes = await triggerGetSignals({
+              configID: config.id,
+              direction: "out",
+            }).unwrap();
+            setSignals((prevState) => [
+              ...signalsInRes.signals,
+              ...signalsOutRes.signals,
+              ...prevState,
+            ]);
           }
         }
-        
       }
     } catch (err) {
-      console.log('error fetching data', err);
+      console.log("error fetching data", err);
     }
-  }
+  };
 
-  const handleKeydown = useCallback((e) => {
-    switch (e.key) {
-      case ' ':
-      case 'p':
-        setPaused(prevPaused => !prevPaused);
-        break;
-      case 'e':
-        setEditing(prevEditing => !prevEditing);
-        break;
-      case 'f':
-        toggleFullscreen();
-        break;
-      default:
-    }
-  }, [toggleFullscreen]);
+  const handleKeydown = useCallback(
+    (e) => {
+      switch (e.key) {
+        case " ":
+        case "p":
+          setPaused((prevPaused) => !prevPaused);
+          break;
+        case "e":
+          setEditing((prevEditing) => !prevEditing);
+          break;
+        case "f":
+          toggleFullscreen();
+          break;
+        default:
+      }
+    },
+    [toggleFullscreen]
+  );
 
   useEffect(() => {
-    window.addEventListener('keydown', handleKeydown);
+    window.addEventListener("keydown", handleKeydown);
     return () => {
-      window.removeEventListener('keydown', handleKeydown);
+      window.removeEventListener("keydown", handleKeydown);
     };
   }, [handleKeydown]);
 
   const handleDrop = async (widget) => {
     widget.dashboardID = dashboard.id;
 
-    if (widget.type === 'ICstatus') {
-      let allICids = ics.map(ic => ic.id);
+    if (widget.type === "ICstatus") {
+      let allICids = ics.map((ic) => ic.id);
       widget.customProperties.checkedIDs = allICids;
     }
 
@@ -204,13 +220,18 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
         fetchWidgets(dashboard.id);
       }
     } catch (err) {
-      console.log('error', err);
+      console.log("error", err);
     }
   };
 
   const widgetChange = async (widget) => {
-    setWidgetsToUpdate(prevWidgetsToUpdate => [...prevWidgetsToUpdate, widget.id]);
-    setWidgets(prevWidgets => prevWidgets.map(w => w.id === widget.id ? {...widget} : w));
+    setWidgetsToUpdate((prevWidgetsToUpdate) => [
+      ...prevWidgetsToUpdate,
+      widget.id,
+    ]);
+    setWidgets((prevWidgets) =>
+      prevWidgets.map((w) => (w.id === widget.id ? { ...widget } : w))
+    );
 
     // try {
     //   await updateWidget({ widgetID: widget.id, updatedWidget: { widget } }).unwrap();
@@ -222,10 +243,13 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
 
   const onChange = async (widget) => {
     try {
-      await updateWidget({ widgetID: widget.id, updatedWidget: { widget: widget } }).unwrap();
+      await updateWidget({
+        widgetID: widget.id,
+        updatedWidget: { widget: widget },
+      }).unwrap();
       fetchWidgets(dashboard.id);
     } catch (err) {
-      console.log('error', err);
+      console.log("error", err);
     }
   };
 
@@ -234,9 +258,12 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
       if (startUpdaterWidgets.has(widget.type)) {
         widget.customProperties.simStartedSendValue = true;
         try {
-          await updateWidget({ widgetID: widget.id, updatedWidget: { widget } }).unwrap();
+          await updateWidget({
+            widgetID: widget.id,
+            updatedWidget: { widget },
+          }).unwrap();
         } catch (err) {
-          console.log('error', err);
+          console.log("error", err);
         }
       }
     });
@@ -244,30 +271,35 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
 
   const editWidget = (widget, index) => {
     setEditModal(true);
-    setModalData({...widget});
+    setModalData({ ...widget });
     setModalIndex(index);
   };
 
   const duplicateWidget = async (widget) => {
-    let widgetCopy = { ...widget, id: undefined, x: widget.x + 50, y: widget.y + 50 };
+    let widgetCopy = {
+      ...widget,
+      id: undefined,
+      x: widget.x + 50,
+      y: widget.y + 50,
+    };
     try {
       const res = await addWidget({ widget: widgetCopy }).unwrap();
       if (res) {
         fetchWidgets(dashboard.id);
       }
     } catch (err) {
-      console.log('error', err);
+      console.log("error", err);
     }
   };
 
   const startEditFiles = () => {
-    let tempFiles = files.map(file => ({ id: file.id, name: file.name }));
+    let tempFiles = files.map((file) => ({ id: file.id, name: file.name }));
     setFilesEditModal(true);
     setFilesEditSaveState(tempFiles);
   };
 
   const closeEditFiles = () => {
-    widgets.forEach(widget => {
+    widgets.forEach((widget) => {
       if (widget.type === "Image") {
         //widget.customProperties.update = true;
       }
@@ -288,10 +320,13 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
     }
 
     try {
-      await updateWidget({ widgetID: data.id, updatedWidget: { widget: data } }).unwrap();
+      await updateWidget({
+        widgetID: data.id,
+        updatedWidget: { widget: data },
+      }).unwrap();
       fetchWidgets(dashboard.id);
     } catch (err) {
-      console.log('error', err);
+      console.log("error", err);
     }
 
     setEditModal(false);
@@ -304,20 +339,27 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
       await deleteWidgetMutation(widgetID).unwrap();
       fetchWidgets(dashboard.id);
     } catch (err) {
-      console.log('error', err);
+      console.log("error", err);
     }
   };
 
   const startEditing = () => {
-    let originalIDs = widgets.map(widget => widget.id);
+    let originalIDs = widgets.map((widget) => widget.id);
     widgets.forEach(async (widget) => {
-      if (widget.type === 'Slider' || widget.type === 'NumberInput' || widget.type === 'Button') {
+      if (
+        widget.type === "Slider" ||
+        widget.type === "NumberInput" ||
+        widget.type === "Button"
+      ) {
         try {
-          await updateWidget({ widgetID: widget.id, updatedWidget: { widget } }).unwrap();
+          await updateWidget({
+            widgetID: widget.id,
+            updatedWidget: { widget },
+          }).unwrap();
         } catch (err) {
-          console.log('error', err);
+          console.log("error", err);
         }
-      } else if (widget.type === 'Image') {
+      } else if (widget.type === "Image") {
         //widget.customProperties.update = true;
       }
     });
@@ -337,25 +379,33 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
     //   }
     // });
 
-
-    if(height !== dashboard.height || grid !== dashboard.grid) {
+    if (height !== dashboard.height || grid !== dashboard.grid) {
       try {
-        const {height: oldHeight, grid: oldGrid, ...rest} = dashboard;
-        await updateDashboard({dashboardID: dashboard.id, dashboard:{height: height, grid: grid, ...rest}}).unwrap();
+        const { height: oldHeight, grid: oldGrid, ...rest } = dashboard;
+        await updateDashboard({
+          dashboardID: dashboard.id,
+          dashboard: { height: height, grid: grid, ...rest },
+        }).unwrap();
       } catch (err) {
-        console.log('error', err);
+        console.log("error", err);
       }
     }
 
-
-    if(widgetsToUpdate.length > 0){
+    if (widgetsToUpdate.length > 0) {
       try {
-        for(const index in widgetsToUpdate){
-          await updateWidget({ widgetID: widgetsToUpdate[index], updatedWidget: { widget: {...widgets.find(w => w.id == widgetsToUpdate[index])} } }).unwrap();
+        for (const index in widgetsToUpdate) {
+          await updateWidget({
+            widgetID: widgetsToUpdate[index],
+            updatedWidget: {
+              widget: {
+                ...widgets.find((w) => w.id == widgetsToUpdate[index]),
+              },
+            },
+          }).unwrap();
         }
         fetchWidgets(dashboard.id);
       } catch (err) {
-        console.log('error', err);
+        console.log("error", err);
       }
     }
 
@@ -394,11 +444,11 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
     }, 0);
 
     if (value === -1) {
-      if (dashboard.height >= 450 && dashboard.height >= (maxHeight + 80)) {
-        setHeight(prevState => (prevState - 50));
+      if (dashboard.height >= 450 && dashboard.height >= maxHeight + 80) {
+        setHeight((prevState) => prevState - 50);
       }
     } else {
-      setHeight( prevState => ( prevState + 50));
+      setHeight((prevState) => prevState + 50);
     }
   };
 
@@ -415,9 +465,11 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
     }
   };
 
-  const buttonStyle = { marginLeft: '10px' };
-  const iconStyle = { height: '25px', width: '25px' };
-  const boxClasses = classNames('section', 'box', { 'fullscreen-padding': isFullscreen });
+  const buttonStyle = { marginLeft: "10px" };
+  const iconStyle = { height: "25px", width: "25px" };
+  const boxClasses = classNames("section", "box", {
+    "fullscreen-padding": isFullscreen,
+  });
 
   if (isDashboardLoading) {
     return <div>Loading...</div>;
@@ -429,19 +481,19 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
 
   return (
     <div className={boxClasses}>
-      <div key={"header-box"} className='section-header box-header'>
+      <div key={"header-box"} className="section-header box-header">
         <div key={"title"} className="section-title">
           <h2>
             {dashboard.name}
-            <span key={"toggle-lock-button"} className='icon-button'>
+            <span key={"toggle-lock-button"} className="icon-button">
               <IconToggleButton
                 childKey={0}
                 checked={locked}
                 index={dashboard.id}
-                checkedIcon='lock'
-                uncheckedIcon='lock-open'
-                tooltipChecked='Dashboard is locked, cannot be edited'
-                tooltipUnchecked='Dashboard is unlocked, can be edited'
+                checkedIcon="lock"
+                uncheckedIcon="lock-open"
+                tooltipChecked="Dashboard is locked, cannot be edited"
+                tooltipUnchecked="Dashboard is unlocked, can be edited"
                 disabled={true}
                 buttonStyle={buttonStyle}
                 iconStyle={iconStyle}
@@ -468,8 +520,12 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
         />
       </div>
 
-      <div key={"dashboard-area"} className="box box-content" onContextMenu={(e) => e.preventDefault()}>
-        {editing &&
+      <div
+        key={"dashboard-area"}
+        className="box box-content"
+        onContextMenu={(e) => e.preventDefault()}
+      >
+        {editing && (
           <WidgetToolbox
             key={"widget-toolbox"}
             grid={grid}
@@ -478,7 +534,7 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
             onDashboardSizeChange={updateHeight}
             widgets={widgets}
           />
-        }
+        )}
 
         <WidgetArea
           key={"widget-area"}
@@ -488,35 +544,36 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
           grid={grid}
           onWidgetAdded={handleDrop}
         >
-          {widgets != null && Object.keys(widgets).map(widgetKey => (
-            <div key={"widget-container-wrapper" + widgetKey}>
-              <WidgetContainer
-                widget={JSON.parse(JSON.stringify(widgets[widgetKey]))}
-                key={"widget-container" + widgetKey}
-                index={parseInt(widgetKey, 10)}
-                grid={grid}
-                onWidgetChange={widgetChange}
-                editing={editing}
-                paused={paused}
-                onEdit={editWidget}
-                onDuplicate={duplicateWidget}
-                onDelete={(widget, index) => deleteWidget(widget.id)}
-                onChange={editing ? widgetChange : onChange}
-              >
-                <Widget
+          {widgets != null &&
+            Object.keys(widgets).map((widgetKey) => (
+              <div key={"widget-container-wrapper" + widgetKey}>
+                <WidgetContainer
                   widget={JSON.parse(JSON.stringify(widgets[widgetKey]))}
+                  key={"widget-container" + widgetKey}
+                  index={parseInt(widgetKey, 10)}
+                  grid={grid}
+                  onWidgetChange={widgetChange}
                   editing={editing}
-                  files={files}
-                  configs={configs}
-                  signals={signals}
                   paused={paused}
-                  ics={activeICS}
-                  scenarioID={dashboard.scenarioID}
-                  onSimulationStarted={() => onSimulationStarted()}
-                />
-              </WidgetContainer>
-            </div>
-          ))}
+                  onEdit={editWidget}
+                  onDuplicate={duplicateWidget}
+                  onDelete={(widget, index) => deleteWidget(widget.id)}
+                  onChange={editing ? widgetChange : onChange}
+                >
+                  <Widget
+                    widget={JSON.parse(JSON.stringify(widgets[widgetKey]))}
+                    editing={editing}
+                    files={files}
+                    configs={configs}
+                    signals={signals}
+                    paused={paused}
+                    ics={activeICS}
+                    scenarioID={dashboard.scenarioID}
+                    onSimulationStarted={() => onSimulationStarted()}
+                  />
+                </WidgetContainer>
+              </div>
+            ))}
         </WidgetArea>
 
         <EditWidget

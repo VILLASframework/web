@@ -14,24 +14,22 @@ import {
 import Dialog from "../../../common/dialogs/dialog";
 import Icon from "../../../common/icon";
 import {
-  useGetSignalsQuery,
-  useAddSignalMutation,
   useDeleteSignalMutation,
   useUpdateSignalMutation,
 } from "../../../store/apiSlice";
 import { Collapse } from "react-collapse";
 
-const EditSignalMappingDialog = ({ show, direction, onClose, configID }) => {
+const EditSignalMappingDialog = ({
+  show,
+  direction,
+  onClose,
+  signals,
+  refetch,
+}) => {
   const [isCollapseOpened, setCollapseOpened] = useState(false);
   const [checkedSignalsIDs, setCheckedSignalsIDs] = useState([]);
-  const { data, refetch: refetchSignals } = useGetSignalsQuery({
-    configID: configID,
-    direction: direction,
-  });
-  const [addSignalToConfig] = useAddSignalMutation();
   const [deleteSignal] = useDeleteSignalMutation();
   const [updateSignal] = useUpdateSignalMutation();
-  const signals = data ? data.signals : [];
 
   const [updatedSignals, setUpdatedSignals] = useState([]);
   const [updatedSignalsIDs, setUpdatedSignalsIDs] = useState([]);
@@ -46,7 +44,7 @@ const EditSignalMappingDialog = ({ show, direction, onClose, configID }) => {
     const signalToUpdate = { ...updatedSignals[row] };
     switch (column) {
       case 1:
-        signalToUpdate.index = Number(e.target.value);
+        signalToUpdate.index = e.target.value;
         break;
       case 2:
         signalToUpdate.name = e.target.value;
@@ -70,32 +68,6 @@ const EditSignalMappingDialog = ({ show, direction, onClose, configID }) => {
     setUpdatedSignalsIDs((prevState) => [signalToUpdate.id, ...prevState]);
   };
 
-  const handleAdd = async () => {
-    let largestIndex = -1;
-    signals.forEach((signal) => {
-      if (signal.index > largestIndex) {
-        largestIndex = signal.index;
-      }
-    });
-
-    const newSignal = {
-      configID: configID,
-      direction: direction,
-      name: "PlaceholderName",
-      unit: "PlaceholderUnit",
-      index: largestIndex + 1,
-      scalingFactor: 1.0,
-    };
-
-    try {
-      await addSignalToConfig(newSignal).unwrap();
-    } catch (err) {
-      console.log(err);
-    }
-
-    refetchSignals();
-  };
-
   const handleDelete = async (signalID) => {
     try {
       await deleteSignal(signalID).unwrap();
@@ -103,7 +75,7 @@ const EditSignalMappingDialog = ({ show, direction, onClose, configID }) => {
       console.log(err);
     }
 
-    refetchSignals();
+    refetch();
   };
 
   const handleUpdate = async () => {
@@ -114,7 +86,6 @@ const EditSignalMappingDialog = ({ show, direction, onClose, configID }) => {
         );
 
         if (signalToUpdate) {
-          console.log(signalToUpdate)
           await updateSignal({
             signalID: id,
             updatedSignal: signalToUpdate,
@@ -122,7 +93,7 @@ const EditSignalMappingDialog = ({ show, direction, onClose, configID }) => {
         }
       }
 
-      refetchSignals();
+      refetch();
       setUpdatedSignalsIDs([]);
     } catch (error) {
       console.error("Error updating signals:", error);
@@ -272,14 +243,6 @@ const EditSignalMappingDialog = ({ show, direction, onClose, configID }) => {
             style={buttonStyle}
           >
             <Icon icon="minus" /> Remove
-          </Button>
-          <Button
-            variant="secondary"
-            key={52}
-            onClick={() => handleAdd()}
-            style={buttonStyle}
-          >
-            <Icon icon="plus" /> Signal
           </Button>
         </div>
         <div>

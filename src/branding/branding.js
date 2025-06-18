@@ -15,17 +15,29 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import { villasweb_footer, villasweb_home, villasweb_welcome } from './villasweb/villasweb-functions';
-import villasweb_values from './villasweb/villasweb-values';
+import {
+  villasweb_footer,
+  villasweb_home,
+  villasweb_welcome,
+} from "./villasweb/villasweb-functions";
+import villasweb_values from "./villasweb/villasweb-values";
 
-import { slew_home, slew_welcome } from './slew/slew-functions';
-import slew_values from './slew/slew-values';
+import { slew_home, slew_welcome } from "./slew/slew-functions";
+import slew_values from "./slew/slew-values";
 
-import { opalrt_footer, opalrt_home, opalrt_welcome } from './opalrt/opalrt-functions';
-import opalrt_values from './opalrt/opalrt-values';
+import {
+  opalrt_footer,
+  opalrt_home,
+  opalrt_welcome,
+} from "./opalrt/opalrt-functions";
+import opalrt_values from "./opalrt/opalrt-values";
 
-import { template_welcome, template_home, template_footer } from './template/template-functions';
-import template_values from './template/template-values';
+import {
+  template_welcome,
+  template_home,
+  template_footer,
+} from "./template/template-functions";
+import template_values from "./template/template-values";
 
 class Branding {
   constructor(brand) {
@@ -40,39 +52,43 @@ class Branding {
 
   setValues() {
     switch (this.brand) {
-      case 'villasweb':
+      case "villasweb":
         this.values = villasweb_values;
         break;
-      case 'slew':
+      case "slew":
         this.values = slew_values;
         break;
-      case 'opalrt':
+      case "opalrt":
         this.values = opalrt_values;
         break;
-      case 'template':
+      case "template":
         this.values = template_values;
         break;
       default:
-        console.error("Branding '" + this.brand + "' not available, will use 'villasweb' branding");
-        this.brand = 'villasweb';
+        console.error(
+          "Branding '" +
+            this.brand +
+            "' not available, will use 'villasweb' branding"
+        );
+        this.brand = "villasweb";
         this.values = villasweb_values;
         break;
     }
   }
 
-  getHome(username = '', userid = '', role = '') {
-    var homepage = '';
+  getHome(username = "", userid = "", role = "") {
+    var homepage = "";
     switch (this.brand) {
-      case 'villasweb':
+      case "villasweb":
         homepage = villasweb_home(this.getTitle(), username, userid, role);
         break;
-      case 'slew':
+      case "slew":
         homepage = slew_home();
         break;
-      case 'opalrt':
+      case "opalrt":
         homepage = opalrt_home(this.getTitle(), username, userid, role);
         break;
-      case 'template':
+      case "template":
         homepage = template_home();
         break;
       default:
@@ -83,14 +99,17 @@ class Branding {
   }
 
   getFooter() {
-    var footer = '';
+    var footer = "";
     switch (this.brand) {
-      case 'template':
+      case "template":
         footer = template_footer();
         break;
-      case 'opalrt':
+      case "opalrt":
         footer = opalrt_footer();
         break;
+      case 'enershare':
+        footer = enershare_footer();
+        break;  
       default:
         footer = villasweb_footer();
         break;
@@ -99,18 +118,18 @@ class Branding {
   }
 
   getWelcome() {
-    var welcome = '';
+    var welcome = "";
     switch (this.brand) {
-      case 'villasweb':
+      case "villasweb":
         welcome = villasweb_welcome();
         break;
-      case 'slew':
+      case "slew":
         welcome = slew_welcome();
         break;
-      case 'opalrt':
+      case "opalrt":
         welcome = opalrt_welcome();
         break;
-      case 'template':
+      case "template":
         welcome = template_welcome();
         break;
       default:
@@ -121,7 +140,12 @@ class Branding {
   }
 
   defaultWelcome() {
-    return (<div><h1>Welcome!</h1><p>This is the welcome page and you are very welcome here.</p></div>);
+    return (
+      <div>
+        <h1>Welcome!</h1>
+        <p>This is the welcome page and you are very welcome here.</p>
+      </div>
+    );
   }
 
   // if icon cannot be found, the default favicon will be used
@@ -137,12 +161,12 @@ class Branding {
     if (!this.values.icon) {
       return;
     }
-    var oldlink = document.getElementById('dynamic-favicon');
+    var oldlink = document.getElementById("dynamic-favicon");
 
-    var link = document.createElement('link');
-    link.id = 'dynamic-favicon';
-    link.rel = 'shortcut icon'
-    link.href = '/' + this.values.icon;
+    var link = document.createElement("link");
+    link.id = "dynamic-favicon";
+    link.rel = "shortcut icon";
+    link.href = "/" + this.values.icon;
 
     if (oldlink) {
       document.head.removeChild(oldlink);
@@ -151,7 +175,7 @@ class Branding {
   }
 
   checkValues() {
-    if (!this.values.hasOwnProperty('pages')) {
+    if (!this.values.hasOwnProperty("pages")) {
       let pages = {};
       pages.home = true;
       pages.scenarios = true;
@@ -162,23 +186,23 @@ class Branding {
 
       this.values.pages = pages;
     } else {
-      if (!this.values.pages.hasOwnProperty('home')) {
-        this.values.pages['home'] = false;
+      if (!this.values.pages.hasOwnProperty("home")) {
+        this.values.pages["home"] = false;
       }
-      if (!this.values.pages.hasOwnProperty('scenarios')) {
-        this.values.pages['scenarios'] = false;
+      if (!this.values.pages.hasOwnProperty("scenarios")) {
+        this.values.pages["scenarios"] = false;
       }
-      if (!this.values.pages.hasOwnProperty('infrastructure')) {
-        this.values.pages['infrastructure'] = false;
+      if (!this.values.pages.hasOwnProperty("infrastructure")) {
+        this.values.pages["infrastructure"] = false;
       }
-      if (!this.values.pages.hasOwnProperty('users')) {
-        this.values.pages['users'] = false;
+      if (!this.values.pages.hasOwnProperty("users")) {
+        this.values.pages["users"] = false;
       }
-      if (!this.values.pages.hasOwnProperty('account')) {
-        this.values.pages['account'] = false;
+      if (!this.values.pages.hasOwnProperty("account")) {
+        this.values.pages["account"] = false;
       }
-      if (!this.values.pages.hasOwnProperty('api')) {
-        this.values.pages['api'] = false;
+      if (!this.values.pages.hasOwnProperty("api")) {
+        this.values.pages["api"] = false;
       }
     }
   }
@@ -186,10 +210,10 @@ class Branding {
   applyStyle() {
     this.changeHead();
 
-    const rootEl = document.querySelector(':root');
+    const rootEl = document.querySelector(":root");
 
     for (const [key, value] of Object.entries(this.values.style)) {
-      rootEl.style.setProperty('--' + key, value);
+      rootEl.style.setProperty("--" + key, value);
     }
   }
 
@@ -197,9 +221,17 @@ class Branding {
     let image = null;
 
     try {
-      image = <img style={style} src={require('./' + this.brand + '/img/' + this.values.logo).default} alt={'Logo ' + this.values.title} />
+      image = (
+        <img
+          style={style}
+          src={require("./" + this.brand + "/img/" + this.values.logo).default}
+          alt={"Logo " + this.values.title}
+        />
+      );
     } catch (err) {
-      console.error("cannot find './" + this.brand + '/img/' + this.values.logo + "'");
+      console.error(
+        "cannot find './" + this.brand + "/img/" + this.values.logo + "'"
+      );
     }
 
     return image;
@@ -212,7 +244,7 @@ class Branding {
   getSubtitle() {
     return this.values.subtitle ? this.values.subtitle : null;
   }
-};
+}
 
 var branding = new Branding(process.env.REACT_APP_BRAND);
 

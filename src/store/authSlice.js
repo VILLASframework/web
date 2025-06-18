@@ -66,6 +66,7 @@ const authSlice = createSlice({
     );
   },
 });
+export const selectToken = (state) => state.auth.token; 
 
 export const { setUser, deleteUser } = authSlice.actions;
 

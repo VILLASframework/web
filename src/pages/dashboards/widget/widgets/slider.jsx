@@ -20,19 +20,18 @@ import { format } from "d3";
 import classNames from "classnames";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
+import { useUpdateWidgetMutation } from "../../../../store/apiSlice";
 
 const WidgetSlider = (props) => {
   const [value, setValue] = useState("");
   const [unit, setUnit] = useState("");
 
+  const [updateWidget] = useUpdateWidgetMutation();
+
   useEffect(() => {
     let widget = { ...props.widget };
     widget.customProperties.simStartedSendValue = false;
-    // AppDispatcher.dispatch({
-    //   type: "widgets/start-edit",
-    //   token: props.token,
-    //   data: widget,
-    // });
+    updateWidgetSimStatus(false);
   }, [props.token, props.widget]);
 
   useEffect(() => {
@@ -40,16 +39,31 @@ const WidgetSlider = (props) => {
     if (props.widget.customProperties.simStartedSendValue) {
       let widget = { ...props.widget };
       widget.customProperties.simStartedSendValue = false;
-      // AppDispatcher.dispatch({
-      //   type: "widgets/start-edit",
-      //   token: props.token,
-      //   data: widget,
-      // });
+      updateWidgetSimStatus(true);
 
       // Send value without changing widget
       props.onInputChanged(widget.customProperties.value, "", "", false);
     }
-  }, [props.token, props.widget, props.onInputChanged]);
+  }, [props.widget]);
+
+  const updateWidgetSimStatus = async (isSimStarted) => {
+    try {
+      await updateWidget({
+        widgetID: props.widget.id,
+        updatedWidget: {
+          widget: {
+            ...props.widget,
+            customProperties: {
+              ...props.widget.customProperties,
+              simStartedSendValue: isSimStarted,
+            },
+          },
+        },
+      }).unwrap();
+    } catch (err) {
+      console.log("error", err);
+    }
+  };
 
   useEffect(() => {
     let newValue = "";
@@ -109,7 +123,7 @@ const WidgetSlider = (props) => {
         disabled={props.editing}
         vertical={isVertical}
         onChange={valueIsChanging}
-        onAfterChange={(v) => valueChanged(v, true)}
+        onChangeComplete={(v) => valueChanged(v, true)}
       />
     ),
     value: (

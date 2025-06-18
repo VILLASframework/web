@@ -105,7 +105,7 @@ class ResultPythonDialog extends React.Component {
     code_snippets.push(code_imports)
 
     /* Result object */
-    code_snippets.push(`r = Result(${result.id}, '${token}')`);
+    code_snippets.push(`r = Result(${result.id}, '${token}', endpoint='https://slew.k8s.eonerc.rwth-aachen.de')`);
 
     /* Examples */
     code_snippets.push(`# Get result metadata
