@@ -35,12 +35,12 @@ import Dashboard from "./pages/dashboards/dashboard.jsx";
 import Account from "./pages/account/account";
 import "./styles/app.css";
 import "./styles/login.css";
-import branding from "./branding/branding";
 import Logout from "./pages/login/logout";
 import Infrastructure from "./pages/infrastructure/infrastructure";
 import Usergroup from "./pages/usergroups/usergroup";
 import { useSelector } from "react-redux";
 import DashboardErrorBoundary from "./pages/dashboards/dashboard-error-boundry";
+import { villasweb_footer } from "./branding/functions.js";
 
 const App = () => {
   const isTokenExpired = (token) => {
@@ -67,7 +67,6 @@ const App = () => {
   } else {
 
     console.log("APP rendering app");
-    const pages = branding.values.pages;
 
     return (
       <DndProvider backend={HTML5Backend}>
@@ -80,8 +79,7 @@ const App = () => {
 
             <div className="app-content app-content-margin-left">
               <Route exact path="/" component={Home} />
-              {pages.home ? <Route path="/home" component={Home} /> : ""}
-              {pages.scenarios ? (
+              <Route path="/home" component={Home} />
                 <>
                   <Route exact path="/scenarios">
                     <Scenarios />
@@ -101,10 +99,8 @@ const App = () => {
                     <Dashboard />
                   </Route>
                 </>
-              ) : (
-                ""
-              )}
-              {user.role === "Admin" || pages.infrastructure ? (
+              
+              {user.role === "Admin" ? (
                 <>
                   <Route exact path="/infrastructure">
                     <Infrastructure />
@@ -116,13 +112,10 @@ const App = () => {
               ) : (
                 ""
               )}
-              {pages.account ? (
                 <Route path="/account">
                   <Account />
                 </Route>
-              ) : (
-                ""
-              )}
+              
               {user.role === "Admin" ? (
                 <>
                   <Route path="/users">
@@ -135,15 +128,16 @@ const App = () => {
               ) : (
                 ""
               )}
-              {user.role === "Admin" || pages.api ? (
+              {user.role === "Admin"? (
                 <Route path="/api" component={APIBrowser} />
               ) : (
                 ""
               )}
             </div>
           </div>
-
-          {branding.getFooter()}
+          <footer className="app-footer" id="brand-footer"> 
+            {villasweb_footer()}
+          </footer>
         </div>
       </DndProvider>
     );

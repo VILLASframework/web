@@ -1,0 +1,9 @@
+services:
+  web:
+    build:
+      context: .
+    volumes:
+      - ./brand-mount:/usr/share/nginx/html/branding
+    ports:
+      - 2980:80
+      - 2443:443

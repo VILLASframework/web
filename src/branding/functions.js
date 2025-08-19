@@ -18,6 +18,69 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 
+function change_head(values) {
+    // set title of document
+    let title = get_title(values);
+    if (get_subtitle(values)) {
+    title += " " + get_subtitle(values);
+    }
+    document.title = title;
+
+    // set document icon
+    if (!values.icon) {
+        return;
+    }
+    var oldlink = document.getElementById("dynamic-favicon");
+
+    var link = document.createElement("link");
+    link.id = "dynamic-favicon";
+    link.rel = "shortcut icon";
+    link.href = "/branding/img/" + values.icon;
+
+    if (oldlink) {
+        document.head.removeChild(oldlink);
+    }
+    document.head.appendChild(link);
+}
+
+
+function apply_style(values) {
+    change_head(values);
+
+    const rootEl = document.querySelector(":root");
+
+    for (const [key, value] of Object.entries(values.style)) {
+        rootEl.style.setProperty("--" + key, value);
+    }
+}
+
+function get_title(values) {
+    return values.title ? values.title : "VILLASweb";
+}
+
+function get_subtitle(values) {
+    return values.subtitle ? values.subtitle : "RT co-simulation";
+}
+
+const values = {
+    "title":"VILLASweb",
+    "subtitle":"ACS",
+    "logo":"villas_web.svg",
+    "pages":{
+       "home":true,
+       "scenarios":true,
+       "infrastructure":true,
+       "usergroups":true,
+       "account":true,
+       "api":true
+    },
+    "style":{
+       "background":"#6EA2B0",
+       "highlights":"#527984",
+       "main":"#4d4d4d",
+       "secondaryText":"#818181"
+    }
+  }
 
 export function villasweb_welcome() {
   let url = 'https://villas.fein-aachen.org/doc/web.html';
@@ -33,13 +96,10 @@ export function villasweb_welcome() {
 }
 
 export function villasweb_home(title, username, userid, role) {
+  apply_style(values)
   return (
     <div className="home-container">
       <img style={{ height: 120, float: 'right' }} src={require('./img/villas_web.svg').default} alt="Logo VILLASweb" />
-      <h1>Home</h1>
-      <p>
-        Welcome to <b>{title}</b>!
-      </p>
       <p>
         You are logged in as user <b>{username}</b> with <b>ID {userid}</b> and role <b>{role}</b>.
       </p>
@@ -84,3 +144,28 @@ export function villasweb_footer() {
     </footer>
   );
 }
+
+export function villasweb_links(){
+    let links = [];
+
+    if (values.links) {
+        Object.keys(values.links).forEach(key => {
+        links.push(<li key={key}><a href={values.links[key]} title={key}>{key}</a></li>);
+        })
+    }
+
+    return links;
+    
+}
+
+export function villasweb_header(){
+    return <header className="app-header">
+                <h1>{get_title(values)} - {get_subtitle(values)}</h1>
+            </header>
+}
+
+export function villasweb_logo(){
+    return require('./img/'+values.logo).default
+}
+
+//apply_style(values)

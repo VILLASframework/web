@@ -16,22 +16,13 @@
  ******************************************************************************/
 
 import React from 'react';
-import branding from '../branding/branding';
+import { villasweb_header } from '../branding/functions';
 
 class Header extends React.Component {
   render() {
-    let hasSubtitle = branding.getSubtitle();
     return (
-      <div>
-      { hasSubtitle ?
-        <header className="app-header">
-        <h1>{branding.getTitle()} - {branding.getSubtitle()}</h1>
-      </header>
-      :
-      <header className="app-header">
-        <h1>{branding.getTitle()} </h1>
-      </header>
-      }
+      <div id="brand-header">
+        {villasweb_header()}
       </div>
     );
   }

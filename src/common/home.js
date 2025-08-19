@@ -16,10 +16,8 @@
  ******************************************************************************/
 
 import React from 'react';
-
+import { villasweb_home } from '../branding/functions';
 import { Redirect } from "react-router-dom";
-import branding from '../branding/branding';
-
 
 class Home extends React.Component {
 
@@ -39,8 +37,15 @@ class Home extends React.Component {
 
     return (
       <div>
-        {branding.getHome(currentUser.username, currentUser.id, currentUser.role)}
-      </div>);
+        <h1>Home</h1>
+        <p>
+          Welcome to <b>{document.title}</b>!
+        </p>
+        <div className='home-container' id="brand-home">
+          {villasweb_home(document.title,currentUser.username,currentUser.id,currentUser.role)}
+        </div>
+      </div>
+    );
   }
 }
 

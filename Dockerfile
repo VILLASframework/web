@@ -31,7 +31,16 @@ ARG REACT_APP_BRAND
 COPY . /usr/src/app
 # Production build, CI=false prevents warnings from being treated as errors
 RUN CI=false npm run build
+WORKDIR /usr/src/app/build
+
+RUN sed -i 's/<\/body>/<script src="\/static\/js\/injector.js"><\/script><link href="\/static\/css\/style.css" rel="stylesheet"><\/body>/g' index.html
+RUN mkdir -p branding/img
+ADD ./src/branding/default /usr/src/app/build/branding
+ADD ./src/branding/img /usr/src/app/build/branding/img
+ADD ./src/branding/injector.js /usr/src/app/build/static/js
+ADD ./src/branding/style.css /usr/src/app/build/static/css
 
 FROM nginx
 
 COPY --from=builder /usr/src/app/build /usr/share/nginx/html
+#EXPECT BRANDING VOLUME TO /usr/share/nginx/html/branding
