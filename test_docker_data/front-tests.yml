@@ -1,0 +1,87 @@
+services:
+  back:
+    image: registry.git.rwth-aachen.de/acs/public/villas/web-backend:rework_scenario_duplication
+    container_name: back
+    hostname: back
+    depends_on:
+      - db
+      - controller
+    environment:
+      DB_HOST: database
+      DB_NAME: villasdb
+      DB_PASS: admin
+      DB_USER: admin
+      AMQP_HOST: rabbitmq
+      AMQP_USER: guest
+      AMQP_PASS: guest
+      ADMIN_USER: admin
+      ADMIN_PASS: adminadmin
+      ADMIN_MAIL: dummy@mail.dum
+      PORT: 4000
+
+  front:
+    image: node:16.5-alpine3.14
+    container_name: front
+    hostname: front
+    depends_on:
+      - back
+    volumes:
+      - type: bind
+        source: ..
+        target: /app
+    command: ['tail','-f']
+
+  controller:
+    image: registry.git.rwth-aachen.de/acs/public/villas/controller:cleaned-simple-kubernetes-manager
+    container_name: controller
+    hostname: controller
+    depends_on:
+      - broker
+      - node
+      - relay
+    environment:
+      KUBECONFIG: /kube/config
+      NAMESPACE: villas-controller
+      POD_NAME: filler #in case os.environ throws ?_?
+      POD_UID: filler
+    volumes:
+      - ./kubeconfig:/kube/config
+      - ./controller.yaml:/etc/villas/controller.yaml
+    command: ["-d","info","-b","amqp://guest:guest@broker/%2F","-c","/etc/villas/controller.yaml","daemon"]
+
+  db:
+    image:
+    container_name: db
+    hostname: db
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: villasdb
+
+  broker:
+    image: rabbitmq:3.10.8-management-alpine
+    container_name: broker
+    hostname: broker
+
+  node: #listens on 8080
+    image: registry.git.rwth-aachen.de/acs/public/villas/node:latest
+    container_name: node
+    hostname: node
+    environment:
+      UUID: 9b81ea29-4a9c-41bd-b6d6-40c03001e280
+    volumes:
+      - ./node.json:/etc/villas/node.json
+    command: ["node","-d","info","/etc/villas/node.json"]
+
+  relay: #listens on 8088
+    image: registry.git.rwth-aachen.de/acs/public/villas/node:latest
+    container_name: relay
+    hostname: relay
+    environment:
+      UUID: 56f66ecd-3069-4cfa-ac94-a8d359f3d07b
+    command: ["relay","-u","56f66ecd-3069-4cfa-ac94-a8d359f3d07b","-d","info"]
+
+networks:
+  kind:
+    name: kind
+    external: true

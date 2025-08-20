@@ -1,0 +1,16 @@
+uuid: 30b5ae6d-5b33-4e40-a964-d402f4ec062b
+components:
+- name: Kubernetes
+  uuid: c5f1d825-5166-4ffe-b9cd-f0c30e287b67
+  category: "manager"
+  type: "kubernetes-simple"
+  namespace: villas-controller
+  cluster_name: local
+- name: VILLASrelay
+  category: manager
+  type: villas-relay
+  api_url: http://relay:8088
+- name: VILLASnode
+  category: manager
+  type: villas-node
+  api_url: http://node:8080

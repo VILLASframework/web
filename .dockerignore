@@ -1,3 +1,5 @@
 node_modules/
 doc/
 npm-debug.log
+test_docker_data
+package-lock.json
