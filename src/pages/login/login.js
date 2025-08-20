@@ -23,8 +23,8 @@ import { useSelector } from 'react-redux';
 import LoginForm from './login-form';
 import Header from '../../common/header';
 import NotificationsDataManager from '../../common/data-managers/notifications-data-manager';
-import branding from '../../branding/branding';
 import { useGetConfigQuery } from '../../store/apiSlice';
+import { villasweb_footer, villasweb_welcome } from '../../branding/functions';
 
 const Login = (props) => {
 
@@ -46,7 +46,7 @@ const Login = (props) => {
         <Header />
         <div className="login-parent">
           <div className="login-welcome">
-            {branding.getWelcome()}
+            {villasweb_welcome()}
           </div>
     
           <div className="login-container">
@@ -55,7 +55,9 @@ const Login = (props) => {
           </div>
         </div>
     
-        {branding.getFooter()}
+        <footer className="app-footer" id="brand-footer"> 
+          {villasweb_footer()}
+        </footer>
       </div>
     )
     :
