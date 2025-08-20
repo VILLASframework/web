@@ -1,3 +1,4 @@
+set -e
 apt update
 apt install wget
 curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.29.0/kind-linux-amd64
