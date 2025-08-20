@@ -18,13 +18,12 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import branding from '../branding/branding';
 import { useGetConfigQuery } from '../store/apiSlice';
 import { useSelector } from 'react-redux';
+import { villasweb_links, villasweb_logo } from '../branding/functions';
 
 const SideBarMenu = (props) => {
 
-  const values = branding.values;
   const [isExternalAuth, setIsExternalAuth] = useState(false);
   const [logoutLink, setLogoutLink] = useState('');
   
@@ -38,32 +37,17 @@ const SideBarMenu = (props) => {
     }
   }, [configRes]);
 
-  const getLinks = () => {
-    let links = [];
-
-    if (values.links) {
-      Object.keys(values.links).forEach(key => {
-        links.push(<li key={key}><a href={values.links[key]} title={key}>{key}</a></li>);
-      })
-    }
-
-    return links;
-  }
-
   return (
     <div className="menucontainer">
-      { branding.getLogo() ?
-        <div className="menulogo">
-          {branding.getLogo({ width: 110, margin: 'auto' })}
-        </div>
-        : ''
-      }
+      <div className="menulogo">
+        <img style={{ width: 110, margin: 'auto' }} id="brand-menu-logo" src={villasweb_logo()}/>
+      </div>
       <div className="menu">
         <h2>Menu</h2>
 
         {isExternalAuth ?
           <ul>
-            <li hidden={!values.pages.home}>
+            <li>
               <NavLink
                 to="/home"
                 className={({isActive}) => (isActive ? "active" : "")}
@@ -71,7 +55,7 @@ const SideBarMenu = (props) => {
                 Home
               </NavLink>
             </li>
-            <li hidden={!values.pages.scenarios}>
+            <li>
               <NavLink
                 to="/scenarios"
                 className={({isActive}) => (isActive ? "active" : "")}
@@ -79,7 +63,7 @@ const SideBarMenu = (props) => {
                 Scenarios
               </NavLink>
             </li>
-            {currentUser.role === 'Admin' || values.pages.infrastructure ?
+            {currentUser.role === 'Admin'?
               <li>
                 <NavLink
                   to="/infrastructure"
@@ -99,7 +83,7 @@ const SideBarMenu = (props) => {
                 </NavLink>
               </li> : ''
             }
-            <li hidden={!values.pages.account}>
+            <li>
               <NavLink
                 to="/account"
                 title="Account">
@@ -111,7 +95,7 @@ const SideBarMenu = (props) => {
               href={''}>
               Logout
             </a>
-            <li hidden={!values.pages.api}>
+            <li>
               <NavLink
                 to="/api"
                 title="API Browser">
@@ -120,7 +104,7 @@ const SideBarMenu = (props) => {
             </li>
           </ul>
           : <ul>
-            <li hidden={!values.pages.home}>
+            <li>
               <NavLink
                 to="/home"
                 className={({isActive}) => (isActive ? "active" : "")}
@@ -128,7 +112,7 @@ const SideBarMenu = (props) => {
                 Home
               </NavLink>
             </li>
-            <li hidden={!values.pages.scenarios}>
+            <li>
               <NavLink
                 to="/scenarios"
                 className={({isActive}) => (isActive ? "active" : "")}
@@ -136,7 +120,7 @@ const SideBarMenu = (props) => {
                 Scenarios
               </NavLink>
             </li>
-            {currentUser.role === 'Admin' || values.pages.infrastructure ?
+            {currentUser.role === 'Admin'?
               <li>
                 <NavLink
                   to="/infrastructure"
@@ -156,7 +140,7 @@ const SideBarMenu = (props) => {
                 </NavLink>
               </li> : ''
             }
-            <li hidden={!values.pages.account}>
+            <li>
               <NavLink
                 to="/account"
                 title="Account">
@@ -170,7 +154,7 @@ const SideBarMenu = (props) => {
                 Logout
               </NavLink>
             </li>
-            {currentUser.role === 'Admin' || values.pages.api ?
+            {currentUser.role === 'Admin'?
               <li>
                 <NavLink
                   to="/api"
@@ -180,16 +164,13 @@ const SideBarMenu = (props) => {
               </li> : ''
             }
           </ul>}
-
-        {
-          getLinks().length > 0 ?
-            <div>
-              <br></br>
-              <h4> Links</h4>
-              <ul> {getLinks()} </ul>
-            </div>
-            : ''
-        }
+          <div>
+            <br></br>
+            <h4> Links</h4>
+            <ul id="brand-links">
+              {villasweb_links()}
+            </ul>
+          </div>
       </div>
 
 

@@ -34,10 +34,10 @@ import Dashboard from './pages/dashboards/dashboard';
 import Account from './pages/account/account';
 import './styles/app.css';
 import './styles/login.css';
-import branding from './branding/branding';
 import Logout from './pages/login/logout';
 import Infrastructure from './pages/infrastructure/infrastructure';
 import { useSelector } from 'react-redux';
+import { villasweb_footer } from "./branding/functions.js";
 
 const App = () => {
   
@@ -53,9 +53,6 @@ const App = () => {
     console.log("APP redirecting to logout/login");
     return (<Redirect to="/logout" />);
   } else {
-
-    console.log("APP rendering app");
-    const pages = branding.values.pages;
 
     return (<DndProvider backend={HTML5Backend} >
       <div className="app">
@@ -106,8 +103,9 @@ const App = () => {
             : '' }
           </div>
         </div>
-
-        {branding.getFooter()}
+        <footer className="app-footer" id="brand-footer"> 
+          {villasweb_footer()}
+        </footer>
       </div>
   </DndProvider>)
   }
