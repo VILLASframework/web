@@ -54,8 +54,8 @@ services:
       POD_NAME: filler #in case os.environ throws ?_?
       POD_UID: filler
     volumes:
-      - ./kubeconfig:/kube/config
-      - ./controller.yaml:/etc/villas/controller.yaml
+      - ./container-config/kubeconfig:/kube/config
+      - ./container-config/controller.yaml:/etc/villas/controller.yaml
     entrypoint:
       - sh
       - -c
@@ -89,7 +89,7 @@ services:
     environment:
       UUID: 9b81ea29-4a9c-41bd-b6d6-40c03001e280
     volumes:
-      - ./node.json:/etc/villas/node.json
+      - ./container-config/node.json:/etc/villas/node.json
     command: ["node","-d","info","/etc/villas/node.json"]
 
   relay: #listens on 8088

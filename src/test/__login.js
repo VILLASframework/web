@@ -8,7 +8,9 @@ import userEvent from "@testing-library/user-event"
 import { Provider } from "react-redux";
 import { createMemoryHistory } from 'history';
 
-test("Lands on home after login",async () => {
+//A small login test to see if we can set token from the test environment directly
+//To potentially be used as a beforeEach on each subsequent test
+test("Sets token and lands on home after login",async () => {
   const history = createMemoryHistory({ initialEntries: ['/home'] });
   render(
     <Provider store={store}>
@@ -33,7 +35,11 @@ test("Lands on home after login",async () => {
   await act(async ()=>{
     userEvent.click(screen.getByRole('button',{name:'Login'}))
   })
+
   await waitFor(async ()=>{
+    expect(localStorage.getItem('token')).not.toBeNull()
+    expect(localStorage.getItem('token')).not.toBeUndefined()
+    expect(localStorage.getItem('token')).not.toBe('')
     expect(history.location.pathname).toBe('/home')
   })
 });

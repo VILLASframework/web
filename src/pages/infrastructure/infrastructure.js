@@ -120,6 +120,7 @@ const Infrastructure = () => {
                     {currentUser.role === "Admin" ?
                         <span className='icon-button'>
                             <IconButton
+                                aria-label="new-ic"
                                 childKey={1}
                                 tooltip='Add Infrastructure Component'
                                 onClick={() => setIsNewModalOpened(true)}

@@ -31,6 +31,7 @@ class IconButton extends React.Component {
       onClick={this.props.onClick}
       style={this.props.buttonStyle}
       size={this.props.size}
+      aria-label={this.props['aria-label']}
     >
       <Icon
         icon={this.props.icon}

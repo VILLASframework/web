@@ -47,8 +47,8 @@ const LoginForm = ({config}) => {
       if(res.error) {
         setLoginMessage(res.error.data.message);
       } else {
-        dispatch(setUser({user: res.data.user, token: res.data.token}));
         setLoginMessage('');
+        dispatch(setUser({user: res.data.user, token: res.data.token}));
       }
     } catch (err) {
       if(err.data){
