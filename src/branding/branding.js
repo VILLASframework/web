@@ -53,7 +53,7 @@ class Branding {
         this.values = template_values;
         break;
       default:
-        console.error("Branding '" + this.brand + "' not available, will use 'villasweb' branding");
+        //console.error("Branding '" + this.brand + "' not available, will use 'villasweb' branding");
         this.brand = 'villasweb';
         this.values = villasweb_values;
         break;
