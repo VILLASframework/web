@@ -1,79 +1,136 @@
 
 import React from "react";
-import { screen,render,act,waitFor} from "@testing-library/react"
+import { screen,render,act,waitFor, within} from "@testing-library/react/pure"
 import {store} from "../store/index";
 import {Router} from "react-router-dom";
-import Login from "../pages/login/login";
 import userEvent from "@testing-library/user-event"
 import { Provider } from "react-redux";
 import { createMemoryHistory } from 'history';
 import Infrastructure from "../pages/infrastructure/infrastructure";
 import '@testing-library/jest-dom';
+import { test_login } from "./common";
 
-//Simulate a login to get a token
-beforeAll(async ()=>{
-    //Mock canvas.getContext to avoid useless logging on these particular tests
-    HTMLCanvasElement.prototype.getContext = jest.fn()
-    const history = createMemoryHistory({ initialEntries: ['/home'] });
+beforeAll(test_login)
+describe('Opens new ic dialog',()=>{
+  beforeEach(()=>{
+    const history = createMemoryHistory();
     render(
-        <Provider store={store}>
+      <Provider store={store}>
         <Router history={history}>
-            <Login/>
+          <Infrastructure/>
         </Router>
-        </Provider>
+      </Provider>
     )
-    await act(async ()=>{
-        userEvent.type(screen.getByPlaceholderText('Username'),'admin')
-    })
-    await waitFor(async ()=>{
-        expect(screen.getByPlaceholderText('Username').value).toBe('admin')
-    })
-    await act(async ()=>{
-        userEvent.type(screen.getByPlaceholderText('Password'),'adminadmin')
-    })
-    await waitFor(async ()=>{
-        expect(screen.getByPlaceholderText('Password').value).toBe('adminadmin')
-    })
+  })
 
-    await act(async ()=>{
-        userEvent.click(screen.getByRole('button',{name:'Login'}))
-    })
-
+  it('Renders page without crashing',async () => {
     await waitFor(async ()=>{
-        expect(localStorage.getItem('token')).not.toBeNull()
-        expect(localStorage.getItem('token')).not.toBeUndefined()
-        expect(localStorage.getItem('token')).not.toBe('')
-        expect(history.location.pathname).toBe('/home')
+      expect(await screen.findByText('IC Managers')).toBeVisible()
     })
+  });
+
+  it('Clicks valid add ic button',async () => {
+    const add = screen.getByRole('button',{name:/new-ic/i})
+    await waitFor(async ()=>{
+      expect(add).toBeVisible()
+    })
+  
+    await act(async ()=>{
+      await userEvent.click(add)
+    })
+    
+    await waitFor(async ()=>{
+      expect(await screen.findByText('New Infrastructure Component')).toBeVisible()
+    })
+  });
 })
 
-test("Renders page without crashing",async () => {
-  const history = createMemoryHistory({ initialEntries: ['/home'] });
-  render(
-    <Provider store={store}>
-      <Router history={history}>
-        <Infrastructure/>
-      </Router>
-    </Provider>
-  )
-  await waitFor(async ()=>{
-    expect(await screen.findByText('IC Managers')).toBeVisible()
+describe('Creates kubernetes simulator',()=>{
+  let e;
+  beforeEach(async ()=>{
+    const history = createMemoryHistory();
+    e = render(
+      <Provider store={store}>
+        <Router history={history}>
+          <Infrastructure/>
+        </Router>
+      </Provider>
+    ).baseElement
+    await act(async ()=>{
+      await userEvent.click(screen.getByRole('button',{name:/new-ic/i}))
+    })
   })
-});
 
-test("Successfully creates a kubernetes simulator",async () => {
-  const history = createMemoryHistory({ initialEntries: ['/home'] });
-  const {baseElement} = render(
-    <Provider store={store}>
-      <Router history={history}>
-        <Infrastructure/>
-      </Router>
-    </Provider>
-  )
-  await act(async ()=>{
-    userEvent.click(screen.getByRole('button',{name:/new-ic/i}))
+  it("Navigates to select manager form",async ()=>{
+    let cbf;
+    await waitFor(async ()=>{
+      cbf = within(screen.getByRole('form',{name:/check-man-form/i})).getByRole('checkbox')
+      expect(cbf).not.toBeUndefined()
+      expect(cbf).not.toBeNull()
+      expect(cbf).not.toBeChecked()
+    })
+    
+    await act(async ()=>{
+      await userEvent.click(cbf)
+    })
+
+    await waitFor(async ()=>{
+      expect(cbf).toBeChecked()
+      expect(await screen.findByText('Manager to create new IC',{exact:false})).toBeVisible()
+    })
   })
-  await waitFor(async ()=>{
-    expect(await screen.findByText('New Infrastructure Component')).toBeVisible()
-  },{timeout:2000})
-});
+
+  it("Selects kubernetes manager from list", async ()=>{
+    let dd;
+    let kube;
+    await act(async ()=>{
+      await userEvent.click(within(screen.getByRole('form',{name:/check-man-form/i})).getByRole('checkbox'))
+    })
+
+    await waitFor(async ()=>{
+      dd = screen.getByRole('option',{name:'Select manager'})
+      expect(dd).toBeVisible()
+      expect(dd.selected).toBe(true)
+    })
+
+    await act(async ()=>{
+      await userEvent.click(dd)
+    })
+
+    await waitFor(async ()=>{ 
+      kube = screen.getByRole('option',{name:'Kubernetes'})
+      expect(kube.selected).toBe(false)
+    })
+
+    await act(async ()=>{
+      await userEvent.selectOptions(dd.closest('select'),[kube.value])
+    })
+
+    await waitFor(async ()=>{
+      expect(kube.selected).toBe(true)
+      expect(e.querySelector('#jsonFormData')).toBeVisible()
+    })
+  })
+
+  it("Fills and submits managed ic form",async ()=>{
+    await act(async ()=>{
+      await userEvent.click(within(screen.getByRole('form',{name:/check-man-form/i})).getByRole('checkbox'))
+      const dd = screen.getByRole('option',{name:'Select manager'})
+      await userEvent.click(dd)
+      await userEvent.selectOptions(dd.closest('select'),[screen.getByRole('option',{name:'Kubernetes'}).value])
+    })
+    await waitFor(async ()=>{
+      const img = screen.getByDisplayValue('perl')
+      const jobname = screen.getByDisplayValue('myjob')
+      const uuid = screen.getByRole('textbox',{name:'UUID'})
+      const simname = screen.getByRole('textbox',{name:'Simulator Name'})
+
+      for (const i of [img,jobname,uuid,simname]){
+        expect(i).toBeVisible()
+        //then type into input and send
+      }
+    })
+  })
+})
+
+

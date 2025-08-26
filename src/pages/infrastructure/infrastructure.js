@@ -34,10 +34,8 @@ const Infrastructure = () => {
     const dispatch = useDispatch();
 
     const { user: currentUser, token: sessionToken } = useSelector((state) => state.auth);
-
     const {data: icsRes, isLoading, refetch: refetchICs} = useGetICSQuery();
     const ics = icsRes ? icsRes.ics : [];
-
     const externalICs = ics.filter(ic => ic.managedexternally === true);
 
     //track status of the modals

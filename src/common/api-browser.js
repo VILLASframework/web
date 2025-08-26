@@ -57,7 +57,6 @@ class APIBrowser extends React.Component {
 
   requestInterceptor(req) {
     var token = localStorage.getItem('token');
-
     if (token)
       req.headers.Authorization = 'Bearer ' + token;
 

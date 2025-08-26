@@ -221,7 +221,7 @@ class NewICDialog extends React.Component {
         <option key={m.id} value={m.uuid}>{m.name}</option>
       );
     }
-
+    
     return (
       <Dialog
         show={this.props.show}
@@ -232,7 +232,7 @@ class NewICDialog extends React.Component {
         valid={this.validateForm()}
       >
         {this.props.managers.length > 0 ?
-          <BForm>
+          <BForm aria-label="check-man-form">
             <BForm.Group controlId="managedexternally">
               <OverlayTrigger key="-1" placement={'left'}
                               overlay={<Tooltip id={`tooltip-${"me"}`}>An externally managed component is created and
@@ -247,7 +247,7 @@ class NewICDialog extends React.Component {
         {this.state.managedexternally === true ?
           <>
 
-          <BForm>
+          <BForm aria-label="select-man-form">
             <BForm.Group controlId="manager" valid={this.validateForm('manager')}>
               <OverlayTrigger key="0" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
                 <BForm.Label>Manager to create new IC *</BForm.Label>
@@ -260,6 +260,7 @@ class NewICDialog extends React.Component {
 
           {this.state.schema ?
             <Form
+              aria-label="man-schema-form"
               schema={this.state.schema}
               formData={this.state.properties}
               id='jsonFormData'
@@ -267,7 +268,7 @@ class NewICDialog extends React.Component {
               children={true} // hides submit button
             />
           :
-            <BForm>
+            <BForm aria-label="man-props-form">
               <BForm.Group controlId="properties">
                 <BForm.Label>Create Properties</BForm.Label>
                   <ParametersEditor
@@ -279,7 +280,7 @@ class NewICDialog extends React.Component {
         }
           </>
         :
-          <BForm>
+          <BForm  aria-label="ext-ic-form">
             <BForm.Group controlId="name" valid={this.validateForm('name')}>
               <OverlayTrigger key="1" placement={'right'} overlay={<Tooltip id={`tooltip-${"required"}`}> Required field </Tooltip>} >
                 <BForm.Label>Name *</BForm.Label>

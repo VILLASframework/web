@@ -1,10 +1,10 @@
 {
-    "http": {
-      "port": 8080
-    },
-    "hugepages": 0,
-    "logging": {
-      "level": "info"
-    },
-    "uuid": "9b81ea29-4a9c-41bd-b6d6-40c03001e280"
-  }
+  "http": {
+    "port": 8080
+  },
+  "hugepages": 0,
+  "logging": {
+    "level": "info"
+  },
+  "uuid": "9b81ea29-4a9c-41bd-b6d6-40c03001e280"
+}

@@ -148,7 +148,7 @@ class CustomTable extends Component {
         key={data.id+'_'+data.createdAt}
         className='table-control-checkbox'
         disabled={isDisabled}
-        checked={typeof child.props.checked !== 'undefined' ? child.props.checked(data) : null}
+        defaultChecked={typeof child.props.checked !== 'undefined' ? child.props.checked(data) : false}
         onChange={e => child.props.onChecked(data, e)}
       />
     );
@@ -388,8 +388,9 @@ class CustomTable extends Component {
                           ref={ref => { this.activeInput = ref; }} />
                         : <span>
                           {
-                            cell.map((element, elementIndex) =>
-                              <span key={elementIndex}>{element}</span>
+                            cell.map((element, elementIndex) =>{
+                              return <span key={elementIndex}>{element}</span>
+                            }
                             )
                           }
                         </span>

@@ -32,6 +32,6 @@ COPY . /usr/src/app
 # Production build, CI=false prevents warnings from being treated as errors
 RUN CI=false npm run build
 
-FROM nginx
+FROM nginxt
 
 COPY --from=builder /usr/src/app/build /usr/share/nginx/html

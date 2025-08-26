@@ -1,6 +1,6 @@
 #cleanup cpk
-export SOURCE=$(dirname "$0")/$(basename "$0")
+export test_dir=$(realpath "$0"|sed 's/scripts\/cleanup.sh//g')
 kill $(ps aux | grep cloud-provider-kind | grep -v grep | awk '{print $2}')
 set -e
 kind delete cluster --name test-cluster
-docker compose -f $SOURCE/../../compose.yaml down -v
+docker compose -f $test_dir'compose.yaml' down -v
