@@ -1,6 +1,6 @@
 
 import React from "react";
-import { screen,render,act,waitFor, within} from "@testing-library/react/pure"
+import { screen,render,act,waitFor, within} from "@testing-library/react"
 import {store} from "../store/index";
 import {Router} from "react-router-dom";
 import userEvent from "@testing-library/user-event"
@@ -120,14 +120,28 @@ describe('Creates kubernetes simulator',()=>{
       await userEvent.selectOptions(dd.closest('select'),[screen.getByRole('option',{name:'Kubernetes'}).value])
     })
     await waitFor(async ()=>{
-      const img = screen.getByDisplayValue('perl')
-      const jobname = screen.getByDisplayValue('myjob')
-      const uuid = screen.getByRole('textbox',{name:'UUID'})
-      const simname = screen.getByRole('textbox',{name:'Simulator Name'})
+      const form_data = {
+        "img":{
+          elem:screen.getByDisplayValue('perl'),
+          input:"soullessblob/test-",
+        },
+        "jobname":{
+          elem:screen.getByDisplayValue('myjob'),
+          input:"test-run-job",
+        },
+        "uuid":{
+          elem:screen.getByRole('textbox',{name:'UUID'}),
+          input:crypto.randomUUID(),
+        },
+        "simname":{
+          elem:screen.getByRole('textbox',{name:'Simulator Name'}),
+          input:"test-run-sim",
+        },
+      }
 
       for (const i of [img,jobname,uuid,simname]){
         expect(i).toBeVisible()
-        //then type into input and send
+        userEvent.type(i)
       }
     })
   })
