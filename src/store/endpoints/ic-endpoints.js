@@ -19,6 +19,7 @@ export const icEndpoints = (builder) => ({
   getICS: builder.query({
     query: () => "ic",
   }),
+
   sendAction: builder.mutation({
     query: (params) => ({
       url: `/ic/${params.icid}/action`,
@@ -29,5 +30,20 @@ export const icEndpoints = (builder) => ({
 
   getICbyId: builder.query({
     query: (icID) => `/ic/${icID}`,
+  }),
+
+  addIC: builder.query({
+    query: (ic) => ({
+      url: `/ic/${ic.id}`,
+      method: "PUT",
+      body: { ic },
+    }),
+  }),
+
+  deleteIC: builder.mutation({
+    query: (icID) => ({
+      url: `/ic/${icID}`,
+      method: "DELETE",
+    }),
   }),
 });

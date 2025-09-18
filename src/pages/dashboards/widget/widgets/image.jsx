@@ -29,19 +29,18 @@ const WidgetImage = (props) => {
 
   const handleDownloadFile = async (fileID) => {
     try {
-        const res = await triggerDownloadImage(fileID);
-        const blob = await res.data; // This is where you get the blob directly
-        setObjectURL(URL.createObjectURL(blob))
+      const res = await triggerDownloadImage(fileID).unwrap();
+      setObjectURL(res);
     } catch (error) {
-        console.error(`Failed to download file with ID ${fileID}`, error);
+      console.error(`Failed to download file with ID ${fileID}`, error);
     }
-  }
+  };
 
   useEffect(() => {
-    if(file !== null){
+    if (file !== null) {
       handleDownloadFile(file.id);
     }
-  }, [file])
+  }, [file]);
 
   useEffect(() => {
     let widgetFile = widget.customProperties.file;
@@ -71,11 +70,11 @@ const WidgetImage = (props) => {
   //revoke object url when component unmounts
   useEffect(() => {
     return () => {
-        if (objectURL) {
-            URL.revokeObjectURL(objectURL);
-        }
+      if (objectURL) {
+        URL.revokeObjectURL(objectURL);
+      }
     };
-}, [objectURL]);
+  }, [objectURL]);
 
   return (
     <div className="full">

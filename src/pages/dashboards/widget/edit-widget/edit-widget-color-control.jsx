@@ -1,6 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Container, Row, Col, OverlayTrigger, Tooltip, Button} from 'react-bootstrap';
-import ColorPicker from '../../../../common/color-picker';
+import React, { useState, useEffect } from "react";
+import {
+  Form,
+  Container,
+  Row,
+  Col,
+  OverlayTrigger,
+  Tooltip,
+  Button,
+} from "react-bootstrap";
+import ColorPicker from "../../../../common/color-picker";
 import Icon from "../../../../common/icon";
 
 const EditWidgetColorControl = (props) => {
@@ -10,14 +18,14 @@ const EditWidgetColorControl = (props) => {
   const [originalColor, setOriginalColor] = useState(null);
 
   useEffect(() => {
-    const parts = props.controlId.split('.');
+    const parts = props.controlId.split(".");
     const isCustomProperty = parts.length !== 1;
-    const newColor = isCustomProperty ?
-      props.widget[parts[0]][parts[1]] :
-      props.widget[props.controlId];
-    const newOpacity = isCustomProperty ?
-      props.widget[parts[0]][parts[1] + "_opacity"] :
-      props.widget[props.controlId + "_opacity"];
+    const newColor = isCustomProperty
+      ? props.widget[parts[0]][parts[1]]
+      : props.widget[props.controlId];
+    const newOpacity = isCustomProperty
+      ? props.widget[parts[0]][parts[1] + "_opacity"]
+      : props.widget[props.controlId + "_opacity"];
 
     setColor(newColor);
     setOpacity(newOpacity);
@@ -36,19 +44,25 @@ const EditWidgetColorControl = (props) => {
     } else {
       setColor(data.hexcolor);
       setOpacity(data.opacity);
-      props.handleChange({ target: { id: props.controlId, value: data.hexcolor } });
-      props.handleChange({ target: { id: props.controlId + "_opacity", value: data.opacity } });
+      props.handleChange({
+        target: { id: props.controlId, value: data.hexcolor },
+      });
+      props.handleChange({
+        target: { id: props.controlId + "_opacity", value: data.opacity },
+      });
     }
   };
 
   const style = {
     backgroundColor: color,
     opacity: opacity,
-    width: '80px',
-    height: '40px',
+    width: "80px",
+    height: "40px",
   };
 
-  const tooltipText = props.disableOpacity ? "Change border color" : "Change color and opacity";
+  const tooltipText = props.disableOpacity
+    ? "Change border color"
+    : "Change color and opacity";
 
   return (
     <Container style={props.style}>
@@ -58,14 +72,12 @@ const EditWidgetColorControl = (props) => {
         </Col>
 
         <Col>
-          <div className='section-buttons-group-right'>
+          <div className="section-buttons-group-right">
             <OverlayTrigger
               key={0}
-              placement={'right'}
+              placement={"right"}
               overlay={
-                <Tooltip id={`tooltip-${"color"}`}>
-                  {tooltipText}
-                </Tooltip>
+                <Tooltip id={`tooltip-${"color"}`}>{tooltipText}</Tooltip>
               }
             >
               <Button style={style} onClick={openColorPicker}>

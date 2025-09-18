@@ -92,7 +92,13 @@ const Widget = ({
     }
   }, [signals]);
 
-  const inputDataChanged = (value, controlID, controlValue, isFinalChange) => {
+  const inputDataChanged = (
+    widget,
+    data,
+    controlID,
+    controlValue,
+    isFinalChange
+  ) => {
     if (controlID !== "" && isFinalChange) {
       let updatedWidget = JSON.parse(JSON.stringify(widget));
       updatedWidget.customProperties[controlID] = controlValue;
@@ -119,7 +125,7 @@ const Widget = ({
           ic: icID,
           signalID: signal[0].id,
           signalIndex: signal[0].index,
-          data: signal[0].scalingFactor * value,
+          data: signal[0].scalingFactor * data,
         },
       })
     );
@@ -198,7 +204,15 @@ const Widget = ({
       <WidgetButton
         widget={widget}
         editing={editing}
-        onInputChanged={inputDataChanged}
+        onInputChanged={(value, controlID, controlValue, isFinalChange) =>
+          inputDataChanged(
+            widget,
+            value,
+            controlID,
+            controlValue,
+            isFinalChange
+          )
+        }
         signals={signals}
         token={sessionToken}
       />
@@ -207,15 +221,32 @@ const Widget = ({
       <WidgetInput
         widget={widget}
         editing={editing}
-        onInputChanged={inputDataChanged}
+        onInputChanged={(value, controlID, controlValue, isFinalChange) =>
+          inputDataChanged(
+            widget,
+            value,
+            controlID,
+            controlValue,
+            isFinalChange
+          )
+        }
         signals={signals}
+        token={sessionToken}
       />
     ),
     Slider: (
       <WidgetSlider
         widget={widget}
         editing={editing}
-        onInputChanged={inputDataChanged}
+        onInputChanged={(value, controlID, controlValue, isFinalChange) =>
+          inputDataChanged(
+            widget,
+            value,
+            controlID,
+            controlValue,
+            isFinalChange
+          )
+        }
         signals={signals}
         token={sessionToken}
       />

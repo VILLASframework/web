@@ -15,26 +15,16 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { useUpdateWidgetMutation } from "../../../../store/apiSlice";
-const WidgetButton = ({ widget, editing, onInputChanged }) => {
+
+const WidgetButton = ({ widget, editing }) => {
   const [pressed, setPressed] = useState(widget.customProperties.pressed);
-  const [toggle, setToggle] = useState(widget.customProperties.toggle);
   const [updateWidget] = useUpdateWidgetMutation();
 
-  //this ref is used for capturing last value of pressed so that it can be saved and sent on unmount
-  const pressedRef = useRef(pressed);
-
   useEffect(() => {
-    return () => {
-      //if button is in toggle-mode, we want to save its pressed state for future reloads of dashboard
-      if (toggle) updateSimStartedAndPressedValues(false, pressedRef.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    setToggle(widget.customProperties.toggle);
+    updateSimStartedAndPressedValues(false, false);
   }, [widget]);
 
   const updateSimStartedAndPressedValues = async (isSimStarted, isPressed) => {
@@ -58,17 +48,17 @@ const WidgetButton = ({ widget, editing, onInputChanged }) => {
   };
 
   useEffect(() => {
-    pressedRef.current = pressed;
+    if (widget.customProperties.simStartedSendValue) {
+      widget.customProperties.simStartedSendValue = false;
+      widget.customProperties.pressed = false;
 
-    onInputChanged(
-      pressed
-        ? widget.customProperties.on_value
-        : widget.customProperties.off_value,
-      "",
-      false,
-      false
-    );
+      onInputChanged(widget.customProperties.off_value, "", false, false);
+    }
   }, [pressed]);
+
+  useEffect(() => {
+    setPressed(widget.customProperties.pressed);
+  }, [widget.customProperties.pressed]);
 
   let opacity = widget.customProperties.background_color_opacity;
   const buttonStyle = {
@@ -85,13 +75,8 @@ const WidgetButton = ({ widget, editing, onInputChanged }) => {
         style={buttonStyle}
         active={pressed}
         disabled={editing}
-        onMouseDown={(e) => {
-          if (!toggle) setPressed(true);
-          else setPressed(!pressed);
-        }}
-        onMouseUp={(e) => {
-          if (!toggle) setPressed(false);
-        }}
+        onMouseDown={(e) => setPressed(true)}
+        onMouseUp={(e) => setPressed(false)}
       >
         {widget.name}
       </Button>

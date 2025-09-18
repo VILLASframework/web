@@ -15,11 +15,9 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import Fullscreenable from "react-fullscreenable";
-import "react-contexify/dist/ReactContexify.min.css";
 import EditWidget from "./widget/edit-widget/edit-widget";
 import EditSignalMappingDialog from "./dialogs/edit-signal-mapping.jsx";
 import WidgetToolbox from "./widget/widget-toolbox";
@@ -33,6 +31,7 @@ import EditFilesDialog from "./dialogs/edit-files-dialog.jsx";
 import { disconnect } from "../../store/websocketSlice";
 import { useDashboardData } from "./hooks/use-dashboard-data.js";
 import useWebSocketConnection from "./hooks/use-websocket-connection.js";
+import useFullscreen from "../../utils/full-screen.js";
 
 import {
   useGetDashboardQuery,
@@ -60,7 +59,7 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
     data: { dashboard } = { dashboard: {} },
     error: dashboardError,
     isLoading: isDashboardLoading,
-  } = useGetDashboardQuery(params.dashboard);
+  } = useGetDashboardQuery(params.dashboardId);
   const { data: { ics } = {} } = useGetICSQuery();
 
   const [triggerGetWidgets] = useLazyGetWidgetsQuery();
@@ -609,4 +608,19 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
   );
 };
 
-export default Fullscreenable()(Dashboard);
+//wrap into fullscreen
+const DashboardFullscreenable = () => {
+  const { fullscreenTargetRef, isFullscreen, toggleFullscreen } =
+    useFullscreen();
+
+  return (
+    <div ref={fullscreenTargetRef}>
+      <Dashboard
+        isFullscreen={isFullscreen}
+        toggleFullscreen={toggleFullscreen}
+      />
+    </div>
+  );
+};
+
+export default DashboardFullscreenable;

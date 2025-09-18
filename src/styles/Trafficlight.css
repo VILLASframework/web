@@ -1,0 +1,63 @@
+/**
+ * This file is part of VILLASweb.
+ *
+ * VILLASweb is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * VILLASweb is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
+
+traffic-light-container {
+  display: inline-block;
+}
+
+.traffic-light {
+  background-color: #000;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex: 0 0;
+}
+
+.traffic-light.horizontal {
+  flex-direction: row;
+  padding: 8px 4px 8px 4px;
+}
+
+.traffic-light.vertical {
+  flex-direction: column;
+  padding: 4px 8px 4px 8px;
+}
+
+.lamp {
+  border-radius: 50%;
+  box-shadow: inset 0 0 3px #000;
+}
+
+.lamp.red.on {
+  background-color: #cc3232;
+  box-shadow: 0 0 3px #cc3232;
+}
+
+.lamp.yellow.on {
+  background-color: #e7b416;
+  box-shadow: 0 0 3px #e7b416;
+}
+
+.lamp.green.on {
+  background-color: #2dc937;
+  box-shadow: 0 0 3px #2dc937;
+}
+
+.off {
+  background-color: grey;
+}

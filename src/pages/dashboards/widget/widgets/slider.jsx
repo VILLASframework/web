@@ -17,7 +17,7 @@
 
 import React, { useState, useEffect } from "react";
 import { format } from "d3";
-import classNames from "classnames";
+import classNames from "../../../../utils/class-names";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { useUpdateWidgetMutation } from "../../../../store/apiSlice";
@@ -44,7 +44,7 @@ const WidgetSlider = (props) => {
       // Send value without changing widget
       props.onInputChanged(widget.customProperties.value, "", "", false);
     }
-  }, [props.widget]);
+  }, [props.token, props.widget, props.onInputChanged]);
 
   const updateWidgetSimStatus = async (isSimStarted) => {
     try {

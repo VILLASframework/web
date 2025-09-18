@@ -15,7 +15,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 import React, { useState, useEffect } from "react";
-import TrafficLight from "react-trafficlight";
+import TrafficLight from "../widget-time-offset/trafficlight";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function WidgetTimeOffset(props) {
@@ -123,9 +123,9 @@ function WidgetTimeOffset(props) {
         }
       >
         <TrafficLight
-          Horizontal={props.widget.customProperties.horizontal}
-          width={props.widget.width - 40}
-          height={props.widget.height - 40}
+          width={props.widget.width}
+          height={props.widget.height}
+          isHorizontal={props.widget.customProperties.horizontal}
           RedOn={
             props.widget.customProperties.threshold_red <= timeOffset ||
             !websocketOpen ||

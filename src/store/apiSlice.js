@@ -27,6 +27,7 @@ import { fileEndpoints } from "./endpoints/file-endpoints";
 import { signalEndpoints } from "./endpoints/signal-endpoints";
 import { resultEndpoints } from "./endpoints/result-endpoints";
 import { authEndpoints } from "./endpoints/auth-endpoints";
+import { websocketEndpoints } from "./endpoints/websocket-endpoints";
 import { usergroupEndpoints } from "./endpoints/usergroup-endpoints";
 import { selectToken } from "./authSlice";
 
@@ -53,6 +54,7 @@ export const apiSlice = createApi({
     ...resultEndpoints(builder),
     ...signalEndpoints(builder),
     ...authEndpoints(builder),
+    ...websocketEndpoints(builder),
     ...usergroupEndpoints(builder),
   }),
 });

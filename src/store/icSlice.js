@@ -18,8 +18,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import RestAPI from "../common/api/rest-api";
 import { sessionToken } from "../localStorage";
-import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
-import NotificationsFactory from "../common/data-managers/notifications-factory";
+// import NotificationsDataManager from "../common/data-managers/notifications-data-manager";
+// import NotificationsFactory from "../common/data-managers/notifications-factory";
 
 const icSlice = createSlice({
   name: "infrastructure",
@@ -92,36 +92,36 @@ const icSlice = createSlice({
         console.log("fetched IC", state.currentIC.name);
       })
       .addCase(addIC.rejected, (state, action) => {
-        NotificationsDataManager.addNotification(
-          NotificationsFactory.ADD_ERROR(
-            "Error while adding infrastructural component: " +
-              action.error.message
-          )
-        );
+        // NotificationsDataManager.addNotification(
+        //   NotificationsFactory.ADD_ERROR(
+        //     "Error while adding infrastructural component: " +
+        //       action.error.message
+        //   )
+        // );
       })
       .addCase(sendActionToIC.rejected, (state, action) => {
-        NotificationsDataManager.addNotification(
-          NotificationsFactory.ADD_ERROR(
-            "Error while sending action to infrastructural component: " +
-              action.error.message
-          )
-        );
+        // NotificationsDataManager.addNotification(
+        //   NotificationsFactory.ADD_ERROR(
+        //     "Error while sending action to infrastructural component: " +
+        //       action.error.message
+        //   )
+        // );
       })
       .addCase(editIC.rejected, (state, action) => {
-        NotificationsDataManager.addNotification(
-          NotificationsFactory.ADD_ERROR(
-            "Error while trying to update an infrastructural component: " +
-              action.error.message
-          )
-        );
+        // NotificationsDataManager.addNotification(
+        //   NotificationsFactory.ADD_ERROR(
+        //     "Error while trying to update an infrastructural component: " +
+        //       action.error.message
+        //   )
+        // );
       })
       .addCase(deleteIC.rejected, (state, action) => {
-        NotificationsDataManager.addNotification(
-          NotificationsFactory.ADD_ERROR(
-            "Error while trying to delete an infrastructural component: " +
-              action.error.message
-          )
-        );
+        // NotificationsDataManager.addNotification(
+        //   NotificationsFactory.ADD_ERROR(
+        //     "Error while trying to delete an infrastructural component: " +
+        //       action.error.message
+        //   )
+        // );
       });
     //TODO
     // .addCase(restartIC.fullfilled, (state, action) => {
@@ -187,9 +187,9 @@ export const sendActionToIC = createAsyncThunk(
         actions,
         token
       );
-      NotificationsDataManager.addNotification(
-        NotificationsFactory.ACTION_INFO()
-      );
+      // NotificationsDataManager.addNotification(
+      //   NotificationsFactory.ACTION_INFO()
+      // );
       return res;
     } catch (error) {
       console.log("Error sending an action to IC: ", error);

@@ -54,11 +54,7 @@ class WidgetGauge extends Component {
     this.updateLabels(this.state.minValue, this.state.maxValue);
   }
 
-  componentDidUpdate(
-    prevProps: Readonly<P>,
-    prevState: Readonly<S>,
-    snapshot: SS
-  ): void {
+  componentDidUpdate() {
     // update gauge's value
     if (prevState.value !== this.state.value) {
       this.gauge.set(this.state.value);

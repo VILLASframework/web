@@ -15,10 +15,10 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
+import React from "react";
 
-import Plot from '../widget-plot/plot';
-import PlotLegend from '../widget-plot/plot-legend';
+import Plot from "../widget-plot/plot";
+import PlotLegend from "../widget-plot/plot-legend";
 
 class WidgetPlot extends React.Component {
   constructor(props) {
@@ -26,14 +26,12 @@ class WidgetPlot extends React.Component {
 
     this.state = {
       data: [],
-      signals: []
+      signals: [],
     };
   }
 
-
-  static getDerivedStateFromProps(props, state){
-
-    let intersection = []
+  static getDerivedStateFromProps(props, state) {
+    let intersection = [];
     let data = [];
     let signalID, sig;
     for (signalID of props.widget.signalIDs) {
@@ -43,16 +41,20 @@ class WidgetPlot extends React.Component {
 
           // sig is a selected signal, get data
           // determine ID of infrastructure component related to signal (via config)
-          let icID = props.icIDs[sig.id]
+          let icID = props.icIDs[sig.id];
 
           // distinguish between input and output signals
           if (sig.direction === "out") {
-            if (props.data[icID] != null && props.data[icID].output != null && props.data[icID].output.values != null) {
+            if (
+              props.data[icID] != null &&
+              props.data[icID].output != null &&
+              props.data[icID].output.values != null
+            ) {
               if (props.data[icID].output.values[sig.index] !== undefined) {
                 let values = props.data[icID].output.values[sig.index];
-                if(sig.scalingFactor !== 1) {
+                if (sig.scalingFactor !== 1) {
                   let scaledValues = JSON.parse(JSON.stringify(values));
-                  for (let i=0; i< scaledValues.length; i++){
+                  for (let i = 0; i < scaledValues.length; i++) {
                     scaledValues[i].y = scaledValues[i].y * sig.scalingFactor;
                   }
                   data.push(scaledValues);
@@ -62,12 +64,16 @@ class WidgetPlot extends React.Component {
               }
             }
           } else if (sig.direction === "in") {
-            if (props.data[icID] != null && props.data[icID].input != null && props.data[icID].input.values != null) {
+            if (
+              props.data[icID] != null &&
+              props.data[icID].input != null &&
+              props.data[icID].input.values != null
+            ) {
               if (props.data[icID].input.values[sig.index] !== undefined) {
                 let values = props.data[icID].output.values[sig.index];
-                if(sig.scalingFactor !== 1) {
+                if (sig.scalingFactor !== 1) {
                   let scaledValues = JSON.parse(JSON.stringify(values));
-                  for (let i=0; i< scaledValues.length; i++){
+                  for (let i = 0; i < scaledValues.length; i++) {
                     scaledValues[i].y = scaledValues[i].y * sig.scalingFactor;
                   }
                   data.push(scaledValues);
@@ -81,39 +87,43 @@ class WidgetPlot extends React.Component {
       } // loop over props.signals
     } // loop over selected signals
 
-    return {signals: intersection, data: data}
-
+    return { signals: intersection, data: data };
   }
 
   //do we need this function?
-  scaleData(data, scaleFactor){
+  scaleData(data, scaleFactor) {
     // data is an array of value pairs x,y
   }
 
   render() {
-    return <div className="plot-widget" ref="wrapper">
-      <div className="widget-plot">
-        <Plot
-          data={this.state.data}
-          mode={this.props.widget.customProperties.mode || "auto time-scrolling"}
-          height={this.props.widget.height - 55}
-          width={this.props.widget.width - 20}
-          time={this.props.widget.customProperties.time}
-          samples={this.props.widget.customProperties.nbrSamples || 100}
-          yMin={this.props.widget.customProperties.yMin}
-          yMax={this.props.widget.customProperties.yMax}
-          yUseMinMax={this.props.widget.customProperties.yUseMinMax}
-          paused={this.props.paused}
-          yLabel={this.props.widget.customProperties.ylabel}
+    return (
+      <div className="plot-widget">
+        <div className="widget-plot">
+          <Plot
+            data={this.state.data}
+            mode={
+              this.props.widget.customProperties.mode || "auto time-scrolling"
+            }
+            height={this.props.widget.height - 55}
+            width={this.props.widget.width - 20}
+            time={this.props.widget.customProperties.time}
+            samples={this.props.widget.customProperties.nbrSamples || 100}
+            yMin={this.props.widget.customProperties.yMin}
+            yMax={this.props.widget.customProperties.yMax}
+            yUseMinMax={this.props.widget.customProperties.yUseMinMax}
+            paused={this.props.paused}
+            yLabel={this.props.widget.customProperties.ylabel}
+            lineColors={this.props.widget.customProperties.lineColors}
+            signalIDs={this.props.widget.signalIDs}
+          />
+        </div>
+        <PlotLegend
+          signals={this.state.signals}
           lineColors={this.props.widget.customProperties.lineColors}
-          signalIDs={this.props.widget.signalIDs}
+          showUnit={this.props.widget.customProperties.showUnit}
         />
       </div>
-      <PlotLegend
-        signals={this.state.signals}
-        lineColors={this.props.widget.customProperties.lineColors}
-        showUnit={this.props.widget.customProperties.showUnit} />
-    </div>;
+    );
   }
 }
 

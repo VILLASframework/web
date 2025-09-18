@@ -16,15 +16,12 @@
  ******************************************************************************/
 
 import React, { useState, useEffect } from "react";
-import { Badge, Spinner } from "react-bootstrap";
+import { Badge } from "react-bootstrap";
 import { stateLabelStyle } from "../../../infrastructure/styles";
-import { useDispatch } from "react-redux";
 import { useLazyGetICbyIdQuery } from "../../../../store/apiSlice";
 
 let timer = null;
 const WidgetICstatus = (props) => {
-  const dispatch = useDispatch();
-  const [ics, setIcs] = useState(props.ics);
   const [triggerGetICbyId] = useLazyGetICbyIdQuery();
   const refresh = async () => {
     if (props.ics) {
@@ -43,9 +40,9 @@ const WidgetICstatus = (props) => {
   useEffect(() => {
     window.clearInterval(timer);
     timer = window.setInterval(refresh, 3000);
-
+    // Function to refresh data
     refresh();
-
+    // Cleanup function equivalent to componentWillUnmount
     return () => {
       window.clearInterval(timer);
     };
@@ -55,9 +52,9 @@ const WidgetICstatus = (props) => {
   let checkedICs = props.widget ? props.widget.customProperties.checkedIDs : [];
 
   if (props.ics && checkedICs) {
-    badges = ics
-      .filter(({ ic }) => checkedICs.includes(ic?.id))
-      .map(({ ic }) => {
+    badges = props.ics
+      .filter((ic) => checkedICs.includes(ic.id))
+      .map((ic) => {
         let badgeStyle = stateLabelStyle(ic.state, ic);
         return (
           <Badge key={ic.id} bg={badgeStyle[0]} className={badgeStyle[1]}>
@@ -67,7 +64,7 @@ const WidgetICstatus = (props) => {
       });
   }
 
-  return badges.length > 0 ? <div>{badges}</div> : <Spinner />;
+  return <div>{badges}</div>;
 };
 
 export default WidgetICstatus;

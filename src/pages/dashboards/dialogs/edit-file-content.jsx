@@ -14,44 +14,69 @@
  * You should have received a copy of the GNU General Public License
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-import React, { useState } from "react";
-import { Form, Button, Col } from "react-bootstrap";
-import Dialog from "../../../common/dialogs/dialog";
 
-const EditFileContent = ({ show, onClose, file, updateFile }) => {
-  const [uploadFile, setUploadFile] = useState(null);
+import React from 'react';
+import { Form, Button, Col } from 'react-bootstrap';
+import Dialog from '../../../common/dialogs/dialog';
 
-  const selectUploadFile = (event) => {
-    const selectedFile = event.target.files[0];
-    setUploadFile(selectedFile);
+class EditFileContent extends React.Component {
+  valid = true;
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      uploadFile: null,
+    };
+  }
+
+  selectUploadFile(event) {
+    this.setState({ uploadFile: event.target.files[0] });
   };
 
-  const handleUploadFile = () => {
-    updateFile(file.id, uploadFile);
-    setUploadFile(null);
-    onClose();
+  startEditContent(){
+    const formData = new FormData();
+    formData.append("file", this.state.uploadFile);
+
+    AppDispatcher.dispatch({
+      type: 'files/start-edit',
+      data: formData,
+      token: this.props.sessionToken,
+      id: this.props.file.id
+    });
+
+    this.setState({ uploadFile: null });
   };
 
-  return (
-    <Dialog
-      show={show}
-      title="Edit File Content"
-      buttonTitle="Close"
-      onClose={onClose}
-      blendOutCancel={true}
+  onClose = () => {
+        this.props.onClose();
+  };
+
+  render() {
+    return <Dialog
+      show={this.props.show}
+      title='Edit File Content'
+      buttonTitle='Close'
+      onClose={() => this.onClose()}
+      blendOutCancel = {true}
       valid={true}
     >
-      <Form.Group as={Col}>
-        <Form.Control type="file" onChange={selectUploadFile} />
+      <Form.Group as={Col} >
+        <Form.Control
+          disabled={false}
+          type='file'
+          onChange={(event) => this.selectUploadFile(event)} />
       </Form.Group>
 
-      <Form.Group as={Col}>
-        <Button disabled={!uploadFile} onClick={handleUploadFile}>
+      <Form.Group as={Col} >
+        <Button
+          disabled={this.state.uploadFile === null}
+          onClick={() => this.startEditContent()}>
           Upload
-        </Button>
+            </Button>
       </Form.Group>
-    </Dialog>
-  );
-};
+    </Dialog>;
+  }
+}
 
 export default EditFileContent;

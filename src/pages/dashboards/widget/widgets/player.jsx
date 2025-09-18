@@ -23,8 +23,6 @@ import IconButton from "../../../../common/buttons/icon-button";
 import IconTextButton from "../../../../common/buttons/icon-text-button";
 import ParametersEditor from "../../../../common/parameters-editor";
 import ResultPythonDialog from "../../../scenarios/dialogs/result-python-dialog";
-import { playerMachine } from "../widget-player/player-machine";
-import { interpret } from "xstate";
 import {
   useAddResultMutation,
   useLazyDownloadFileQuery,
@@ -32,11 +30,9 @@ import {
   useGetFilesQuery,
   useUpdateComponentConfigMutation,
 } from "../../../../store/apiSlice";
-import notificationsDataManager from "../../../../common/data-managers/notifications-data-manager";
-import NotificationsFactory from "../../../../common/data-managers/notifications-factory";
-import { start } from "xstate/lib/actions";
 import FileSaver from "file-saver";
 import { useDispatch } from "react-redux";
+import { useNotifications } from "../../../../notification-provider";
 
 const WidgetPlayer = ({
   widget,
@@ -55,7 +51,7 @@ const WidgetPlayer = ({
   const [updateComponentConfig] = useUpdateComponentConfigMutation();
   const { refetch: refetchFiles } = useGetFilesQuery(scenarioID);
   const [addResult, { isError: isErrorAddingResult }] = useAddResultMutation();
-  const [playerState, setPlayerState] = useState(playerMachine.initialState);
+  const [playerState, setPlayerState] = useState("created");
   const [configID, setConfigID] = useState(-1);
   const [config, setConfig] = useState({});
   const [icState, setICState] = useState("unknown");
@@ -72,8 +68,31 @@ const WidgetPlayer = ({
   const [warningText, setWarningText] = useState("");
   const [configBtnText, setConfigBtnText] = useState("Component Configuration");
 
-  const playerService = interpret(playerMachine);
-  playerService.start();
+  const { notifyError } = useNotifications();
+
+  const transitionMap = {
+    created: {
+      ICIDLE: "startable",
+      ICBUSY: "default",
+    },
+    default: {
+      ICIDLE: "startable",
+      FINISH: "finished",
+    },
+    startable: {
+      START: "default",
+      ICBUSY: "default",
+    },
+    finished: {
+      ICBUSY: "default",
+      ICIDLE: "startable",
+    },
+  };
+
+  const getNextState = (current, event) => {
+    return transitionMap[current]?.[event] || current;
+  };
+
   useEffect(() => {
     setIsUploadResultsChecked(widget.customProperties.uploadResults);
   }, [widget.customProperties.uploadResults]);
@@ -105,9 +124,9 @@ const WidgetPlayer = ({
         if (t_playeric) {
           var afterCreateState = "";
           if (t_playeric.state === "idle") {
-            afterCreateState = transitionState(playerState, "ICIDLE");
+            afterCreateState = getNextState(playerState, "ICIDLE");
           } else {
-            afterCreateState = transitionState(playerState, "ICBUSY");
+            afterCreateState = getNextState(playerState, "ICBUSY");
           }
           setPlayerIC(t_playeric);
           setConfigID(configID);
@@ -135,30 +154,23 @@ const WidgetPlayer = ({
             setFilesToDownload(v.data.files);
           });
         }
-        newState = transitionState(playerState, "FINISH");
+        newState = getNextState(playerState, "FINISH");
         setPlayerState(newState);
-        return { playerState: newState, icState: icState };
       case "idle":
-        newState = transitionState(playerState, "ICIDLE");
+        newState = getNextState(playerState, "ICIDLE");
         setPlayerState(newState);
-        return { playerState: newState, icState: icState };
       default:
         if (icState === "running") {
           onStarted();
         }
-        newState = transitionState(playerState, "ICBUSY");
+        newState = getNextState(playerState, "ICBUSY");
         setPlayerState(newState);
-        return { playerState: newState, icState: icState };
     }
   }, [icState]);
 
-  const transitionState = (currentState, playerEvent) => {
-    return playerMachine.transition(currentState, { type: playerEvent });
-  };
-
   const clickStart = async () => {
     try {
-      setPlayerState(transitionState(playerState, "ICBUSY"));
+      setPlayerState(getNextState(playerState, "ICBUSY"));
       let pld = {
         action: "start",
         when: Math.round(new Date().getTime() / 1000),
@@ -185,9 +197,7 @@ const WidgetPlayer = ({
             );
           })
           .catch((e) => {
-            notificationsDataManager.addNotification(
-              NotificationsFactory.LOAD_ERROR(e.toString())
-            );
+            notifyError(e.toString);
           });
       } else {
         dispatch(
@@ -325,7 +335,7 @@ const WidgetPlayer = ({
                   childKey={0}
                   onClick={() => clickStart()}
                   icon="play"
-                  disabled={!(playerState && playerState.matches("startable"))}
+                  disabled={!(playerState && playerState === "startable")}
                   iconStyle={iconStyle}
                   tooltip="Start Component"
                 />
@@ -385,7 +395,7 @@ const WidgetPlayer = ({
                       icon={["fab", "python"]}
                       disabled={
                         playerState &&
-                        playerState.matches("finished") &&
+                        playerState === "finished" &&
                         isUploadResultsChecked
                           ? false
                           : true
@@ -401,9 +411,7 @@ const WidgetPlayer = ({
                       onClick={() => downloadResultFiles()}
                       icon="file-download"
                       disabled={
-                        playerState && playerState.matches("finished")
-                          ? false
-                          : true
+                        playerState && playerState === "finished" ? false : true
                       }
                       iconStyle={iconStyle}
                     />

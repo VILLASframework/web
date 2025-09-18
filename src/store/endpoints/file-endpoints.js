@@ -25,7 +25,7 @@ export const fileEndpoints = (builder) => ({
   addFile: builder.mutation({
     query: ({ scenarioID, file }) => {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("inputFile", file);
       return {
         url: `files?scenarioID=${scenarioID}`,
         method: "POST",
@@ -46,11 +46,12 @@ export const fileEndpoints = (builder) => ({
       method: "GET",
       responseHandler: (response) => response.blob(),
     }),
+    transformResponse: (blob) => URL.createObjectURL(blob),
   }),
   updateFile: builder.mutation({
     query: ({ fileID, file }) => {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("inputFile", file);
       return {
         url: `files/${fileID}`,
         method: "PUT",

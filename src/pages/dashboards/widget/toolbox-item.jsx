@@ -16,35 +16,27 @@
  ******************************************************************************/
 
 import React from "react";
-import { DragSource } from "react-dnd";
-import classNames from "classnames";
+import classNames from "../../../utils/class-names";
 import Icon from "../../../common/icon";
 
-// Drag source specification
-const toolboxItemSource = {
-  beginDrag(props) {
-    return {
-      name: props.name,
-    };
-  },
-};
+import { useDrag } from "react-dnd";
 
-// The collect function gathers props for the component related to dragging
-function collect(connect, monitor) {
-  return {
-    connectDragSource: connect.dragSource(),
-    isDragging: monitor.isDragging(),
-  };
-}
+const ToolboxItem = ({ name, icon, disabled }) => {
+  const [{ isDragging }, dragRef] = useDrag(
+    () => ({
+      type: "widget",
+      item: { name },
+      options: {
+        dropEffect: "copy",
+      },
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
+      canDrag: !disabled,
+    }),
+    [name, disabled]
+  );
 
-// The functional component for ToolboxItem
-const ToolboxItem = ({
-  connectDragSource,
-  isDragging,
-  disabled,
-  name,
-  icon,
-}) => {
   const itemClass = classNames({
     "toolbox-item": true,
     "toolbox-item-dragging": isDragging,
@@ -52,18 +44,16 @@ const ToolboxItem = ({
   });
 
   const content = (
-    <span className="btn " style={{ marginTop: "5px" }}>
+    <span className="btn" style={{ marginTop: "5px" }}>
       {icon && <Icon style={{ marginRight: "5px" }} icon={icon} />}
       {name}
     </span>
   );
 
-  return disabled ? (
-    <div className={itemClass}>{content}</div>
-  ) : (
-    connectDragSource(<div className={itemClass}>{content}</div>, {
-      dropEffect: "copy",
-    })
+  return (
+    <div className={itemClass} ref={!disabled ? dragRef : null}>
+      {content}
+    </div>
   );
 };
 
@@ -71,4 +61,4 @@ ToolboxItem.defaultProps = {
   disabled: false,
 };
 
-export default DragSource("widget", toolboxItemSource, collect)(ToolboxItem);
+export default ToolboxItem;
