@@ -214,6 +214,8 @@ class Branding {
   }
 };
 
-var branding = new Branding(process.env.REACT_APP_BRAND);
+var branding = new Branding(
+  window._env_?.BRAND || process.env.REACT_APP_BRAND || "villasweb"
+);
 
 export default branding;

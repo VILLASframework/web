@@ -11,30 +11,14 @@ build:
   image:
     name: docker
   variables:
-    BRANDING: villasweb
-    DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
+    DOCKER_TAG: ${CI_COMMIT_BRANCH}
   script:
-  - docker build --build-arg REACT_APP_BRAND=${BRANDING} --tag ${DOCKER_IMAGE}:${DOCKER_TAG} .
+  - docker build --tag ${DOCKER_IMAGE}:${DOCKER_TAG} .
   tags:
   - docker
 
-build.slew:
-  variables:
-    BRANDING: slew
-    DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
-  extends: build
-
-build.opalrt:
-  variables:
-    BRANDING: opalrt
-    DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
-  extends: build
-
 deploy:
   stage: deploy
-  variables:
-    BRANDING: villasweb
-    DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
   before_script:
   - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
   script:
@@ -43,18 +27,6 @@ deploy:
   - docker
   dependencies:
   - build
-
-deploy.slew:
-  extends: deploy
-  variables:
-    BRANDING: slew
-    DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
-
-deploy.opalrt:
-  extends: deploy
-  variables:
-    BRANDING: opalrt
-    DOCKER_TAG: ${CI_COMMIT_BRANCH}-${BRANDING}
 
 deploy.latest:
   extends: deploy
