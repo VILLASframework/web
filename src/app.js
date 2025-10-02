@@ -35,6 +35,7 @@ import Dashboard from "./pages/dashboards/dashboard.jsx";
 import Account from "./pages/account/account";
 import "./styles/app.css";
 import "./styles/login.css";
+import "./styles/Trafficlight.css";
 import branding from "./branding/branding";
 import Logout from "./pages/login/logout";
 import Infrastructure from "./pages/infrastructure/infrastructure";
@@ -65,7 +66,6 @@ const App = () => {
     console.log("APP redirecting to logout/login");
     return <Redirect to="/logout" />;
   } else {
-
     console.log("APP rendering app");
     const pages = branding.values.pages;
 

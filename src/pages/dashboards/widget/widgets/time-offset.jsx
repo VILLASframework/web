@@ -15,7 +15,7 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 import React, { useState, useEffect } from "react";
-import TrafficLight from "react-trafficlight";
+import TrafficLight from "../widget-time-offset/trafficlight";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function WidgetTimeOffset(props) {
@@ -79,7 +79,15 @@ function WidgetTimeOffset(props) {
     setState((prevState) => ({ ...prevState, ...derivedState }));
 
     // eslint-disable-next-line
-  }, [props.widget, props.ics, props.websockets, props.data]);
+  }, [
+    props.widget.customProperties.icID,
+    props.widget.customProperties.showOffset,
+    props.widget.customProperties.threshold_red,
+    props.widget.customProperties.threshold_yellow,
+    props.data && state.icID ? props.data[state.icID]?.output?.timestamp : null,
+    props.websockets?.length,
+    props.ics?.length,
+  ]);
 
   const { timeOffset, icID, icName, websocketOpen } = state;
 
@@ -123,20 +131,20 @@ function WidgetTimeOffset(props) {
         }
       >
         <TrafficLight
-          Horizontal={props.widget.customProperties.horizontal}
           width={props.widget.width - 40}
           height={props.widget.height - 40}
-          RedOn={
+          isHorizontal={props.widget.customProperties.horizontal}
+          isRedOn={
             props.widget.customProperties.threshold_red <= timeOffset ||
             !websocketOpen ||
             timeOffset < 0
           }
-          YellowOn={
+          isYellowOn={
             props.widget.customProperties.threshold_yellow <= timeOffset &&
             timeOffset < props.widget.customProperties.threshold_red &&
             websocketOpen
           }
-          GreenOn={
+          isGreenOn={
             timeOffset > 0 &&
             timeOffset < props.widget.customProperties.threshold_yellow &&
             websocketOpen
