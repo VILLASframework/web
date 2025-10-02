@@ -27,7 +27,6 @@ import {
   useUpdateWidgetMutation,
 } from "../../store/apiSlice";
 import { sessionToken } from "../../localStorage";
-import Fullscreenable from "react-fullscreenable";
 import DashboardButtonGroup from "./grid/dashboard-button-group";
 import Widget from "./widget/widget";
 import WidgetContainer from "./widget/widget-container";
@@ -38,6 +37,7 @@ import EditWidgetDialog from "./widget/edit-widget/edit-widget";
 import EditSignalMappingDialog from "../scenarios/dialogs/edit-signal-mapping";
 import classNames from "classnames";
 import { Spinner } from "react-bootstrap";
+import useFullscreen from "../../utils/fullscreen.js";
 
 //this component handles the UI of the dashboard
 const DashboardLayout = ({ isFullscreen, toggleFullscreen }) => {
@@ -451,4 +451,19 @@ const DashboardLayout = ({ isFullscreen, toggleFullscreen }) => {
   );
 };
 
-export default Fullscreenable()(DashboardLayout);
+//wrap into fullscreen
+const DashboardFullscreenable = () => {
+  const { fullscreenTargetRef, isFullscreen, toggleFullscreen } =
+    useFullscreen();
+
+  return (
+    <div ref={fullscreenTargetRef}>
+      <Dashboard
+        isFullscreen={isFullscreen}
+        toggleFullscreen={toggleFullscreen}
+      />
+    </div>
+  );
+};
+
+export default DashboardFullscreenable;

@@ -18,7 +18,6 @@
 import React, { useState, useEffect, useCallback, useRef, act } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import Fullscreenable from "react-fullscreenable";
 import classNames from "classnames";
 import "react-contexify/dist/ReactContexify.min.css";
 import EditWidget from "./widget/edit-widget/edit-widget";
@@ -29,6 +28,7 @@ import DashboardButtonGroup from "./grid/dashboard-button-group";
 import IconToggleButton from "../../common/buttons/icon-toggle-button";
 import WidgetContainer from "./widget/widget-container";
 import Widget from "./widget/widget-old";
+import useFullscreen from "../../utils/fullscreen.js";
 
 import { connectWebSocket, disconnect } from "../../store/websocketSlice";
 
@@ -615,4 +615,19 @@ const Dashboard = ({ isFullscreen, toggleFullscreen }) => {
   );
 };
 
-export default Fullscreenable()(Dashboard);
+//wrap into fullscreen
+const DashboardFullscreenable = () => {
+  const { fullscreenTargetRef, isFullscreen, toggleFullscreen } =
+    useFullscreen();
+
+  return (
+    <div ref={fullscreenTargetRef}>
+      <Dashboard
+        isFullscreen={isFullscreen}
+        toggleFullscreen={toggleFullscreen}
+      />
+    </div>
+  );
+};
+
+export default DashboardFullscreenable;
