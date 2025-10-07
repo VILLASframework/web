@@ -23,9 +23,21 @@ import {store} from "./store/index";
 import "bootstrap/dist/css/bootstrap.css";
 import "./styles/index.css";
 
-ReactDOM.render(
+const loadEnv = () =>
+  fetch("/env.js")
+    .then(res => res.text())
+    .then(js => {
+      eval(js);
+    });
+
+loadEnv().then(() => {
+  console.log("Runtime env brand:", window._env_?.FRONTEND_BRANDING);
+  const branding = new Branding(window._env_?.FRONTEND_BRANDING || "villasweb");
+
+  ReactDOM.render(
   <Provider store={store}>
     <Router />
   </Provider>,
   document.getElementById("root")
-);
+  );
+});
