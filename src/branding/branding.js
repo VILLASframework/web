@@ -214,6 +214,8 @@ class Branding {
   }
 };
 
+console.log("Runtime env brand:", window._env_?.FRONTEND_BRANDING);
+
 var branding = new Branding(
   window._env_?.FRONTEND_BRANDING || "villasweb"
 );
