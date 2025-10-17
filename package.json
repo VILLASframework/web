@@ -38,7 +38,6 @@
     "react-collapse": "^5.1.1",
     "react-color": "^2.19.3",
     "react-contexify": "^5.0.0",
-    "react-copy-to-clipboard": "^5.1.0",
     "react-datetime-picker": "^3.5.0",
     "react-dnd": "^14.0.5",
     "react-dnd-html5-backend": "^14.1.0",
