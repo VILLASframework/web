@@ -15,64 +15,64 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import JsonView from 'react-json-view';
+import React from "react";
+import PropTypes from "prop-types";
+import { JsonEditor } from "json-edit-react";
 
 class ParametersEditor extends React.Component {
-    onAdd = event => {
-        if (this.props.onChange != null) {
-            this.props.onChange(JSON.parse(JSON.stringify(event.updated_src)));
-        }
+  onAdd = (event) => {
+    if (this.props.onChange != null) {
+      this.props.onChange(JSON.parse(JSON.stringify(event.updated_src)));
     }
+  };
 
-    onEdit = event => {
-        if (this.props.onChange != null) {
-            this.props.onChange(JSON.parse(JSON.stringify(event.updated_src)));
-        }
+  onEdit = (event) => {
+    if (this.props.onChange != null) {
+      this.props.onChange(JSON.parse(JSON.stringify(event.updated_src)));
     }
+  };
 
-    onDelete = event => {
-        if (this.props.onChange != null) {
-            this.props.onChange(JSON.parse(JSON.stringify(event.updated_src)));
-        }
+  onDelete = (event) => {
+    if (this.props.onChange != null) {
+      this.props.onChange(JSON.parse(JSON.stringify(event.updated_src)));
     }
+  };
 
-    render() {
-        const containerStyle = {
-            minHeight: '100px',
+  render() {
+    const containerStyle = {
+      minHeight: "100px",
 
-            paddingTop: '5px',
-            paddingBottom: '5px',
-            paddingLeft: '8px',
+      paddingTop: "5px",
+      paddingBottom: "5px",
+      paddingLeft: "8px",
 
-            border: '1px solid lightgray'
-        };
+      border: "1px solid lightgray",
+    };
 
-        return <div style={containerStyle}>
-            <JsonView
-                src={this.props.content}
-                name={false}
-                displayDataTypes={false}
-                displayObjectSize={false}
-                enableClipboard={false}
-                onAdd={this.props.disabled ? undefined : this.onAdd}
-                onEdit={this.props.disabled ? undefined : this.onEdit}
-                onDelete={this.props.disabled ? undefined : this.onDelete}
-            />
-        </div>;
-    }
+    return (
+      <div style={containerStyle}>
+        <JsonEditor
+          data={this.props.content}
+          rootName={false}
+          showDataTypes={false}
+          showObjectSize={false}
+          enableClipboard={false}
+          onUpdate={this.handleJsonUpdate}
+        />
+      </div>
+    );
+  }
 }
 
 ParametersEditor.propTypes = {
-    content: PropTypes.object,
-    onChange: PropTypes.func,
-    disabled: PropTypes.bool
+  content: PropTypes.object,
+  onChange: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 ParametersEditor.defaultProps = {
-    content: {},
-    disabled: false
+  content: {},
+  disabled: false,
 };
 
 export default ParametersEditor;
