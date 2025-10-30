@@ -14,11 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-import React from 'react';
-import { Form } from 'react-bootstrap';
-import Dialog from '../../../common/dialogs/dialog';
-import ReactJson from 'react-json-view';
-
+import React from "react";
+import { Form } from "react-bootstrap";
+import Dialog from "../../../common/dialogs/dialog";
+import { JsonEditor } from "json-edit-react";
 
 class ResultConfigDialog extends React.Component {
   valid = true;
@@ -28,7 +27,7 @@ class ResultConfigDialog extends React.Component {
 
     this.state = {
       confirmCommand: false,
-      command: '',
+      command: "",
     };
   }
 
@@ -48,13 +47,14 @@ class ResultConfigDialog extends React.Component {
         blendOutCancel={true}
       >
         <Form>
-          <ReactJson
-            src={this.props.configs}
-            name={false}
-            displayDataTypes={false}
-            displayObjectSize={false}
+          <JsonEditor
+            data={this.props.configs}
+            rootName={false}
+            showDataTypes={false}
+            showObjectSize={false}
             enableClipboard={false}
             collapsed={false}
+            viewOnly
           />
         </Form>
       </Dialog>
