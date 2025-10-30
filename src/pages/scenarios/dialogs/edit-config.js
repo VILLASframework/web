@@ -55,7 +55,7 @@ class EditConfigDialog extends React.Component {
           data.icID = parseInt(this.state.icID, 10);
         }
         if (
-          Object.keys(this.state.startParameters).length === 0 &&
+          Object.keys(this.state.startParameters).length !== 0 &&
           this.state.startParameters.constructor === Object &&
           JSON.stringify(this.props.config.startParameters) !==
             JSON.stringify(this.state.startParameters)
@@ -67,18 +67,7 @@ class EditConfigDialog extends React.Component {
         for (let e of this.state.selectedFiles) {
           IDs.push(e.id);
         }
-        if (
-          this.props.config.fileIDs !== null &&
-          this.props.config.fileIDs !== undefined
-        ) {
-          if (
-            JSON.stringify(IDs) !== JSON.stringify(this.props.config.fileIDs)
-          ) {
-            data.fileIDs = IDs;
-          }
-        } else {
-          data.fileIDs = IDs;
-        }
+        data.fileIDs = IDs;
 
         //forward modified config to callback function
         this.props.onClose(data);

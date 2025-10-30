@@ -20,45 +20,34 @@ import PropTypes from "prop-types";
 import { JsonEditor } from "json-edit-react";
 
 class ParametersEditor extends React.Component {
-  onAdd = (event) => {
-    if (this.props.onChange != null) {
-      this.props.onChange(JSON.parse(JSON.stringify(event.updated_src)));
-    }
-  };
-
-  onEdit = (event) => {
-    if (this.props.onChange != null) {
-      this.props.onChange(JSON.parse(JSON.stringify(event.updated_src)));
-    }
-  };
-
-  onDelete = (event) => {
-    if (this.props.onChange != null) {
-      this.props.onChange(JSON.parse(JSON.stringify(event.updated_src)));
-    }
+  handleJsonUpdate = ({ newData }) => {
+    this.props.onChange(JSON.parse(JSON.stringify(newData)));
   };
 
   render() {
     const containerStyle = {
+      width: "100%",
       minHeight: "100px",
-
-      paddingTop: "5px",
-      paddingBottom: "5px",
-      paddingLeft: "8px",
-
+      padding: "5px",
       border: "1px solid lightgray",
+      display: "flex",
     };
 
     return (
-      <div style={containerStyle}>
-        <JsonEditor
-          data={this.props.content}
-          rootName={false}
-          showDataTypes={false}
-          showObjectSize={false}
-          enableClipboard={false}
-          onUpdate={this.handleJsonUpdate}
-        />
+      <div className="parameters-editor" style={containerStyle}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <JsonEditor
+            data={this.props.content}
+            rootName={false}
+            showDataTypes={false}
+            showObjectSize={false}
+            enableClipboard={false}
+            onUpdate={this.handleJsonUpdate}
+            minWidth={0}
+            maxWidth="100%"
+            theme={{ styles: { container: { width: "100%" } } }}
+          />
+        </div>
       </div>
     );
   }
