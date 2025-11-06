@@ -24,6 +24,7 @@ import { sessionToken } from '../../../localStorage';
 import { useSendActionMutation, useAddResultMutation, useLazyGetSignalsQuery, useGetResultsQuery } from '../../../store/apiSlice';
 import NotificationsFactory from "../../../common/data-managers/notifications-factory";
 import notificationsDataManager from "../../../common/data-managers/notifications-data-manager";
+import __origin from '../../../url';
 
 const ConfigActionBoard = ({selectedConfigs, scenarioID}) => {
   let pickedTime = new Date();
@@ -82,9 +83,8 @@ const ConfigActionBoard = ({selectedConfigs, scenarioID}) => {
           const res = await addResult({result: newResult}).unwrap();
           
           if(!isErrorAddingResult){
-            const url = window.location.origin;
             action.results = {
-              url: `https://slew.k8s.eonerc.rwth-aachen.de/api/v2/results/${res.result.id}/file`,
+              url: `https://${__origin}/api/v2/results/${res.result.id}/file`,
               type: "url",
               token: sessionToken
             }

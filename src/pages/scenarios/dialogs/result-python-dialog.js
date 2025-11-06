@@ -22,6 +22,7 @@ import Dialog from '../../../common/dialogs/dialog';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import __origin from '../../../url';
 
 class ResultPythonDialog extends React.Component {
   villasDataProcessingUrl = 'https://pypi.org/project/villas-dataprocessing/';
@@ -105,7 +106,7 @@ class ResultPythonDialog extends React.Component {
     code_snippets.push(code_imports)
 
     /* Result object */
-    code_snippets.push(`r = Result(${result.id}, '${token}', endpoint='https://slew.k8s.eonerc.rwth-aachen.de')`);
+    code_snippets.push(`r = Result(${result.id}, '${token}', endpoint='https://${__origin}')`);
 
     /* Examples */
     code_snippets.push(`# Get result metadata

@@ -34,9 +34,9 @@ import {
 } from "../../../../store/apiSlice";
 import notificationsDataManager from "../../../../common/data-managers/notifications-data-manager";
 import NotificationsFactory from "../../../../common/data-managers/notifications-factory";
-import { start } from "xstate/lib/actions";
 import FileSaver from "file-saver";
 import { useDispatch } from "react-redux";
+import __origin from "../../../../url";
 
 const WidgetPlayer = ({
   widget,
@@ -172,7 +172,7 @@ const WidgetPlayer = ({
         })
           .then((v) => {
             pld.results = {
-              url: `https://slew.k8s.eonerc.rwth-aachen.de/api/v2/results/${v.data.result.id}/file`,
+              url: `https://${__origin}/api/v2/results/${v.data.result.id}/file`,
               type: "url",
               token: sessionToken,
             };
