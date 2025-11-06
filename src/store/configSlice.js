@@ -32,7 +32,6 @@ const configSlice = createSlice({
            .addCase(loadConfig.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.config = action.payload;
-                console.log("fetched config", action.payload)
            })
     }
 });
@@ -43,7 +42,6 @@ export const loadConfig = createAsyncThunk(
     async (data) => {
         try {
             const res = await RestAPI.get("/api/v2/config", null);
-            console.log("response:", res)
             return res;
         } catch (error) {
             console.log("Error loading config", error);

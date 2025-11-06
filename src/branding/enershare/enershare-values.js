@@ -15,22 +15,31 @@
  * along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-import { configureStore } from "@reduxjs/toolkit";
-import icReducer from "./icSlice";
-import configReducer from "./configSlice";
-import { apiSlice } from "./apiSlice";
-import authReducer from "./authSlice";
-import websocketReducer from "./websocketSlice";
-
-export const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    infrastructure: icReducer,
-    config: configReducer,
-    websocket: websocketReducer,
-    [apiSlice.reducerPath]: apiSlice.reducer,
+const enershare_values = {
+  title: 'Digital Twin for flexible energy networks',
+  subtitle: '',
+  icon: "logo_Enershare_Icon.svg",
+  logo: "logo_Enershare.svg",
+  pages: {
+    home: true,
+    scenarios: true,
+    infrastructure: true,
+    users: true,
+    account: true,
+    api: true
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
-  devTools: true,
-});
+  links: {
+    "AppStore": "https://store.haslab-dataspace.pt/gui/",
+    "The Project": "https://enershare.eu/"
+  },
+  style: {
+    background: 'rgba(24,229,176, 0.6)',
+    highlights: 'rgba(153,102,255, 0.75)',
+    main: 'rgba(0,0,0, 1)',
+    secondaryText: 'rgba(0,0,100, 0.8)',
+    fontFamily: "Manrope, sans-serif",
+    borderRadius: "60px"
+  }
+}
+
+export default enershare_values;
