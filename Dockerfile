@@ -15,7 +15,7 @@
  # along with VILLASweb. If not, see <http://www.gnu.org/licenses/>.
  # ******************************************************************************
 
-FROM node:16.5 AS builder
+FROM node:16.20.2 AS builder
 
 # Create app directory
 RUN mkdir -p /usr/src/app

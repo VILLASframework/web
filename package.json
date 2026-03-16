@@ -66,6 +66,11 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "react-scripts": "^4.0.3"
   },
+  "overrides":{
+    "react-rnd":{
+      "react-draggable":"4.4.3"
+    }
+  },
   "scripts": {
     "start": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
