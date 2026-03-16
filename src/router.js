@@ -19,6 +19,8 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import App from "./app";
 import Login from "./pages/login/login";
+
+import LoginComplete from "./pages/login/login-complete";
 import Logout from "./pages/login/logout";
 
 class Root extends React.Component {
@@ -26,6 +28,9 @@ class Root extends React.Component {
     return (
         <BrowserRouter>
           <Switch>
+            <Route path='/login/complete'>
+              <LoginComplete />
+            </Route>
             <Route path='/login'>
               <Login />
             </Route>
