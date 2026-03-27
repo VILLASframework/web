@@ -85,7 +85,6 @@ const Scenarios = (props) => {
     }
 
     const onEditScenario = async (data) => {
-      console.log("data: ", {scenario: data});
       if(data){
         try{
           await updateScenario({id: modalScenario.id, ...{scenario: data}}).unwrap();
